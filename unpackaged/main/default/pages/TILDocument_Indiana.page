@@ -1,0 +1,387 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" showHeader="false" controller="ApplicationController" id="TILPage" renderAs="pdf" standardStylesheets="false" doctype="html-5.0">
+<head>
+  <title>Payoff Personal Loan Agreement</title>
+  <apex:stylesheet value="{!$Resource.PayoffStyleSheet}"/>
+  <style type="text/css">
+    .border-bottom-0 { border-bottom: 0 !important; }
+    .border-top-0 { border-top: 0 !important; }
+    .border-thick { border-width: 4px !important; }
+    input[type="text"] {
+      border-width: 0 0 1px 0;
+      border-radius: 0;
+    }
+    input[type="text"],
+    input[type="text"]:focus {
+      border-color: #001239;
+      box-shadow: none;
+      height: 1.4rem;
+      padding: 0 0.5rem 0.2rem;
+    }
+    .control-label {
+      white-space: nowrap;
+    }
+    .d-inline-input {
+      display: inline-block;
+      width: auto;
+    }
+  </style>
+  <style type="text/css" media="print">
+    @page {
+      @top-center {
+        content: element(header);
+      }
+
+      .page-header {
+        position: running(header);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <div class="page-header">
+    <p class="font-weight-bold text-uppercase">
+      PAYOFF PERSONAL LOAN AGREEMENT
+    </p>
+  </div> -->
+
+  <div class="px-3">
+    <div class="mb-4">
+      <h1 class="text-center">Truth In Lending Disclosure Statement</h1>
+
+      <table class="table">
+        <tr>
+          <td>
+            <label for="loan__id" class="control-label">Loan ID:</label>
+          </td>
+          <td class="w-100">
+            <input type="text" class="form-control w-25" id="loan__id" />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="loan__borrower" class="control-label">Borrower ("I" or "me"):</label>
+          </td>
+          <td class="w-100">
+            <input type="text" class="form-control w-25" id="loan__borrower" />
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <table class="table" style="border: 2px solid #001239;">
+      <tr>
+        <td class="p-3" style="border-bottom: 2px solid #001239;">
+
+          <table class="table table-bordered mb-0 border-bottom-0">
+            <tbody>
+              <tr>
+                <td class="w-25 border-bottom-0 border-thick">
+                  <strong>ANNUAL PERCENTAGE RATE</strong>
+                  <p>
+                    The cost of credit as a yearly rate.
+                  </p>
+                </td>
+                <td class="w-25 border-bottom-0 border-thick">
+                  <strong>FINANCE CHARGE</strong>
+                  <p>
+                    The dollar amount the credit will cost you.
+                  </p>
+                </td>
+                <td class="w-25 border-bottom-0">
+                  <strong>Amount Financed</strong>
+                  <p>
+                    The amount of credit provided to you or on your behalf.
+                  </p>
+                </td>
+                <td class="w-25 border-bottom-0">
+                  <strong>Total of Payments</strong>
+                  <p>
+                    The amount you will have paid after you have made all scheduled payments.
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="table table-bordered text-right border-top-0">
+            <tbody>
+        <tr>
+          <td class="w-25 border-top-0 border-thick">
+            <!--{!applicationRec.genesis__APR__c}-->
+            <apex:outputText value="{0, number, #,###.##}">
+            <!--<apex:param value="{!ROUND(applicationRec.genesis__APR__c,2)}" />-->
+                <apex:param value="{!apr_strInt}" />
+            </apex:outputText>%
+          </td>
+          <td class="w-25 border-top-0 border-thick">
+            $<!--{!applicationRec.genesis__Total_Estimated_Interest__c+applicationRec.Origination_fee__c}1,729.55 --> 
+             <apex:repeat value="{!applicationRec.Pricing_offer__r}" var="offer">
+              <apex:outputText value="{0, number, #,###.00}">
+                <!--apex:param value="{!ROUND((applicationRec.genesis__Total_Estimated_Interest__c+applicationRec.Origination_fee__c),2)}" /-->
+                <apex:param value="{!ROUND((offer.Total_of_Payments_TIL__c-applicationRec.genesis__Financed_Amount__c),2)}" />
+              </apex:outputText>
+             </apex:repeat> 
+          </td>
+          <td class="w-25 border-top-0">
+            $<!--{!applicationRec.genesis__Loan_Amount__c-applicationRec.Origination_fee__c} 4,800.00 -->
+              <apex:outputText value="{0, number, #,###.00}">
+                <!--<apex:param value="{!ROUND((1234),2)}" />          
+                <apex:param value="{!ROUND((applicationRec.genesis__Loan_Amount__c-applicationRec.Origination_fee__c),2)}" />-->
+                <apex:param value="{!ROUND((applicationRec.genesis__Financed_Amount__c),2)}" />
+            </apex:outputText> 
+          </td>
+          <td class="w-25 border-top-0">
+            $ <!--{!applicationRec.Initial_Term_Payment_Amt__c}136.03 -->
+              <apex:repeat value="{!applicationRec.Pricing_offer__r}" var="offer">
+                <apex:outputText value="{0, number, #,###.00}">
+                    <apex:param value="{!ROUND(offer.Total_of_Payments_TIL__c-0,2)}" />
+                </apex:outputText> 
+              </apex:repeat>                
+          </td>
+        </tr>
+      </tbody>
+          </table>
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th colspan="3">
+                  Payment Schedule
+                </th>
+              </tr>
+              <tr>
+                <th class="w-25">
+                  Number of Payments
+                </th>
+                <th class="w-25">
+                  Amounts
+                </th>
+                <th class="w-50">
+                  When Payments Are Due
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  1
+                </td>
+                <td>
+                  ${!applicationRec.Last_Payment_Amount__c}e
+                </td>
+                <td>
+                  {MM/DD/YY}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {!applicationRec.Loan_Term_sub_1__c}
+                </td>
+                <td>
+                  $ {!applicationRec.Initial_Term_Payment_Amt__c}
+                </td>
+                <td>
+                  {MM/DD/YY}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            <strong>Prepayment:</strong> If you pay off early, you will not have to pay a penalty. You may prepay the unpaid balance at any time without penalty and may be entitled to receive a refund of unearned charges in accordance with law.
+          </p>
+
+          <p>
+            See the rest of this document for additional information about nonpayment, default, and any required repayment in full before the scheduled date, and prepayment refunds and penalties.
+          </p>
+
+          <p class="small font-italic">e means estimate</p>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="p-3">
+
+          <h5>
+            <label for="itemization__amount_financed" class="control-label">Itemization of Amount Financed of </label>
+            <input type="text" class="form-control input-lg d-inline-input" placeholder="$" id="itemization__amount_financed" />
+          </h5>
+
+          <p>
+            <strong>Borrower</strong><br />
+            {!applicationRec.genesis__Account__r.peer__First_Name__c}
+              {!applicationRec.genesis__Account__r.peer__Last_Name__c } <br />
+              {!applicationRec.genesis__Account__r.City__c},
+              {!applicationRec.genesis__Account__r.State__c}
+              {!applicationRec.genesis__Account__r.ZIP_Code__c}
+          </p>
+
+          <table class="table mb-3">
+            <tr>
+              <td>
+                <input type="text" class="form-control d-inline-input" placeholder="$" id="itemization__direct_amount" />
+                <label for="itemization__direct_amount" class="control-label font-weight-normal">Amount given to you directly</label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Amount paid to others on your behalf:
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="text" class="form-control d-inline-input" placeholder="$" id="itemization__creditor_1" />
+                <label for="itemization__creditor_1" class="control-label font-weight-normal">to {creditor name}</label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="text" class="form-control d-inline-input" placeholder="$" id="itemization__creditor_2" />
+                <label for="itemization__creditor_2" class="control-label font-weight-normal">to {creditor name}</label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="text" class="form-control d-inline-input" placeholder="$" id="itemization__creditor_3" />
+                <label for="itemization__creditor_3" class="control-label font-weight-normal">to {creditor name}</label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="text" class="form-control d-inline-input" placeholder="$" id="itemization__finance_charge" />
+                <label for="itemization__finance_charge" class="control-label font-weight-normal">prepaid finance charge. This is a one-time administrative fee that you pay in advance to Payoff and is included in the finance charge.</label>
+              </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+
+    <h3 class="text-center mt-5">This is a consumer credit transaction.</h3>
+
+    <p>
+      <strong>Promise to Pay.</strong> In return for a loan I have received, I promise to pay Payoff, Inc., a Delaware corporation or any later holder ("you," or "Lender") of this Promissory Note ("Note") the principal sum of <input type="text" class="form-control d-inline-input" placeholder="$" />, with interest starting on the date my loan is funded at the rate of <input type="text" class="form-control d-inline-input" /> percent (XX%) per year, simple interest. I understand that references in this Note to Lender also include any person or company to whom the Note is transferred.
+    </p>
+    <p>
+      <strong>Payments.</strong> I will make 36 monthly payments of <input type="text" class="form-control d-inline-input" placeholder="$" /> each, consisting of principal and interest, starting on the <input type="text" class="form-control d-inline-input" /> day of <input type="text" class="form-control d-inline-input" />, and continuing until the final payment date of <input type="text" class="form-control d-inline-input" />, which is the maturity date of this Note. The last payment might be a slightly different amount to adjust for rounding. I will also pay a one-time administrative fee in advance to Payoff in the amount of <input type="text" class="form-control d-inline-input" placeholder="$" />, which amount is included in my finance charge.
+    </p>
+    <p>
+      All payments are to be applied first to any fees, expenses and other amounts due to you (excluding principal and interest), then to interest owed, and the rest to unpaid principal, except if applicable law requires payments to be applied differently. If I don't make my payments, any money paid to you can be applied however you deem fit, to the extent permitted by applicable law.
+    </p>
+    <p>
+      <strong>Interest.</strong> I will pay a fixed rate of interest at <input type="text" class="form-control d-inline-input" /> percent (XX %) per year. Interest is calculated on a monthly basis on the unpaid balance with each payment representing 1/12th of a year.
+    </p>
+    <p>
+      <strong>Late Charge.</strong> There is no late charge in connection with this Note.
+    </p>
+    <p>
+      <strong>Prepayments and Partial Payments.</strong> I can prepay this loan, without penalty, at any time. If I partially prepay, my monthly payment amount won't change, but I will pay off my loan sooner. We may accept late payments or partial payments, even if they are marked "paid in full", without losing any rights under this Note.
+    </p>
+    <p>
+      <strong>Default and Remedies.</strong> If I don't make my payments, file for bankruptcy, die, commit fraud or lie concerning my loan or application, or don’t follow the terms of this Note, I may be considered in default. If I default, the entire principal balance, together with any accrued interest may become due and payable immediately, you may take all available actions to collect what I owe. I agree to pay for all costs you incur in trying to collect what I owe, including legal fees as allowed by applicable law.
+    </p>
+    <p>
+      <strong>Loan Charges.</strong> If a law that applies to my loan and to this Note is later interpreted so that the interest or other loan charges already collected or to be collected from me exceed allowable limits, then you may correct the issue by reducing my principal owed, issuing me a refund, or taking other action that would bring the charges under the maximum.
+    </p>
+    <p>
+      <strong>Assignment.</strong> I may not assign any of my obligations under this Note without your written permission. You do not have to give me your permission. You may assign this Note at any time without my permission. Unless prohibited by applicable law, you may do so without telling me. My obligations under this Note apply to all of my permitted assigns. Your rights under this Note apply to each of your successors and assigns.
+    </p>
+    <p>
+      <strong>Notices.</strong> All notices and other communications shall be given in writing and shall be deemed to have been duly given and effective (i) upon receipt, if delivered in person or by facsimile, email or other electronic transmission, or (ii) one day after deposit prepaid for overnight delivery with a national overnight express delivery service. Except as expressly provided otherwise in this Note, notices to me may be addressed to my registered email address or to the address shown at the top of this Note, unless I provide a different address for notice. I may change my registered email address by logging onto the Payoff website and updating my profile.
+    </p>
+    <p>
+      <strong>Governing Law.</strong> This Agreement is governed by federal law and, to the extent that state law applies, the laws of the State of Indiana.
+    </p>
+    <p>
+      <strong>Electronic Execution.</strong> This Note is in the form of an electronic record and is being executed using an electronic signature. I agree that this Note constitutes a "transferable record" as provided for in Ind. Code Ann. § 26-2-8-115 and that the authoritative copy of the Note shall at all times be maintained by Lender or Lender's designated custodian I agree that any person who becomes the person in control of this Note as provided for in Ind. Code Ann. § 26-2-8-115 shall be the person referred to in this Note as the holder or the Lender. The authoritative copy will at all times be the copy identified by the Lender as the authoritative copy and the only copy of this Note that is the authoritative copy is the copy that is within the control of the Lender or the Lender’s designated custodian. No other copy of this Note is the authoritative copy. I expressly agree that the Lender shall have the right to convert this Note at any time into a paper-based Note (the "Paper-Based Note").
+    </p>
+    <p>
+      In the event this Note is converted into a Paper-Based Note I further expressly agree that: (i) the Paper Based Note will be an effective, enforceable and valid negotiable instrument governed by the applicable provisions of the Uniform Commercial Code in the State of Indiana, (ii) my signing of this Note will be deemed issuance and delivery of the Paper-Based Note; and (iii) I intend that the printing of the representation of my electronic signature upon the Paper-Based Note will be my original signature on the Paper Based Note and will serve to indicate my present intention to authenticate the Paper Based Note.
+    </p>
+    <p>
+      <strong>Miscellaneous.</strong> No provision of this Note shall be modified or limited except by a written agreement signed by both you and me. The unenforceability of any provision of this Note shall not affect the enforceability or validity of any other provision of this Note.
+    </p>
+
+    <h3 class="text-center text-uppercase mt-5">Notice to Consumer:</h3>
+
+    <p class="font-weight-bold mb-4">
+      [1] Do not sign this paper before you read it.<br />
+      [2] You are entitled to a copy of this paper.<br />
+      [3] You may prepay the unpaid balance at any time without penalty and may be entitled to receive a refund of unearned charges in accordance with law.<br />
+      [4] If you prepay the unpaid balance, you may have to pay a minimum charge not greater than seven dollars and fifty cents.
+    </p>
+
+    <table class="table">
+      <tr>
+        <td>
+          <label for="consumer__date" class="d-inline-label">Date:</label>
+        </td>
+        <td class="w-100">
+          <input type="text" class="form-control d-inline-input w-50" id="consumer__date" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="consumer__signature" class="d-inline-label">Signed:</label>
+        </td>
+        <td class="w-100">
+          <input type="text" class="form-control d-inline-input w-50" id="consumer__signature" />
+        </td>
+      </tr>
+    </table>
+
+    <h3 class="text-center text-uppercase mt-5">Notice to Co-Signer (If Applicable)</h3>
+
+    <p class="font-weight-bold">
+      You agree to pay the debt identified below although you may not personally receive any property, services, or money. You may be sued for payment although the person who receives the property, services, or money is able to pay. This notice is not the contract that obligates you to pay the debt. Read the contract for the exact terms of your obligation.
+    </p>
+
+    <h3 class="text-center text-uppercase mt-5">Identification of Debt You May Have to Pay</h3>
+
+    <div class="form-group text-center">
+      <input type="text" class="form-control w-25 mx-auto" id="debtor__name" />
+      <label for="debtor__name" class="mt-2">(name of debtor)</label>
+    </div>
+
+    <div class="form-group text-center font-weight-bold">
+      PAYOFF, INC.<br />
+      (name of creditor)
+    </div>
+
+    <div class="form-group text-center">
+      <input type="text" class="form-control w-25 mx-auto" id="debt__date" />
+      <label for="debt__date" class="mt-2">(date)</label>
+    </div>
+
+    <div class="form-group text-center font-weight-bold">
+      Unsecured Personal Loan<br />
+      (kind of debt)
+    </div>
+
+    <p class="font-weight-bold">
+      I have received a copy of this notice.
+    </p>
+
+    <table class="table">
+      <tr>
+        <td>
+          <label for="esign__date" class="d-inline-label">Date:</label>
+        </td>
+        <td class="w-100">
+          <input type="text" class="form-control d-inline-input w-50" id="esign__date" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="esign__signature" class="d-inline-label">Signed:</label>
+        </td>
+        <td class="w-100">
+          <input type="text" class="form-control d-inline-input w-50" id="esign__signature" />
+        </td>
+      </tr>
+    </table>
+
+  </div>
+</body>
+</apex:page>

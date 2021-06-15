@@ -1,0 +1,66 @@
+<apex:page lightningStylesheets="true" standardController="loan__Automated_Payment_Configuration__c" id="automatedPaymentConfigPage"
+    recordSetVar="aPCSet" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+     <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+    <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+    <apex:form >
+        <br/>
+        
+        <apex:commandLink value="Help On Automated Payment" id="thelink" onclick="popWindow('AutoPaymentConfig');" 
+                          reRender="dummy" style="text-decoration:none;color:green;padding:1px" styleClass="link-show" 
+                          rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>                                                                                                                
+        <apex:commandLink value="Help On Automated Payment" id="thelink2" onclick="popWindow('AutoPaymentConfig');" 
+        reRender="dummy" styleClass="help-link" 
+        rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>  
+                              
+        <br/><br/>
+       
+        <apex:sectionHeader title="Automated Payment Configuration" />
+        <apex:pageblock id="autoPaymentConfigList">
+            <apex:actionRegion >
+                <apex:outputText value="Records per page: "></apex:outputText>
+                <apex:selectList value="{!pagesize}" size="1">
+                    <apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+                    <apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+                    <apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+                    <apex:selectOption itemLabel="25" itemValue="25"></apex:selectOption>
+                    <apex:actionSupport event="onchange"
+                        rerender="autoPaymentConfigTable, navigation" />
+                </apex:selectList>
+            </apex:actionRegion>
+
+            <apex:pageblockTable value="{!aPCSet}" id="autoPaymentConfigTable" var="JA">
+                <apex:column headerValue="Automated Payment Configuration">
+                    <apex:commandLink value="{!JA.Name}" reRender="automatedPaymentConfigPage:automatedPaymentConfigDetail">
+                        <apex:param name="automatedPaymentConfigID" value="{!JA.ID}" />
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column value="{!JA.loan__Payment_Mode__c}" />
+                <apex:column value="{!JA.loan__Bank_Account__c}" />
+                <apex:column value="{!JA.loan__Active__c}" />
+            </apex:pageblockTable>
+        </apex:pageblock>
+        <apex:panelGrid columns="2" id="navigation">
+            <apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+            <apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+        </apex:panelGrid>
+    </apex:form>
+
+    <apex:outputPanel id="automatedPaymentConfigDetail">
+        <apex:detail subject="{!$CurrentPage.parameters.automatedPaymentConfigID}"
+            inlineEdit="true"></apex:detail>
+    </apex:outputPanel>
+
+    <apex:sectionHeader title="Define a New Automated Payment Configuration" />
+    <apex:pageblock >
+        <table>
+            <tr>
+                <td>
+                    <apex:outputLink value="{!URLFOR($Action.loan__Automated_Payment_Configuration__c.New)}">Define New Automated Payment Configuration</apex:outputLink>
+                </td>
+            </tr>
+        </table>
+    </apex:pageblock>
+
+</apex:page>

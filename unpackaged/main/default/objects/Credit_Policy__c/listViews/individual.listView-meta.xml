@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>individual</fullName>
+    <columns>NAME</columns>
+    <columns>Application__c</columns>
+    <columns>final_decision__c</columns>
+    <columns>Monthly_DTI__c</columns>
+    <columns>Debt_to_Income_DTI__c</columns>
+    <columns>Net_Disposable_Income_NDI__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>request_intent__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Application__c</field>
+        <operation>equals</operation>
+        <value>APP-0001515097</value>
+    </filters>
+    <label>individual</label>
+</ListView>

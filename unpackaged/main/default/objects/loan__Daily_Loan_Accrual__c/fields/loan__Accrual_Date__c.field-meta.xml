@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Accrual_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Date on which accrual is posted.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Date on which accrual is posted.</inlineHelpText>
+    <label>Accrual Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

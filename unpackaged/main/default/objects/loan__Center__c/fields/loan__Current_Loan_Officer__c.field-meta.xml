@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Current_Loan_Officer__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Current Loan Officer</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>loan__Staff__c.loan__Branch__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.loan__Branch__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>loan__Staff__c</referenceTo>
+    <relationshipLabel>Centers (Current Loan Officer)</relationshipLabel>
+    <relationshipName>Centers1</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

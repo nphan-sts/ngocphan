@@ -1,0 +1,16 @@
+<apex:page controller="ints.OAuth2Controller">
+  <apex:form >
+      <apex:pageBlock >
+          <!--<apex:pageMessages id="showmsg"></apex:pageMessages>-->
+          <apex:selectList size="1" value="{!serviceId}" >
+            <apex:selectOptions value="{!ServiceName}" />
+          </apex:selectList><br/><br/>
+          <apex:commandButton action="{!authorize}" value="OAuth Authorization" style="margin-left:35%"/>
+      </apex:pageBlock> 
+      <apex:actionFunction action="{!getToken}" name="getTokenId" rerender="none"/>
+  </apex:form>
+  
+  <script>
+      window.onload = getTokenId();
+  </script>
+</apex:page>

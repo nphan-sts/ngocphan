@@ -1,0 +1,72 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Account__c"
+    extensions="loan.RecurringACHController"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+    <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+
+    <script> function setFocusOnLoad(){} </script>
+
+    <script>
+        j$ = jQuery.noConflict();
+        
+    </script>
+	
+    <apex:sectionHeader title="Recurring ACH setup against the loan: {!loan__Loan_Account__c.Name}" />
+    <apex:outputPanel >
+        <apex:form id="recurringACHForm">
+            <apex:commandLink value="Help On Recurring ACH" id="thelink" onclick="popWindow('Recurring ACH');"
+                              reRender="dummy" style="text-decoration:none;color:green;padding:1px" styleClass="link-show"
+                              rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+            <apex:commandLink value="Help On Recurring ACH" id="thelink2" onclick="popWindow('Recurring ACH');" 
+                                reRender="dummy" styleClass="help-link" 
+                                rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/> 
+            
+            <br/><br/>
+
+            <apex:pageBlock id="achPBId" mode="edit">
+                <apex:pageMessages />
+                <apex:pageBlockButtons location="both">
+                    <c:BusyButton name="Save" busyName="Saving"
+                        actionTo="{!recurringACH}" id="sBtn" reRenderTo="recurringACHForm"
+                        oncomplete="({!closeModal}===true) ? closeIframe('{!loan__Loan_Account__c.Id}') : {};"
+                        style="margin-left:120px;" disabled="{!achTxn.Id != null}" />
+                    <apex:commandButton value="Cancel" immediate="true"
+                        action="{!URLFOR($Action.Loan_Account__c.View,Loan_Account__c.Id)}"
+                        onclick="closeIframe()" />
+                </apex:pageBlockButtons>
+                <apex:outputpanel id="achLoanPanel" styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+                    <apex:pageBlockSection columns="2"
+                        id="loanTermsPanelPageBlockSection" title="ACH Parameters">
+                        <apex:outputField id="LoanId" value="{!achTxn.loan__Loan_Account__c}" />
+                        <apex:outputField value="{!achTxn.loan__Txn_Date__c}" />
+                        <apex:outputField id="txnTypeId" value="{!achTxn.loan__Transaction_Type__c}" />
+                        <apex:inputField value="{!achTxn.loan__Bank_Account__c}" required="true" rendered="{!lockBasedACH}" />
+                        <apex:inputField value="{!achTxn.loan__OT_ACH_Relationship_Type__c}" required="true" rendered="{!NOT(lockBasedACH)}" />
+                        <apex:inputField value="{!achTxn.loan__OT_ACH_Drawer_Name__c}" rendered="{!NOT(lockBasedACH)}" />
+                        <apex:inputField value="{!achTxn.loan__OT_ACH_Account_Number__c}" required="true" rendered="{!NOT(lockBasedACH)}" />
+                        <apex:inputField value="{!achTxn.loan__OT_ACH_Routing_Number__c}" required="true" rendered="{!NOT(lockBasedACH)}" />
+                        <apex:inputField value="{!achTxn.loan__OT_ACH_Account_Type__c}" required="true" rendered="{!NOT(lockBasedACH)}" />
+                        <apex:inputField value="{!achTxn.loan__OT_ACH_Payment_Amount__c}" required="true" />
+                        <apex:inputField value="{!achTxn.loan__OT_ACH_Debit_Date__c}" required="true" />
+                        <apex:inputField value="{!achTxn.loan__OT_ACH_Bank_Name__c}" rendered="{!NOT(lockBasedACH)}" />
+                        <apex:inputField value="{!achTxn.loan__ACH_Frequency__c}" required="true" >
+                        <apex:actionSupport event="onchange" action="{!setVisibilityForSemiMonthlyPd}" reRender="achLoanPanel"/>
+                        </apex:inputField>
+                        <apex:inputField value="{!achTxn.loan__ACH_Second_Debit_Date__c}" id="second" label="Second Payment Date" rendered="{!renderSecondInstallment}" />
+                        <apex:inputField value="{!achTxn.loan__ACH_Start_Date__c}" required="true" />
+                        <apex:inputField value="{!achTxn.loan__ACH_Frequency_Cycle__c}" rendered="{!renderNumberOfDays}"/>
+                        <apex:inputField value="{!achTxn.loan__ACH_End_Date__c}" />
+                    </apex:pageBlockSection>
+                </apex:outputpanel>
+
+            </apex:pageBlock>
+        </apex:form>
+
+    </apex:outputPanel>
+</apex:page>

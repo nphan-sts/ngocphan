@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Bill_Follow_Schedules__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This field will represent if bill follows the schedules.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field will represent if bill follows the schedules.</inlineHelpText>
+    <label>Bill Follow Schedules</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

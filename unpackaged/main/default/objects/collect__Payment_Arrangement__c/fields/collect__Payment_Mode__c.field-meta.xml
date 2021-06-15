@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Payment_Mode__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Deprecated field. Made another field with picklist type for same purpose.</description>
+    <externalId>false</externalId>
+    <label>Payment Mode (Deprecated)</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Accrue_Interest_From_Date_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>loan__Interest_Bearing__c = true &amp;&amp;
+ ISBLANK(loan__Accrue_Interest_From__c)</errorConditionFormula>
+    <errorMessage>For an interest bearing charge, please enter the accrue interest from date.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,119 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__Quick_Quote_Option__c"
+    extensions="genesis.QuickQuoteOptionsController"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.genesis__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.genesis__MFIStyles}" />
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+        j$ = jQuery.noConflict();
+    </script>
+    <script>
+        function confirmCancel() {
+            var isConfirm = confirm("Are you sure you want to cancel?");
+            if(isConfirm){
+                return this.parent.parent.window.close();                
+            }
+        }
+    
+    </script>
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+
+    <script>
+        function testify(){
+            alert(j$('').length);
+        };
+      function scrolify(tblAsJQueryObject, height){
+        var oTbl = tblAsJQueryObject;
+        
+        // for very large tables you can remove the four lines below
+        // and wrap the table with <div> in the mark-up and assign
+        // height and overflow property  
+        var oTblDiv = $("<div/>");
+        oTblDiv.css('height', height);
+        oTblDiv.css('overflow-y','scroll');
+        oTbl.wrap(oTblDiv);
+
+        // save original width
+        oTbl.attr("data-item-original-width", oTbl.width());
+        oTbl.find('thead tr td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        }); 
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        });                 
+
+
+        // clone the original table
+        var newTbl = oTbl.clone();
+
+        // remove table header from original table
+        oTbl.find('thead tr').remove();                 
+        // remove table body from new table
+        newTbl.find('tbody tr').remove();   
+
+        oTbl.parent().parent().prepend(newTbl);
+        newTbl.wrap("<div/>");
+
+        // replace ORIGINAL COLUMN width                
+        newTbl.width(newTbl.attr('data-item-original-width'));
+        newTbl.find('thead tr td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });     
+        oTbl.width(oTbl.attr('data-item-original-width'));      
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });                 
+    }
+
+    function callScroll() {
+        scrolify($('.scrollableFixedHeader'), 300); // 160 is height
+    }
+    </script>
+    <apex:sectionHeader title="Financing Options: {!genesis__Quick_Quote_Option__c.Name}" rendered="{!IF(genesis__Quick_Quote_Option__c.Name == '',false,true)}"/>
+    <apex:sectionHeader title="Financing Options " rendered="{!IF(genesis__Quick_Quote_Option__c.Name == '',true,false)}"/>
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.genesis__modalheaderStyle,'')}" />
+    <apex:outputPanel >
+        <apex:form id="quickQuoteOptionsForm">
+            <apex:pageBlock id="quickQuoteOptionsId" mode="edit">
+                <apex:pageMessages />
+                <apex:pageBlockButtons location="both">
+                    <c:BusyButton name="Save" busyName="Saving"
+                        actionTo="{!saveQuickQuoteOptions}"
+                        oncomplete="({!closeModal}===true) ? closeIframe('{!genesis__Quick_Quote_Option__c.Id}') : {};"
+                        reRenderTo="quickQuoteOptionsForm" />
+                   <apex:commandButton action="{!cancelQuickQuoteOptions}" immediate="true" value="Cancel" />
+                </apex:pageBlockButtons>
+                <apex:outputpanel id="Optionsid">
+                    <apex:pageBlockSection columns="2"
+                        id="InfoPanelPageBlockSection" title="Details">
+                        <apex:outputField value="{!quickQuoteOptions.name}" />
+                        <apex:inputField value="{!quickQuoteOptions.genesis__Enabled_Flag__c}" />
+                        <apex:inputField value="{!quickQuoteOptions.genesis__Documentation_Fees_Originated_Dealer__c}" required="true"/>
+                        <apex:inputField value="{!quickQuoteOptions.genesis__Documentation_Fees_Originated_Direct__c}" required="true"/>
+                        <!--<apex:inputField value="{!quickQuoteOptions.Documentation_Fees_Originated_Broker__c}" />-->
+                        <!--<apex:inputField value="{!quickQuoteOptions.Maximum_Financed_Percent_Broker__c}" />-->
+                        <apex:inputField value="{!quickQuoteOptions.genesis__Maximum_Financed_Percent_Dealer__c}" required="true"/>                        
+                        <apex:inputField value="{!quickQuoteOptions.genesis__Maximum_Financed_Percent_Direct__c}" required="true"/>                                                                        
+                        <apex:inputField value="{!quickQuoteOptions.genesis__Minimum_Cash_Percent_Customer__c}" required="true"/>
+                        <apex:inputField value="{!quickQuoteOptions.genesis__Term_Extension_Fees__c}" required="true"/>
+                        <apex:inputField value="{!quickQuoteOptions.genesis__Debt_to_Income__c}" required="true"/>
+                        <apex:inputfield value="{!quickQuoteOptions.genesis__Assumed_Interest_Rate__c}" required="true"/> 
+                        <apex:inputField value="{!quickQuoteOptions.genesis__Start_Date__c}" required="true"/>
+                        <apex:inputField value="{!quickQuoteOptions.genesis__End_Date__c}" />                                                                                            
+                    </apex:pageBlockSection>
+                </apex:outputpanel>
+                <center>
+                   <apex:actionStatus id="valueChange">
+                      <apex:facet name="start" >
+                         <apex:image value="/img/loading32.gif" style="height:15px;"/>
+                      </apex:facet>
+                   </apex:actionStatus>
+                </center>
+
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+</apex:page>

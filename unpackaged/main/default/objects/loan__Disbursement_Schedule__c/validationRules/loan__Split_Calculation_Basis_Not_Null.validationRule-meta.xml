@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Split_Calculation_Basis_Not_Null</fullName>
+    <active>true</active>
+    <errorConditionFormula>OR(ISBLANK(TEXT(loan__Split_Calculation_Basis__c)), ISNULL(TEXT(loan__Split_Calculation_Basis__c)))</errorConditionFormula>
+    <errorMessage>Split Calculation Basis cannot be null.</errorMessage>
+</ValidationRule>

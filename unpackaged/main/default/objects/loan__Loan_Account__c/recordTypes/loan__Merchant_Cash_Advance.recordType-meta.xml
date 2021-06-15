@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Merchant_Cash_Advance</fullName>
+    <active>true</active>
+    <description>Merchant Cash Advance</description>
+    <label>Merchant Cash Advance</label>
+    <picklistValues>
+        <picklist>CPD_Reason__c</picklist>
+        <values>
+            <fullName>Changed Payment Date</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Changed via Member Portal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Past Due or Loan Mod</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__ACH_Account_Type__c</picklist>
+        <values>
+            <fullName>Checking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Saving</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__ACH_Frequency__c</picklist>
+        <values>
+            <fullName>Bi-Monthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bi-weekly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Monthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Semi-Monthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Weekly</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__ACH_Relationship_Type__c</picklist>
+        <values>
+            <fullName>Cosigner</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cosigner Spouse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cosigner2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cosigner2 Spouse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Primary</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Secondary</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Spouse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Third Party</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Account_Type__c</picklist>
+        <values>
+            <fullName>Current</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Type2</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Collateral_Type__c</picklist>
+        <values>
+            <fullName>Fixed Asset</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Contingency_Status_Code__c</picklist>
+        <values>
+            <fullName>Bankruptcy %28B%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Deceased %28D%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Duplicate %28K%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fraudulent %28F%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No Communication %28X%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Normal %28N%29</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Suspend Disbursal %28Z%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Contract_Type__c</picklist>
+        <values>
+            <fullName>New</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Disbursal_Status__c</picklist>
+        <values>
+            <fullName>Fully Disbursed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Partially Disbursed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending Disbursal</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Draw_Billing_Method__c</picklist>
+        <values>
+            <fullName>Interest Only</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Draw_Period_Billing_Method__c</picklist>
+        <values>
+            <fullName>None</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Draw_Period_Interest_Calculation__c</picklist>
+        <values>
+            <fullName>Compounding Interest</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Simple Interest</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Floating_Rate_Revision_Frequency__c</picklist>
+        <values>
+            <fullName>Billing Frequency</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Daily</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Monthly</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Fractionalization_Status__c</picklist>
+        <values>
+            <fullName>Active</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Frequency_of_Loan_Payment__c</picklist>
+        <values>
+            <fullName>Annual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bi-Monthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bi-weekly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Daily</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Monthly</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Quarterly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Semi-Annual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Semi-Monthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Single-Payment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Weekly</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Funding_Stop_Basis__c</picklist>
+        <values>
+            <fullName>Draw Period End</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__IOA_Generation_Status__c</picklist>
+        <values>
+            <fullName>Failure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Success</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Interest_Calculation_Method__c</picklist>
+        <values>
+            <fullName>Declining Balance</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Flat</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Flexible Repayment</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Interest_Period_Calculation__c</picklist>
+        <values>
+            <fullName>Include From Date</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Interest_Rate_Change_Method__c</picklist>
+        <values>
+            <fullName>Change Payment Amount</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Keep Same Payment Amount</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Interest_Type__c</picklist>
+        <values>
+            <fullName>Fixed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Floating</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__LA_Amortization_Calculation_Method__c</picklist>
+        <values>
+            <fullName>Interest Bearing</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__LA_Amortization_Frequency__c</picklist>
+        <values>
+            <fullName>Monthly</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__LA_Amortized_Balance_Type__c</picklist>
+        <values>
+            <fullName>Interest</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Last_Transaction_Type__c</picklist>
+        <values>
+            <fullName>Additional Repayment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Disbursal Reversal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Disbursal Transaction</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Extension</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Index Rate Change</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Payment Reversal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Payment Transaction</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PrincipalAdjustment-Add</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Refund</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Reschedule</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Start Accrual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Stop Accrual</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Loan_Status__c</picklist>
+        <values>
+            <fullName>Active - Bad Standing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Active - Good Standing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Active - Marked for Closure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Active - Matured</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Canceled</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed - Obligations met</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed- Written Off</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Partial Application</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Pending Approval</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__MCA_Billing_Type__c</picklist>
+        <values>
+            <fullName>%25 of Revenue</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__MCA_Mode__c</picklist>
+        <values>
+            <fullName>Credit Card Processor</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Payment Gateway</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Revenue Transaction</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Metro2_Account_Type_Code__c</picklist>
+        <values>
+            <fullName>00 - Auto</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>01 - Unsecured</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>02 - Secured</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>03 - Partially Secured</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>0F - Construction Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10 - Business Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>12 - Education</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>15 - Line of Credit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>20 - Note Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>29 - Rental Agreement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3A - Auto Lease</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>6A - Commercial Installment Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>7B - Agricultural</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Metro2_Portfolio_Type__c</picklist>
+        <values>
+            <fullName>Installment</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Line of Credit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mortgage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Open Account</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Revolving</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Minimum_Amount_Due_Type__c</picklist>
+        <values>
+            <fullName>Fixed Amount</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Percent</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__OT_ACH_Account_Type__c</picklist>
+        <values>
+            <fullName>Checking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Saving</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__OT_ACH_Relationship_Type__c</picklist>
+        <values>
+            <fullName>Cosigner</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cosigner Spouse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cosigner2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cosigner2 Spouse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Primary</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Secondary</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Spouse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Third Party</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Payment_Application_Mode__c</picklist>
+        <values>
+            <fullName>Current Dues</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Deposit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Future Dues</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Payment_Application_Order__c</picklist>
+        <values>
+            <fullName>Date</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Spread</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Prepayment_Method__c</picklist>
+        <values>
+            <fullName>Amount calculated as %25 of loan amount</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Amount calculated as %25 of loan payoff</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Amount calculated as %25 of principal balance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fixed</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Principal_Adjustment_Reschedule_Option__c</picklist>
+        <values>
+            <fullName>Change Payment Amount</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Keep Same Payment Amount</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Product_Type__c</picklist>
+        <values>
+            <fullName>Flexible Amz Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Line of Credit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Loan</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Merchant Cash Advance</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Repayment_Billing_Method__c</picklist>
+        <values>
+            <fullName>Interest Only</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Percentage Of Remaining Balance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Principal Plus Interest</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Repayment_Period_Interest_Calculation__c</picklist>
+        <values>
+            <fullName>Compounding Interest</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Simple Interest</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Repayment_Procedure__c</picklist>
+        <values>
+            <fullName>Equal Monthly Installments</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Flexible</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Repayment_Start_Basis__c</picklist>
+        <values>
+            <fullName>Draw Period End</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Full Disbursal</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Reschedule_Option_On_Excess_Payment__c</picklist>
+        <values>
+            <fullName>Change Payment Amount</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Keep Same Payment Amount</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Reschedule_Status__c</picklist>
+        <values>
+            <fullName>Failure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Success</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Schedule_Adjustment_Method__c</picklist>
+        <values>
+            <fullName>After</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Before</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Scheduled_Fee_Amount_In_PayOff__c</picklist>
+        <values>
+            <fullName>Current Amount</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Total Amount</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__StepUp_Option__c</picklist>
+        <values>
+            <fullName>Amount</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Percentage</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__TDS_Type__c</picklist>
+        <values>
+            <fullName>Complete TDS for specific schedule</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Time_Counting_Method__c</picklist>
+        <values>
+            <fullName>Actual Days</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Month And Days</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+</RecordType>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Investor_Rebated_At_Payoff__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Investor rebated this component on payoff</description>
+    <externalId>false</externalId>
+    <label>Is Investor Rebated at Payoff</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

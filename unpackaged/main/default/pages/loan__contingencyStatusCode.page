@@ -1,0 +1,28 @@
+<apex:page lightningStylesheets="true" standardController="clcommon__Contingency_Status_Code__c" extensions="loan.ContingencyStatusCodeController" showHeader="true" sidebar="true">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:sectionHeader title="Contingency Status Code Definition" />
+    <apex:outputPanel id="code">
+        <apex:form id="statusCode">
+        <apex:pageMessages />
+            <apex:pageBlock id="buttons">
+                <apex:pageBlockButtons location="both">
+                    <c:BusyButton name="Save" actionTo="{!saveCode}" />
+                    <c:BusyButton name="Cancel" actionTo="{!cancelCode}"/>
+                </apex:pageBlockButtons>
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!statusCodeRecord.Name}" label="Contingency Status Code Name" />
+                <apex:repeat value="{!listOfActionType}" var="actionType">
+                    <apex:selectList value="{!actionType.parentValue}" size="1" label="Execute Action">
+                        <apex:selectOptions value="{!allItems}"/>
+                    </apex:selectList>
+                </apex:repeat>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection columns="2">
+                    <apex:commandButton style="left:200px;position:relative" image="{!URLFOR($Resource.loan__Add_Button_Green)}" title="Add" value="Add New Action" action="{!addRow}" reRender="code" />
+                    <apex:commandButton style="left:-200px;position:relative" image="{!URLFOR($Resource.loan__Delete_Button_Red)}" title="Sub" value="Remove Action" action="{!subRow}" reRender="code" />
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+</apex:page>

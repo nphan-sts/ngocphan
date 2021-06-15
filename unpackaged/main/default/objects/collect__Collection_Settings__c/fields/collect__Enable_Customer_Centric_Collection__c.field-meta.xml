@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Enable_Customer_Centric_Collection__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>When Checked , all the related contracts will be assigned to single user and single queue.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When Checked , all the related contracts will be assigned to single user and single queue.</inlineHelpText>
+    <label>Enable Customer Centric Collection</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

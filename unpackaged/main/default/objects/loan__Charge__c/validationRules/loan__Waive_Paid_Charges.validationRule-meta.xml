@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Waive_Paid_Charges</fullName>
+    <active>false</active>
+    <description>Charges that have a payment against them cannot be waived</description>
+    <errorConditionFormula>loan__Waive__c  = true  &amp;&amp; loan__Paid_Amount__c  &lt;&gt; 0</errorConditionFormula>
+    <errorMessage>Charge cannot be waived as there is a payment made against it already</errorMessage>
+</ValidationRule>

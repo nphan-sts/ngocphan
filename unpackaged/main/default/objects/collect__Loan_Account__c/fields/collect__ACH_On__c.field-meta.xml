@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__ACH_On__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This field indicates whether the ACH functionality should be executed or not</description>
+    <externalId>false</externalId>
+    <label>ACH</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Active_Investor__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This is checked if there is an active investor on the lending account.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This flag will becomes checked if there is any active investor on this lending account. This flag should not be changed by user manually.</inlineHelpText>
+    <label>Active Investor</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

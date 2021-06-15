@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Three_Month_Average_Difference_Business__c</fullName>
+    <deprecated>false</deprecated>
+    <description>3 Month Average Difference (Business)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>3 Month Average Difference (Business)</inlineHelpText>
+    <label>3 Month Average Difference (Business)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

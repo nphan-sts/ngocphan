@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Records_Per_File__c</fullName>
+    <defaultValue>2000</defaultValue>
+    <deprecated>false</deprecated>
+    <description>The default is 2000. The number of files generated will depend on total number of records returned by query as per Metro2_Query_Class__c (or default class)  totalRecords/Records_Per_File__c.  Very high number can cause CPU or heap issue for the job.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Set this to a number which will determine the number of records taken by job for creating a Metro2 file.</inlineHelpText>
+    <label>Number of Records per File</label>
+    <precision>4</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

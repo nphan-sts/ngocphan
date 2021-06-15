@@ -1,0 +1,64 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Account__c"
+    extensions="loan.RunBatchJobController" id="page" standardStylesheets="true">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:variable var="oldUI" value="classicUI" rendered="{!$User.UIThemeDisplayed != 'Theme4d'}">
+        <script type="text/javascript" src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    </apex:variable>
+    <apex:pageMessages id="pageMessages" />
+    <apex:form id="myForm">
+
+        <apex:variable var="oldUI" value="classicUI" rendered="{!$User.UIThemeDisplayed != 'Theme4d'}">
+            <apex:stylesheet value="/sCSS/Theme3/default/versioning.css" />
+            <apex:stylesheet value="/sCSS/Theme3/default/extended.css" />
+        </apex:variable>
+        <!-- <apex:actionFunction name="nextTab" id="nextTabFctn" rerender="pageMessages" /> -->
+        <apex:tabPanel id="theTabPanel" selectedTab="name2"
+            switchType="client" immediate="true" styleClass="theTabPanel"
+            tabClass="activeTab" contentClass="tabContent"
+            activeTabClass="activeTab" disabledTabClass="disabledTab">
+            <apex:tab label="Select Job" id="selectJob"
+                disabled="{!currentTab<>'1'}">
+                <apex:pageBlock id="selectJobpb" title="Select Job for Process">
+                    <apex:pageBlockButtons location="top">
+                        <c:BusyButton name="Next" busyName="Processing..."
+                            actionTo="{!nextTab}" reRenderTo="pageMessages,theTabPanel" />
+                    </apex:pageBlockButtons>
+                    <apex:selectRadio layout="pageDirection" value="{!selectedJob}">
+                        <apex:SelectOptions value="{!items}" />
+                    </apex:selectRadio>
+
+                </apex:pageBlock>
+            </apex:tab>
+
+            <apex:tab label="Select Records" id="selectRecords"
+                disabled="{!NOT(currentTab =='2')}">
+                <apex:pageBlock id="selectRecordpb"
+                    title="Select Record for Process">
+                    <apex:pageBlockButtons location="top">
+                        <c:BusyButton name="Previous" actionTo="{!prevTab}"
+                            rerenderTo="pageMessages,theTabPanel" busyName="Processing..."
+                            disabled="{!jobInProgress}" />
+                        <c:BusyButton name="Run" actionTo="{!doRun}"
+                            rerenderTo="pageMessages,theTabPanel" busyName="Running..."
+                            disabled="{!jobInProgress}" oncomplete="alert('Job Submitted!')" />
+                    </apex:pageBlockButtons>
+                    <apex:pageBlockSection columns="2">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputText value="Select Records" />
+                            <apex:selectList value="{!SelectedPick}" title="Select Records"
+                                size="1">
+                                <apex:SelectOptions value="{!pickvalues}" />
+                            </apex:selectList>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputText value="Job Selected : {0}">
+                                <apex:param value="{!selectedJob}" />
+                            </apex:outputText>
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:tab>
+        </apex:tabPanel>
+    </apex:form>
+</apex:page>

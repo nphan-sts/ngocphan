@@ -1,0 +1,6 @@
+<apex:page lightningStylesheets="true" controller="loan.SupervisionAction" tabStyle="Accounting__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+
+
+</apex:page>

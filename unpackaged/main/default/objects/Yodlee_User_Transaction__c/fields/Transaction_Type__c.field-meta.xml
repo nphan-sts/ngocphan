@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Transaction_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Transaction Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>CREDIT</fullName>
+                <default>false</default>
+                <label>CREDIT</label>
+            </value>
+            <value>
+                <fullName>DEBIT</fullName>
+                <default>false</default>
+                <label>DEBIT</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

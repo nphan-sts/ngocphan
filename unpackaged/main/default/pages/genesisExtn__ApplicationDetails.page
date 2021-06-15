@@ -1,0 +1,6 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__Applications__c" extensions="skuid.Redirects" 
+       showHeader="{!NOT($Setup.genesis__Org_Parameters__c.genesis__Use_Contact_as_Account__c)}" sidebar="false" readonly="true" docType="html-5.0"
+        action="{!IF(canUseSkuid,'',redirect)}" title="{!$ObjectType.genesis__Applications__c.label}">
+    <skuid:page page="ApplicationDetails" rendered="{!NOT($Setup.genesis__Org_Parameters__c.genesis__Use_Contact_as_Account__c)}"/>
+    <skuid:page page="ApplicationView" rendered="{!$Setup.genesis__Org_Parameters__c.genesis__Use_Contact_as_Account__c}"/>
+</apex:page>

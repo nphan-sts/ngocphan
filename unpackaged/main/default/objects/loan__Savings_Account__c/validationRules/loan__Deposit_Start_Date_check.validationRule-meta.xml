@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Deposit_Start_Date_check</fullName>
+    <active>true</active>
+    <description>Deposit_Start_Date_check</description>
+    <errorConditionFormula>AND( (loan__Deposit_Start_Date__c &lt;  TODAY()),( PRIORVALUE(loan__Deposit_Start_Date__c)  &lt;&gt; loan__Deposit_Start_Date__c  ))</errorConditionFormula>
+    <errorDisplayField>loan__Deposit_Start_Date__c</errorDisplayField>
+    <errorMessage>Start Date can't be in the past.</errorMessage>
+</ValidationRule>

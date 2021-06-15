@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>cnotify__Use_Short_Code__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Check this box if your company owns a short code and would like to use that number to send text messages. Enter the short code in the 'Short Code' field.</inlineHelpText>
+    <label>Use Short Code</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

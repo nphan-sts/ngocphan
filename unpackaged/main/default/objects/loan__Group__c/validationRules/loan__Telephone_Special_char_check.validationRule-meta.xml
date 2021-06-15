@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Telephone_Special_char_check</fullName>
+    <active>true</active>
+    <description>Telephone_Special_char_check</description>
+    <errorConditionFormula>NOT(REGEX(     loan__Telephone_No__c , "^[a-zA-Z0-9\\s]*$"))</errorConditionFormula>
+    <errorDisplayField>loan__Telephone_No__c</errorDisplayField>
+    <errorMessage>Telephone no. should not include special characters</errorMessage>
+</ValidationRule>

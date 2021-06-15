@@ -1,0 +1,21 @@
+<apex:page standardcontroller="loan__Loan_Account__c" recordsetvar="objItems" extensions="AutoSaleBatchAssignCntrl" showheader="false" action="{!saveBuyerandDate}">
+    <apex:form id="formId" >
+    <apex:pageBlock title="Auto Sale Batch Assign">
+        <apex:pagemessages escape="false"></apex:pagemessages>
+        	<apex:pageBlockSection columns="1">
+                <apex:inputField value="{!loan__Loan_Account__c.Buyer__c}" label="Buyer">
+                    <apex:actionSupport event="onchange" action="{!onChangeBuyer}" reRender="formId" />
+                </apex:inputField>
+                <apex:inputField value="{!loan__Loan_Account__c.Effective_Date_for_AutoSale__c}" label="Effective Date">
+                	<apex:actionSupport event="onchange" action="{!onChangeBuyer}" reRender="formId" />
+                </apex:inputField>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Validate" action="{!validateBuyerandDate}" disabled="{!btnEnabled}" />
+                <apex:commandButton value="Save" action="{!updateBuyerandDate}" rendered="{!btnEnabled}" />
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+        
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

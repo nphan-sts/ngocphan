@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Statments_Logo_File_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Provide file name of static resource with extension. for ex: .png, .jpeg etc</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the file name for the loan account statement</inlineHelpText>
+    <label>Statements Logo File Name</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,129 @@
+<apex:page lightningStylesheets="true" standardController="loan__Floating_Rate__c" extensions="loan.FloatingRatesController"
+     sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+     tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.loan__MFIStyles}" />
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+        j$ = jQuery.noConflict();
+    </script>
+    <script>
+        function confirmCancel() {
+            var isConfirm = confirm("Are you sure you want to cancel?");
+            if(isConfirm){
+                return this.parent.parent.window.close();                
+            }
+        }
+    
+    </script>
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+
+    <script>
+        function testify(){
+            alert(j$('').length);
+        };
+      function scrolify(tblAsJQueryObject, height){
+        var oTbl = tblAsJQueryObject;
+        
+        // for very large tables you can remove the four lines below
+        // and wrap the table with <div> in the mark-up and assign
+        // height and overflow property  
+        var oTblDiv = $("<div/>");
+        oTblDiv.css('height', height);
+        oTblDiv.css('overflow-y','scroll');
+        oTbl.wrap(oTblDiv);
+
+        // save original width
+        oTbl.attr("data-item-original-width", oTbl.width());
+        oTbl.find('thead tr td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        }); 
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        });                 
+
+
+        // clone the original table
+        var newTbl = oTbl.clone();
+
+        // remove table header from original table
+        oTbl.find('thead tr').remove();                 
+        // remove table body from new table
+        newTbl.find('tbody tr').remove();   
+
+        oTbl.parent().parent().prepend(newTbl);
+        newTbl.wrap("<div/>");
+
+        // replace ORIGINAL COLUMN width                
+        newTbl.width(newTbl.attr('data-item-original-width'));
+        newTbl.find('thead tr td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });     
+        oTbl.width(oTbl.attr('data-item-original-width'));      
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });                 
+    }
+
+    function callScroll() {
+        scrolify($('.scrollableFixedHeader'), 300); // 160 is height
+    }
+    </script>
+   <apex:sectionHeader title="Floating Rate" />
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:outputPanel >
+      <apex:form id="floatingRatesForm">
+        <apex:pageBlock mode="edit" id="floatingRatePageBlock">
+            <apex:pageMessages />
+            <apex:pageBlockButtons location="both">
+                <apex:commandButton value="Save" action="{!saveRate}"/>
+                <apex:commandButton value="Cancel" immediate="true" action="{!cancel}" />
+                <!-- Submit Job button not required on Edit Screen
+                <apex:commandButton value="Submit Reset Process" action="{!submitResetProcess}"
+                                    rendered="{!isEditMode}"
+                                    disabled="{!isResetJobSubmitted}"/>
+                -->
+            </apex:pageBlockButtons>
+
+            <!-- Create Mode -->
+            <apex:pageBlockSection title="Floating Rate Details" columns="2" rendered="{!NOT(isEditMode)}">
+                <apex:outputField value="{!floatingRate.loan__Floating_Rate_Index__c}" />
+                <apex:pageBlockSectionItem />
+                <apex:inputField value="{!floatingRate.loan__Rate_Percentage__c}"/>
+                <apex:inputField value="{!floatingRate.loan__Active__c}"/>
+                <apex:inputField value="{!floatingRate.loan__Rate_Effective_From__c}" label="Effective From"/>
+                <apex:inputField value="{!floatingRate.loan__Rate_Effective_To__c}" label="Effective To" />
+            </apex:pageBlockSection>
+
+            <!-- Edit Mode -->
+            <apex:pageBlockSection title="Floating Rate Details" columns="2" rendered="{!isEditMode}">
+                <apex:outputField value="{!floatingRate.loan__Floating_Rate_Index__c}" />
+                <apex:outputField value="{!floatingRate.name}"/>
+                <!-- Allow Edit if the Reset Job is not yet submitted -->
+                <apex:inputField value="{!floatingRate.loan__Rate_Percentage__c}" rendered="{!NOT(isResetJobSubmitted)}"/>
+                <apex:inputField value="{!floatingRate.loan__Active__c}" rendered="{!NOT(isResetJobSubmitted)}"/>
+                <apex:inputField value="{!floatingRate.loan__Rate_Effective_From__c}" label="Effective From" rendered="{!NOT(isResetJobSubmitted)}"/>
+                <!-- Do not allow Edit once the Reset Job is submitted -->
+                <apex:outputField value="{!floatingRate.loan__Rate_Percentage__c}" rendered="{!isResetJobSubmitted}"/>
+                <apex:outputField value="{!floatingRate.loan__Active__c}" rendered="{!isResetJobSubmitted}"/>
+                <apex:outputField value="{!floatingRate.loan__Rate_Effective_From__c}" label="Effective From" rendered="{!isResetJobSubmitted}"/>
+                <apex:inputField value="{!floatingRate.loan__Rate_Effective_To__c}" label="Effective To" />
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Reset Process Job Details" columns="2" rendered="{!isEditMode}" >
+                <apex:outputField value="{!floatingRate.loan__Reset_Process_Status__c}" />
+                <apex:outputField value="{!floatingRate.loan__Reset_Process_Start_Time__c}" />
+                <apex:outputField value="{!floatingRate.loan__Reset_Process_Job_Id__c}" />
+                <apex:outputField value="{!floatingRate.loan__Reset_Process_End_Time__c}" />
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+      </apex:form>
+      <apex:relatedList list="ProcessSteps"/>
+    </apex:outputPanel>      
+</apex:page>

@@ -1,0 +1,3 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" >
+
+</apex:page>

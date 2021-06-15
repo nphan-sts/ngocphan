@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__FD_Early_Withdrawals_Not_Allowed</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISPICKVAL( loan__Savings_Account__r.loan__Savings_Product_Name__r.loan__Product_Type__c, 'Fixed') 
+&amp;&amp; loan__Savings_Account__r.loan__Savings_Product_Name__r.loan__Allow_Early_Withdrawals__c=false
+&amp;&amp; ISPICKVAL( loan__Transaction_Type__c , 'Withdrawal')
+&amp;&amp; NOT(loan__Terminate_Fixed_Deposit__c)</errorConditionFormula>
+    <errorMessage>This Fixed Deposit Account does not allow early withdrawals</errorMessage>
+</ValidationRule>

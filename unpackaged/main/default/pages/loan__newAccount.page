@@ -1,0 +1,64 @@
+<apex:page lightningStylesheets="true" controller="loan.NewAccountController" id="newAccountPage"
+	tabStyle="Accounting__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:sectionHeader title="Create a new Account" />
+
+	<apex:form >
+		<apex:pageBlock title="Select Accounting Segments" mode="edit"
+			id="selectSegmentsId">
+			<apex:outputpanel id="refreshAccounts">
+				<apex:pageBlockSection columns="1">
+
+					<apex:outputField value="{!accountingSegmentation.loan__Accounting_Segmentation__c}">
+						<apex:SelectList id="segment" value="{!selectedAccount}" size="1">
+							<apex:selectOptions value="{!possibleAccountsList}"></apex:selectOptions>
+							<apex:actionSupport action="{!refreshAccountsList}"
+								rerender="refreshAccounts,refresh" event="onchange"
+								status="accountChange" />
+						</apex:SelectList>
+						<apex:actionStatus startText="Refreshing accounts list..."
+							id="accountChange" />
+					</apex:outputField>
+
+				</apex:pageBlockSection>
+				<!-- empty selectItem-->
+
+			</apex:outputpanel>
+		</apex:pageBlock>
+	</apex:form>
+
+	<apex:form >
+
+		<apex:pageBlock title="New Account Details" mode="edit"
+			id="createNewAccount">
+			<apex:pageMessages />
+			<apex:pageBlockButtons location="top">
+				<apex:commandButton value="Preview" action="{!preview}" />
+				<apex:commandButton value="Reset" action="{!reset}" />
+			</apex:pageBlockButtons>
+
+			<apex:outputpanel id="refresh">
+				<apex:pageBlockSection columns="2">
+					<apex:inputField value="{!account.Name}" required="true" />
+					<apex:inputField value="{!account.loan__Account_Type__c}" required="true" />
+					<apex:inputField value="{!account.loan__Description__c}" required="true" />
+					<apex:inputField value="{!account.loan__Parent_Account__c}" />
+					<apex:inputField value="{!account.loan__Long_Description__c}"
+						required="false" />
+					<apex:inputField value="{!account.loan__isLeaf__c}" />
+				</apex:pageBlockSection>
+
+			</apex:outputpanel>
+
+
+			<apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="Preview" action="{!preview}" />
+				<apex:commandButton value="Reset" action="{!reset}" />
+			</apex:pageBlockButtons>
+		</apex:pageBlock>
+
+	</apex:form>
+
+
+</apex:page>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Credit_Rating_Matrix__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Credit Rating Matrix</label>
+    <referenceTo>peer__Credit_Rating_Matrix__c</referenceTo>
+    <relationshipLabel>Portfolio Weights Table</relationshipLabel>
+    <relationshipName>Portfolio_Weights_Table</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

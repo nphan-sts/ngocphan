@@ -1,0 +1,11 @@
+<apex:page lightningStylesheets="true" standardcontroller="Contact"
+	extensions="loan.ContactAgingController">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:pageblock >
+		<apex:pageblockTable var="age" value="{!rows}">
+			<apex:column headerValue="Aging Bucket" value="{!age.bucket}" />
+			<apex:column headerValue="No of Times" value="{!age.noOfTimes}" />
+		</apex:pageblockTable>
+	</apex:pageblock>
+</apex:page>

@@ -1,0 +1,22 @@
+<apex:page lightningStylesheets="true" controller="loan.SeedDataController" id="seedDataPage">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:sectionHeader title="Upload Seed Data" />
+
+	<apex:form >
+		<apex:pageBlock mode="edit" id="createLoanApplication">
+			<apex:pageBlockButtons location="top">
+				<apex:pageMessages />
+				<apex:inputFile value="{!miscFileContent}"
+					filename="{!miscFileName}" />
+				<apex:commandButton value="Step . Upload Setup Data"
+					action="{!uploadMisc}" />
+				<br></br>
+				<br></br>
+
+			</apex:pageBlockButtons>
+
+		</apex:pageBlock>
+	</apex:form>
+
+</apex:page>

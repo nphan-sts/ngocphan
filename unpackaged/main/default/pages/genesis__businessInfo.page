@@ -1,0 +1,204 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__Applications__c" extensions="genesis.BusinessInfoCtrl" action="{!onLoad}">
+<apex:outputPanel rendered="{!NOT(manager.isSF1Request)}">
+<apex:composition template="genesis__wizardComposition">
+ div.tooltip {
+    width: 195px;
+    float: left;
+  }
+  div.tooltip:hover {
+    background: #ffffff;
+    text-decoration: none;
+  } /*BG color is a must for IE6*/
+  div.tooltip span {
+    display: none;
+    padding: 2px 3px;
+    margin-left: 8px;
+    width: 195px;
+  }
+  div.tooltip:hover span {
+    display: inline;
+    position: absolute;
+    border: 1px solid #cccccc;
+    background: #FFC;;
+    color: #000000;
+  }
+  
+<div class="tooltip" style="display:inline">
+    <span>Refresh</span>
+</div>
+    
+        <!-- Define the page body, including form and button bar -->
+        <apex:define name="pageBody" >
+            <!-- Snehal: The following panelGrid is a hack. It should be copied in all VF pages that use wizard.
+            This ugliness is due to the way VF handles polymorphism. If I leave this code in the wizardComposition,
+            the Next and Back button logic cannot be customized.
+             -->
+            <!-- The first column -->
+            <apex:panelGrid columnClasses="col1,col2" columns="2" width="100%"  cellpadding="10" cellspacing="10" border="2" rules="all">
+                
+                <!-- left arrow button -->
+                <apex:outputPanel layout="block" styleClass="outPanelLeft" >
+                    <div class="button bordered back">
+                        <span class="pointer"></span>
+                        <div class="content">
+                            <span class="label">
+                                <apex:commandLink action="{!backActionLogic}" value="{!manager.backButtonText}" />
+                            </span>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+        
+                <!-- right arrow button -->
+                <apex:outputPanel layout="block">
+                    
+                    <div class="button bordered next">
+                        <span class="pointer"></span>
+                        <div class="content">
+                            <span class="label">
+                                <apex:commandLink action="{!nextActionLogic}" value="{!manager.nextButtonText}"/>
+                            </span>
+                        </div>
+                    </div>
+                    
+                </apex:outputPanel>
+            
+            </apex:panelGrid>
+                    
+        </apex:define>   
+        
+        <apex:define name="pageNoForm" >
+            <apex:form id="bIFormId">
+                <apex:pageBlock >
+                    <apex:pageMessages />
+                    <apex:pageBlockButtons location="Both">
+                        <c:BusyButton actionTo="{!saveBusinessInfo}" name="Save"
+                                id="SaveButton" busyname="Saving.." rerenderTo="bIFormId,BusinessInfoPageBlockSection,BankBusinessInfoPageBlockSection,BankPersonalInfoPageBlockSection,CreditCardInfoPageBlockSection" />
+    
+                    </apex:pageBlockButtons>
+                    <apex:pageBlockSection columns="2" id="BusinessInfoPageBlockSection" title="Business Information">
+                        <apex:inputField value="{!businessInfo.genesis__Industry_Experience__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Time_in_Business__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Owner_Operator__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Is_Driver_same_as_Owner__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Driver_Name__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Driver_Relationship_to_Owner__c}" /> 
+                        <apex:inputField value="{!businessInfo.genesis__If_Other_describe__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Do_you_have_a_Contract__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Contract_Details__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Carrier_Borker__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__How_Long_Driving_for_Carrier__c}" /> 
+                        <apex:inputField value="{!businessInfo.genesis__Authority__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Number_of_Trucks_in_Fleet__c}" />    
+                        <apex:inputField value="{!businessInfo.genesis__Experience_as_Owner_Operator__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__How_often_does_driver_get_paid__c}" />   
+                        <apex:inputField value="{!businessInfo.genesis__If_paid_in_others_freq_describe__c}" />  
+                        <apex:inputField value="{!businessInfo.genesis__Monthly_revenue_from_Equipment__c}" />   
+                        <apex:inputField value="{!businessInfo.Current_Monthly_Vehicle_Cost__c  }" />
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" id="BankBusinessInfoPageBlockSection" title="Bank Information (Business)">
+                        <apex:inputField value="{!businessInfo.genesis__Business_Bank_Name__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__ABA_Routing_Number_Business__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Account_Number_Business__c}" />  
+                        <apex:inputField value="{!businessInfo.genesis__Name_on_Account_Business__c}" /> 
+                        <apex:inputField value="{!businessInfo.genesis__Current_Balance_Business__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Average_Bank_Balance_Business__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Three_Months_Average_Deposits_Business__c}" />   
+                        <apex:inputField value="{!businessInfo.genesis__Three_Month_Average_Withdrawals_Business__c}" /> 
+                        <apex:inputField value="{!businessInfo.genesis__Three_Month_Average_Difference_Business__c}" />                                                                            
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" id="BankPersonalInfoPageBlockSection" title="Bank Information (Personal)">
+                        <apex:inputField value="{!businessInfo.genesis__Personal_Bank_Name__c}" />   
+                        <apex:inputField value="{!businessInfo.genesis__ABA_Routing_Number_Personal__c}" />  
+                        <apex:inputField value="{!businessInfo.genesis__Account_Number_Personal__c}" />  
+                        <apex:inputField value="{!businessInfo.genesis__Name_on_Account_Personal__c}" />     
+                        <apex:inputField value="{!businessInfo.genesis__Current_Balance_Personal__c}" />     
+                        <apex:inputField value="{!businessInfo.Average_Bank_Balance_Personal__c }" />   
+                        <apex:inputField value="{!businessInfo.genesis__Three_Months_Average_Deposits_Personal__c}" />       
+                        <apex:inputField value="{!businessInfo.genesis__Three_Month_Average_Withdrawals_Personal__c}" />     
+                        <apex:inputField value="{!businessInfo.genesis__Three_Month_Average_Difference_Personal__c}" />      
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" id="CreditCardInfoPageBlockSection" title="Credit Card Information">
+                        <apex:inputField value="{!businessInfo.Credit_Card_Type__c  }" />   
+                        <apex:inputField value="{!businessInfo.genesis__Name_on_Credit_Card__c}" />      
+                        <apex:inputField value="{!businessInfo.Credit_Card_Number__c    }" />   
+                        <apex:inputField value="{!businessInfo.CVV_Code__c  }" />   
+                        <apex:inputField value="{!businessInfo.Credit_Card_Expiration_Date__c   }" />   
+                        <apex:inputField value="{!businessInfo.Address_for_Credit_Card__c   }" />   
+                        <apex:inputField value="{!businessInfo.Authorization_Form_on_File__c    }" />                                      
+                        <apex:outputField value="{!businessInfo.createdbyid}" />                                        
+                        <apex:outputField value="{!businessInfo.createdDate}" />   
+                    </apex:pageBlockSection>                                  
+                </apex:pageBlock>      
+            </apex:form>
+        </apex:define>
+     
+    </apex:composition>
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!manager.isSF1Request}">
+<apex:include pageName="genesis__mwizardComposition"/>
+    <apex:form id="bIFormId">
+                <apex:pageBlock >
+                    <apex:pageMessages />
+                    <apex:pageBlockButtons location="Both">
+                        <c:BusyButton actionTo="{!saveBusinessInfo}" name="Save"
+                                id="SaveButton" busyname="Saving.." rerenderTo="bIFormId,BusinessInfoPageBlockSection,BankBusinessInfoPageBlockSection,BankPersonalInfoPageBlockSection,CreditCardInfoPageBlockSection" />
+    
+                    </apex:pageBlockButtons>
+                    <apex:pageBlockSection columns="1" id="BusinessInfoPageBlockSection" title="Business Information">
+                        <apex:inputField value="{!businessInfo.genesis__Industry_Experience__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Time_in_Business__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Owner_Operator__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Is_Driver_same_as_Owner__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Driver_Name__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Driver_Relationship_to_Owner__c}" /> 
+                        <apex:inputField value="{!businessInfo.genesis__If_Other_describe__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Do_you_have_a_Contract__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Contract_Details__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Carrier_Borker__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__How_Long_Driving_for_Carrier__c}" /> 
+                        <apex:inputField value="{!businessInfo.genesis__Authority__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Number_of_Trucks_in_Fleet__c}" />    
+                        <apex:inputField value="{!businessInfo.genesis__Experience_as_Owner_Operator__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__How_often_does_driver_get_paid__c}" />   
+                        <apex:inputField value="{!businessInfo.genesis__If_paid_in_others_freq_describe__c}" />  
+                        <apex:inputField value="{!businessInfo.genesis__Monthly_revenue_from_Equipment__c}" />   
+                        <apex:inputField value="{!businessInfo.Current_Monthly_Vehicle_Cost__c  }" />
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="1" id="BankBusinessInfoPageBlockSection" title="Bank Information (Business)">
+                        <apex:inputField value="{!businessInfo.genesis__Business_Bank_Name__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__ABA_Routing_Number_Business__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Account_Number_Business__c}" />  
+                        <apex:inputField value="{!businessInfo.genesis__Name_on_Account_Business__c}" /> 
+                        <apex:inputField value="{!businessInfo.genesis__Current_Balance_Business__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Average_Bank_Balance_Business__c}" />
+                        <apex:inputField value="{!businessInfo.genesis__Three_Months_Average_Deposits_Business__c}" />   
+                        <apex:inputField value="{!businessInfo.genesis__Three_Month_Average_Withdrawals_Business__c}" /> 
+                        <apex:inputField value="{!businessInfo.genesis__Three_Month_Average_Difference_Business__c}" />                                                                            
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="1" id="BankPersonalInfoPageBlockSection" title="Bank Information (Personal)">
+                        <apex:inputField value="{!businessInfo.genesis__Personal_Bank_Name__c}" />   
+                        <apex:inputField value="{!businessInfo.genesis__ABA_Routing_Number_Personal__c}" />  
+                        <apex:inputField value="{!businessInfo.genesis__Account_Number_Personal__c}" />  
+                        <apex:inputField value="{!businessInfo.genesis__Name_on_Account_Personal__c}" />     
+                        <apex:inputField value="{!businessInfo.genesis__Current_Balance_Personal__c}" />     
+                        <apex:inputField value="{!businessInfo.Average_Bank_Balance_Personal__c }" />   
+                        <apex:inputField value="{!businessInfo.genesis__Three_Months_Average_Deposits_Personal__c}" />       
+                        <apex:inputField value="{!businessInfo.genesis__Three_Month_Average_Withdrawals_Personal__c}" />     
+                        <apex:inputField value="{!businessInfo.genesis__Three_Month_Average_Difference_Personal__c}" />      
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="1" id="CreditCardInfoPageBlockSection" title="Credit Card Information">
+                        <apex:inputField value="{!businessInfo.Credit_Card_Type__c  }" />   
+                        <apex:inputField value="{!businessInfo.genesis__Name_on_Credit_Card__c}" />      
+                        <apex:inputField value="{!businessInfo.Credit_Card_Number__c    }" />   
+                        <apex:inputField value="{!businessInfo.CVV_Code__c  }" />   
+                        <apex:inputField value="{!businessInfo.Credit_Card_Expiration_Date__c   }" />   
+                        <apex:inputField value="{!businessInfo.Address_for_Credit_Card__c   }" />   
+                        <apex:inputField value="{!businessInfo.Authorization_Form_on_File__c    }" />                                      
+                        <apex:outputField value="{!businessInfo.createdbyid}" />                                        
+                        <apex:outputField value="{!businessInfo.createdDate}" />   
+                    </apex:pageBlockSection>                                  
+                </apex:pageBlock>      
+            </apex:form>
+</apex:outputPanel>
+</apex:page>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Revoke_Process_Enforcement</fullName>
+    <availability>online</availability>
+    <description>Revoke Process Enforcement</description>
+    <displayType>button</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Revoke Process Enforcement</masterLabel>
+    <openType>sidebar</openType>
+    <page>clcommon__RevokeProcessEnforcement</page>
+    <protected>false</protected>
+</WebLink>

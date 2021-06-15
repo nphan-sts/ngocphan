@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_Loan_Cycle_Setup_For_Installment</fullName>
+    <active>false</active>
+    <errorConditionFormula>AND(  ISPICKVAL(loan__Loan_Cycle_Setup__c, 'Same for all Loans') ,OR( ISBLANK(  loan__Minimum_Gap_Between_Installments__c ) , ISBLANK(  loan__Maximum_Gap_Between_Installments__c ), ISBLANK(  loan__Max_Number_of_Installments__c ) , ISBLANK(  loan__Min_Number_of_Installments__c ) , ISBLANK(  loan__Minimum_Installment_Amount__c ),  ISBLANK( loan__Default_Number_of_Installments__c )   ) )</errorConditionFormula>
+    <errorMessage>Please fill out the Installment section.</errorMessage>
+</ValidationRule>

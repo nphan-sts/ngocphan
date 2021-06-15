@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__LOC_ID__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Location ID</description>
+    <displayFormat>LOC-{0000}</displayFormat>
+    <externalId>false</externalId>
+    <inlineHelpText>Location ID</inlineHelpText>
+    <label>LOC_ID</label>
+    <trackTrending>false</trackTrending>
+    <type>AutoNumber</type>
+</CustomField>

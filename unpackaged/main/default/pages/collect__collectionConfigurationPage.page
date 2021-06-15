@@ -1,0 +1,2 @@
+<apex:page standardController="collect__Collection_Configuration__c" extensions="collect.StrategyController" doctype="html-5.0">
+</apex:page>

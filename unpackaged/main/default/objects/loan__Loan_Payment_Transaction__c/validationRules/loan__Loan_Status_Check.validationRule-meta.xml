@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Loan_Status_Check</fullName>
+    <active>false</active>
+    <errorConditionFormula>ISNEW() &amp;&amp; (TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = 'Partial Application' || TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = 'Pending Approval' || TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = 'Canceled' ||
+TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = 'Closed - Rescheduled' ||
+TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = 'Disbursed to LO' ||
+TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = 'Partial Application')</errorConditionFormula>
+    <errorMessage>Invalid Loan Status. You cannot record a repayment transaction for this loan.</errorMessage>
+</ValidationRule>

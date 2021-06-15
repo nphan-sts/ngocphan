@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__Blackbook_Result__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Blackbook Result</label>
+    <referenceTo>ints__Blackbook_Result__c</referenceTo>
+    <relationshipLabel>EquipmentDetails</relationshipLabel>
+    <relationshipName>EquipmentDetails</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

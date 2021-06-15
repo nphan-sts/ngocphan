@@ -1,0 +1,16 @@
+<apex:page lightningStylesheets="true" rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}">
+ <link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet" type="text/css"/>
+ <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+ <apex:stylesheet value="{!URLFOR($Resource.clcommon__MintCSSPack, 'mint-common.css')}"/>
+ <apex:stylesheet value="{!URLFOR($Resource.clcommon__MintCSSPack, 'mint-fieldeditor.css')}"/>
+ <apex:stylesheet value="{!URLFOR($Resource.clcommon__MintCSSPack, 'mint-lightning-fieldeditor.css')}"/>
+ <apex:stylesheet value="{!URLFOR($Resource.clcommon__MintCSSPack, 'mint-mfiflex.css')}"/>
+ <apex:stylesheet value="{!URLFOR($Resource.clcommon__MintCSSPack, 'mint-popover.css')}"/>
+ <apex:stylesheet value="{!URLFOR($Resource.clcommon__MintCSSPack, 'mint-table.css')}"/>
+ <apex:stylesheet value="{!URLFOR($Resource.clcommon__MintCSSPack, 'mint-tabs.css')}"/>
+ <apex:stylesheet value="{!URLFOR($Resource.clcommon__MintCSSPack, 'mint-datepicker.css')}"/>
+ <apex:stylesheet html-media="print" 
+                         value="{!URLFOR($Resource.clcommon__MintCSSPack, 'mint-pdf-statement.css')}"/> 
+ <apex:includeScript loadOnReady="true" value="{!URLFOR($Resource.clcommon__MintJSPack, 'mint-table.js')}"/>
+ <apex:includeScript loadOnReady="true" value="{!URLFOR($Resource.clcommon__MintJSPack, 'mint-iframe.js')}"/> 
+</apex:page>

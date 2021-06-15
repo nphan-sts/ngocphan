@@ -1,0 +1,141 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__Quick_Quote_Equipment__c"
+    extensions="genesis.QuickQuoteEquipmentController"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.genesis__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.genesis__MFIStyles}" />
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+        j$ = jQuery.noConflict();
+    </script>
+    <script>
+        function confirmCancel() {
+            var isConfirm = confirm("Are you sure you want to cancel?");
+            if(isConfirm){
+                return this.parent.parent.window.close();                
+            }
+        }
+    
+    </script>
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+
+    <script>
+        function testify(){
+            alert(j$('').length);
+        };
+      function scrolify(tblAsJQueryObject, height){
+        var oTbl = tblAsJQueryObject;
+        
+        // for very large tables you can remove the four lines below
+        // and wrap the table with <div> in the mark-up and assign
+        // height and overflow property  
+        var oTblDiv = $("<div/>");
+        oTblDiv.css('height', height);
+        oTblDiv.css('overflow-y','scroll');
+        oTbl.wrap(oTblDiv);
+
+        // save original width
+        oTbl.attr("data-item-original-width", oTbl.width());
+        oTbl.find('thead tr td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        }); 
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        });                 
+
+
+        // clone the original table
+        var newTbl = oTbl.clone();
+
+        // remove table header from original table
+        oTbl.find('thead tr').remove();                 
+        // remove table body from new table
+        newTbl.find('tbody tr').remove();   
+
+        oTbl.parent().parent().prepend(newTbl);
+        newTbl.wrap("<div/>");
+
+        // replace ORIGINAL COLUMN width                
+        newTbl.width(newTbl.attr('data-item-original-width'));
+        newTbl.find('thead tr td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });     
+        oTbl.width(oTbl.attr('data-item-original-width'));      
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });                 
+    }
+
+    function callScroll() {
+        scrolify($('.scrollableFixedHeader'), 300); // 160 is height
+    }
+    </script>
+   <apex:sectionHeader title="Equipment: {!genesis__Quick_Quote_Equipment__c.Name}" />
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.genesis__modalheaderStyle,'')}" />
+    <apex:outputPanel >
+        <apex:form id="EquipmentForm">
+            <apex:pageBlock id="EquipmentId" mode="edit">
+                <apex:pageMessages />
+                <apex:pageBlockButtons location="both">
+                    <c:BusyButton name="Save" busyName="Saving"
+                        actionTo="{!saveEquipment}" rendered="{!NOT(isConverted)}"
+                        oncomplete="({!closeModal}===true) ? closeIframe('{!genesis__Quick_Quote_Equipment__c.Id}') : {};"
+                        reRenderTo="EquipmentForm" />
+                    <apex:commandbutton value="Cancel" action="{!gotoQuickQuotePage}" immediate="true"/>
+                    <c:BusyButton name="Delete" busyName="Deleting"
+                        actionTo="{!deleteEquipment}" rendered="{!NOT(isConverted)}"
+                        oncomplete="({!closeModal}===true) ? closeIframe('{!genesis__Quick_Quote_Equipment__c.Id}') : {};"
+                        reRenderTo="EquipmentForm" />                       
+                </apex:pageBlockButtons>
+                <apex:outputpanel id="headerid">
+                    <apex:pageBlockSection columns="2" rendered="{!NOT(isConverted)}"
+                        id="masterEquipmentDetails" title="Equipment Description">                    
+                        <apex:inputField value="{!equipment.genesis__VIN_Identification__c}" />                                         
+                        <apex:inputField value="{!equipment.genesis__Make__c}" />                        
+                        <apex:inputField value="{!equipment.genesis__Model__c}" /> 
+                        <apex:inputField value="{!equipment.genesis__Year_Of_Manufacture__c}" />         
+                        <apex:inputField value="{!equipment.genesis__Style__c}" />   
+                        <apex:inputField value="{!equipment.genesis__Equipment_Serial_Number__c}"/> 
+                        <apex:inputField value="{!equipment.genesis__Stock_Number__c}" /> 
+                    </apex:pageBlockSection>
+                
+                    <apex:pageBlockSection columns="2" rendered="{!isConverted}"
+                        id="masterEquipmentDetailsOut" title="Equipment Description">                    
+                        <apex:outputField value="{!equipment.genesis__VIN_Identification__c}" />                                         
+                        <apex:outputField value="{!equipment.genesis__Make__c}" />                        
+                        <apex:outputField value="{!equipment.genesis__Model__c}" /> 
+                        <apex:outputField value="{!equipment.genesis__Year_Of_Manufacture__c}" />         
+                        <apex:outputField value="{!equipment.genesis__Style__c}" />   
+                        <apex:outputField value="{!equipment.genesis__Equipment_Serial_Number__c}"/> 
+                        <apex:outputField value="{!equipment.genesis__Stock_Number__c}" /> 
+                    </apex:pageBlockSection>
+                
+                    <apex:pageBlockSection columns="2" rendered="{!NOT(isConverted)}"
+                        id="EqpPanelPageBlockSection" title="Price Details">
+                        <apex:inputField value="{!equipment.genesis__Equipment_Sale_Price__c}" required="true"/>                        
+                        <apex:inputField value="{!equipment.genesis__Warranty_Amount__c}" />                        
+                        <apex:inputField value="{!equipment.genesis__Fees_Amount__c}" />                        
+                        <apex:inputField value="{!equipment.genesis__Tax_Amount__c}" />  
+                        <apex:outputField value="{!equipment.genesis__Total_Dealer_Charges__c}"/>
+                        <apex:inputField value="{!equipment.genesis__Other_Financed_Fees__c}" />                                                                                                                    
+                        <apex:inputField value="{!equipment.genesis__Equipment_Cost__c}" required="true"/>                           
+                    </apex:pageBlockSection>
+                    
+                     <apex:pageBlockSection columns="2" rendered="{!isConverted}"
+                        id="EqpPanelPageBlockSectionOut" title="Price Details">
+                        <apex:outputField value="{!equipment.genesis__Equipment_Sale_Price__c}"/>                        
+                        <apex:outputField value="{!equipment.genesis__Warranty_Amount__c}" />                        
+                        <apex:outputField value="{!equipment.genesis__Fees_Amount__c}" />                        
+                        <apex:outputField value="{!equipment.genesis__Tax_Amount__c}" />  
+                        <apex:outputField value="{!equipment.genesis__Total_Dealer_Charges__c}"/>
+                        <apex:outputField value="{!equipment.genesis__Other_Financed_Fees__c}" />                                                                                                                    
+                        <apex:outputField value="{!equipment.genesis__Equipment_Cost__c}"/>                           
+                    </apex:pageBlockSection>
+                </apex:outputpanel>
+               
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+</apex:page>

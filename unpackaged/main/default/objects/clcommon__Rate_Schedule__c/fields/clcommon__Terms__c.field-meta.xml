@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Terms__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field will specify how many units of the duration is applicable for this rate schedule record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field will specify how many units of the duration is applicable for this rate schedule record.</inlineHelpText>
+    <label>Terms</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

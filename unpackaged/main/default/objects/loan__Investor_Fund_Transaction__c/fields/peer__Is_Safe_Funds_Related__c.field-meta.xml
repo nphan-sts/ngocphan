@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Is_Safe_Funds_Related__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Specifies if IFT is related to Safe Funds</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Specifies if IFT is related to Safe Funds</inlineHelpText>
+    <label>Is Safe Funds Related</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,10 @@
+<apex:page lightningStylesheets="true" showHeader="false" sidebar="false" >
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <body style="background-color: #D4EDF6"  >
+        <apex:form >
+            <c:branchAndSODHeader />
+        </apex:form>
+    </body>
+    <div class="lmsBranchDate" id="lmsBranchDate"/>
+</apex:page>

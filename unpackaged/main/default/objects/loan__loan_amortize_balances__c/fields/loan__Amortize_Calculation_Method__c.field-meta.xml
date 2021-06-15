@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Amortize_Calculation_Method__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Amortization Method</description>
+    <externalId>false</externalId>
+    <inlineHelpText>It is the method used to calculate the Interest Amortization</inlineHelpText>
+    <label>Amortization Method</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>loan__Balance_Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Interest Bearing</fullName>
+                <default>false</default>
+                <label>Interest Bearing</label>
+            </value>
+            <value>
+                <fullName>Straight Line</fullName>
+                <default>false</default>
+                <label>Straight Line</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Pre Paid Fee</controllingFieldValue>
+            <valueName>Straight Line</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Interest</controllingFieldValue>
+            <valueName>Interest Bearing</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

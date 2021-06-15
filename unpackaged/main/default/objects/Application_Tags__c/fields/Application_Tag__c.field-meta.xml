@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Application_Tag__c</fullName>
+    <externalId>false</externalId>
+    <label>Application Tag</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Account in Dispute</fullName>
+                <default>false</default>
+                <label>Account in Dispute</label>
+            </value>
+            <value>
+                <fullName>Cannabis Review</fullName>
+                <default>false</default>
+                <label>Cannabis Review</label>
+            </value>
+            <value>
+                <fullName>Confirmed Fraud</fullName>
+                <default>false</default>
+                <label>Confirmed Fraud</label>
+            </value>
+            <value>
+                <fullName>DCP Card Verifications Failed</fullName>
+                <default>false</default>
+                <label>DCP Card Verifications Failed</label>
+            </value>
+            <value>
+                <fullName>E-Sign Redecision</fullName>
+                <default>false</default>
+                <label>E-Sign Redecision</label>
+            </value>
+            <value>
+                <fullName>Follow-Up</fullName>
+                <default>false</default>
+                <label>Follow-Up</label>
+            </value>
+            <value>
+                <fullName>Fraud</fullName>
+                <default>false</default>
+                <label>Fraud</label>
+            </value>
+            <value>
+                <fullName>Fraud Awaiting Action</fullName>
+                <default>false</default>
+                <label>Fraud Awaiting Action</label>
+            </value>
+            <value>
+                <fullName>Fraud F/U</fullName>
+                <default>false</default>
+                <label>Fraud F/U</label>
+            </value>
+            <value>
+                <fullName>Fraud Hold</fullName>
+                <default>false</default>
+                <label>Fraud Hold</label>
+            </value>
+            <value>
+                <fullName>Fraud Reviewed Declined</fullName>
+                <default>false</default>
+                <label>Fraud Reviewed Declined</label>
+            </value>
+            <value>
+                <fullName>Fraud RFP</fullName>
+                <default>false</default>
+                <label>Fraud RFP</label>
+            </value>
+            <value>
+                <fullName>Fraud To-Do</fullName>
+                <default>false</default>
+                <label>Fraud To-Do</label>
+            </value>
+            <value>
+                <fullName>Hot List</fullName>
+                <default>false</default>
+                <label>Hot List</label>
+            </value>
+            <value>
+                <fullName>Identity</fullName>
+                <default>false</default>
+                <label>Identity</label>
+            </value>
+            <value>
+                <fullName>Issues</fullName>
+                <default>false</default>
+                <label>Issues</label>
+            </value>
+            <value>
+                <fullName>Manual Fraud Review</fullName>
+                <default>false</default>
+                <label>Manual Fraud Review</label>
+            </value>
+            <value>
+                <fullName>Max OB</fullName>
+                <default>false</default>
+                <label>Max OB</label>
+            </value>
+            <value>
+                <fullName>Needs Approval</fullName>
+                <default>false</default>
+                <label>Needs Approval</label>
+            </value>
+            <value>
+                <fullName>Needs Review</fullName>
+                <default>false</default>
+                <label>Needs Review</label>
+            </value>
+            <value>
+                <fullName>New Documents</fullName>
+                <default>false</default>
+                <label>New Documents</label>
+            </value>
+            <value>
+                <fullName>New Interaction</fullName>
+                <default>false</default>
+                <label>New Interaction</label>
+            </value>
+            <value>
+                <fullName>Non-Resident</fullName>
+                <default>false</default>
+                <label>Non-Resident</label>
+            </value>
+            <value>
+                <fullName>Not Moving Forward</fullName>
+                <default>false</default>
+                <label>Not Moving Forward</label>
+            </value>
+            <value>
+                <fullName>Pending 9012</fullName>
+                <default>false</default>
+                <label>Pending 9012</label>
+            </value>
+            <value>
+                <fullName>Pending 9013</fullName>
+                <default>false</default>
+                <label>Pending 9013</label>
+            </value>
+            <value>
+                <fullName>Pending Docs</fullName>
+                <default>false</default>
+                <label>Pending Docs</label>
+            </value>
+            <value>
+                <fullName>Pending EmpInfo</fullName>
+                <default>false</default>
+                <label>Pending EmpInfo</label>
+            </value>
+            <value>
+                <fullName>Pending Fraud Call</fullName>
+                <default>false</default>
+                <label>Pending Fraud Call</label>
+            </value>
+            <value>
+                <fullName>Pending Info</fullName>
+                <default>false</default>
+                <label>Pending Info</label>
+            </value>
+            <value>
+                <fullName>Pending KBA</fullName>
+                <default>false</default>
+                <label>Pending KBA</label>
+            </value>
+            <value>
+                <fullName>Pending Offer</fullName>
+                <default>false</default>
+                <label>Pending Offer</label>
+            </value>
+            <value>
+                <fullName>Pending Paystubs</fullName>
+                <default>false</default>
+                <label>Pending Paystubs</label>
+            </value>
+            <value>
+                <fullName>Pending Tenure</fullName>
+                <default>false</default>
+                <label>Pending Tenure</label>
+            </value>
+            <value>
+                <fullName>Potential Fraud</fullName>
+                <default>false</default>
+                <label>Potential Fraud</label>
+            </value>
+            <value>
+                <fullName>Potential Stacker</fullName>
+                <default>false</default>
+                <label>Potential Stacker</label>
+            </value>
+            <value>
+                <fullName>Re allocation</fullName>
+                <default>false</default>
+                <label>Re allocation</label>
+            </value>
+            <value>
+                <fullName>Redecision</fullName>
+                <default>false</default>
+                <label>Redecision</label>
+            </value>
+            <value>
+                <fullName>RFP 9012</fullName>
+                <default>false</default>
+                <label>RFP 9012</label>
+            </value>
+            <value>
+                <fullName>Soft Pull Requested.</fullName>
+                <default>false</default>
+                <label>Soft Pull Requested.</label>
+            </value>
+            <value>
+                <fullName>Spanish Speaker Requested</fullName>
+                <default>false</default>
+                <label>Spanish Speaker Requested</label>
+            </value>
+            <value>
+                <fullName>Specialized Income</fullName>
+                <default>false</default>
+                <label>Specialized Income</label>
+            </value>
+            <value>
+                <fullName>Stacker Check Declined</fullName>
+                <default>false</default>
+                <label>Stacker Check Declined</label>
+            </value>
+            <value>
+                <fullName>Suspicious Documentation</fullName>
+                <default>false</default>
+                <label>Suspicious Documentation</label>
+            </value>
+            <value>
+                <fullName>Suspicious Funding Account</fullName>
+                <default>false</default>
+                <label>Suspicious Funding Account</label>
+            </value>
+            <value>
+                <fullName>Suspicious Inconsistencies</fullName>
+                <default>false</default>
+                <label>Suspicious Inconsistencies</label>
+            </value>
+            <value>
+                <fullName>Suspicious Interaction</fullName>
+                <default>false</default>
+                <label>Suspicious Interaction</label>
+            </value>
+            <value>
+                <fullName>To-Do</fullName>
+                <default>false</default>
+                <label>To-Do</label>
+            </value>
+            <value>
+                <fullName>Unresponsive</fullName>
+                <default>false</default>
+                <label>Unresponsive</label>
+            </value>
+            <value>
+                <fullName>View Box for Documents</fullName>
+                <default>false</default>
+                <label>View Box for Documents</label>
+            </value>
+            <value>
+                <fullName>Confirmed Stacker</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Confirmed Stacker</label>
+            </value>
+            <value>
+                <fullName>Fast Pass</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Fast Pass</label>
+            </value>
+            <value>
+                <fullName>Potential Manual Decline</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Potential Manual Decline</label>
+            </value>
+            <value>
+                <fullName>RFP Stacker</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>RFP Stacker</label>
+            </value>
+            <value>
+                <fullName>Slow Pass</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Slow Pass</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

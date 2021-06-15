@@ -1,0 +1,90 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Product__c"
+	tabStyle="Product_Management__tab"
+	extensions="loan.LoanSubProductController">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:sectionHeader title="Edit Sub Product"
+		subtitle="{!loanProduct.name}" />
+	<apex:form >
+		<apex:pageBlock title="Edit Sub Product" id="thePageBlock" mode="edit">
+			<apex:pageMessages />
+			<apex:pageBlockButtons >
+				<apex:commandButton value="Save" action="{!createTheSubProduct}" />
+				<apex:commandButton value="Cancel" action="{!cancel}" />
+			</apex:pageBlockButtons>
+			<apex:actionRegion >
+				<apex:pageBlockSection title="Basic Information" columns="2">
+					<apex:inputField value="{!loanProduct.Name}" />
+					<apex:outputField value="{!loanProduct.loan__Loan_Product_Type__c}" />
+					<apex:outputField value="{!loanProduct.loan__Parent_Loan_Product__c}" />
+					<apex:inputField value="{!loanProduct.loan__Loan_Cycle_Setup__c}" />
+					<apex:inputField value="{!loanProduct.loan__Currency__c}" />
+					<apex:inputField value="{!loanProduct.loan__Interest_Calculation_Method__c}" />
+					<apex:inputField value="{!loanProduct.loan__Repayment_Procedure__c}" />
+					<apex:inputField value="{!loanProduct.loan__General_Rounding_Mode__c}" />
+					<apex:inputField value="{!loanProduct.loan__Frequency_of_Loan_Payment__c}" />
+					<apex:inputField value="{!loanProduct.loan__Days_In_A_Year__c}" />
+					<apex:inputField value="{!loanProduct.loan__Holiday_Shift__c}" />
+					<apex:inputField value="{!loanProduct.loan__Can_Waive_Interest_on_Prepaid_loan__c}" />
+				</apex:pageBlockSection>
+
+				<apex:pageBlockSection title="Loan Amount" columns="2">
+					<apex:inputField value="{!loanProduct.loan__Min_Loan_Amount__c}" />
+					<apex:inputField value="{!loanProduct.loan__Max_Loan_Amount__c}" />
+				</apex:pageBlockSection>
+
+				<apex:pageBlockSection title="Fee Set" columns="2">
+					<apex:inputField value="{!loanProduct.loan__Fee_Set__c}" />
+				</apex:pageBlockSection>
+
+				<apex:pageBlockSection title="Installments" columns="2">
+					<apex:inputField value="{!loanProduct.loan__Minimum_Gap_Between_Installments__c}" />
+					<apex:inputField value="{!loanProduct.loan__Maximum_Gap_Between_Installments__c}" />
+					<apex:inputField value="{!loanProduct.loan__Default_Number_of_Installments__c}" />
+					<apex:inputField value="{!loanProduct.loan__Min_Number_of_Installments__c}" />
+					<apex:inputField value="{!loanProduct.loan__Max_Number_of_Installments__c}" />
+					<apex:inputField value="{!loanProduct.loan__Minimum_Installment_Amount__c}" />
+				</apex:pageBlockSection>
+
+				<apex:pageBlockSection title="Interest" columns="2">
+					<apex:inputField value="{!loanProduct.loan__Interest_Rate_Type__c}" />
+					<apex:inputField value="{!loanProduct.loan__Default_Interest_Rate__c}" />
+					<apex:inputField value="{!loanProduct.loan__Min_Interest_Rate__c}" />
+					<apex:inputField value="{!loanProduct.loan__Min_Overdue_Interest_Rate__c}" />
+					<apex:inputField value="{!loanProduct.loan__Default_Overdue_Interest_Rate__c}" />
+					<apex:inputField value="{!loanProduct.loan__Max_Interest_Rate__c}" />
+					<apex:inputField value="{!loanProduct.loan__Max_Overdue_Interest_Rate__c}" />
+				</apex:pageBlockSection>
+
+				<apex:pageBlockSection title="Rounding" columns="2">
+					<apex:inputField value="{!loanProduct.loan__Initial_Rounding_Mode__c}" />
+					<apex:inputField value="{!loanProduct.loan__Initial_Rounding_Precision__c}" />
+					<apex:inputField value="{!loanProduct.loan__Digits_After_Decimals__c}" />
+					<apex:inputField value="{!loanProduct.loan__Final_Rounding_Mode__c}" />
+					<apex:inputField value="{!loanProduct.loan__Final_Rounding_Precision__c}" />
+				</apex:pageBlockSection>
+
+				<apex:pageBlockSection title="Accounting" columns="2">
+					<apex:inputField value="{!loanProduct.loan__Accrual_Based_Accounting__c}" />
+					<apex:inputField value="{!loanProduct.loan__Product_Loan_Control_Account__c}" />
+					<apex:inputField value="{!loanProduct.loan__Product_Interest_Income_Account__c}" />
+					<apex:inputField value="{!loanProduct.loan__Product_Suspended_Int_On_Overdue_Acc__c}" />
+					<apex:inputField value="{!loanProduct.loan__Product_Loan_Loss_Reserve_Account__c}" />
+					<apex:inputField value="{!loanProduct.loan__Product_Write_Off_Recovery_Account__c}" />
+					<apex:inputField value="{!loanProduct.loan__Product_Int_On_Overdue_Income_Acc__c}" />
+					<apex:inputField value="{!loanProduct.loan__Product_Suspended_Interest_Account__c}" />
+					<apex:inputField value="{!loanProduct.loan__Product_Loan_Loss_Provision_Account__c}" />
+				</apex:pageBlockSection>
+
+				<apex:pageBlockSection title="Link Savings Product" columns="2">
+					<apex:inputField value="{!loanProduct.loan__Savings_Product__c}" />
+				</apex:pageBlockSection>
+
+				<apex:pageBlockSection title="Grace Period" columns="2">
+					<apex:inputField value="{!loanProduct.loan__Grace_Period_Duration__c}" />
+				</apex:pageBlockSection>
+
+			</apex:actionRegion>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

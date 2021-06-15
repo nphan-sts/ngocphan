@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Credit_Card_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Credit Card Type</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Credit Card Type</inlineHelpText>
+    <label>Credit Card Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DISCOVER</fullName>
+                <default>false</default>
+                <label>DISCOVER</label>
+            </value>
+            <value>
+                <fullName>MASTER CARD</fullName>
+                <default>false</default>
+                <label>MASTER CARD</label>
+            </value>
+            <value>
+                <fullName>VISA</fullName>
+                <default>false</default>
+                <label>VISA</label>
+            </value>
+            <value>
+                <fullName>AMEX</fullName>
+                <default>false</default>
+                <label>AMEX</label>
+            </value>
+            <value>
+                <fullName>OTHERS</fullName>
+                <default>false</default>
+                <label>OTHERS</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

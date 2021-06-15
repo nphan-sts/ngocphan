@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Application_Collateral__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Reference to application collateral related to the application</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Reference to application collateral related to the application</inlineHelpText>
+    <label>Application Collateral</label>
+    <referenceTo>genesis__Application_Collateral__c</referenceTo>
+    <relationshipLabel>Execution Criteria Result</relationshipLabel>
+    <relationshipName>Execution_Criteria_Result</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

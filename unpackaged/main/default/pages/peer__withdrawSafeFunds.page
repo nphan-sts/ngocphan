@@ -1,0 +1,61 @@
+<apex:page controller="peer.WithdrawSafeFundsController">
+<apex:include pageName="clcommon__mintTheme"/>
+    <apex:form id="safeFundsBlock">
+        <apex:pageblock id="safeFundDetailsBlock" mode="edit">
+            <apex:pageMessages />
+            <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+            <apex:pageBlockSection id="safeFundDetails" title="Safe Funds Details" collapsible="false" showHeader="true" columns="2">
+                <apex:outputText label="Total Safe Funds Received">{!totalSafeFunds}</apex:outputText>
+                <apex:outputText label="Total Withdrawals">{!totalWithdrawals }</apex:outputText>
+                <apex:outputText label="Current Balance">{!balance}</apex:outputText>
+                <apex:outputText label="Uncleared Withdrawals">{!unclearedWithdrawals}</apex:outputText>
+            </apex:pageBlockSection>
+            </apex:outputpanel>  
+        </apex:pageBlock>
+        <apex:pageblock mode="edit" id="mainBlock">
+            
+             
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Validate" action="{!validateSafeFunds}" status="validating" reRender="safeFundDetailsBlock,mainBlock" disabled="{!saveDisabled}"/>               
+                    <apex:actionStatus id="validating">
+                        <apex:facet name="start">
+                            <apex:outputText >Validating...</apex:outputText>
+                        </apex:facet>
+                    </apex:actionStatus>
+                <apex:commandButton value="Save" action="{!save}" status="saving" reRender="safeFundDetailsBlock,mainBlock" disabled="{!saveDisabled}"/>              
+                <apex:actionStatus id="saving">
+                    <apex:facet name="start">
+                        <apex:outputText >Saving...</apex:outputText>
+                    </apex:facet>
+                </apex:actionStatus>
+                
+                
+            </apex:pageBlockButtons> 
+            <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+            <apex:pageBlockSection columns="1" id="investorList" title="Investors List" collapsible="false"> 
+                <apex:pageBlockTable value="{!ioList}" var="investmentOrder">
+                    <apex:column headerValue="Investor"><apex:outputField value="{!investmentOrder.loan__Account__c}"/></apex:column>
+                    <apex:column headerValue="Loan Account"><apex:outputField value="{!investmentOrder.loan__Loan__c}"/></apex:column>                    
+                    <!--<apex:column headerValue="Investment Order"><apex:outputField value="{!investmentOrder.name}"/></apex:column>-->
+                    <apex:column headerValue="Investment Order">
+                        <apex:commandLink id="investorLoanId"  action="{!openDetailsPage}" value="{!investmentOrder.Name}" target="_blank">                               
+                            <apex:param name="ioNumber" value="{!investmentOrder.Id}" assignTo="{!invOrdId}"/>                                                    
+                        </apex:commandLink>
+                    </apex:column>
+                    <apex:column headerValue="Investment Amount"><apex:outputField value="{!investmentOrder.loan__Investment_Amount__c}"/></apex:column>
+                    <apex:column headerValue="Remaining Principal"><apex:outputField value="{!investmentOrder.loan__Remaining_Investment_Amount__c}"/></apex:column>
+                    <apex:column headerValue="Interest Posted"><apex:outputField value="{!investmentOrder.loan__Inv_Interest_Posted_Amt__c}"/></apex:column>
+                    <apex:column headerValue="Remaining Interest"><apex:outputField value="{!investmentOrder.loan__Interest_Balance__c}" /></apex:column>
+                    <apex:column headerValue="Amount">
+                        <apex:inputField value="{!investmentOrder.loan__Charged_Off_Principal__c}" >
+                            <apex:actionSupport id="test" event="onchange" action="{!amountChanged}" reRender="mainBlock"/>
+                        </apex:inputField>
+                    </apex:column>                    
+    
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            </apex:outputpanel>     
+        </apex:pageblock>
+    </apex:form>
+  
+</apex:page>

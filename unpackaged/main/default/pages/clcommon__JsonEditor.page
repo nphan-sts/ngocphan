@@ -1,0 +1,437 @@
+<apex:page showHeader="false" controller="clcommon.ConfigurationManagerWizardGeneratorImpl2">
+    <apex:include pageName="clcommon__ResolveNamespace"/>
+    <title>CL Configuration Manager Structure JSON Editor</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+    <style type="text/css">
+        .control-group {
+            position: absolute;
+            top: 0;
+            height: 45px;
+            left: 0;
+            right: 0;
+            padding: 6px 10px;
+        }
+        
+        .wrapper {
+            position: absolute;
+            top: 45px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        #editor {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .save-btn,
+        .save-btn.active,
+        .save-btn:active,
+        .save-btn:focus,
+        .save-btn:hover,
+        .save-btn.btn-default.btn {
+            font: normal normal 400 12px Lato !important;
+            color: white !important;
+            background: none !important;
+            background-color: #48ce94 !important;
+            border: 0 !important;
+            border-radius: 4px !important;
+            padding: 6px 16px !important;
+            outline: 0 !important;
+        }
+        
+        .reset-btn,
+        .reset-btn.active,
+        .reset-btn:active,
+        .reset-btn:focus,
+        .reset-btn:hover,
+        .reset-btn.btn-default.btn {
+            font: normal normal 400 12px Lato !important;
+            color: white !important;
+            background: none !important;
+            background-color: #ffa21d !important;
+            border: 0 !important;
+            border-radius: 4px !important;
+            padding: 6px 16px !important;
+            outline: 0 !important;
+        }
+
+        .delete-btn,
+        .delete-btn.active,
+        .delete-btn:active,
+        .delete-btn:focus,
+        .delete-btn:hover,
+        .delete-btn.btn-default.btn {
+            font: normal normal 400 12px Lato !important;
+            color: white !important;
+            background: none !important;
+            background-color: #e63c00 !important;
+            border: 0 !important;
+            border-radius: 4px !important;
+            padding: 6px 16px !important;
+            outline: 0 !important;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            top: 9px;
+            right: 10px;
+        }
+                
+        .history-label, .product-label {
+            font: normal normal 400 12px Lato !important;
+            font-weight: 400 !important;
+        }
+        
+        .history-select, .product-select {
+            display: inline-block;
+            width: inherit;
+        }
+        
+        .product-span, .history-span {
+            margin-right: 20px;
+        }
+    </style>
+    
+    <div class="control-group">
+        <span class="product-span">
+            <label class="product-label">Product</label>
+            <select class="product-select form-control">
+            </select>
+        </span>
+        <span class="history-span">
+            <label class="history-label">History</label>
+            <select class="history-select form-control">
+            </select>
+        </span>
+        <button type="button" class="btn reset-btn">Reset</button>
+        <button type="button" class="btn save-btn">Save</button>
+        
+        <button type="button" class="btn delete-btn"></button>        
+    </div>
+    <div class="wrapper">
+        <div id="editor"></div>
+    </div>
+    
+    <div class="modal fade" id="confirmation-dlg" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Confirmation</h4>
+          </div>
+          <div class="modal-body"><p></p></div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>    
+    
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/json");
+        
+        var remoteControllerName = 'ConfigurationManagerWizardGeneratorImpl2';
+        if(window.commonprefix != ''){
+            remoteControllerName = window.commonprefix + '.' + remoteControllerName;
+        }
+        
+        var jsonHistory = Object.create(null);
+        var jsonNavHistory = Object.create(null);
+        
+        var type = '{!JSENCODE($CurrentPage.parameters.type)}';
+
+        if (type === 'nav') {
+            $('.product-span').show();
+            $('.delete-btn').hide();
+            
+            Visualforce.remoting.Manager.invokeAction(
+                remoteControllerName + '.getProductStructure',
+                '',
+                function(structure) {
+                    // array of JSON strings
+                    var structureJsonArray = JSON.parse(structure).response[0].structure;
+                    
+                    $.each(structureJsonArray, function(index, productJson) {
+                        var productObj = JSON.parse(productJson);
+                        var productBeautifulJson = JSON.stringify(productObj, null, 4);
+                        jsonNavHistory = initializeJsonNavHistory(jsonNavHistory, productObj.id, productObj.product_name, productBeautifulJson);
+                    });
+                    
+                    var selectedProductId = $($('.product-select')[0]).val();
+                    
+                    reloadNavHistorySelect(selectedProductId);
+                    
+                    editor.getSession().setValue(jsonNavHistory[selectedProductId][0].content);
+                }, 
+                {escape: false}
+            );
+            
+            /*
+            ConfigurationManagerWizardGeneratorImpl2.getProductStructure('', function(structure) {
+                // array of JSON strings
+                var structureJsonArray = JSON.parse(structure).response[0].structure;
+                
+                $.each(structureJsonArray, function(index, productJson) {
+                    var productObj = JSON.parse(productJson);
+                    var productBeautifulJson = JSON.stringify(productObj, null, 4);
+                    jsonNavHistory = initializeJsonNavHistory(jsonNavHistory, productObj.id, productObj.product_name, productBeautifulJson);
+                });
+                
+                var selectedProductId = $($('.product-select')[0]).val();
+                
+                reloadNavHistorySelect(selectedProductId);
+                
+                editor.getSession().setValue(jsonNavHistory[selectedProductId][0].content);
+            }, {escape: false});
+            */
+        }
+
+        if (type === 'comp') {
+            $('.product-span').hide();
+            $('.delete-btn').text('Delete Component');
+            
+            var id = '{!$CurrentPage.parameters.id}';
+            
+            Visualforce.remoting.Manager.invokeAction(
+                remoteControllerName + '.getComponentStructure',
+                '',
+                id,
+                function(structure) {
+                    var componentJson = JSON.parse(structure).response[0].structure;
+                    var componentBeautifulJson = JSON.stringify(JSON.parse(componentJson), null, 4);
+                    jsonHistory = updateJsonHistory(jsonHistory, id, componentBeautifulJson);
+                    editor.getSession().setValue(componentBeautifulJson);
+                }, 
+                {escape: false}
+            );
+            
+            /*
+            ConfigurationManagerWizardGeneratorImpl2.getComponentStructure('', id, function(structure) {
+                var componentJson = JSON.parse(structure).response[0].structure;
+                var componentBeautifulJson = JSON.stringify(JSON.parse(componentJson), null, 4);
+                jsonHistory = updateJsonHistory(jsonHistory, id, componentBeautifulJson);
+                editor.getSession().setValue(componentBeautifulJson);
+            }, {escape: false});
+            */
+        }
+        
+        $('.delete-btn').click(function() {
+            if (type === 'nav') {
+            }
+            
+            if (type === 'comp') {
+                var id = '{!$CurrentPage.parameters.id}';
+                
+                Visualforce.remoting.Manager.invokeAction(
+                    remoteControllerName + '.deleteComponentStructureAction',
+                    id,
+                    function(result) {
+                        if (JSON.parse(result).status === 'SUCCESS') {
+                            jsonHistory = removeFromJsonHistory(jsonHistory, id);
+                            
+                            $('#confirmation-dlg').find('.modal-body > p').text('Your changes have been successfully saved.');
+                            $('#confirmation-dlg').modal();
+                        } else {
+                            $('#confirmation-dlg').find('.modal-body > p').text('Error: ' + JSON.parse(result).errorMessage);
+                            $('#confirmation-dlg').modal();
+                        }
+                    }, 
+                    {escape: false}
+                );
+                
+                /*
+                ConfigurationManagerWizardGeneratorImpl2.deleteComponentStructureAction(id, function(result) {
+                    if (JSON.parse(result).status === 'SUCCESS') {
+                        jsonHistory = removeFromJsonHistory(jsonHistory, id);
+                        
+                        $('#confirmation-dlg').find('.modal-body > p').text('Your changes have been successfully saved.');
+                        $('#confirmation-dlg').modal();
+                    } else {
+                        $('#confirmation-dlg').find('.modal-body > p').text('Error: ' + JSON.parse(result).errorMessage);
+                        $('#confirmation-dlg').modal();
+                    }
+                }, {escape: false});
+                */
+            }
+        });
+        
+        $('.reset-btn').click(function() {
+            var selectedIndex = $('.history-select')[0].selectedIndex;
+            
+            if (type === 'nav') {
+                var currentProductId = $($('.product-select')[0]).val();
+                editor.getSession().setValue(jsonNavHistory[currentProductId][selectedIndex].content);            
+            }
+            
+            if (type === 'comp') {
+                var id = '{!$CurrentPage.parameters.id}';            
+                editor.getSession().setValue(jsonHistory[id][selectedIndex].content);
+            }
+        });
+        
+        $('.save-btn').click(function() {
+            var currentJson = editor.getSession().getValue();
+            var minifiedJson = JSON.stringify(JSON.parse(currentJson));
+            
+            if (type === 'nav') {
+                var currentProductId = $($('.product-select')[0]).val();
+                var currentProductName = $('.product-select option:selected').text();
+                
+                Visualforce.remoting.Manager.invokeAction(
+                    remoteControllerName + '.updateProductStructureAction',
+                    currentProductName, 
+                    minifiedJson, 
+                    function(result) {
+                        if (JSON.parse(result).status === 'SUCCESS') {
+                            jsonNavHistory = updateJsonNavHistory(jsonNavHistory, currentProductId, currentJson);
+                            reloadNavHistorySelect(currentProductId);
+                            
+                            $('#confirmation-dlg').find('.modal-body > p').text('Your changes have been successfully saved.');
+                            $('#confirmation-dlg').modal();
+                        } else {
+                            $('#confirmation-dlg').find('.modal-body > p').text('Error: ' + JSON.parse(result).errorMessage);
+                            $('#confirmation-dlg').modal();
+                        }
+                    }, 
+                    {escape: false}
+                );
+                
+                /*
+                ConfigurationManagerWizardGeneratorImpl2.updateProductStructureAction(currentProductName, minifiedJson, function(result) {
+                    if (JSON.parse(result).status === 'SUCCESS') {
+                        jsonNavHistory = updateJsonNavHistory(jsonNavHistory, currentProductId, currentJson);
+                        reloadNavHistorySelect(currentProductId);
+                        
+                        $('#confirmation-dlg').find('.modal-body > p').text('Your changes have been successfully saved.');
+                        $('#confirmation-dlg').modal();
+                    } else {
+                        $('#confirmation-dlg').find('.modal-body > p').text('Error: ' + JSON.parse(result).errorMessage);
+                        $('#confirmation-dlg').modal();
+                    }
+                }, {escape: false});
+                */
+            }
+            
+            if (type === 'comp') {
+                var id = '{!$CurrentPage.parameters.id}';
+                
+                Visualforce.remoting.Manager.invokeAction(
+                    remoteControllerName + '.updateComponentStructureAction',
+                    id, 
+                    minifiedJson, 
+                    function(result) {
+                        if (JSON.parse(result).status === 'SUCCESS') {
+                            jsonHistory = updateJsonHistory(jsonHistory, id, currentJson);
+                            
+                            $('#confirmation-dlg').find('.modal-body > p').text('Your changes have been successfully saved.');
+                            $('#confirmation-dlg').modal();
+                        } else {
+                            $('#confirmation-dlg').find('.modal-body > p').text('Error: ' + JSON.parse(result).errorMessage);
+                            $('#confirmation-dlg').modal();
+                        }
+                    }, 
+                    {escape: false}
+                );
+
+                /*
+                ConfigurationManagerWizardGeneratorImpl2.updateComponentStructureAction(id, minifiedJson, function(result) {
+                    if (JSON.parse(result).status === 'SUCCESS') {
+                        jsonHistory = updateJsonHistory(jsonHistory, id, currentJson);
+                        
+                        $('#confirmation-dlg').find('.modal-body > p').text('Your changes have been successfully saved.');
+                        $('#confirmation-dlg').modal();
+                    } else {
+                        $('#confirmation-dlg').find('.modal-body > p').text('Error: ' + JSON.parse(result).errorMessage);
+                        $('#confirmation-dlg').modal();
+                    }
+                }, {escape: false});
+                */
+            }
+        });
+        
+        $('.history-select').change(function(evt) {
+            var selectedIndex = evt.target.selectedIndex;
+            if (type === 'nav') {
+                var currentProductId = $($('.product-select')[0]).val();
+                editor.getSession().setValue(jsonNavHistory[currentProductId][selectedIndex].content);
+            }
+            
+            if (type === 'comp') {
+                var id = '{!$CurrentPage.parameters.id}';            
+                editor.getSession().setValue(jsonHistory[id][selectedIndex].content);
+            }
+        });
+        
+        $('.product-select').change(function(evt) {
+            var selectedProductId = $($('.product-select')[0]).val();
+        
+            reloadNavHistorySelect(selectedProductId);
+                
+            editor.getSession().setValue(jsonNavHistory[selectedProductId][0].content);
+        });
+        
+        function initializeJsonNavHistory(jsonNavHistory, productId, productName, productJson) {
+            var timeStamp = (new Date()).toString();
+            
+            jsonNavHistory[productId] = [{content: productJson, timeStamp: timeStamp}];
+            
+            $('.product-select').append($('<option>', {
+                value: productId,
+                text: productName
+            }));
+            
+            return jsonNavHistory;
+        }
+        
+        function updateJsonNavHistory(jsonNavHistory, productId, productJson) {
+            var timeStamp = (new Date()).toString();
+            editHistory = jsonNavHistory[productId];
+            editHistory.unshift({content: productJson, timeStamp: timeStamp});
+            jsonNavHistory[productId] = editHistory;
+            
+            return jsonNavHistory;
+        }
+        
+        function updateJsonHistory(jsonHistory, componentId, componentJson) {
+            var timeStamp = (new Date()).toString();
+            
+            var editHistory = jsonHistory[componentId];
+            if (Array.isArray(editHistory)) {
+                editHistory.unshift({content: componentJson, timeStamp: timeStamp});
+                jsonHistory[componentId] = editHistory;
+            } else {
+                jsonHistory[componentId] = [{content: componentJson, timeStamp: timeStamp}];
+            }
+
+            $('.history-select').prepend($('<option>', {
+                value: timeStamp,
+                text: timeStamp
+            }));
+            
+            $('.history-select option:first-child').prop('selected', true);
+
+            return jsonHistory;
+        }
+        
+        function removeFromJsonHistory(jsonHistory, componentId) {
+            delete jsonHistory[componentId];
+        }
+        
+        function reloadNavHistorySelect(productId) {
+            $('.history-select').find('option').remove();
+            $.each(jsonNavHistory[productId], function(index, history) {
+                $('.history-select').append($('<option>', {
+                    value: history.timeStamp,
+                    text: history.timeStamp
+                }));
+            });
+        }
+    </script>
+  
+</apex:page>

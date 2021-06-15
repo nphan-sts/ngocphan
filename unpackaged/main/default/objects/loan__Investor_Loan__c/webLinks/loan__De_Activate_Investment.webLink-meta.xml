@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__De_Activate_Investment</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>De-Activate Investment</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT("/soap/ajax/13.0/connection.js")}
+{!REQUIRESCRIPT("/soap/ajax/10.0/apex.js")}
+var retVal = sforce.apex.execute("loan/DeactivateInvestmentOrder","deactivate", {invOrderId:"{! loan__Investor_Loan__c.Id }"});
+window.alert(retVal);
+window.location.reload();</url>
+</WebLink>

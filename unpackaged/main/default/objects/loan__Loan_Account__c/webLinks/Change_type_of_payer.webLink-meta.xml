@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Change_type_of_payer</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Change type of payer</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT("/soap/ajax/13.0/connection.js")}
+{!REQUIRESCRIPT("/soap/ajax/10.0/apex.js")}
+var namespacePrefix = "{!$Setup.loan__Org_Parameters__c.loan__Namespace_Prefix__c}";
+if (namespacePrefix != null &amp;&amp; namespacePrefix != ""){
+namespacePrefix += "/";
+}
+var className = "ChangeTypeOfPayerController";
+var methodName = "ChangeTypeOfPayerController";
+console.log(methodName);
+var str = "{!$Api.Partner_Server_URL_260}";
+console.log(str);
+//alert(str);
+//var sfInstance = str.slice(str.indexOf("loan.") + 5,str.indexOf(".visual.force"));
+//alert(sfInstance);
+//var str1 = "https://c.";
+var test  = str.substring(0,str.indexOf("services"))+"apex/ChangeTypeOfPayerPage?id={!loan__Loan_Account__c.Id}";
+test  = test.replace("loan","c");
+//alert(test);
+
+//var str2 = ".visual.force.com/apex/ChangeTypeOfPayerPage?id {!loan__Loan_Account__c.Id}";
+//var retVal = str1.concat(sfInstance,str2); 
+//alert(retVal);
+window.location.href =test;</url>
+</WebLink>

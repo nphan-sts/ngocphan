@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Type of the statement analysis</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Type of the statement analysis</inlineHelpText>
+    <label>Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>TREND</fullName>
+                <default>false</default>
+                <label>TREND</label>
+            </value>
+            <value>
+                <fullName>SENSITIVITY</fullName>
+                <default>false</default>
+                <label>SENSITIVITY</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

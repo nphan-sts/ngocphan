@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_Loan_Cycle_Setup_For_Interest</fullName>
+    <active>false</active>
+    <description>Deprecated by Abhinav and Snehal, not supported.</description>
+    <errorConditionFormula>AND(  ISPICKVAL(loan__Loan_Cycle_Setup__c, 'Same for all Loans') ,OR( ISBLANK( loan__Max_Interest_Rate__c ) , ISBLANK( loan__Min_Interest_Rate__c ),ISBLANK( loan__Default_Interest_Rate__c )  ) )</errorConditionFormula>
+    <errorMessage>Please fill out the Interest section.</errorMessage>
+</ValidationRule>

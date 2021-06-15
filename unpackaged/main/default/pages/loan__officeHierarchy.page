@@ -1,0 +1,21 @@
+<apex:page lightningStylesheets="true" standardcontroller="loan__Office_Name__c"
+	extensions="loan.OfficeHierarchyController"
+	tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<br />
+	<br />
+	<b>
+		<center>Organization Chart</center>
+	</b>
+	<br />
+	<br />
+	<!--c:TreeComponent childfield="mfiforce__Parent_Office__c" 
+            childrelationshipname="mfiforce__Offices__r" 
+            objecttoquery="mfiforce__Office_Name__c" 
+            parentid="{!headOffice.Id}" 
+            parentrecordname="{!Office_Name__c.Name}"
+            objectName="mfiforce__Office_Name__c">
+      </c:TreeComponent-->
+
+</apex:page>

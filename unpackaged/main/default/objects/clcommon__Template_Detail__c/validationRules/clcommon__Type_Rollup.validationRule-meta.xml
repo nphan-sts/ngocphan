@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Type_Rollup</fullName>
+    <active>true</active>
+    <description>ROLLUP record must have Chart of Account only</description>
+    <errorConditionFormula>AND(
+    ISPICKVAL(clcommon__Type__c,'ROLLUP'),
+    OR(
+       ISBLANK(clcommon__Chart_of_Account__c),
+       NOT(ISBLANK(clcommon__Detail__c)),
+       NOT(ISBLANK(clcommon__Expression__c))
+    ) 
+)</errorConditionFormula>
+    <errorMessage>Record with type = ROLLUP must be associated with Chart of Account record. Detail or Expression must be blank</errorMessage>
+</ValidationRule>

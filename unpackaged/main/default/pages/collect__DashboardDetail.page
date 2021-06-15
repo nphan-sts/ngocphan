@@ -1,0 +1,600 @@
+<apex:page id="thePage" contentType="text/html" docType="html-5.0" sidebar="false" showHeader="true" controller="collect.DashboardCtrl" standardStylesheets="true">
+<!-- apex:include pageName="clcommon__mintTheme"/-->
+    <c:modalIFrameWindow />
+    <apex:stylesheet value="{!$Resource.collect__MFIStyles}" />
+    <apex:stylesheet value="/sCSS/Theme3/default/versioning.css" />
+    <apex:stylesheet value="/sCSS/Theme3/default/extended.css" />
+
+    <script type="text/javascript"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
+    <script type="text/javascript">
+        jQuery.noConflict();
+
+        function changeMe(sel) {
+            sel.style.color = "#000";
+        }
+
+        function showContactPopUp(selectedPartyForCP) {
+            var urlStr = "/apex/ContactPreference?party="+selectedPartyForCP;
+            showURLInModalWindow(urlStr);
+        }
+
+        function showWorkLoadIcon() {
+            document.getElementById("workloadViewIconLink").rendered = "true";
+        }
+        function openFragment() {
+            j$('div#actionsSection').slideDown(300, "swing");
+        }
+        function closeFragment() {
+            j$('div#actionsSection').slideUp(300, "swing");
+            refreshFrames();
+        }
+        function fragmentRefresh() {
+            refreshSummarySection();
+        }
+    </script>
+    <script type="text/javascript">
+        jQuery.noConflict();
+        jQuery(document).ready(function() {
+          /*
+           * Example 2:
+           *
+           * - default gradient
+           * - listening to `circle-animation-progress` event and display the animation progress: from 0 to 100%
+           */
+          jQuery('.second.circle').circleProgress({
+
+          }).on('circle-animation-progress', function(event, progress) {
+          });
+        });
+    </script>
+
+    <style type="text/css">
+        .bPageHeader {
+            display:none;
+        }
+        .bPageFooter.noTableFooter {
+            display:none;
+        }
+        div.bodyDiv.brdPalette.brandPrimaryBrd {
+            height:930px;
+        }
+        .bodyDiv {
+            background-color: #f8f8f8;
+            border-top: 0px solid;
+            box-shadow: 0px 0px 0px hsla(0,0%,0%,.25)
+        }
+        .brdPalette {
+            border-top-color: #f8f8f8;
+        }
+        body.sfdcBody {
+            background: #f8f8f8;
+        }
+        .noSidebarCell, .sidebarCell .fixed {
+            padding: 0px;
+        }
+        .pbTitle {
+            white-space: nowrap
+        }
+        .contractSearchFS {
+            font-family: "Sans-serif";
+            font-weight: bold;
+            font-size: 12px;
+        }
+        div.table {border: 0px solid black; display: table; }
+        div.tr {border: 0px solid black; display: table-row; }
+        div.td {border: 0px solid black; display: table-cell; }
+        select
+        {
+            color: #ccc;
+        }
+        option
+        {
+            color: #000;
+        }
+        option:first-child
+        {
+            color: #ccc;
+        }
+        div#actionsSection {
+            display: none;
+            height: auto;
+            width: 100%;
+            background: #f8f8f8;
+            overflow: auto;
+        }
+        .circles {
+          margin-bottom: -10px;
+          position: relative;
+          text-align: center;
+        }
+        .circle {
+          width: 100px;
+          margin: 6px 6px 20px;
+          display: inline-block;
+          position: relative;
+          text-align: center;
+          line-height: 1.2;
+        }
+        .circle canvas {
+          vertical-align: top;
+        }
+        .circle strong {
+          position: absolute;
+          top: 20px;
+          left: -2px;
+          width: 100%;
+          text-align: center;
+          line-height: 30px;
+          font-size: 20px;
+        }
+        .circle strong i {
+          font-style: normal;
+          font-size: 0.7em;
+          font-weight: normal;
+        }
+        .circle span {
+          display: block;
+          color: #aaa;
+          margin-top: 12px;
+        }
+        body .bPageBlock, body #bodyCell .bResource .secondaryPalette, body .secondaryPalette.bPageBlock, body .individualPalette .secondaryPalette.bPageBlock, body .bodyDiv .genericTable, body .genericPageBlockTable, body .bodyDiv .bSubBlock, body .bComponentBlock .bPageBlock, body .bMyDashboard .bPageBlock, body.rlHoverFrame .bPageBlock, body.subjectSelectionPopup div.choicesBox, body.lookupTab .secondaryPalette.bPageBlock, body.popupTab .secondaryPalette.bPageBlock, body.UserTagStatsPage .secondaryPalette.bPageBlock {
+            border-bottom: 0px;
+            border-left: 0px;
+            border-right: 0px;
+            border-radius: 1px;
+        }
+        body .rich-tabpanel-content {
+            border-bottom: 0px;
+        }
+        .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader {
+            color: #333;
+        }
+    </style>
+
+    <div style="height:780px; border:1px; position:relative">
+        <apex:form >
+            <apex:actionFunction name="refreshSummarySection" action="{!initialize}" reRender="contractFullDetail1"/>
+            <apex:actionFunction name="refreshFrames" reRender="mfiflexFragmentWrapper2, mfiflexFragmentWrapper1, mfiflexFragmentWrapper"/>
+        </apex:form>
+        <apex:form id="actionInsideIFrame">
+                <apex:pageBlock id="contractFullDetail" mode="edit" >
+                    <apex:pageBlockSection columns="1">
+                        <apex:pageblocksectionitem id="notePBSI" labelStyle="width:5%">
+                            <apex:outputLabel style="font-size: 1.3em; font-weight: bold;" for="actionPopup">Note: </apex:outputLabel>
+                            <apex:inputText id="actionPopup" html-placeholder="type here" style="width:80%"/>
+                        </apex:pageblocksectionitem>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2">
+                        <apex:pageblocksectionitem id="actionButtonsItem" labelStyle="width:5%">
+                            <apex:outputLabel value="Actions: " style="font-size: 1.3em; font-weight: bold;" for="actionButtonsGrid"/>
+                            <apex:panelGrid id="actionButtonsGrid" columns="2" style="margin-top: -6px">
+                                <apex:commandLink id="actionOpenArrow" onclick="openFragment()" reRender="none" style="cursor:pointer;">
+                                    <apex:image id="openArrow" url="/img/arrow_dwn.gif"/> 
+                                </apex:commandLink>
+                                <apex:commandLink id="actionCloseArrow" onclick="closeFragment()" reRender="none" style="cursor:pointer;">
+                                    <apex:image id="closeArrow" url="/img/arrow_up.gif"/>
+                                </apex:commandLink>
+                            </apex:panelGrid>
+                        </apex:pageblocksectionitem>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:form>
+
+            <!--Trying to fit in the actions pop up into the place itself-->
+            <div id="actionsSection" style="width:100%; border:1px; position:relative">
+                 <apex:tabPanel id="actionsTabPanel" selectedTab="PaymentArrangementTab" switchType="client" styleClass="theTabPanel" tabClass="theTabPanel" contentClass="tabContent" activeTabClass="activeTab" inactiveTabClass="inactiveTab">
+                     <apex:tab label="Promise to Pay" name="PaymentArrangementTab" id="payArrTabdetails">
+                                  <apex:outputPanel layout="block" id="mfiflexFragmentWrapper2">
+                                      <apex:outputPanel id="ipa">
+                                          <apex:iframe id="theFramePa" src="{!'/apex/paymentArrangement?id=' + conId +'&productType=' +productType}" scrolling="false" html-style="display:block; height:280px;"/>
+                                      </apex:outputPanel>
+                                  </apex:outputPanel>
+                      </apex:tab>
+                      <apex:tab label="Interaction Log" name="InteractionLogTab" id="ilogTabdetails">
+                              <apex:outputPanel layout="block" id="mfiflexFragmentWrapper1">
+                                  <apex:outputPanel id="iCop">
+                                      <apex:iframe id="theFrameIl" src="{!'/apex/newInteractionLog?id=' + conId +'&productType=' +productType}" scrolling="false" html-style="display:block; height:295px;"/>
+                                  </apex:outputPanel>
+                              </apex:outputPanel>
+                      </apex:tab>
+                     <apex:tab label="One Time ACH" name="OneTimeACHTab" id="iAchTabdetails" rendered="{!isLoan}">
+                              <apex:outputPanel layout="block" id="mfiflexFragmentWrapper">
+                                  <apex:outputPanel id="iAchLoan">
+                                      <apex:iframe id="theFrameAch1" src="{!'/apex/loan__setupAutomatedPayment?scontrolCaching=1&id=' + loanID + '&modal=true'}" scrolling="true" html-style="display:block; height:250px;"/>
+                                      <script>
+                                          window.addEventListener( "message",
+                                                                   function (e) {
+                                                                       var data = JSON.parse(e.data);
+                                                                       if(data.source !== 'OTACH'){ return; }
+                                                                       closeFragment();
+                                                                   },
+                                                                   false);
+                                      </script>
+                                  </apex:outputPanel>
+                              </apex:outputPanel>
+                      </apex:tab>
+                      <!--begin 3rd party OTACH-->                
+                    <apex:tab label="One Time ACH" id="iAch3rdPartyTabdetails" rendered="{! NOT(isLoan) }">
+                        <apex:outputPanel layout="block">
+                            <apex:outputPanel id="iAch3rdParty">
+                                <Script>
+                                $('theFrameAch2').load(function() {
+                                    this.style.height = this.contentWindow.document.body.offsetHeight + 'px'; });
+                                </Script>
+         
+                                <apex:iframe id="theFrameAch2" src="{!'/apex/OneTimeTransaction?id=' + conID}"  scrolling="false" html-style="display:block; height:430px;"/>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:tab>
+                    <!-- end 3rd party ACH -->
+                     <apex:tab label="Customer Contact Preference" name="contactPreferenceTab" id="p1tab2" rendered="{!NOT(noParty)}">
+                         <apex:form style="height:300px">
+                             <apex:outputPanel id="divCpPb" style="width:100%; display:block; position:relative">
+                                 <apex:outputPanel id="divCpPb2" style="width:100%; display:block; position:absolute">
+                                     <apex:pageBlock id="contactPrefTabBlock">
+                                         <apex:selectList value="{!selectedPartyForCP}" size="1" multiselect="false" required="true" onchange="changeMe(this)">
+                                             <apex:selectOptions Value="{!selectListPartyForCP}"/>
+                                         </apex:selectList>
+                                         <apex:commandButton value="Go" action="{!displayCP}" rerender="contactPrefTabBlock"/>
+
+                                         <apex:pageBlockSection html-style="overflow:auto;">
+                                             <apex:pageBlockTable id="pbtForCp" rendered="{!showCP}" value="{!cpdList}" var="cp" rules="rows,cols" style="width:100%">
+                                                 <apex:column value="{!cp.cpObj.collect__Time_Zone__c}" style="width:30%"/>
+                                                 <apex:column headerValue="{!$ObjectType.collect__Contact_Preference__c.Fields.collect__Start_Time__c.label}" style="width:20%">
+                                                     <apex:outputText value="{0,time,hh:mm a}">
+                                                         <apex:param value="{!cp.displayStartTime}"/>
+                                                     </apex:outputText>
+                                                 </apex:column>
+                                                 <apex:column headerValue="{!$ObjectType.collect__Contact_Preference__c.Fields.collect__End_Time__c.label}" style="width:20%">
+                                                     <apex:outputText value="{0,time,hh:mm a}">
+                                                         <apex:param value="{!cp.displayEndTime}"/>
+                                                     </apex:outputText>
+                                                 </apex:column>
+                                                 <apex:column headerValue="Contact Mode" value="{!cp.cpObj.collect__Mode_of_Communication__c}" style="width:20%"/>
+                                                 <apex:column value="{!cp.cpObj.collect__Preferred__c}" style="width:10%"/>
+                                             </apex:pageBlockTable>
+                                         </apex:pageBlockSection>
+                                         <br />
+                                         <br />
+                                         <apex:commandButton value="New Contact Preference" rendered="{!showCP}" rerender="contactPrefTabBlock" onclick="showContactPopUp('{!selectedPartyForCP}');" style="margin-left:15%; position:absolute"/>
+                                     </apex:pageBlock>
+                                 </apex:outputPanel>
+                             </apex:outputPanel>
+                         </apex:form>
+                     </apex:tab>
+                </apex:tabPanel>
+            </div>
+
+            <!--This div is for the entire section below the text box and actions button in the contract details section of the DashboardDetail page-->
+            <apex:outputPanel layout="block" id="contractFullDetail1" style="height:100%; width:100%; border:1px; position:relative">
+                    <apex:outputPanel id="conDetail" layout="block" style="width:100%; border:1px; margin:0px auto; left:0px">
+                        <apex:tabPanel id="contractTabPanel" style="margin:0px auto; height:100%;" selectedTab="contactsTab" switchType="client" styleClass="theTabPanel" tabClass="theTabPanel" contentClass="tabContent" activeTabClass="activeTab" inactiveTabClass="inactiveTab">
+                            <apex:tab label="Contract Details" name="contactsTab" id="p1tab1">
+                                <apex:outputPanel id="contactDetails" layout="block" style="width:30%; border:1px; position:absolute; left:2px;">
+                                        <apex:form id="contact" style="width:100%; left:0px; overflow: hidden; margin: 0px auto">
+                                        <apex:pageBlock id="contactBlock">
+                                            <apex:pageBlockButtons location="bottom">
+                                                <apex:commandButton value="<<" action="{!beginning}" disabled="{!DisablePrevious}" reRender="contact"/>
+                                                <apex:commandButton value="<" action="{!previous}" disabled="{!DisablePrevious}" reRender="contact"/>
+                                                <apex:commandButton value=">" action="{!next}" disabled="{!DisableNext}" reRender="contact"/>
+                                                <apex:commandButton value=">>" action="{!last}" disabled="{!DisableNext}" reRender="contact"/>
+                                            </apex:pageBlockButtons>
+                                                <apex:pageBlockSection columns="1" title="Customer Details" collapsible="false">
+                                                    <apex:repeat value="{!contactsToShow}" var="pd">
+                                                        <apex:pageBlockSectionItem id="namePbsi">
+                                                            <apex:outputLabel value="Name" for="Name" />
+                                                            <apex:commandLink id="Name" value="{!pd.contactName}" style="cursor:pointer;" action="{!redirectToContact}" target="_blank">
+                                                                <apex:param name="conAccId" assignTo="{!idVar}" value="{!pd.id}"/>
+                                                            </apex:commandLink>
+                                                        </apex:pageBlockSectionItem>
+
+                                                        <apex:pageBlockSectionItem id="phone1Pbsi">
+                                                            <apex:outputLabel value="Phone 1" for="Phone_1"/>
+                                                            <support:clickToDial number="{!pd.phone1}"/>
+                                                        </apex:pageBlockSectionItem>
+
+                                                        <apex:pageBlockSectionItem id="phone2Pbsi">
+                                                            <apex:outputLabel value="Phone 2" for="Phone_2"/>
+                                                            <support:clickToDial number="{!pd.phone2}" />
+                                                        </apex:pageBlockSectionItem>
+
+                                                        <apex:pageBlockSectionItem id="emailPbsi">
+                                                            <apex:outputLabel value="Email" for="Email"/>
+                                                            <apex:outputText id="Email" value="{!pd.email}" />
+                                                        </apex:pageBlockSectionItem>
+
+                                                        <apex:pageBlockSectionItem id="addressPbsi">
+                                                            <apex:outputLabel value="Address" for="Address"/>
+                                                            <apex:outputText id="Address" value="{!pd.address}" />
+                                                        </apex:pageBlockSectionItem>
+
+                                                        <apex:pageBlockSectionItem id="partyTypePbsi">
+                                                            <apex:outputLabel value="Party Type" for="Party_Type"/>
+                                                            <apex:outputText id="Party_Type" value="{!pd.partyType}" />
+                                                        </apex:pageBlockSectionItem>
+
+                                                        <apex:pageBlockSectionItem id="primaryPbsi">
+                                                            <apex:outputLabel value="Primary" for="Primary"/>
+                                                            <apex:inputCheckbox disabled="true" value="{!pd.primary}"/>
+                                                        </apex:pageBlockSectionItem>
+                                                    </apex:repeat>
+                                                </apex:pageBlockSection>
+                                        </apex:pageBlock>
+                                        </apex:form>
+                                        <apex:form id="contCounter" style="height:170px; width:100%; margin:0px auto; left:0px; overflow:auto"><!--height:98%; -->
+                                        <apex:pageBlock id="counterBlock" rendered="{!showContactCounter}">
+                                                <apex:pageBlockSection title="Contact Counter" collapsible="false" columns="2">
+                                                    <apex:repeat value="{!contactCounterList}" var="ccl">
+                                                        <div class="circles">
+                                                            <div class="second circle"
+                                                              data-value="{!ccl.contactCount}"
+                                                              data-size="70"
+                                                              data-thickness="10"
+                                                              data-fill='{!ccl.gradient}'>
+                                                                <br /><strong>{!ccl.contactIndex}<i>/{!ccl.contactThreshold}</i></strong>
+                                                                <span>{!ccl.contactFrequency}</span>
+                                                            </div>
+                                                        </div>
+                                                    </apex:repeat>
+                                              </apex:pageBlockSection>
+                                        </apex:pageBlock>
+                                        </apex:form>
+                                </apex:outputPanel>
+                                <apex:outputPanel id="conFL" layout="block" style="height:97%; width:69%; position:absolute; right:2px">
+                                    <apex:form id="fieldSet" style="width:100%; right:0px; overflow: hidden; margin: 0px auto;">
+                                        <apex:pageBlock id="fieldsetBlock">
+                                            <apex:pageBlockSection title="Details" collapsible="false" columns="3">
+                                                <apex:repeat value="{!fields}" var="f">
+                                                    <apex:outputField id="fs" value="{!contract[f.fieldPath]}"/>
+                                                </apex:repeat>
+                                            </apex:pageBlockSection>
+                                        </apex:pageBlock>
+                                    </apex:form>
+                                </apex:outputPanel>
+                            </apex:tab>
+                            <apex:tab label="Contract History" name="contractHistoryTab" id="p1tab3">
+                               <apex:form >
+                                <apex:pageBlock title="Details" mode="edit">
+                                    <apex:outputPanel layout="block" style="overflow: scroll">
+                                        <apex:pageBlockTable value="{!contractHistoryList}" var="ch" rules="rows,cols">
+                                            <apex:column headerValue="Interaction Date" value="{!ch.interactionDate}"/>
+                                            <apex:column headerValue="Action" value="{!ch.action}"/>
+                                        </apex:pageBlockTable>
+                                    </apex:outputPanel>
+                                </apex:pageBlock>
+                                </apex:form>
+                            </apex:tab>
+                        </apex:tabPanel>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel layout="block" id="summaryOutputPanel" style="margin:0px auto; width:100%; border:1px; position:absolute; bottom:0px; left:0px; right:10px; top:62%; clear:all"><!-- background-color:green; for debugging-->
+                        <apex:tabPanel id="summaryTabPanel" style="width:100%; margin:0px auto;" selectedTab="contractsTab" switchType="client" styleClass="theTabPanel" tabClass="theTabPanel" contentClass="tabContent" activeTabClass="activeTab" inactiveTabClass="inactiveTab">
+                            <apex:tab label="Interaction Log" name="ilTab" id="p3tab1">
+                                <apex:pageBlock title="Interaction Log Details" mode="edit">
+                                    <apex:outputPanel layout="block" style="overflow: scroll">
+                                        <apex:pageBlockTable value="{!ilLog}" var="IL" rules="rows,cols">
+                                            <apex:column headerValue="Interaction Date" value="{!IL.collect__Interaction_Date__c}"/>
+                                            <apex:column headerValue="Action" value="{!IL.collect__Action__c}"/>
+                                            <apex:column headerValue="Description" value="{!IL.collect__Description__c}"/>
+                                            <apex:column headerValue="User" value="{!IL.LastModifiedBy.Name}"/>
+                                        </apex:pageBlockTable>
+                                    </apex:outputPanel>
+                                </apex:pageBlock>
+                            </apex:tab>
+                            <apex:tab label="Promise to Pay" name="ptpTab" id="p3tab2">
+                                <apex:form >
+                                <apex:pageBlock id="p2pMainPB" title="Promise to Pay Details" mode="edit">
+                                    <apex:pageBlockButtons id="p2pSummaryButtons">
+                                        <apex:commandButton id="p2pEditBtn" value="Edit" action="{!changeToP2pEditMode}" rendered="{!NOT(editP2p)}" reRender="p2pSummaryButtons, p2pSummaryView, p2pSummaryTableEdit"/>
+                                        <apex:commandButton id="p2pSaveBtn" value="Save" action="{!saveP2ps}" rendered="true" reRender="p2pSummaryButtons, p2pSummaryView, p2pSummaryTableEdit"/>
+                                        <apex:commandButton value="Cancel" action="{!cancelP2pEdit}" reRender="p2pSummaryButtons, p2pSummaryView, p2pSummaryTableEdit" immediate="true"/>
+                                    </apex:pageBlockButtons>
+
+                                    <apex:outputPanel id="p2pSummaryView">
+                                        <apex:pageBlockSection columns="1" collapsible="false" rendered="{!NOT(editP2p)}">
+                                            <apex:pageBlockTable value="{!ptp}" var="prtpy" rules="rows,cols" style="overflow: scroll">
+                                                <apex:column headerValue="Promise to pay date">
+                                                    <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                                        <apex:param value="{!prtpy.collect__Promise_To_Pay_Date__c}" />
+                                                    </apex:outputText>
+                                                </apex:column>
+                                                <apex:column headerValue="Promise to pay amount">
+                                                    <apex:outputText value="{!ROUND(prtpy.collect__Promise_To_Pay_Amount__c,2)}"/>
+                                                </apex:column> 
+                                                <apex:column headerValue="Payment Mode" value="{!prtpy.collect__Mode_of_Payment__c}"/>
+                                                <apex:column headerValue="Promise Kept">
+                                                    <apex:inputCheckbox disabled="true" value="{!prtpy.collect__Promise_Kept__c}"/>
+                                                </apex:column>
+                                                <apex:column headerValue="Promise Broken ">
+                                                    <apex:inputCheckbox disabled="true" value="{!prtpy.collect__Promise_Broken__c}"/>
+                                                </apex:column>
+                                            </apex:pageBlockTable>
+                                        </apex:pageBlockSection>
+                                    </apex:outputPanel>
+
+                                    <apex:outputPanel id="p2pSummaryTableEdit">
+                                        <apex:pageBlockSection columns="1" collapsible="false" rendered="{!editP2p}">
+                                            <apex:pageblockTable id="p2pTableEdit" value="{!ptp}" var="p2pInfo" headerClass="fixedHeader" styleClass="scrollableFixedHeader">
+                                                <apex:column headerValue="Promise to pay date">
+                                                    <apex:inputField value="{!p2pInfo.collect__Promise_To_Pay_Date__c}" rendered="{!NOT(p2pInfo.collect__Promise_Kept__c || p2pInfo.collect__Promise_Broken__c)}"/>
+                                                    <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" rendered="{!(p2pInfo.collect__Promise_Kept__c || p2pInfo.collect__Promise_Broken__c)}">
+                                                        <apex:param value="{!p2pInfo.collect__Promise_To_Pay_Date__c}" />
+                                                    </apex:outputText>
+                                                </apex:column>
+                                                <apex:column headerValue="Promise to pay amount">
+                                                    <apex:inputField value="{!p2pInfo.collect__Promise_To_Pay_Amount__c}" rendered="{!NOT(p2pInfo.collect__Promise_Kept__c || p2pInfo.collect__Promise_Broken__c)}"/>
+                                                    <apex:outputField value="{!p2pInfo.collect__Promise_To_Pay_Amount__c}" rendered="{!(p2pInfo.collect__Promise_Kept__c || p2pInfo.collect__Promise_Broken__c)}"/>
+                                                </apex:column>
+                                                <apex:column headerValue="Payment Mode">
+                                                    <apex:inputField value="{!p2pInfo.collect__Mode_of_Payment__c}" rendered="{!NOT(p2pInfo.collect__Promise_Kept__c || p2pInfo.collect__Promise_Broken__c)}"/>
+                                                    <apex:outputField value="{!p2pInfo.collect__Mode_of_Payment__c}" rendered="{!(p2pInfo.collect__Promise_Kept__c || p2pInfo.collect__Promise_Broken__c)}"/>
+                                                </apex:column>
+                                                <apex:column headerValue="Promise Kept ?">
+                                                    <apex:outputField value="{!p2pInfo.collect__Promise_Kept__c}"/>
+                                                </apex:column>
+                                                <apex:column headerValue="Promise Broken ?">
+                                                    <apex:outputField value="{!p2pInfo.collect__Promise_Broken__c}"/>
+                                                </apex:column>
+                                                <apex:column headerValue="Delete">
+                                                    <apex:commandButton title="Delete P2P"
+                                                                        value="Delete P2P"
+                                                                        image="{!URLFOR($Resource.collect__Delete_Button_Red)}"
+                                                                        action="{!deleteP2p}"
+                                                                        immediate="true"
+                                                                        reRender="p2pSummaryTableEdit, p2pTableEdit"
+                                                                        rendered="{!NOT(p2pInfo.collect__Promise_Kept__c || p2pInfo.collect__Promise_Broken__c)}">
+                                                        <apex:param name="p2pToBeDeleted" value="{!p2pInfo.Id}" assignTo="{!p2pIdToBeDeleted}"/>
+                                                    </apex:commandButton>
+                                                </apex:column>
+                                            </apex:pageblockTable>
+                                        </apex:pageBlockSection>
+                                    </apex:outputPanel>
+                                </apex:pageBlock>
+                                </apex:form>
+                            </apex:tab>
+                            <apex:tab label="Payments" name="paymentsTab" id="p3tab3">
+                                <apex:form >
+                                <apex:pageBlock title="Payment Transaction Details" mode="edit">
+                                    <apex:outputPanel layout="block" style="overflow: scroll">
+                                        <apex:pageBlockTable value="{!paymentTxnsList}" var="lpt" rules="rows,cols">
+                                            <apex:column headerValue="Payment" value="{!lpt.paymentName}"/>
+                                            <apex:column headerValue="Transaction Date">
+                                                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                                    <apex:param value="{!lpt.txnDate}" />
+                                                </apex:outputText>
+                                            </apex:column>
+                                            <apex:column headerValue="Transaction amount">
+                                                <apex:outputText value="{!ROUND(lpt.txnAmount,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Fees">
+                                                <apex:outputText value="{!ROUND(lpt.fees,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Excess">
+                                                <apex:outputText value="{!ROUND(lpt.excess,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Cleared">
+                                                <apex:inputCheckbox disabled="true" value="{!lpt.isCleared}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Reversed">
+                                                <apex:inputCheckbox disabled="true" value="{!lpt.isReversed}"/>
+                                            </apex:column>
+					    <apex:column headerValue="Reversal Reason" rendered="{!IF(product=='CL Loan',true,false)}">
+                                                <apex:outputText value="{!lpt.reversalReason}"/>
+                                            </apex:column>
+                                        </apex:pageBlockTable>
+                                    </apex:outputPanel>
+                                </apex:pageBlock>
+                                </apex:form>
+                            </apex:tab>
+                            <apex:tab label="Bills" name="billsTab" id="p3tab4">
+                                <apex:form >
+                                <apex:pageBlock title="Bill Details" mode="edit">
+                                    <apex:outputPanel layout="block" style="overflow: scroll">
+                                        <apex:pageBlockTable value="{!billsTxnsList}" var="bl" rules="rows,cols">
+                                            <apex:column headerValue="Bill" value="{!bl.billName}"/>
+                                            <apex:column headerValue="Due date">
+                                                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                                    <apex:param value="{!bl.dueDate}" />
+                                                </apex:outputText>
+                                            </apex:column>
+                                            <apex:column headerValue="Tax due amount" rendered="{!IF(product=='CL Lease',true,false)}">
+                                                <apex:outputText value="{!ROUND(bl.taxDueAmount,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Rental due amount" rendered="{!IF(product=='CL Lease',true,false)}">
+                                                <apex:outputText value="{!ROUND(bl.rentalDueAmount,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Total due amount" rendered="{!IF(product=='CL Lease',true,false)}">
+                                                <apex:outputText value="{!ROUND(bl.totalDueAmount,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Total amount paid" rendered="{!IF(product=='CL Lease',true,false)}">
+                                                <apex:outputText value="{!ROUND(bl.totalPaidAmount,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Due amount" rendered="{!IF(product=='CL Lease',false,true)}">
+                                                <apex:outputText value="{!ROUND(bl.dueAmount,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Payment amount" rendered="{!IF(product=='CL Lease',false,true)}">
+                                                <apex:outputText value="{!ROUND(bl.paymentAmount,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Payment date" rendered="{!IF(product=='CL Lease',false,true)}">
+                                                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                                    <apex:param value="{!bl.paymentDate}" />
+                                                </apex:outputText>
+                                            </apex:column>
+                                            <apex:column headerValue="Satisfied" rendered="{!IF(product=='CL Lease',false,true)}" >
+                                                <apex:inputCheckbox disabled="true" value="{!bl.isPaymentSatisfied}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Primary" rendered="{!IF(product=='CL Lease',false,true)}">
+                                                <apex:inputCheckbox disabled="true" value="{!bl.isPrimary}"/>
+                                            </apex:column>      
+                                            <apex:column headerValue="Late charge applied"  value="{!bl.isLateChargeApplied}"/>
+                                        </apex:pageBlockTable>
+                                    </apex:outputPanel>
+                                </apex:pageBlock>
+                                </apex:form>
+                            </apex:tab>
+                            <apex:tab label="Charges" name="chargesTab" id="p3tab5">
+                                <apex:form >
+                                <apex:pageBlock title="Charge Details" mode="edit">
+                                    <apex:outputPanel layout="block" style="overflow: scroll">
+                                        <apex:pageBlockTable value="{!chargesTxnsList}" var="crg" rules="rows,cols">
+                                            <apex:column headerValue="Charge" value="{!crg.chargeName}" rendered="{!NOT(isLoan)}"/>
+                                            <apex:column headerValue="Charge" rendered="{!isLoan}">
+                                                <apex:commandLink value="{!crg.chargeName}" action="{!openWaiveChargePage}" target="_blank"> <!--onclick="showWaiveChargePopUp('{!crg.chargeId}')"-->
+                                                    <apex:param name="chargeId" assignTo="{!chargeID}" value="{!crg.chargeId}"/>
+                                                </apex:commandLink>
+                                            </apex:column>
+                                            <apex:column headerValue="Created date">
+                                                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                                    <apex:param value="{!crg.createdDate}" />
+                                                </apex:outputText>
+                                            </apex:column>
+                                            <apex:column headerValue="Fee type" value="{!crg.fee}"/>
+                                            
+                                            <apex:column headerValue="Due amount">
+                                                <apex:outputText value="{!ROUND(crg.balanceAmount,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Paid amount">
+                                                <apex:outputText value="{!ROUND(crg.paidAmount,2)}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Paid">
+                                                <apex:inputCheckbox disabled="true" value="{!crg.isPaid}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Waived">
+                                                <apex:inputCheckbox disabled="true" value="{!crg.isWaived}"/>
+                                               </apex:column>
+                                        </apex:pageBlockTable>
+                                    </apex:outputPanel>
+                                </apex:pageBlock>
+                                </apex:form>
+                            </apex:tab>
+                            <apex:tab label="Notifications" name="notificationsTab" id="p3tab6">
+                               <apex:form >
+                                <apex:pageBlock title="Details" mode="edit">
+                                    <apex:outputPanel layout="block" style="overflow: scroll">
+                                        <apex:pageBlockTable value="{!notificationList}" var="nf" rules="rows,cols">
+                                            <apex:column headerValue="Sent Date">
+                                                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                                    <apex:param value="{!nf.sentDate}" />
+                                                </apex:outputText>
+                                            </apex:column>
+                                            <apex:column headerValue="Message Sent">
+                                                <apex:inputCheckbox disabled="true" value="{!nf.messageSent}"/>
+                                            </apex:column>
+                                            <apex:column headerValue="Type" value="{!nf.messageType}"/>
+                                            <apex:column headerValue="Subject" value="{!nf.subject}"/>
+                                            <apex:column headerValue="Message" value="{!nf.message}"/>
+
+                                        </apex:pageBlockTable>
+                                    </apex:outputPanel>
+                                </apex:pageBlock>
+                                </apex:form>
+                            </apex:tab>
+                        </apex:tabPanel>
+                    </apex:outputPanel>
+                <!--</apex:pageBlock>-->
+            </apex:outputPanel>
+    </div>
+</apex:page>

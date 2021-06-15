@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Target_Financial_Statement__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Target financial statement for the statement analysis</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Target financial statement for the statement analysis</inlineHelpText>
+    <label>Target Financial Statement</label>
+    <referenceTo>clcommon__Financial_Statement__c</referenceTo>
+    <relationshipLabel>Statement Analysis (Target Financial Statement)</relationshipLabel>
+    <relationshipName>Statement_Analysis1</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

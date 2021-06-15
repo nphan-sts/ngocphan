@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>statusWebhook__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( OR ((TEXT(genesis__Status__c)= 'Decline_Manual_Review'), (TEXT(genesis__Status__c)= 'Withdrawn'),( Owner:Queue.QueueName ='Review Queue')) ,true, false)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>statusWebhook</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

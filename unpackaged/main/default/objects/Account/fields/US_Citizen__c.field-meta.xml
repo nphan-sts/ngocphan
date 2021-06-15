@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>US_Citizen__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Field to define the member is U.S. Citizen or U.S. Person (including a U.S. Resident Alien) or not.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Should be passed from FrontEnd to set the Member as U.S. Citizen or U.S. Person (including a U.S. Resident Alien)</inlineHelpText>
+    <label>U.S. Citizen or U.S. Person</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

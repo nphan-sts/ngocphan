@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>ENTERED</fullName>
+                <default>true</default>
+                <label>ENTERED</label>
+            </value>
+            <value>
+                <fullName>GENERATED</fullName>
+                <default>false</default>
+                <label>GENERATED</label>
+            </value>
+            <value>
+                <fullName>CONVERTED TO APPLICATION</fullName>
+                <default>false</default>
+                <label>CONVERTED TO APPLICATION</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

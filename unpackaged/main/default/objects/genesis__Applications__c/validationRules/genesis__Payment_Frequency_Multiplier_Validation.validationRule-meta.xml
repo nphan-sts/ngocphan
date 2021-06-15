@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Payment_Frequency_Multiplier_Validation</fullName>
+    <active>true</active>
+    <description>Payment Frequency Multiplier should not be less than or equal to zero .
+Payment Frequency Multiplier should not be allowed to input for Payment Frequency other than Monthly, Weekly and Daily</description>
+    <errorConditionFormula>IF( ISBLANK(genesis__Payment_Frequency_Multiplier__c),FALSE,
+ OR(genesis__Payment_Frequency_Multiplier__c &lt;= 0,
+  NOT(
+   OR( ISPICKVAL(genesis__Payment_Frequency__c,'Daily'),
+      ISPICKVAL(genesis__Payment_Frequency__c,'WEEKLY'),
+      ISPICKVAL(genesis__Payment_Frequency__c,'MONTHLY')
+     )
+    )
+  )
+)</errorConditionFormula>
+    <errorMessage>Either value is less than or equal to zero, or kindly choose correct value for Payment Frequency(Daily, Weekly or Monthly)</errorMessage>
+</ValidationRule>

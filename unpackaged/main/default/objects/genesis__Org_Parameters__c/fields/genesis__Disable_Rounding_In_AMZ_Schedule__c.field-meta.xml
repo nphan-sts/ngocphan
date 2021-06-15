@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Disable_Rounding_In_AMZ_Schedule__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If this is checked then there will not any any rounding in amz schedule.
+All the interest and payment amount will be saved as un rounded one.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If this is checked then there will not any any rounding in amz schedule.
+All the interest and payment amount will be saved as un rounded one.</inlineHelpText>
+    <label>Disable Rounding In AMZ Schedule</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,127 @@
+<apex:page lightningStylesheets="true" standardController="loan__Consolidated_Loan_Payment__c"
+    extensions="loan.ConsolidatedLoanPaymentController" sidebar="false">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <!--We use jQuery to disable all buttons with id ending with 'Btn'-->
+    <!--we don't have to re-enable them here because the related pageblock is reRendered-->
+    <script>
+        var j$ = jQuery.noConflict();
+        function disableButtons(btnName) {
+            j$('[id$=Btn]').prop('value', btnName).addClass("btnDisabled").attr("disabled", "true");
+        }
+    </script>
+    <apex:form >
+        <apex:sectionHeader title="Consolidated Loan Payment">
+            <apex:pageBlock mode="{!IF(ISBLANK(newPayment.id), 'edit', 'detail')}" id="topPg">
+                <apex:pageMessages />
+                <apex:pageBlockButtons location="top" id="blkButtons">
+                    <c:BusyButton name="Validate" busyName="Validating.."
+                        actionTo="{!validate}" disabled="{!NOT(ISBLANK(newPayment.Id))}"
+                        reRenderTo="loans, topPg" />
+                    <c:BusyButton name="Save" busyName="Saving" actionTo="{!save}"
+                        disabled="{!NOT(ISBLANK(newPayment.Id))}" reRenderTo="topPg" />
+                    <apex:commandButton value="Reverse"
+                        action="/apex/consolidatedPaymentReversal?Id={!newPayment.Id}"
+                        immediate="true" id="rBtn" disabled="{!ISBLANK(newPayment.Id)}" />
+                    <apex:commandButton value="Cancel" immediate="true" id="cBtn"
+                        action="{!URLFOR($Action.Account.Tab, $ObjectType.Account)}" />
+                </apex:pageBlockButtons>
+                <apex:outputpanel id="op1">
+                    <apex:pageBlockSection columns="2" title="Payment Details">
+                        <apex:outputField value="{!newPayment.loan__Account__c}"
+                            rendered="{!NOT(ISBLANK(newPayment.loan__Account__c))}" />
+                        <apex:outputField value="{!newPayment.loan__Contact__c}"
+                            rendered="{!NOT(ISBLANK(newPayment.loan__Contact__c))}" />
+                        <apex:inputField value="{!newPayment.loan__Date__c}"
+                            rendered="{!ISBLANK(newPayment.Id)}" />
+                        <apex:outputField value="{!newPayment.loan__Date__c}"
+                            rendered="{!NOT(ISBLANK(newPayment.Id))}" />
+                        <apex:inputField value="{!newPayment.loan__Amount__c}"
+                            rendered="{!ISBLANK(newPayment.Id)}" />
+                        <apex:outputField value="{!newPayment.loan__Amount__c}"
+                            rendered="{!NOT(ISBLANK(newPayment.Id))}" />
+                        <apex:inputField value="{!newPayment.loan__Payment_Mode__c}"
+                            rendered="{!ISBLANK(newPayment.Id)}" />
+                        <apex:outputField value="{!newPayment.loan__Payment_Mode__c}"
+                            rendered="{!NOT(ISBLANK(newPayment.Id))}" />
+                    </apex:pageBlockSection>
+                </apex:outputpanel>
+                <apex:outputpanel style="overflow:auto; height:500px;" id="opanel1">
+                    <apex:pageblockSection columns="1" title="Loans" id="loans">
+                        <!--<apex:inputcheckbox label="Show pay-off amount" value="{!showPayOff}" rendered="{!ISBLANK(newPayment.id)}">
+                            <apex:actionSupport event="onchange" rerender="opanel1, loans, loantable"/>
+                        </apex:inputcheckbox>-->
+                        <apex:inputcheckbox label="Show Amount to Current"
+                            value="{!showAmountToCurrent}"
+                            rendered="{!ISBLANK(newPayment.id)}">
+                            <apex:actionSupport event="onchange"
+                                rerender="opanel1, loans, loantable" />
+                        </apex:inputcheckbox>
+                        <apex:pageblocktable value="{!iRepayments}" var="repayment"
+                            id="loantable" style="width:100%">
+                            <apex:column headerValue="Spread Manually"
+                                style="text-align:center;">
+                                <apex:inputCheckBox value="{!repayment.manual}" immediate="true"
+                                    disabled="{!NOT(ISBLANK(newPayment.Id))}">
+                                    <apex:actionSupport event="onclick"
+                                        action="{!handleManualToggle}"
+                                        rerender="opanel1, loans, loantable">
+                                        <apex:param name="rowNum" value="{!repayment.index}" />
+                                    </apex:actionSupport>
+                                </apex:inputCheckBox>
+                            </apex:column>
+                            <apex:column headerValue="Loan Id">
+                                <apex:outputLink target="_blank"
+                                    style="{!IF(repayment.loanAccount.loan__Loan_Status__c='Active - Bad Standing', 'color:red; font-weight:bold;', '')}"
+                                    value="/{!repayment.loanAccount.Id}">{!repayment.loanAccount.Name}</apex:outputLink>
+                            </apex:column>
+                            <apex:column style="{!IF(repayment.loanAccount.loan__Loan_Status__c='Active - Bad Standing', 'color:red; font-weight:bold;', '')}"
+                                headerValue="Loan Status"
+                                value="{!repayment.loanAccount.loan__Loan_Status__c}"
+                                rendered="{!ISBLANK(newPayment.Id)}" />
+                            <apex:column style="{!IF(repayment.loanAccount.loan__Loan_Status__c='Active - Bad Standing', 'color:red; font-weight:bold;', '')}"
+                                headerValue="Next Due Date"
+                                value="{!repayment.loanAccount.loan__Next_Installment_Date__c}"
+                                rendered="{!ISBLANK(newPayment.Id)}" />
+                            <apex:column style="{!IF(repayment.loanAccount.loan__Loan_Status__c='Active - Bad Standing', 'color:red; font-weight:bold;', '')}"
+                                headerValue="Payment Amount"
+                                value="{!repayment.loanAccount.loan__Payment_Amount__c}"
+                                rendered="{!ISBLANK(newPayment.Id)}" />
+                            <apex:column style="{!IF(repayment.loanAccount.loan__Loan_Status__c='Active - Bad Standing', 'color:red; font-weight:bold;', '')}"
+                                headerValue="Pay-Off Amount"
+                                value="{!repayment.loanAccount.loan__Pay_Off_Amount_As_Of_Today__c}"
+                                rendered="{!AND(showPayOff, ISBLANK(newPayment.Id))}" />
+                            <apex:column style="{!IF(repayment.loanAccount.loan__Loan_Status__c='Active - Bad Standing', 'color:red; font-weight:bold;', '')}"
+                                headerValue="Amount To Current"
+                                value="{!repayment.loanAccount.loan__Amount_to_Current__c}"
+                                rendered="{!AND(showAmountToCurrent, ISBLANK(newPayment.Id))}" />
+
+                            <apex:column headerValue="Principal">
+                                <apex:inputText value="{!repayment.principal}"
+                                    style="width:90px"
+                                    disabled="{!OR(NOT(repayment.manual),NOT(ISBLANK(newPayment.Id)))}" />
+                            </apex:column>
+                            <apex:column headerValue="Interest">
+                                <apex:inputText value="{!repayment.interest}" style="width:90px"
+                                    disabled="{!OR(NOT(repayment.manual),NOT(ISBLANK(newPayment.Id)))}" />
+                            </apex:column>
+                            <apex:column headerValue="Fees">
+                                <apex:inputText value="{!repayment.fees}" style="width:90px"
+                                    disabled="{!OR(NOT(repayment.manual),NOT(ISBLANK(newPayment.Id)))}" />
+                            </apex:column>
+                            <apex:column headerValue="Applied Amount">
+                                <apex:inputText value="{!repayment.total}"
+                                    disabled="{!NOT(ISBLANK(newPayment.Id))}" />
+                            </apex:column>
+                            <apex:column headerValue="Posted">
+                                <apex:inputCheckbox value="{!repayment.posted}" disabled="true" />
+                            </apex:column>
+                        </apex:pageblocktable>
+                    </apex:pageblockSection>
+                </apex:outputpanel>
+            </apex:pageBlock>
+        </apex:sectionHeader>
+    </apex:form>
+</apex:page>

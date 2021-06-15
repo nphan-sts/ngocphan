@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Allow_Guest_User_Access__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This field indicates whether a guest user can access this structure or not.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field indicates whether a guest user can access this structure or not.</inlineHelpText>
+    <label>Allow Guest User Access</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

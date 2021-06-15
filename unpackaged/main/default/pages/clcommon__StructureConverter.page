@@ -1,0 +1,288 @@
+<apex:page sidebar="false" showHeader="false" controller="clcommon.PortalActions">
+    <apex:include pageName="clcommon__ResolveNamespace"/>
+    <script src="../../soap/ajax/42.0/connection.js" type="text/javascript"></script>
+    <script>
+        var objectPrefix = window.commonprefix;
+        if(objectPrefix){
+            objectPrefix = objectPrefix + '__';
+        } 
+        var V3_RESOURCE_NAME = 'PortalBuilderConfigurationsV3';
+        var NAVIGATION_STRUCTURE_JSON_FIELD = objectPrefix + "data__c";
+        var NAVIGATION_STRUCTURE_QUERY = "Select Name, Id, " 
+                                            + NAVIGATION_STRUCTURE_JSON_FIELD 
+                                            + " FROM " 
+                                            + objectPrefix + "NavigationStructure__c WHERE " 
+                                            + objectPrefix + "Is_Editor_JSON__c = false";
+        var CSS_CONFIGURATION_QUERY = "Select Id, Name, " 
+                                            + objectPrefix + "Content__c FROM " 
+                                            + objectPrefix + "Css_Configuration__c";
+        
+        // get records for a given query
+        function getRecordsForQuery(query){
+            sforce.connection.sessionId='{!GETSESSIONID()}';     
+            var result = sforce.connection.query(query);
+            var records = result.getArray("records");            
+            return records;
+        }
+        
+        // get records for a given query
+        function createRecords(records){
+            sforce.connection.sessionId='{!GETSESSIONID()}';     
+            var result = sforce.connection.create(records);
+            return result;
+        }
+        
+        // get records for a given query
+        function updateRecords(records){
+            sforce.connection.sessionId='{!GETSESSIONID()}';     
+            var result = sforce.connection.update(records);
+            return result;
+        }
+        
+        function getErrorRecordNames(result, originalRecords){
+            var successRecords = [];
+            for(var index = 0; index < result.length; index++){
+                if(result[index].getBoolean("success")){
+                    successRecords.push(result[index].id);
+                }
+            }
+            
+            var errRecordNames = [];
+            for(var index = 0; index < originalRecords.length; index++){
+                if(!successRecords.includes(originalRecords[index].Id)){
+                    errRecordNames.push(originalRecords[index].Name);
+                }
+            }
+            
+            return errRecordNames;
+        }
+        
+        // template to generate CSS Config record
+        function CSSConfiguration(name, id) {
+            this.name = name;
+            this.id = id;
+            this.stageMapping = {};
+            this.layoutTitleMapping = {};
+            this.layoutMapping = {};
+        }
+        
+        function organizeAction(action){
+            var newAction = {};
+            var appearance = Object.assign({}, action.appearance);   
+            for (var attribute in action) {
+                switch (attribute) {
+                    case 'label':
+                        appearance.label = action.label;
+                        break;
+                    case 'style':
+                        appearance.style = action.style;
+                        break;
+                    case 'position':
+                        appearance.position = action.position;
+                        break;
+                    case 'tooltip':
+                        appearance.tooltip = action.tooltip;
+                        break;
+                    case 'render':
+                        appearance.render = action.render;
+                        break;
+                    case 'enable':
+                        appearance.enable = action.enable;
+                        break;
+                    default:
+                        newAction[attribute] = action[attribute];
+                }
+            }
+            newAction.appearance = appearance;
+            return newAction;
+        }
+        
+        function processActions(actions){
+            if(Array.isArray(actions)){
+                return actions && actions.map(function(action){
+                    return organizeAction(action);
+                });
+            } else {
+                var newActions = {};
+                for (var actionName in actions) {
+                    if (actions.hasOwnProperty(actionName)) {  
+                        newActions[actionName] = organizeAction(actions[actionName]);
+                    }
+                }
+                return newActions;
+            }        
+        }
+        
+        function V2ToV3Parser(navRecordToProcess){
+            if(navRecordToProcess[NAVIGATION_STRUCTURE_JSON_FIELD]){
+                var navStrInstance = JSON.parse(navRecordToProcess[NAVIGATION_STRUCTURE_JSON_FIELD]); // can throw error
+                var actors = navStrInstance.actors; // get actors from the object and process each actor
+                for (var actorName in actors) {
+                    if (actors.hasOwnProperty(actorName)) {         
+                        // each actor can have component actions, general hanlers , record actions. 
+                        var actor = actors[actorName];  
+                        if(actor.componentActions){
+                            actor.componentActions = processActions(actor.componentActions);   
+                        }
+                        if(actor.recordActions){
+                            actor.recordActions = processActions(actor.recordActions);
+                        }                                
+                        if(actor.generalHandlers){
+                             actor.generalHandlers = processActions(actor.generalHandlers);
+                        }   
+                    }
+                }
+                navRecordToProcess[NAVIGATION_STRUCTURE_JSON_FIELD] = JSON.stringify(navStrInstance, null, 0);
+            }
+        }
+        
+        function convertTo(){ // later should take version
+            
+            showSpinner(true); //show spinner
+            
+            setTimeout(function(){
+                // generate the builder jsons
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.PortalActions.extractBuilderConfigurations}', 
+                    V3_RESOURCE_NAME, 
+                    function(result, event){
+                        // do nothing
+                    }
+                );
+                
+                // Generate css configuration map. Generate missing css config record for the nav record
+                var cssConfigRecords = getRecordsForQuery(CSS_CONFIGURATION_QUERY);
+                var cssConfigByName = {};
+                for (var index = 0; index < cssConfigRecords.length; index++) {
+                    var record = cssConfigRecords[index];
+                    cssConfigByName[record.Name] = record;
+                }
+    
+                // get navigation structures
+                var newCssConfigRecords = [];
+                var updateNavigationRecords = [];
+                var errorRecords = [];
+                var navigationRecords = getRecordsForQuery(NAVIGATION_STRUCTURE_QUERY);
+                if(navigationRecords && navigationRecords.length > 0){
+                    for (var index = 0; index < navigationRecords.length; index++) {
+                        var navRecord = navigationRecords[index];
+                        if(navRecord){
+                            var cssRecord = cssConfigByName[navRecord.Name];
+                            if(!cssRecord){
+                                cssRecord = new sforce.SObject(objectPrefix + "Css_Configuration__c");
+                                cssRecord.Name = navRecord.Name;
+                                cssRecord[objectPrefix + "Content__c"] = JSON.stringify(new CSSConfiguration(navRecord.Name));
+                                newCssConfigRecords.push(cssRecord);
+                            }
+                            try{
+                                V2ToV3Parser(navRecord);
+                                updateNavigationRecords.push(navRecord);
+                            }catch(err){
+                                // do not process the records and add name to errors
+                                errorRecords.push(navRecord.Name);
+                            }      
+                        }
+                    }
+                    
+                    var result = updateRecords(updateNavigationRecords);
+                    var errNames = getErrorRecordNames(result, updateNavigationRecords);
+                    if(errorRecords.length > 0){
+                        errNames.push(errorRecords.toString());           
+                    }
+                    if(newCssConfigRecords && newCssConfigRecords.length > 0){
+                        result = createRecords(newCssConfigRecords);
+                    }
+                }
+                showSpinner(false);
+                
+                // update text
+                if(errNames.length == 0) {
+                    updateStatus('Processing Completed!', 'green');
+                } else {
+                    updateStatus('Unable to process ' + errNames.toString(), 'red');
+                }
+                
+            }, 10);   
+        }
+        
+        function updateStatus(message, color){
+            var el = document.getElementById('notify-status');
+            el.innerText = message;
+            el.style.color = color;
+        }
+        
+        //show or hide spinner
+        function showSpinner(show){        
+            var el = document.getElementById('status-spinner');
+            if(show){
+                el.style.display = 'inline-block';
+            } else {
+                el.style.display = 'none';
+            }    
+        } 
+    
+      </script>
+      <style>
+      #status-spinner{
+          display: none;
+          padding : 4px;
+      }
+      #notify-status{
+          font-weight: bold;
+      }
+      .page-header > h1{
+          font-size: large;
+      }
+      .header{
+          text-decoration: underline;
+          font-weight: bold;
+      }
+      </style>
+      
+      <apex:panelGrid columns="1" style="margin: 6px; border: 2px solid white;">
+          <div class="page-header">
+              <h1>CL Portal Syntax Upgrades</h1>
+          </div>
+          <apex:outputText value="Here are all the available syntax upgrades, please elect to upgrade to one of the following below. Please note: these upgrades cannot be reversed"></apex:outputText>
+      </apex:panelGrid>
+      
+      <apex:panelGrid columns="4" width="100%" style="margin: 15px 4px 15px 4px; border: 2px solid white;">
+          <apex:panelGrid columns="1">
+              <apex:outputLabel styleClass="header">Syntax Version</apex:outputLabel>
+              <apex:outputLabel >V3</apex:outputLabel>
+          </apex:panelGrid>
+          
+          <apex:panelGrid columns="1">
+              <apex:outputLabel styleClass="header">Related Release</apex:outputLabel>
+              <apex:outputLabel >Orion Release(May 2018)</apex:outputLabel>
+          </apex:panelGrid>    
+          
+          <apex:panelGrid columns="1">
+              <apex:outputLabel styleClass="header">Description</apex:outputLabel>
+              <apex:outputLabel >This upgrade will upgrade syntax version V2 to V3. V2 is required</apex:outputLabel>
+          </apex:panelGrid>
+          
+          <apex:panelGrid columns="1">
+              <apex:form >    
+                  <apex:outputPanel id="container">         
+                      <apex:actionStatus id="pageStatus">
+                          <apex:facet name="start">
+                              <apex:outputPanel >
+                                  <!-- <img src="/img/loading32.gif" width="25" height="25" />
+                                  <apex:outputLabel value="Processing..."/> -->
+                              </apex:outputPanel>            
+                          </apex:facet>
+                      </apex:actionStatus>
+                      <apex:commandButton onclick="convertTo();" 
+                                          status="pageStatus" 
+                                          value="Upgrade" 
+                                          reRender="container"/>
+                  </apex:outputPanel>
+                  <div id="status-spinner">
+                      <img src="/img/loading32.gif" width="25" height="25" />
+                  </div>    
+                  <div id="notify-status"></div>      
+             </apex:form>  
+          </apex:panelGrid>
+      </apex:panelGrid>
+</apex:page>

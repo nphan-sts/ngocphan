@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Share__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF (ISPICKVAL(peer__Loan_Application__r.peer__Stage__c, 'Funded'),
+  peer__Investment_Amount__c / peer__Loan_Application__r.peer__Amount_Funded__c,
+  peer__Investment_Amount__c / peer__Loan_Application__r.peer__Requested_Loan_Amount__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Share</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

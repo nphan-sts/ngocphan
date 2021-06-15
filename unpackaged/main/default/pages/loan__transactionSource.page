@@ -1,0 +1,49 @@
+<apex:page lightningStylesheets="true" standardController="loan__Transaction_Source__c"
+	id="transactionSourcePage" recordSetVar="transactionSourceSet"
+	tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:form >
+		<apex:sectionHeader title="Transaction Source" />
+		<apex:pageblock id="transactionSourceList">
+			<apex:actionRegion >
+				<apex:outputText value="Records per page: "></apex:outputText>
+				<apex:selectList value="{!pagesize}" size="1">
+					<apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+					<apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+					<apex:selectOption itemLabel="25" itemValue="25"></apex:selectOption>
+					<apex:actionSupport event="onchange"
+						rerender="transactionSourceTable, navigation" />
+				</apex:selectList>
+			</apex:actionRegion>
+
+			<apex:pageblockTable value="{!transactionSourceSet}"
+				id="transactionSourceTable" var="JA">
+				<apex:column headerValue="Transaction Source Name">
+					<apex:commandLink value="{!JA.Name}"
+						reRender="transactionSourcePage:transactionSourceDetail">
+						<apex:param name="transactionSourceID" value="{!JA.ID}" />
+					</apex:commandLink>
+				</apex:column>
+			</apex:pageblockTable>
+		</apex:pageblock>
+		<apex:panelGrid columns="2" id="navigation">
+			<apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+			<apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+		</apex:panelGrid>
+	</apex:form>
+
+	<apex:outputPanel id="transactionSourceDetail">
+		<apex:detail subject="{!$CurrentPage.parameters.transactionSourceID}"></apex:detail>
+	</apex:outputPanel>
+
+	<apex:sectionHeader title="Define a New Transaction Source" />
+	<table>
+		<tr>
+			<td><a href="{!URLFOR($Action.Transaction_Source__c.New)}"><br></br>
+				<b>Define New Transaction Source</b></a></td>
+		</tr>
+	</table>
+
+</apex:page>

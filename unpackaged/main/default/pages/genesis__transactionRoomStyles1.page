@@ -1,0 +1,458 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardStylesheets="false">
+    <style>
+    @media (min-width: 768px) {
+        #page-wrapper {
+            margin-left: 0px!important;
+            margin-right: 350px!important;
+            // margin-top : 50px!important ;
+        }
+        .sidebar {
+            right: 0px !important;
+            width: 350px !important;
+            padding-right: 5px !important;
+        }
+    }
+    
+    .btncustomer{
+        margin-right : 10px;
+    }
+    .doc-status-tab {
+        height: 77px;
+    }
+    
+    .show-grid {
+        margin-top: 5px!important;
+        background-color: white!important;
+    }
+    
+    .transaction-room-panel-heading {
+        background-color: #d6f2fb !important;
+        color: #000 !important;
+        font-weight: bold !important;
+    }
+    
+    .number {
+        font-size: 29px;
+    }
+    
+    .bold {
+        font-weight: bold;
+        font-size: 11px;
+    }
+    
+    .action-icons {
+        padding-right: 3px;
+        color: rgb(82, 161, 209);
+    }
+    
+    div[data-angular-treeview] {
+        -moz-user-select: none;
+        color: #555;
+        font-family: arial;
+        font-size: 12px;
+        text-decoration: none;
+    }
+    
+    div[data-tree-model] ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border: none;
+        overflow: hidden;
+    }
+    
+    div[data-tree-model] li {
+        position: relative;
+        padding: 0 0 0 5px;
+        line-height: 30px;
+    }
+    
+    div[data-tree-model] li .expanded {
+        background-repeat: no-repeat;
+        color: rgb(75, 75, 75);
+        font-size: 12px;
+    }
+    
+    div[data-tree-model] li .collapsed {
+        background-repeat: no-repeat;
+        color: rgb(100, 100, 100);
+        font-size: 12px;
+    }
+    
+    div[data-tree-model] li .normal {
+        padding: 1px 10px;
+        background-repeat: no-repeat;
+        color: rgb(82, 161, 209);
+    }
+    
+    div[data-tree-model] li i,
+    div[data-tree-model] li span {
+        cursor: pointer;
+        padding-left: 6px;
+    }
+    
+    div[data-tree-model] li .selected {
+        background-color: #aaddff;
+        font-weight: bold;
+        padding: 1px 5px;
+    }
+    
+    .doc-category-panel-body {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding-right : 4px;
+    }
+    
+    .e-input {
+        width: 200px;
+        height: 27px;
+    }
+    
+    .text-tick {
+        top: -25px;
+        position: relative;
+        right: -207px;
+        font-size: 22px;
+    }
+    
+    .text-cross {
+        top: -25px;
+        position: relative;
+        right: -213px;
+        font-size: 22px;
+    }
+    
+    .inputArea {
+        padding: 5px 5px 5px 5px;
+        line-height: 15px;
+    }
+    
+    .colorBlue {
+        color: rgb(82, 161, 209);
+    }
+    /*
+    .trchatterPanel {
+        height: 450px;
+        position: relative;
+        //overflow: hidden;
+    }
+    */
+    .right-panel-body {
+        padding: 8px 10px;
+    }
+    
+    .app-modal-body {
+        height: 150px;
+        background-color: #fff;
+        padding: 15px;
+    }
+    
+    .notifyContainer {
+        top: 6px;
+        font-size: 13px;
+        line-height: 16px;
+        text-align: center;
+        padding: 10px;
+        width: auto;
+        position: relative;
+    }
+    
+    #publishereditablearea_autoCompleteBoxId {
+        z-index: 1110 !important;
+    }
+    </style>
+    
+    <style>
+    .genesis-trRoom .navbar-inverse {
+        background-color: #23386f;
+        border-color: #23386f;
+    }
+    
+    .genesis-trRoom .navbar-inverse .navbar-brand {
+        color: #fff;
+    }
+        
+    .panelreport {
+        border: 1px solid #dddddd;
+        background: #fdfdfd;
+        padding: 5px 10px 5px 10px;
+    }
+    
+    .panelreport .panel {
+        background-color: #fdfdfd;
+        border: none !important;
+        border-radius: 0px !important;
+        box-shadow: none !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .panelreport .panel-heading {
+        border-bottom: none !important;
+        border-top-left-radius: 0px !important;
+        border-top-right-radius: 0px!important;
+        padding: 10px 15px;
+    }
+    
+    .panelapplayer {
+        border: 1px solid #a6a6a6;
+        background: #ffffff;
+    }
+    
+    .panelapplayer .col-lg-5 {
+        background: #ffffff !important;
+    }
+    
+    .panelapplayer .col-lg-5 .transaction-room-panel-heading {
+        background-color: #bfe8f5 !important;
+        color: #000000 !important;
+        font-weight: bold !important;
+        border-radius: none !important;
+    }
+    
+    .panelapplayer .panel {
+        background-color: #fff;
+        border: none !important;
+        border-radius: 0px !important;
+        box-shadow: none !important;
+        margin-bottom: 0px !important;
+    }
+    
+    .panel-heading {
+        border-bottom: none !important;
+        border-top-left-radius: none !important;
+        border-top-right-radius: none !important;
+        padding: 10px 15px;
+    }
+    
+    .panelapplayer .doc-category-panel-body {
+        font-size: 12px;
+        font-family: sans-serif;
+    }
+    
+    
+    .panel {
+        background-color: #fff;
+        border: none !important;
+        border-radius: 4px;
+        box-shadow: none !important;
+        margin-bottom: 0px!important;
+    }
+    
+    .panelapplayer .col-lg-5 {
+        border-right: 1px solid #d0d2d5;
+        min-height: 800px;
+    }
+    
+    .panelapplayer .col-lg-6 {
+        padding: 10px 2px 10px 20px;
+    }
+    
+    .panelapplayer #detailContent .col-lg-6 {
+       // min-height: 400px;
+        padding: 10px 10px 10px 20px;
+    }
+    
+    .panelapplayer .col-lg-12 {
+        padding: 10px 10px 10px 20px;
+    }
+    
+    .ng-scope {
+        font-family: sans-serif;
+        font-size: 12px;
+    }
+    
+    .panelapplayer .table {
+        margin-top: 20px;
+    }
+    
+    .panelapplayer .table tr th {
+        font-size: 10px !important;
+    }
+    
+    .panelapplayer .form-control-static {
+        margin-bottom: 0;
+        padding-bottom: 2px!important;
+        padding-top: 2px!important;
+    }
+    
+    .genesis-trRoom .panel-default > .panel-heading {
+        background-color: #d6f2fb;
+        border-color: #ddd;
+        color: #333;
+    }
+    
+    .dragupload {
+        background: #f5f7fa;
+        margin: 0 auto;
+        width: 99%;
+        padding: 3px 3px 6px 3px;
+    }
+    
+
+    .upload {
+    /*
+        border: 1px solid #dcdcdc;
+        background: #fff;
+        padding: 20px;
+        text-align: center;
+        display:table;  
+    */
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #dcdcdc;
+        display: table;
+        padding: 20px;
+        text-align: center;
+        
+    }
+    
+    .attbg {
+        background: #f5f7fa none repeat scroll 0 0;
+        margin-bottom: 0px !important;
+        margin-top: 0px !important;
+    }
+    
+    .attbg ul,
+    ol {
+        margin-bottom: 10px;
+        margin-top: 0;
+    }
+    
+    .attbg .attachment-ul {
+        list-style-type: none;
+        height: 349px;
+        overflow: scroll;
+        padding-left: 20px;
+        padding-top: 20px;
+    }
+    
+    @media screen and (min-width: 360px) {
+        .navbar-brand {
+            float: left;
+            height: 50px;
+            padding: 15px 15px;
+            font-size: 100%;
+            line-height: 20px;
+        }
+    }
+    
+    .accordion-toggle .fa-fw { 
+        margin-right:10px;
+    } 
+    
+   .completedTask{
+       color: grey;
+       text-decoration: line-through;
+    }
+    
+    .divlgspace { 
+        margin-left:20px;
+        margin-right:20px;
+    }
+    
+    .clgpadding { 
+        padding-left: 15px;
+        padding-right: 15px; 
+    }
+    
+    .faOpen{
+        color : #FAE057 !important;
+    }
+    .faSubmitted{
+        color : #3A74C5 !important;
+    }
+    .faCleared{
+        color : #1EB442 !important;
+    }
+    .faRejected{
+        color : #E23F3F !important;
+    }
+    
+    .panelHeading{
+        background-color: #bfe8f5 !important;
+    }
+   
+    #chatterPnl .publishercontainer .bottomBar{
+        height : 45px;
+        padding: 8px;
+    }
+   
+   #chatterPnl .defaultState.publishercontainer .bottomBar {
+        height: 0;
+        padding: 0;
+    }
+    
+    #accordionGrp .panel-heading{
+        background-color: #bfe8f5 !important;
+    }
+
+    #accordionGrp * {outline: 0 !important;}
+    
+    #taskPnl table tbody tr td{
+        border-left : 0px transparent;
+        border-right: 0px transparent;
+    }
+    
+    #taskPnl .panel-body{
+        padding : 0px 0px 5px 0px !important;
+    }
+    
+    #attachmentpanel table tbody tr td{
+        border-left : 0px transparent;
+        border-right: 0px transparent;
+    }
+    
+    #attachmentpanel .panel-body{
+        padding : 0px 0px 5px 0px !important;
+    }
+    
+    #chatter-content .panel-body{
+        padding : 0px 8px 5px 8px !important;
+    }
+    
+    .task-category-highlight{
+        text-decoration : underline !important;
+        font-weight : bold !important;
+    }
+    
+    .transaction-room-tab-heading {
+      color: #000 !important;
+      font-weight: bold !important;
+    }
+    
+    #tr-room-tab-view ul.nav{
+        height: 37px !important;
+        background-color: #BFE8F5 !important;
+    }
+    
+    #tr-room-tab-view ul.nav li{
+        height: 37px;
+    }
+    
+    #tr-room-tab-view ul.nav li a{
+        height: 37px;
+        border-radius : 0px;
+        margin-right : 0px;
+    }
+    
+    .dragover {
+        border: 3px dashed #DCDEE1;
+    }
+    
+    .dropdownOptions{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 33px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        width: 100%; 
+        margin-top: 3px !important;
+    }
+    </style>
+</apex:page>

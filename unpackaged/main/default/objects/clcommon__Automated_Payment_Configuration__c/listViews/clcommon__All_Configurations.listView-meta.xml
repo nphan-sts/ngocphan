@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__All_Configurations</fullName>
+    <columns>NAME</columns>
+    <columns>clcommon__Payment_Mode__c</columns>
+    <columns>clcommon__Event__c</columns>
+    <columns>clcommon__Filegen_Class__c</columns>
+    <columns>clcommon__Active__c</columns>
+    <columns>clcommon__Bank_Account__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All Configurations</label>
+</ListView>

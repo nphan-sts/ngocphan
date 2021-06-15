@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__SS_Interest_Rounding_Error__c</fullName>
+    <defaultValue>0</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This field stores the interest rounding error whenever investor payout happens. It will be used to restore the interest rounding error at the time of investor payout reversal.</description>
+    <externalId>false</externalId>
+    <label>Interest Rounding Error Snapshot</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>6</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

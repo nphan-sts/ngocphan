@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Final_Payment_Differ__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This works in combination with Adjust rounding in last Pmt parameter.
+If both are checked then rounding is done in last payment by increasing the last payment amount.
+If this is unchecked then all the payments will be equated(even).</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This works in combination with Adjust rounding in last Pmt parameter.
+If both are checked then rounding is done in last payment by increasing the last payment amount.
+If this is unchecked then all the payments will be equated(even).</inlineHelpText>
+    <label>Final Payment Differ (in Amz Schedule)</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

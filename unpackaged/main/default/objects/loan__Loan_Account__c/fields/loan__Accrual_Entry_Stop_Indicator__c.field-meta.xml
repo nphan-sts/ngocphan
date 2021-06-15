@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Accrual_Entry_Stop_Indicator__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Interest accrual entries will not be created when this flag is checked.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Interest accrual entries will not be created when this flag is checked.</inlineHelpText>
+    <label>Accrual Entry Stop Indicator</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

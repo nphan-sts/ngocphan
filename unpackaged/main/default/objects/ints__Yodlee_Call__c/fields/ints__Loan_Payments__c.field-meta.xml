@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__Loan_Payments__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Loan Payments</label>
+    <summarizedField>ints__Yodlee_Transaction__c.ints__Transaction_Amount__c</summarizedField>
+    <summaryFilterItems>
+        <field>ints__Yodlee_Transaction__c.ints__Transaction_Category__c</field>
+        <operation>equals</operation>
+        <value>Loans</value>
+    </summaryFilterItems>
+    <summaryForeignKey>ints__Yodlee_Transaction__c.ints__Yodlee_Call__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

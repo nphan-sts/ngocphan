@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Work_Email_Verification_Email</fullName>
+        <description>Work Email Verification Email</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Work_Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>verification@payoff.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Payoff_Email_Templates/work_email_verify</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>Disable_Send_Work_Email_Verification</fullName>
+        <field>Send_work_email_verification_Email__c</field>
+        <literalValue>0</literalValue>
+        <name>Disable Send Work Email Verification</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>Work Email Verify</fullName>
+        <actions>
+            <name>Work_Email_Verification_Email</name>
+            <type>Alert</type>
+        </actions>
+        <actions>
+            <name>Disable_Send_Work_Email_Verification</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>genesis__Employment_Information__c.Send_work_email_verification_Email__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <description>triggered by button click on application</description>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Result__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This field captures the final result of the rule evaluated in the form of true/false corresponding to Pass/Fail.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field captures the final result of the evaluated rule. If ticked then Pass else Fail</inlineHelpText>
+    <label>Result</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

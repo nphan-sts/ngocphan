@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Product_Service_Fee_Income_Account__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This account is debited with any service fees income on the account. Typically income on the interest is credited while completing the buyback process.</inlineHelpText>
+    <label>Product Service Fee Income Account</label>
+    <referenceTo>loan__MF_Account__c</referenceTo>
+    <relationshipLabel>Lending Products (Product Service Fees Expense)</relationshipLabel>
+    <relationshipName>Lending_Products5</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

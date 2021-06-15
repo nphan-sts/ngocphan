@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Yodlee_User_account__c</fullName>
+    <externalId>false</externalId>
+    <label>Yodlee User Account</label>
+    <referenceTo>Yodlee_User_Account__c</referenceTo>
+    <relationshipName>Yodlee_User_account1588291616563</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

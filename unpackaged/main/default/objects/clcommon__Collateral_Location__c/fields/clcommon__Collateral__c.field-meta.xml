@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Collateral__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Collateral</label>
+    <referenceTo>clcommon__Collateral__c</referenceTo>
+    <relationshipLabel>Collateral Locations</relationshipLabel>
+    <relationshipName>Collateral_Locations</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

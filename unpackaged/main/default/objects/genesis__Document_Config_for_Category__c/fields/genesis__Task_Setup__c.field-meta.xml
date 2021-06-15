@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Task_Setup__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>The task setup attached to Document Category which we need to relate to, for this document.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The task setup attached to Document Category which we need to relate to, for this document.</inlineHelpText>
+    <label>Task Setup</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>Only Auto Close task setups are allowed.</errorMessage>
+        <filterItems>
+            <field>genesis__Task_Setup__c.genesis__Auto_Close__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>genesis__Task_Setup__c</referenceTo>
+    <relationshipName>Document_Configs_for_Categories</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

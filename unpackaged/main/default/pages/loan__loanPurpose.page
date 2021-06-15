@@ -1,0 +1,49 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Purpose__c" id="loanPurposePage"
+	recordSetVar="loanPurposeSet">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:form >
+		<apex:sectionHeader title="Loan Purpose" />
+		<apex:pageblock id="loanPurposeList">
+			<apex:actionRegion >
+				<apex:outputText value="Records per page: "></apex:outputText>
+				<apex:selectList value="{!pagesize}" size="1">
+					<apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+					<apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+					<apex:selectOption itemLabel="25" itemValue="25"></apex:selectOption>
+					<apex:actionSupport event="onchange"
+						rerender="loanPurposeTable, navigation" />
+				</apex:selectList>
+			</apex:actionRegion>
+
+			<apex:pageblockTable value="{!loanPurposeSet}" id="loanPurposeTable"
+				var="JA">
+				<apex:column headerValue="Loan Purpose">
+					<apex:commandLink value="{!JA.Name}"
+						reRender="loanPurposePage:loanPurposeDetail">
+						<apex:param name="loanPurpose" value="{!JA.ID}" />
+					</apex:commandLink>
+				</apex:column>
+				<apex:column value="{!JA.loan__Loan_Purpose_Code__c}" />
+				<apex:column value="{!JA.loan__Description__c}" />
+			</apex:pageblockTable>
+		</apex:pageblock>
+		<apex:panelGrid columns="2" id="navigation">
+			<apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+			<apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+		</apex:panelGrid>
+	</apex:form>
+
+	<apex:outputPanel id="loanPurposeDetail">
+		<apex:detail subject="{!$CurrentPage.parameters.loanPurpose}"></apex:detail>
+	</apex:outputPanel>
+
+	<apex:sectionHeader title="Define a New Loan Purpose" />
+	<apex:pageblock >
+		<apex:pageblockSection columns="1">
+			<apex:outputLink value="{!URLFOR($Action.loan__Loan_Purpose__c.New)}">Define New Loan Purpose</apex:outputLink>
+		</apex:pageblockSection>
+	</apex:pageblock>
+
+</apex:page>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Amt_In_funding_exceeds_requested_amount</fullName>
+    <active>false</active>
+    <errorConditionFormula>peer__Amount_In_Funding__c  &gt;  peer__Requested_Loan_Amount__c</errorConditionFormula>
+    <errorMessage>The amount funded exceeds the requested amount.</errorMessage>
+</ValidationRule>

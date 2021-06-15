@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Select_Pricing_And_Save</fullName>
+    <availability>online</availability>
+    <displayType>massActionButton</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Select Pricing And Save</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+    <url>{!REQUIRESCRIPT("/soap/ajax/13.0/connection.js")}
+{!REQUIRESCRIPT("/soap/ajax/10.0/apex.js")}
+
+var selectedPricingOptionsIds = {!GETRECORDIDS($ObjectType.genesis__Application_Pricing_Detail__c)};
+var nsp = "{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}";
+var namespacePrefix = "{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}";
+if(namespacePrefix != null &amp;&amp; namespacePrefix != ""){
+    namespacePrefix += "/";
+    nsp = nsp + "__";
+}
+var SelectedIds= "'"+selectedPricingOptionsIds[0]+"'";
+var appId='';
+if (selectedPricingOptionsIds.length == 1) {
+var qquery = sforce.connection.query("select " + nsp + "Application__c from " + nsp+ "Application_Pricing_Detail__c where Id in ("+SelectedIds+")");
+var records = qquery.getArray("records");
+appId = "'"+records[0].get(nsp+"Application__c")+"'";
+qquery = sforce.connection.query("select " + nsp + "Valid_Pricing_Flag__c from " +  nsp + "Applications__c where Id in ("+appId+")");
+records = qquery.getArray("records");
+var validPricingFlag = records[0].get(nsp + "Valid_Pricing_Flag__c");
+if (validPricingFlag =="true"){
+var r = confirm("Click ''OK'' to continue with application creation.");
+if (r){
+var className = namespacePrefix + "SelectPricingOnApplication";
+var methodName = "selectPricingOption";
+var retVal = sforce.apex.execute(className,methodName, {pricingId:selectedPricingOptionsIds});
+window.alert(retVal);
+window.location.reload();
+}
+}else{
+alert('Current Pricing options are invalid, please regenerate the pricing options.')
+}
+
+} else if (selectedPricingOptionsIds.length == 0) {
+alert('Please select a pricing record to create a application.')
+}else{
+alert('Multiple pricing records cannot be used to create a application.')
+}</url>
+</WebLink>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__Data_Loader_Header__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Data Loader Header</label>
+    <referenceTo>ints__Data_Loader_Header__c</referenceTo>
+    <relationshipLabel>Data Loader Detail</relationshipLabel>
+    <relationshipName>Data_Loader_Detail</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

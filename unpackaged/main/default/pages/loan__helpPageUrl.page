@@ -1,0 +1,9 @@
+<apex:page lightningStylesheets="true" sidebar="false" showHeader="false"
+	standardStylesheets="false">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:pageblock id="headerList"
+		helpUrl="https://mfiflex.atlassian.net/wiki/pages/viewpage.action?pageId=1441902&src=search"
+		helpTitle="Help for this Page">
+	</apex:pageblock>
+</apex:page>

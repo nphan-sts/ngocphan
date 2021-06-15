@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Generate_Principal_and_Interest_Payment</fullName>
+    <availability>online</availability>
+    <description>User can start P+I schedule anytime</description>
+    <displayType>massActionButton</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <height>600</height>
+    <linkType>url</linkType>
+    <masterLabel>Regenerate Principal and Interest Payment</masterLabel>
+    <openType>sidebar</openType>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+    <url>/apex/{!IF(ISBLANK($Setup.loan__Org_Parameters__c.loan__Namespace_Prefix__c ), '',  $Setup.loan__Org_Parameters__c.loan__Namespace_Prefix__c + '__')}RegenerateAMZschwithPrinandInt?id={!loan__Loan_Account__c.Id}</url>
+</WebLink>

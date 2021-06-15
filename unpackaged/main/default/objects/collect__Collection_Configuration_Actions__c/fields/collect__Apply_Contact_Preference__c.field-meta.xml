@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Apply_Contact_Preference__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, contact preference is checked first and applied for customer communication. If contact preference is not available, then action as per this action record is applied.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If checked, contact preference is checked first and applied for customer communication. If contact preference is not available, then action as per this action record is applied.</inlineHelpText>
+    <label>Apply Contact Preference</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

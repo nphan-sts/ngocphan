@@ -1,0 +1,85 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Block_Code__c"
+      extensions="loan.LoanBlockCodeController"
+       sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+      id="applyLoanBlockCode"  title="Loan Block Code" >
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:sectionHeader title=" Apply/Edit Contingency Status Code" subtitle="" />
+    <apex:form >
+        <apex:pageBlock title="Contingency Status Codes" id="blockCode">
+        <apex:pageMessages />
+                <apex:pageBlockButtons location="top">
+                        <c:BusyButton name="Save" actionTo="{!save}"  />
+                        <c:BusyButton name="Cancel" actionTo="{!cancel}" rendered="{!IF(blockCodeExpiredOrRevoked == false, true, false)}" immediate="true"/>
+                        <c:BusyButton name="Done" actionTo="{!done}"   rendered="{!IF(blockCodeExpiredOrRevoked == true, true, false)}" />
+                </apex:pageBlockButtons>
+
+            <apex:pageBlockSection title="Contingency Status Code" rendered="{!IF(oLoanBlockCode.Id == null, true, false)}">
+                <apex:outputField value="{!oLoanBlockCode.loan__Loan_Account__c}" />
+                <apex:inputField value="{!oLoanBlockCode.loan__Contingency_Status_Code_Setup__c}" required="true">
+                    <apex:actionSupport action="{!determineBlockCodeActions}" rerender="blockCode"
+                    event="onchange" status="blockCodeChange"/>
+                </apex:inputField>
+                <apex:inputField value="{!oLoanBlockCode.loan__Block_Code_Applied_On__c}" />
+                <apex:inputField value="{!oLoanBlockCode.loan__Block_Code_Expires_On__c}" />
+
+                <apex:inputField value="{!oLoanBlockCode.loan__Suspend_ACH__c}" rendered="{!(suspendACHEditable == true)}"/>
+                <apex:inputField value="{!oLoanBlockCode.loan__Suspend_Communication__c}" rendered="{!(suspendCommunicationEditable == true)}"/>
+                <apex:inputField value="{!oLoanBlockCode.loan__Stop_Accruals__c}" rendered="{!(stopAccrualsEditable == true)}" />
+                <apex:inputField value="{!oLoanBlockCode.loan__Suspend_Disbursals__c}" rendered="{!(suspendDisbursalsEditable == true)}"/>
+                <apex:inputField value="{!oLoanBlockCode.loan__Suspend_Charges__c}" rendered="{!(suspendChargesEditable == true)}"/>
+                <apex:inputField value="{!oLoanBlockCode.loan__Stop_Accrual_Entries__c}" rendered="{!(stopAccrualEntriesEditable == true)}" />
+
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_ACH__c}" rendered="{!(suspendACHEditable == false)}"/>
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Communication__c}" rendered="{!(suspendCommunicationEditable == false)}"/>
+                <apex:outputField value="{!oLoanBlockCode.loan__Stop_Accruals__c}" rendered="{!(stopAccrualsEditable == false)}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Disbursals__c}" rendered="{!(suspendDisbursalsEditable == false)}"/>
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Charges__c}" rendered="{!(suspendChargesEditable == false)}"/>
+                <apex:outputField value="{!oLoanBlockCode.loan__Stop_Accrual_Entries__c}" rendered="{!(stopAccrualEntriesEditable == false)}" />
+
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Contingency Status Code (Existing)"
+                rendered="{!IF(AND(oLoanBlockCode.Id != null, blockCodeExpiredOrRevoked == false), true, false)}">
+                <apex:outputField value="{!oLoanBlockCode.loan__Loan_Account__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Block_Code__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Block_Code_Applied_On__c}" />
+                <apex:inputField value="{!oLoanBlockCode.loan__Block_Code_Expires_On__c}" />
+                <!-- <apex:inputField value="{!oLoanBlockCode.loan__Block_Code_Revoked__c}" /> -->
+                <apex:inputField value="{!oLoanBlockCode.loan__Block_Code_Revoked_On__c}" />
+
+               <apex:inputField value="{!oLoanBlockCode.loan__Suspend_ACH__c}" rendered="{!(suspendACHEditable == true)}"/>
+                <apex:inputField value="{!oLoanBlockCode.loan__Suspend_Communication__c}" rendered="{!(suspendCommunicationEditable == true)}"/>
+                <apex:inputField value="{!oLoanBlockCode.loan__Stop_Accruals__c}" rendered="{!(stopAccrualsEditable == true)}" />
+                <apex:inputField value="{!oLoanBlockCode.loan__Suspend_Disbursals__c}" rendered="{!(suspendDisbursalsEditable == true)}"/>
+                <apex:inputField value="{!oLoanBlockCode.loan__Suspend_Charges__c}" rendered="{!(suspendChargesEditable == true)}"/>
+                <apex:inputField value="{!oLoanBlockCode.loan__Stop_Accrual_Entries__c}" rendered="{!(stopAccrualEntriesEditable == true)}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_ACH__c}" rendered="{!(suspendACHEditable == false)}"/>
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Communication__c}" rendered="{!(suspendCommunicationEditable == false)}"/>
+                <apex:outputField value="{!oLoanBlockCode.loan__Stop_Accruals__c}" rendered="{!(stopAccrualsEditable == false)}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Disbursals__c}" rendered="{!(suspendDisbursalsEditable == false)}"/>
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Charges__c}" rendered="{!(suspendChargesEditable == false)}"/>
+                <apex:outputField value="{!oLoanBlockCode.loan__Stop_Accrual_Entries__c}" rendered="{!(stopAccrualEntriesEditable == true)}" />
+
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Contingency Status Code (Expired/Revoked)"
+                rendered="{!IF(AND(oLoanBlockCode.Id != null, blockCodeExpiredOrRevoked == true), true, false)}">
+                <apex:outputField value="{!oLoanBlockCode.loan__Loan_Account__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Block_Code__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Block_Code_Applied_On__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Block_Code_Expires_On__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Block_Code_Revoked__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Block_Code_Revoked_On__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_ACH__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Communication__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Stop_Accruals__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Disbursals__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Stop_Accrual_Entries__c}" />
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+        </apex:form>
+
+</apex:page>

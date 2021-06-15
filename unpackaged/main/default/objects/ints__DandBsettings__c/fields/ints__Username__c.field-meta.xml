@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__Username__c</fullName>
+    <defaultValue>"P2000000D73275CECBE45FFB25DDBA09"</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>D&amp;B Username</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

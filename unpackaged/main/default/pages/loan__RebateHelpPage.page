@@ -1,0 +1,17 @@
+<apex:page lightningStylesheets="true" extensions="loan.URLFetch" standardController="loan__Loan_Payment_Transaction__c">
+ <apex:include pageName="clcommon__mintTheme"/>
+ <html>
+  <head>
+   <script src="{!$Resource.ShowPage_JS}" type="text/javascript"/>
+   <apex:include pageName="clcommon__plainTheme"/>
+  </head>
+  <div class="link-show">
+   <apex:outputLink onclick="popitup('/apex/LoanHelpPage', getParameterByName('id','{!urlLink}'), 'Rebate')" rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}" styleClass="help-link" value="#">
+    Help on Rebate
+   </apex:outputLink>
+   <apex:outputLink onclick="popitup('/apex/LoanHelpPage', getParameterByName('id','{!urlLink}'), 'Rebate')" rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Plain'}" style="color:green;text-decoration:none;text-align:center;" value="#">
+    Help on Rebate
+   </apex:outputLink>
+  </div>
+ </html>
+</apex:page>

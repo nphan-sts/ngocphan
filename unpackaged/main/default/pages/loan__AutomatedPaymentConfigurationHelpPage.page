@@ -1,0 +1,17 @@
+<apex:page lightningStylesheets="true" extensions="loan.URLFetch" standardController="loan__Automated_Payment_Configuration__c">
+ <apex:include pageName="clcommon__mintTheme"/>
+ <html>
+  <head>
+   <script src="{!$Resource.ShowPage_JS}" type="text/javascript"/>
+   <apex:include pageName="clcommon__plainTheme"/>
+  </head>
+  <div class="link-show">
+   <apex:outputLink onclick="popitup('/apex/clcommon__HelpPage', getParameterByName('id','{!urlLink}'), 'AutoPaymentConfig')" rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}" styleClass="help-link" value="#">
+    Help on Automated Payment
+   </apex:outputLink>
+   <apex:outputLink onclick="popitup('/apex/clcommon__HelpPage', getParameterByName('id','{!urlLink}'), 'AutoPaymentConfig')" rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Plain'}" style="color:green;text-decoration:none;text-align:center;" value="#">
+    Help on Automated Payment
+   </apex:outputLink>
+  </div>
+ </html>
+</apex:page>

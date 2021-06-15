@@ -1,0 +1,202 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__Rate_Card_Setup_Detail__c" extensions="genesis.RateCardDetailController" sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+    <apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.genesis__modalheaderStyle,'')}"/>
+    <apex:stylesheet value="{!$Resource.genesis__MFIStyles}"/>
+    <script src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}"/>
+    <script src="{!URLFOR($Resource.helperclose)}"/>
+    <script>
+        j$ = jQuery.noConflict();
+    </script>
+    <script type="text/javascript" src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}"/>
+
+    <script>
+        
+        function testify() {
+            alert(j$('').length);
+        };
+        function scrolify(tblAsJQueryObject, height) {
+            var oTbl = tblAsJQueryObject;
+
+            // for very large tables you can remove the four lines below and wrap the table with <div> in the mark-up and assign height and overflow property
+            var oTblDiv = $("<div/>");
+            oTblDiv.css('height', height);
+            oTblDiv.css('overflow-y', 'scroll');
+            oTbl.wrap(oTblDiv);
+
+            // save original width
+            oTbl.attr("data-item-original-width", oTbl.width());
+            oTbl.find('thead tr td').each(function () {
+                $(this).attr("data-item-original-width", $(this).width());
+            });
+            oTbl.find('tbody tr:eq(0) td').each(function () {
+                $(this).attr("data-item-original-width", $(this).width());
+            });
+
+            // clone the original table
+            var newTbl = oTbl.clone();
+
+            // remove table header from original table
+            oTbl.find('thead tr').remove();
+            // remove table body from new table
+            newTbl.find('tbody tr').remove();
+
+            oTbl.parent().parent().prepend(newTbl);
+            newTbl.wrap("<div/>");
+
+            // replace ORIGINAL COLUMN width
+            newTbl.width(newTbl.attr('data-item-original-width'));
+            newTbl.find('thead tr td').each(function () {
+                $(this).width($(this).attr("data-item-original-width"));
+            });
+            oTbl.width(oTbl.attr('data-item-original-width'));
+            oTbl.find('tbody tr:eq(0) td').each(function () {
+                $(this).width($(this).attr("data-item-original-width"));
+            });
+        }
+
+        function callScroll() {
+            scrolify($('.scrollableFixedHeader'), 300); // 160 is height
+        }
+    </script>
+    <apex:sectionHeader title="Rate Card : {!rateCardHeader.Name}" subtitle="Rate Card Detail Setup" rendered="{!IF(genesis__Rate_Card_Setup_Detail__c.Name == null,true,false)}"/>
+    <apex:sectionHeader title="Rate Card : {!rateCardHeader.Name}" subtitle="Rate Card Detail Setup: {!genesis__Rate_Card_Setup_Detail__c.Name}" rendered="{!IF(genesis__Rate_Card_Setup_Detail__c.Name == null,false,true)}"/>
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.genesis__modalheaderStyle,'')}"/>
+    
+    <apex:form id="rateCardheaderForm">
+        <!-- <apex:actionFunction name="doInit" action="{!init}" rerender="rateCardSetupDetails"/> -->
+        <apex:outputPanel id="rateCardSetupDetails">
+            <script>
+                var saveData = function () {
+                    window.parent.postMessage({!statusOnsaveRulesCriteria}, '*');
+                };
+    
+                var cancelFunctionality = function () {
+                    window.parent.postMessage({!statusOncancelRulesCriteria}, '*');
+                };
+                
+            </script>
+            <apex:pageBlock id="rateCardId" mode="edit">
+                <apex:pageMessages />
+                <apex:pageBlockButtons location="both">
+                    <c:BusyButton name="Calculate Payments"
+                                  busyname="Calculating Payment..."
+                                  actionTo="{!calculatePayment}"
+                                  oncomplete="({!closeModal}===true) ? closeIframe('{!genesis__Rate_Card_Setup_Detail__c.Id}') : {};"
+                                  reRenderTo="rateCardheaderForm"
+                                  rendered="{!productTypeLease}"/>
+                    <!--
+<c:BusyButton name="Save" busyName="Saving"
+actionTo="{!saveRateCardDetail}"
+oncomplete="({!closeModal}===true) ? closeIframe('{!genesis__Rate_Card_Setup_Detail__c.Id}') : {};"
+reRenderTo="rateCardheaderForm" />
+-->
+                    <apex:commandButton action="{!saveRateCardDetail}" rerender="rateCardSetupDetails" value="Save" oncomplete="saveData()"/>
+                    <apex:commandButton action="{!cancel}" immediate="true" value="Cancel" onclick="cancelFunctionality()"/>
+                </apex:pageBlockButtons>
+                
+                <apex:outputpanel id="InfoPanel" styleClass="mint-lightning-wrapper">
+                    <apex:pageBlockSection columns="2" id="InfoPanelPageBlockSection" title="Information">
+                        <apex:outputField label="Rate Card Name" value="{!rateCardDetail.genesis__Rate_Card_Setup_Header__c}  "/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Enabled_Flag__c}"/>
+                        <apex:outputField value="{!rateCardHeader.genesis__Product_Type__c}  "/>
+                    </apex:pageBlockSection>
+                </apex:outputpanel>
+                
+                <apex:outputpanel id="CriteriaPanel" styleClass="mint-lightning-wrapper">
+                    <apex:pageBlockSection columns="2" id="LeaseCriteriaSection" title="Criteria" rendered="{!productTypeLease}">
+                        <apex:inputField value="{!rateCardDetail.genesis__Residual_Type__c}" required="true"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Residual_Percent__c}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Residual_Term__c}"/>
+                        <apex:outputField value="{!rateCardDetail.genesis__Residual_Amount__c}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Minimum_Financed_Amount__c}" required="true"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Maximum_Financed_Amount__c}" required="true"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Term__c}" required="true"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Payment_Frequency__c}" required="true"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Arrears__c}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Days_Convention__c}" required="true"/>
+                        <apex:inputfield value="{!rateCardDetail.genesis__Credit_Grade__c}" rendered="{!NOT($Setup.genesis__Org_Parameters__c.genesis__Use_CL_Product__c)}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Credit_Rating__c}" rendered="{!$Setup.genesis__Org_Parameters__c.genesis__Use_CL_Product__c}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Min_Term__c}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Max_Term__c}"/>
+                        <apex:pageBlockSectionItem />
+                        <apex:inputField value="{!rateCardDetail.genesis__Use_Additional_Determining_Factors__c}">
+                            <apex:actionSupport event="onchange" action="{!populateAddnlDFTable}" reRender="InfoPanel,CriteriaPanel,AddnlDetFactorPanel,FinancialPanel" status="valueChange"/>
+                        </apex:inputField>
+                    </apex:pageBlockSection>
+                    
+                    <apex:pageBlockSection columns="2" id="LoanCriteriaSection" title="Criteria" rendered="{!NOT(productTypeLease)}">
+                        <apex:inputField value="{!rateCardDetail.genesis__Minimum_Financed_Amount__c}" required="true"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Maximum_Financed_Amount__c}" required="true"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Term__c}" required="true"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Payment_Frequency__c}"/>
+                        <apex:inputfield value="{!rateCardDetail.genesis__Credit_Grade__c}" rendered="{!NOT($Setup.genesis__Org_Parameters__c.genesis__Use_CL_Product__c)}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Credit_Rating__c}" rendered="{!$Setup.genesis__Org_Parameters__c.genesis__Use_CL_Product__c}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Days_Convention__c}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Min_Term__c}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Max_Term__c}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Use_Additional_Determining_Factors__c}">
+                            <apex:actionSupport event="onchange" action="{!populateAddnlDFTable}" reRender="InfoPanel,CriteriaPanel,AddnlDetFactorPanel,FinancialPanel" status="valueChange"/>
+                        </apex:inputField>
+                    </apex:pageBlockSection>
+                </apex:outputpanel>
+                
+                <center>
+                    <apex:actionStatus id="valueChange">
+                        <apex:facet name="start">
+                            <apex:image value="/img/loading32.gif" style="height:15px;"/>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </center>
+                
+                <apex:outputPanel id="AddnlDetFactorPanel" layout="block" styleClass="container">
+                    <apex:pageBlockSection id="AddnlDetFactorTableSection" title="Additional Detemining Factors" columns="1" collapsible="false" rendered="{!rateCardDetail.genesis__Use_Additional_Determining_Factors__c}">
+                        <apex:pageBlockTable id="detFactorTable" value="{!addnlDetFactorRecordList}" var="rec" headerClass="fixedHeader" styleClass="scrollableFixedHeader">
+                            <apex:column >
+                                <apex:facet name="header">Determining Factor Name</apex:facet>
+                                <apex:outputField value="{!rec.addnlDetFactor.Name}" label="Determining Factor Name"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Evaluation Operator</apex:facet>
+                                <apex:outputField value="{!rec.addnlDetFactor.genesis__Evaluation_Operator__c}" label="Evaluation Operator"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Required</apex:facet>
+                                <apex:outputField value="{!rec.addnlDetFactor.genesis__Required_for_Evaluation__c}" label="Required"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Type</apex:facet>
+                                <apex:outputText value="{!rec.displayType}" label="Type"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Value</apex:facet>
+                                <apex:inputText value="{!rec.value}"/>
+                            </apex:column>
+                        </apex:pageBlockTable>
+                    </apex:pageBlockSection>
+                </apex:outputPanel>
+                
+                <apex:outputPanel id="FinancialPanel" styleClass="mint-lightning-wrapper">
+                    <apex:pageBlockSection columns="2" id="LeaseFinancialSection" title="Financials" rendered="{!productTypeLease}">
+                        <apex:inputField value="{!rateCardDetail.genesis__Rate_Factor__c}" required="true"/>
+                        <apex:outputField value="{!rateCardDetail.genesis__Payment_Amount_Per_Period__c}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Rate_Factor_Based_On_Amount__c}" required="true"/>
+                        <apex:outputField value="{!rateCardDetail.genesis__Total_Payments__c}"/>
+                        <apex:pageBlockSectionItem />
+                        <apex:outputField value="{!rateCardDetail.genesis__Yield_Percent__c}"/>
+                    </apex:pageBlockSection>
+                    
+                    <apex:pageBlockSection columns="2" id="LoanFinancialSection" title="Financials" rendered="{!NOT(productTypeLease)}">
+                        <apex:inputField value="{!rateCardDetail.genesis__Pricing_Method__c}" required="true">
+                            <apex:actionSupport event="onchange" reRender="InfoPanel,CriteriaPanel,AddnlDetFactorPanel,FinancialPanel"/>
+                        </apex:inputField>
+                        <apex:pageBlockSectionItem />
+                        <apex:inputField value="{!rateCardDetail.genesis__Rate_Factor__c}" rendered="{!rateCardDetail.genesis__Pricing_Method__c == 'RATE FACTOR'}"/>
+                        <apex:inputField value="{!rateCardDetail.genesis__Interest_Rate__c}" rendered="{!rateCardDetail.genesis__Pricing_Method__c == 'INTEREST RATE'}"/>
+                    </apex:pageBlockSection>
+                </apex:outputpanel>
+                <c:FieldSetPanel value2="{!detailObjName}" value3="{!rateCardDetail}"/>
+            </apex:pageBlock>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

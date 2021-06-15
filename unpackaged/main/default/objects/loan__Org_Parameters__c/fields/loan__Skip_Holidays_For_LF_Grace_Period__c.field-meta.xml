@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Skip_Holidays_For_LF_Grace_Period__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Select this option to exclude holidays and non-business days, as setup in the Salesforce Business Hours, while calculating the grace period before applying a late payment fee.</inlineHelpText>
+    <label>Skip Holidays For Late Charge Grace Days</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__EfxReport_FraudWarning__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>EfxReport FraudWarning</label>
+    <referenceTo>ints__EfxReport_FraudWarning__c</referenceTo>
+    <relationshipLabel>EfxReport FW Messages</relationshipLabel>
+    <relationshipName>EfxReport_FW_Messages</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

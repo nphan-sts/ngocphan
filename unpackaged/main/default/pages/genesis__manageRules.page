@@ -1,0 +1,52 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__Rule__c" extensions="genesis.ManageRules" tabstyle="genesis__Rule__c">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:outputPanel id="manageRulesPanel">
+    <script type="text/javascript">
+    var saveData = function () {
+      window.parent.postMessage({!statusOnsaveRule}, '*');
+      console.log('qwerty');
+    };
+
+
+    var cancelFunctionality = function () {
+      window.parent.postMessage({!statusOncancelRule}, '*');
+    };
+    </script>
+        <apex:form >
+            <apex:sectionHeader subtitle="{!IF(edit,newRule.Name, 'New Rule')}" title="Rule Edit"/>
+            <apex:pageMessages />
+            <apex:pageBlock title="Rule Edit" mode="edit">
+                <apex:pageBlockButtons >
+
+                    <apex:commandButton value="Save" action="{!saveRule}" rerender="manageRulesPanel" oncomplete="saveData()"/>
+                    <apex:commandButton value="Save and New" action="{!saveAndNewRule}"/>
+                    <apex:commandButton value="Cancel" action="{!cancel}" onclick="cancelFunctionality()"/>
+                    <!-- <input type="button" name="cancel" value="cancel" onclick="cancelFunctionality();"/> -->
+                    <!-- <apex:actionFunction name="CallCancelApexMethod" action="{!cancel}"/> -->
+                </apex:pageBlockButtons>
+                <apex:outputpanel styleClass="mint-lightning-wrapper">
+                <apex:pageBlockSection title="Information" columns="2">
+                    <apex:inputField value="{!newrule.name}" required="True"/>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Object Type"></apex:outputLabel>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                            <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                            <apex:selectList value="{!objType}" size="1">
+                                <apex:selectOptions value="{!objOptions}"/>
+                            </apex:selectList>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:inputField value="{!newrule.genesis__Enabled__c}"/>
+                    <apex:inputField value="{!newrule.genesis__Lending_Product__c}" required="true" rendered="{!NOT($Setup.genesis__Org_Parameters__c.genesis__Use_CL_Product__c)}"/>
+                    <apex:inputField value="{!newrule.genesis__Evaluation_Expression__c}"  onkeyup="var u = this.value.toUpperCase(); if(this.value != u) {this.value = u;}"/>                    
+                </apex:pageBlockSection>
+                </apex:outputpanel>
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!newrule.genesis__Message_success__c}"/>
+                    <apex:inputField value="{!newrule.genesis__Message_failure__c}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+</apex:page>

@@ -1,0 +1,59 @@
+<apex:page lightningStylesheets="true" controller="loan.PPIWizardController" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:sectionHeader title="New PPI (Progress out of Poverty) Initiative"
+        subtitle="Step 3 of 3" />
+    <apex:form >
+        <apex:pageBlock title="Confirmation">
+            <apex:facet name="footer">
+                <apex:outputPanel >
+                    <apex:commandButton action="{!step2}" value="Previous"
+                        styleClass="btn" />
+                    <apex:commandButton action="{!save}" value="Save" styleClass="btn" />
+                </apex:outputPanel>
+            </apex:facet>
+            <apex:pageBlockSection title="PPI Information">
+                <apex:panelGrid columns="2">
+                    <apex:outputText value="PPI Name" />
+                    <apex:outputText value="{!ppi.name}" />
+                    <apex:outputText value="Evaluation Start Date" />
+                    <apex:outputText value="{!ppi.loan__Evaluation_Start_Date__c}" />
+                    <apex:outputText value="Number of Households/Clients" />
+                    <apex:outputText value="{!ppi.loan__Number_of_Households_Clients__c}" />
+                </apex:panelGrid>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="PPI Indicators Information">
+                <apex:pageBlockTable value="{!ppiIndicators}" var="ppiIndicator"
+                    id="theRepeat">
+                    <apex:column >
+                        <apex:facet name="header">PPI Name</apex:facet>
+                        <apex:outputField value="{!ppiIndicator.loan__PPI_Name__c}" />
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Question</apex:facet>
+                        <apex:outputField value="{!ppiIndicator.loan__Question__c}" />
+                    </apex:column>
+
+                    <apex:column >
+                        <apex:facet name="header">Question Text</apex:facet>
+                        <apex:outputField value="{!ppiIndicator.loan__Question_Text__c}" />
+                    </apex:column>
+
+                    <apex:column >
+                        <apex:facet name="header">Answer Choice</apex:facet>
+                        <apex:outputField value="{!ppiIndicator.loan__Answer_Choice__c}" />
+                    </apex:column>
+
+
+                    <apex:column >
+                        <apex:facet name="header">Weight</apex:facet>
+                        <apex:outputField value="{!ppiIndicator.loan__Weight__c}" />
+                    </apex:column>
+
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Refund_Amount_Check</fullName>
+    <active>false</active>
+    <description>This validation is deprecated and should not be used.</description>
+    <errorConditionFormula>AND(
+ISPICKVAL(  loan__Transaction_Type__c , 'Refund'),
+( loan__Txn_Amt__c &gt;  loan__Loan_Account__r.loan__Excess__c )
+)</errorConditionFormula>
+    <errorMessage>You cannot refund more than 'Excess' amount on Loan account.</errorMessage>
+</ValidationRule>

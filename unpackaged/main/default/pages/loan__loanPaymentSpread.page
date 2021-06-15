@@ -1,0 +1,30 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Payment_Spread__c" extensions="loan.LoanPaymentSpreadController" showHeader="true" sidebar="true">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:sectionHeader title="Payment Spread Definition" />
+    <apex:pageMessages />
+    <apex:outputPanel >
+        <apex:pageBlock id="spread">
+            <apex:form id="paymentSpread">
+                <apex:pageBlock id="buttons"> 
+                    <apex:pageBlockButtons location="both">
+                        <c:BusyButton name="Save" busyname="Saving" actionTo="{!saveSpread}" />
+                        <c:BusyButton name="Cancel" actionTo="{!cancelSpread}"/>
+                    </apex:pageBlockButtons>
+                    <apex:pageBlockSection columns="1">
+                        <apex:inputField value="{!loan__Loan_Payment_Spread__c.Name}" label="Spread Name" />
+                    <apex:repeat value="{!listOfBalanceType}" var="balanceType">
+                        <apex:selectList value="{!balanceType.parentValue}" multiselect="false" size="1" label="Balance Type" id="balance">
+                            <apex:selectOptions value="{!allItems}"/>
+                        </apex:selectList>
+                    </apex:repeat>
+                    </apex:pageBlockSection>    
+                    <apex:pageBlockSection columns="2">
+                        <apex:commandButton style="left:200px;position:relative" image="{!URLFOR($Resource.loan__Add_Button_Green)}" title="Add" value="Add Balance Type" action="{!addRow}" reRender="spread" />
+                        <apex:commandButton style="left:-200px;position:relative" image="{!URLFOR($Resource.loan__Delete_Button_Red)}" title="Sub" value="Remove Balance Type" action="{!subRow}" reRender="spread" />
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:form>
+        </apex:pageBlock>
+    </apex:outputPanel> 
+</apex:page>

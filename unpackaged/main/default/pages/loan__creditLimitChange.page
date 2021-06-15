@@ -1,0 +1,47 @@
+<apex:page lightningStylesheets="true" id="creditLimitChangePage" standardController="loan__Loan_Account__c"
+    extensions="loan.CreditLimitChangeController" tabStyle="loan__Loan_Account__c"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+    title="Credit Limit Change">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+      j$ = jQuery.noConflict();
+    </script>
+    <apex:sectionHeader title="Credit Limit Change" id="creditLimitChangeSection" />
+    <apex:form id="creditChangeForm">
+        <apex:pageBlock mode="edit" id="creditLimitChangeTxn">
+            <apex:pageMessages />
+            <apex:pageBlockButtons location="both">
+                
+                <c:BusyButton name="Save" busyName="Saving" actionTo="{!save}"
+                    disabled="{!(otherLoanTxn.Id != null)}"
+                    oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};"
+                    reRenderTo="creditChangeForm" style="margin-left:120px;"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"
+                    onclick="closeIframe()" immediate="true" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection title="Loan Details" columns="2"
+                rendered="{!(otherLoanTxn.Id == null)}">
+                <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}" />
+                <apex:outputField value="{!loanAccount.loan__Credit_Limit_Current__c}" />                                
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Parameters" columns="2"
+                rendered="{!(otherLoanTxn.Id == null)}">
+                <apex:inputField value="{!otherLoanTxn.loan__New_Credit_Limit__c}" required="true"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Transaction Detail" columns="2"
+                rendered="{!(otherLoanTxn.Id != null)}">
+                <apex:outputField value="{!otherLoanTxn.loan__Loan_Account__c}" />
+                <apex:outputField value="{!otherLoanTxn.loan__Transaction_Type__c}" />
+                <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}" />
+                <apex:outputField value="{!otherLoanTxn.loan__Credit_Limit__c}" />
+                <apex:outputField value="{!otherLoanTxn.loan__New_Credit_Limit__c}" /> 
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+
+</apex:page>

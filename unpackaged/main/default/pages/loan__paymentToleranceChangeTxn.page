@@ -1,0 +1,74 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Account__c"
+    extensions="loan.PaymentToleranceChangeController"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+    <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+
+    <script> function setFocusOnLoad(){} </script>
+
+    <script>
+        j$ = jQuery.noConflict();
+
+    </script>
+
+    <apex:sectionHeader title="Change Payment Tolerance"
+        id="paymentToleranceSection" />
+    <div style="height:300px;">
+        <apex:form id="paymentToleranceChangeForm">
+            <apex:commandLink value="Help On Change Payment Tolerance" id="thelink" onclick="popWindow('Payment Tolerance Change');"
+                              reRender="dummy" style="text-decoration:none;color:green;padding:1px;" styleClass="link-show-broad"
+                              rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+
+            <apex:commandLink value="Help On Change Payment Tolerance" id="thelink2" onclick="popWindow('Payment Tolerance Change');"
+                            reRender="dummy" styleClass="help-link"
+                            rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>
+            <br/><br/>
+
+            <apex:pageBlock mode="edit" id="paymentTChangeTxn">
+                <apex:pageMessages />
+                <apex:pageBlockButtons location="both">
+                    <c:BusyButton name="Save" busyName="Saving"
+                        actionTo="{!paymentToleranceChangeTxn}"
+                        rerenderTo="paymentToleranceChangeForm"
+                        disabled="{!(paymentToleranceChangeTxn.Id != null)}"
+                        oncomplete="({!closeModal}===true) ? closeIframe('{!paymentToleranceChangeTxn.loan__Loan_Account__c}') : {};"
+                        style="margin-left:120px;" />
+                    <apex:commandButton value="Cancel"
+                        action="{!URLFOR($Action.Loan_Account__c.View,Loan_Account__c.Id)}"
+                        immediate="true" onclick="closeIframe()" />
+                </apex:pageBlockButtons>
+                <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+                <apex:pageBlockSection title="Details" columns="2">
+                    <apex:outputField value="{!paymentToleranceChangeTxn.loan__Loan_Account__c}" />
+                    <apex:outputField value="{!loanAccount.loan__Pmt_Amt_Cur__c}" />
+                </apex:pageBlockSection>
+                <apex:pageBlockSection title="Payment Tolerance Setup" columns="2">
+                    <apex:inputField value="{!paymentToleranceChangeTxn.loan__Payment_Tolerance_Start_Date__c}"
+                        required="true" />
+                    <apex:inputField value="{!paymentToleranceChangeTxn.loan__Payment_Tolerance_End_Date__c}"
+                        required="true" />
+                    <apex:inputField value="{!paymentToleranceChangeTxn.loan__Payment_Tolerance_Rate__c}"
+                        required="false" />
+                    <apex:inputField value="{!paymentToleranceChangeTxn.loan__Payment_Tolerance_Fixed_Amount__c}"
+                    required="false" />
+                </apex:pageBlockSection>
+                <apex:pageBlockSection title="Transaction Detail" columns="2"
+                    rendered="{!(paymentToleranceChangeTxn.Id != null)}">
+                    <apex:outputField value="{!paymentToleranceChangeTxn.loan__Loan_Account__c}" />
+                    <apex:outputField value="{!paymentToleranceChangeTxn.loan__Transaction_Type__c}" />
+                    <apex:outputField value="{!paymentToleranceChangeTxn.loan__Txn_Date__c}" />
+                    <apex:outputField value="{!loanAccount.loan__Payment_Tolerance_Rate__c}" />
+                    <apex:outputField value="{!loanAccount.loan__Payment_Tolerance_Fixed_Amount__c}" />
+                    <apex:outputField value="{!loanAccount.Loan_Product_Name__r.loan__Payment_Tolerance_Type__c}" />
+                </apex:pageBlockSection>
+                </apex:outputpanel>
+            </apex:pageBlock>
+        </apex:form>
+    </div>
+</apex:page>

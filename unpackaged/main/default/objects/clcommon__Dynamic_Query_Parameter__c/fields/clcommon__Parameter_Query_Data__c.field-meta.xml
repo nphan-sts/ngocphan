@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Parameter_Query_Data__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Specifies selected field from existing query</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Specifies selected field from existing query</inlineHelpText>
+    <label>Parameter Query Data</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>Only Dynamic Query Data records with Filter Type SELECT_FIELD can be selected</errorMessage>
+        <filterItems>
+            <field>clcommon__Dynamic_Query_Data__c.clcommon__Filter_Type__c</field>
+            <operation>equals</operation>
+            <value>SELECT_FIELD</value>
+        </filterItems>
+        <infoMessage>Only Dynamic Query Data records with Filter Type SELECT_FIELD can be selected</infoMessage>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>clcommon__Dynamic_Query_Data__c</referenceTo>
+    <relationshipLabel>Dynamic Query Parameters</relationshipLabel>
+    <relationshipName>Dynamic_Query_Parameters</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

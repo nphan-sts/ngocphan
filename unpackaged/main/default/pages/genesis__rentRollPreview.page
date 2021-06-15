@@ -1,0 +1,104 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" controller="genesis.RentRollHelper" docType="html-5.0" sidebar="false" showHeader="false" standardStylesheets="true">
+    <style type="text/css">
+        p
+        {
+        font-family:"Arial Unicode MS";
+        font-size:11pt;
+        color: gray;
+        padding: 35px;
+        }
+        h3
+        {
+        font-family:"Arial Unicode MS";
+        font-size:1.2em;
+        font-weight: bold;
+        padding: 35px;
+        }
+    </style>
+    <style>
+        .bPageBlock .pbBody .dataCol {
+        border:0px;
+        }
+        .bPageBlock .pbBody .labelCol {
+        border:0px;
+        }
+        .bPageBlock{
+        border:0px;
+        }
+        .buttonStyle { width:15% !important;
+        color:white !important;
+        background:#009ACD !important;
+        text-align:center; padding-top:8px !important;
+        font-family:"Arial Unicode MS" !important;
+        font-size:10pt !important;
+        font-weight: bold !important;
+        }
+        .inputFile {
+        margin-left:470px !important;
+        }
+        
+    </style>
+    <html lang="en">
+        <head>
+            <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+            <meta charset="utf-8" />
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,700" rel="stylesheet" type="text/css" />
+            <link href="//fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet" type="text/css" />
+            <link href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
+        </head>
+        <body>
+            <apex:form enctype="multipart/form-data">
+                <apex:outputPanel rendered="{!success1}">
+                    <apex:messages styleClass="alert alert-success"/>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!error1}">
+                    <apex:messages styleClass="alert alert-danger"/>
+                </apex:outputPanel>   
+                <div align="center">
+                    <apex:pageBlock mode="maindetail">
+                        <h3> How do you wish to enter the Rent Roll Data?</h3><br/><br/>
+                        <apex:commandButton styleClass="buttonStyle" value="Manual Entry" action="{!manualEntry}"/>
+                        <apex:commandButton styleClass="buttonStyle" value="Upload Rent Roll" action="{!uploadOption}"/>  
+                    </apex:pageBlock>
+                </div>
+                <apex:pageBlock rendered="{!manualEntry}" mode="maindetail">
+                    <h3>Rent Roll Detail</h3><br/><br/> 
+                    <apex:pageBlockSection columns="2">
+                        <apex:inputField value="{!rentRollRec.genesis__Business_Name__c}"/>
+                        <apex:inputField value="{!rentRollRec.genesis__Unit_Type__c}"/>
+                        <apex:inputField value="{!rentRollRec.genesis__Suite_Unit_Number__c}"/>
+                        <apex:inputField value="{!rentRollRec.genesis__Square_Footage__c}"/>
+                        <apex:inputField value="{!rentRollRec.genesis__Number_of_bedrooms__c}"/>
+                        <apex:inputField value="{!rentRollRec.genesis__Number_of_bathrooms__c}"/>
+                        <apex:inputField value="{!rentRollRec.genesis__Lease_Start_Date__c}"/>
+                        <apex:inputField value="{!rentRollRec.genesis__Lease_End_Date__c}"/>
+                        <apex:inputField label="Increases in percent" value="{!rentRollRec.genesis__Increases__c}"/>
+                        <apex:inputField value="{!rentRollRec.genesis__Expenses_Paid__c}"/>
+                        <apex:inputField value="{!rentRollRec.genesis__Current_Monthly_Rent__c}"/>
+                        <apex:inputField value="{!rentRollRec.genesis__Comments__c}"/>
+                        <apex:outputField value="{!rentRollRec.genesis__Collateral__c}"/>
+                    </apex:pageBlockSection><br/><br/>
+                    <div align="center">
+                        <apex:commandButton styleClass="buttonStyle" style="padding: 6px;" value="Save Rent Roll Entry" action="{!saveRentRoll}" rendered="{!buttonRenderer}"/>
+                    </div>
+                </apex:pageBlock>
+                <apex:pageBlock rendered="{!upload}" mode="maindetail">
+                    <p>Click 'Choose File' below to search and upload your rent roll file in CSV format. 
+                        Once uploaded a preview of the rent roll data will be displayed in a table below.
+                        In order to accurately map rent roll data, please select the applicable field as the column header and then click 'Save' to import the rent roll data.
+                        (Note: Salesforce date format should be followed for date field input: YYYY-MM-DD)</p>
+                    <p><apex:inputFile id="fileToUpload" value="{!fileBody}" filename="{!fileName}" styleClass="inputFile"/></p> 
+                    <div align="center">
+                        <apex:commandButton styleClass="buttonStyle" value="Upload Rent Roll" action="{!uploadFile}"/>
+                    </div>
+                </apex:pageBlock>
+            </apex:form>            
+            <apex:pageBlock rendered="{!attachmentUploaded}" mode="maindetail">
+                <c:CSVPreviewComponent objectName="genesis__Rent_Roll__c" csvString="{!csvBody}" attachment="{!myAttachment}" appCol="{!appColId}"/>
+            </apex:pageBlock>
+        </body>
+    </html>
+</apex:page>

@@ -1,0 +1,25 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" showHeader="false" sidebar="false" standardController="Account" extensions="genesis.RiskAssessmentController" id="pg">
+    <apex:outputPanel >
+   
+        <apex:pageBlock id="AccountScorecard">
+            <apex:pageBlockSection columns="1" collapsible="true">
+            <apex:outputPanel style="color:red" >
+                <apex:pageMessages />
+            </apex:outputPanel>
+            <apex:pageBlockTable value="{!AccScResult}" var="item" title="Risk Assessment">
+                <apex:column value="{!item.Name}" headerValue="Account Scorecard Id" style="width: 70px;">
+                </apex:column>
+                <apex:column value="{!item.genesis__Scorecard_Criteria__c}" headerValue="Scorecard Criteria">
+                </apex:column>
+                <apex:column value="{!item.Field_Name__c }" headerValue="Field Name">
+                </apex:column> 
+                <apex:column value="{!item.genesis__Actual_Value__c}" headerValue="Actual Value">
+                </apex:column> 
+                <apex:column value="{!item.Weighted_Score__c }" headerValue="Weighted Score"> 
+                </apex:column> 
+            </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:outputPanel>
+   
+</apex:page>

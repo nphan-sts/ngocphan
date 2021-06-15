@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Allow_Rebid__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Allow the Investor to Rebid on the Loan Application they already Bid on.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Check this to allow the Investor to rebid on the existing loan application</inlineHelpText>
+    <label>Allow Rebid</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

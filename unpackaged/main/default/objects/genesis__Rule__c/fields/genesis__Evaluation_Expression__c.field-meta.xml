@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Evaluation_Expression__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field captures the evaluation expression for defining logical operators between the respective rule criterias</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field captures the evaluation expression for  computing logical operations between respective rule criterias</inlineHelpText>
+    <label>Evaluation Expression</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

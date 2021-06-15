@@ -1,0 +1,140 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="clcommon__Execution_Criteria__c" extensions="genesis.ManageExecutionCriteria">
+    <apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:outputPanel id="manageExecutionCriteria">
+        <script type="text/javascript">
+            var saveData = function () {
+                window.parent.postMessage({!statusOnsaveExecutionCriteria}, '*');
+            };
+
+            var cancelFunctionality = function () {
+                window.parent.postMessage({!statusOncancelExecutionCriteria}, '*');
+            };
+        </script>
+        <apex:form >
+            <apex:sectionHeader subtitle="{!IF(newExecutionCriteria.Id != NULL, newExecutionCriteria.Name, 'New Execution Criteria')}" title="Execution Criteria Detail"/>
+            <apex:pagemessages />
+
+            <apex:pageBlock title="Execution Criteria Detail">
+                <apex:pageBlockButtons >
+                    <apex:commandButton value="Save" action="{!saveExecutionCriteria}" rerender="manageExecutionCriteria" oncomplete="saveData()"/>
+                    <apex:commandButton value="Cancel" action="{!cancel}" onclick="cancelFunctionality()"/>
+                </apex:pageBlockButtons>
+
+                <apex:pageBlockSection title="Information" id="information" columns="1">
+                    <apex:outputpanel styleClass="mint-lightning-wrapper">                
+                    <apex:pageblockSection columns="2">
+                        <apex:inputField value="{!newExecutionCriteria.clcommon__Sequence__c}"/>
+                        <apex:dynamicComponent componentValue="{!parentField}"/>
+                      
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Related Object"></apex:outputLabel>
+                            <apex:selectList value="{!newExecutionCriteria.clcommon__Related_Object__c}" size="1" onchange="fieldNamesList(this.options[this.selectedIndex].value);">
+                                <apex:selectOptions value="{!relatedObjectList}"/>
+                            </apex:selectList>
+                        </apex:pageBlockSectionItem>
+                        
+                        <apex:dynamicComponent componentValue="{!parentObjectReference}"/>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Name"></apex:outputLabel>
+                            <apex:outputPanel id="fieldPanel">
+                                <apex:outputPanel layout="block" styleClass="requiredInput">
+                                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                    <apex:selectList value="{!parentFieldName}" size="1" onchange="lookupfieldNamesList(this.options[this.selectedIndex].value)">
+                                        <apex:selectOptions value="{!objectFieldList}"/>
+                                    </apex:selectList>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        
+                    </apex:pageblockSection>
+
+                    <apex:pageblockSection rendered="{!NOT(lookupListNotNull)}" columns="2">
+
+                        <apex:inputField value="{!newExecutionCriteria.clcommon__Matching_Type__c}">
+                            <apex:actionSupport event="onchange" reRender="information"/>
+                        </apex:inputField>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Api Name"></apex:outputLabel>
+                            <apex:outputPanel id="fieldApiPanel">
+                                <apex:outputField value="{!newExecutionCriteria.clcommon__Field_API_Name__c}"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:inputField value="{!newExecutionCriteria.clcommon__Minimum_Value__c}" rendered="{!newExecutionCriteria.clcommon__Matching_Type__c == MT_BETWEEN}"/>
+
+                        <apex:inputField value="{!newExecutionCriteria.clcommon__Matching_Value__c}" rendered="{!newExecutionCriteria.clcommon__Matching_Type__c != MT_BETWEEN}"/>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Type"></apex:outputLabel>
+                            <apex:outputPanel id="fieldApiTypePanel">
+                                <apex:outputField value="{!newExecutionCriteria.clcommon__Field_Type__c}"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:inputField value="{!newExecutionCriteria.clcommon__Maximum_Value__c}" rendered="{!newExecutionCriteria.clcommon__Matching_Type__c == MT_BETWEEN}"/>
+                    </apex:pageblockSection>
+
+                    <apex:pageblockSection rendered="{!lookupListNotNull}" columns="2">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Lookup Object Field Name"></apex:outputLabel>
+                            <apex:outputPanel id="lookupFieldPanel">
+                                <apex:outputPanel layout="block" styleClass="requiredInput">
+                                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                    <apex:selectList value="{!childFieldName}" size="1" onchange="setFieldApiName(this.options[this.selectedIndex].value)">
+                                        <apex:selectOptions value="{!lookupObjFieldList}"/>
+                                    </apex:selectList>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Api Name"></apex:outputLabel>
+                            <apex:outputPanel id="fieldApiPanel">
+                                <apex:outputField value="{!newExecutionCriteria.clcommon__Field_API_Name__c}"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:inputField value="{!newExecutionCriteria.clcommon__Matching_Type__c}">
+                            <apex:actionSupport event="onchange" reRender="information"/>
+                        </apex:inputField>
+
+                        <apex:inputField value="{!newExecutionCriteria.clcommon__Minimum_Value__c}" rendered="{!newExecutionCriteria.clcommon__Matching_Type__c == MT_BETWEEN}"/>
+
+                        <apex:inputField value="{!newExecutionCriteria.clcommon__Matching_Value__c}" rendered="{!newExecutionCriteria.clcommon__Matching_Type__c != MT_BETWEEN}"/>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Type"></apex:outputLabel>
+                            <apex:outputPanel id="fieldApiTypePanel">
+                                <apex:outputField value="{!newExecutionCriteria.clcommon__Field_Type__c}"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:inputField value="{!newExecutionCriteria.clcommon__Maximum_Value__c}" rendered="{!newExecutionCriteria.clcommon__Matching_Type__c == MT_BETWEEN}"/>
+
+                    </apex:pageblockSection>
+                    </apex:outputpanel>
+
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:actionRegion >
+                <apex:actionFunction name="fieldNamesList" action="{!getFieldNames}" reRender="information">
+                    <apex:param assignTo="{!parentName}" value="" name="parentName"/>
+                </apex:actionFunction>
+            </apex:actionRegion>
+            <apex:actionRegion >
+                <apex:actionFunction name="lookupfieldNamesList" action="{!getLookupFieldNames}" reRender="information">
+                    <apex:param assignTo="{!lookupName}" value="" name="lookupName"/>
+                </apex:actionFunction>
+            </apex:actionRegion>
+            <apex:actionRegion >
+                <apex:actionFunction name="setFieldApiName" action="{!setFieldApiName}" reRender="information">
+                    <apex:param assignTo="{!lookupFieldName}" value="" name="lookupFieldName"/>
+                </apex:actionFunction>
+            </apex:actionRegion>
+
+        </apex:form>
+    </apex:outputPanel>
+</apex:page>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Payment_Frequency__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Payment Frequency</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>genesis__Product_Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>MONTHLY</fullName>
+                <default>false</default>
+                <label>MONTHLY</label>
+            </value>
+            <value>
+                <fullName>QUARTERLY</fullName>
+                <default>false</default>
+                <label>QUARTERLY</label>
+            </value>
+            <value>
+                <fullName>ANNUALLY</fullName>
+                <default>false</default>
+                <label>ANNUALLY</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>LEASE</controllingFieldValue>
+            <valueName>MONTHLY</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>LEASE</controllingFieldValue>
+            <valueName>QUARTERLY</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>LEASE</controllingFieldValue>
+            <valueName>ANNUALLY</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

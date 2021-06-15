@@ -1,0 +1,45 @@
+<apex:page lightningStylesheets="true" id="additionalInstallmentPage"
+	controller="loan.AddInstallmentLineController"
+	sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+	title="New Additional Installment">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+	<script
+		src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+	<script src="{!URLFOR($Resource.helperclose)}" />
+	<script>
+        j$ = jQuery.noConflict();
+</script>
+	<apex:sectionHeader title="Add Installment Line"
+		id="addInstallmentSection" />
+	<apex:form id="installmentForm">
+		<apex:pageBlock mode="edit" id="addInstallmentTxn">
+			<apex:pageMessages />
+			<apex:pageBlockButtons location="both">
+				<c:BusyButton name="Save" busyName="Saving" actionTo="{!save}"
+					disabled="{!(otherLoanTxn.Id != null)}"
+					oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};"
+					reRenderTo="installmentForm" style="margin-left:120px;" />
+				<apex:commandButton value="Cancel" action="{!cancel}"
+					onclick="closeIframe()" immediate="true" />
+			</apex:pageBlockButtons>
+			<apex:pageBlockSection title="Input additional amount" columns="2">
+				<apex:outputField value="{!loanAccount.Name}" />
+				<apex:inputText value="{!txnAmount}" required="true"
+					label="Amount to be added - " />
+				<apex:inputText value="{!reference}" label="Reference " />
+			</apex:pageBlockSection>
+			<apex:pageBlockSection title="Transaction Detail" columns="2"
+				rendered="{!(otherLoanTxn.Id != null)}">
+				<apex:outputField value="{!otherLoanTxn.loan__Loan_Account__c}" />
+				<apex:outputField value="{!otherLoanTxn.loan__Transaction_Type__c}" />
+				<apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}" />
+				<apex:outputField value="{!otherLoanTxn.loan__Txn_Amt__c}" />
+				<apex:outputField value="{!otherLoanTxn.loan__Reference__c}" />
+				<apex:outputField value="{!loanAccount.loan__Maturity_Date_Current__c}" />
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+
+</apex:page>

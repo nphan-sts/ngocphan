@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Interest_On_Total_Overdue__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Interest on total overdue</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Interest on total overdue</inlineHelpText>
+    <label>Interest On Total Overdue</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

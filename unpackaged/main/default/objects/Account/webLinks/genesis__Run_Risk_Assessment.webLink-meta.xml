@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Run_Risk_Assessment</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Run Risk Assessment</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT("/soap/ajax/13.0/connection.js")}
+{!REQUIRESCRIPT("/soap/ajax/10.0/apex.js")}
+var namespacePrefix = "{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}";
+if (namespacePrefix != null &amp;&amp; namespacePrefix != ""){
+namespacePrefix += "/";
+}
+var accountId = "{!Account.Id }";
+var className = namespacePrefix + "EnhancedScorecardAPI";
+var methodName = "runScorecard";
+
+var retVal = sforce.apex.execute(className ,methodName,{objId:accountId});
+window.alert(retVal);
+window.location.reload();</url>
+</WebLink>

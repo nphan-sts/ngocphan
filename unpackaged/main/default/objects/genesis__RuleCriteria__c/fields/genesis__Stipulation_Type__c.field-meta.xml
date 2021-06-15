@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Stipulation_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Stipulation Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>FUNDING</fullName>
+                <default>false</default>
+                <label>FUNDING</label>
+            </value>
+            <value>
+                <fullName>CONTRACT</fullName>
+                <default>false</default>
+                <label>CONTRACT</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

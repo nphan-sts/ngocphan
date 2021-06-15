@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Negative_Late_Charge_Grace_Days_Check</fullName>
+    <active>true</active>
+    <description>"Late Charge Grace Days" cannot be negative</description>
+    <errorConditionFormula>loan__Late_Charge_Grace_Days__c &lt; 0</errorConditionFormula>
+    <errorDisplayField>loan__Late_Charge_Grace_Days__c</errorDisplayField>
+    <errorMessage>'Late Charge Grace Days' cannot be negative</errorMessage>
+</ValidationRule>

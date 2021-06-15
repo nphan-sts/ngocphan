@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Loan_Disbursal_Transaction__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Loan Disbursal Transaction</label>
+    <referenceTo>loan__Loan_Disbursal_Transaction__c</referenceTo>
+    <relationshipLabel>Disbursement Schedule</relationshipLabel>
+    <relationshipName>Disbursement_Schedule</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

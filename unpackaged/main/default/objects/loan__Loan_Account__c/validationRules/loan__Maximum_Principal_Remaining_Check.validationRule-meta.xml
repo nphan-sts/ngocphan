@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Maximum_Principal_Remaining_Check</fullName>
+    <active>true</active>
+    <description>Maximum_Principal_Remaining_Check</description>
+    <errorConditionFormula>loan__Principal_Remaining__c &gt; loan__Loan_Product_Name__r.loan__Max_Loan_Amount__c</errorConditionFormula>
+    <errorDisplayField>loan__Principal_Remaining__c</errorDisplayField>
+    <errorMessage>The Principal/Advance Remaining should be less than or equal to the Maximum Financed Amount  specified in the Lending Product.</errorMessage>
+</ValidationRule>

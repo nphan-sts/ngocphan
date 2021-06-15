@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Repayment_Date_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT( ISNULL( loan__Expected_Repayment_Start_Date__c ) )
+&amp;&amp;
+loan__Expected_Repayment_Start_Date__c &lt;
+loan__Expected_Disbursal_Date__c</errorConditionFormula>
+    <errorMessage>The Expected Repayment Start Date can not be less than the Expected Disbursal Date.</errorMessage>
+</ValidationRule>

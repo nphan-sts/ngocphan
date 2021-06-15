@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>staging__Dispute_Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Dispute Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>EDR Active</fullName>
+                <default>false</default>
+                <label>EDR Active</label>
+            </value>
+            <value>
+                <fullName>EDR Finalised</fullName>
+                <default>false</default>
+                <label>EDR Finalised</label>
+            </value>
+            <value>
+                <fullName>EDR Lodged</fullName>
+                <default>false</default>
+                <label>EDR Lodged</label>
+            </value>
+            <value>
+                <fullName>IDR Active</fullName>
+                <default>false</default>
+                <label>IDR Active</label>
+            </value>
+            <value>
+                <fullName>IDR Finalized</fullName>
+                <default>false</default>
+                <label>IDR Finalized</label>
+            </value>
+            <value>
+                <fullName>IDR Lodged</fullName>
+                <default>false</default>
+                <label>IDR Lodged</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

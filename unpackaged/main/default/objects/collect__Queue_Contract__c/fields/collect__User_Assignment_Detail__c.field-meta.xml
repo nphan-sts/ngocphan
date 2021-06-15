@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__User_Assignment_Detail__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Reference to the User assignment detail</description>
+    <externalId>false</externalId>
+    <label>User Assignment Detail</label>
+    <referenceTo>collect__User_Assignment_Detail__c</referenceTo>
+    <relationshipLabel>Queue Contracts</relationshipLabel>
+    <relationshipName>Queue_Contracts</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

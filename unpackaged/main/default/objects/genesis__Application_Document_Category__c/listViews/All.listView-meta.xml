@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>genesis__Description__c</columns>
+    <columns>genesis__Application__c</columns>
+    <columns>Box_URl__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>genesis__Application__c</field>
+        <operation>equals</operation>
+        <value>APP-0001096681</value>
+    </filters>
+    <label>All</label>
+</ListView>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Client__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Client</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Clients are the end beneficiaries of micro finance products and services.</inlineHelpText>
+    <label>Client</label>
+    <referenceTo>loan__Client__c</referenceTo>
+    <relationshipLabel>Loan Payment Collection Records</relationshipLabel>
+    <relationshipName>Loan_Payment_Collection_Records</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

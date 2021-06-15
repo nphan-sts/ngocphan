@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DOB_Match__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( genesis__Account__r.peer__Date_of_Birth__c = (DATE( IF(   CONTAINS(MID( Bureau_DOB__c , 5, 4), '/')  ,  IF(CONTAINS(MID( Bureau_DOB__c , 6, 4), '/'),
+ VALUE(MID( Bureau_DOB__c , 7, 4)), VALUE(MID(Bureau_DOB__c , 6, 4))) , VALUE(MID( Bureau_DOB__c , 5, 4))) ,
+ IF( CONTAINS( MID(Bureau_DOB__c, 1, 2) , '/') , VALUE(MID(Bureau_DOB__c, 1, 1)),  VALUE(MID(Bureau_DOB__c, 1, 2)) ), IF( CONTAINS( MID(Bureau_DOB__c, 4, 2) , '/') ,  IF( CONTAINS( MID(Bureau_DOB__c, 3, 2) , '/') ,  IF( CONTAINS( MID(Bureau_DOB__c, 4, 1) , '/') ,  VALUE(MID(Bureau_DOB__c, 3, 1)) ,  VALUE(MID(Bureau_DOB__c, 4, 1)) ) ,  VALUE(MID(Bureau_DOB__c, 3, 2)) ) ,  VALUE(MID(Bureau_DOB__c, 4, 2)) )  )), true, false)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>DOB Match</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

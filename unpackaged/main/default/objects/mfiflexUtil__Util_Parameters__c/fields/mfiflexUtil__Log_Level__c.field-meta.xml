@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>mfiflexUtil__Log_Level__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The logging level of the application. Valid options are:
+NONE, ERROR, DEBUG, INFO</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The logging level of the application. Valid options are:
+NONE, ERROR, DEBUG, INFO</inlineHelpText>
+    <label>Log Level</label>
+    <length>64</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Module_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field will store the module name performed on a particular object event</description>
+    <externalId>false</externalId>
+    <label>Module Name</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Document Generation</fullName>
+                <default>false</default>
+                <label>Document Generation</label>
+            </value>
+            <value>
+                <fullName>Task Generation</fullName>
+                <default>false</default>
+                <label>Task Generation</label>
+            </value>
+            <value>
+                <fullName>Policy Condition Generation</fullName>
+                <default>false</default>
+                <label>Policy Condition Generation</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

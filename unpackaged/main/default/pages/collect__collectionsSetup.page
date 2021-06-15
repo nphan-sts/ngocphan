@@ -1,0 +1,65 @@
+<apex:page id="orgPage" tabStyle="Collection_Strategy__tab">
+
+    <apex:stylesheet value="{!$Resource.collect__MFIStyles}" />
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.sidebarMenuTemplate)}" />
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+
+    <style>
+        .subDataImport {
+            left: 199px !important;
+            width: 150px !important;
+        }
+
+        div.createNewModule.sidebarModule.navMenu {
+            padding: 5px !important;
+        }
+
+        .manageActivities {
+            margin-left: 70px !important;
+            margin-top: 1px !important;
+        }
+
+    </style>
+
+    <script>
+    var j$ = jQuery.noConflict();
+    j$(document).ready(function(){
+
+       j$('.strategySetup').append(j$(addMenuHeader('Collection Strategy...','80px')));
+       j$('.strategySetup .quickloanmenu').append(addMenuItemWithLink('{!URLFOR($Action.Collection_Configuration__c.List, $ObjectType.Collection_Configuration__c)}','viewCollectionStrategy','','View Collection Strategies'));
+
+       j$('.mainMenu').live('mouseenter', function() {
+       j$('.subMenu').hide();
+       j$(this).next('.subMenu').show();
+       });
+
+       j$(document).mouseup(function (e) {
+            var container = j$(".navMenu #createNewMenu");
+            if (container.has(e.target).length === 0) {
+                j$('.subMenu').hide();
+            }
+       });
+
+    });
+
+</script>
+    <style>
+</style>
+    <apex:form id="setupForm">
+        <div style="min-width: 800px">
+            <div class="mfiflexBlock"
+                style="height: 200px; float: left; width: 98%;">
+                <div class="mfiflexBlockHeading" id="bottomWrapper">
+                    <h1 class="heading">Collection Strategy</h1>
+                </div>
+                <div style="text-align: center; margin-top: 30px">
+                    <div class="collapsible sidebar strategySetup" id="sidebarDiv"
+                        style="display: inline-block;"></div>
+                </div>
+            </div>
+
+        </div>
+    </apex:form>
+</apex:page>

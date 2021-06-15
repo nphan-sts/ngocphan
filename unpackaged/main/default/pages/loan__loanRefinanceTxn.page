@@ -1,0 +1,116 @@
+<apex:page lightningStylesheets="true" standardController="loan__Refinance_Transaction__c" extensions="loan.LoanRefinanceTxnController" sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.loan__MFIStyles}" />
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+        j$ = jQuery.noConflict();
+    </script>
+    <script>
+        function confirmCancel() {
+            var isConfirm = confirm("Are you sure you want to cancel?");
+            if(isConfirm){
+                return this.parent.parent.window.close();                
+            }
+        }
+        
+        
+    </script>
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+
+    <script>
+        function testify(){
+            alert(j$('').length);
+        };
+      function scrolify(tblAsJQueryObject, height){
+        var oTbl = tblAsJQueryObject;
+        
+        // for very large tables you can remove the four lines below
+        // and wrap the table with <div> in the mark-up and assign
+        // height and overflow property  
+        var oTblDiv = $("<div/>");
+        oTblDiv.css('height', height);
+        oTblDiv.css('overflow-y','scroll');
+        oTbl.wrap(oTblDiv);
+
+        // save original width
+        oTbl.attr("data-item-original-width", oTbl.width());
+        oTbl.find('thead tr td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        }); 
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        });                 
+
+
+        // clone the original table
+        var newTbl = oTbl.clone();
+
+        // remove table header from original table
+        oTbl.find('thead tr').remove();                 
+        // remove table body from new table
+        newTbl.find('tbody tr').remove();   
+
+        oTbl.parent().parent().prepend(newTbl);
+        newTbl.wrap("<div/>");
+
+        // replace ORIGINAL COLUMN width                
+        newTbl.width(newTbl.attr('data-item-original-width'));
+        newTbl.find('thead tr td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });     
+        oTbl.width(oTbl.attr('data-item-original-width'));      
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });                 
+    }
+
+    function callScroll() {
+        scrolify($('.scrollableFixedHeader'), 300); // 160 is height
+    }
+    </script>
+
+    <apex:sectionHeader title="{!loanAccount.Name}" subtitle="Refinance Transaction" />
+    <apex:form >
+       <apex:pageMessage severity="INFO" rendered="{!refinTxn.loan__Settled__c}" summary="Settled Refinance Transacions cannot be edited!" strength="3"/>
+       <apex:pageBlock mode="edit" id="refinTransaction">
+          <apex:pageMessages />
+          <apex:pageBlockButtons >
+             <c:BusyButton name="Validate" actionTo="{!validate}" busyname="Validating..." reRenderTo="refinTransaction" rendered="{!(isParentLoanStatusValid && NOT(refinTxn.loan__Settled__c))}" />
+             <apex:commandButton value="Save" action="{!save}" rendered="{!(isParentLoanStatusValid && NOT(refinTxn.loan__Settled__c))}"/>
+             <apex:commandButton value="Cancel" immediate="true" action="{!cancel}" />    
+          </apex:pageBlockButtons>   
+
+          <apex:pageBlockSection title="Transaction Details">
+             <apex:outputField value="{!refinTxn.loan__Loan_Account__c}"/>
+             <apex:outputField value="{!refinTxn.Name}"/>
+             <apex:inputField value="{!refinTxn.loan__Refinance_Transaction_Date__c}" required="True" rendered="{!isCreateMode && isParentLoanStatusValid && NOT(refinTxn.loan__Settled__c)}"/>
+             <apex:outputField value="{!refinTxn.loan__Refinance_Transaction_Date__c}" rendered="{!NOT(isCreateMode && isParentLoanStatusValid && NOT(refinTxn.loan__Settled__c))}"/>
+             <apex:outputField value="{!refinTxn.loan__Settled__c}"/>
+          </apex:pageBlockSection>
+
+          <apex:pageBlockSection title="Select a Contract for Refinancing">
+             <apex:inputField value="{!refinTxn.loan__Refinanced_Loan_Account__c}" required="true" rendered="{!(isParentLoanStatusValid && NOT(refinTxn.loan__Settled__c))}">
+                 <apex:actionSupport action="{!getRefinancedLoanInfo}" rerender="refinTransaction" event="onchange" status="changeRefinLoan"/>
+             </apex:inputField>
+             <apex:outputField value="{!refinTxn.loan__Refinanced_Loan_Account__c}" rendered="{!NOT(isParentLoanStatusValid && NOT(refinTxn.loan__Settled__c))}"/>
+             <apex:outputField value="{!refinTxn.loan__Account__c}"/>
+             <apex:outputText label="Current Loan Status" value="{!CurrentLoanStatus }"/>
+             <apex:outputField value="{!refinTxn.loan__Contact__c}"/>
+             <apex:outputField value="{!refinTxn.loan__Expected_Refinance_Amount__c}"/>
+             <apex:outputField value="{!refinTxn.loan__Actual_Refinance_Amount__c}"/>
+          </apex:pageBlockSection>
+
+          <center><apex:actionStatus id="changeRefinLoan">
+              <apex:facet name="start" >
+                  <apex:image value="/img/loading32.gif" style="height:15px;"/>
+              </apex:facet>
+          </apex:actionStatus></center>
+                 
+       </apex:pageBlock>
+    </apex:form>            
+</apex:page>

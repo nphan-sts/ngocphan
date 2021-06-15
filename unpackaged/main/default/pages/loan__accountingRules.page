@@ -1,0 +1,118 @@
+<apex:page lightningStylesheets="true" controller="loan.AccountingRuleAction" id="accountingRulePage"
+	tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<!--apex:stylesheet value="{!$Resource.MFIStyles}"/-->
+	<!--    <apex:form >
+     <apex:pageMessages />
+     <apex:sectionHeader title="Accounting Rules"/>
+     <apex:pageBlock id="accounitingRulePageId">
+      <center><h1 style="font-size:12px;">Accounting Rule Search</h1><br/><br/></center>
+        <apex:pageblockSection title="Search Transactions" columns="2" collapsible="true" >
+          
+              <apex:inputField value="{!search.Accounting_Rule__c}" />
+              <apex:outputLabel > </apex:outputLabel>
+              <apex:outputLabel > </apex:outputLabel>
+          
+          </apex:pageblockSection>
+          <apex:commandButton value="Search" action="{!doSearch}" rerender="transactionList" status="searchStatus"/>      
+          <apex:actionStatus id="searchStatus" startText="Searching..."/>
+          <apex:actionStatus id="getRuleStatus" startText="Fetching rule..."/>          
+          <br></br>
+                  
+        <apex:actionStatus id="paginatorStatus" startText="Fetching Entries..."/>
+        <c:tablePaginationFooter id="footer" paginator="{!paginator}" rows="{!accountingRuleList}" reRenderx="footer, accountingRuleNameTable" statusx="paginatorStatus"/>
+  
+        <apex:pageBlockTable value="{!accountingRuleList}" id="accountingRuleNameTable" var="ARNT">
+          <apex:column headervalue="Name">
+              <apex:commandLink value="{!ARNT.Name}" action="{!setRule}" rerender="accountingRuleDetail" status="getRuleStatus">
+                  <apex:param name="ruleHeaderId" value="{!ARNT.ID}"/>
+              </apex:commandLink>
+          </apex:column>
+          <apex:column value="{!ARNT.Business_Event__c}"/>
+          <apex:column value="{!ARNT.System_Generated__c}"/>
+        </apex:pageBlockTable>
+      <apex:pageBlockButtons location="bottom">
+        <apex:commandButton value="New Accounting Rule" action="{!newAccountingRule}" reRender="accountingRuleDetail"/>
+     </apex:pageBlockButtons>
+     </apex:pageBlock>
+     
+    </apex:form>
+     
+     
+    <apex:form >
+    
+        <apex:actionStatus id="getRuleStatus" startText="Refreshing..."/>
+        
+        <apex:outputPanel id="accountingRuleDetail">
+          <apex:pageBlock title="{!(accountingRuleHeader.Name)}" mode="detail" id="accountingRuleHeaderEntryBlock" 
+                          rendered="{!renderAccountingRuleForm}">
+            <apex:pageblockSection title="Accounting Rule Header Detail" columns="2" collapsible="true" >
+              <apex:inputField value="{!accountingRuleHeader.Name}" required="true" rendered="{!NOT(accountingRuleHeader.System_Generated__c)}"/>
+              <apex:outputField value="{!accountingRuleHeader.Name}" rendered="{!accountingRuleHeader.System_Generated__c}"/>
+              
+              <apex:inputField value="{!accountingRuleHeader.Business_Event__c}" required="true" rendered="{!NOT(accountingRuleHeader.System_Generated__c)}"/>
+              <apex:outputField value="{!accountingRuleHeader.Business_Event__c}" rendered="{!accountingRuleHeader.System_Generated__c}"/>
+              
+              <apex:outputField value="{!accountingRuleHeader.System_Generated__c}"/>
+              
+            </apex:pageblockSection>
+          </apex:pageBlock>
+          
+          
+          <apex:pageBlock rendered="{!renderAccountingRuleForm}">
+                <apex:inlineeditsupport event="onclick" showOnEdit="addRuleLineButton"/>             
+                
+               <apex:pageBlockTable value="{!accountingRuleLineList}" var="ruleLine" 
+                                     id="ruleLinesTable" columns="5" >
+                    
+                    <apex:inlineeditsupport event="onclick" showOnEdit="addRuleLineButton" />             
+                     
+                    <apex:column >
+                        <apex:inputField value="{!ruleLine.Amount_Type__c}" id="amountType" rendered="{!NOT(accountingRuleHeader.System_Generated__c)}"/> 
+                        <apex:outputField value="{!ruleLine.Amount_Type__c}" rendered="{!accountingRuleHeader.System_Generated__c}"/>
+                        <apex:facet name="header">Amount Type</apex:facet>
+                    </apex:column>
+            
+                    <apex:column >
+                        <apex:inputField value="{!ruleLine.Debit_Account__c}" id="debit" rendered="{!NOT(accountingRuleHeader.System_Generated__c)}"/> 
+                        <apex:outputField value="{!ruleLine.Debit_Account__c}" rendered="{!accountingRuleHeader.System_Generated__c}"/>
+                        <apex:facet name="header">Debit Account</apex:facet>
+                    </apex:column>
+                    <apex:column >
+                        <apex:inputField value="{!ruleLine.Debit_Subledger__c}" id="debitSubledger" rendered="{!NOT(accountingRuleHeader.System_Generated__c)}"/> 
+                        <apex:outputField value="{!ruleLine.Debit_Subledger__c}" rendered="{!accountingRuleHeader.System_Generated__c}"/>
+                        <apex:facet name="header">Debit Subledger</apex:facet>
+                    </apex:column>
+                    
+                    <apex:column >
+                        <apex:inputField value="{!ruleLine.Credit_Account__c}" id="credit" rendered="{!NOT(accountingRuleHeader.System_Generated__c)}"/> 
+                        <apex:outputField value="{!ruleLine.Credit_Account__c}" rendered="{!accountingRuleHeader.System_Generated__c}"/>
+                        <apex:facet name="header">Credit Account</apex:facet>
+                    </apex:column>
+                    <apex:column >
+                        <apex:inputField value="{!ruleLine.Credit_Subledger__c}" id="creditSubledger" rendered="{!NOT(accountingRuleHeader.System_Generated__c)}"/> 
+                        <apex:outputField value="{!ruleLine.Credit_Subledger__c}" rendered="{!accountingRuleHeader.System_Generated__c}"/>
+                        <apex:facet name="header">Credit Subledger</apex:facet>
+                    </apex:column>
+                    
+             
+                </apex:pageBlockTable>
+                
+                <apex:pageBlockButtons location="bottom" id="buttons">
+                   <apex:commandButton value="Add Rule Line" id="addRuleLineButton" action="{!addRuleLine}" 
+                                       reRender="ruleLinesTable" rendered="{!NOT(accountingRuleHeader.System_Generated__c)}"/>
+                   <apex:commandButton value="Save" id="saveButton" action="{!save}" status="saveStatus" 
+                                       reRender="" rendered="{!NOT(accountingRuleHeader.System_Generated__c)}"/>
+                   <apex:actionStatus id="saveStatus" startText="Saving..."/>
+                   <apex:commandButton value="Cancel" action="{!cancel}"  immediate="true" reRender="accountingRuleDetail" rendered="{!NOT(accountingRuleHeader.System_Generated__c)}"/>
+                   
+                </apex:pageBlockButtons>        
+        
+           </apex:pageBlock>
+             
+        </apex:outputPanel>
+
+    </apex:form> 
+  -->
+</apex:page>

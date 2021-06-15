@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Transaction_Date_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(loan__Transaction_Date__c &gt;  $User.loan__Current_Branch_s_System_Date__c  ,  NOT(loan__Skip_Validation__c), ISNEW())</errorConditionFormula>
+    <errorMessage>Transaction/Receipt date cannot be greater than system date.</errorMessage>
+</ValidationRule>

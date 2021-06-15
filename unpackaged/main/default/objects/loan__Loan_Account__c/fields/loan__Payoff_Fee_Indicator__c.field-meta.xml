@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Payoff_Fee_Indicator__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This flag indicates whether we need to assess payoff fee or not.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Checked if the Payoff fees needs to be assessed on the Loan account.</inlineHelpText>
+    <label>Payoff Fee</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

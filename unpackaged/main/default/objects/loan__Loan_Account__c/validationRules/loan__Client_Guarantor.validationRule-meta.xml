@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Client_Guarantor</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+NOT($Setup.loan__Org_Parameters__c.loan__Integrate_Salesforce_CRM__c)
+,OR(
+         (  NOT(ISBLANK(loan__Guarantor__c )) &amp;&amp; NOT(ISBLANK(loan__Client__c ))  &amp;&amp; loan__Guarantor__c =  loan__Client__c ),
+         (NOT(ISBLANK(loan__Guarantor__c )) &amp;&amp; NOT(ISBLANK(loan__Co_Applicant__c ))  &amp;&amp; loan__Guarantor__c =  loan__Co_Applicant__c )
+      )
+)</errorConditionFormula>
+    <errorDisplayField>loan__Guarantor__c</errorDisplayField>
+    <errorMessage>Guarantor can not be same as Client or Co-applicant.</errorMessage>
+</ValidationRule>

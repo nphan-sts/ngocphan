@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Zipcode_check</fullName>
+    <active>false</active>
+    <description>Zipcode_check</description>
+    <errorConditionFormula>NOT(REGEX( loan__Zipcode__c , "\\d{6}"))</errorConditionFormula>
+    <errorMessage>Invalid Zipcode</errorMessage>
+</ValidationRule>

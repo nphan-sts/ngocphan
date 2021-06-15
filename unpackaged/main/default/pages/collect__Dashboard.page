@@ -1,0 +1,610 @@
+<apex:page id="theDashboardPage" contentType="text/html" docType="html-5.0" controller="collect.SearchController" standardStylesheets="true" extensions="collect.DashboardCtrl">
+	<!-- apex:include pageName="clcommon__mintTheme"/-->
+    <apex:stylesheet value="{!$Resource.collect__MFIStyles}"/>
+    <apex:stylesheet value="/sCSS/Theme3/default/versioning.css"/>
+    <apex:stylesheet value="/sCSS/Theme3/default/extended.css"/>
+    <apex:stylesheet value="{!$Resource.collect__jQuery_UI_1_12_1_css}"/>
+    <apex:includeScript value="{!$Resource.collect__jQuery_1_12_4_js}"/>
+    
+    <apex:includeScript value="{!$Resource.collect__jQuery_UI_1_12_1_js}"/>
+    <apex:includeScript value="{!$Resource.collect__spin_js}"/>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js">
+    	jquery.noConflict();
+    </script>
+    
+    <script type="text/javascript">
+        var $  = jQuery.noConflict();
+        var sel = [];
+    	var selAllHidden = [];
+    	var selConId;
+        var productType;
+        var str;
+    	var strg;
+    	var show = true;
+    	var sideFlag;
+    	var tempConName = document.getElementById("{!$Component.theDashboardPage:conName}");
+
+        // Function to remove required element from the array (without knowing it's index)
+        function removeA(arr) {
+            var what, a = arguments, L = a.length, ax;
+            while (L > 1 && arr.length) {
+                what = a[--L];
+                while ((ax= arr.indexOf(what)) !== -1) {
+                    arr.splice(ax, 1);
+                }
+            }
+            return arr;
+        }
+
+        // Function to remove null elements from an array
+        function cleanArray(actual) {
+            var newArray = new Array();
+            for (var i = 0; i < actual.length; i++) {
+                if (actual[i]) {
+                    newArray.push(actual[i]);
+                }
+            }
+            return newArray;
+        }
+
+        // Redirects the flow to actionFunction on 'Assign' button being clicked
+        function callActFunc() {
+            sel = cleanArray(sel);
+            console.log( JSON.stringify(sel) );
+            str = JSON.stringify(sel);
+            userAssignment(str);
+        }
+    
+    	function callDetailedView() {
+            productType = document.getElementById("{!$Component.theDashboardPage:searchForm:searchBlock:searchView}").value;
+       		console.log('Contract ID clicked' + selConId);
+			var searchElement = document.getElementById("{!$Component.theDashboardPage:two}");
+            var conDetailObj = document.getElementById("{!$Component.theDashboardPage:three}");
+            var widShrink = $('#theDashboardPage\\:one').width() * 0.25;
+            var htExpand = $('#theDashboardPage\\:one').height() * 0.83;
+            $("#theDashboardPage\\:two").animate({
+                width:widShrink
+            })
+            $("#theDashboardPage\\:searchForm\\:searchBlock\\:searchResultSection").height(htExpand);
+            $("#theDashboardPage\\:userAssignForm\\:main_pageBlock").hide();
+            sideFlag = 1;
+            spin();
+            openDetailedView(selConId, productType);
+    	}
+    
+    	function showContactPopUp(selectedPartyForCP) {
+            var urlStr = "/apex/ContactPreference?party="+selectedPartyForCP; 
+            showURLInModalWindow(urlStr);
+        }
+		
+    	function openFragment() {
+            $('div#actionsSection').slideDown(300, "swing");
+        }
+        function closeFragment() {
+            $('div#actionsSection').slideUp(300, "swing");
+        }
+        function popWindow(identifier){
+            var w = 450;
+            var h = 300;
+            var left = (screen.width) - w - 10;
+            var top = (screen.height) - h - 100;
+            var link = 'apex/clcommon__helpPage';
+            link = link + '?identifier=' + identifier;
+            var newwindow=window.open(link,'null','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=1, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+            newwindow.focus();
+        } 
+    </script>
+    <style type="text/css">
+        .bPageBlock .pbTitle {
+            width: 100%;
+            text-align: left;
+        }
+        .pbTitle {
+            white-space: nowrap
+        }
+        
+        div#actionsSection{display:none;height:auto;width:100%;background:white;overflow:auto}
+        
+        .detailOPNoDisplay {
+        	height:480px !important; 
+        	width:29%; 
+        	border:1px; 
+        	position:absolute !important;
+        	top:10px; 
+        	right:5px;
+        }
+        .detailOPDisplay {
+        	 
+        	width:74% !important;
+        	border:1px; 
+        	position:absolute !important;
+        	
+        	top:10px; 
+        	right:5px;
+        }
+        
+    </style>
+
+    <apex:outputPanel layout="block" id="one" style="height:950px; border:1px; position:relative">
+        <apex:outputPanel layout="block" id="two" style="height:480px !important; width:70%; border:1px; position:absolute; top:10px; left:5px; display: block;">
+            <apex:form id="searchForm" html-novalidate="novalidate" html-autocomplete="off">
+
+                <apex:actionRegion >
+                    <!--Action Function when search term is selected.-->
+                    <apex:actionFunction name="performSearch" action="{!search}" reRender="messages, searchResultPanel, searchFooterPanel">
+                        <apex:param assignTo="{!searchTerm}" value="" name="searchTerm"/>
+                    </apex:actionFunction>
+
+                    <!--Action Function when 'Assign' button is clicked for user assignment-->
+                    <apex:actionFunction name="userAssignment" action="{!assignmentAction}" reRender="main_pageBlock, userAssignmentMessages" oncomplete="searchClick(); return false;">
+                        <apex:param assignTo="{!conIdStrSet}" value="" name="conIdStrSet"/>
+                    </apex:actionFunction>
+                    
+                    <apex:actionFunction name="openDetailedView" action="{!changeToDisplay}" reRender="three, switchToUserAssgn, contractFullDetailIFrame"><!--contractFullDetail, userAssignForm, actionsTabPanel, contractFullDetail1, contractDetail"-->
+                		<apex:param assignTo="{!selectedContractName}" value="" name="selectedContractName"/>
+                        <apex:param assignTo="{!productType}" value="" name="productType"/>
+                    </apex:actionFunction>
+                </apex:actionRegion>
+
+                <!--The search page block-->
+                <apex:pageBlock id="searchBlock" title="Search">
+                    <apex:outputPanel id="searchInputPanel" style="font-size:0px;">
+                        <apex:selectList id="searchView" size="1" multiSelect="false" style="font-size:11pt;width:100%;max-width:15%;" value="{!selectedView}">
+                            <apex:selectOptions value="{!lstSearchViewOption}"/>
+                            <apex:actionSupport event="onchange" action="{!resetView}" reRender="searchInputPanel, messages, searchResultPanel, searchFooterPanel"/>
+                        </apex:selectList>
+                        <apex:selectList id="searchCategory" size="1" multiSelect="false" style="font-size:11pt;width:100%;padding-left:0px;margin-left:2px;max-width:20%;" onChange="setCategory(this.value, this.options[this.selectedIndex].innerHTML)">
+                            <apex:selectOptions value="{!lstSearchCategoryOption}"/>
+                            <apex:actionSupport event="onchange" reRender="none"/>
+                        </apex:selectList>
+                        <apex:inputText id="searchInput" value="{!searchTerm}" maxLength="100" html-placeholder="Search all objects..." onKeypress="searchKeyPress(event, this.value);" style="font-size:11pt;padding-left:0px;padding-right:0px;margin-left:2px;margin-right:0px;width:57.7%;"/>
+                        <style>
+                            .dropdown-btn {
+                                display: inline-block;
+                                font-size:12pt;
+                                vertical-align: top;
+                                border-top-left-radius: 0;
+                                border-bottom-left-radius: 0;
+                                margin: 0px;
+                                padding-left: 0px;
+                                padding-top: 0px;
+                                padding-bottom: 2px;
+                                border-width: 1px;
+                                border-left-width: 0px;
+                                border-color: #bbbbbb
+                            }
+                            
+                            .caret {
+                                display: inline-block;
+                                width: 0;
+                                height: 0;
+                                margin-left: 2px;
+                                vertical-align: middle;
+                                border-top: 4px dashed;
+                                border-top: 4px solid;
+                                border-right: 4px solid transparent;
+                                border-left: 4px solid transparent;
+                            }
+                        </style>
+                        <button type="button" onClick="getList(); return false;" class="dropdown-btn">
+                            <span class="caret"/>
+                        </button>
+                        <apex:commandButton id="searchButton" onClick="searchClick(); return false;" reRender="none" value="Go" style="font-size:10pt;padding-left:2px !important;padding-right:2px !important;padding-top:2px !important;padding-bottom:2px !important;margin-left:3px;margin-right:0px;width:34px;font-weight:bold;"/>
+                        <style>
+                            .ui-autocomplete {
+                                max-height: 200px;
+                                overflow-y: auto;
+                                /* prevent horizontal scrollbar */
+                                overflow-x: hidden;
+                            }
+                            .ui-menu .ui-widget .ui-widget-content .ui-helper-hidden-accessible {
+                                background: white !important;
+                                font-size: inherit !important;
+                                display: block !important;
+                                border-width: 0px !important;
+                                border-style: none !important;
+                            }
+                            .ui-state-active {
+                                margin: 0px !important;
+                            }
+                            .ui-menu-item:hover .ui-menu-item-wrapper:hover {
+                                background: white;
+                                border: none;
+                                color: blue;
+                                font-size: inherit !important;
+                                font-weight: normal;
+                                font-style: normal;
+                                overflow: auto;
+                                display: block !important;
+                                text-decoration: none;
+                                border-width: 0px !important;
+                                border-style: none !important;
+                                border-color: transparent;
+                            }
+                            .ui-menu-item .ui-menu-item-wrapper {
+                                background: white;
+                                border: none;
+                                color: black;
+                                font-size: inherit !important;
+                                font-weight: normal;
+                                font-style: normal;
+                                overflow: auto;
+                                display: block !important;
+                                text-decoration: none;
+                                border-width: 0px !important;
+                                border-style: none !important;
+                                border-color: transparent;
+                            }
+                            .ui-autocomplete-loading { background:white url('{!$Resource.ajax_loader_gif}') no-repeat right center }
+                        </style>
+                        <script type="text/javascript">
+                            var jqXHR;
+                            var sbObject = document.getElementById("{!$Component.theDashboardPage:searchForm:searchBlock:searchInput}");
+                        
+                            function spin() {
+                                var spinnerOpts = {  lines: 13 // The number of lines to draw
+                                                   , length: 28 // The length of each line
+                                                   , width: 14 // The line thickness
+                                                   , radius: 42 // The radius of the inner circle
+                                                   , scale: 1 // Scales overall size of the spinner
+                                                   , corners: 1 // Corner roundness (0..1)
+                                                   , color: '#3399ff' // #rgb or #rrggbb or array of colors
+                                                   , opacity: 0 // Opacity of the lines
+                                                   , rotate: 0 // The rotation offset
+                                                   , direction: 1 // 1: clockwise, -1: counterclockwise
+                                                   , speed: 0.5 // Rounds per second
+                                                   , trail: 60 // Afterglow percentage
+                                                   , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+                                                   , zIndex: 2e9 // The z-index (defaults to 2000000000)
+                                                   , className: 'spinner' // The CSS class to assign to the spinner
+                                                   , top: '50%' // Top position relative to parent
+                                                   , left: '50%' // Left position relative to parent
+                                                   , shadow: false // Whether to render a shadow
+                                                   , hwaccel: false // Whether to use hardware acceleration
+                                                   , position: 'fixed' // Element positioning
+                                                  };
+                                
+                                
+                                if(sideFlag == 0){
+                                    var srObject = document.getElementById("{!$Component.theDashboardPage:searchForm:searchBlock:searchResultSection}");
+                                	var spinner = new Spinner(spinnerOpts).spin(srObject);
+                                }
+                                if(sideFlag == 1){
+                                    var conDetailObject = document.getElementById("{!$Component.theDashboardPage:three}");
+                                	var spinner1 = new Spinner(spinnerOpts).spin(conDetailObject);
+                                }
+                            }
+
+                            function getList() {
+                                $(sbObject).autocomplete('search', sbObject.value);
+                            }
+
+                            function searchClick() {
+                                $("#theDashboardPage\\:contractFullDetailIFrame").hide();
+                                search(sbObject.value);
+                            }
+
+                            function search(term) {
+                                var svObject = document.getElementById("{!$Component.theDashboardPage:searchForm:searchBlock:searchView}");
+                                var scObject = document.getElementById("{!$Component.theDashboardPage:searchForm:searchBlock:searchCategory}");
+                                var searchCategory = '';
+
+                                if (svObject.value) {
+                                    searchView = svObject.options[svObject.selectedIndex].text.trim();
+                                }
+
+                                if (scObject.value) {
+                                    searchCategory = scObject.options[scObject.selectedIndex].text.trim();
+                                }
+
+                                term = term.trim();
+
+                                if (term.length >= 3) {
+                                    try { jqXHR.abort(); } catch(e){}
+                                    
+                                    $(sbObject).removeClass("ui-autocomplete-loading");
+                                
+                                    $(sbObject).blur();
+                                
+                                    if(searchCategory){
+                                        performSearch(searchCategory + ' ' + term);
+                                    } else {
+                                        performSearch(term);
+                                    }
+                                    
+                                    sideFlag = 0;
+                                    spin();
+                                
+                                    $(sbObject).focus();
+                                }
+                            }
+
+                            function searchKeyPress(e, term) {
+                                if (e.which == 13) {
+                                    e.preventDefault();
+                                    
+                                    $("#theDashboardPage\\:contractFullDetailIFrame").hide();
+                                    search(term);
+
+                                    return false;
+                                }
+                            }
+
+                            function setCategory(categoryValue, categoryLabel) {
+                                !categoryValue ? $(sbObject).attr('placeholder', 'Search all objects...') :
+                                                 $(sbObject).attr('placeholder', 'Search ' + categoryLabel + '...');
+                            }
+                            var previousOnload = window.onload;
+                            window.onload = function() { if (previousOnload) { previousOnload(); } spin(); performSearch(); }
+
+                            // Provides the Autocomplete functionality, on selecting the search term (from autocomplete suggestions or clicking on 'Enter'). Calls actionFunction and passes the searched term to SearchController.
+                            $(function() {
+                                $(sbObject).autocomplete({
+                                    minChars: 0,
+                                    delay : 300,
+                                    source: function(request, response) {
+                                        var svObject = document.getElementById("{!$Component.theDashboardPage:searchForm:searchBlock:searchView}");
+                                        var scObject = document.getElementById("{!$Component.theDashboardPage:searchForm:searchBlock:searchCategory}");
+
+                                        var searchCategory = '';
+                                        var term = '';
+
+                                        if (svObject.value) {
+                                            searchView = svObject.options[svObject.selectedIndex].text.trim();
+                                        }
+                                        
+                                        console.log('View: ' + searchView);
+
+                                        if (scObject.value) {
+                                            searchCategory = scObject.options[scObject.selectedIndex].text.trim();
+                                        }
+
+                                        console.log('Category: ' + searchCategory);
+
+                                        if (sbObject.value) {
+                                            term = sbObject.value.trim();
+                                        }
+
+                                        console.log('Term: ' + term);
+
+                                        if (term.length >= 3 || searchCategory) {
+                                            var query = '';
+                                            
+                                            if (searchCategory) {
+                                                query = searchCategory + ' ' + term;
+                                            } else {
+                                                query = term;
+                                            }
+                                            
+                                            console.log('Query: ' + query);
+                                            
+                                            try { jqXHR.abort(); } catch(e){}
+                                            
+                                            jqXHR = $.ajax({url: '{!$Page.SearchHandler}' + '?q=' + query + '&v=' + searchView,
+                                                            dataType: 'json',
+                                                            timeout: 30000,
+                                                            success: function(data) {
+                                                                         $(sbObject).removeClass("ui-autocomplete-loading");
+
+                                                                         if (typeof data == "object") {
+                                                                             response($.map(data, function(item) { return {api: item.o, label: item.l, text: item.n} }))
+                                                                         }
+                                                                     },
+                                                            error: function (xhr, error) {
+                                                                       $(sbObject).removeClass("ui-autocomplete-loading");
+                                                                       return [];
+                                                                   }
+                                                           });
+                                        } else {
+                                            $(sbObject).removeClass("ui-autocomplete-loading");
+                                            return [];
+                                        }
+                                    },
+                                    focus: function(event, ui) {
+                                               return false;
+                                           },
+                                    select: function(e, ui) {
+                                                var scObject = document.getElementById("{!$Component.theDashboardPage:searchForm:searchBlock:searchCategory}");
+                                                var searchCategory = '';
+                                                
+                                                if (scObject.value) {
+                                                    searchCategory = scObject.options[scObject.selectedIndex].text.trim();
+                                                }
+
+                                                if (!searchCategory) {
+                                                    $(sbObject).val(ui.item.label + ' ' + ui.item.text);
+                                                } else {
+                                                    $(sbObject).val(ui.item.text);
+                                                }
+
+                                                return false;
+                                            },
+                                    open: function(e, ui) {
+                                              $(sbObject).removeClass("ui-autocomplete-loading");                                           
+                                          },
+                                    close: function(e, ui) {
+                                               $(sbObject).removeClass("ui-autocomplete-loading");                                           
+                                           }                                     
+                                })
+                                .autocomplete( "instance" )._renderItem = function( ul, item ) {
+                                                                              var scObject = document.getElementById("{!$Component.theDashboardPage:searchForm:searchBlock:searchCategory}");
+                                                                              var searchCategory = '';
+
+                                                                              if (scObject.value) {
+                                                                                  searchCategory = scObject.options[scObject.selectedIndex].text.trim();
+                                                                              }
+
+                                                                              if (!searchCategory) {
+                                                                                  return $("<li></li>")
+                                                                                    .data("ui-autocomplete-item", item)
+                                                                                    .append( $( "<a></a>" ).text( '['+ item.label + '] '+ item.text ) )
+                                                                                    .appendTo(ul);
+                                                                              } else {
+                                                                                  return $("<li></li>")
+                                                                                    .data("ui-autocomplete-item", item)
+                                                                                    .append( $( "<a></a>" ).text( item.text ) )
+                                                                                    .appendTo(ul);
+                                                                              }
+                                };
+                            });
+                        </script>
+                        
+                    </apex:outputPanel>
+                    <apex:pageMessages id="messages"/>
+                    <apex:pageBlockSection >
+                    <apex:outputPanel id="switchToUserAssgn">
+                        <apex:outputPanel id="ua" Rendered="{!display}">
+                            <apex:actionRegion >
+                                <apex:commandButton id="backToUserAssgnViewLink" value=">>" style="cursor:pointer;" action="{!displayToUserAssgnSwitch}" >
+                                    <apex:actionSupport event="onclick" rerender="two, three, switchToUserAssgn, contractFullDetail, userAssignForm, actionsTabPanel, contractFullDetail1, contractDetail"/>
+                                </apex:commandButton>
+                            </apex:actionRegion>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                    </apex:pageBlockSection>
+                    <apex:outputPanel id="searchResultPanel">
+                        <apex:pageBlockSection id="searchResultSection" collapsible="false" columns="1" html-style="overflow:auto; height:367px;">
+                            <apex:dynamicComponent invokeAfterAction="true" componentValue="{!SearchResults}"/>
+                        </apex:pageBlockSection>
+                        <script type="text/javascript">
+                            jQuery.noConflict();
+
+                            //To store the checkbox selected contracts in an array.
+                            $(function(){
+                                console.log('Ready...');
+                                var i = 0;
+                                var j = 0;
+                                var k = 0;
+                                var $pgTable = $( '#{!$Component.theDashboardPage:searchForm:searchBlock:searchResultSection}'.replace(/(:|\.)/g,'\\\\$1') );
+                                sel = [];
+                                selAllHidden = [];
+								
+                                $pgTable.find('a[href]').filter(function(){
+                                                    return ($(this).prev("input[type=hidden]").attr("value") != 'undefined');
+                                                }).on("click", function(){
+                                                    selConId = $(this).prev("input[type=hidden]").attr("value");
+                                                    callDetailedView();
+                                            });
+                                
+                                
+                                $pgTable.find('input[type=hidden]').each(function(){
+                                	selAllHidden[k] = $(this).attr('value');
+                                    k++;
+                                })
+                                $pgTable.find('input[type=checkbox],input[type=hidden]').each(function(){
+
+                                    // When Select all checkbox is selected
+                                    if($(this).prev().prop('type') != 'hidden'){
+                                        $(this).click(function(){
+                                            sel = [];
+                                            $pgTable.find('input[type=checkbox]').not(this).prop('checked', this.checked);
+                                            var boole = $pgTable.find('input[type=checkbox]').not(this).prop('checked');
+                                            if(boole == true){
+                                                $pgTable.find('input[type=hidden]').each(function(){
+                                                    sel[i] = $(this).attr('value');
+                                                    i = i+1;
+                                                });
+
+                                            }
+                                            else if(boole == false){
+                                                sel = [];
+                                            }
+                                        });
+                                    }
+
+                                    // When one or more individual checkboxes for contracts are selected
+                                    else {
+                                        $(this).click(function(){
+                                            if($(this).prop('checked')){
+                                                sel[j] = $(this).prev("input[type=hidden]").attr("value");
+                                                j = j+1;
+                                            }
+                                            else {
+                                                var temp = $(this).prev("input[type=hidden]").attr("value");
+                                                if(jQuery.inArray( temp, sel ) != -1){
+                                                    removeA(sel, temp);
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                });
+                            })
+                        </script>
+                    </apex:outputPanel>
+                    <apex:outputPanel id="searchFooterPanel" layout="block">
+                        <apex:pageBlockSection >
+                            <apex:outputPanel html-align="right" style="width:100%; display:block; overflow:auto;">
+                                <apex:commandLink action="{!getPrevPage}" value="Previous" rendered="{!IF(currentPageNumber > 1, true, false)}" reRender="messages, searchResultPanel, searchFooterPanel"/>
+                                <apex:outputText value="Previous" rendered="{!IF(currentPageNumber > 1, false, true)}"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel html-align="left" style="width:100%; display:block; overflow:auto;">
+                                <apex:commandLink action="{!getNextPage}" value="Next" rendered="{!IF(haveMoreRecords, true, false)}" reRender="messages, searchResultPanel, searchFooterPanel"/>
+                                <apex:outputText value="Next" rendered="{!IF(haveMoreRecords, false, true)}"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockSection>
+                    </apex:outputPanel>
+                </apex:pageBlock>
+            </apex:form>
+        </apex:outputPanel>
+
+        <apex:outputPanel layout="block" id="three" styleClass="{!IF(display, 'detailOPDisplay', 'detailOPNoDisplay')}" >
+            <apex:form id="userAssignForm" rendered="{!NOT(display)}">
+                <!--The User Assignment page block-->
+                <apex:outputPanel layout="block" id="main_pageBlock">
+                <apex:pageBlock id="userAssignmentPageBlock" title="User and Status Assignment">
+                <apex:pageblockbuttons location="top">
+                <apex:commandLink value="Help" id="thelink" onclick="popWindow('userAssignment');" 
+                                  reRender="dummy" style="float:right;text-decoration:none;color:green;padding:1px;font-size:15px;font-weight:bold;" styleClass="link-show" 
+                                  rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>                                                                                                         
+                <apex:commandLink value="Help" id="thelink2" onclick="popWindow('userAssignment');" 
+                                  reRender="dummy" styleClass="help-link" 
+                                  rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>
+                 </apex:pageblockbuttons>
+                    <apex:pageBlockSection id="userAssignmentPBS" title="User Assignment" collapsible="true" columns="1" html-style="height:437px;">
+                    <apex:pageMessages id="userAssignmentMessages"/>
+                            <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Assignment Type" for="one" style="width:200px;"/>
+                            <apex:selectList id="one" value="{!selectedAssignmentType}" style="width:200px" size="1" multiselect="false" required="true">
+                                <apex:selectOption itemValue="None" itemLabel="----"/>
+                                <apex:selectOption itemValue="fixed" itemLabel="Fixed Assignment"/>
+                                <apex:selectOption itemValue="temporary" itemLabel="Temporary Assignment"/>
+                                <apex:selectOption itemValue="permanent" itemLabel="Permanent Assignment"/>
+                                <apex:actionSupport event="onchange" rerender="userAssignmentPBS" action="{!populateUserPicklist}"/>
+                            </apex:selectList>
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                            <apex:outputLabel id="assgnUserLabel" value="User" for="two"/>
+                            <apex:selectList id="two" value="{!selectedUserForAssignment}" style="width:200px" size="1" disabled="{!IF(!disableAssgnUserPicklist, false, true)}" multiselect="false" required="true">
+                                <apex:selectOptions value="{!selectListUserForAssgn}"/>
+                                <apex:actionSupport event="onchange" rerender="userAssignmentPBS" action="{!populateUserQueuePicklist}"/>
+                            </apex:selectList>
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Queue" for="three"/>
+                            <apex:selectList id="three" value="{!selectedUserQueueForAssignment}" style="width:200px" size="1" disabled="{!IF(!disableAssgnUserQueuePicklist, false, true)}" multiselect="false" required="true">
+                                <apex:selectOptions value="{!selectListUserQueueForAssgn}"/>
+                                <apex:actionSupport event="onchange" rerender="userAssignmentPBS" action="{!enableDate}"/>
+                            </apex:selectList>
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel value="End Date" for="assnEndDt"/>
+                                <apex:input type="date" value="{!endDate}" id="assnEndDt" style="width:195px" rendered="{!IF(!disableAssgnDateOption, true, false)}" >
+                                    <apex:actionSupport event="onchange" rerender="userAssignmentPBS" action="{!enableAssign}"/> 
+                                </apex:input>
+                            </apex:pageBlockSectionItem>
+                        <apex:commandButton value="Assign" onclick="callActFunc()" disabled="{!IF(!disableAssign, false, true)}" reRender="userAssignmentPBS"/>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+                </apex:outputPanel>
+            </apex:form>
+            
+            <apex:outputPanel layout="block" id="contractFullDetailIFrame" style="height:100%" Rendered="{!display}">
+                <apex:iframe id="detailIFrame" src="{!'/apex/DashboardDetail?id=' + conID +'&productType=' +productType}" scrolling="true" html-style="height:950px"/>
+            </apex:outputPanel>
+        </apex:outputPanel>
+    </apex:outputPanel>
+</apex:page>

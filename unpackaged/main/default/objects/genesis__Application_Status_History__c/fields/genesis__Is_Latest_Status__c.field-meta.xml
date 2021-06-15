@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Is_Latest_Status__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If the application is being processes and it is the most recent status change record, then its true else false. This value is set based on the values provided in Closed Status in Org Parameters.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If the application is being processes and it is the most recent status change record, then its true else false. This value is set based on the values provided in Closed Status in Org Parameters.</inlineHelpText>
+    <label>Is Latest Status</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

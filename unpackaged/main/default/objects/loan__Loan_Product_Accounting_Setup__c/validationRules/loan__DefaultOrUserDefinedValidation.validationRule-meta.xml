@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__DefaultOrUserDefinedValidation</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND (loan__Use_Default_Setup__c, NOT(ISBLANK(loan__User_Defined_Rule__c)))</errorConditionFormula>
+    <errorMessage>Please uncheck 'Default Setup' if you wish to use a user defined rule.</errorMessage>
+</ValidationRule>

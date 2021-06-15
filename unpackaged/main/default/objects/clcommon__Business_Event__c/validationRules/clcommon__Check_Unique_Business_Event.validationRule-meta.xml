@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Check_Unique_Business_Event</fullName>
+    <active>true</active>
+    <errorConditionFormula>Name = VLOOKUP( $ObjectType.clcommon__Business_Event__c.Fields.Name , $ObjectType.clcommon__Business_Event__c.Fields.Name , Name )
+&amp;&amp;
+Id &lt;&gt; VLOOKUP( $ObjectType.clcommon__Business_Event__c.Fields.Id , $ObjectType.clcommon__Business_Event__c.Fields.Name , Name )</errorConditionFormula>
+    <errorMessage>Business Event already exists.</errorMessage>
+</ValidationRule>

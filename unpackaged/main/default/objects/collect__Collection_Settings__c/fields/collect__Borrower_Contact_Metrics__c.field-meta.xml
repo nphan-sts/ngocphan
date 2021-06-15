@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Borrower_Contact_Metrics__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Borrower Contact Metrics</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

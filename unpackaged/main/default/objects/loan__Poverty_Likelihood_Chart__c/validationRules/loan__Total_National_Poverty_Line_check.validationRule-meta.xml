@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Total_National_Poverty_Line_check</fullName>
+    <active>true</active>
+    <description>Total_National_Poverty_Line_check</description>
+    <errorConditionFormula>loan__Total_Above_National_Poverty_Line__c +  loan__Total_Below_National_Poverty_Line__c &gt; 100</errorConditionFormula>
+    <errorMessage>Total National Poverty Line % can't exceed 100%</errorMessage>
+</ValidationRule>

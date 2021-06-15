@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Remaining_Applications__c</fullName>
+    <description>Formula the finds difference between Total No of Application Limit and Number of Applications Invested.</description>
+    <externalId>false</externalId>
+    <formula>Total_No_of_Application_Limit__c -  Number_Of_Applications_Invested__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Formula the finds difference between Total No of Application Limit and Number of Applications Invested.</inlineHelpText>
+    <label>Remaining Applications</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

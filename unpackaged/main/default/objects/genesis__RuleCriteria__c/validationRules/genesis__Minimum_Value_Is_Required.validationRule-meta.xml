@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Minimum_Value_Is_Required</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISPICKVAL(genesis__Matching_Type__c , 'Between'), ISBLANK(genesis__Minimum_Value__c))</errorConditionFormula>
+    <errorDisplayField>genesis__Minimum_Value__c</errorDisplayField>
+    <errorMessage>When the Matching Type is Between, the Minimum Value field is required.</errorMessage>
+</ValidationRule>

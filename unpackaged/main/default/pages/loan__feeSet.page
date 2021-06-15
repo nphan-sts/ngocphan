@@ -1,0 +1,51 @@
+<apex:page lightningStylesheets="true" standardController="loan__Fee_Set__c" id="feeSetPage"
+	recordSetVar="feeSetSet" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:form >
+		<apex:sectionHeader title="Fee Set" />
+		<apex:pageblock id="feeSetList">
+			<apex:actionRegion >
+				<apex:outputText value="Records per page: "></apex:outputText>
+				<apex:selectList value="{!pagesize}" size="1">
+					<apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+					<apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="25"></apex:selectOption>
+					<apex:actionSupport event="onchange"
+						rerender="feeSetTable, navigation" />
+				</apex:selectList>
+			</apex:actionRegion>
+
+			<apex:pageblockTable value="{!feeSetSet}" id="feeSetTable" var="JA">
+				<apex:column headerValue="Fee Set">
+					<apex:commandLink value="{!JA.Name}"
+						reRender="feeSetPage:feeSetDetail">
+						<apex:param name="feeSet" value="{!JA.ID}" />
+					</apex:commandLink>
+				</apex:column>
+				<apex:column value="{!JA.loan__Fee_Set_Category__c}" />
+			</apex:pageblockTable>
+		</apex:pageblock>
+		<apex:panelGrid columns="2" id="navigation">
+			<apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+			<apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+		</apex:panelGrid>
+	</apex:form>
+
+	<apex:outputPanel id="feeSetDetail">
+		<apex:detail subject="{!$CurrentPage.parameters.feeSet}"></apex:detail>
+	</apex:outputPanel>
+
+	<apex:sectionHeader title="Define a New Fee Set" />
+	<apex:pageblock >
+		<table>
+			<tr>
+				<td>
+				    <apex:outputLink value="{!URLFOR($Action.loan__Fee_Set__c.New)}">Define New Fee Set</apex:outputLink>
+				</td>
+			</tr>
+		</table>
+	</apex:pageblock>
+
+</apex:page>

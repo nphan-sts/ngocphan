@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Application_Fraud</fullName>
+    <columns>Application__c</columns>
+    <columns>Application_Tag__c</columns>
+    <columns>Application_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Application_Tag__c</field>
+        <operation>equals</operation>
+        <value>Fraud</value>
+    </filters>
+    <filters>
+        <field>Application_Status__c</field>
+        <operation>notEqual</operation>
+        <value>Declined</value>
+    </filters>
+    <filters>
+        <field>Application_Status__c</field>
+        <operation>notEqual</operation>
+        <value>Expired</value>
+    </filters>
+    <filters>
+        <field>Application_Status__c</field>
+        <operation>notEqual</operation>
+        <value>Decline_Manual_Review</value>
+    </filters>
+    <filters>
+        <field>Application_Status__c</field>
+        <operation>notEqual</operation>
+        <value>funded</value>
+    </filters>
+    <label>Application - Fraud</label>
+</ListView>

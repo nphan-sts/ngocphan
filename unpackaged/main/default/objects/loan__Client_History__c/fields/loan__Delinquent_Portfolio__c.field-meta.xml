@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Delinquent_Portfolio__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Amount of overdue loan principal / Total original value of all outstanding loans</description>
+    <externalId>false</externalId>
+    <inlineHelpText>* This should consider loans in Active in good standing and Active in bad standing states.
+* Written-off loans should not be included.
+* Closed- rescheduled loans should not be included.</inlineHelpText>
+    <label>Delinquent Portfolio</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,53 @@
+<apex:component access="global">
+
+<apex:attribute name="name" description="Signature name." type="String" default="The Payoff Team" />
+<apex:attribute name="title" description="Signature title." type="String" default="Payoff, Inc." />
+<apex:attribute name="email" description="Signature email." type="String" default="success@payoff.com" />
+<apex:attribute name="phone" description="Signature phone." type="String" default="(800) 878-0901" />
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+    <tbody class="mcnTextBlockOuter">
+        <tr>
+            <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                <tr>
+                <![endif]-->
+    
+                <!--[if mso]>
+                <td valign="top" width="600" style="width:600px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                    <tbody>
+                        <tr>
+                            <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
+                                <br />
+                                <p style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #000000; font-family: 'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif; font-size: 16px; line-height: 150%; margin: 10px 0; padding: 0;" align="left">
+                                    <strong>{!name}</strong>
+                                    <br />
+                                    {!title}
+                                    <br />
+                                    <br />
+                                    <a href="mailto:{!email}" target="_blank" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #f2117a; font-weight: normal; text-decoration: underline;">{!email}</a>
+                                    <br />
+                                    <a href="tel:{!phone}" target="_blank" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #f2117a; font-weight: normal; text-decoration: underline;">{!phone}</a>
+                                </p>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+    
+                <!--[if mso]>
+                </tr>
+                </table>
+                <![endif]-->
+            </td>
+        </tr>
+    </tbody>
+</table>
+</apex:component>

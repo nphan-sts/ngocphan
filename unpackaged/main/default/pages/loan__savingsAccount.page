@@ -1,0 +1,24 @@
+<apex:page lightningStylesheets="true" controller="loan.SavingsAccountController" id="savingsAccountPage">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:sectionHeader title="Create a new Savings Accounts" />
+
+	<apex:form >
+
+		<apex:pageBlock title="Savings Account Details" mode="edit"
+			id="createSavingsAccount">
+			<apex:pageMessages />
+
+			<!--apex:param assignTo="{!postSaveRedirectURL}" value="{!URLFOR($Action.mfiforce__Savings_Account__c.Tab,$ObjectType.mfiforce__Savings_Account__c)}"/-->
+			<apex:outputpanel id="refresh">
+				<apex:pageBlockSection columns="2" id="SAPageBlock">
+					<apex:outputText >This page is deprecated.</apex:outputText>
+				</apex:pageBlockSection>
+			</apex:outputpanel>
+
+		</apex:pageBlock>
+
+	</apex:form>
+
+
+</apex:page>

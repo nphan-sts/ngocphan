@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bank_Account__c</fullName>
+    <externalId>false</externalId>
+    <label>Bank Account</label>
+    <referenceTo>loan__Bank_Account__c</referenceTo>
+    <relationshipName>Bank_Account1589329474979</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

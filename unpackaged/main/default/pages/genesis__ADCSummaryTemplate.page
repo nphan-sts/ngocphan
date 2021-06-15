@@ -1,0 +1,18 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" docType="html-5.0" showHeader="false" sidebar="false" standardStylesheets="false">
+    <script type="text/ng-template" id="adcSummaryContent.html">
+    <div style="height : 600px;">
+    <div class="modal-header" style="padding:5px;">
+        <div class="panel panel-default" style="margin-bottom:0px;">
+                <div class="transaction-room-panel-heading panel-heading" >
+                    <span> Summary Details </span>
+                    <span class="pull-right" style="padding-right : 10px;">
+                        <i class="fa fa fa-times-circle close-icon" ng-click="cancel()"></i></span>
+                </div>
+         </div>
+    </div>
+    <div class="modal-body">
+        <iframe frameborder="0" ng-src={{childUrl}} width="100%" height="500px"></iframe>
+    </div>
+    </div>
+    </script>
+</apex:page>

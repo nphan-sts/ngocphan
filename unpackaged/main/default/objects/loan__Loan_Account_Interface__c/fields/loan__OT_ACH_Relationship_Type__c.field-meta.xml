@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__OT_ACH_Relationship_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>One time ACH relationship type</description>
+    <externalId>false</externalId>
+    <label>OT ACH Relationship Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Primary</fullName>
+                <default>false</default>
+                <label>Primary</label>
+            </value>
+            <value>
+                <fullName>Spouse</fullName>
+                <default>false</default>
+                <label>Spouse</label>
+            </value>
+            <value>
+                <fullName>Secondary</fullName>
+                <default>false</default>
+                <label>Secondary</label>
+            </value>
+            <value>
+                <fullName>Cosigner</fullName>
+                <default>false</default>
+                <label>Cosigner</label>
+            </value>
+            <value>
+                <fullName>Cosigner Spouse</fullName>
+                <default>false</default>
+                <label>Cosigner Spouse</label>
+            </value>
+            <value>
+                <fullName>Cosigner2</fullName>
+                <default>false</default>
+                <label>Cosigner2</label>
+            </value>
+            <value>
+                <fullName>Cosigner2 Spouse</fullName>
+                <default>false</default>
+                <label>Cosigner2 Spouse</label>
+            </value>
+            <value>
+                <fullName>Third Party</fullName>
+                <default>false</default>
+                <label>Third Party</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

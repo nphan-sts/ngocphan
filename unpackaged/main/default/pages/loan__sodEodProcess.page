@@ -1,0 +1,54 @@
+<apex:page controller="loan.DayProcessingAction"
+	tabStyle="Organization_Preference__tab">
+	<!--
+      <apex:sectionHeader title="SOD-EOD Process"/>
+      
+      <apex:form >
+      
+          <apex:pageblock id="eodbodProcessId">
+              <apex:pageMessages />
+              <apex:pageblockSection title="SOD EOD Process - Select a Branch" columns="2" collapsible="false">
+                  <apex:inputField value="{!search.Branch__c}" required="true">
+                      <apex:actionSupport action="{!getRunningDayInfoForBranch}" rerender="eodbodProcessId,currentEodBodSectionId" event="onchange" status="runningDayStatus"/>
+                  </apex:inputField>          
+                  <apex:outputLabel > </apex:outputLabel>
+                  <apex:outputLabel > </apex:outputLabel>
+                 
+              </apex:pageblockSection>
+        
+              <apex:actionStatus id="runningDayStatus" startText="Fetching running day information for this branch..."/>
+              <apex:actionStatus id="eodStatus" startText="EOD Process started..."/>
+              <apex:actionStatus id="sodStatus" startText="SOD Process started..."/>
+              
+              <apex:pageblockSection title="Branch's SOD/EOD Status" columns="2" collapsible="false" id="currentEodBodSectionId" rendered="{!renderRunningDay && !renderResult}">
+                  <apex:outputField value="{!runningProcessRec.Branch__c}" />          
+                  <apex:outputField value="{!runningProcessRec.Date__c}"/>
+                  <apex:outputField value="{!runningProcessRec.Day_Started__c}"/>
+                  <apex:outputField value="{!runningProcessRec.Day_Ended__c}"/>
+                  <apex:outputField value="{!runningProcessRec.Day_Status__c}" />                    
+              </apex:pageblockSection>        
+              <apex:commandButton value="Mark Start of Day" disabled="{!disableSODButton}" action="{!sodProcess}" rerender="eodbodProcessId,afterEodBodSectionId" status="sodStatus" rendered="{!renderRunningDay}" />      
+              <apex:commandButton value="Mark End of Day" disabled="{!disableEODButton}" action="{!eodProcess}" rerender="eodbodProcessId,afterEodBodSectionId" status="eodStatus" rendered="{!renderRunningDay}"/>          
+                  
+              <apex:pageblockSection title="SOD EOD Process Result" columns="2" collapsible="false" id="afterEodBodSectionId" rendered="{!renderResult}">
+                  <apex:outputField value="{!dayProcessRec.Branch__c}" />          
+                  <apex:outputField value="{!dayProcessRec.Date__c}"/>
+                  <apex:outputField value="{!dayProcessRec.SOD_Process_Started__c}"/>
+                  <apex:outputField value="{!dayProcessRec.EOD_Process_Started__c}"/>
+                  <apex:outputField value="{!dayProcessRec.Day_Started__c}"/>
+                  <apex:outputField value="{!dayProcessRec.Day_Ended__c}"/>
+                  <apex:outputField value="{!dayProcessRec.Day_Status__c}" />       
+                  <apex:outputLabel ></apex:outputLabel>
+                  <apex:commandButton value="Refresh Result Screen" action="{!refreshResults}" rerender="eodbodProcessId,afterEodBodSectionId,logsId" status="refreshStatus"/>  
+                  <apex:actionStatus id="refreshStatus" startText="Refreshing..."/>       
+              </apex:pageblockSection>   
+              
+              <apex:pageblockSection title="Process Logs" columns="1" collapsible="true" id="logsId" rendered="{!showLogs}">
+                  <apex:outputText value="{!log}" escape="false"/>
+              </apex:pageblockSection> 
+          </apex:pageblock>
+          
+      </apex:form>
+      -->
+
+</apex:page>

@@ -1,0 +1,28 @@
+<apex:page lightningStylesheets="true" standardController="loan__CR_Org_Definition__c"
+	extensions="loan.CreditReportController" contentType="text/plain/#test.txt">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<!--
+    <apex:repeat value="{!metro2ResultHeaderMap}" var="map" >
+         <apex:outputText value="{!metro2ResultHeaderMap[map]}"/>
+    </apex:repeat>
+  
+  <apex:repeat value="{!metro2ResultBaseMap}" var="map" >  
+         <apex:outputText value="{!newLine}"/>  
+         <apex:outputText value="{!metro2ResultBaseMap[map]}"/>        
+         <apex:outputText value="{!metro2ResultJ1Map[map]}"/>
+    </apex:repeat>
+    -->
+</apex:page>
+<!--
+<apex:page standardController="loan__CR_Org_Definition__c" extensions="loan.CreditReportController" renderAs="pdf">
+
+    <apex:repeat value="{!metro2ResultHeaderMap}" var="map" >
+         <apex:outputText style="white-space:pre-wrap;" value="{!metro2ResultHeaderMap[map]}"/>
+    </apex:repeat>
+    
+    <apex:repeat value="{!metro2ResultBaseMap}" var="map" >
+         <apex:outputText style="white-space:pre-wrap;" value="{!metro2ResultBaseMap[map]}"/>
+         <br></br>
+    </apex:repeat>
+ </apex:page>-->

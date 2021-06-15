@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Receivables__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Json of Bills, Charges and any other receivables corresponding to a Cancelled Invoice</description>
+    <externalId>false</externalId>
+    <label>Receivables</label>
+    <length>32768</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>10</visibleLines>
+</CustomField>

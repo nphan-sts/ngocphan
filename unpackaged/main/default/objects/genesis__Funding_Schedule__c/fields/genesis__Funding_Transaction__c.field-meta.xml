@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Funding_Transaction__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Funding Transaction</label>
+    <referenceTo>genesis__Funding_Transaction__c</referenceTo>
+    <relationshipLabel>Funding Schedules</relationshipLabel>
+    <relationshipName>Funding_Schedules</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

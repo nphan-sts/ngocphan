@@ -1,0 +1,84 @@
+<apex:page lightningStylesheets="true" id="orgPage" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!$Resource.loan__MFIStyles}" />
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.sidebarMenuTemplate)}" />
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script>
+    function isLightningExperienceOrSalesforce1() {
+        return((typeof sforce != 'undefined') && sforce && (!!sforce.one));
+    }
+    var j$ = jQuery.noConflict();    
+    j$(document).ready(function(){
+       if( isLightningExperienceOrSalesforce1() ){
+           j$('.loanProduct').append(addMenuItemWithLink('{!URLFOR($Action.Loan_Product__c.New)}','createLendingProductMru','','Create New Lending Product'));
+           j$('.viewProduct').append(addMenuItemWithLink('{!$Page.loanProduct}','viewEditLendingProductMru','','View/Edit Lending Products'));
+           j$('.assignProduct').append(addMenuItemWithLink('{!$Page.loanProductAssignment}','assignLendingProductMru','','Assign Lending Product To Company'));
+       }
+       else{
+           j$('.loanProducts').append(j$(addMenuHeader('Lending Products...','120px')));
+           j$('.loanProducts .quickloanmenu').append(addMenuItemWithLink('{!URLFOR($Action.Loan_Product__c.New)}','createLendingProductMru','','Create New Lending Product'));
+           j$('.loanProducts .quickloanmenu').append(addMenuItemWithLink('loanProduct','viewEditLendingProductMru','','View/Edit Lending Products'));
+           j$('.loanProducts .quickloanmenu').append(addMenuItemWithLink('loanProductAssignment','assignLendingProductMru','','Assign Lending Product To Company'));
+       }
+       
+    });     
+</script>
+    <style>
+        .configuration-group {
+        border: 1px solid #dddbda;
+        padding: 20px;
+        border-radius: 5px;
+        display: inline-block;
+        margin-right: 20px;
+        width: 100%;
+        vertical-align:top;
+        }
+        .configuration-box {
+        background-color: #f3f2f2;
+        border: 1px solid #dddbda;
+        border-radius: 5px;
+        margin-bottom: 26px;
+        margin-left: 550px;
+        width: 31%;
+        }
+        .configuration-header {
+        padding: 14px;
+        font-weight: 600;
+        border-bottom: 1px solid #dddbda;
+        }
+        .configuration-text {
+        background-color: #ffffff;
+        padding: 14px;
+        border-bottom: 1px solid #dddbda;
+        }
+    </style>
+
+    <apex:form id="managementForm" rendered="{!$User.UIThemeDisplayed != 'Theme4d'}">
+        <div style="min-width: 800px">
+            <div class="mfiflexBlock"
+                style="height: 200px; float: left; width: 98%;">
+                <div class="mfiflexBlockHeading" id="bottomWrapper">
+                    <h1 class="heading">Lending Product Setup</h1>
+                </div>
+                <div class="collapsible sidebar loanProducts" id="sidebarDiv"
+                    style="margin: auto; margin-top: 30px"></div>
+            </div>
+        </div>
+    </apex:form>
+    
+    <apex:form rendered="{!$User.UIThemeDisplayed == 'Theme4d'}" id="setupFormLightning">
+    
+        <div class="configuration-group">
+                <!-- div class="configuration-title">Product</div -->
+                <div class="configuration-box" >
+                    <div class="configuration-header">Lending Products...</div>
+                    <div class="configuration-text loanProduct" id="sidebarDiv"></div>
+                    <div class="configuration-text viewProduct" id="sidebarDiv"></div>
+                    <div class="configuration-text assignProduct" id="sidebarDiv"></div>
+                </div>
+        </div>
+    </apex:form>
+</apex:page>

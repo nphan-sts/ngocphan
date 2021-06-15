@@ -1,0 +1,75 @@
+<apex:page lightningStylesheets="true" id="postExtensionPage" controller="loan.PostExtensionController"
+	tabStyle="loan__Loan_Account__c"
+	sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+	title="Post Extension">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+    <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+	<script
+		src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+	<script src="{!URLFOR($Resource.helperclose)}" />
+	<script>
+      j$ = jQuery.noConflict();
+ 	</script>
+    
+	<apex:sectionHeader title="Post an extension" id="loanPaymentSection" />
+	<apex:form id="extensionForm">
+		<apex:commandLink value="Help On Extension" id="thelink" onclick="popWindow('Extension');" 
+			reRender="dummy" style="text-decoration:none;color:green;padding:1px" styleClass="link-show" rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+		
+		<apex:commandLink value="Help On Extension" id="thelink2" onclick="popWindow('Extension');" 
+			reRender="dummy" styleClass="help-link" rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>
+
+        <br/><br/>
+        
+		<apex:pageBlock mode="edit" id="postExtensionTxn">
+			<div class="orgLoginHistoryWrapper">
+				<div class="message warningM3" id="ie6DeprecationWarning">
+					<table class="messageTable" border="0" cellpadding="2"
+						cellspacing="1">
+						<tr>
+							<td valign="top"><img src="/s.gif" alt="warning"
+								class="msgIcon" title="warning" /></td>
+							<td class="messageCell"><Strong>Warning: All the
+									unbilled future payments will be deferred.</Strong></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<apex:pageMessages />
+			<apex:pageBlockButtons location="both">
+				<c:BusyButton name="Save" busyName="Saving" actionTo="{!save}"
+					disabled="{!(otherLoanTxn.Id != null)}"
+					oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};"
+					reRenderTo="extensionForm" style="margin-left:120px;" />
+				<apex:commandButton value="Cancel" action="{!cancel}"
+					onclick="closeIframe()" immediate="true" />
+			</apex:pageBlockButtons>
+			
+			<apex:outputPanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+			<apex:pageBlockSection title="Input an extension period" columns="2">
+				<apex:outputField value="{!loanAccount.Name}" />
+				<apex:inputText value="{!noOfPeriodDeferrals}" required="true"
+					label="# of period deferrals - " />
+			    <apex:inputCheckbox value="{!loanAccount.loan__Change_Recurring_ACH_Terms__c}"
+			        label="Change Recurring ACH Terms"/>
+			</apex:pageBlockSection>
+			</apex:outputPanel>
+
+		    <apex:outputPanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+			<apex:pageBlockSection title="Transaction Detail" columns="2"
+				rendered="{!(otherLoanTxn.Id != null)}">
+				<apex:outputField value="{!otherLoanTxn.loan__Loan_Account__c}" />
+				<apex:outputField value="{!otherLoanTxn.loan__Transaction_Type__c}" />
+				<apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}" />
+				<apex:outputField value="{!otherLoanTxn.loan__Repayment_Extension_Days__c}" />
+				<apex:outputField value="{!loanAccount.loan__Next_Installment_Date__c}" />
+				<apex:outputField value="{!loanAccount.loan__Maturity_Date_Current__c}" />
+			</apex:pageBlockSection>
+			</apex:outputPanel>
+		</apex:pageBlock>
+	</apex:form>
+
+</apex:page>

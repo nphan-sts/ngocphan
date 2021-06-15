@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Rejected_Bids__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Rejected Bids</label>
+    <summaryFilterItems>
+        <field>genesis__Appraisal_Bid__c.genesis__Status__c</field>
+        <operation>equals</operation>
+        <value>Rejected</value>
+    </summaryFilterItems>
+    <summaryForeignKey>genesis__Appraisal_Bid__c.genesis__Appraisal_Request__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

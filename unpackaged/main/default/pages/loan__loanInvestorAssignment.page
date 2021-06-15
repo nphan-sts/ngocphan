@@ -1,0 +1,239 @@
+<apex:page lightningStylesheets="true" controller="loan.LoanInvestorAssignmentController" action="{!onPageLoad}">
+<apex:include pageName="clcommon__mintTheme"/>
+
+        <script>
+        function formReset() {
+            document.getElementById("loanid").reset();
+            document.getElementById("investorid").reset();
+            document.getElementById("investmentamt").reset();
+            document.getElementById("certificateRate").reset();
+            document.getElementById("serviceRate").reset();
+            
+        }
+    </script>
+    <apex:sectionHeader title="Investor Assignment" />
+    <apex:form id="fractionalizationForm">
+        <apex:pageBlock id="headerPageBlock" mode="edit">
+            <apex:pageMessages />
+            <apex:pageBlockSection columns="6" id="InvLoanTransactionDetails1"
+                title="Investor Loan Transactions"
+                rendered="{!(showLoanInvTxDetails==True)}">
+                
+                <apex:outputPanel layout="block" styleClass="container">
+                    <apex:pageblockTable value="{!investorLoanAccountTxnList}"
+                        id="investorLoanTransactionsDetailTable1" var="ILATL"
+                        headerClass="fixedHeader" styleClass="scrollableFixedHeader">
+                        <apex:column >
+                            <apex:commandLink action="{!showInvestorLoanAccountTxnsDetails}"
+                                value="View" status="txDetails">
+                            </apex:commandLink>
+                            <apex:commandLink action="{!showInvestorLoanAccountTxnsDetails}"
+                                value="Edit" status="txDetails">
+                            </apex:commandLink>
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Transaction_Date__c}"
+                            headerValue="Transaction Date" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Txn_Amount__c}"
+                            headerValue="Transaction Amount" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Txn_Code__c}"
+                            headerValue="Transaction Code" styleClass="scrollContent">
+                        </apex:column>
+
+                        <apex:column value="{!ILATL.loan__Txn_Description__c}"
+                            headerValue="Transaction Description" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Principal_Paid__c}"
+                            headerValue="Principal" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Interest_Paid__c}"
+                            headerValue="Interest" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Late_Fees_Paid__c}"
+                            headerValue="Late Fees" styleClass="scrollContent">
+                        </apex:column>                                                                        
+                        <apex:column value="{!ILATL.loan__Post_Date__c}" headerValue="Post Date"
+                            styleClass="scrollContent">
+                        </apex:column>
+
+                    </apex:pageblockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="LoanInfoBlock" title="Loan Details">
+                <apex:inputField id="loanid" label="Loan" value="{!investorLoan.loan__Loan__c}" required="true">
+                    <apex:actionSupport action="{!setLoanAttributes}"
+                        rerender="headerPageBlock,loanDetails,loanInvDetails,InvLoanTransactionDetails1"
+                        event="onchange" status="loanChange" />
+                </apex:inputField>
+            </apex:pageBlockSection>
+
+            <center><apex:actionStatus id="loanChange">
+                <apex:facet name="start">
+                    <apex:image value="/img/loading32.gif" style="height:15px;" />
+                </apex:facet>
+            </apex:actionStatus></center>
+
+            <apex:pageBlockSection id="loanDetails"
+                rendered="{!(showLoanDetails==True)}">
+                <apex:outputText label="Outstanding Principal Amount"
+                    value="{! investorLoan.Loan_Principal_Remaining__c}" />
+                <apex:outputText label="Days past dues"
+                    value="{! investorLoan.Loan_Delinquent_Days__c}" />
+                <apex:outputText label="Interest Rate"
+                    value="{! investorLoan.Interest_Rate_On_Loan_Account__c}%" />
+                <apex:outputText value="{! investorLoan.Loan_Status__c}" />
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="reinvestDetails"
+                title="Re-Investment Choices" columns="2">
+                <apex:inputField label="Re-Invest Principal"
+                    value="{!investorLoan.loan__Reinvest_Principal__c}" >
+                </apex:inputField>
+                <apex:inputField label="Re-Invest Interest"
+                    value="{!investorLoan.loan__Reinvest_Interest__c}">
+                </apex:inputField>
+            </apex:pageBlockSection>
+            <!--  <apex:pageBlock title="Investor Loan Details" mode="edit">-->
+            <apex:pageBlockSection id="invLoanDetails"
+                title="Investor Loan Details" columns="2">
+                <apex:inputField id="investorid" label="Account "
+                    value="{!investorLoan.loan__Account__c}">
+                </apex:inputField>
+                <apex:outputField label="Start Date"
+                    value="{!investorLoan.loan__Investor_Start_Date__c}" />
+                <apex:outputField value="{!investorLoan.loan__Status__c}" />
+                <br />
+                <br />
+                <apex:inputField id="investmentamt" label="Investment Amount"
+                    value="{!investorLoan.loan__Investment_Amount__c}">
+                </apex:inputField>
+                <br />
+                <apex:inputField id="certificateRate" label="Certificate Rate"
+                    value="{!investorLoan.loan__Certificate_Rate__c}">
+                </apex:inputField>
+                <apex:inputField id="serviceRate" label="Service Rate"
+                    value="{!investorLoan.loan__Service_Rate__c}">
+                </apex:inputField>
+                
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton action="{!validate}" value="Validate"
+                    id="validateButton" />
+                <c:BusyButton actionTo="{!saveInvestorLoanDetails}" name="Save"
+                    id="saveButton" busyname="Saving.." reRenderTo="fractionalizationForm" 
+                    oncomplete="javascript:formReset()"/>
+
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockSection columns="1" id="loanInvDetails"
+                title="Active Investment"
+                rendered="{!(showExistingInvDetails==True)}">
+                <apex:outputText label="Total Ownership">{!totalOwnership}%</apex:outputText>
+                <apex:outputText label="Total Investment in Loan">{!totalInvestedAmount}</apex:outputText><br/>
+                <apex:outputPanel layout="block" styleClass="container">
+                    <apex:pageblockTable value="{!investorLoanList}"
+                        id="investorLoanTable" var="ILL" headerClass="fixedHeader"
+                        styleClass="scrollableFixedHeader">
+                        
+                        <apex:column headerValue="Investor Loan Id"
+                            styleClass="scrollContent">
+                            <apex:commandLink action="{!showInvestorLoanAccountTxnsDetails}"
+                                reRender="headerPageBlock,InvLoanTransactionDetails"
+                                value="{!ILL.name}" status="txDetails">
+                                <apex:param name="investorLoanId" value="{!ILL.id}" />
+                            </apex:commandLink>
+                        </apex:column>
+                        <apex:column value="{!ILL.loan__Enabled_Flag__c}" headerValue="Enabled"
+                            styleClass="scrollContent">
+                        </apex:column>
+                         <apex:column headerValue="Loan Id"
+                            styleClass="scrollContent" value="{!ILL.loan__Loan__c}">
+                        </apex:column>
+                        <apex:column headerValue="Investor Name" styleClass="scrollContent">
+                              <apex:commandLink action="{!showInvestorAccount}"
+                                value="{!ILL.Account__r.Name}" status="txDetails">
+                                <apex:param name="investor_acc_id" value="{!ILL.Account__r.id}" />
+                            </apex:commandLink>
+                        </apex:column>
+                        <apex:column value="{!ILL.loan__Certificate_Rate__c}"
+                            headerValue="Certificate Rate" styleClass="scrollContent">
+                        </apex:column>
+                         <apex:column value="{!ILL.loan__Inv_Accrued_Interest_Amt__c}"
+                            headerValue="Accrued Interest" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILL.loan__Investment_Amount__c}"
+                            headerValue="Investment Amount" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILL.loan__Share__c}" headerValue="Share"
+                            styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILL.loan__Principal_Amount_Paid__c}"
+                            headerValue="Principal Paid" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILL.loan__Interest_Amount_Paid__c}"
+                            headerValue="Int Paid" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILL.loan__Late_Fees_Amount_Paid__c}"
+                            headerValue="Late Fees Paid" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILL.loan__Total_Amount_Paid__c}"
+                            headerValue="Total Amt Paid" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILL.loan__Status__c}" headerValue="Status"
+                            styleClass="scrollContent">
+                        </apex:column>
+                    </apex:pageblockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <center><apex:actionStatus id="txDetails">
+                <apex:facet name="start">
+                    <apex:image value="/img/loading32.gif" style="height:15px;" />
+                </apex:facet>
+            </apex:actionStatus></center>
+            <apex:pageblockSection rendered="{!(showLoanInvTxDetails==True)}" columns="1">
+                <apex:detail subject="{!investorLoanIdStr }" relatedList="false"/>
+            </apex:pageblockSection>
+            <apex:pageBlockSection columns="6" id="InvLoanTransactionDetails"
+                title="Investor Loan Transactions"
+                rendered="{!(showLoanInvTxDetails==True)}">
+                
+                <apex:outputPanel layout="block" styleClass="container">
+                    <apex:pageblockTable value="{!investorLoanAccountTxnList}"
+                        id="investorLoanTransactionsDetailTable" var="ILATL"
+                        headerClass="fixedHeader" styleClass="scrollableFixedHeader">
+                        <apex:column value="{!ILATL.loan__Transaction_Date__c}"
+                            headerValue="Transaction Date" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Txn_Amount__c}"
+                            headerValue="Transaction Amount" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Txn_Code__c}"
+                            headerValue="Transaction Code" styleClass="scrollContent">
+                        </apex:column>
+
+                        <apex:column value="{!ILATL.loan__Txn_Description__c}"
+                            headerValue="Transaction Description" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Principal_Paid__c}"
+                            headerValue="Principal" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Interest_Paid__c}"
+                            headerValue="Interest" styleClass="scrollContent">
+                        </apex:column>
+                        <apex:column value="{!ILATL.loan__Late_Fees_Paid__c}"
+                            headerValue="Late Fees" styleClass="scrollContent">
+                        </apex:column>                                                                        
+                        <apex:column value="{!ILATL.loan__Post_Date__c}" headerValue="Post Date"
+                            styleClass="scrollContent">
+                        </apex:column>
+
+                    </apex:pageblockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+
+    </apex:form>
+</apex:page>

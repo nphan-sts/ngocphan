@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Validate_Query</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Validate Query</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT("/soap/ajax/13.0/connection.js")} 
+{!REQUIRESCRIPT("/soap/ajax/10.0/apex.js")} 
+
+var nsPrefix = "{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Namespace_Prefix__c}"; 
+if(nsPrefix &amp;&amp; nsPrefix != ''){ 
+    nsPrefix = nsPrefix + '.' ; 
+} 
+
+var queryId = "{!clcommon__Dynamic_Query__c.Id}";
+var className = nsPrefix + "CustomButtonAction"; 
+var methodName = "validateQuery"; 
+sforce.apex.execute(className,
+                    methodName,
+                    {queryId:queryId});
+window.location.reload();</url>
+</WebLink>

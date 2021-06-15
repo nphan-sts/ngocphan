@@ -1,0 +1,18 @@
+<apex:page lightningStylesheets="true" id="feeAccrualStreamPage" standardController="loan__Contract_Pre_Paid_Fee__c"
+    extensions="loan.FeeAccrualStreamController" tabStyle="loan__Loan_Account__c" 
+    title="Fee Accrual Stream" renderAs="pdf">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:form >
+	    <apex:pageBlock title="Fee Accrual Stream"  >
+	        <apex:pageBlockTable value="{!accrualStream}" var="entry" cellpadding="10" border="0.2" align="center">
+	            
+	            <apex:column value="{!entry.loan__Fee__c}" />
+	            <apex:pageBlockSection > <apex:pageBlockSectionItem > </apex:pageBlockSectionItem></apex:pageBlockSection>
+	            <apex:column value="{!entry.loan__Amount__c}" />
+	            <apex:column value="{!entry.loan__Transaction_Date__c}" />
+	        
+	        </apex:pageBlockTable>
+	    </apex:pageBlock>
+    </apex:form>
+</apex:page>

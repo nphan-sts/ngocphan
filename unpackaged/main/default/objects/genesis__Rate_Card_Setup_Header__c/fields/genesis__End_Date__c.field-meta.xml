@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__End_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>End Date of Rate card</description>
+    <externalId>false</externalId>
+    <inlineHelpText>End Date of Rate card</inlineHelpText>
+    <label>End Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

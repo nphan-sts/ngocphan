@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Fee_Snapshot__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field stores an encrypted string of all paid 'Overdue Fees' and 'Charges'. No need to add 'Due Fees' because it is being recorded as a part of 'Installment Snapshot' field on the installment.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field stores an encrypted string of all paid 'Overdue Fees' and 'Charges'. No need to add 'Due Fees' because it is being recorded as a part of 'Installment Snapshot' field on the installment.</inlineHelpText>
+    <label>Fee Snapshot</label>
+    <length>32768</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

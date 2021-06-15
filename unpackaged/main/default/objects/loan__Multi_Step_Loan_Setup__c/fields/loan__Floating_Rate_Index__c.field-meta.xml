@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Floating_Rate_Index__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This defines the base rate for loan.</inlineHelpText>
+    <label>Floating Rate Index</label>
+    <referenceTo>loan__Floating_Rate_Index__c</referenceTo>
+    <relationshipLabel>Rate Schedule Setup</relationshipLabel>
+    <relationshipName>Rate_Schedule_Setup</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

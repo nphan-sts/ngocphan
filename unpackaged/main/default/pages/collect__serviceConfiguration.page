@@ -1,0 +1,158 @@
+<apex:page id="serviceConfigPage" lightningStylesheets="true">
+
+    <apex:stylesheet value="{!$Resource.collect__MFIStyles}" />
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.sidebarMenuTemplate)}" />
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+
+    <style>
+        .subDataImport {
+            left: 199px !important;
+            width: 150px !important;
+        }
+
+        div.createNewModule.sidebarModule.navMenu {
+            padding: 5px !important;
+        }
+
+    </style>
+    <script>
+    var j$ = jQuery.noConflict();    
+    function isLightningExperienceOrSalesforce1() {
+        return((typeof sforce != 'undefined') && sforce && (!!sforce.one));
+    }
+    j$(document).ready(function(){
+        if(isLightningExperienceOrSalesforce1()){
+            j$('.newSourceSystem').append(addMenuItemWithLink('{!URLFOR($Action.Source_System__c.List, $ObjectType.Source_System__c)}','sourceSystemConfiguration','','View/Edit Source Systems'));
+            }else{
+       j$('.sourceSystemSetup').append(j$(addMenuHeader('Source System Configuration','70px')));
+       j$('.sourceSystemSetup .quickloanmenu').append(addMenuItemWithLink('{!URLFOR($Action.Source_System__c.List, $ObjectType.Source_System__c)}','sourceSystemConfiguration','','View/Edit Source Systems'));
+}if(isLightningExperienceOrSalesforce1()){
+     j$('.newStatusConfiguration').append(addMenuItemWithLink('{!URLFOR($Action.Status_Config__c.List, $ObjectType.Status_Config__c)}','statusConfiguration','','View/Edit Status Configuration'));
+    }else{
+       j$('.statusSetup').append(j$(addMenuHeader('Status Configuration','70px')));
+       j$('.statusSetup .quickloanmenu').append(addMenuItemWithLink('{!URLFOR($Action.Status_Config__c.List, $ObjectType.Status_Config__c)}','statusConfiguration','','View/Edit Status Configuration'));
+}
+        if(isLightningExperienceOrSalesforce1()){
+            var configActions = '{!$Page.configActions}';
+             j$('.newActionCode').append(addMenuItemWithLink('{!URLFOR($Action.Action_Code__c.List, $ObjectType.Action_Code__c)}','actionCodeConfiguration','','View/Edit Action Codes'));
+        j$('.newActionConfig').append(addMenuItemWithLink(configActions,'configActions','','View/Edit Action Code Configuration'));
+            }else{
+       j$('.actionSetup').append(j$(addMenuHeader('Action Code Configuration','80px')));
+       j$('.actionSetup .quickloanmenu').append(addMenuItemWithLink('{!URLFOR($Action.Action_Code__c.List, $ObjectType.Action_Code__c)}','actionCodeConfiguration','','View/Edit Action Codes'));
+        j$('.actionSetup .quickloanmenu').append(addMenuItemWithLink('/apex/configActions','configActions','','View/Edit Action Code Configuration'));
+}
+        if(isLightningExperienceOrSalesforce1()){
+            var batchJobs = '{!$Page.batchJobScheduler}';
+            j$('.batchJobsScheduler').append(addMenuItemWithLink(batchJobs,'batchJobScheduler','','Batch Job Scheduler'));
+            }else{
+       j$('.batchJobs').append(j$(addMenuHeader('Batch Jobs','80px')));
+        j$('.batchJobs .quickloanmenu').append(addMenuItemWithLink('/apex/batchJobScheduler','batchJobScheduler','','Batch Job Scheduler'));
+}
+       j$('.mainMenu').live('mouseenter', function() {
+       j$('.subMenu').hide();
+       j$(this).next('.subMenu').show();
+       });
+    
+       j$(document).mouseup(function (e) {
+            var container = j$(".navMenu #createNewMenu");
+            if (container.has(e.target).length === 0) {
+                j$('.subMenu').hide();
+            }
+       });
+    
+    });   
+    </script>
+    <style>
+        .configuration-group {
+    border: 1px solid #dddbda;
+    padding: 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-right: 20px;
+    width: 45%;
+    vertical-align:top;
+}
+.configuration-title {
+        background-color: #f3f2f2;
+        border: 1px solid #dddbda;
+        border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+        padding: 14px;
+}
+.configuration-box {
+    background-color: #f3f2f2;
+    border: 1px solid #dddbda;
+    border-radius: 10px;
+    margin-bottom: 26px;
+        margin-left: 20%;
+        width: 50%;
+}
+.configuration-header {
+    padding: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #dddbda;
+}
+.configuration-text {
+    background-color: #ffffff;
+    padding: 14px;
+    border-bottom: 1px solid #dddbda;
+}
+    </style>
+    <apex:form id="setupForm" rendered="{!$User.UIThemeDisplayed != 'Theme4d'}">
+        <div style="min-width: 800px">
+
+            <div class="mfiflexBlock"
+                style="height: 460px; float: left; width: 48%; margin-right: 1%;">
+                <div class="mfiflexBlockHeading" id="bottomWrapper">
+                    <h1 class="heading">Setup</h1>
+                </div>
+                <div class="collapsible sidebar sourceSystemSetup" id="sidebarDiv"
+                    style="margin: auto; margin-top: 30px"></div>
+                <div class="collapsible sidebar statusSetup" id="sidebarDiv"
+                    style="margin: auto;"></div>
+                <div class="collapsible sidebar actionSetup" id="sidebarDiv"
+                    style="margin: auto;"></div>
+            </div>
+
+            <div class="mfiflexBlock"
+                style="height: 460px; float: left; width: 48%; margin-left: 1%;">
+                <div class="mfiflexBlockHeading" id="bottomWrapper">
+                    <h1 class="heading">Batch Jobs</h1>
+                </div>
+                <div class="collapsible sidebar batchJobs" id="sidebarDiv"
+                    style="margin: auto; margin-top: 30px"></div>
+            </div>
+
+        </div>
+    </apex:form>
+  <apex:form rendered="{!$User.UIThemeDisplayed == 'Theme4d'}" id="setupFormLightning">
+     <div class="configuration-group">
+            <div class="configuration-title">Setup</div>
+            <div class="configuration-box" >
+                <div class="configuration-header">Source System Configuration</div>
+                <div class="configuration-text newSourceSystem" id="sidebarDiv"></div>
+            </div>
+         <div class="configuration-box" >
+                <div class="configuration-header">Status Configuration</div>
+                <div class="configuration-text newStatusConfiguration" id="sidebarDiv"></div>
+            </div>
+         <div class="configuration-box" >
+                <div class="configuration-header">Action Code Configuration</div>
+                <div class="configuration-text newActionCode" id="sidebarDiv"></div>
+             <div class="configuration-text newActionConfig" id="sidebarDiv"></div>
+            </div>
+      </div>
+         <div class="configuration-group">
+            <div class="configuration-title">Batch Jobs</div>
+         <div class="configuration-box" >
+                <div class="configuration-header">Batch Jobs</div>
+                <div class="configuration-text batchJobsScheduler" id="sidebarDiv"></div>
+             
+            </div>
+        </div>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,52 @@
+<apex:page lightningStylesheets="true" standardController="loan__Payoff_Quote__c"
+    extensions="loan.PayoffQuoteViewController"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+    <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+    
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:sectionHeader title="Generate New PayOff Quote" />
+    <br></br>
+    <br></br>
+    <div style="height:300px;">
+        <apex:form id="payOffQuoteForm" >
+            <apex:commandLink value="Help On Payoff Quote" id="thelink" onclick="popWindow('Payoff Quote');" 
+                              reRender="dummy" style="text-decoration:none;color:green;padding:1px" styleClass="link-show"
+                              rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+            <apex:commandLink value="Help On Payoff Quote" id="thelink2" onclick="popWindow('Payoff Quote');" 
+                                reRender="dummy" styleClass="help-link" 
+                                rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>  
+                                  
+                                  <br/><br/>
+            
+            <apex:pageBlock mode="maindetail">
+                <apex:pageblockButtons location="top">
+                    <c:BusyButton name="Generate Quote" busyName="Generating Quote"
+                        actionTo="{!generateQuote}" id="sBtn"
+                        oncomplete="({!closeModal}===true) ? closeIframe('{!loan__Payoff_Quote__c.loan__Loan_Account__c}') : {};"
+                        reRenderTo="payOffQuoteForm" />
+                    <apex:commandButton value="Cancel" action="{!cancel}"
+                        onclick="closeIframe()" id="cBtn" />
+                </apex:pageblockButtons>
+                <br></br>
+                <br></br>
+                <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+                <apex:pageblockSection columns="2">
+                    <apex:inputField value="{!pq.Name}" required="true" />
+                    <apex:outputField value="{!pq.loan__Poq_Transaction_Date__c}" />
+                    <apex:inputField value="{!pq.loan__Poq_valid_till_Dt__c}" required="true"/>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Loan</apex:outputLabel>
+                        <apex:outputfield value="{!loan__Payoff_Quote__c.loan__Loan_Account__c}" />
+                    </apex:pageBlockSectionItem>
+    
+    
+                </apex:pageblockSection>
+              </apex:outputpanel>
+            </apex:pageBlock>
+        </apex:form>
+    </div>
+</apex:page>

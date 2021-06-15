@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_Default_Term</fullName>
+    <active>true</active>
+    <errorConditionFormula>OR(loan__Default_Number_of_Installments__c &lt; loan__Min_Number_of_Installments__c, loan__Default_Number_of_Installments__c &gt; loan__Max_Number_of_Installments__c)</errorConditionFormula>
+    <errorMessage>Default Term is Invalid</errorMessage>
+</ValidationRule>

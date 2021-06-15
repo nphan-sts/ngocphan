@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Archive_Detail_Object_Fully__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Flag to indicate to archive the detail object records of for which this object is the master object. If the object is archived fully no summary records will be created.</inlineHelpText>
+    <label>Archive Detail Object Fully</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

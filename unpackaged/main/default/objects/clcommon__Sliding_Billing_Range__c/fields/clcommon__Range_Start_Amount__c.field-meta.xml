@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Range_Start_Amount__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The minimum amount for the range. Range Start Amount is included in the range.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the minimum amount for the range. Range Start Amount is included in the range.</inlineHelpText>
+    <label>Range Start Amount</label>
+    <precision>18</precision>
+    <required>true</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

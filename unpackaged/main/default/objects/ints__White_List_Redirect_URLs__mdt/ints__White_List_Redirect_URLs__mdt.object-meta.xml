@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>This Custom MetaData type is used to white list redirect url which helps to avoid Redirect URL attacks</description>
+    <label>White List Redirect URL</label>
+    <pluralLabel>White List Redirect URLs</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

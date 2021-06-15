@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Exclude_Delinq_Grace_Days_In_Aging__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If this check box is selected then delinquency grace days are not considered while calculating aging. E.g., If delinquency grace days are 7 and dues are unpaid for 9 days then aging is 2 days if you select this checkbox.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If this check box is selected then delinquency grace days are not considered while calculating aging. E.g., If delinquency grace days are 7 and dues are unpaid for 9 days then aging is 2 days if you select this checkbox.</inlineHelpText>
+    <label>Exclude Delinquency Grace Days in Aging</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Run_IPT_Job</fullName>
+    <availability>online</availability>
+    <description>This button is to run IPT job for a specific loan</description>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Run IPT Job</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT("/soap/ajax/15.0/connection.js")}
+{!REQUIRESCRIPT("/soap/ajax/15.0/apex.js")}
+
+var r = confirm("Do you want to run the IPT Job?");
+if(r == true)
+{
+sforce.apex.execute("IPTRescheduleJob","runIPTJob",{LoanId:"{! loan__Loan_Account__c.Id }"});
+location.reload();
+}</url>
+</WebLink>

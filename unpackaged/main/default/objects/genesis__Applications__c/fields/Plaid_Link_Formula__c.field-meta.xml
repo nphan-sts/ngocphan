@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Plaid_Link_Formula__c</fullName>
+    <externalId>false</externalId>
+    <formula>"https://" + $Setup.MW_Settings__c.PLAID_Host_Name__c + '/' + $Setup.MW_Settings__c.PLAID_App_Name__c + '/' +"plaid?lead_id=" + LEAD_ID_ExtKey__c + "&amp;member_id=" + Member_ID__c + "&amp;user_id=" + $User.Id</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Plaid Link Formula</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

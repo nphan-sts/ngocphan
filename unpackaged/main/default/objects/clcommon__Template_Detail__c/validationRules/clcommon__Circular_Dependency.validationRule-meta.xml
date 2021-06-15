@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Circular_Dependency</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    ISPICKVAL(clcommon__Type__c,'INPUT'),
+    NOT(ISBLANK(clcommon__Detail__c)), 
+    NOT(ISBLANK(clcommon__Detail__r.clcommon__Detail__c)),
+    Id  =  clcommon__Detail__r.clcommon__Detail__c 
+)</errorConditionFormula>
+    <errorMessage>This will introduce circular dependency</errorMessage>
+</ValidationRule>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Priority__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field represents the priority for a deposit among multiple deposits attached to the same contract</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field represents the priority for a deposit among multiple deposits attached to the same contract</inlineHelpText>
+    <label>Priority</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

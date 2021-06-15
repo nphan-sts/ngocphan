@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Certificate_rate_check</fullName>
+    <active>true</active>
+    <description>The certificate rate must be less than the interest rate for the loan if 'Supports Higher Investor Certificate Rate' on CL Contract's lending product is false</description>
+    <errorConditionFormula>AND(loan__Loan__r.loan__Loan_Product_Name__r.loan__Higher_Investor_Certificate_Rate_Allowed__c = false,  loan__Certificate_Rate__c &gt;   loan__Loan__r.loan__Interest_Rate__c)</errorConditionFormula>
+    <errorMessage>The certificate rate must be less than the interest rate for the loan.</errorMessage>
+</ValidationRule>

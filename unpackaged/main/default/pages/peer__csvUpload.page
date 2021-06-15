@@ -1,0 +1,16 @@
+<apex:page controller="peer.CsvUploadController" title="Bank Statement Upload">
+  <apex:include pageName="clcommon__mintTheme"/>
+  <apex:sectionHeader title="Upload Bank Statement" />
+    
+        <apex:form >
+            <apex:pageBlock mode="edit" id="uploadNacha">
+                <apex:pageBlockButtons location="top">
+                    <apex:pageMessages />
+                   <apex:inputFile value="{!fileContent}" filename="{!fileName}" />
+                   <apex:commandButton value="Reconcile Statement" action="{!uploadMisc}"/><br></br> <br></br>
+                   
+                </apex:pageBlockButtons>
+                
+            </apex:pageBlock>
+        </apex:form>
+</apex:page>

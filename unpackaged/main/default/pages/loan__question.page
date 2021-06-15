@@ -1,0 +1,53 @@
+<apex:page lightningStylesheets="true" standardController="loan__Question__c" id="questionPage"
+    recordSetVar="questionSet" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:form >
+        <apex:sectionHeader title="Question" />
+        <apex:pageblock id="questionList">
+            <apex:actionRegion >
+                <apex:outputText value="Records per page: "></apex:outputText>
+                <apex:selectList value="{!pagesize}" size="1">
+                    <apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+                    <apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+                    <apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+                    <apex:selectOption itemLabel="20" itemValue="25"></apex:selectOption>
+                    <apex:actionSupport event="onchange"
+                        rerender="questionTable, navigation" />
+                </apex:selectList>
+            </apex:actionRegion>
+
+            <apex:pageblockTable value="{!questionSet}" id="questionTable"
+                var="JA">
+                <apex:column headerValue="Question">
+                    <apex:commandLink value="{!JA.Name}"
+                        reRender="questionPage:questionDetail">
+                        <apex:param name="question" value="{!JA.ID}" />
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column headerValue="Question Text" value="{!JA.loan__Question__c}" />
+                <apex:column headerValue="Answer Type" value="{!JA.loan__Answer_Type__c}" />
+                <apex:column headerValue="State" value="{!JA.loan__State__c}" />
+            </apex:pageblockTable>
+        </apex:pageblock>
+        <apex:panelGrid columns="2" id="navigation">
+            <apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+            <apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+        </apex:panelGrid>
+    </apex:form>
+
+    <apex:outputPanel id="questionDetail">
+        <apex:detail subject="{!$CurrentPage.parameters.question}"></apex:detail>
+    </apex:outputPanel>
+
+    <apex:sectionHeader title="Define a New Question" />
+    <apex:pageblock >
+        <table>
+            <tr>
+                <td><a href="{!URLFOR($Action.Question__c.New)}"><br></br>
+                    <b>Define New Question</b></a></td>
+            </tr>
+        </table>
+    </apex:pageblock>
+
+</apex:page>

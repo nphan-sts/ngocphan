@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Origination_Fee_Included_in_Loan_Amount__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>If this is checked, amount disbursed would be requested loan amount - origination fee. If this is not checked, amount disbursed would be requested loan amount and loan amount would be requested amount + origination fee</inlineHelpText>
+    <label>Origination Fee in the Requested Amount</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

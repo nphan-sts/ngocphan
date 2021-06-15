@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Promise_To_Pay_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Date on which  the amount promised will be paid</description>
+    <externalId>false</externalId>
+    <label>Promise To Pay Date</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

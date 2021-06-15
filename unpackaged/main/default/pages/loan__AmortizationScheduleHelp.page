@@ -1,0 +1,11 @@
+<apex:page lightningStylesheets="true" >
+<apex:include pageName="clcommon__mintTheme"/>
+ 
+	<html> 
+		<script language="javascript" type="text/javascript"> 
+			window.onload = new function() { 
+ 				window.location.href = "https://mfiflex.atlassian.net/wiki/display/UCL/Amortization+Based+Loan"; 
+ 			 }
+		</script> 
+	</html> 
+</apex:page>

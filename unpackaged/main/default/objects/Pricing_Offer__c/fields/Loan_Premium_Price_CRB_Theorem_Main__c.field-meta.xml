@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loan_Premium_Price_CRB_Theorem_Main__c</fullName>
+    <description>Applied the new pricing matrix in this formula. Please see LOP-136 for reference.</description>
+    <externalId>false</externalId>
+    <formula>IF( AND(Application__r.Investor__r.Investor_Code__c =='CRB_THRM_MAIN') ,
+IF(Term__c == 24, IF(Pricing_Tier__c == 't1', 0, IF(Pricing_Tier__c == 't2', 0, IF(Pricing_Tier__c == 't3', 0.0236, IF(Pricing_Tier__c == 't4', 0.0268, IF(Pricing_Tier__c == 't5', 0.0158, 0) ) ) ) ) ,
+IF(Term__c == 36, IF(Pricing_Tier__c == 't1', 0, IF(Pricing_Tier__c == 't2', 0, IF(Pricing_Tier__c == 't3', 0.0252, IF(Pricing_Tier__c == 't4', 0.0284, IF(Pricing_Tier__c == 't5', 0.0158, 0) ) ) ) ) ,
+IF(Term__c == 48, IF(Pricing_Tier__c == 't1', 0, IF(Pricing_Tier__c == 't2', 0, IF(Pricing_Tier__c == 't3', 0.0268, IF(Pricing_Tier__c == 't4', 0.0299, IF(Pricing_Tier__c == 't5', 0.0158, 0) ) ) ) ) ,
+IF(Term__c == 60, IF(Pricing_Tier__c == 't1', 0, IF(Pricing_Tier__c == 't2', 0, IF(Pricing_Tier__c == 't3', 0.0284, IF(Pricing_Tier__c == 't4', 0.0315, IF(Pricing_Tier__c == 't5', 0.0158, 0) ) ) ) ) , 0) ) ) ) , 0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Loan_Premium_Price_CRB_Theorem_Main</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>4</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

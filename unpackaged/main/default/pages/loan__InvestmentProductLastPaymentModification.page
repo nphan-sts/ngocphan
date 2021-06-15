@@ -1,0 +1,115 @@
+<apex:page lightningStylesheets="true" Controller="loan.InvestmentProdInvestmentordercontroller" showHeader="false" showQuickActionVfHeader="false" tabStyle="loan__Loan_Account__c" title="Payment Modification">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <style type="text/css">
+        table.exceptionText td {
+                 font-size:16px;
+                 font-weight:bold;
+                 text-align:center;
+                 color:red;}
+    </style>
+    
+    <style type="text/css">
+        table.infoText td {
+                 font-size:16px;
+                 font-weight:bold;
+                 text-align:center;
+                 color:green;}
+    </style>
+    
+    <apex:form id="form">
+        <apex:pageBlock title="Summary" rendered="{!showDetails}" id="mainScreen">
+            <apex:messages layout="table" styleClass="infoText" rendered="{!splitsSaved}"/>
+            <apex:pageBlockSection columns="2" id="loanDetails" title="Loan Details" showHeader="true" collapsible="false">
+                <apex:pageBlockSectionItem helpText="Loan Account Name">   
+                           <apex:outputLabel >Loan Account</apex:outputLabel>                 
+                           <apex:outputField id="loanAccount" label="Loan Account"  value="{!investmentLoan.Name}"/>
+                       </apex:pageblockSectionItem>
+                <apex:pageBlockSectionItem helpText="Investor">   
+                           <apex:outputLabel >Investor</apex:outputLabel>                 
+                           <apex:outputField id="Investor" label="Loan Account"  value="{!investmentLoan.Account__r.Name}"/>
+                       </apex:pageblockSectionItem>
+                <apex:pageBlockSectionItem helpText="Investment Product">   
+                           <apex:outputLabel >Product</apex:outputLabel>                 
+                           <apex:outputField id="Product" label="Loan Account"  value="{!investmentLoan.Loan_Product_Name__r.Name}"/>
+                       </apex:pageblockSectionItem>
+                <apex:pageBlockSectionItem helpText="Investment Status">   
+                           <apex:outputLabel >Status</apex:outputLabel>                 
+                           <apex:outputField id="Status" label="Loan Account"  value="{!investmentLoan.loan__Loan_Status__c}"/>
+                       </apex:pageblockSectionItem>
+                <apex:pageBlockSectionItem helpText="Outstanding Principal">   
+                           <apex:outputLabel >Outstanding Principal</apex:outputLabel>                 
+                           <apex:outputField id="Outstandingprincipal" label="Loan Account"  value="{!investmentLoan.loan__Principal_Remaining__c}"/>
+                       </apex:pageblockSectionItem>
+                <apex:pageBlockSectionItem helpText="Outstanding Interest">   
+                           <apex:outputLabel >Outstanding Interest</apex:outputLabel>                 
+                           <apex:outputField id="Outstandinginterest" label="Loan Account"  value="{!investmentLoan.loan__Interest_Accrued_Not_Due__c}"/>
+                       </apex:pageblockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+        <apex:pageBlock title="Principal Split" rendered="{!showDetails}" id="prin">
+            <h2>All the values are in percentage</h2>
+            <apex:messages layout="table" styleClass="exceptionText" rendered="{!(prinModification && showError)}"/>
+            <apex:messages layout="table" styleClass="infoText" rendered="{!(prinModification && showInfo && !splitsSaved && showPrincipalSplitMessage)}"/>
+            <apex:pageBlockTable value="{!investmentLoan}" var="modify" id="prinSplit">
+                <apex:column headerValue="Donation">
+                    <apex:inputField id="donate" label="Donation"  value="{!modify.loan__Principal_Donated_on_Rollover__c}"/>
+                </apex:column>
+                <apex:column headerValue="Reinvestment">                
+                    <apex:inputField id="Reinvest" label="Reinvestment"  value="{!modify.loan__Principal_Reinvested_On_Rollover__c}"/>
+                </apex:column>
+				<apex:column headerValue="Payback">                
+                    <apex:inputField id="Pay" label="Payback"  value="{!modify.loan__Principal_Payback_On_Rollover__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+            
+            <apex:pageBlockButtons location="bottom" >
+                	<c:BusyButton name="Validate" busyname="Validating..."
+                     actionTo="{!validateModificationForPrincipal}" reRenderTo="form"/>
+                <c:BusyButton name="Save" busyname="Saving..."
+                     actionTo="{!saveModificationOfPrincipal}" reRenderTo="form"/>
+                <c:BusyButton name="Clear" busyname="Clearing..."
+                     actionTo="{!clearDataForPrincipal}" reRenderTo="form"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        
+        <apex:pageBlock title="Interest Split" rendered="{!showDetails}" id="int">
+            <h2>All the values are in percentage</h2>
+            <apex:messages layout="table" styleClass="exceptionText" rendered="{!(intModification && showError)}"/>
+            <apex:messages layout="table" styleClass="infoText" rendered="{!(intModification && showInfo && !splitsSaved && showInterestSplitMessage)}"/>
+            <apex:pageBlockTable value="{!investmentLoan}" var="modify" id="intSplit">
+                <apex:column headerValue="Donation">
+                    <apex:inputField id="donate" label="Donation"  value="{!modify.loan__Interest_Donated_on_Rollover__c}"/>
+                </apex:column>
+                <apex:column headerValue="Reinvestment">                
+                    <apex:inputField id="Reinvest" label="Reinvestment"  value="{!modify.loan__Reinvest_Interest_on_Rollover__c}"/>
+                </apex:column>
+				<apex:column headerValue="Payback">                
+                    <apex:inputField id="Pay" label="Payback"  value="{!modify.loan__Interest_Payback_on_Rollover__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+            
+            <apex:pageBlockButtons location="bottom" >
+                <c:BusyButton name="Validate" busyname="Validating..."
+                     actionTo="{!validateModificationForInterest}" reRenderTo="form"/>
+                <c:BusyButton name="Save" busyname="Saving..."
+                     actionTo="{!saveModificationOfInterest}" reRenderTo="form"/>
+                <c:BusyButton name="Clear" busyname="Clearing..."
+                     actionTo="{!clearDataForInterest}" reRenderTo="form"/>
+            </apex:pageBlockButtons>
+            <apex:outputText rendered="{!(showPopupPrin && showPopupInt)}">
+            	<Script>
+                    setTimeout(function(){
+                    var closeThePopup = confirm('Do you want to close the window?');
+                    if(closeThePopup){
+                    	self.close();
+                    }
+                    else{
+                    	
+                    }}, 3000);
+                </Script>
+            </apex:outputText>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

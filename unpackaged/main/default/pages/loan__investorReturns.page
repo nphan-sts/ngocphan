@@ -1,0 +1,120 @@
+<apex:page lightningStylesheets="true" standardController="Account" extensions="loan.InvestorReturnsController">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <style>
+        #newspaper-a
+        {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 12px;
+            margin: 0px;
+            width: 480px;
+            text-align: left;
+            border-collapse: collapse;
+            border: 1px solid #69c;
+            font-color: black;
+        }
+        #newspaper-a th
+        {
+            padding: 12px 17px 12px 17px;
+            font-weight: normal;
+            font-size: 14px;
+            color: #039;
+            border-bottom: 1px dashed #69c;
+        }
+        #newspaper-a td
+        {
+            padding: 7px 17px 7px 17px;
+            color: #000;
+        }
+        #newspaper-a tbody tr:hover td
+        {
+            color: #000;
+            background: #d0dafd;
+            font-weight:bold;
+        }
+        
+        .highlight {
+            background-color: #333;
+            border-color: #333;
+            background-color: transparent;
+            border-width: 2px 13px 0;
+            border-style: solid;
+            color: #333;
+            width: 15%;
+        }
+    </style>
+    <body>
+    <table cellspadding="0" cellsmargin="0">
+        <tr>
+            <td>
+            <table id="newspaper-a">
+                <tbody>
+                    <tr>
+                        <td>Principal Disbursed (To Investor)</td>
+                        <td>{!principalDisbursed}</td>
+                    </tr>
+                    <tr>
+                        <td>Principal Re-invested </td>
+                        <td>{!principalReinvested}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><div class="highlight"></div></td>
+                    </tr>
+                    <tr>
+                        <td>Released and Reinvested</td>
+                        <td>{!principalDisbursed+principalReinvested}</td>
+                    </tr>
+                     <tr>
+                        <td>Principal Disbursment Pending</td>
+                        <td>{!unreleasedPrincipal}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><div class="highlight"></div></td>
+                    </tr>
+                     <tr>
+                        <td>Total Principal</td>
+                        <td>{!principalDisbursed+principalReinvested+unreleasedPrincipal}</td>
+                     </tr>
+                </tbody>
+            </table>
+            </td>
+            <td>
+                <table id="newspaper-a">
+                    <tbody>
+                        <tr>
+                            <td>Interest Disbursed (To Investor)</td>
+                            <td>{!intDisbursed}</td>
+                        </tr>
+                        <tr>
+                            <td>Interest Re-invested </td>
+                            <td>{!intReinvested}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><div class="highlight"></div></td>
+                        </tr>
+                        <tr>
+                            <td>Released and Reinvested</td>
+                            <td>{!intDisbursed+intReinvested}</td>
+                        </tr>
+                        <tr>
+                            <td>Interest Disbursment Pending </td>
+                            <td>{!unreleasedInterest}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><div class="highlight"></div></td>
+                        </tr>
+                         <tr>
+                            <td>Total Interest </td>
+                            <td>{!intDisbursed+intReinvested+unreleasedInterest}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+    </body>
+</apex:page>

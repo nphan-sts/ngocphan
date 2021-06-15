@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Number_of_Meetings_Attended__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Number of meetings where the client attendance is equal to "Present" and “Late”</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Number of meetings where the client attendance is equal to "Present" and “Late”</inlineHelpText>
+    <label>Number of Meetings Attended</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

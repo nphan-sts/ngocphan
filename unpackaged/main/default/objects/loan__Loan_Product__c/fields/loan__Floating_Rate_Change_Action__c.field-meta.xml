@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Floating_Rate_Change_Action__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>When floating rate is changed, the reset process will regenerate the repayment schedule of the loans and change either payment amount or keep the payment amount same and adjust the last payment as per this setup option.</inlineHelpText>
+    <label>Interest Rate Change Method</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>loan__Interest_Rate_Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Change Payment Amount</fullName>
+                <default>true</default>
+                <label>Change Payment Amount</label>
+            </value>
+            <value>
+                <fullName>Keep Same Payment Amount</fullName>
+                <default>false</default>
+                <label>Keep Same Payment Amount</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Fixed</controllingFieldValue>
+            <controllingFieldValue>Floating</controllingFieldValue>
+            <valueName>Change Payment Amount</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Fixed</controllingFieldValue>
+            <controllingFieldValue>Floating</controllingFieldValue>
+            <valueName>Keep Same Payment Amount</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Client_Coaplicant_validation</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+NOT($Setup.loan__Org_Parameters__c.loan__Integrate_Salesforce_CRM__c)
+,
+OR(
+        ( NOT(ISBLANK(loan__Co_Applicant__c)) &amp;&amp; NOT(ISBLANK(loan__Client__c )) &amp;&amp; loan__Co_Applicant__c =  loan__Client__c ),
+        ( NOT(ISBLANK(loan__Guarantor__c )) &amp;&amp; NOT(ISBLANK(loan__Co_Applicant__c )) &amp;&amp; loan__Co_Applicant__c =  loan__Guarantor__c )
+       )
+)</errorConditionFormula>
+    <errorDisplayField>loan__Co_Applicant__c</errorDisplayField>
+    <errorMessage>Co-applicant can not be same as Client or Guarantor</errorMessage>
+</ValidationRule>

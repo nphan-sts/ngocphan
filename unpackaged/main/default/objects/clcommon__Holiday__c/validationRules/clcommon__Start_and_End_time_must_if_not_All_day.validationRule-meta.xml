@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Start_and_End_time_must_if_not_All_day</fullName>
+    <active>true</active>
+    <description>Start time and End time of the holiday must be mentioned if it is not an All Day holiday.
+Also, Start time and End time of the holiday must not be mentioned if it is an All Day holiday.</description>
+    <errorConditionFormula>OR(AND(NOT(clcommon__IsAllDay__c), OR(ISBLANK(clcommon__StartTimeInMinutes__c), ISBLANK(clcommon__EndTimeInMinutes__c))), AND(clcommon__IsAllDay__c, OR(NOT(ISBLANK(clcommon__StartTimeInMinutes__c)), NOT(ISBLANK(clcommon__EndTimeInMinutes__c)))))</errorConditionFormula>
+    <errorDisplayField>clcommon__IsAllDay__c</errorDisplayField>
+    <errorMessage>One of the following :
+1. Start time and End time of the holiday MUST be mentioned if it is NOT ALL DAY holiday.
+2. Start time and End time of the holiday MUST NOT be mentioned if it IS ALL DAY holiday.</errorMessage>
+</ValidationRule>

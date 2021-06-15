@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__Allow_Manual_Mileage_Adjustments__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If mileage adjustments needs to be done manually for an equipment's collateral valuation then mark this selected.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If mileage adjustments needs to be done manually for an equipment's collateral valuation then mark this selected.</inlineHelpText>
+    <label>Allow Manual Mileage Adjustments</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

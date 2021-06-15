@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Teller_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>loan__Is_Teller__c &amp;&amp; ISBLANK( loan__Teller_GL__c )</errorConditionFormula>
+    <errorMessage>GL must be entered for a teller.</errorMessage>
+</ValidationRule>

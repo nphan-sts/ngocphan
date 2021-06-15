@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Interest_Rate__c</fullName>
+    <deprecated>false</deprecated>
+    <description>nnualized rate is stored by the system.
+In case of change in interest rate, system should calculate the interest using the new rate from the time of  change. . However the old interest rate should be recorded for reporting purposes.
+E.g. Supposing the interest is to be posted on a monthly basis and on the 30th day the rate is changed. Interest should be calculated using the old rate for 29 days and use the new rate for 30th day and onwards.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>nnualized rate is stored by the system.
+In case of change in interest rate, system should calculate the interest using the new rate from the time of  change. . However the old interest rate should be recorded for reporting purposes.</inlineHelpText>
+    <label>Interest Rate</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

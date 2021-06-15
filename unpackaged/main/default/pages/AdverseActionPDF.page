@@ -1,0 +1,153 @@
+<apex:page title="Adverse Action" standardController="genesis__Applications__c" renderAs="PDF">
+    
+
+<body id="body" leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0"
+      style="margin: 50px 0 0 0;padding: 0;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #fff;width: 100% !important;">
+ 
+    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" id="bodyTable"
+           style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;margin: 0;padding: 0;background-color: #fff;width: 100% !important;">
+      <tbody>
+        <tr>
+          <td>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0"
+                   style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+              <tbody>
+                <tr>
+                  <td valign="top"
+                      style="padding-top: 0;padding-bottom: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%; text-align:center;">
+                    <p style="font-weight:bold;font-size:12pt;text-align:center;">STATEMENT OF CREDIT DENIAL</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table width="80%" border="0" cellpadding="0" cellspacing="0"
+                       style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%; margin: 30px auto 0;;font-size:10pt;">
+                      <tbody>
+                        <tr>
+                          <td style="padding:5px 0;">
+                            Date: {!TODAY()}<br/>
+                              Applicants Name: {!genesis__Applications__c.Borrower_s_First_Name__c} {!genesis__Applications__c.Borrower_s_LastName__c}<br/>
+                              Applicants Address: {!genesis__Applications__c.Memberaddress__c}<br/>
+                            Loan Number: {!genesis__Applications__c.genesis__Loan_Amount__c}<br/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td tyle="padding:5px 0;">
+                            <p style="margin-top:30px;">
+                              Dear {!genesis__Applications__c.Borrower_s_First_Name__c},
+                            </p>
+                            <p style="text-align:justify;">
+                              We appreciate that you applied for a Payoff Loan&trade;. However, we are unable to approve your application at this time. We have provided the reasons for our decision below. We're still here to help you reach your goal with assessments and resources to improve your financial wellness.
+                            </p>
+                            <p style="font-weight: bold;margin-top:15px;">PART I.</p>
+                            <p style="font-weight: bold;margin-top:15px;">Reasons for our decision:</p>
+                            <ol>
+                              {% for reason in params['coded_reasons'] %}
+                                {% if reason['name'] == 'post_bureau_fico_score_below_min' or reason['name'] == 'risk_model_fico_score_low' %}
+                                <li style="margin-top: 10px; font-weight: bold;">Your credit score does not meet our minimum requirement, mainly due to:</li>
+                                   <ul>
+                                    {% for factor in params['score_factors'] %}
+                                      {% if params['score_factors'].size =4 or (params['score_factors'].size > 4 and factor != 'Too many recent inquiries.'))) %}
+                                         <li>{{ factor }}</li>
+                                      
+                                  </ul>
+                                
+                                 <li style="margin-top: 10px; font-weight: bold;">{{ reason['reason'] }}</li>
+                                
+                            </ol>
+                            {% if params['bureau_fico_score'] != '0' %}
+                              <p style="font-weight: bold;margin-top:15px;">PART II.</p>
+                              <p style="font-weight: bold;margin-top:15px;">Disclosure of use of information obtained from an outside source.</p>
+                              <p style="margin-top:15px;">
+                                Our credit decision was based, in whole or in part, on information that we received from the 
+                                  <apex:outputText value=" consumer reporting agencies " rendered="{!genesis__Applications__c.Decline_Reason__c == 'Inability to Pay (NeoVerify)'}" />
+                                  <apex:outputText value=" credit bureau " rendered="{!genesis__Applications__c.Decline_Reason__c != 'Inability to Pay (NeoVerify)'}" />
+                                  listed below.<br/>
+                                Thanks to the Fair Credit Reporting Act, you have the right to see the same information provided to us in the credit file provided by the credit
+                                bureau. This credit bureau had no influence on our decision and cannot provide explanations on specific reasons why you weren’t
+                                approved for a Payoff Loan&trade;. You also have the right to order a free copy of your credit report from this credit bureau, which must
+                                be requested within 60 days of you receiving this document. If you find any information in the report that is incorrect or incomplete,
+                                you can dispute any mistakes with the credit bureau.
+                              </p>
+
+                              {% if params['is_no_hit'] == 'false' %}
+                                <p style="margin-top:15px;">We also obtained your credit score from this consumer reporting agency and used it in making our credit decision. Your credit score is a number that reflects the information in your credit report. Your credit score can change, depending on how the information in your credit report changes.</p>
+                                <p style="font-size: 8pt; padding-left: 60px;margin-top:15px;">
+                                  Your Credit Score: {{ params['bureau_fico_score'] }}<br/>
+                                  Date: {{ params['bureau_date'] }}<br/>
+                                  Score Range: from a low of 300 to a high of 850
+                                </p>
+                                <p style="margin-top:15px;">Key factors that adversely affected your credit score:</p>
+                                <p style="font-size: 8pt; padding-left: 60px;margin-top:15px;">
+                                  <ul>
+                                  {% for factor in params['score_factors'] %}<li>{{ factor }}</li>
+                                  </ul>
+                                </p>
+                             
+                              <p style="margin-top:15px;">If you have any questions regarding your credit score, you should contact TransUnion that provided the credit score at:</p>
+                              <p style="font-size: 8pt; padding-left: 60px;margin-top:15px;">
+                                TransUnion<br />
+                                P.O. Box 2000<br />
+                                Chester, PA 19022-2000<br />
+                                (800) 916-8800
+                              </p>
+                           
+                            {% if params['coded_reasons'][0]['name'] == 'manual_decline_inability_to_pay_neoverify' %}
+                            <p style="margin-top:15px;">We also received information from the third party company below regarding your past financial history:</p>
+                            <p style="margin-top:15px;">
+                              Neo Finance Inc.<br/>
+                              Consumer Reporting Division<br/>
+                              700 Villa Centre Way<br/>
+                              San Jose, CA 95128
+                            </p>
+                            <p style="font-weight: bold;margin-top:15px;">PART II{% if params['bureau_fico_score'] != '0' %}I{% endif %}.</p>
+                            <p style="font-weight: bold;margin-top:15px;">Equal Credit Opportunity Act</p>
+                            <p style="font-size: 8pt; margin-top:15px;text-align:justify;">
+                              The federal Equal Credit Opportunity Act prohibits creditors from discriminating against credit applicants on the basis of race, color, religion, national origin,
+                              sex, marital status, age (provided the applicant has the capacity to enter into a binding contract); because all or part of the applicant(s) income derives from any public assistance program; or because the applicant has in
+                              good faith exercised any right under the Consumer Credit Protection Act.   The federal agency that administers compliance with this law concerning{% if params['lending_sources'] contains 'Technology Credit Union' %} these creditors{% else %} this creditor{% endif %} is the Federal Trade Commission, Equal Credit Opportunity, Washington, DC 20580.</p>
+                            <p style="margin-top:20px;font-weight:bold;font-style:italic;">If you have any questions regarding this notice, feel free talk to a Customer Success Advocate at 1-800-878-0901.</p>
+                          <p style="margin-top:20px;font-weight:bold;font-style:italic;">If you have any questions regarding your credit score, you should contact TransUnion which provided the credit score at:<br/>
+                              TransUnion<br/>
+                              P.O. Box 2000<br/>
+                              Chester, PA 19022-2000<br/>
+                              (800) 916-8800<br/>
+                          </p>  
+                          
+                          <p style="margin-top:20px;font-weight:bold;font-style:italic;">If you have any questions regarding your recent credit history, you should contact SageStream which provided the credit history at: <br/>
+                              SageStream, LLC<br/>
+                              P.O. Box 503793<br/>
+                              San Diego, CA 92150-3793<br/>
+                              (888) 395-0277<br/>
+                          </p> 
+                          
+                          <p style="margin-top:30px;">Sincerely,</p>
+                            <p style="margin-top:15px;margin-bottom:50px;">
+                                //{% for source in params['lending_sources'] %}<br/>
+                                //c/o Payoff<br/>
+                              Alliant Credit Union c/o Payoff
+                              First Technology Federal Credit Union c/o Payoff<br/>
+                              Technology Credit Union c/o Payoff <br/>
+                              Teachers Federal Credit Union c/o Payoff<br/>
+                              3200 Park Center Drive, STE. 800<br/>
+                              Costa Mesa, CA 92626<br/>
+                            </p>
+                            <p style="margin-top:15px;margin-bottom:50px;"></p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+ 
+</body>
+</apex:page>

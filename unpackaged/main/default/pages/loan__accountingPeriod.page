@@ -1,0 +1,85 @@
+<apex:page lightningStylesheets="true" controller="loan.AccountingPeriodAction"
+	tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+
+	<apex:form >
+		<apex:pageMessages />
+		<apex:sectionHeader title="List of Accounting Period" />
+
+		<apex:pageblock id="accountPeriodList">
+			<center>
+				<h1 style="font-size: 12px;">Accounting Period Search</h1>
+				<br />
+				<br />
+				<apex:outputLabel >
+					<b>Start Date:</b>
+				</apex:outputLabel>
+				<apex:inputText value="{!startDate}" />
+				<apex:outputLabel >
+					<b>End Date:</b>
+				</apex:outputLabel>
+				<apex:inputText value="{!endDate}" />
+				<apex:commandButton value="Search" action="{!doSearch}"
+					rerender="accountPeriodList" status="searchStatus" />
+			</center>
+			<br></br>
+			<apex:actionStatus id="searchStatus" startText="Searching..." />
+			<apex:pageblockTable value="{!accountingPeriodList}"
+				id="accountingPeriodTable" var="JA">
+				<apex:column headerValue="Accounting Period ID" width="20%">
+					<apex:commandLink value="{!JA.Name}" />
+				</apex:column>
+				<apex:column value="{!JA.loan__Start_Date__c}" width="20%" />
+				<apex:column value="{!JA.loan__End_Date__c}" width="20%" />
+				<apex:column value="{!JA.loan__Status__c}" width="20%" />
+			</apex:pageblockTable>
+			<apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="New Accounting Period"
+					action="{!newAccountingPeriod}"
+					reRender="newAccountingPeriodPanel,newAccountingPeriodBlock" />
+			</apex:pageBlockButtons>
+
+		</apex:pageblock>
+
+	</apex:form>
+
+	<apex:form >
+		<apex:outputPanel id="messagePanel">
+			<apex:pageMessages id="messages">
+				<apex:pagemessage id="dateValidationMessage"
+					rendered="{!startDateGrtThanEndDate}"
+					summary="Start Date cannot be greater than end date."
+					severity="info" strength="3" />
+			</apex:pageMessages>
+		</apex:outputPanel>
+
+		<apex:outputPanel id="newAccountingPeriodPanel">
+
+			<apex:pageBlock title="{!(newAccountingPeriod.Name)}"
+				id="newAccountingPeriodBlock"
+				rendered="{!renderAccountingPeriodForm}">
+				<apex:pageblockSection title="New Accounting Period" columns="2"
+					collapsible="true">
+					<apex:inputField value="{!newAccountingPeriod.loan__Start_Date__c}"
+						required="true" />
+					<apex:inputField value="{!newAccountingPeriod.loan__End_Date__c}"
+						required="true" />
+					<apex:inputField value="{!newAccountingPeriod.loan__Status__c}"
+						required="true" />
+				</apex:pageblockSection>
+
+				<apex:pageBlockButtons location="bottom">
+					<apex:commandButton value="Save" action="{!save}"
+						reRender="accountPeriodList,newAccountingPeriodPanel" />
+					<apex:commandButton value="Cancel" action="{!cancel}"
+						reRender="newAccountingPeriodPanel,newAccountingPeriodBlock"
+						immediate="true" />
+				</apex:pageBlockButtons>
+
+			</apex:pageBlock>
+		</apex:outputPanel>
+
+	</apex:form>
+
+</apex:page>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>LOS147</fullName>
+    <columns>NAME</columns>
+    <columns>loan__Origin__c</columns>
+    <columns>loan__Type__c</columns>
+    <columns>loan__Log_Level__c</columns>
+    <columns>loan__Message__c</columns>
+    <columns>loan__Summary_Record_Id__c</columns>
+    <columns>loan__Batch_Job_Id__c</columns>
+    <columns>loan__Batch_Id__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>loan__Summary_Record_Id__c</field>
+        <operation>contains</operation>
+        <value>a6h2M0000008FSd</value>
+    </filters>
+    <label>LOS147</label>
+</ListView>

@@ -1,0 +1,61 @@
+<apex:page lightningStylesheets="true" id="waiveInterestPage" standardController="loan__Loan_Account__c" extensions="loan.InterestWaiveController" tabStyle="loan__Loan_Account__c" 
+        sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}" title="Waive Interest">
+<apex:include pageName="clcommon__mintTheme"/>
+
+ <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}"/>  
+ <script src="{!URLFOR($Resource.loan__jQueryFiles, 'js/jquery-1.8.3.min.js')}"/>
+ <script src="{!URLFOR($Resource.loan__helperclose)}"/>
+ <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+ <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+ <script>
+      j$ = jQuery.noConflict();
+ </script>
+ 
+  <apex:sectionHeader title="Waive Interest" id="waiveInterestSection"/>
+      <div style="height:300px;">
+          <apex:form id="interestWaiveForm">
+          
+          <apex:pageMessage summary="There are uncleared payment transactions exist on this loan account, please backdate the transaction before them.
+          <br/> Transaction Date can be backdated up to last transaction date." severity="warning"  escape="false" strength="3" 
+          rendered="{!AND(unclearedTxnExist==true,isAmzBasedLoan == true)}"/>
+          <apex:pageMessage summary="{!interestWaiverWarning}" severity="warning"  escape="false" strength="3" rendered="{!interestWaiverWarning != null}"/>
+              <apex:pageBlock mode="edit" id="waiveInterestTxn">
+                  <apex:pageMessages />
+                  <apex:pageBlockButtons location="both">
+                      <c:BusyButton name="Save" busyName="Saving" actionTo="{!save}" 
+                          disabled="{!(otherLoanTxn.Id != null)}" 
+                          oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};" 
+                          reRenderTo="interestWaiveForm" style="margin-left:120px;"/>
+                      <apex:commandButton value="Cancel" action="{!cancel}" onclick="closeIframe()" immediate="true"/>
+                  </apex:pageBlockButtons>
+                  <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+                  <apex:pageBlockSection title="Waive Interest" columns="2">
+                      <apex:outputText value="{!totalInterest}" label="Total Interest till Today"/>
+                      <apex:inputText value="{!waivePercentage}" label="Waive Percentage (%)">
+                          <apex:actionSupport event="onchange" action="{!waivePercentageChange}" reRender="waiveInterestTxn" status="changeValue"/>
+                      </apex:inputText>
+                      <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}" label="Transaction Date" rendered="{!(isAmzBasedLoan==false)}"/>
+                      <apex:inputField value="{!otherLoanTxn.loan__Txn_Date__c}" label="Transaction Date" rendered="{!(isAmzBasedLoan)}"/>                      
+                      <apex:inputText value="{!waiveAmount}" label="Waive Amount">
+                          <apex:actionSupport event="onchange" action="{!waiveAmountChange}" reRender="waiveInterestTxn" status="changeValue"/>
+                      </apex:inputText>
+                  </apex:pageBlockSection>
+
+                  <center><apex:actionStatus id="changeValue">
+                      <apex:facet name="start">
+                          <apex:image value="/img/loading32.gif" style="height:12px;" />
+                      </apex:facet>
+                  </apex:actionStatus></center>
+    
+                  <apex:pageBlockSection title="Transaction Detail" columns="2" rendered="{!(otherLoanTxn.Id != null)}">
+                      <apex:outputField value="{!otherLoanTxn.loan__Loan_Account__c}"/>
+                      <apex:outputField value="{!otherLoanTxn.loan__Transaction_Type__c}"/>
+                      <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}"/>
+                      <apex:outputField value="{!otherLoanTxn.loan__Waived_Interest__c}"/>
+                  </apex:pageBlockSection>
+                  </apex:outputpanel>
+              </apex:pageBlock>
+        </apex:form>
+    </div>
+    
+</apex:page>

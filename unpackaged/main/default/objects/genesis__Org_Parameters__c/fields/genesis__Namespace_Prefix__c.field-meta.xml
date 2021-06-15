@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Namespace_Prefix__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This is MFiFlex internal.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is MFiFlex internal. Do not delete/edit this value.</inlineHelpText>
+    <label>Namespace Prefix</label>
+    <length>64</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,155 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__Applications__c" extensions="genesis.CollateralCtrl" action="{!onLoad}">
+<apex:outputPanel rendered="{!NOT(manager.isSF1Request)}">
+  <!-- QuoteWizardTemplate -->
+    <apex:composition template="genesis__wizardComposition" >
+    div.tooltip {
+    width: 195px;
+    float: left;
+  }
+  div.tooltip:hover {
+    background: #ffffff;
+    text-decoration: none;
+  } /*BG color is a must for IE6*/
+  div.tooltip span {
+    display: none;
+    padding: 2px 3px;
+    margin-left: 8px;
+    width: 195px;
+  }
+  div.tooltip:hover span {
+    display: inline;
+    position: absolute;
+    border: 1px solid #cccccc;
+    background: #FFC;;
+    color: #000000;
+  }
+  .wrapper {
+    text-align: center;
+    }
+    
+    .button {
+        position: absolute;
+        top: 50%;
+    }
+  <script type="text/javascript">
+  
+  function createNew() {
+      sforce.one.createRecord("ints__Collateral__c");
+  }
+  
+  function setupMarker(){ 
+
+    // Use JavaScript nav function to determine if we are
+    // in Salesforce1 and set navigation link appropriately
+    var collateralNavUrl = 
+        'sforce.one.navigateToSObject(\'' + ints__Collateral__c.Id + '\')';
+
+    // Wrap the ints__Collateral__c details with the link to 
+    // navigate to the ints__Collateral__c details
+    var collateralDetails = 
+        '<a href="javascript:' + collateralNavUrl + '">';
+   
+    // Create a panel that will appear when a marker is clicked
+    var infowindow = new google.maps.InfoWindow({ 
+        content: collateralDetails
+    });
+   
+  } 
+  </script>
+<div class="tooltip" style="display:inline">
+    <span>Refresh</span>
+</div>
+        <!-- Define the page body, including form and button bar -->
+        <apex:define name="pageBody" >
+            <!-- Snehal: The following panelGrid is a hack. It should be copied in all VF pages that use wizard.
+            This ugliness is due to the way VF handles polymorphism. If I leave this code in the wizardComposition,
+            the Next and Back button logic cannot be customized.
+             -->
+            <!-- The first column -->
+            <apex:panelGrid columnClasses="col1,col2" columns="2" width="100%"  cellpadding="10" cellspacing="10" border="2" rules="all">
+                
+                <!-- left arrow button -->
+                <apex:outputPanel layout="block" styleClass="outPanelLeft" >
+                    <div class="button bordered back">
+                        <span class="pointer"></span>
+                        <div class="content">
+                            <span class="label">
+                                <apex:commandLink action="{!backActionLogic}" value="{!manager.backButtonText}" />
+                            </span>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+        
+                <!-- right arrow button -->
+                <apex:outputPanel layout="block">
+                    
+                    <div class="button bordered next">
+                        <span class="pointer"></span>
+                        <div class="content">
+                            <span class="label">
+                                <apex:commandLink action="{!nextActionLogic}" value="{!manager.nextButtonText}"/>
+                            </span>
+                        </div>
+                    </div>
+                    
+                </apex:outputPanel>
+            
+            </apex:panelGrid>
+        </apex:define>
+        
+        <apex:define name="pageNoForm" >
+            <apex:relatedList list="Collateral__r" id="creditList"/>
+        </apex:define>
+    </apex:composition>
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!manager.isSF1Request}">
+<apex:include pageName="genesis__mwizardComposition"/>
+    <apex:form >
+            <!--<apex:outputpanel id="collateralListPanel">
+                    <apex:dataTable value="{!collateralList}" var="collateralDet" cellpadding="4" bgcolor="white" rowClasses="even,odd">
+                         <apex:column value="{!collateralDet.ints__City__c}" />
+                         <apex:column value="{!collateralDet.ints__Company__c}" />
+                         <apex:column value="{!collateralDet.ints__Country__c}" />
+                     </apex:dataTable>
+                </apex:outputpanel>-->
+           <!--<apex:pageBlock >
+               <apex:pageBlockButtons >
+                   <apex:commandButton title="New" value="New" onclick="createNew()"/>
+               </apex:pageBlockButtons>
+           </apex:pageBlock>-->
+           <button class="btn bg-secondary-btn btn--secondary pvs size-full brm border border--3">
+              <span class="text-color-4 f3 fw-semibold">New Collateral</span>
+           </button>
+           <div class="wrapper">
+                <button onclick="setupMarker()" class="button">New</button>
+            </div>
+           <apex:repeat var="collateralDet" value="{!collateralList}">  
+            <ul class="man pan list-plain">
+                <li class="pam border-bottom border--5">
+                  <ul class="list-plain man pan">
+                      <div class="wrapper">
+                        <span class="Header">Name:</span>
+                        <span class="Text">{!collateralDet.Name}</span>
+                      </div>
+                      <div class="wrapper">
+                        <span class="Header">Created By:</span>
+                        <span class="Text">{!collateralDet.CreatedBy.Name}</span>
+                      </div>
+                      <div class="wrapper">
+                        <span class="Header">Last Modified By:</span>
+                        <span class="Text">{!collateralDet.LastModifiedBy.Name}</span>
+                      </div>
+                  </ul>
+                </li>
+            </ul>
+           </apex:repeat>
+           
+    </apex:form>
+    
+    <!--<apex:define name="pageNoForm" >
+        <apex:relatedList list="Collateral__r" id="creditList"/>
+            
+     </apex:define>-->
+</apex:outputPanel>
+</apex:page>

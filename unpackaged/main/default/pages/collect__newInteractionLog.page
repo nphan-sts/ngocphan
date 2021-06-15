@@ -1,0 +1,144 @@
+<apex:page id="interactionLog" controller="collect.InteractionLogController" sidebar="false" showHeader="false">
+    <script src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+        jQuery.noConflict();
+        function setFocusOnLoad() {}
+  	</script>
+    <script type="text/javascript">
+    	function changeMe(sel){
+            sel.style.color = "#000";
+            enableCompletedCheckbox();
+        }
+    	function callParentFunc(){
+        	window.parent.closeFragment();
+        }
+    	function callParentRefresh(){
+            window.parent.fragmentRefresh();
+        }
+        function popWindow(identifier){
+            var w = 450;
+            var h = 300;
+            var left = (screen.width) - w - 10;
+            var top = (screen.height) - h - 100;
+            var link = 'apex/clcommon__helpPage';
+            link = link + '?identifier=' + identifier;
+            var newwindow=window.open(link,'null','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=1, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+            newwindow.focus();
+        }
+    </script>
+    <style type="text/css">
+        .bPageHeader {
+            display:none;
+        }
+        .bPageFooter.noTableFooter {
+        		display:none;
+        	}
+        .requiredLegend {
+                display: none;
+        }
+        .bPageBlock {
+        	border-top: 0px;
+        }
+        body { background-color:#f8f8f8; }
+        body .bPageBlock, body #bodyCell .bResource .secondaryPalette, body .secondaryPalette.bPageBlock, body .individualPalette .secondaryPalette.bPageBlock, body .bodyDiv .genericTable, body .genericPageBlockTable, body .bodyDiv .bSubBlock, body .bComponentBlock .bPageBlock, body .bMyDashboard .bPageBlock, body.rlHoverFrame .bPageBlock, body.subjectSelectionPopup div.choicesBox, body.lookupTab .secondaryPalette.bPageBlock, body.popupTab .secondaryPalette.bPageBlock, body.UserTagStatsPage .secondaryPalette.bPageBlock {
+            border-bottom: 0px;
+            border-left: 0px;
+            border-right: 0px;
+            border-radius: 1px;
+        }
+        body .bEditBlock .pbBottomButtons, body .apexp .bPageBlock.apexDefaultPageBlock .pbBottomButtons {
+            border-top: 0px;
+        	margin-top: 15px;
+        }
+        .bPageBlock .detailList .labelCol {
+            width: 21%;
+        }
+        select
+        {
+            color: #ccc;
+        }
+        option
+        {
+            color: #000;
+        }
+        option:first-child
+        {
+            color: #ccc;
+        }
+    </style>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.collect__modalheaderStyle,'')}"/>
+    <div style="height:305px !important; width:50% !important; position:absolute !important;overflow:auto; border:1px !important;">
+        <apex:form id="interactionLogForm">
+            <apex:actionFunction name="enableCompletedCheckbox" action="{!enableCompletedCheckbox}" reRender="topBlk"/>
+            <apex:pageblock mode="edit" id="topBlk">
+                <apex:inlineEditSupport />
+                <apex:pageBlockButtons location="bottom" >
+                    <apex:commandButton value="Save" action="{!save}"
+                                        reRender="interactionLogForm"
+                                        id="sBtn" onclick="callParentRefresh();"/>
+                    <apex:commandButton value="Cancel" reRender="interactionLogForm"
+                                        immediate="true"
+                                        action="{!cancel}" onclick="callParentFunc();"
+                                        id="cBtn"/>
+                </apex:pageBlockButtons>
+                <apex:pageBlockSection columns="1" title="Interaction Log">
+                    <apex:pageMessages />
+                    <apex:facet name="header">
+                        <apex:outputpanel >
+                            <apex:outputText style="font-weight:bold;font-size:13px;float:left;" value="Interaction Log"/>
+                            <apex:commandLink value="Help" id="thelink" onclick="popWindow('interactionLog');"
+                                              reRender="dummy" style="float:right;text-decoration:none;color:green;padding:1px;font-size:15px;font-weight:bold;float:right;" styleClass="link-show" rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+                            <apex:commandLink value="Help" id="thelink2" onclick="popWindow('interactionLog');"
+                                              reRender="dummy" styleClass="help-link"
+                                              rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>
+                        </apex:outputpanel>
+                    </apex:facet>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Contract</apex:outputLabel>
+                        <apex:outputfield value="{!iLog.collect__Contract_Name__c}" >
+                            <apex:inlineEditSupport disabled="true"/>
+                        </apex:outputField>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Related Contracts</apex:outputLabel>
+                        <apex:selectList id="relatedContract" value="{!relatedContractList}" size="3" multiselect="true">
+                            <apex:selectOptions value="{!contractIDList}" />
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:selectList label="Open Manual Activities" value="{!iLog.collect__Collection_Activity__c}" size="1" multiselect="false" onchange="changeMe(this)">
+                        <apex:selectOptions value="{!openActivitiesSelectList}"/>
+                    </apex:selectList>
+                    <apex:inputField value="{!iLog.collect__Interaction_Date__c}"/>
+                    <apex:inputField value="{!iLog.collect__Action__c}"/>
+                    <apex:inputField value="{!iLog.collect__Description__c}" style="width:35%; height:18px;"/>
+                    <apex:inputField value="{!iLog.collect__Follow_Up_Date_Time__c}"/>
+                    <apex:inputField id="actCompleted" value="{!iLog.collect__Activity_Completed__c}" rendered="{!enableCompleted}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:form>
+    </div>
+    <div style="height:100% !important; width:50% !important; overflow:none; border:1px !important;position:absolute !important;right:-5px !important;">
+        <apex:form id="contractStatusForm">
+            <apex:pageblock mode="edit" id="rightBlk">
+
+                <apex:inlineEditSupport />
+                <apex:pageBlockButtons location="bottom" >
+                    <apex:commandButton value="Save" action="{!saveContractStatus}"
+                                        reRender="contractStatusForm"
+                                        id="sBtn" onclick="callParentRefresh();"/>
+                </apex:pageBlockButtons>
+                <apex:pageBlockSection columns="1" title="Contract Status">
+                    <apex:pageMessages />
+                    <apex:repeat value="{!statusConfigList}" var="scf">
+                        <apex:selectList label="{!scf.status}" value="{!scf.selectedStatus}" multiselect="false" size="1">
+                            <apex:selectOptions value="{!scf.statuses}"></apex:selectOptions>
+                        </apex:selectList>
+                    </apex:repeat>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:form>
+    </div>
+
+</apex:page>

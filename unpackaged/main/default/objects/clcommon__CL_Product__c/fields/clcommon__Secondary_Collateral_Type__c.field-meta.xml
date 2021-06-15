@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Secondary_Collateral_Type__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Secondary Collateral Type</label>
+    <referenceTo>clcommon__Collateral_Type__c</referenceTo>
+    <relationshipLabel>CL Products (Secondary Collateral Type)</relationshipLabel>
+    <relationshipName>CL_Products1</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

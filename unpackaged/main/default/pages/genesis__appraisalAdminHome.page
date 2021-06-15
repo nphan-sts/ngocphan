@@ -1,0 +1,65 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" controller="genesis.AppraisalAdminHomeController" id="adminHome" >
+   <apex:form >
+      <apex:sectionHeader title="Appraisal Administrator Details" />
+      <apex:pageBlock >
+         <div align="center">
+            <apex:commandButton value="Edit Details" action="{!URLFOR($Action.User.EditUserAction, adminId)}"/>
+         </div>
+         <br/>
+         <apex:repeat value="{!Details}" var="data">
+            <table>
+               <tr><b>Administrator Name: </b> {!data.Name}</tr>
+               <br/><br/>
+               <tr><b>Party Type:</b>{!data.genesis__Party_Type__c}</tr>
+               <br/><br/>
+            </table>
+         </apex:repeat>
+      </apex:pageBlock>
+   </apex:form>
+   <apex:form >
+      <apex:sectionHeader title="Appraiser Associations" />
+      <apex:pageBlock id="recordList">
+         <div align="center">
+            <apex:commandButton value="New Appraiser Association" action="{!URLFOR($Action.Appraisal_Association__c.New)}"/>
+         </div>
+         <br/>
+         <apex:pageBlockButtons >
+            <div align="right">
+               <apex:commandButton action="{!firstPage}" value="|<<" reRender="adminTable" />
+               <apex:commandButton action="{!prev}" value="<" reRender="adminTable" />
+               <apex:commandButton action="{!next}" value=">" reRender="adminTable" />
+               <apex:commandButton action="{!lastPage}" value=">>|" reRender="adminTable" />
+            </div>
+         </apex:pageBlockButtons>
+         <apex:pageBlockTable value="{!Associations}" var="admin" id="adminTable">
+            <apex:column >
+               <apex:commandLink value="Edit" action="{!URLFOR($Action.Appraisal_Association__c.Edit,admin.Id)}"></apex:commandLink>
+            </apex:column>
+            <apex:column headerValue="Association Name">
+               <apex:outputLink value="{!URLFOR($Action.genesis__Appraisal_Association__c.View, admin.Id)}">{!admin.Name}</apex:outputLink>
+            </apex:column>
+            <apex:column value="{!admin.genesis__Collateral_Category__c}"/>
+            <apex:column value="{!admin.genesis__Appraiser__c}"/>
+         </apex:pageBlockTable>
+      </apex:pageBlock>
+   </apex:form>
+   <apex:form >
+      <apex:sectionHeader title="Appraisal Requests"/>
+      <apex:pageBlock id="recordList">
+         <apex:pageBlockButtons >
+            <div align="right">
+               <apex:commandButton action="{!firstPage}" value="|<<" reRender="appReqTable" />
+               <apex:commandButton action="{!prev}" value="<" reRender="appReqTable" />
+               <apex:commandButton action="{!next}" value=">" reRender="appReqTable" />
+               <apex:commandButton action="{!lastPage}" value=">>|" reRender="appReqTable" />
+            </div>
+         </apex:pageBlockButtons>
+         <apex:pageBlockTable value="{!Requests}" var="req" id="appReqTable">
+            <apex:column headerValue="Appraisal Request">
+               <apex:outputLink value="{!URLFOR($Action.genesis__Appraisal_Request__c.View, req.Id)}">{!req.Name}</apex:outputLink>
+            </apex:column>
+            <apex:column value="{!req.Application_Collateral__r.genesis__Collateral__c}"/>
+         </apex:pageBlockTable>
+      </apex:pageBlock>
+   </apex:form>
+</apex:page>

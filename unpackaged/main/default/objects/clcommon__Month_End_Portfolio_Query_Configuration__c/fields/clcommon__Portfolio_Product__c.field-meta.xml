@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Portfolio_Product__c</fullName>
+    <deprecated>false</deprecated>
+    <description>CL Product for which the portfolio is getting generated</description>
+    <externalId>false</externalId>
+    <label>Portfolio Product</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

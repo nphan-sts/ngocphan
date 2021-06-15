@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Task_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <description>A short name of the task. This is copied to “Subject” field of task</description>
+    <externalId>false</externalId>
+    <inlineHelpText>A short name of the task. This is copied to “Subject” field of task</inlineHelpText>
+    <label>Task Name</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

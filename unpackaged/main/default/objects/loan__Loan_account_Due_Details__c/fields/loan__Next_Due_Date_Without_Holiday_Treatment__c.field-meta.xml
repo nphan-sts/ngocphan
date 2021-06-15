@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Next_Due_Date_Without_Holiday_Treatment__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Internal field : This field will hold the actual next installment date of the subsequent bill irrespective of holidays specified with the business hours, if any, attached with the product.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Internal field : This field will hold the actual next installment date of the subsequent bill irrespective of holidays specified with the business hours, if any, attached with the product.</inlineHelpText>
+    <label>Next Due Date Without Holiday Treatment</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

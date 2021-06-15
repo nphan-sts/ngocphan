@@ -1,0 +1,158 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__Quick_Quotes__c" showHeader="false" tabStyle="genesis__Quick_Quotes__c" title="Quick Quote" docType="html-5.0"
+    standardStylesheets="false" extensions="genesis.TabbedQuickQuoteController">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- <link href="{!URLFOR($Resource.Bootstrap,'css/bootstrap.css')}" rel="stylesheet" media="screen" />
+ <link href="{!URLFOR($Resource.Bootstrap,'css/bootstrap.min.css')}" rel="stylesheet" media="screen" />
+ -->
+
+<apex:tabPanel switchType="client" id="theTabPanel" styleClass="theTabPanel" tabClass="theTabPanel"
+    contentClass="tabContent" activeTabClass="activeTab" inactiveTabClass="inactiveTab">
+<apex:tab label="Details" name="AccDetails" id="tabdetails">
+    <apex:form >
+    <apex:inputField value="{!genesis__Quick_Quotes__c.Name}" rendered="false" />
+    </apex:form>
+    
+    <apex:page standardController="genesis__Quick_Quotes__c" extensions="genesis.QuickQuoteController"
+        sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+     <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.genesis__modalheaderStyle,'')}" />
+     <apex:stylesheet value="{!$Resource.genesis__MFIStyles}" />
+     <script type= "text/javascript" src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}"/>
+     <script type= "text/javascript" src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-ui-1.9.2.custom.min.js')}"/>
+     <script src="{!URLFOR($Resource.helperclose)}" />
+     <script>
+        j$ = jQuery.noConflict();
+        function confirmCancel() {
+            var isConfirm = confirm("Are you sure you want to cancel?");
+            if(isConfirm){
+                return this.parent.parent.window.close();                
+            }
+        }
+     </script>
+     <script>
+      function scrolify(tblAsJQueryObject, height){
+        var oTbl = tblAsJQueryObject;
+        
+        // for very large tables you can remove the four lines below
+        // and wrap the table with <div> in the mark-up and assign
+        // height and overflow property  
+        var oTblDiv = $("<div/>");
+        oTblDiv.css('height', height);
+        oTblDiv.css('overflow-y','scroll');
+        oTbl.wrap(oTblDiv);
+
+        // save original width
+        oTbl.attr("data-item-original-width", oTbl.width());
+        oTbl.find('thead tr td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        }); 
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        });                 
+
+
+        // clone the original table
+        var newTbl = oTbl.clone();
+
+        // remove table header from original table
+        oTbl.find('thead tr').remove();                 
+        // remove table body from new table
+        newTbl.find('tbody tr').remove();   
+
+        oTbl.parent().parent().prepend(newTbl);
+        newTbl.wrap("<div/>");
+
+        // replace ORIGINAL COLUMN width                
+        newTbl.width(newTbl.attr('data-item-original-width'));
+        newTbl.find('thead tr td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });     
+        oTbl.width(oTbl.attr('data-item-original-width'));      
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });                 
+    }
+
+    function callScroll() {
+        scrolify($('.scrollableFixedHeader'), 300); // 160 is height
+    }
+    </script>
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.genesis__modalheaderStyle,'')}" />
+    <div>
+    <apex:form id="QuickQuoteForm">
+     <apex:pageBlock id="QuickQuoteId" mode="edit">
+        <apex:pageMessages />
+        <div class="btn-group .btn-group-*">
+            <apex:pageBlockButtons location="top">
+                <c:BusyButton name="Save" busyName="Saving" actionTo="{!saveCustomerDetails}" 
+                    rendered="{!AND(NOT(isQQConverted),quickQuote.Id !=null)}" reRenderTo="QuickQuoteForm"/>
+                <c:BusyButton name="Next" busyName="Next.." actionTo="{!savePartialQuickQuote}"
+                    rendered="{!quickQuote.Id=null}" reRenderTo="QuickQuoteForm"/>
+                <apex:commandButton action="{!cancelQuickQuote}" immediate="true" value="Cancel" rendered="{!NOT(isQQConverted)}"/>
+            </apex:pageBlockButtons>   
+         </div>  
+         <apex:outputpanel id="accountDetailPanelId">
+          <apex:pageBlockSection id="companyDetailPanelId" title="Funding Source Information" columns="1"> 
+          <div class="row">
+              <div class="col-xs-12">
+                <apex:pageblockSectionItem rendered="{!IF(quickQuote.genesis__Company__c!=null,true,false)}">  
+                <apex:outputLabel value="Company"  rendered="{!IF(quickQuote.genesis__Company__c!=null,true,false)}"></apex:outputLabel>
+                <apex:outputLabel value="{!companyName}"  rendered="{!IF(quickQuote.genesis__Company__c!=null,true,false)}"></apex:outputLabel>
+              </apex:pageblockSectionItem>
+              </div>
+           </div> 
+          </apex:pageBlockSection>     
+         
+         <apex:pageBlockSection id="accountDetailSectionId1" title="Quote Information" rendered="{!quickQuote.Id != null }" > 
+           <div class="row"> 
+           <div class="col-sm-6 col-xs-12"> 
+             <apex:outputField value="{!quickQuote.Name}" styleClass="col-sm-6 col-xs-12"/>
+           </div>
+            <div class="col-sm-6 col-xs-12"> 
+             <apex:outputField value="{!quickQuote.genesis__Expected_Start_Date__c}" styleClass="col-sm-6 col-xs-12"/>
+           </div>
+             
+             <apex:outputField value="{!quickQuote.genesis__Application__c}"  styleClass="col-sm-6 col-xs-12"/>
+             <apex:outputField value="{!quickQuote.CreatedById}" styleClass="col-sm-6 col-xs-12"/> 
+             <apex:inputfield value="{!quickQuote.genesis__Product_Type__c}" required="true" rendered="{!NOT(isQQConverted)}" styleClass="col-sm-6"/>
+             <apex:outputField value="{!quickQuote.genesis__Product_Type__c}" rendered="{!isQQConverted}" styleClass="col-sm-6"/>
+             <apex:inputfield value="{!quickQuote.genesis__Pricing_Method__c}" required="true" rendered="{!NOT(isQQConverted)}" styleClass="col-sm-6"/>
+             <apex:outputField value="{!quickQuote.genesis__Pricing_Method__c}" rendered="{!isQQConverted}" styleClass="col-sm-6"/>
+             <apex:inputfield value="{!quickQuote.genesis__Payment_Frequency__c}" required="true" rendered="{!NOT(isQQConverted)}" styleClass="col-sm-6">
+             <apex:actionSupport action="{!selectedSource}" event="onchange" rerender="QuickQuoteForm" rendered="{!NOT(isQQConverted)}"/>
+             </apex:inputField>
+             <apex:outputField value="{!quickQuote.genesis__Payment_Frequency__c}" rendered="{!isQQConverted}" styleClass="col-sm-6"/>
+             <apex:outputField value="{!quickQuote.genesis__Source__c}" rendered="{!OR(isSourceDefined,isQQConverted)}" label="Quote Source" styleClass="col-sm-6"/>
+             <apex:inputField value="{!quickQuote.genesis__Source__c}" label="Quote Source" rendered="{!AND(NOT(isQQConverted),NOT(isSourceDefined))}" required="true" styleClass="col-sm-6">
+             <apex:actionSupport action="{!selectedSource}" event="onchange" rerender="QuickQuoteForm" rendered="{!AND(NOT(isQQConverted),NOT(isSourceDefined))}"/>
+             </apex:inputField>
+             <apex:outputField value="{!quickQuote.genesis__Status__c}" styleClass="col-sm-6"/>
+         </div> 
+         </apex:pageBlockSection>
+         </apex:outputPanel>
+        </apex:pageBlock>        
+    </apex:form>
+    </div>
+    
+    
+    
+    
+    
+    
+    </apex:page>  
+</apex:tab>
+
+<apex:tab label="Equipment" name="equipmentsTab" id="tabequipments" rendered="{!quickQuote.Id!=null}">
+     <apex:relatedList list="Quick_Quote_Equipments__r" title="Equipment" rendered="{!NOT(quickQuote.genesis__Status__c = 'CONVERTED TO APPLICATION')}"/>
+     <apex:relatedList list="Quick_Quote_Equipments__r" title="Equipment" rendered="{!quickQuote.genesis__Status__c = 'CONVERTED TO APPLICATION'}">
+     <apex:facet name="header"><table><tr><td class="pbTitle"><h3>Equipment</h3></td></tr></table></apex:facet>
+     </apex:relatedList>
+</apex:tab>
+<apex:tab label="Notes and Attachments" id="tabNotes" rendered="{!quickQuote.Id!=null}">
+    <apex:relatedList list="CombinedAttachments" rendered="{!NOT(quickQuote.genesis__Status__c = 'CONVERTED TO APPLICATION')}"/>
+    <apex:relatedList list="CombinedAttachments" rendered="{!quickQuote.genesis__Status__c = 'CONVERTED TO APPLICATION'}">
+    <apex:facet name="header"><table><tr><td class="pbTitle"><h3>Notes and Attachments</h3></td></tr></table></apex:facet>
+    </apex:relatedList>
+</apex:tab>
+</apex:tabPanel>
+
+</apex:page>

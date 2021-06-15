@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Clients_Status_check</fullName>
+    <active>false</active>
+    <description>Clients_Status_check</description>
+    <errorConditionFormula>NOT(ISPICKVAL( loan__Client_ID__r.loan__Status__c ,"Active"))</errorConditionFormula>
+    <errorMessage>Client is not Approved/Active.</errorMessage>
+</ValidationRule>

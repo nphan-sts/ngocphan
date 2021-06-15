@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Convert_to_Application</fullName>
+    <availability>online</availability>
+    <displayType>massActionButton</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Convert to Application</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+    <url>{!REQUIRESCRIPT("/soap/ajax/13.0/connection.js")}
+{!REQUIRESCRIPT("/soap/ajax/10.0/apex.js")}
+
+var selectedPricingOptionsIds = {!GETRECORDIDS($ObjectType.genesis__Quick_Quote_Pricing_Options__c)};
+
+var nsp = "{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}";
+var namespacePrefix = "{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}";
+if (namespacePrefix != null &amp;&amp; namespacePrefix != ""){
+namespacePrefix += "/";
+nsp = nsp + '__';
+}
+var SelectedIds="'"+selectedPricingOptionsIds[0]+"'";
+var quickQuoteId='';
+
+if (selectedPricingOptionsIds.length == 1) {
+var qquery = sforce.connection.query("select " + nsp + "Quick_Quote__c from " + nsp + "Quick_Quote_Pricing_Options__c where Id in ("+SelectedIds+")");
+var records = qquery.getArray("records");
+quickQuoteId = "'"+records[0].get(nsp+"Quick_Quote__c")+"'";
+qquery = sforce.connection.query("select " + nsp + "Valid_Pricing_Flag__c from " + nsp + "Quick_Quotes__c where Id in ("+quickQuoteId+")");
+records = qquery.getArray("records");
+var validPricingFlag = records[0].get(nsp + "Valid_Pricing_Flag__c");
+if (validPricingFlag =="true"){
+var r = confirm("Click ''OK'' to continue with application creation.");
+if (r){
+var className = namespacePrefix + "CreateApplicationCtrlOnQuickQuote";
+var methodName = "createApplication";
+var retVal = sforce.apex.execute(className, methodName, {pricingId:selectedPricingOptionsIds});
+window.alert(retVal);
+window.location.reload();
+}
+}else{
+alert('Current Pricing options are invalid, please regenerate the pricing before converting it to application.')
+}
+
+} else if (selectedPricingOptionsIds.length == 0) {
+    alert('Please select a pricing record to create a application.')
+}else{
+    alert('Multiple pricing records cannot be used to create a application.')
+}</url>
+</WebLink>

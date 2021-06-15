@@ -1,0 +1,42 @@
+<apex:page lightningStylesheets="true" standardController="loan__Savings_Product__c"
+	id="savingsProductPage" recordSetVar="savingsProductSet"
+	tabStyle="Product_Management__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+
+	<apex:form >
+		<apex:sectionHeader title="Savings Products" />
+		<apex:pageblock id="savingsProductList">
+			<apex:actionRegion >
+				<apex:outputText value="Records per page: "></apex:outputText>
+				<apex:selectList value="{!pagesize}" size="1">
+					<apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+					<apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="25"></apex:selectOption>
+					<apex:actionSupport event="onchange"
+						rerender="savingsProductTable, navigation" />
+				</apex:selectList>
+			</apex:actionRegion>
+
+			<apex:pageblockTable value="{!savingsProductSet}"
+				id="savingsProductTable" var="JA">
+				<apex:column headerValue="Savings Product">
+					<apex:commandLink value="{!JA.Name}"
+						reRender="savingsProductPage:savingsProductDetail">
+						<apex:param name="savingsProduct" value="{!JA.ID}" />
+					</apex:commandLink>
+				</apex:column>
+			</apex:pageblockTable>
+		</apex:pageblock>
+		<apex:panelGrid columns="2" id="navigation">
+			<apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+			<apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+		</apex:panelGrid>
+	</apex:form>
+
+	<apex:outputPanel id="savingsProductDetail">
+		<apex:detail subject="{!$CurrentPage.parameters.savingsProduct}"></apex:detail>
+	</apex:outputPanel>
+
+</apex:page>

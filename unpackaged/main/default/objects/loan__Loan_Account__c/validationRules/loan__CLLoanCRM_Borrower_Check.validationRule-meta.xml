@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__CLLoanCRM_Borrower_Check</fullName>
+    <active>true</active>
+    <description>Either Group or Client should be specified.</description>
+    <errorConditionFormula>AND(NOT($Setup.loan__Org_Parameters__c.loan__Integrate_Salesforce_CRM__c), OR(ISNULL(loan__Client__c),ISBLANK(loan__Client__c )), OR(ISNULL(loan__Group__c),ISBLANK(loan__Group__c)))</errorConditionFormula>
+    <errorMessage>Either Group or Client should be provided.</errorMessage>
+</ValidationRule>

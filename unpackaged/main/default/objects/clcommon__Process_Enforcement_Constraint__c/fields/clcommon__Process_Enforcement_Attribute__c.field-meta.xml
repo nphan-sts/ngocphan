@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Process_Enforcement_Attribute__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Process Enforcement Attribute</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Suspend ACH</fullName>
+                <default>false</default>
+                <label>Suspend ACH</label>
+            </value>
+            <value>
+                <fullName>Set maximum interest rate</fullName>
+                <default>false</default>
+                <label>Set maximum interest rate</label>
+            </value>
+            <value>
+                <fullName>Suspend Charges</fullName>
+                <default>false</default>
+                <label>Suspend Charges</label>
+            </value>
+            <value>
+                <fullName>Stop Accruals</fullName>
+                <default>false</default>
+                <label>Stop Accruals</label>
+            </value>
+            <value>
+                <fullName>Suspend Communication</fullName>
+                <default>false</default>
+                <label>Suspend Communication</label>
+            </value>
+            <value>
+                <fullName>Suspend Disbursal</fullName>
+                <default>false</default>
+                <label>Suspend Disbursal</label>
+            </value>
+            <value>
+                <fullName>Suppress Credit Reporting</fullName>
+                <default>false</default>
+                <label>Suppress Credit Reporting</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>5</visibleLines>
+</CustomField>

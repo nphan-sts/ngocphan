@@ -1,0 +1,56 @@
+<apex:page lightningStylesheets="true" standardController="loan__Staff__c" id="staffPage"
+	recordSetVar="staffSet" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:form >
+		<apex:sectionHeader title="Business Activities" />
+		<apex:pageblock id="staffList">
+			<apex:actionRegion >
+				<apex:outputText value="Records per page: "></apex:outputText>
+				<apex:selectList value="{!pagesize}" size="1">
+					<apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+					<apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+					<apex:selectOption itemLabel="25" itemValue="25"></apex:selectOption>
+					<apex:actionSupport event="onchange"
+						rerender="staffTable, navigation" />
+				</apex:selectList>
+			</apex:actionRegion>
+
+			<apex:pageblockTable value="{!staffSet}" id="staffTable" var="JA">
+				<apex:column headerValue="Staff">
+					<apex:commandLink value="{!JA.Name}"
+						reRender="staffPage:staffDetail">
+						<apex:param name="staff" value="{!JA.ID}" />
+					</apex:commandLink>
+				</apex:column>
+				<apex:column value="{!JA.loan__First_Name__c}" />
+				<apex:column value="{!JA.loan__Last_Name__c}" />
+				<apex:column value="{!JA.loan__Role__c}" />
+			</apex:pageblockTable>
+		</apex:pageblock>
+		<apex:panelGrid columns="2" id="navigation">
+			<apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+			<apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+		</apex:panelGrid>
+
+	</apex:form>
+
+	<apex:outputPanel id="staffDetail">
+		<apex:detail subject="{!$CurrentPage.parameters.staff}"></apex:detail>
+	</apex:outputPanel>
+
+
+	<apex:sectionHeader title="Define a New Staff)" />
+
+	<apex:pageblock >
+		<table width="100%">
+			<tr>
+				<td><a href="{!URLFOR($Action.Staff__c.New)}"><br></br>
+					<b>New Staff Member</b></a></td>
+			</tr>
+		</table>
+
+	</apex:pageblock>
+
+</apex:page>

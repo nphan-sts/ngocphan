@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Related_Entity__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>This field represents account to which a relationship is extended.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field represents account to which a relationship is extended.</inlineHelpText>
+    <label>Related Entity</label>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Relationships (Related Entity)</relationshipLabel>
+    <relationshipName>RelatedEntityRelationships</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

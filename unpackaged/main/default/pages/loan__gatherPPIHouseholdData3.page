@@ -1,0 +1,52 @@
+<apex:page lightningStylesheets="true" controller="loan.PPIHouseholdDataWizard" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:sectionHeader title="PPI Information for Client/Household"
+        subtitle="Step 3 of 3" />
+    <apex:form >
+        <apex:pageBlock title="Preview PPI Information">
+
+            <apex:facet name="footer">
+                <apex:outputPanel >
+                    <apex:commandButton action="{!step2}" value="Previous"
+                        styleClass="btn" />
+                    <apex:commandButton action="{!save}" value="Save" styleClass="btn" />
+                </apex:outputPanel>
+            </apex:facet>
+
+            <apex:pageBlockSection title="PPI Indicators Information">
+                <apex:pageBlockTable value="{!answers}" var="answer" id="theRepeat"
+                    columns="8">
+
+                    <apex:facet name="header">Review your answers</apex:facet>
+                    <apex:column rendered="true">
+                        <apex:facet name="header">Question</apex:facet>
+                        <apex:outputField value="{!answer.loan__Question_Text__c}" />
+                    </apex:column>
+
+                    <apex:column rendered="{!answer.loan__Answer_Type__c=='Single Select'}">
+                        <apex:outputField value="{!answer.loan__Single_Select_Answer__c}" />
+                    </apex:column>
+
+                    <apex:column rendered="{!answer.loan__Answer_Type__c=='Multiple Select'}">
+                        <apex:outputField value="{!answer.loan__Mutiselect_Answer__c}" />
+                    </apex:column>
+
+                    <apex:column rendered="{!answer.loan__Answer_Type__c=='Free Text'}">
+                        <apex:outputField value="{!answer.loan__Free_Text_Answer__c}" />
+                    </apex:column>
+
+                    <apex:column rendered="{!answer.loan__Answer_Type__c=='Date'}">
+                        <apex:outputField value="{!answer.loan__Date_Answer__c}" />
+                    </apex:column>
+
+                    <apex:column rendered="{!answer.loan__Answer_Type__c=='Number'}">
+                        <apex:outputField value="{!answer.loan__Answer_Type__c}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

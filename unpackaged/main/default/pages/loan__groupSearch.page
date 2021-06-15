@@ -1,0 +1,108 @@
+<apex:page lightningStylesheets="true" controller="loan.GroupSearchController" sidebar="false"
+    tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+
+    <apex:form >
+        <apex:pageMessages id="errors" />
+
+        <apex:pageBlock title="Find Me A Group!" mode="edit">
+
+            <table width="100%" border="0">
+                <tr>
+                    <td width="200" valign="top"><apex:pageBlock title="Parameters" mode="edit" id="criteria">
+
+                            <script type="text/javascript">
+      function doSearch() {
+        searchServer(
+          document.getElementById("name").value,
+          document.getElementById("branch").value,
+          document.getElementById("center").value
+          );
+      }
+      </script>
+
+                            <apex:actionFunction name="searchServer" action="{!runSearch}"
+                                rerender="results,debug,errors">
+                                <apex:param name="name" value="" />
+                                <apex:param name="branch" value="" />
+                                <apex:param name="center" value="" />
+                            </apex:actionFunction>
+
+                            <table cellpadding="2" cellspacing="2">
+                                <tr>
+                                    <td style="font-weight: bold;">Group Name<br /> <input
+                                        type="text" id="name" onkeyup="doSearch();" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Branch<br /> <input
+                                        type="text" id="branch" onkeyup="doSearch();" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Center<br /> <input
+                                        type="text" id="center" onkeyup="doSearch();" />
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </apex:pageBlock></td>
+                    <td valign="top"><apex:pageBlock mode="edit" id="results">
+
+                            <apex:pageBlockTable value="{!groups}" var="group">
+
+                                <apex:column >
+                                    <apex:facet name="header">
+                                        <apex:commandLink value="Group Name" action="{!toggleSort}"
+                                            rerender="results,debug">
+                                            <apex:param name="sortField" value="Name"
+                                                assignTo="{!sortField}" />
+                                        </apex:commandLink>
+                                    </apex:facet>
+                                    <apex:commandLink value="{!group.Name}"
+                                        action="{!URLFOR($Action.Group__c.View, group.ID)}"
+                                        target="_blank" />
+                                </apex:column>
+
+                                <apex:column >
+                                    <apex:facet name="header">
+                                        <apex:commandLink value="Branch" action="{!toggleSort}"
+                                            rerender="results,debug">
+                                            <apex:param name="sortField" value="Office__r.Name"
+                                                assignTo="{!sortField}" />
+                                        </apex:commandLink>
+                                    </apex:facet>
+                                    <apex:commandLink value="{!group.Office__r.Name}"
+                                        action="{!URLFOR($Action.Office_Name__c.View, group.Office__c)}"
+                                        target="_blank" />
+                                </apex:column>
+
+                                <apex:column >
+                                    <apex:facet name="header">
+                                        <apex:commandLink value="Center" action="{!toggleSort}"
+                                            rerender="results,debug">
+                                            <apex:param name="sortField" value="Center__r.Name"
+                                                assignTo="{!sortField}" />
+                                        </apex:commandLink>
+                                    </apex:facet>
+                                    <apex:commandLink value="{!group.Center__r.Name}"
+                                        action="{!URLFOR($Action.Center__c.View, group.Center__c)}"
+                                        target="_blank" />
+                                </apex:column>
+
+                            </apex:pageBlockTable>
+
+                        </apex:pageBlock></td>
+                </tr>
+            </table>
+
+            <apex:pageBlock title="Debug - SOQL" id="debug">
+                <apex:outputText value="{!debugSoql}" />
+            </apex:pageBlock>
+
+        </apex:pageBlock>
+
+    </apex:form>
+
+</apex:page>

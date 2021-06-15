@@ -1,0 +1,26 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" controller="clcommon.PortalActions">
+    <apex:include pageName="clcommon__ResolveNamespace"/>
+    <html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet"
+              type="text/css"/>
+        <link rel="stylesheet" type="text/css"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css"
+              href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <script type="text/javascript"
+              src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.13.3/math.min.js"></script>
+        <title>Collector Dashboard</title>
+       
+    </head>
+    <body>
+        <div id="app" pageId="Collector_Dashboard"></div>
+        <script src="../../soap/ajax/29.0/connection.js" type="text/javascript"></script>
+        <script src="../../soap/ajax/29.0/apex.js" type="text/javascript"></script>
+        <apex:include pageName="collect__PortalDevInclude"/>
+        <apex:stylesheet value="{!URLFOR($Resource.collect__CollectorDashboardCSSPack)}"/>
+        <!--<link rel="stylesheet" type="text/css" href="https://7591dcf8.ngrok.io/dist/portal-web.css"/>
+        <script type="text/javascript" src="https://7591dcf8.ngrok.io/dist/portal2.js"></script>-->
+    </body>
+    </html>
+</apex:page>

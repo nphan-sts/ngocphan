@@ -1,0 +1,55 @@
+<apex:page lightningStylesheets="true" standardController="loan__Holiday__c" id="holidayManagementPage"
+	recordSetVar="HolidaySet" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:form >
+		<apex:sectionHeader title="List of Holidays" />
+		<apex:pageblock id="HolodayList">
+			<apex:actionRegion >
+				<apex:outputText value="Records per page: "></apex:outputText>
+				<apex:selectList value="{!pagesize}" size="1">
+					<apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+					<apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="25"></apex:selectOption>
+					<apex:actionSupport event="onchange"
+						rerender="holidayNameTable, navigation, holidayManagementPage:holidayDetails" />
+				</apex:selectList>
+			</apex:actionRegion>
+
+			<apex:pageblockTable value="{!HolidaySet}" id="holidayNameTable"
+				var="JA">
+				<apex:column headerValue="Name">
+					<apex:commandLink value="{!JA.Name}"
+						reRender="holidaysTable, holidayDetails">
+						<apex:param name="holiday" value="{!JA.ID}" />
+					</apex:commandLink>
+				</apex:column>
+				<apex:column value="{!JA.loan__Date__c}" />
+				<apex:column value="{!JA.loan__Description__c}" />
+				<apex:column value="{!JA.loan__Frequency__c}" />
+				<apex:column value="{!JA.loan__Shift_Meeting__c}" />
+			</apex:pageblockTable>
+		</apex:pageblock>
+		<apex:panelGrid columns="2" id="navigation">
+			<apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+			<apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+		</apex:panelGrid>
+	</apex:form>
+
+	<apex:outputPanel id="holidayDetails">
+		<apex:detail inlineEdit="true"
+			subject="{!$CurrentPage.parameters.holiday}"></apex:detail>
+	</apex:outputPanel>
+
+	<apex:sectionHeader title="Define a New Holiday" />
+	<apex:pageblock >
+		<table>
+			<tr>
+				<td><a href="{!URLFOR($Action.Holiday__c.New)}"><br></br>
+					<b>Define New Holiday</b></a></td>
+			</tr>
+		</table>
+	</apex:pageblock>
+
+</apex:page>

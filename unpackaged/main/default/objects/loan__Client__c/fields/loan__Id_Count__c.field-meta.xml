@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Id_Count__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This variable store the total count of identification detail records for particular client.</description>
+    <externalId>false</externalId>
+    <label>Identification Details Count</label>
+    <summaryForeignKey>loan__Client_Identification__c.loan__Client__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

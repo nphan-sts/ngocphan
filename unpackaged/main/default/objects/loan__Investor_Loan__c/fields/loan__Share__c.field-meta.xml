@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Share__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Describes the percent share of Investor in Loan amount</description>
+    <externalId>false</externalId>
+    <label>Share</label>
+    <precision>10</precision>
+    <required>false</required>
+    <scale>7</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

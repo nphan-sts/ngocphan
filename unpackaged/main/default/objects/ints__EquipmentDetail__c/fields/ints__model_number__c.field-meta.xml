@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__model_number__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Manufacturer's model number that corresponds to this vehicle.</description>
+    <externalId>false</externalId>
+    <label>Manufacturer's model number</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

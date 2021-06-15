@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Category_Attachment_Association__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Category Attachment Association</label>
+    <referenceTo>clcommon__Category_Attachment_Association__c</referenceTo>
+    <relationshipLabel>Execution Criteria Result</relationshipLabel>
+    <relationshipName>Execution_Criteria_Result</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

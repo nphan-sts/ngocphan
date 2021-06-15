@@ -1,0 +1,102 @@
+<apex:page lightningStylesheets="true" controller="loan.CreateTransactionAction" sidebar="false"
+	tabStyle="Accounts__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:form >
+		<apex:pageMessages id="errors" />
+
+		<apex:pageBlock title="Find Me An Account" mode="edit">
+
+			<table width="100%" border="0">
+				<tr>
+					<td width="200" valign="top"><apex:pageBlock title="Parameters" mode="edit" id="criteria">
+
+							<script type="text/javascript">
+      function doSearch() {
+        searchServer(
+          document.getElementById("accNumber").value
+          );
+      }
+      </script>
+
+							<apex:actionFunction name="searchServer" action="{!runSearch}"
+								rerender="results,debug,errors">
+								<apex:param name="accountNumber" value="" />
+							</apex:actionFunction>
+
+							<table cellpadding="2" cellspacing="2">
+								<tr>
+									<td style="font-weight: bold;">Account Number<br /> <input
+										type="text" id="accNumber" onkeyup="doSearch();" />
+									</td>
+								</tr>
+							</table>
+
+						</apex:pageBlock></td>
+					<td valign="top"><apex:pageBlock mode="edit" id="results">
+
+							<apex:pageBlockTable value="{!lstTransactionEntry}" var="trans">
+
+								<apex:column headerValue="Account Number">
+
+									<apex:commandLink value="{!trans.Name}"
+										action="{!getTransactionIdList}"
+										rerender="results,transDetail,debug" status="fetchTransaction">
+										<apex:param name="docuNumb" value="{!trans.Name}"
+											assignTo="{!sortField}" />
+									</apex:commandLink>
+
+									<!-- <apex:outputField value="{!trans.Document_Number__c}"/> -->
+								</apex:column>
+
+								<apex:column headerValue="First Name"
+									value="{!trans.loan__First_Name__c}">
+
+								</apex:column>
+
+								<apex:column headerValue="Last Name"
+									value="{!trans.loan__Last_Name__c}">
+
+								</apex:column>
+
+							</apex:pageBlockTable>
+
+							<apex:actionStatus startText="Fetching Transaction Details..."
+								id="fetchTransaction" />
+
+						</apex:pageBlock></td>
+				</tr>
+			</table>
+
+			<apex:pageBlock title="Accounts" id="debug">
+				<!--apex:outputText value="{!debugSoql}" /-->
+			</apex:pageBlock>
+			<apex:outputPanel id="transDetail">
+				<apex:pageBlockTable value="{!transactions}" var="transtoFetch">
+
+					<apex:column headerValue="ID">
+						<apex:outputField value="{!transtoFetch.Id}" />
+					</apex:column>
+
+					<apex:column headerValue="Name">
+						<apex:outputField value="{!transtoFetch.Name}" />
+					</apex:column>
+
+					<apex:column headerValue="Client Id">
+						<apex:outputField value="{!transtoFetch.loan__Client_ID__c}" />
+					</apex:column>
+
+					<apex:column headerValue="Group">
+						<apex:outputField value="{!transtoFetch.loan__Group__c}" />
+					</apex:column>
+
+
+				</apex:pageBlockTable>
+
+			</apex:outputPanel>
+
+		</apex:pageBlock>
+
+	</apex:form>
+
+</apex:page>

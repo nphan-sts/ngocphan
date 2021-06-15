@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Root_Branch</fullName>
+    <active>true</active>
+    <description>This is the root branch/office in the organization. There can only be 1 such branch.</description>
+    <label>Root Branch</label>
+</RecordType>

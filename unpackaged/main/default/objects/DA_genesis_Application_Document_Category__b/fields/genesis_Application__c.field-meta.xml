@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis_Application__c</fullName>
+    <externalId>false</externalId>
+    <label>Application</label>
+    <referenceTo>genesis__Applications__c</referenceTo>
+    <relationshipName>genesis_Application1582248995643</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

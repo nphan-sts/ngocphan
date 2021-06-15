@@ -1,0 +1,172 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__RuleCriteria__c" extensions="genesis.ManageRulesCriteria">
+    <apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:outputPanel id="manageRulesCriteria2">
+        <script type="text/javascript">
+            var saveData = function () {
+                window.parent.postMessage({!statusOnsaveRulesCriteria}, '*');
+            };
+
+            var cancelFunctionality = function () {
+                window.parent.postMessage({!statusOncancelRulesCriteria}, '*');
+            };
+        </script>
+        <apex:form >
+            <apex:sectionHeader subtitle="{!IF(newRuleCriteria.Id != NULL, newRuleCriteria.Name, 'New Rule Criteria')}" title="Rule Criteria Detail"/>
+            <apex:pagemessages />
+
+            <apex:pageBlock title="Rule Criteria Detail">
+                <apex:pageBlockButtons >
+                    <apex:commandButton value="Save" action="{!saveRuleCriteria}" rerender="manageRulesCriteria2" oncomplete="saveData()"/>
+                    <apex:commandButton value="Cancel" action="{!cancel}" onclick="cancelFunctionality()"/>
+                </apex:pageBlockButtons>
+
+                <apex:outputpanel styleClass="mint-lightning-wrapper">
+                <apex:pageBlockSection title="Rule Type" columns="2">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Stipulation Type"></apex:outputLabel>
+                        <apex:selectList id="stipulationsList" value="{!newRuleCriteria.genesis__Stipulation_Type__c}" size="1" onchange="setStipulationType(this.options[this.selectedIndex].value)">
+                            <apex:selectOption itemValue="FUNDING" itemLabel="FUNDING"/>
+                            <apex:selectOption itemValue="CONTRACT" itemLabel="CONTRACT"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:inputField value="{!newRuleCriteria.genesis__Criteria_Sequence__c}"/>
+                </apex:pageBlockSection>
+                </apex:outputpanel>
+
+                <apex:pageBlockSection title="Information" id="information" columns="1">
+                    <apex:outputpanel styleClass="mint-lightning-wrapper">                
+                    <apex:pageblockSection columns="2">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Related Object"></apex:outputLabel>
+                            <apex:selectList value="{!newRuleCriteria.genesis__Related_Object__c}" size="1" disabled="{!newRuleCriteria.genesis__Stipulation_Type__c = 'CONTRACT'}" onchange="fieldNamesList(this.options[this.selectedIndex].value);">
+                                <apex:selectOptions value="{!relatedObjectList}"/>
+                            </apex:selectList>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:outputField value="{!newRuleCriteria.genesis__Rule__c}"/>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Name"></apex:outputLabel>
+                            <apex:outputPanel id="fieldPanel">
+                                <apex:outputPanel layout="block" styleClass="requiredInput">
+                                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                    <apex:selectList value="{!parentFieldName}" size="1" disabled="{!newRuleCriteria.genesis__Stipulation_Type__c = 'CONTRACT'}" onchange="lookupfieldNamesList(this.options[this.selectedIndex].value)">
+                                        <apex:selectOptions value="{!objectFieldList}"/>
+                                    </apex:selectList>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:outputField value="{!newRuleCriteria.genesis__Rule_Object_Reference__c}"/>
+                    </apex:pageblockSection>
+
+                    <apex:pageblockSection rendered="{!AND(NOT(lookupListNotNull),newRuleCriteria.genesis__Stipulation_Type__c = 'FUNDING')}" columns="2">
+
+                        <apex:inputField value="{!newRuleCriteria.genesis__Matching_Type__c}">
+                            <apex:actionSupport event="onchange" reRender="information"/>
+                        </apex:inputField>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Api Name"></apex:outputLabel>
+                            <apex:outputPanel id="fieldApiPanel">
+                                <apex:outputField value="{!newRuleCriteria.genesis__Field_API_Name__c}"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:inputField value="{!newRuleCriteria.genesis__Minimum_Value__c}" rendered="{!newRuleCriteria.genesis__Matching_Type__c == MT_BETWEEN}"/>
+
+                        <apex:inputField value="{!newRuleCriteria.genesis__Matching_Value__c}" rendered="{!newRuleCriteria.genesis__Matching_Type__c != MT_BETWEEN}"/>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Type"></apex:outputLabel>
+                            <apex:outputPanel id="fieldApiTypePanel">
+                                <apex:outputField value="{!newRuleCriteria.genesis__Field_Type__c}"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:inputField value="{!newRuleCriteria.genesis__Maximum_Value__c}" rendered="{!newRuleCriteria.genesis__Matching_Type__c == MT_BETWEEN}"/>
+                    </apex:pageblockSection>
+
+                    <apex:pageblockSection rendered="{!AND(lookupListNotNull,newRuleCriteria.genesis__Stipulation_Type__c = 'FUNDING')}" columns="2">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Lookup Object Field Name"></apex:outputLabel>
+                            <apex:outputPanel id="lookupFieldPanel">
+                                <apex:outputPanel layout="block" styleClass="requiredInput">
+                                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                                    <apex:selectList value="{!childFieldName}" size="1" onchange="setFieldApiName(this.options[this.selectedIndex].value)">
+                                        <apex:selectOptions value="{!lookupObjFieldList}"/>
+                                    </apex:selectList>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Api Name"></apex:outputLabel>
+                            <apex:outputPanel id="fieldApiPanel">
+                                <apex:outputField value="{!newRuleCriteria.genesis__Field_API_Name__c}"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:inputField value="{!newRuleCriteria.genesis__Matching_Type__c}">
+                            <apex:actionSupport event="onchange" reRender="information"/>
+                        </apex:inputField>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Api Name"></apex:outputLabel>
+                            <apex:outputPanel id="fieldApiPanel">
+                                <apex:outputField value="{!newRuleCriteria.genesis__Field_API_Name__c}"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:inputField value="{!newRuleCriteria.genesis__Minimum_Value__c}" rendered="{!newRuleCriteria.genesis__Matching_Type__c == MT_BETWEEN}"/>
+
+                        <apex:inputField value="{!newRuleCriteria.genesis__Matching_Value__c}" rendered="{!newRuleCriteria.genesis__Matching_Type__c != MT_BETWEEN}"/>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Field Type"></apex:outputLabel>
+                            <apex:outputPanel id="fieldApiTypePanel">
+                                <apex:outputField value="{!newRuleCriteria.genesis__Field_Type__c}"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:inputField value="{!newRuleCriteria.genesis__Maximum_Value__c}" rendered="{!newRuleCriteria.genesis__Matching_Type__c == MT_BETWEEN}"/>
+
+                    </apex:pageblockSection>
+                    </apex:outputpanel>
+                    
+                    <apex:pageBlockSectionItem >
+                        <apex:pageblockTable value="{!selectDocList}" id="DocListTable" var="d" width="100%" rendered="{!newRuleCriteria.genesis__Stipulation_Type__c = 'CONTRACT'}">
+                            <apex:column width="20%" headerValue="Select">
+                                <apex:inputCheckbox value="{!d.check}"/>
+                            </apex:column>
+                            <apex:column value="{!d.doc.genesis__Doc_Name__c}" width="40%"/>
+                        </apex:pageblockTable>
+                    </apex:pageBlockSectionItem>
+
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:actionRegion >
+                <apex:actionFunction name="setStipulationType" action="{!setStipulationType}" reRender="information">
+                    <apex:param assignTo="{!stipulationType}" value="" name="stipulationType"/>
+                </apex:actionFunction>
+            </apex:actionRegion>
+            <apex:actionRegion >
+                <apex:actionFunction name="fieldNamesList" action="{!getFieldNames}" reRender="information">
+                    <apex:param assignTo="{!parentName}" value="" name="parentName"/>
+                </apex:actionFunction>
+            </apex:actionRegion>
+            <apex:actionRegion >
+                <apex:actionFunction name="lookupfieldNamesList" action="{!getLookupFieldNames}" reRender="information">
+                    <apex:param assignTo="{!lookupName}" value="" name="lookupName"/>
+                </apex:actionFunction>
+            </apex:actionRegion>
+            <apex:actionRegion >
+                <apex:actionFunction name="setFieldApiName" action="{!setFieldApiName}" reRender="information">
+                    <apex:param assignTo="{!lookupFieldName}" value="" name="lookupFieldName"/>
+                </apex:actionFunction>
+            </apex:actionRegion>
+
+        </apex:form>
+    </apex:outputPanel>
+</apex:page>

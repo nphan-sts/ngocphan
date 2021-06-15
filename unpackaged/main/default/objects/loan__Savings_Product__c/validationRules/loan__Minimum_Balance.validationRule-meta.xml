@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Minimum_Balance</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISPICKVAL( loan__Balance_Used_for_Int_Rate_Calculation__c  , 'Minimum Balance') 
+&amp;&amp; 
+(loan__Min_Balance_Required_for_Interest_Rate_c__c  &lt; 0
+|| ISBLANK(loan__Min_Balance_Required_for_Interest_Rate_c__c))</errorConditionFormula>
+    <errorMessage>Please enter a valid Minimum Balance for Interest Calculation (must be greater than or equal to 0)</errorMessage>
+</ValidationRule>

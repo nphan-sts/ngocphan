@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>This event will get published when a party record will get inserted or updated</description>
+    <eventType>StandardVolume</eventType>
+    <label>Party Event</label>
+    <pluralLabel>Party Event</pluralLabel>
+    <publishBehavior>PublishImmediately</publishBehavior>
+</CustomObject>

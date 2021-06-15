@@ -1,0 +1,83 @@
+<apex:page lightningStylesheets="true" standardController="loan__Consolidated_Loan_Payment__c"
+	extensions="loan.ConsolidatedLoanPaymentReversalCtrl" sidebar="false">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<script
+		src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+	<!--We use jQuery to disable all buttons with id ending with 'Btn'-->
+	<!--we don't have to re-enable them here because the related pageblock is reRendered-->
+	<script>
+        var j$ = jQuery.noConflict();
+        function disableButtons(btnName) {
+            j$('[id$=Btn]').prop('value', btnName).addClass("btnDisabled").attr("disabled", "true");
+        }
+    </script>
+	<apex:form >
+		<apex:sectionHeader title="Create a Consolidated Loan Payment Reversal">
+			<apex:pageBlock mode="detail" id="topPg">
+				<apex:pageMessages />
+				<apex:pageBlockButtons location="top" id="blkButtons">
+					<c:BusyButton name="Reverse" busyName="Reversing"
+						actionTo="{!process}"
+						disabled="{!AND(NOT(ISBLANK(consolidatedReversal.Id)),NOT(consolidatedPayment.loan__Reversed__c))}"
+						reRenderTo="topPg" style="margin-left:120px;" />
+					<apex:commandButton value="Cancel" immediate="true" id="cBtn"
+						action="{!URLFOR($Action.Account.Tab, $ObjectType.Account)}" />
+				</apex:pageBlockButtons>
+				<apex:outputpanel id="op1">
+					<apex:pageBlockSection columns="2" title="Payment Details">
+						<apex:outputField value="{!consolidatedPayment.loan__Account__c}" />
+						<apex:inputField value="{!consolidatedPayment.loan__Date__c}" />
+						<apex:outputField value="{!consolidatedPayment.loan__Amount__c}" />
+						<apex:outputField value="{!consolidatedPayment.loan__Payment_Mode__c}" />
+
+						<apex:inputField value="{!consolidatedReversal.loan__Reference__c}"
+							rendered="{!consolidatedReversal.Id==null}" />
+						<apex:outputField value="{!consolidatedReversal.loan__Reference__c}"
+							rendered="{!consolidatedReversal.Id!=null}" />
+
+						<apex:inputField value="{!consolidatedReversal.loan__Reason_Code__c}"
+							rendered="{!consolidatedReversal.Id==null}" />
+						<apex:outputField value="{!consolidatedReversal.loan__Reason_Code__c}"
+							rendered="{!consolidatedReversal.Id!=null}" />
+
+						<apex:outputField value="{!consolidatedPayment.loan__Reversed__c}" />
+					</apex:pageBlockSection>
+				</apex:outputpanel>
+				<apex:outputpanel style="overflow:auto; height:500px;" id="opanel1">
+					<apex:pageblockSection columns="1" title="Loans" id="loans">
+						<apex:pageblocktable value="{!paymentsToBeReversed}"
+							var="repayment" id="loantable" style="width:100%">
+							<apex:column headerValue="Loan Id">
+								<apex:outputLink target="_blank"
+									style="{!IF(repayment.Loan_Account__r.loan__Loan_Status__c='Active - Bad Standing', 'color:red; font-weight:bold;', '')}"
+									value="/{!repayment.loan__Loan_Account__c}">{!repayment.Loan_Account__r.Name}</apex:outputLink>
+							</apex:column>
+							<apex:column headerValue="Transaction Amount">
+								<apex:outputField value="{!repayment.loan__Transaction_Amount__c}" />
+							</apex:column>
+							<apex:column headerValue="Transaction Date">
+								<apex:outputField value="{!repayment.loan__Transaction_Date__c}" />
+							</apex:column>
+							<apex:column headerValue="Principal">
+								<apex:outputField value="{!repayment.loan__Principal__c}" />
+							</apex:column>
+							<apex:column headerValue="Interest">
+								<apex:outputField value="{!repayment.loan__Interest__c}" />
+							</apex:column>
+							<apex:column headerValue="Fees">
+								<apex:outputField value="{!repayment.loan__Fees__c}" />
+							</apex:column>
+							<apex:column headerValue="Excess">
+								<apex:outputField value="{!repayment.loan__Excess__c}" />
+							</apex:column>
+							<apex:column headerValue="Reversed">
+								<apex:outputField value="{!repayment.loan__Reversed__c}" />
+							</apex:column>
+						</apex:pageblocktable>
+					</apex:pageblockSection>
+				</apex:outputpanel>
+			</apex:pageBlock>
+		</apex:sectionHeader>
+	</apex:form>
+</apex:page>

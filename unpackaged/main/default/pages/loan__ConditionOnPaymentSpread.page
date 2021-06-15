@@ -1,0 +1,51 @@
+<apex:page lightningStylesheets="true" standardController="loan__Conditions_On_Spread__c" id="conditionOnSpreadPage" showHeader="true" sidebar="true"
+        recordSetVar="aPCSet" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+
+    <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+    <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+
+    <apex:form >
+        <apex:sectionHeader title="Condition On Payment Spread" />
+        <apex:pageblock id="conditionOnPaymentSpreadList">
+
+            <apex:actionRegion >
+                <apex:outputText value="Records per page: "></apex:outputText>
+                <apex:selectList value="{!pagesize}" size="1">
+                    <apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+                    <apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+                    <apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+                    <apex:selectOption itemLabel="25" itemValue="25"></apex:selectOption>
+                    <apex:actionSupport event="onchange"
+                        rerender="conditionOnPaymentSpreadTable, navigation" />
+                </apex:selectList>
+            </apex:actionRegion>
+
+            <apex:pageblockTable value="{!aPCSet}" id="conditionOnPaymentSpreadTable" var="JA">
+                <apex:column headerValue="Condition On Payment Spread">
+                    <apex:commandLink value="{!JA.Name}" reRender="conditionOnPaymentSpreadDetail">
+                        <apex:param name="conditionOnPaymentSpreadID" value="{!JA.ID}" />
+                    </apex:commandLink>
+                </apex:column>
+            </apex:pageblockTable>
+            
+        </apex:pageblock>
+    </apex:form>
+
+    <apex:outputPanel id="conditionOnPaymentSpreadDetail">
+        <apex:detail subject="{!$CurrentPage.parameters.conditionOnPaymentSpreadID}"
+            inlineEdit="true"></apex:detail>
+    </apex:outputPanel>
+
+    <apex:sectionHeader title="Condition On Payment Spread Definition" />    
+        <apex:pageBlock >
+            <table>
+                <tr>
+                    <td>
+                        <apex:outputLink value="{!URLFOR($Action.loan__Conditions_On_Spread__c.New)}">Define New Condition On Payment Spread</apex:outputLink>
+                    </td>
+                </tr>
+            </table>
+        </apex:pageBlock>
+</apex:page>

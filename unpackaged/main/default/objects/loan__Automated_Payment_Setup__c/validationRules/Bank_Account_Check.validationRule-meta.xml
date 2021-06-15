@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bank_Account_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>loan__Bank_Account__r.loan__Account__c  &lt;&gt;  loan__CL_Contract__r.loan__Account__c</errorConditionFormula>
+    <errorDisplayField>loan__Bank_Account__c</errorDisplayField>
+    <errorMessage>Bank Account is not valid for this Borrower.Please select the correct option.</errorMessage>
+</ValidationRule>

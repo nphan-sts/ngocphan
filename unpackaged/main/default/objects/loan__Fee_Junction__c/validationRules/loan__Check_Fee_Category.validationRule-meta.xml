@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_Fee_Category</fullName>
+    <active>true</active>
+    <errorConditionFormula>TEXT(loan__Fee__r.loan__Fee_Category__c) !=  TEXT(loan__Fee_Set__r.loan__Fee_Set_Category__c)</errorConditionFormula>
+    <errorMessage>Fee Category does not match.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,112 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__Rate_Card_Setup_Header__c"
+    extensions="genesis.RateCardHeaderController"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.genesis__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.genesis__MFIStyles}" />
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+        j$ = jQuery.noConflict();
+    </script>
+    <script>
+        function confirmCancel() {
+            var isConfirm = confirm("Are you sure you want to cancel?");
+            if(isConfirm){
+                return this.parent.parent.window.close();                
+            }
+        }
+    
+    </script>
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+
+    <script>
+        function testify(){
+            alert(j$('').length);
+        };
+      function scrolify(tblAsJQueryObject, height){
+        var oTbl = tblAsJQueryObject;
+        
+        // for very large tables you can remove the four lines below
+        // and wrap the table with <div> in the mark-up and assign
+        // height and overflow property  
+        var oTblDiv = $("<div/>");
+        oTblDiv.css('height', height);
+        oTblDiv.css('overflow-y','scroll');
+        oTbl.wrap(oTblDiv);
+
+        // save original width
+        oTbl.attr("data-item-original-width", oTbl.width());
+        oTbl.find('thead tr td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        }); 
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        });                 
+
+
+        // clone the original table
+        var newTbl = oTbl.clone();
+
+        // remove table header from original table
+        oTbl.find('thead tr').remove();                 
+        // remove table body from new table
+        newTbl.find('tbody tr').remove();   
+
+        oTbl.parent().parent().prepend(newTbl);
+        newTbl.wrap("<div/>");
+
+        // replace ORIGINAL COLUMN width                
+        newTbl.width(newTbl.attr('data-item-original-width'));
+        newTbl.find('thead tr td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });     
+        oTbl.width(oTbl.attr('data-item-original-width'));      
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });                 
+    }
+
+    function callScroll() {
+        scrolify($('.scrollableFixedHeader'), 300); // 160 is height
+    }
+    </script>
+    <apex:sectionHeader title="Rate Card Setup " rendered="{!IF(genesis__Rate_Card_Setup_Header__c.Name == '',true ,false)}"/>
+    <apex:sectionHeader title="Rate Card Setup" subtitle="{!genesis__Rate_Card_Setup_Header__c.Name}" rendered="{!IF(genesis__Rate_Card_Setup_Header__c.Name == '',false ,true)}"/>
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.genesis__modalheaderStyle,'')}" />
+    <apex:outputPanel id="rateCrdHdrPanel">
+        <apex:form id="rateCardheaderForm">
+            <apex:pageBlock id="rateCardId" mode="edit">
+                <apex:pageMessages />
+                <apex:pageBlockButtons location="both">
+                    <c:BusyButton name="Save" busyName="Saving"
+                        actionTo="{!saveRateCardHeader}"
+                        oncomplete="({!closeModal}===true) ? closeIframe('{!genesis__Rate_Card_Setup_Header__c.Id}') : {};"
+                        reRenderTo="rateCrdHdrPanel" />
+                    <apex:commandButton action="{!cancelRateCardHeader}" immediate="true" value="Cancel" /> 
+                </apex:pageBlockButtons>
+                
+                <apex:outputpanel id="headerid">
+                    <apex:pageBlockSection columns="2" id="InfoPanelPageBlockSection" title="Rate Card Details">
+                        <apex:inputField value="{!rateCardHeader.Name}"/>
+                        <apex:outputField value="{!rateCardHeader.genesis__Transaction_Date__c}" />
+                        <apex:inputField value="{!rateCardHeader.genesis__Product_Type__c}" required="true"/>
+                        <apex:inputField value="{!rateCardHeader.genesis__Company__c}" required="{!NOT($Setup.genesis__Org_Parameters__c.genesis__Use_CL_Product__c) || (multiCurrencyEnabled == true)}"
+                                         rendered="{!NOT($Setup.genesis__Org_Parameters__c.genesis__Use_CL_Product__c) || (multiCurrencyEnabled == true)}"/>
+                        <apex:inputField value="{!rateCardHeader.genesis__Description__c}"/>
+                        <apex:inputField value="{!rateCardHeader.genesis__Start_Date__c}" />
+                        <apex:inputField value="{!rateCardHeader.genesis__Enabled_Flag__c}" />
+                        <apex:inputField value="{!rateCardHeader.genesis__End_Date__c}" />
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" id="FiltersInfoPanelPageBlockSection" title="Filters">
+                        <apex:inputField value="{!rateCardHeader.genesis__Filter_By_Loan_Amount__c}" />
+                        <apex:inputField value="{!rateCardHeader.genesis__Filter_By_Credit_Rating__c}" />
+                        <apex:inputField value="{!rateCardHeader.genesis__Filter_By_Term__c}" />
+                        <apex:inputField value="{!rateCardHeader.genesis__Filter_By_Frequency__c}" />
+                    </apex:pageBlockSection>
+                </apex:outputpanel>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+</apex:page>

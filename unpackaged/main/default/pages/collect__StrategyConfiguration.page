@@ -1,0 +1,499 @@
+<apex:page standardController="collect__Collection_Configuration__c" extensions="collect.StrategyController"  doctype="html-5.0" lightningStylesheets="true">
+    <apex:include pageName="clcommon__mintTheme"/>
+    <apex:outputPanel id="collectionConfig">
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.collect__modalheaderStyle,'')}"/>
+    <apex:stylesheet value="{!$Resource.collect__MFIStyles}"/>
+    <script type="text/javascript">
+        <!--Redirects the flow to actionFunction on SOject change from dropdown picklist.-->
+        function passCriteriaObjectInfo(objectName, rowIndex) {
+            if(objectName == '') {
+                alert('Object Name can\'t be empty!');
+                return;
+            }
+            populateCriteriaSObjectFields(objectName, rowIndex);
+
+            return false;
+        }
+
+        var saveData = function () {
+          window.parent.postMessage({!statusOnsave}, '*');
+        };
+
+        var cancelFunctionality = function () {
+          window.parent.postMessage({!statusOncancel}, '*');
+        };
+
+        <!--Redirects the flow to actionFunction on SOject Field change from dropdown picklist.-->
+        function passCriteriaFieldInfo(fieldName, rowIndex) {
+            if(fieldName == '') {
+                alert('Field Name can\'t be empty!');
+                return;
+            }
+            setCriteriaFieldName(fieldName, rowIndex);
+
+            return false;
+        }
+
+        <!--Redirects the flow to actionFunction on SOject change from dropdown picklist.-->
+        function passActionObjectInfo(objectName, rowIndex) {
+            if(objectName == '') {
+                alert('Object Name can\'t be empty!');
+                return;
+            }
+            populateActionSObjectFields(objectName, rowIndex);
+
+            return false;
+        }
+
+        <!--Redirects the flow to actionFuction on SOject Field change from dropdown picklist.-->
+        function passActionFieldInfo(fieldName, rowIndex) {
+            if(fieldName == '') {
+                alert('Field Name can\'t be empty!');
+                return;
+            }
+            setActionFieldName(fieldName, rowIndex);
+
+            return false;
+        }
+
+        <!-- Redirects the flow to actionFunction on action details picklist -->
+        function passActionDetailsId(actionDetailsId, rowIndex) {
+            setActionDetailsId(actionDetailsId, rowIndex);
+
+            return false;
+        }
+        function popWindow(identifier){
+            var w = 450;
+            var h = 300;
+            var left = (screen.width) - w - 10;
+            var top = (screen.height) - h - 100;
+            var link = 'apex/clcommon__helpPage';
+            link = link + '?identifier=' + identifier;
+            var newwindow=window.open(link,'null','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=1, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+            newwindow.focus();
+        }
+    </script>  
+    <apex:sectionHeader title="{!IF(editMode, 'Strategy - Edit', 'Strategy - View')}"/>
+    <apex:form html-novalidate="novalidate">
+        <apex:commandLink value="Help On Collection Strategy" id="thelink" onclick="popWindow('strategyConfig');" 
+                          reRender="dummy" style="text-decoration:none;color:green;padding:1px;font-size:15px;font-weight:bold;" styleClass="link-show" 
+                          rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>                                                                                                         
+        <apex:commandLink value="Help On Collection Strategy" id="thelink2" onclick="popWindow('strategyConfig');" 
+                          reRender="dummy" styleClass="help-link" 
+                          rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>
+        <apex:actionRegion >
+            <!--Action Function when selected Criteria object names changes in a Row.-->
+            <apex:actionFunction immediate="true" name="populateCriteriaSObjectFields" action="{!populateCriteriaObjFieldsList}" reRender="messages, criteriaPanelEdit">
+                <apex:param assignTo="{!criteriaObjectAPIName}" value="" name="objectAPIName"/>
+                <apex:param assignTo="{!criteriaRowClicked}" value="" name="criteriaNumber"/>
+            </apex:actionFunction>
+
+            <!--Action Function when Criteria field Name is selected in a row.-->
+            <apex:actionFunction immediate="true" name="setCriteriaFieldName" action="{!setCriteriaFieldNameInRow}" reRender="messages, criteriaPanelEdit">
+                <apex:param assignTo="{!criteriaFieldAPIName}" value="" name="fieldAPIName"/>
+                <apex:param assignTo="{!criteriaRowClicked}" value="" name="criteriaNumber"/>
+            </apex:actionFunction>
+
+            <!--Action Function when selected Action object names changes in a Row.-->
+            <apex:actionFunction immediate="true" name="populateActionSObjectFields" action="{!populateActionObjFieldsList}" reRender="messages, actionsPanelEdit">
+                <apex:param assignTo="{!actionObjectAPIName}" value="" name="objectAPIName"/>
+                <apex:param assignTo="{!actionRowClicked}" value="" name="actionNumber"/>
+            </apex:actionFunction>
+
+            <!--Action Function when selected Action field names changes in a Row.-->
+            <apex:actionFunction immediate="true" name="setActionFieldName" action="{!setActionFieldName}" reRender="messages, actionsPanelEdit">
+                <apex:param assignTo="{!actionFieldAPIName}" value="" name="fieldAPIName"/>
+                <apex:param assignTo="{!actionRowClicked}" value="" name="actionNumber"/>
+            </apex:actionFunction>
+
+            <!--Action Function when Action Details Id is passed in a selected row.-->
+            <apex:actionFunction immediate="true" name="setActionDetailsId" action="{!setActionDetailsId}" reRender="messages">
+                <apex:param assignTo="{!actionDetailsId}" value="" name="actionDetailsId"/>
+                <apex:param assignTo="{!actionRowClicked}" value="" name="actionNumber"/>
+            </apex:actionFunction>
+        </apex:actionRegion>
+        <apex:pageBlock mode="edit">
+            <apex:pageMessages id="messages"/>
+
+            <!-----COMMAND BUTTONS----->
+            <!-----COMMAND BUTTONS----->
+            <!-----COMMAND BUTTONS----->
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Edit" action="{!changeToEditMode}" rendered="{!NOT(editMode || isApprovalProcessPending)}"/>
+                <apex:commandButton value="Save" action="{!saveStrategy}" rendered="{!editMode}" reRender="collectionConfig" oncomplete="saveData()"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" immediate="true" onclick="cancelFunctionality()"/>
+                <apex:commandButton value="Submit for Approval" action="{!submitForApproval}" rendered="{!NOT(editMode) && isApprovalProcessEnabled && strategyDetail.collect__Enabled_Flag__c == false}"/>
+            </apex:pageBlockButtons>
+
+            <!-----COLLECTION CONFIGURATION PANEL--VIEW MODE--->
+            <!-----COLLECTION CONFIGURATION PANEL--VIEW MODE--->
+            <!-----COLLECTION CONFIGURATION PANEL--VIEW MODE--->
+            <apex:outputPanel id="strategyDetailsPanelView">
+                <apex:pageBlockSection title="Strategy Details" rendered="{!NOT(editMode)}">
+                    <apex:outputField value="{!strategyDetail.Name}"/>
+                    <apex:outputField value="{!strategyDetail.collect__Source_System__c}"/>
+                    <apex:outputField value="{!strategyDetail.collect__Exclusion__c}"/>
+                    <apex:outputField value="{!strategyDetail.collect__Enabled_Flag__c}"/>
+                    <apex:outputField value="{!strategyDetail.Approver__c }" rendered="{!isApprovalProcessEnabled}"/>
+                    <apex:outputfield value="{!strategyDetail.collect__Priority__c}" rendered="{!priority && strategyDetail.collect__Exclusion__c == false}"/>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+
+            <!-----COLLECTION CONFIGURATION PANEL--EDIT MODE--->
+            <!-----COLLECTION CONFIGURATION PANEL--EDIT MODE--->
+            <!-----COLLECTION CONFIGURATION PANEL--EDIT MODE--->
+            <apex:outputPanel id="strategyDetailsPanelEdit">
+                <apex:pageBlockSection title="Strategy Details" collapsible="false" rendered="{!editMode}">
+                    <apex:inputField value="{!strategyDetail.Name}" onkeyup="var u=this.value.toUpperCase();if(this.value!=u){this.value=u;}"/>
+                    <apex:selectList value="{!strategyDetail.collect__Source_System__c}" size="1" multiSelect="false" disabled="{!IF(criteriaInfoList.size > 0 || actionInfoList.size > 0, true, false)}">
+                        <apex:selectOptions value="{!sourceSystemOptions}"/>
+                        <apex:actionSupport event="onchange" reRender="none"/>
+                    </apex:selectList>
+                    <apex:inputField value="{!strategyDetail.collect__Exclusion__c}" rendered="{!IF(actionInfoList.size > 0, false, true)}">
+                        <apex:actionSupport event="onchange" reRender="strategyDetailsPanelEdit, actionsPanelEdit"/>
+                    </apex:inputField>
+                    <apex:outputField value="{!strategyDetail.collect__Exclusion__c}" rendered="{!IF(actionInfoList.size > 0, true, false)}"/>
+                    <apex:inputField value="{!strategyDetail.collect__Enabled_Flag__c}" rendered="{!NOT(isApprovalProcessEnabled)}"/>
+                    <apex:inputField value="{!strategyDetail.collect__Approver__c}" rendered="{!isApprovalProcessEnabled}"/>
+                    <apex:inputfield value="{!strategyDetail.collect__Priority__c}" rendered="{!priority && strategyDetail.collect__Exclusion__c == false}"/>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+
+            <!-----QUEUE CRITERIA LIST PANEL - EDIT MODE ----->
+            <!-----QUEUE CRITERIA LIST PANEL - EDIT MODE ----->
+            <!-----QUEUE CRITERIA LIST PANEL - EDIT MODE ----->
+            <apex:outputPanel id="criteriaPanelEdit">
+            <apex:pageBlockSection columns="1" title="Criteria" collapsible="false" rendered="{!editMode}">
+                <apex:pageblockTable id="criteriaTableEdit" value="{!criteriaInfoList}" var="criteriaInfo" headerClass="fixedHeader" styleClass="scrollableFixedHeader">
+                    <apex:variable var="criteriaNumber" value="{!-1}"/>
+                    <apex:column headerValue="Sequence">
+                        <label><b>{!criteriaNumber + 1}</b>
+                        </label>
+                    </apex:column>
+                    <apex:column headerValue="Object Name">
+                        <apex:selectList value="{!criteriaInfo.criteria.collect__Object_API_Name__c}" onchange="passCriteriaObjectInfo(this.options[this.selectedIndex].value, {!criteriaNumber});" size="1">
+                            <apex:selectOptions value="{!criteriaInfo.objectNamesOptions}"/>
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column headerValue="Field Name">
+                        <apex:selectList value="{!criteriaInfo.criteria.collect__Field_API_Name__c}" onchange="passCriteriaFieldInfo(this.options[this.selectedIndex].value, {!criteriaNumber});" size="1">
+                            <apex:selectOptions value="{!criteriaInfo.objectFieldsOptions}"/>
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column headerValue="Operator">
+                        <apex:inputField value="{!criteriaInfo.criteria.collect__Operator__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Value">
+                        <apex:inputField value="{!criteriaInfo.criteria.collect__Value__c}"  rendered="{!criteriaInfo.criteria.Field_Type__c != 'Date' &&
+                                                                                                criteriaInfo.criteria.Field_Type__c != 'Boolean' &&
+                                                                                                criteriaInfo.criteria.Field_Type__c != 'Picklist' &&
+                                                                                                criteriaInfo.criteria.Field_Type__c != 'DateTime'}">
+                        </apex:inputField>
+                        <apex:inputCheckbox value="{!criteriaInfo.useToday}" title="Current Date"
+                                        rendered="{!AND(OR(criteriaInfo.criteria.collect__Field_Type__c == 'Date', (criteriaInfo.criteria.collect__Field_Type__c == 'DateTime')), (criteriaInfo.criteria.collect__date__c == NULL))}">
+                            <apex:actionSupport action="{!setCriteriaDate}" event="onchange" reRender="criteriaPanelEdit">
+                                <apex:param assignTo="{!criteriaRowClicked}" value="{!criteriaNumber}" name="criteriaNumber"/>
+                            </apex:actionSupport>
+                        </apex:inputCheckbox>
+                        <apex:outputLabel rendered="{!AND(OR(criteriaInfo.criteria.collect__Field_Type__c == 'Date', (criteriaInfo.criteria.collect__Field_Type__c == 'DateTime')), (criteriaInfo.criteria.collect__date__c == NULL))}">
+                                        Current Date</apex:outputLabel>
+                        <apex:outputLabel rendered="{!AND(OR(criteriaInfo.criteria.Field_Type__c == 'Date', (criteriaInfo.criteria.Field_Type__c == 'DateTime')),
+                                        AND(NOT(criteriaInfo.useToday), (criteriaInfo.criteria.Date__c == NULL)))}"
+                                        style="font-weight: bold">&nbsp; | &nbsp;
+                        </apex:outputLabel>
+                        <apex:inputField value="{!criteriaInfo.criteria.collect__date__c}"
+                                        rendered="{!OR(criteriaInfo.criteria.collect__Field_Type__c == 'Date', (criteriaInfo.criteria.collect__Field_Type__c == 'DateTime')) && NOT(criteriaInfo.useToday)}">
+
+                            <apex:actionSupport event="onchange" action="{!setCriteriaDate}" reRender="criteriaPanelEdit">
+                                <apex:param assignTo="{!criteriaRowClicked}" value="{!criteriaNumber}" name="criteriaNumber"/>
+
+                            </apex:actionSupport>
+                        </apex:inputField>
+                        <apex:inputCheckbox value="{!criteriaInfo.criteria.collect__Value__c}" rendered="{!criteriaInfo.criteria.collect__Field_Type__c == 'Boolean'}"/>
+                        <apex:selectList value="{!criteriaInfo.criteria.collect__Value__c}" size="1" multiSelect="false" rendered="{!criteriaInfo.criteria.collect__Field_Type__c == 'Picklist'}">
+                            <apex:selectOptions value="{!criteriaInfo.objectFieldPicklistOptions}"/>
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column headerValue="Remove" rendered="{!AND(editMode,$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c != 'Mint')}">
+                        <apex:commandButton title="Remove Criteria"
+                                            value="Remove Criteria"
+                                            image="{!URLFOR($Resource.collect__Delete_Button_Red)}"
+                                            action="{!deleteCriteria}"
+                                            immediate="true"
+                                            reRender="messages, strategyDetailsPanelEdit, criteriaPanelEdit">
+                            <apex:param name="criteriaNumber" value="{!criteriaNumber}" assignTo="{!criteriaRowClicked}"/>
+                        </apex:commandButton>
+                    </apex:column>
+                    <apex:column rendered="{!AND(editMode,$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c = 'Mint')}">
+                        <apex:commandButton title="Remove Criteria"
+                                            value="Remove"
+                                            action="{!deleteCriteria}"
+                                            immediate="true"
+                                            reRender="messages, strategyDetailsPanelEdit, criteriaPanelEdit">
+                            <apex:param name="criteriaNumber" value="{!criteriaNumber}" assignTo="{!criteriaRowClicked}"/>
+                        </apex:commandButton>
+                    </apex:column>
+                    <apex:column >
+                        <apex:variable var="criteriaNumber" value="{!criteriaNumber + 1}"/>
+                    </apex:column>
+                </apex:pageblockTable>
+
+                <apex:panelGrid columns="1" id="addAnotherRow" rendered="{!AND(editMode,$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c != 'Mint')}">
+                    <apex:commandButton title="Add New Criteria"
+                                        value="Add New Criteria"
+                                        image="{!URLFOR($Resource.collect__Add_Button_Green)}"
+                                        action="{!addCriteria}"
+                                        immediate="false"
+                                        reRender="messages, strategyDetailsPanelEdit, criteriaPanelEdit"/>
+                </apex:panelGrid>
+                <apex:panelGrid columns="1" id="addAnotherRowForMint" rendered="{!AND(editMode,$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c = 'Mint')}">
+                    <apex:commandButton title="Add New Criteria"
+                                        value="Add"
+                                        action="{!addCriteria}"
+                                        immediate="false"
+                                        reRender="messages, strategyDetailsPanelEdit, criteriaPanelEdit"/>
+                </apex:panelGrid>
+
+            </apex:pageBlockSection>
+            </apex:outputPanel>
+
+            <!--EVALUATION CRITERIA - EDIT MODE-->
+            <!--EVALUATION CRITERIA - EDIT MODE-->
+            <!--EVALUATION CRITERIA - EDIT MODE-->
+            <apex:outputPanel id="ruleEvaluationPanelEdit" title="Criteria Evaluation Rule" rendered="{!editMode}">
+                <apex:pageBlockSection id="ruleEvaluationSectionEdit" title="Criteria Evaluation Rule" columns="1">
+                    <apex:pageBlockSectionItem helpText="Only AND, OR, ( and ) operators are allowed with operands as Numbers." LabelTitle="Evaluation Rule">
+                        <apex:outputText >Evaluation Rule</apex:outputtext>
+                        <apex:inputText value="{!strategyDetail.collect__Evaluation_Rule__c}" onkeyup="var u = this.value.toUpperCase(); if(this.value != u) {this.value = u;}" style="width:600px"/>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+
+            <!-----CRITERIA LIST PANEL - VIEW MODE ----->
+            <!-----CRITERIA LIST PANEL - VIEW MODE ----->
+            <!-----CRITERIA LIST PANEL - VIEW MODE ----->
+            <apex:outputPanel id="criteriaPanelView">
+            <apex:pageBlockSection columns="1" title="Criteria" collapsible="false" rendered="{!NOT(editMode)}">
+                <apex:pageblockTable id="criteriaTableView" value="{!criteriaInfoList}" var="criteriaInfo" headerClass="fixedHeader" styleClass="scrollableFixedHeader">
+                    <apex:variable var="criteriaNumber" value="{!-1}"/>
+                    <apex:column headerValue="Sequence">
+                        <label><b>{!criteriaNumber + 1}</b>
+                        </label>
+                    </apex:column>
+                    <apex:column headerValue="Object Name">
+                        <apex:outputField value="{!criteriaInfo.criteria.collect__Object_Label__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Field Name">
+                        <apex:outputField value="{!criteriaInfo.criteria.collect__Field_Label__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Operator">
+                        <apex:outputField value="{!criteriaInfo.criteria.collect__Operator__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Value">
+                        <apex:outputField value="{!criteriaInfo.criteria.collect__Value__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:variable var="criteriaNumber" value="{!criteriaNumber + 1}"/>
+                    </apex:column>
+                </apex:pageblockTable>
+            </apex:pageBlockSection>
+            </apex:outputPanel>
+
+            <!--EVALUATION CRITERIA - VIEW MODE-->
+            <!--EVALUATION CRITERIA - VIEW MODE-->
+            <!--EVALUATION CRITERIA - VIEW MODE-->
+            <apex:outputPanel id="ruleEvaluationPanelView" title="Criteria Evaluation Rule" rendered="{!NOT(editMode)}">
+                <apex:pageBlockSection id="ruleEvaluationSectionView" title="Criteria Evaluation Rule" columns="1">
+                    <apex:outputField value="{!strategyDetail.collect__Evaluation_Rule__c}" style="width:600px"/>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+
+            <!-----COLLECTION CONFIGURATION ACTIONS LIST PANEL - EDIT MODE ----->
+            <!-----COLLECTION CONFIGURATION ACTIONS LIST PANEL - EDIT MODE ----->
+            <!-----COLLECTION CONFIGURATION ACTIONS LIST PANEL - EDIT MODE ----->
+            <apex:outputPanel id="actionsPanelEdit">
+            <apex:pageBlockSection columns="1" title="Actions" collapsible="false" rendered="{!editMode}">
+                <apex:pageblockTable id="actionsTableEdit" value="{!actionInfoList}" var="actionInfo" headerClass="fixedHeader" styleClass="scrollableFixedHeader">
+                    <apex:variable var="actionNumber" value="{!-1}"/>
+                    <apex:column headerValue="Object Name" rendered="{!IF(strategyDetail.collect__Exclusion__c == true, false, true)}">
+                        <apex:selectList size="1" value="{!actionInfo.action.collect__Object_API_Name__c}" onchange="passActionObjectInfo(this.options[this.selectedIndex].value, {!actionNumber});" disabled="{!IF(strategyDetail.collect__Exclusion__c == true, true, false)}">
+                            <apex:selectOptions value="{!actionInfo.objectNamesOptions}"/>
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column headerValue="Field Name" rendered="{!IF(strategyDetail.collect__Exclusion__c == true, false, true)}">
+                        <apex:selectList size="1" value="{!actionInfo.action.collect__Field_API_Name__c}" onchange="passActionFieldInfo(this.options[this.selectedIndex].value, {!actionNumber});" disabled="{!IF(strategyDetail.collect__Exclusion__c == true, true, false)}">
+                            <apex:selectOptions value="{!actionInfo.objectFieldsOptions}"/>
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column headerValue="Operator" rendered="{!IF(strategyDetail.collect__Exclusion__c == true, false, true)}">
+                        <apex:inputField value="{!actionInfo.action.collect__Operator__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Value" rendered="{!IF(strategyDetail.collect__Exclusion__c == true, false, true)}">
+                        <apex:inputField value="{!actionInfo.action.collect__Value__c}" rendered="{!actionInfo.action.Field_Type__c != 'Date' &&
+                                                                                           actionInfo.action.Field_Type__c != 'Boolean' &&
+                                                                                           actionInfo.action.Field_Type__c != 'Picklist' &&
+                                                                                           actionInfo.action.Field_Type__c != 'DateTime'}"/>
+                        <apex:inputCheckbox value="{!actionInfo.useToday}" title="Current Date" rendered="{!(actionInfo.action.Field_Type__c == 'Date' ||
+                                                                                                             actionInfo.action.Field_Type__c == 'DateTime') &&
+                                                                                                            actionInfo.action.Date__c == NULL}">
+                            <apex:actionSupport action="{!setActionDate}" event="onchange" reRender="actionsPanelEdit">
+                                  <apex:param assignTo="{!actionRowClicked}" value="{!actionNumber}" name="actionNumber"/>
+                            </apex:actionSupport>
+                        </apex:inputCheckbox>
+                        <apex:outputLabel rendered="{!(actionInfo.action.Field_Type__c == 'Date' ||
+                                                       actionInfo.action.Field_Type__c == 'DateTime') &&
+                                                      actionInfo.action.Date__c == NULL}">
+                            Current Date
+                        </apex:outputLabel>
+                        <apex:outputLabel rendered="{!(actionInfo.action.Field_Type__c == 'Date' ||
+                                                       actionInfo.action.Field_Type__c == 'DateTime') &&
+                                                      (NOT(actionInfo.useToday) && actionInfo.action.Date__c == NULL)}" style="font-weight: bold">
+                            &nbsp;|&nbsp;
+                        </apex:outputLabel>
+                        <apex:inputField value="{!actionInfo.action.collect__Date__c}" rendered="{!(actionInfo.action.Field_Type__c == 'Date' ||
+                                                                                           actionInfo.action.Field_Type__c == 'DateTime') &&
+                                                                                          NOT(actionInfo.useToday)}">
+                             <apex:actionSupport event="onchange" action="{!setActionDate}"  reRender="actionsPanelEdit">
+                                 <apex:param assignTo="{!actionRowClicked}" value="{!actionNumber}" name="actionNumber"/>
+                             </apex:actionSupport>
+                        </apex:inputField>
+                        <apex:inputCheckbox value="{!actionInfo.action.collect__Value__c}" rendered="{!actionInfo.action.collect__Field_Type__c == 'Boolean'}"/>
+                        <apex:selectList value="{!actionInfo.action.collect__Value__c}" size="1" rendered="{!actionInfo.action.collect__Field_Type__c == 'Picklist'}">
+                            <apex:selectOptions value="{!actionInfo.objectFieldPickListOptions}"/>
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column headerValue="Action">
+                        <apex:inputField value="{!actionInfo.action.collect__Action__c}">
+                            <apex:actionSupport event="onchange" action="{!setContactPreferenceAndManualActivity}" reRender="actionsPanelEdit">
+                                 <apex:param assignTo="{!actionRowClicked}" value="{!actionNumber}" name="actionNumber"/>
+                             </apex:actionSupport>
+                        </apex:inputField>
+                    </apex:column>
+                    <apex:column headerValue="Manual Activity">
+                        <apex:inputCheckBox value="{!actionInfo.action.collect__Manual_Activity__c}" disabled="{!IF(strategyDetail.collect__Exclusion__c == false && !(actionInfo.action.collect__Action__c == 'Assign to Queue'), false, true)}">
+                            <apex:actionSupport event="onchange" reRender="actionsPanelEdit"/>
+                        </apex:inputCheckBox>
+                    </apex:column>
+                    <apex:column headerValue="Apply Contact Preference">
+                        <apex:inputCheckBox value="{!actionInfo.action.collect__Apply_Contact_Preference__c}" disabled="{!IF(strategyDetail.Exclusion__c == false &&
+                                                                                                                    (actionInfo.action.Action__c == 'Letter' ||
+                                                                                                                     actionInfo.action.Action__c == 'HTML Email' ||
+                                                                                                                     actionInfo.action.Action__c == 'Email' ||
+                                                                                                                     actionInfo.action.Action__c == 'Message' ||
+                                                                                                                     actionInfo.action.Action__c == 'Text Email') && actionInfo.action.Manual_Activity__c == false, false, true)}"/>
+                    </apex:column>
+                    <apex:column headerValue="Action Details" rendered="{!IF(strategyDetail.collect__Exclusion__c == true, false, true)}">
+                        <apex:selectList multiselect="false" size="1" value="{!actionInfo.action.collect__Template__c}" onchange="passActionDetailsId(this.options[this.selectedIndex].value, {!actionNumber});" rendered="{!IF((actionInfo.action.Action__c == 'Letter' ||
+                                                                                                                                                                                                                       actionInfo.action.Action__c == 'HTML Email' ||
+                                                                                                                                                                                                                       actionInfo.action.Action__c == 'Email' ||
+                                                                                                                                                                                                                       actionInfo.action.Action__c == 'Message' ||
+                                                                                                                                                                                                                       actionInfo.action.Action__c == 'Text Email') && actionInfo.action.Manual_Activity__c == false && isNotifyEnabled, true, false)}">
+                            <apex:selectOptions value="{!textMessageOptions}"/>
+                        </apex:selectList>
+                        <apex:selectList multiselect="false" size="1" value="{!actionInfo.action.collect__Template_common__c}" onchange="passActionDetailsId(this.options[this.selectedIndex].value, {!actionNumber});" rendered="{!IF((actionInfo.action.Action__c == 'Letter' ||
+                                                                                                                                                                                                                       actionInfo.action.Action__c == 'HTML Email' ||
+                                                                                                                                                                                                                       actionInfo.action.Action__c == 'Email' ||
+                                                                                                                                                                                                                       actionInfo.action.Action__c == 'Message' ||
+                                                                                                                                                                                                                       actionInfo.action.Action__c == 'Text Email') && actionInfo.action.Manual_Activity__c == false && NOT(isNotifyEnabled), true, false)}">
+                            <apex:selectOptions value="{!textMessageOptions}"/>
+                        </apex:selectList>
+                        <apex:selectList multiselect="false" size="1" value="{!actionInfo.action.collect__Queue__c}" onchange="passActionDetailsId(this.options[this.selectedIndex].value, {!actionNumber});" rendered="{!IF(actionInfo.action.collect__Action__c == 'Assign to Queue', true, false)}">
+                            <apex:selectOptions value="{!queueOptions}"/>
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column headerValue="Remove" rendered="{!AND(editMode,$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c != 'Mint')}">
+                        <apex:commandButton title="Remove Action"
+                                            value="Remove Action"
+                                            image="{!URLFOR($Resource.collect__Delete_Button_Red)}"
+                                            action="{!deleteAction}" immediate="true"
+                                            reRender="messages, strategyDetailsPanelEdit, actionsPanelEdit">
+                            <apex:param name="removeRec" value="{!actionNumber}" assignTo="{!actionRowClicked}"/>
+                        </apex:commandButton>
+                    </apex:column>
+                    <apex:column rendered="{!AND(editMode,$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c = 'Mint')}">
+                        <apex:commandButton title="Remove Action"
+                                            value="Remove"
+                                            action="{!deleteAction}"
+                                            immediate="true"
+                                            reRender="messages, strategyDetailsPanelEdit, actionsPanelEdit">
+                            <apex:param name="removeRec" value="{!actionNumber}" assignTo="{!actionRowClicked}"/>
+                        </apex:commandButton>
+                    </apex:column>
+                    <apex:column >
+                        <apex:variable var="actionNumber" value="{!actionNumber + 1}"/>
+                    </apex:column>
+                </apex:pageblockTable>
+
+                <apex:panelGrid columns="1" id="addActionRow" rendered="{!AND(editMode,$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c != 'Mint')}">
+                    <apex:commandButton title="Add New Action"
+                                        value="Add New Action"
+                                        image="{!URLFOR($Resource.collect__Add_Button_Green)}"
+                                        action="{!addActionRow}" immediate="true"
+                                        reRender="messages, strategyDetailsPanelEdit, actionsPanelEdit"/>
+                </apex:panelGrid>
+                <apex:panelGrid columns="1" id="addActionRowForMint" rendered="{!AND(editMode,$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c = 'Mint')}">
+                    <apex:commandButton title="Add New Action"
+                                        value="Add"
+                                        action="{!addActionRow}" immediate="true"
+                                        reRender="messages, strategyDetailsPanelEdit, actionsPanelEdit"/>
+                </apex:panelGrid>
+            </apex:pageBlockSection>
+            </apex:outputPanel>
+
+            <!-----COLLECTION CONFIGURATION ACTIONS LIST PANEL - VIEW MODE ----->
+            <!-----COLLECTION CONFIGURATION ACTIONS LIST PANEL - VIEW MODE ----->
+            <!-----COLLECTION CONFIGURATION ACTIONS LIST PANEL - VIEW MODE ----->
+            <apex:outputPanel id="actionsPanelView">
+            <apex:pageBlockSection columns="1" title="Actions" collapsible="false" rendered="{!NOT(editMode)}">
+                <apex:pageblockTable id="actionsTableView" value="{!actionInfoList}" var="actionInfo" headerClass="fixedHeader" styleClass="scrollableFixedHeader">
+                    <apex:variable var="actionNumber" value="{!-1}"/>
+                    <apex:column headerValue="Object Name" rendered="{!IF(strategyDetail.collect__Exclusion__c == true, false, true)}">
+                        <apex:outputField value="{!actionInfo.action.collect__Object_Label__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Field Name" rendered="{!IF(strategyDetail.collect__Exclusion__c == true, false, true)}">
+                        <apex:outputField value="{!actionInfo.action.collect__Field_Label__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Operator" rendered="{!IF(strategyDetail.collect__Exclusion__c == true, false, true)}">
+                        <apex:outputField value="{!actionInfo.action.collect__Operator__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Value" rendered="{!IF(strategyDetail.collect__Exclusion__c == true, false, true)}">
+                        <apex:outputField value="{!actionInfo.action.collect__Value__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Action">
+                        <apex:outputField value="{!actionInfo.action.collect__Action__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Manual Activity">
+                        <apex:outputField value="{!actionInfo.action.collect__Manual_Activity__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Apply Contact Preference">
+                        <apex:outputField value="{!actionInfo.action.collect__Apply_Contact_Preference__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Action Details" rendered="{!IF(strategyDetail.collect__Exclusion__c == true, false, true)}">
+                        <apex:selectList multiselect="false" size="1" disabled="true" value="{!actionInfo.action.collect__Template_common__c}" rendered="{!IF((actionInfo.action.Action__c == 'Letter' ||
+                                                                                                                                              actionInfo.action.Action__c == 'HTML Email' ||
+                                                                                                                                              actionInfo.action.Action__c == 'Email' ||
+                                                                                                                                              actionInfo.action.Action__c == 'Message' ||
+                                                                                                                                              actionInfo.action.Action__c == 'Text Email') && NOT(isNotifyEnabled), true, false)}">
+                            <apex:selectOptions value="{!textMessageOptions}"/>
+                        </apex:selectList>
+                        <apex:selectList multiselect="false" size="1" disabled="true" value="{!actionInfo.action.collect__Template__c}" rendered="{!IF((actionInfo.action.Action__c == 'Letter' ||
+                                                                                                                                              actionInfo.action.Action__c == 'HTML Email' ||
+                                                                                                                                              actionInfo.action.Action__c == 'Email' ||
+                                                                                                                                              actionInfo.action.Action__c == 'Message' ||
+                                                                                                                                              actionInfo.action.Action__c == 'Text Email') && isNotifyEnabled, true, false)}">
+                            <apex:selectOptions value="{!textMessageOptions}"/>
+                        </apex:selectList>
+                        <apex:selectList multiselect="false" size="1" disabled="true" value="{!actionInfo.action.collect__Queue__c}" rendered="{!IF(actionInfo.action.collect__Action__c == 'Assign to Queue', true, false)}">
+                            <apex:selectOptions value="{!queueOptions}"/>
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column >
+                        <apex:variable var="actionNumber" value="{!actionNumber + 1}"/>
+                    </apex:column>
+                </apex:pageblockTable>
+            </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+    </apex:outputPanel>
+</apex:page>

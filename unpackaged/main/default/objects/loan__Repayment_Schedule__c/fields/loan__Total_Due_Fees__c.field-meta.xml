@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Total_Due_Fees__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Sum of all the fees that is due for each installment</inlineHelpText>
+    <label>Total Due Fees</label>
+    <summarizedField>loan__Due_Fee__c.loan__Due_Fee_Amount__c</summarizedField>
+    <summaryForeignKey>loan__Due_Fee__c.loan__Repayment_Schedule__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

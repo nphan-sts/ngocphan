@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Net_Income_Verification</fullName>
+    <active>false</active>
+    <description>Net Income Verification Validation</description>
+    <errorConditionFormula>AND( TEXT(Income_Verification_Flag__c) == 'PASS', Net_Variance__c != NULL, Net_Variance__c &lt; -0.15)</errorConditionFormula>
+    <errorMessage>Variance is less than -15%, Income Verification cannot be completed</errorMessage>
+</ValidationRule>

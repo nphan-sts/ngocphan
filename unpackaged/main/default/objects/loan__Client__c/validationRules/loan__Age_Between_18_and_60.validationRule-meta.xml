@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Age_Between_18_and_60</fullName>
+    <active>true</active>
+    <errorConditionFormula>OR
+      ((IF(
+             MONTH(TODAY())&gt;MONTH( loan__Date_of_Birth__c ),
+             YEAR(TODAY())-YEAR(loan__Date_of_Birth__c ),
+             IF(AND(MONTH(TODAY()) = MONTH(loan__Date_of_Birth__c ), DAY(TODAY()) &gt;=      
+             DAY(loan__Date_of_Birth__c )),YEAR(TODAY())-YEAR(loan__Date_of_Birth__c),
+             (YEAR(TODAY())-YEAR(loan__Date_of_Birth__c ))-1)
+             )
+             &lt;  18) ,
+       (IF(
+            MONTH(TODAY())&gt;MONTH( loan__Date_of_Birth__c ),
+            YEAR(TODAY())-YEAR(loan__Date_of_Birth__c ),
+            IF(AND(MONTH(TODAY()) = MONTH(loan__Date_of_Birth__c ), DAY(TODAY()) &gt;= 
+            DAY(loan__Date_of_Birth__c )),YEAR(TODAY())-YEAR(loan__Date_of_Birth__c),
+           (YEAR(TODAY())-YEAR(loan__Date_of_Birth__c ))-1)
+           )
+           &gt;   60))</errorConditionFormula>
+    <errorDisplayField>loan__Date_of_Birth__c</errorDisplayField>
+    <errorMessage>Age should be between18 to 60 years</errorMessage>
+</ValidationRule>

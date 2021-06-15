@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Total_Payments_Derived__c</fullName>
+    <defaultValue>0</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Sum of all the rental payments made by customer. Payment Amount * Term</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Sum of all the rental payments made by customer.</inlineHelpText>
+    <label>Total Payments</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

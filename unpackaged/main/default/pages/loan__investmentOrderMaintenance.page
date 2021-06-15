@@ -1,0 +1,258 @@
+<apex:page lightningStylesheets="true" controller="loan.InvestmentOrderMaintenanceController" tabStyle="loan__Loan_Account__c">
+
+<apex:include pageName="clcommon__mintTheme"/>
+
+    
+    <apex:sectionHeader title="Investment Order Maintenance" />
+    <script type="text/javascript">
+        function enterKeyPressed(e) { 
+            formSubmit();
+        }
+    </script>
+    <apex:form id="fractionalizationForm" onkeypress="if(event.keyCode == 13) enterKeyPressed(event); else return true; return false;" rendered="{!IF(activated == true && showPage == true, true, false)}">
+       <apex:actionFunction name="formSubmit" action="{!validate}" reRender="fractionalizationForm" />
+       <apex:pageblock tabstyle="Account"> 
+            <apex:pageBlockSection columns="2" id="loanDetails" title="Loan" showHeader="true" collapsible="false">                     
+                <apex:outputText label="Loan"><apex:outputLink id="loanDetails" title="Loan" value="apex/tabbedLoanAccount?id={!loan.id}"> {!loan.name} </apex:outputLink></apex:outputText>
+                <apex:outputField id="loanAmount" label="Loan Amount"  value="{!loan.loan__Loan_Amount__c}"/>
+                <apex:outputField id="loanPrincipalRemaining" label="Principal Remaining"  value="{!loan.loan__Principal_Remaining__c}"/>
+                <apex:outputField id="loanInterestRate" label="Interest Rate"  value="{!loan.loan__Interest_Rate__c}"/>
+                <apex:outputText id="fractionalizationStatus" label="Fractionalization Status">{!loan.loan__Fractionalization_Status__c}</apex:outputText> 
+                <apex:outputField id="loanContractDate" label="Contract Date" value="{!loan.loan__Disbursal_Date__c}"/>
+                
+            </apex:pageBlockSection> 
+        </apex:pageblock>
+        <apex:pageBlock id="headerPageBlock" mode="edit">
+            <apex:pageMessages />
+             
+            <apex:pageBlockButtons rendered="{!activated == true}">
+                <c:BusyButton actionTo="{!validate}" name="Validate" disabled="{!listEmpty && inactiveListEmpty}"
+                    id="validateButton" busyname="Validating.." reRenderTo="fractionalizationForm"
+                    oncomplete="javascript:formReset()"/>
+                
+                <c:BusyButton actionTo="{!addNewRecord}" name="Add"
+                    id="addButton" busyname="Adding.." reRenderTo="fractionalizationForm"
+                    oncomplete="javascript:formReset()"/>
+                
+                 <c:BusyButton name="Save" disabled="{!listEmpty && inactiveListEmpty}" actionTo="{!save}"
+                    id="saveButton" busyname="Saving.." reRenderTo="fractionalizationForm"
+                    oncomplete="javascript:formReset()"/>                 
+                 <apex:commandButton value="Cancel" action="{!cancel}"/>                 
+            </apex:pageBlockButtons> 
+            
+            <apex:pageBlockSection columns="1" id="invOrderList" title="Active Investment Orders" collapsible="false" 
+                                        rendered="{!IF(listEmpty == false || (listEmpty && inActiveListEmpty), true, false)}">
+                <apex:outputPanel layout="block" styleClass="container">
+                    <apex:outputText rendered="IF(listEmpty && inActiveListEmpty, true, false)"> No Investment orders to display.</apex:outputText>                 
+                    <apex:pageblockTable value="{!investmentOrders}" id="invOrderTable" var="invOrder" >
+                       <apex:variable value="{!-1}" var="activeRowNumber" />
+                        <apex:column >
+                                <apex:commandButton rendered="{!invOrder.isTotal == false}" status="toggling" value="Deactivate" action="{!deActivate}" reRender="headerPageBlock">
+                                    <apex:param name="toggleRec" value="{!activeRowNumber}" assignTo="{!numberOfRowClicked}"/>
+                                    <apex:param name="isActive" value="{!trueTest}" assignTo="{!isActiveRowClicked}"/>                                     
+                                </apex:commandButton>
+                                <center>
+                                        <apex:actionStatus id="toggling">
+                                            <apex:facet name="start">
+                                               <apex:outputText >{!IF(invOrder.investmentOrd.loan__Enabled_Flag__c, 'Deactivating...', 'Activating..')}</apex:outputText>
+                                            </apex:facet>
+                                        </apex:actionStatus>
+                                    </center>                                
+                            </apex:column>
+                       <apex:column >
+                           <apex:facet name="header">Investor Loan ID</apex:facet> 
+
+                           <apex:commandLink id="investorLoanId"  action="{!openDetailsPage}" value="{!invOrder.investmentOrd.Name}" target="_blank" rendered="{!invOrder.isSaved && invOrder.isTotal == false}">                               
+                               <apex:param name="ioNumber" value="{!activeRowNumber}" assignTo="{!numberOfRowClicked}"/>
+                               <apex:param name="activeIO" value="{!trueTest}" assignTo="{!isActiveRowClicked}"/>                                
+                           </apex:commandLink>
+                       </apex:column>
+                       <apex:column >
+                            <apex:facet name="header">Investor</apex:facet>                           
+                            <apex:outputField id="investor" label="Investor" value="{!invOrder.investmentOrd.loan__Account__c}" rendered="{!invOrder.isSaved && invOrder.isTotal == false}"/>
+                            <apex:inputField id="addedInvestor" label="Investor" value="{!invOrder.investmentOrd.loan__Account__c}" rendered="{!invOrder.isSaved == false && invOrder.isTotal == false}">
+                                <apex:actionSupport status="investorChange" action="{!getServiceRate}" event="onchange" reRender="invOrderTable">
+                                    <apex:param name="amount" value="{!activeRowNumber}" assignTo="{!numberOfRowClicked}"/>
+                                </apex:actionSupport> 
+                            </apex:inputField>
+                            <apex:outputLabel value="Total" style="font-weight:bold" rendered="{!invOrder.isTotal}"></apex:outputLabel>
+                          </apex:column> 
+                          <apex:column >
+                              <apex:facet name="header">Investment</apex:facet>
+                              <apex:outputField id="investment" label="Investment" value="{!invOrder.investmentOrd.loan__Investment_Amount__c}"  rendered="{!invOrder.isSaved && invOrder.isTotal == false}"/>
+                              <apex:inputField id="addedInvestment" label="Investment" value="{!invOrder.investmentOrd.loan__Investment_Amount__c}"  rendered="{!invOrder.isSaved == false && invOrder.isTotal == false}">
+                                  <apex:actionSupport status="shareChange" action="{!calculateShare}" event="onchange" reRender="invOrderTable">
+                                        <apex:param name="amount" value="{!activeRowNumber}" assignTo="{!numberOfRowClicked}"/>
+                                        <apex:param name="isActive" value="{!trueTest}" assignTo="{!isActiveRowClicked}"/>  
+                                    </apex:actionSupport> 
+                              </apex:inputField>
+                              <center>
+                                  <apex:actionStatus id="investmentChange">
+                                        <apex:facet name="start">
+                                            <apex:image value="/img/loading32.gif" style="height:15px;" />
+                                        </apex:facet>
+                                    </apex:actionStatus>
+                               </center>
+                               <apex:outputLabel value="{!totalAmount}" style="font-weight:bold" rendered="{!invOrder.isTotal}"/>
+                          </apex:column> 
+                         <apex:column >
+                             <apex:facet name="header">Remaining Balance</apex:facet>
+                             <apex:outputField id="remainingBalance" label="Remaining" value="{!invOrder.investmentOrd.loan__Remaining_Investment_Amount__c}" rendered="{!invOrder.isSaved && invOrder.isTotal == false}"/>
+                         </apex:column>
+                         <apex:column >
+                              <apex:facet name="header">Share</apex:facet>
+                                <apex:outputText rendered="{!invOrder.isSaved && invOrder.isTotal == false}">{!invOrder.share}%</apex:outputText>
+                                <!--<apex:outputText id="share" label="Share" value="{!invOrder.investmentOrd.Share__c}"  rendered="{!invOrder.isSaved && invOrder.isTotal == false}"/>-->
+                                <apex:inputText id="addedShare" value="{!invOrder.share}"  rendered="{!invOrder.isSaved == false  && invOrder.isTotal == false}">
+                                <!--<apex:inputField id="addedShare" label="Share" value="{!invOrder.investmentOrd.Share__c}"  rendered="{!invOrder.isSaved == false  && invOrder.isTotal == false}">-->
+                                    <apex:actionSupport status="investmentChange" action="{!calculateInvestmentAmount}" event="onchange" reRender="invOrderTable">
+                                      <apex:param name="share" value="{!activeRowNumber}" assignTo="{!numberOfRowClicked}"/>
+                                      <apex:param name="isActive" value="{!trueTest}" assignTo="{!isActiveRowClicked}"/>  
+                                  </apex:actionSupport>
+                                </apex:inputText>   
+                                <center>
+                                    <apex:actionStatus id="shareChange">
+                                        <apex:facet name="start">
+                                        <apex:image value="/img/loading32.gif" style="height:15px;" />
+                                        </apex:facet>
+                                    </apex:actionStatus>
+                                </center>
+                                <apex:outputLabel value="{!totalShare}%"  style="font-weight:bold" rendered="{!invOrder.isTotal}"></apex:outputlabel>
+                          </apex:column> 
+                         
+                          <apex:column > 
+                           <apex:facet name="header">Effective Date </apex:facet>
+                            <apex:outputField label="Start Date" value="{!invOrder.investmentOrd.loan__Investor_Start_Date__c}" rendered="{!invOrder.isSaved && invOrder.isTotal == false}"/>
+                            <apex:inputField label="Start Date" value="{!invOrder.investmentOrd.loan__Investor_Start_Date__c}" rendered="{!invOrder.isSaved == false && invOrder.isTotal == false}"/>
+                          </apex:column> 
+                          <apex:column >     
+                           <apex:facet name="header">Certificate Rate </apex:facet>            
+                            <apex:inputField label="Certificate Rate" value="{!invOrder.investmentOrd.loan__Certificate_Rate__c}" required="true" rendered="{!invOrder.isTotal == false}"/>                         
+                            
+                           </apex:column> 
+                           
+                           <apex:column > 
+                               <apex:facet name="header">Service Rate </apex:facet>   
+                               <apex:inputField label="Service Rate" value="{!invOrder.investmentOrd.loan__Service_Rate__c}" rendered="{!invOrder.isTotal == false}"/>
+                           </apex:column>
+                        <!--Nitin S. added this column to handle Investor Amz Schedule genration-->
+                          <apex:column > 
+                               <apex:facet name="header">Generate AMZ Schedule </apex:facet>   
+                              <apex:inputField label="Amortization Schedule" value="{!invOrder.investmentOrd.loan__Generate_Amortization_Schedule__c}" rendered="{!invOrder.isSaved == false && invOrder.isTotal == false}"/>
+                              <apex:outputField label="Amortization Schedule" value="{!invOrder.investmentOrd.loan__Generate_Amortization_Schedule__c}" rendered="{!invOrder.isSaved && invOrder.isTotal == false}"/>
+                                                                   
+                          </apex:column>
+                           
+                          <apex:column >
+                            <apex:variable var="activeRowNumber" value="{!activeRowNumber+1}" />
+                           </apex:column>
+                    
+                  </apex:pageblockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>                  
+            
+            <apex:pageBlockSection columns="1" id="inactiveInvOrderList" title="Inactive Investment Orders" collapsible="false" rendered="{!inactiveListEmpty == false}">
+                <apex:outputPanel layout="block" styleClass="container" >                   
+                    <apex:pageblockTable value="{!inactiveInvestmentOrders}"
+                        id="inactiveInvOrderTable" var="inactiveInvOrder" headerClass="fixedHeader"
+                        styleClass="scrollableFixedHeader">
+                       <apex:variable value="{!-1}" var="inactiveRowNumber" />
+                       <!--<apex:column rendered="{!activated}">
+                                <apex:commandButton rendered="{!inactiveInvOrder.isTotal == false}"  status="activating" value="Activate" action="{!activate}" reRender="headerPageBlock">
+                                    <apex:param name="toggleRec" value="{!inactiveRowNumber}" assignTo="{!numberOfRowClicked}"/>   
+                                    <apex:param name="isActive" value="{!falseTest}" assignTo="{!isActiveRowClicked}"/>                                    
+                                </apex:commandButton>
+                                <center>
+                                        <apex:actionStatus id="activating">
+                                            <apex:facet name="start">
+                                               <apex:outputText >{!IF(inactiveInvOrder.investmentOrd.Enabled_Flag__c, 'Deactivating...', 'Activating..')}</apex:outputText>
+                                            </apex:facet>
+                                        </apex:actionStatus>
+                                    </center>
+                                
+                            </apex:column>-->
+                        <apex:column >
+                           <apex:facet name="header">Investor Loan ID</apex:facet> 
+                           <apex:commandLink id="inactiveInvestorLoanId" action="{!openDetailsPage}" target="_blank" rendered="{!inactiveInvOrder.isSaved && inactiveInvOrder.isTotal == false}">{!inactiveInvOrder.investmentOrd.Name}
+                               <apex:param name="inactiveIONumber" value="{!inactiveRowNumber}" assignTo="{!numberOfRowClicked}"/>   
+                               <apex:param name="inactiveIO" value="{!falseTest}" assignTo="{!isActiveRowClicked}"/>
+                           </apex:commandLink>
+                       </apex:column>
+                       <apex:column >
+                            <apex:facet name="header">Investor</apex:facet>                           
+                            <apex:outputField id="inactiveInvestor" label="Investor" value="{!inactiveInvOrder.investmentOrd.loan__Account__c}" rendered="{!inactiveInvOrder.isSaved && inactiveInvOrder.isTotal == false}"/>
+                            <apex:inputField id="addedInactiveInvestor" label="Investor" value="{!inactiveInvOrder.investmentOrd.loan__Account__c}" rendered="{!inactiveInvOrder.isSaved == false && inactiveInvOrder.isTotal == false}"/>
+                            <apex:outputLabel value="Total" style="font-weight:bold" rendered="{!inactiveInvOrder.isTotal}"></apex:outputLabel>
+                          </apex:column> 
+                          <apex:column >
+                              <apex:facet name="header">Investment</apex:facet>
+                              <apex:outputField id="inactiveInvestment" label="Investment" value="{!inactiveInvOrder.investmentOrd.loan__Investment_Amount__c}"  rendered="{!inactiveInvOrder.isSaved  && inactiveInvOrder.isTotal == false}"/>
+                              <apex:inputField id="addedInactiveInvestment" label="Investment" value="{!inactiveInvOrder.investmentOrd.loan__Investment_Amount__c}"  rendered="{!inactiveInvOrder.isSaved == false  && inactiveInvOrder.isTotal == false}">
+                                  <apex:actionSupport status="shareChange" action="{!calculateShare}" event="onchange" reRender="inactiveInvOrderTable">
+                                        <apex:param name="amount" value="{!inactiveRowNumber}" assignTo="{!numberOfRowClicked}"/>
+                                        <apex:param name="isActive" value="{!falseTest}" assignTo="{!isActiveRowClicked}"/>                                        
+                                    </apex:actionSupport> 
+                              </apex:inputField>
+                              <center>
+                                  <apex:actionStatus id="investmentChange">
+                                        <apex:facet name="start">
+                                            <apex:image value="/img/loading32.gif" style="height:15px;" />
+                                        </apex:facet>
+                                    </apex:actionStatus>
+                               </center>                               
+                               <apex:outputLabel value="{!totalInactiveAmount}" style="font-weight:bold" rendered="{!inactiveInvOrder.isTotal}"/>
+                          </apex:column> 
+                         <apex:column >
+                             <apex:facet name="header">Remaining Balance</apex:facet>
+                             <apex:outputField id="inactiveRemainingBalance" label="Remaining" value="{!inactiveInvOrder.investmentOrd.loan__Remaining_Investment_Amount__c}" rendered="{!inactiveInvOrder.isSaved && inactiveInvOrder.isTotal == false}"/>
+                         </apex:column> 
+                         <apex:column >
+                              <apex:facet name="header">Share</apex:facet>
+                                <apex:outputText id="inactiveShare" label="Share" rendered="{!inactiveInvOrder.isSaved && inactiveInvOrder.isTotal == false}">{!inactiveInvOrder.share}%</apex:outputText>
+                               <!--<apex:outputField id="inactiveShare" label="Share" value="{!inactiveInvOrder.investmentOrd.Share__c}"  rendered="{!inactiveInvOrder.isSaved && inactiveInvOrder.isTotal == false}"/>-->
+                                <apex:inputText id="addedInactiveShare" label="Share" value="{!inactiveInvOrder.share}"  rendered="{!inactiveInvOrder.isSaved == false && inactiveInvOrder.isTotal == false}">
+                                <!--<apex:inputField id="addedInactiveShare" label="Share" value="{!inactiveInvOrder.investmentOrd.Share__c}"  rendered="{!inactiveInvOrder.isSaved == false && inactiveInvOrder.isTotal == false}">-->
+                                    <apex:actionSupport status="investmentChange" action="{!calculateInvestmentAmount}" event="onchange" reRender="inactiveInvOrderTable">
+                                      <apex:param name="share" value="{!inactiveRowNumber}" assignTo="{!numberOfRowClicked}"/>
+                                      <apex:param name="isActive" value="{!falseTest}" assignTo="{!isActiveRowClicked}"/>
+                                  </apex:actionSupport>
+                                </apex:inputText>   
+                                <center>
+                                    <apex:actionStatus id="shareChange">
+                                        <apex:facet name="start">
+                                        <apex:image value="/img/loading32.gif" style="height:15px;" />
+                                        </apex:facet>
+                                    </apex:actionStatus>
+                                </center>
+                                <apex:outputLabel value="{!totalInactiveShare}%"  style="font-weight:bold" rendered="{!inactiveInvOrder.isTotal}"></apex:outputlabel>                                         
+                          </apex:column> 
+                         
+                          <apex:column > 
+                           <apex:facet name="header">Effective Date </apex:facet>
+                            <apex:outputField label="Start Date" value="{!inactiveInvOrder.investmentOrd.loan__Investor_Start_Date__c}" rendered="{!inactiveInvOrder.isSaved && inactiveInvOrder.isTotal == false}"/>
+                            <apex:inputField label="Start Date" value="{!inactiveInvOrder.investmentOrd.loan__Investor_Start_Date__c}" rendered="{!inactiveInvOrder.isSaved == false && inactiveInvOrder.isTotal == false}"/>
+                          </apex:column> 
+                          <apex:column >     
+                           <apex:facet name="header">Certificate Rate </apex:facet>            
+                            <apex:inputField label="Certificate Rate" value="{!inactiveInvOrder.investmentOrd.loan__Certificate_Rate__c}" required="true" rendered="{!inactiveInvOrder.isSaved == false && inactiveInvOrder.isTotal == false}"/>                        
+                            <apex:outputField label="Certificate Rate" value="{!inactiveInvOrder.investmentOrd.loan__Certificate_Rate__c}" rendered="{!inactiveInvOrder.isSaved && inactiveInvOrder.isTotal == false}"/>    
+                           </apex:column> 
+                           
+                           <apex:column > 
+                               <apex:facet name="header">Sevice Rate </apex:facet>   
+                               <apex:inputField label="Service Rate" value="{!inactiveInvOrder.investmentOrd.loan__Service_Rate__c}" rendered="{!inactiveInvOrder.isSaved == false && inactiveInvOrder.isTotal == false}"/>
+                               <apex:outputField label="Service Rate" value="{!inactiveInvOrder.investmentOrd.loan__Service_Rate__c}" rendered="{!inactiveInvOrder.isSaved && inactiveInvOrder.isTotal == false}"/>
+                           </apex:column>
+                           
+                          <apex:column >
+                            <apex:variable var="inactiveRowNumber" value="{!inactiveRowNumber+1}" />
+                           </apex:column>
+                    
+                  </apex:pageblockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>                  
+         </apex:pageBlock>
+    </apex:form>          
+    <apex:outputLabel rendered="{!IF(showPage == true && loan.Fractionalization_Status__c != 'Active', true, false) }"> Fractionlization is not Active yet. Please use Initial setup page.</apex:outputLabel>
+    <apex:outputLabel rendered="{!IF(showPage == false , true, false) }"> Investment Orders cannot be modified. </apex:outputLabel>
+</apex:page>

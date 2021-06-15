@@ -1,0 +1,17 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" docType="html-5.0" showHeader="false" standardStylesheets="false" controller="genesisExtn.PreviewDocCategoryController">
+    <style>
+        #col1,#col2{width:49%;display:inline-block;}
+    </style>
+    <apex:form >
+        <div id="col1">
+           <apex:pageBlock >
+               <apex:iframe src="/apex/skuid__ui?page=DocumentCategoryInput&id={!attachmentId}&isdtp=vw" scrolling="true" id="theIframe"/>
+            </apex:pageBlock>
+        </div>
+        <div id="col2">
+           <apex:pageBlock >
+               <apex:iframe src="/servlet/servlet.FileDownload?file={!attachmentId}" scrolling="true" id="theIframe"/>
+            </apex:pageBlock>
+        </div>
+    </apex:form>
+</apex:page>

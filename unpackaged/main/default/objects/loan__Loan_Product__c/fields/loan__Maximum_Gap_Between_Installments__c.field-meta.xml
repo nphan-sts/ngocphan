@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Maximum_Gap_Between_Installments__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Maximum number of days between 2 installments</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Maximum number of days between 2 installments</inlineHelpText>
+    <label>Maximum Gap Between Installments</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

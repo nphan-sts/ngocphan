@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Current_Status__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Indicates the status of the repossessed Contract. Example : Repossessed ,Closed, etc</description>
+    <externalId>false</externalId>
+    <label>Current Status</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

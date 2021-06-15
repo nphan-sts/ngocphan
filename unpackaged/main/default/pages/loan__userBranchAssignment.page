@@ -1,0 +1,82 @@
+<!-- Tie to our custom controller and use our custom parent's object style -->
+<apex:page lightningStylesheets="true" controller="loan.UserBranchAssignmentAction"
+	tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:sectionHeader title="User-Branch Assignment Summary" />
+
+	<apex:form id="searchForm">
+		<apex:pageBlock title="User Search" mode="edit">
+
+			<apex:pageblockSection title="Select a User" columns="2"
+				collapsible="true">
+
+				<apex:inputField value="{!searchObj.loan__User__c}" />
+
+			</apex:pageblockSection>
+
+			<apex:commandButton value="Search" action="{!doSearch}"
+				status="searchStatus" reRender="assignToBranchId" />
+			<br></br>
+			<apex:actionStatus id="searchStatus" startText="Searching..." />
+
+		</apex:pageBlock>
+
+		<apex:pageBlock title="Assign User to Company" mode="edit"
+			id="assignToBranchId">
+			<apex:pageMessages />
+			<apex:pageBlockTable value="{!branchList}" var="branchEntry"
+				width="100%">
+
+				<apex:column width="50%">
+					<apex:outputLabel value="{!branchEntry.branch.Name}"
+						id="description" />
+					<apex:facet name="header">Company Name</apex:facet>
+				</apex:column>
+				<apex:column width="30%">
+					<apex:facet name="header">Check companies for this User</apex:facet>
+					<apex:inputCheckbox value="{!branchEntry.checked}">
+						<apex:actionSupport action="{!checkSubBranches}"
+							rerender="assignToBranchId" event="onchange"
+							status="otherBranchStatus">
+							<apex:param name="checkedBranch"
+								value="{!branchEntry.branch.Name}" assignTo="{!checkedBranch}" />
+							<apex:param name="checkedBranchValue"
+								value="{!branchEntry.checked}" assignTo="{!checkedBranchValue}" />
+						</apex:actionSupport>
+						</apex:inputCheckBox>
+						<apex:actionStatus id="otherBranchStatus"
+							startText="checking all sub branches..." />
+				</apex:column>
+
+				<apex:column width="20%">
+					<apex:facet name="header">Default Company</apex:facet>
+					<apex:inputCheckbox value="{!branchEntry.defaultBranch}">
+						<apex:actionSupport action="{!defaultBranch}"
+							rerender="assignToBranchId" event="onchange"
+							status="uncheckOtherStatus">
+							<apex:param name="checkedBranch"
+								value="{!branchEntry.branch.Name}" assignTo="{!checkedBranch}" />
+							<apex:param name="checkedBranchValue"
+								value="{!branchEntry.checked}" assignTo="{!checkedBranchValue}" />
+							<apex:param name="defaultBranchChecked"
+								value="{!branchEntry.defaultBranch}"
+								assignTo="{!defaultBranchChecked}" />
+						</apex:actionSupport>
+						</apex:inputCheckBox>
+						<apex:actionStatus id="uncheckOtherStatus"
+							startText="unchecking other branches..." />
+				</apex:column>
+
+			</apex:pageBlockTable>
+
+			<apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="Save" action="{!save}" />
+			</apex:pageBlockButtons>
+
+		</apex:pageBlock>
+
+	</apex:form>
+
+
+</apex:page>

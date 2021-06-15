@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>This will contains all Pay Off end points which are used in this application. Please make sure always working end point or else code will raise exceptions.</description>
+    <label>Payoff Endpoints</label>
+    <pluralLabel>Payoff_Endpoints</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

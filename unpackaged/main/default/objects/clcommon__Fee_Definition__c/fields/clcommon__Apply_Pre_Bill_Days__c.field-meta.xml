@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Apply_Pre_Bill_Days__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Select Yes if you want to apply pre bill days specified on the contract at the time of creating charge for this fee.</inlineHelpText>
+    <label>Apply Pre Bill Days</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>clcommon__Checkbox_Values</valueSetName>
+    </valueSet>
+</CustomField>

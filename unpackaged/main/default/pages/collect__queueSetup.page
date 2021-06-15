@@ -1,0 +1,2 @@
+<apex:page standardController="collect__Queue__c" extensions="collect.QueueController" doctype="html-5.0">
+</apex:page>

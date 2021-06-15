@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <description>To store SIFT API Key value to pull Sift Status</description>
+    <enableFeeds>false</enableFeeds>
+    <label>Sift API Key</label>
+    <visibility>Public</visibility>
+</CustomObject>

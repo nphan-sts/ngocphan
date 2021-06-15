@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Type_of_Deposits__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Depending on this selection, system should show the correct set of GL codes to select from.</description>
+    <externalId>false</externalId>
+    <label>Product Kind</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>loan__Product_Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Voluntary</fullName>
+                <default>true</default>
+                <label>Voluntary</label>
+            </value>
+            <value>
+                <fullName>Mandatory - Fixed Amount</fullName>
+                <default>false</default>
+                <label>Mandatory - Fixed Amount</label>
+            </value>
+            <value>
+                <fullName>Mandatory - % of Loan Amount</fullName>
+                <default>false</default>
+                <label>Mandatory - % of Loan Amount</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Savings</controllingFieldValue>
+            <controllingFieldValue>Current</controllingFieldValue>
+            <valueName>Voluntary</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Savings</controllingFieldValue>
+            <controllingFieldValue>Current</controllingFieldValue>
+            <valueName>Mandatory - Fixed Amount</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Savings</controllingFieldValue>
+            <controllingFieldValue>Current</controllingFieldValue>
+            <valueName>Mandatory - % of Loan Amount</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

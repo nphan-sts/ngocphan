@@ -1,0 +1,38 @@
+<apex:page lightningStylesheets="true" controller="loan.ValidateModeACHController"
+	tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:sectionHeader title="Run ACH in preview mode" />
+
+	<apex:form >
+		<apex:pageBlock id="validateModeACHPBId">
+			<apex:pageMessages />
+			<apex:outputpanel id="validateModeACHPanel">
+				<apex:outputLabel value="Preview Mode" for="validateMode" />
+				<apex:inputCheckbox label="AllLoans" value="{!validateMode}"
+					disabled="true" />
+				<br />
+				<br />
+				<apex:outputLabel value="Batch size:" for="batchSize" />
+				<apex:inputText label="Batch size" value="{!batchSize}" />
+				<br />
+				<br />
+				<apex:outputLabel value="Debit date:" for="date" />
+				<apex:inputField label="Debit date" value="{!search.loan__Date__c}" />
+				<apex:panelGrid columns="4">
+					<c:BusyButton name="Run ACH in validate mode"
+						busyname="Processing..."
+						actionTo="{!runACHForTheDayInValidateMode}"
+						disabled="{!disabledRunButton}" reRenderTo="validateModeACHPBId" />
+					<c:BusyButton name="Refresh Result View" busyname="Refreshing..."
+						actionTo="{!getCurrentJobStatus}"
+						reRenderTo="resultPBId,validateModeACHPBId" />
+				</apex:panelGrid>
+			</apex:outputpanel>
+		</apex:pageBlock>
+
+		<apex:pageBlock id="resultPBId" title="Result">
+			<apex:outputText label="Job Status: " value="{!jobStatus}" />
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

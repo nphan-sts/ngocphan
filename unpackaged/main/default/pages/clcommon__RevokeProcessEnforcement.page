@@ -1,0 +1,52 @@
+<apex:page id="applyProcessEnforcementContact" standardController="clcommon__Process_Enforcement_Detail__c"
+    extensions="clcommon.ProcessEnforcementRevokeController" tabStyle="clcommon__Process_Enforcement_Detail__c"
+    title="Revoke Process Enforcement" action="{!checkProcessEnforcementEnabled}">
+
+    <apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:form >
+        <apex:pageMessages />
+        <br/><br/>
+        <apex:pageBlock title="Process Enforcement Detail" rendered="{!canRenderPage}">
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Validate" action="{!validate}" status="Validating"/>
+                <apex:commandButton value="Revoke" action="{!revoke}" status="Revoking" disabled="{!NOT(isValidated)}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" status="Cancel"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="2" id="processEnforcementDetails" title="Process Enforcement Details"
+                           showHeader="true" collapsible="false">
+                <apex:outputField value="{!peDetail.Process_Enforcement__r.clcommon__Process_Enforcement_Name__c}" label="Process Enforcement"/>
+                <apex:outputField value="{!peDetail.Account__r.Name}" rendered="{!IF(peDetail.clcommon__Account__c != null, true, false)}" label="Account"/>
+                <apex:outputField value="{!peDetail.Contact__r.Name}" rendered="{!IF(peDetail.clcommon__Contact__c != null, true, false)}" label="Contact"/>
+                <apex:outputField id="peStartDate" value="{!peDetail.clcommon__Start_Date__c}"/>
+                <apex:outputField id="peExpiryDate" value="{!peDetail.clcommon__Expiry_Date__c}"/>
+            </apex:pageBlockSection>
+         </apex:pageBlock>
+         <apex:pageBlock title="Validation Errors" rendered="{!displayErrors}">
+            <apex:pageBlockSection columns="1" id="errorMsgs" title="Error Messages">
+                 <apex:pageblockTable value="{!actionErrorMessages}" id="errorTable"
+                                var="err" headerClass="tableRight" styleClass="tableRight">
+                       <apex:column value="{!err.recordId}" width="5%"
+                          headerValue="Object Id" />
+                      <apex:column value="{!err.peDetailId}" width="5%"
+                          headerValue="PE Detail Id" />
+                      <apex:column value="{!err.actionResult}" width="5%"
+                          headerValue="Action Result" />
+                      <apex:column value="{!err.actionExecuteEvent}" width="5%"
+                          headerValue="Action Event" />
+                      <apex:column value="{!err.actionName}" width="5%"
+                          headerValue="Action Name" />
+                      <apex:column value="{!err.namespace}" width="5%"
+                          headerValue="Action NameSpace" />
+                      <apex:column width="70%" headerValue="Error Messages">
+                        <apex:pageblockTable value="{!err.messages}" id="msgSubTable"
+                            var="msg" headerClass="tableRight" styleClass="tableRight">
+                            <apex:column value="{!msg}" width="100%"
+                                headerValue="message" />
+                            </apex:pageblockTable>
+                      </apex:column>
+                  </apex:pageblockTable>
+            </apex:pageBlockSection>
+         </apex:pageBlock>
+           </apex:form>
+</apex:page>

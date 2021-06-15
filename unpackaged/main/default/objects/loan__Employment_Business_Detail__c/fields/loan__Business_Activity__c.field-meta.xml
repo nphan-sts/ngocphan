@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Business_Activity__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Business Activity</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Tickli Moti</fullName>
+                <default>false</default>
+                <label>Tickli Moti</label>
+            </value>
+            <value>
+                <fullName>Home Based</fullName>
+                <default>false</default>
+                <label>Home Based</label>
+            </value>
+            <value>
+                <fullName>Hawker</fullName>
+                <default>false</default>
+                <label>Hawker</label>
+            </value>
+            <value>
+                <fullName>Fruit Selling</fullName>
+                <default>false</default>
+                <label>Fruit Selling</label>
+            </value>
+            <value>
+                <fullName>General Store</fullName>
+                <default>false</default>
+                <label>General Store</label>
+            </value>
+            <value>
+                <fullName>Vegetable Selling</fullName>
+                <default>false</default>
+                <label>Vegetable Selling</label>
+            </value>
+            <value>
+                <fullName>Tiffin Services</fullName>
+                <default>false</default>
+                <label>Tiffin Services</label>
+            </value>
+            <value>
+                <fullName>Milk Selling</fullName>
+                <default>false</default>
+                <label>Milk Selling</label>
+            </value>
+            <value>
+                <fullName>Kite Making</fullName>
+                <default>false</default>
+                <label>Kite Making</label>
+            </value>
+            <value>
+                <fullName>Imitation Jewellery</fullName>
+                <default>false</default>
+                <label>Imitation Jewellery</label>
+            </value>
+            <value>
+                <fullName>Papad Making</fullName>
+                <default>false</default>
+                <label>Papad Making</label>
+            </value>
+            <value>
+                <fullName>Tailoring</fullName>
+                <default>false</default>
+                <label>Tailoring</label>
+            </value>
+            <value>
+                <fullName>Fish Selling</fullName>
+                <default>false</default>
+                <label>Fish Selling</label>
+            </value>
+            <value>
+                <fullName>Other (Please Specify)</fullName>
+                <default>false</default>
+                <label>Other (Please Specify)</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

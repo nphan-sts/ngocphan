@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loan_Premium_Price_ACU__c</fullName>
+    <description>Applied the new pricing matrix in this formula. Please see CRM-965 for reference.</description>
+    <externalId>false</externalId>
+    <formula>IF( AND(Application__r.Investor__r.Investor_Code__c =='ACU',Application__r.Loan_Origination_Date__c &gt;= DATE(2020,10,12)) , 
+IF(Term__c == 24, IF(Pricing_Tier__c == 't1', 0.0270, IF(Pricing_Tier__c == 't2', 0.0260, IF(Pricing_Tier__c == 't3', 0.0330, IF(Pricing_Tier__c == 't4', 0.0310, IF(Pricing_Tier__c == 't5', 0.0130, 0) ) ) ) ) , 
+IF(Term__c == 36, IF(Pricing_Tier__c == 't1', 0.0440, IF(Pricing_Tier__c == 't2', 0.0440, IF(Pricing_Tier__c == 't3', 0.0410, IF(Pricing_Tier__c == 't4', 0.0290, IF(Pricing_Tier__c == 't5', 0.0000, 0) ) ) ) ) , 
+IF(Term__c == 48, IF(Pricing_Tier__c == 't1', 0.0730, IF(Pricing_Tier__c == 't2', 0.0400, IF(Pricing_Tier__c == 't3', 0.0320, IF(Pricing_Tier__c == 't4', 0.0410, IF(Pricing_Tier__c == 't5', 0.0000, 0) ) ) ) ) , 
+IF(Term__c == 60, IF(Pricing_Tier__c == 't1', 0.0750, IF(Pricing_Tier__c == 't2', 0.0540, IF(Pricing_Tier__c == 't3', 0.0000, IF(Pricing_Tier__c == 't4', 0.0190, IF(Pricing_Tier__c == 't5', 0.0000, 0) ) ) ) ) , 0) ) ) ) , 0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Loan_Premium_Price_ACU</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>4</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

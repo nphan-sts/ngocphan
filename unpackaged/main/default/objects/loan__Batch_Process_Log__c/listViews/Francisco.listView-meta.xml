@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Francisco</fullName>
+    <columns>NAME</columns>
+    <columns>loan__Message__c</columns>
+    <columns>loan__Origin__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>loan__Origin__c</field>
+        <operation>equals</operation>
+    </filters>
+    <filters>
+        <field>OWNER.FIRST_NAME</field>
+        <operation>equals</operation>
+        <value>Francisco</value>
+    </filters>
+    <label>Francisco</label>
+</ListView>

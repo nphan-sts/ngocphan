@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Transaction_Date_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>loan__Adjustment_Txn_Date__c &gt; TODAY()</errorConditionFormula>
+    <errorMessage>Transaction date cannot be greater than calendar date.</errorMessage>
+</ValidationRule>

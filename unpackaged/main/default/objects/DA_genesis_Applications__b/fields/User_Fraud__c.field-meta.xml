@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>User_Fraud__c</fullName>
+    <externalId>false</externalId>
+    <label>User_Fraud</label>
+    <referenceTo>User</referenceTo>
+    <relationshipName>User_Fraud1617325208627</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,176 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Account__c"
+    extensions="loan.LoanPrinAdjController"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.loan__MFIStyles}" />
+    <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+    <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+        j$ = jQuery.noConflict();
+    </script>
+    <script>
+        function confirmCancel() {
+            var isConfirm = confirm("Are you sure you want to cancel?");
+            if(isConfirm){
+                return this.parent.parent.window.close();                
+            }
+        }
+    
+    </script>
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+
+    <script>
+        function testify(){
+            alert(j$('').length);
+        };
+      function scrolify(tblAsJQueryObject, height){
+        var oTbl = tblAsJQueryObject;
+        
+        // for very large tables you can remove the four lines below
+        // and wrap the table with <div> in the mark-up and assign
+        // height and overflow property  
+        var oTblDiv = $("<div/>");
+        oTblDiv.css('height', height);
+        oTblDiv.css('overflow-y','scroll');
+        oTbl.wrap(oTblDiv);
+
+        // save original width
+        oTbl.attr("data-item-original-width", oTbl.width());
+        oTbl.find('thead tr td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        }); 
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        });                 
+
+
+        // clone the original table
+        var newTbl = oTbl.clone();
+
+        // remove table header from original table
+        oTbl.find('thead tr').remove();                 
+        // remove table body from new table
+        newTbl.find('tbody tr').remove();   
+
+        oTbl.parent().parent().prepend(newTbl);
+        newTbl.wrap("<div/>");
+
+        // replace ORIGINAL COLUMN width                
+        newTbl.width(newTbl.attr('data-item-original-width'));
+        newTbl.find('thead tr td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });     
+        oTbl.width(oTbl.attr('data-item-original-width'));      
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });                 
+    }
+
+    function callScroll() {
+        scrolify($('.scrollableFixedHeader'), 300); // 160 is height
+    }
+    </script>
+	
+    <apex:sectionHeader title="Adjustment to Principal/Advance - Add/Subtract: {!loan__Loan_Account__c.Name}" />
+    <apex:outputPanel >
+        <apex:form id="principalAdjustmentForm">
+            <apex:commandLink value="Help On Principal Adjustment" id="thelink" onclick="popWindow('Principal Adjustment');"
+                              reRender="dummy" style="text-decoration:none;color:green;padding:1px" styleClass="link-show"
+                              rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+        	
+            <apex:commandLink value="Help On Principal Adjustment" id="thelink2" onclick="popWindow('Principal Adjustment');" 
+                                reRender="dummy" styleClass="help-link" 
+                                rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>
+            <br/><br/>
+            
+            <apex:pageBlock id="prinAdjPBId" mode="edit">
+                <apex:pageMessages />
+                <apex:pageBlockButtons location="both">
+                    <c:BusyButton name="Validate" busyname="Validating..."
+                        actionTo="{!validate}" oncomplete="callScroll()"
+                        style="margin-left:100px;"
+                        reRenderTo="prinAdjPBId,prinAdjLoanPanel,resultsPanelPageBlockSection"
+                        disabled="{!(principalAdjusment.Id != null)}" />
+                    <c:BusyButton name="Save" busyName="Saving"
+                        actionTo="{!savePrinAdjLoan}"
+                        oncomplete="({!closeModal}===true) ? closeIframe('{!loan__Loan_Account__c.Id}') : {};"
+                        reRenderTo="principalAdjustmentForm"
+                        disabled="{!(principalAdjusment.Id != null)}" />
+                    <c:BusyButton name="Reset" busyName="Resetting" actionTo="{!reset}"
+                        reRenderTo="prinAdjLoanPanel"
+                        disabled="{!(principalAdjusment.Id != null)}" />
+                    <!-- <apex:commandButton value="Cancel" immediate="true" action="{!URLFOR($Action.Loan_Account__c.View,Loan_Account__c.Id)}" onclick="closeIframe()"/>-->
+                    <apex:commandButton value="Close" immediate="true"
+                        action="{!URLFOR($Action.Loan_Account__c.View,Loan_Account__c.Id)}"
+                        onclick="closeIframe()" />
+                </apex:pageBlockButtons>
+                <apex:outputpanel id="prinAdjLoanPanel">
+                    <apex:actionStatus id="generatePreview"
+                        startText="Generating preview..." />
+                     <apex:outputPanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+                    <apex:pageBlockSection columns="2"
+                        id="loanInfoPanelPageBlockSection" title="Loan Information">
+                        <apex:outputField value="{!principalAdjusment.loan__Loan_Account__c}" />
+                        <apex:outputField value="{!loanAccount.loan__Loan_Amount__c}" rendered="{! loanAccount.Product_Type__c != 'Line of Credit'}"/>
+                        <apex:outputField value="{!loanAccount.loan__Credit_Limit_Current__c}" rendered="{! loanAccount.Product_Type__c = 'Line of Credit'}"/>
+                        <apex:outputField value="{!loanAccount.loan__Term_Cur__c}" />
+                        <apex:outputField value="{!loanAccount.loan__Remaining_Loan_Amount__c}" rendered="{!loanAccount.loan__Funding_in_Tranches__c}" />
+                        <apex:outputField label="Unpaid Principal/Advance"
+                            value="{!principalAdjusment.loan__Principal_Remaining__c}" />
+                        <apex:outputField value="{!loanAccount.loan__Last_Accrual_Date__c}" />
+                        <apex:outputField value="{!loanAccount.loan__Maturity_Date_Current__c}" />
+                        <apex:outputField label="Principal/Advance Adjusted : Added"
+                            value="{!loanAccount.loan__Principal_Adjustment__c}" />
+                        <apex:outputField label="Principal/Advance Adjusted : Subtracted"
+                            value="{!loanAccount.loan__Principal_Adjustment_Subtract__c}" />
+                    </apex:pageBlockSection>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+                    <apex:pageBlockSection columns="2"
+                        id="loanTermsPanelPageBlockSection"
+                        title="Principal Adjustment Parameters">
+                        <apex:inputField value="{!principalAdjusment.loan__Txn_Date__c}">
+                            <apex:actionSupport action="{!txnDateChange}"
+                                rerender="loanTermsPanelPageBlockSection,prinAdjLoanPanel"
+                                event="onchange" />
+                        </apex:inputField>
+                        <apex:inputField id="txn_Amt"
+                            value="{!principalAdjusment.loan__Txn_Amt__c}" required="True">
+                            <apex:actionSupport action="{!txnAmountChange}"
+                                rerender="loanTermsPanelPageBlockSection,prinAdjLoanPanel"
+                                event="onchange" />
+                        </apex:inputField>
+                        <apex:inputField id="SamePaymentAmount" label="Same Payment Amount" rendered="{! loanAccount.Product_Type__c = 'Amz Based Loan'}"
+                            value="{!principalAdjusment.loan__Same_monthly_payment__c}" >
+                            <apex:actionSupport action="{!txnAmountChange}"
+                                rerender="loanTermsPanelPageBlockSection,prinAdjLoanPanel"
+                                event="onchange" />
+                        </apex:inputField>                        
+                        <!--  <apex:inputField value="{!principalAdjusment.Payment_Amount__c }" required="true"  >
+                       <apex:actionSupport action="{!pmtAmountChange}" rerender="loanTermsPanelPageBlockSection,prinAdjLoanPanel" event="onchange"/>
+                    </apex:inputField>
+                    -->
+                         <apex:outputField value="{!principalAdjusment.Payment_Amount__c }" />
+                       <!--<apex:inputField label="Term"
+                            value="{!principalAdjusment.Number_of_Installments__c }"
+                            required="true">
+                            <apex:actionSupport action="{!termChange}"
+                                rerender="loanTermsPanelPageBlockSection,prinAdjLoanPanel"
+                                event="onchange" />
+                        </apex:inputField>-->
+                        <apex:inputField id="ref"
+                            value="{!principalAdjusment.loan__Reference__c}" />
+                    </apex:pageBlockSection>
+                    </apex:outputPanel>
+                </apex:outputpanel>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+</apex:page>

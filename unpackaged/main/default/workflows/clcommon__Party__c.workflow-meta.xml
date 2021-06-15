@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>update_user_on_party</fullName>
+        <field>clcommon__User__c</field>
+        <lookupValue>happymoney_cls@happymoney.com</lookupValue>
+        <lookupValueType>User</lookupValueType>
+        <name>update user on party</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>update user on party</fullName>
+        <actions>
+            <name>update_user_on_party</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>clcommon__Party__c.clcommon__User__c</field>
+            <operation>equals</operation>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+</Workflow>

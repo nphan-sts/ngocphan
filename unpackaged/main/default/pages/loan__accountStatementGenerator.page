@@ -1,0 +1,121 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Account__c"
+    extensions="loan.AccountStatementGeneratorController"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+    showHeader="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+    standardStylesheets="false">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!$Resource.loan__StatementStyleSheet}" />
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+        j$ = jQuery.noConflict();
+     });
+    </script>
+    <script>
+        function setFocusOnLoad() {}
+    </script>
+    <apex:form id="statementGeneratorForm">
+
+        <apex:pageBlock title="Choose duration" mode="edit" rendered="false">
+            <apex:pageblockButtons location="bottom">
+
+                <c:BusyButton name="Preview" busyname="Generating Preview..."
+                    actionTo="{!submitDuration}"
+                    reRenderTo="statementPreviewId,accountActivity" />
+                <c:BusyButton name="Download Statement" busyname="Downloading..."
+                    actionTo="{!saveAsPdf}"
+                    oncomplete="({!closeModal}===true) ? function reload(){window.top.location.href='/apex/tabbedLoanAccount?id=' + j$('#loanRedirectId').text(); closeIframe();}() : {};" />
+            </apex:pageblockButtons>
+            <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+            <apex:pageBlockSection columns="2">
+                <apex:inputField label="StartDate" value="{!search.loan__Start_Date__c}">
+                </apex:inputField>
+                <apex:inputField label="EndDate" value="{!search.loan__End_Date__c}">
+                </apex:inputField>
+            </apex:pageBlockSection>
+            </apex:outputpanel>
+        </apex:pageBlock>
+
+        <c:StatementHeader size="180px" />
+
+        <c:BusyButton name="Download Statement" busyname="Downloading..."
+            actionTo="{!saveAsPdf}"
+            oncomplete="({!closeModal}===true) ? function reload(){window.top.location.href='/apex/tabbedLoanAccount?id=' + j$('#loanRedirectId').text(); closeIframe();}() : {};"
+            id="submitButton" />
+
+        <br />
+        <apex:pageBlock title="Loan Account Statement">
+            <table class="mfiflex-namevaluetable" summary="Loan Details">
+                <tbody>
+                    <tr>
+                        <td class="mfiflex-fbold">Customer Name</td>
+                        <td>{!custName}</td>
+
+                    </tr>
+                    <tr>
+                        <td class="mfiflex-fbold">Loan Account</td>
+                        <td>{!loanAccount.Name}</td>
+                    </tr>
+                    <tr>
+                        <td class="mfiflex-fbold">Loan Amount</td>
+                        <td>
+                            <apex:outputText value="{!loanAccount.loan__Loan_Amount__c}" rendered="{!IF(loanAccount.loan__Product_Type__c == 'Loan',true,false)}" />
+                            <apex:outputText value="{!loanAccount.loan__Credit_Limit_Current__c}" rendered="{!IF(loanAccount.loan__Product_Type__c == 'Line of Credit',true,false)}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="mfiflex-fbold">Loan Product</td>
+                        <td>{!loanAccount.Loan_Product_Name__r.Name}</td>
+                    </tr>
+                    <tr>
+                        <td class="mfiflex-fbold">Interest Rate</td>
+                        <td>{!loanAccount.loan__Interest_Rate__c}</td>
+                    </tr>
+                    <tr>
+                        <td class="mfiflex-fbold">Term</td>
+                        <td>{!loanAccount.loan__Number_of_Installments__c}</td>
+                    </tr>
+                    <tr>
+                        <td class="mfiflex-fbold">Balance Amount</td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,##0.00}">
+                                <apex:param value="{!loanAccount.loan__Pay_Off_Amount_As_Of_Today__c}"/>
+                            </apex:outputText> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </apex:pageBlock>
+        
+        <apex:pageBlock title="Account Activity" id="accountActivity"
+            rendered="{! listOfLoanPaymentTransactions!=null}">
+            <apex:pageBlockTable value="{!sortedlist}"
+                var="listItem" id="amzSch" headerClass="dkbkg denter"
+                style="font-size:12px;width: 100%;" border="0" cellpadding="8">
+
+                <apex:column headerClass="left" headerValue="Transaction Date"
+                    value="{! listItem.Txn_Date__c}" styleClass="left" />
+                <!--<apex:column headerClass="left" headerValue="Payment Due Date" value="{! loanAccount.Next_Installment_Date__c}" styleClass="left"/>-->
+                 <apex:column headerClass="left" headerValue="Transaction Type"
+                    value="{! listItem.Type__c}" styleClass="left" />
+                <apex:column headerClass="left" headerValue="Reference"
+                    value="{! listItem.Transaction_Type__c}" styleClass="left" />
+                <apex:column headerClass="right" headerValue="Transaction Amount"
+                    value="{!listItem.loan__Txn_Amt__c}" styleClass="right" />
+                <apex:column headerClass="right" headerValue="Interest"
+                    value="{! listItem.Interest__c}" styleClass="right" />
+                <apex:column headerClass="right" headerValue="Principal"
+                    value="{! listItem.Principal__c}" styleClass="right" />
+                <apex:column headerClass="right" headerValue="Charges"
+                    value="{! listItem.Fees__c}" styleClass="right" /> 
+            </apex:pageBlockTable>
+
+        </apex:pageBlock>
+        <!--ends Account Activity -->
+    </apex:form>
+    <label id="loanRedirectId" style="display: none;">{!
+        loanAccount}</label>
+
+</apex:page>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Interest_Rate_Time_Related</fullName>
+    <active>true</active>
+    <errorConditionFormula>loan__Interest_Rate__c &gt; 0
+&amp;&amp;
+(ISNULL( loan__Time_Period_for_Int_Rate_Calculation__c )
+    || loan__Time_Period_for_Int_Rate_Calculation__c &lt;= 0)</errorConditionFormula>
+    <errorMessage>The time period for interest calculation cannot be zero if the interest rate is not zero.</errorMessage>
+</ValidationRule>

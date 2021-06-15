@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_Accounting_Type</fullName>
+    <active>true</active>
+    <errorConditionFormula>(loan__Accrual_Based_Accounting__c &amp;&amp;  loan__Cash_Based_Accounting__c)
+||
+(NOT(loan__Accrual_Based_Accounting__c) &amp;&amp;  NOT(loan__Cash_Based_Accounting__c))</errorConditionFormula>
+    <errorMessage>Both accrual and cash based accounting cannot be checked or unchecked.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Tasks can be manual or auto close. Manual tasks are the ones where user is required to explicitly close the task. Auto close task get closed automatically when the desired action is completed.
+MANUAL → Selected for manual tasks
+PULL CREDIT → Selected for credit pull auto closed tasks
+FETCH TRANSACTIONS → Selected for yodlee bank transactions</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Tasks can be manual or auto close depending on the type.Select "MANUAL" for manual tasks and rest for auto close</inlineHelpText>
+    <label>Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>MANUAL</fullName>
+                <default>true</default>
+                <label>MANUAL</label>
+            </value>
+            <value>
+                <fullName>PULL CREDIT</fullName>
+                <default>false</default>
+                <label>PULL CREDIT</label>
+            </value>
+            <value>
+                <fullName>FETCH TRANSACTIONS</fullName>
+                <default>false</default>
+                <label>FETCH TRANSACTIONS</label>
+            </value>
+            <value>
+                <fullName>LOI</fullName>
+                <default>false</default>
+                <label>LOI</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

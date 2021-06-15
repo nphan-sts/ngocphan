@@ -1,0 +1,30 @@
+<!-- For this example to render properly, you must associate the Visualforce page
+with a valid account record in the URL.
+For example, if 001D000000IRt53 is the account ID, the resulting URL should be:
+https://Salesforce_instance/apex/myPage?id=001D000000IRt53
+See the Visualforce Developer's Guide Quick Start Tutorial for more information. -->
+
+
+<!-- Page: -->
+<apex:page standardController="Account" extensions="clcommon.AccountContactSample">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"/>
+    <apex:include pageName="clcommon__mintTheme"/>
+    <apex:form styleClass="mint-lightning-page mint-lightning-wrapper-tall">
+        <apex:detail subject="{!acc.id}" inlineEdit="true" oncomplete="addNoLightningWrapperClass(); updateActionLinksToIcons();"/>
+    </apex:form>
+    <apex:form styleClass="mint-lightning-wrapper">
+        <apex:pageBlock title="My Content" mode="edit">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+            </apex:pageBlockButtons>
+            <apex:outputPanel styleClass="mint-lightning-wrapper">
+                <apex:pageBlockSection title="My Content Section" columns="2">
+                    <apex:inputField value="{!account.name}"/>
+                    <apex:inputField value="{!account.site}"/>
+                    <apex:inputField value="{!account.type}"/>
+                    <apex:inputField value="{!account.accountNumber}"/>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

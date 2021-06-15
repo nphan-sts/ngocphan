@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Investment_Order__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Investment Order</label>
+    <referenceTo>loan__Investor_Loan__c</referenceTo>
+    <relationshipLabel>Note Bundles</relationshipLabel>
+    <relationshipName>Note_Bundles</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

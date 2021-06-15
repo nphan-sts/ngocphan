@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Member_Investor_Select</fullName>
+    <active>false</active>
+    <description>Check for Investor or Member Type</description>
+    <errorConditionFormula>OR(
+AND( RecordTypeId == '012n00000000JmN',  loan__Investor__c = FALSE),
+AND(RecordTypeId == '012n00000000JmI',  loan__Investor__c = TRUE)
+)</errorConditionFormula>
+    <errorDisplayField>loan__Investor__c</errorDisplayField>
+    <errorMessage>Please check the Investor Type</errorMessage>
+</ValidationRule>

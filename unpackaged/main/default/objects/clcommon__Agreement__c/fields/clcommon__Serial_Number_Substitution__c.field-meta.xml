@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Serial_Number_Substitution__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Serial Number Substitution</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Permitted</fullName>
+                <default>false</default>
+                <label>Permitted</label>
+            </value>
+            <value>
+                <fullName>Not Permitted</fullName>
+                <default>false</default>
+                <label>Not Permitted</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,23 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" controller="genesis.BinderShelf" action="{!checkFunc}">
+    
+    <apex:pageBlock id="pagedisplay" >
+        
+        <apex:form >
+        <apex:outputText rendered="{!IF(download == true,true,false)}">
+        
+            Page has been downloaded and attached to the case.
+        
+        </apex:outputText>
+        
+        <apex:outputText rendered="{!IF(download == true,false,true)}">
+            Page could not be downloaded.
+        </apex:outputText>
+        
+        
+        
+            <apex:commandButton value="Go Back" action="{!pagePage}" />
+        </apex:form>
+    
+    
+    </apex:pageBlock> 
+</apex:page>

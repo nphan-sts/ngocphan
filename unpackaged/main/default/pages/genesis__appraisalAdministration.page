@@ -1,0 +1,48 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" controller="genesis.AdminPageController" id="appraisalAdminPage">
+   <apex:form >
+      <apex:sectionHeader title="List of Appraisal Administrators"/>
+      <apex:pageBlock id="recordList">
+         <apex:pageBlockButtons >
+            <div align="right">
+               <apex:commandButton action="{!firstPage}" value="|<<" reRender="nameTable" />
+               <apex:commandButton action="{!prev}" value="<" reRender="nameTable" />
+               <apex:commandButton action="{!next}" value=">" reRender="nameTable" />
+               <apex:commandButton action="{!lastPage}" value=">>|" reRender="nameTable" />
+            </div>
+         </apex:pageBlockButtons>
+         <apex:pageBlockTable value="{!Users}" var="admin" id="nameTable">
+            <apex:column headerValue="Admin Home Page">
+               <apex:outputLink value="{!URLFOR($Page.genesis__appraisalAdminHome,null,[id=admin.Id])}">{!admin.Name}
+               </apex:outputLink>
+            </apex:column>
+            <apex:column value="{!admin.genesis__Party_Type__c}">
+            </apex:column>
+         </apex:pageBlockTable>
+      </apex:pageBlock>
+   </apex:form>
+   <apex:form >
+      <apex:sectionHeader title="Associate Appraisal Administrator with Existing Collateral Category" />
+      <apex:pageBlock id="recordList">
+         <br/>
+         <apex:pageBlockButtons >
+            <div align="right">
+               <apex:commandButton action="{!firstPage}" value="|<<" reRender="colCategoryTable" />
+               <apex:commandButton action="{!prev}" value="<" reRender="colCategoryTable" />
+               <apex:commandButton action="{!next}" value=">" reRender="colCategoryTable" />
+               <apex:commandButton action="{!lastPage}" value=">>|" reRender="colCategoryTable" />
+            </div>
+         </apex:pageBlockButtons>
+         <div align="center">
+            <apex:commandButton value="Associate New Collateral Category" action="{!URLFOR($Action.clcommon__Collateral_Category__c.New)}"/>
+         </div>
+          <br/>
+         <apex:pageBlockTable value="{!Types}" var="var" id="colCategoryTable">
+            <apex:column >
+               <apex:commandLink value="Edit" action="{!URLFOR($Action.clcommon__Collateral_Category__c.Edit,var.id)}"></apex:commandLink>
+            </apex:column>
+            <apex:column value="{!var.Name}"/>
+            <apex:column value="{!var.genesis__AppraisalAdmin__c}"/>
+         </apex:pageBlockTable>        
+      </apex:pageBlock>
+   </apex:form>
+</apex:page>

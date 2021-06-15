@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loan_Account__c</fullName>
+    <externalId>false</externalId>
+    <label>CL Contract</label>
+    <referenceTo>loan__Loan_Account__c</referenceTo>
+    <relationshipName>Loan_Account1582247735440</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,51 @@
+<apex:page lightningStylesheets="true" controller="loan.PPIHouseholdDataWizard" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:sectionHeader title="PPI Information for Client/Household"
+        subtitle="Step 1 of 3" />
+    <apex:form >
+        <apex:pageBlock title="PPI Information">
+
+            <!-- This facet tag defines the "Next" button that appears
+           in the footer of the pageBlock. It calls the step2()
+           controller method, which returns a pageReference to
+           the next step of the wizard. -->
+
+            <apex:facet name="footer">
+                <apex:commandButton action="{!step2}" value="Next" styleClass="btn" />
+            </apex:facet>
+            <apex:pageBlockSection title="PPI Information">
+
+                <apex:panelGrid columns="4">
+                    <apex:outputLabel value="PPI Name: " for="ppiName" />
+                    <apex:inputField id="ppiName" value="{!ppiHouseholdData.loan__PPI__c}"
+                        required="true" />
+
+                    <apex:outputLabel value="Interview Date: " for="interviewDate" />
+                    <apex:inputField id="interviewDate"
+                        value="{!ppiHouseholdData.loan__Interview_Date__c}" required="true" />
+
+                    <apex:outputLabel value="Interviewer: " for="interviewer" />
+                    <apex:inputField id="interviewer"
+                        value="{!ppiHouseholdData.loan__Interviewer__c}" required="true" />
+
+                </apex:panelGrid>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Client Demographic Information">
+
+                <apex:panelGrid columns="4">
+                    <apex:outputLabel value="Client: " for="client" />
+                    <apex:inputField id="client" value="{!ppiHouseholdData.loan__Client__c}"
+                        required="true" />
+
+                    <apex:outputLabel value="Total Loan Amount: " for="totalLoanAmnt" />
+                    <apex:outputField id="totalLoanAmnt"
+                        value="{!ppiHouseholdData.loan__Total_Loan_Amount__c}" />
+
+                </apex:panelGrid>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

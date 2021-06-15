@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Decline_Reason__c</fullName>
+    <externalId>false</externalId>
+    <label>Decline Reason</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>genesis__Status__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Bankruptcy</fullName>
+                <default>false</default>
+                <label>Bankruptcy</label>
+            </value>
+            <value>
+                <fullName>Current Delinquency</fullName>
+                <default>false</default>
+                <label>Current Delinquency</label>
+            </value>
+            <value>
+                <fullName>Current Judgement</fullName>
+                <default>false</default>
+                <label>Current Judgement</label>
+            </value>
+            <value>
+                <fullName>Current Tax Lien</fullName>
+                <default>false</default>
+                <label>Current Tax Lien</label>
+            </value>
+            <value>
+                <fullName>DTI Too High</fullName>
+                <default>false</default>
+                <label>DTI Too High</label>
+            </value>
+            <value>
+                <fullName>Inability to Pay</fullName>
+                <default>false</default>
+                <label>Inability to Pay</label>
+            </value>
+            <value>
+                <fullName>Inability to Pay (NeoVerify)</fullName>
+                <default>false</default>
+                <label>Inability to Pay (NeoVerify)</label>
+            </value>
+            <value>
+                <fullName>Incomplete Application</fullName>
+                <default>false</default>
+                <label>Incomplete Application</label>
+            </value>
+            <value>
+                <fullName>Ineligible Use for Loan Proceeds</fullName>
+                <default>false</default>
+                <label>Ineligible Use for Loan Proceeds</label>
+            </value>
+            <value>
+                <fullName>Insufficient Income for Requested Amount</fullName>
+                <default>false</default>
+                <label>Insufficient Income for Requested Amount</label>
+            </value>
+            <value>
+                <fullName>NDI Too Low</fullName>
+                <default>false</default>
+                <label>NDI Too Low</label>
+            </value>
+            <value>
+                <fullName>New Open Tradeline</fullName>
+                <default>false</default>
+                <label>New Open Tradeline</label>
+            </value>
+            <value>
+                <fullName>New Tradeline Inquiry</fullName>
+                <default>false</default>
+                <label>New Tradeline Inquiry</label>
+            </value>
+            <value>
+                <fullName>Non US Citizen or Perm Resident</fullName>
+                <default>false</default>
+                <label>Non US Citizen or Perm Resident</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Out of Country</fullName>
+                <default>false</default>
+                <label>Out of Country</label>
+            </value>
+            <value>
+                <fullName>Out of State</fullName>
+                <default>false</default>
+                <label>Out of State</label>
+            </value>
+            <value>
+                <fullName>Unable to Establish Intent</fullName>
+                <default>false</default>
+                <label>Unable to Establish Intent</label>
+            </value>
+            <value>
+                <fullName>Unable to Satisfactorily Verify ID</fullName>
+                <default>false</default>
+                <label>Unable to Satisfactorily Verify ID</label>
+            </value>
+            <value>
+                <fullName>Unable to Verify Employment</fullName>
+                <default>false</default>
+                <label>Unable to Verify Employment</label>
+            </value>
+            <value>
+                <fullName>Unable to Verify Income</fullName>
+                <default>false</default>
+                <label>Unable to Verify Income</label>
+            </value>
+            <value>
+                <fullName>Unsecured Installment Loans Open Last 12 Month Above Max</fullName>
+                <default>false</default>
+                <label>Unsecured Installment Loans Open Last 12 Month Above Max</label>
+            </value>
+            <value>
+                <fullName>Rescind</fullName>
+                <default>false</default>
+                <label>Rescind</label>
+            </value>
+            <value>
+                <fullName>Loan Discrepancy</fullName>
+                <default>false</default>
+                <label>Loan Discrepancy</label>
+            </value>
+            <value>
+                <fullName>Funding Partner Problem</fullName>
+                <default>false</default>
+                <label>Funding Partner Problem</label>
+            </value>
+            <value>
+                <fullName>Test2</fullName>
+                <default>false</default>
+                <label>Test2</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Bankruptcy</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Current Delinquency</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Current Judgement</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Current Tax Lien</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>DTI Too High</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Inability to Pay</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Inability to Pay (NeoVerify)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Incomplete Application</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Ineligible Use for Loan Proceeds</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Insufficient Income for Requested Amount</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>NDI Too Low</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>New Open Tradeline</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>New Tradeline Inquiry</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Non US Citizen or Perm Resident</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Other</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Out of Country</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Out of State</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Unable to Establish Intent</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Unable to Satisfactorily Verify ID</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Unable to Verify Employment</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Unable to Verify Income</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Unsecured Installment Loans Open Last 12 Month Above Max</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Rescind</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Loan Discrepancy</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>REJECTED</controllingFieldValue>
+            <controllingFieldValue>PULL CREDIT</controllingFieldValue>
+            <controllingFieldValue>APPROVED - APPROVED</controllingFieldValue>
+            <controllingFieldValue>NEW - SCORECARD GENERATED</controllingFieldValue>
+            <valueName>Funding Partner Problem</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Buyback_Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This field is used to indicate the loan's buyback status.</inlineHelpText>
+    <label>Buyback Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Not Yet Boarded</fullName>
+                <default>false</default>
+                <label>Not Yet Boarded</label>
+            </value>
+            <value>
+                <fullName>Boarded</fullName>
+                <default>false</default>
+                <label>Boarded</label>
+            </value>
+            <value>
+                <fullName>Disbursed By Bank</fullName>
+                <default>false</default>
+                <label>Disbursed By Bank</label>
+            </value>
+            <value>
+                <fullName>Buyback Complete</fullName>
+                <default>false</default>
+                <label>Buyback Complete</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

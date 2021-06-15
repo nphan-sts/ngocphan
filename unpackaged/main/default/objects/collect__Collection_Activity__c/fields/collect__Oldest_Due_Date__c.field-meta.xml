@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Oldest_Due_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Indicates the oldest due date of contract which is related to this collection activity.</description>
+    <externalId>false</externalId>
+    <label>Oldest Due Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

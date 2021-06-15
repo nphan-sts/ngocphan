@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__category_check</fullName>
+    <active>true</active>
+    <description>make sure that category is populated</description>
+    <errorConditionFormula>ISNULL(peer__Category__c )</errorConditionFormula>
+    <errorMessage>Category cannot be empty</errorMessage>
+</ValidationRule>

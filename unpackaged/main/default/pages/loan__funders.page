@@ -1,0 +1,74 @@
+<apex:page lightningStylesheets="true" standardController="loan__Funder__c" id="funderManagementPage"
+	extensions="loan.FunderController" recordSetVar="FunderSet"
+	tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:form >
+		<apex:sectionHeader title="List of Funders" />
+		<apex:pageblock id="FunderList">
+			<apex:actionRegion >
+				<apex:outputText value="Records per page: "></apex:outputText>
+				<apex:selectList value="{!pagesize}" size="1">
+					<apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+					<apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="25"></apex:selectOption>
+					<apex:actionSupport event="onchange"
+						rerender="funderNameTable, navigation, funderPortfolioList, funderPortfoliosTable, portfolioTableTitle" />
+				</apex:selectList>
+			</apex:actionRegion>
+
+			<apex:pageblockTable value="{!FunderSet}" id="funderNameTable"
+				var="JA">
+				<apex:column headerValue="Action">
+					<apex:commandLink value="Edit"
+						action="{!URLFOR($Action.Funder__c.Edit, JA.Id)}" target="_blank" />
+				</apex:column>
+				<apex:column headerValue="Funder Code">
+					<apex:commandLink value="{!JA.Name}" action="{!setFunder}"
+						reRender="funderPortfoliosTable, portfolioTableTitle, funderPortfolioList">
+						<apex:param name="funder" value="{!JA.ID}" />
+					</apex:commandLink>
+				</apex:column>
+				<apex:column value="{!JA.loan__Funder_Name__c}" />
+				<apex:column value="{!JA.loan__City__c}" />
+			</apex:pageblockTable>
+		</apex:pageblock>
+		<apex:panelGrid columns="2" id="navigation">
+			<apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+			<apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+		</apex:panelGrid>
+	</apex:form>
+
+	<apex:form >
+		<apex:pageblock id="funderPortfolioList">
+			<apex:outputPanel id="funderDetail">
+				<apex:outputLabel id="portfolioTableTitle"
+					value="{!$CurrentPage.parameters.funder.Funder_Name__c}" />
+				<apex:pageblockTable value="{!portfolios}"
+					id="funderPortfoliosTable" var="JA"
+					rendered="{!renderPortfolioTable}">
+					<apex:column headerValue="Funder Portfolio Name">
+						<apex:commandLink value="{!JA.Name}"
+							action="{!URLFOR($Action.Funder_Portfolio__c.Edit, JA.Id)}"
+							target="_blank">
+							<apex:param name="funderPortfolio" value="{!JA.ID}" />
+						</apex:commandLink>
+					</apex:column>
+					<apex:column value="{!JA.loan__Center__c}" />
+					<apex:column value="{!JA.loan__Branch__c}" />
+					<apex:column value="{!JA.loan__Amount_Funded__c}" />
+				</apex:pageblockTable>
+			</apex:outputPanel>
+		</apex:pageblock>
+	</apex:form>
+
+	<apex:sectionHeader title="Define a New Funder" />
+	<apex:pageblock >
+		<apex:pageblockSection columns="2">
+			<apex:outputLink value="{!URLFOR($Action.loan__Funder__c.New)}">Define New Funder</apex:outputLink>
+			<apex:outputLink value="{!URLFOR($Action.loan__Funder_Portfolio__c.New)}">Define New Funder Portfolio</apex:outputLink>
+		</apex:pageblockSection>
+	</apex:pageblock>
+
+</apex:page>

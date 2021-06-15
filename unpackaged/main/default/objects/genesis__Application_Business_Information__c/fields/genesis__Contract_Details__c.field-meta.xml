@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Contract_Details__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Contract Details</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Contract Details</inlineHelpText>
+    <label>Contract Details</label>
+    <length>200</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

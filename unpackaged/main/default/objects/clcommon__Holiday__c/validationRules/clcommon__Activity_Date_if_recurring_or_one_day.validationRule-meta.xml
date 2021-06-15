@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Activity_Date_if_recurring_or_one_day</fullName>
+    <active>true</active>
+    <description>This date should not be populated if the holiday is marked recurring.
+Also, this date should be populated if the holiday is not marked recurring.</description>
+    <errorConditionFormula>OR(AND(clcommon__IsRecurrence__c, NOT(ISBLANK(clcommon__ActivityDate__c))), AND(NOT(clcommon__IsRecurrence__c), ISBLANK(clcommon__ActivityDate__c)))</errorConditionFormula>
+    <errorDisplayField>clcommon__ActivityDate__c</errorDisplayField>
+    <errorMessage>One of the following :
+1. Activity date MUST NOT be set if the holiday is marked RECURRING.
+2. Activity date MUST be set if the holiday is marked NOT RECURRING.</errorMessage>
+</ValidationRule>

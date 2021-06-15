@@ -1,0 +1,17 @@
+<apex:page lightningStylesheets="true" >
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<style>
+.red {
+	color: red;
+}
+</style>
+	<apex:form >
+		<apex:pageBlock >
+			<apex:outputText >
+            This page is deprecated. <br />
+			</apex:outputText>
+			<br />
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

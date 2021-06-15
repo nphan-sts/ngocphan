@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Existing_Reversal_Transaction</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISNEW() &amp;&amp;  loan__Consolidated_Loan_Payment__r.loan__Reversed__c</errorConditionFormula>
+    <errorMessage>This payment has already been reversed</errorMessage>
+</ValidationRule>

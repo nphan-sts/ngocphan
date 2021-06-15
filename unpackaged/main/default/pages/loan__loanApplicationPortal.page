@@ -1,0 +1,118 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Account__c" id="loanAccountPage">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<!--
+  <apex:sectionHeader title="Create a new Loan Application" id="loanAppSection"/>
+    
+        <apex:form >
+        <apex:pageBlock mode="edit" id="createLoanApplication">
+            <apex:pageMessages />
+            <apex:pageBlockButtons location="top">
+               <apex:commandButton value="Save" action="{!save}"/>
+               <apex:commandButton value="Save and New" action="{!saveAndNext}"/>
+               <apex:commandButton value="Cancel" immediate="true" action="{!URLFOR($Action.Loan_Account__c.Tab,$ObjectType.Loan_Account__c)}"/>
+            </apex:pageBlockButtons>
+            
+            <apex:outputpanel id="loanAppStartPanel">
+                <apex:pageBlockSection columns="2" id="loanAppStartPageBlock" title="Loan Application Type">
+                    <apex:inputCheckbox value="{!individualLoan}" label="Loan to a Contact">
+                        <apex:actionSupport action="{!setLoanTypeAsIndividual}" rerender="createLoanApplication,loanAppStartPanel,loanApplicationInfoPanel" event="onchange"/>
+                    </apex:inputCheckbox>
+                    <apex:inputCheckbox value="{!groupLoan}" label="Loan to an Account">
+                        <apex:actionSupport action="{!setLoanTypeAsGroup}" rerender="createLoanApplication,loanAppStartPanel,loanApplicationInfoPanel" event="onchange"/>
+                    </apex:inputCheckbox>
+                    <apex:inputField value="{!loanAccount.Client__c}" rendered="{!individualLoan && NOT(renderSFCRMAccount)}"/>
+                    <apex:inputField value="{!contactObj.Name}" rendered="{!individualLoan && renderSFCRMAccount}"/>
+                    <apex:inputField value="{!loanAccount.Account__c}" rendered="{!groupLoan && renderSFCRMAccount}"/>
+                </apex:pageBlockSection>
+            </apex:outputpanel>
+            
+            <apex:outputpanel id="loanApplicationInfoPanel">
+                
+                <apex:pageBlockSection columns="2" id="LAPageBlock" title="Loan Application Information" rendered="{!individualLoan || groupLoan}">
+                    <apex:inputField value="{!loanAccount.Loan_Purpose__c}"/>
+                    <apex:inputField value="{!loanAccount.Loan_Product_Name__c}">
+                        <apex:actionSupport action="{!getLPInfo}" rerender="loanAmntPanel,createLoanApplication, LAPageBlock" event="onchange" status="productChange"/>
+                    </apex:inputField>
+                    
+                    <apex:outputField value="{!loanAccount.Loan_Status__c}" />
+                    <apex:outputField value="{!loanAccount.Branch__c}" />
+                    <apex:outputField value="{!loanAccount.Source_Loan_Officer__c}" />                    
+                    <apex:outputField value="{!loanAccount.Fee_Set__c}" />
+                </apex:pageBlockSection>
+            </apex:outputpanel>
+            <center><apex:actionStatus id="productChange">
+                <apex:facet name="start" >
+                    <apex:image value="/img/loading32.gif" style="height:15px;"/>
+                </apex:facet>
+            </apex:actionStatus></center>
+            <apex:outputpanel id="loanAmntPanel">
+                <apex:pageBlockSection columns="2" id="loanAmntPageBlock" title="Loan Amount" rendered="{!renderLoanAmountPage}">
+                    <apex:inputField value="{!loanAccount.Loan_Amount__c}" required="false"/>
+                    <apex:outputField value="{!loanAccount.Interest_Rate__c}" />
+                    <apex:inputField value="{!loanAccount.Interest_Calculation_Method__c}">
+                        <apex:actionSupport rerender="loanAmntPanel" event="onchange"/>
+                    </apex:inputField>
+                    <apex:inputField value="{!loanAccount.Time_Counting_Method__c}" required="true"/>                    
+                    <apex:inputField value="{!loanAccount.Interest_Only_Period__c}" rendered="{!loanAccount.Interest_Calculation_Method__c == 'Interest Only'}"/>
+                    <apex:inputField value="{!loanAccount.Balloon_Payment__c}"/>
+                    <apex:inputField value="{!loanAccount.Funder__c}" />
+                </apex:pageBlockSection>
+                <apex:pageBlockSection columns="1" rendered="{!loanAccount.Interest_Calculation_Method__c == 'Flexible Repayment'}">  
+                    <c:RateSchedule rateScheduleList="{!rateSchedule}"
+                                    paymentStartDate="{!loanAccount.Expected_Disbursal_Date__c}"
+                                    interestRate="{!Loan_Account__c.Interest_Rate__c}"
+                                    paymentFrequency="{!Loan_Account__c.Frequency_of_Loan_Payment__c}"
+                                    showButtons="Add,Validate,Clear"/>
+              </apex:pageBlockSection>
+            </apex:outputpanel>
+            
+            <apex:outputpanel id="repaymentsPanel">
+                <apex:pageBlockSection columns="2" id="paymentPageBlock" title="Payment Information" rendered="{!renderLoanAmountPage}">
+                    <apex:outputField value="{!loanAccount.Repayment_Procedure__c}"/>
+                    
+                    <apex:inputField value="{!loanAccount.Expected_Disbursal_Date__c}">
+                        <apex:actionSupport action="{!validateExpectedDD}" rerender="createLoanApplication" event="onblur"/>
+                    </apex:inputField>
+                    
+                    <apex:inputField value="{!loanAccount.Number_of_Installments__c}" required="false" />
+                    
+                    <apex:inputField value="{!loanAccount.Frequency_of_Loan_Payment__c}" required="true" />
+                    <apex:inputField value="{!loanAccount.Expected_Repayment_Start_Date__c}" rendered="{!renderRepaymentFields}" required="true"/>
+                    
+                    <apex:inputCheckbox value="{!generateRepaymentSchedule}" label="Generate Repayment Schedule"  disabled="true"/>
+                    
+                </apex:pageBlockSection>
+                
+            </apex:outputpanel>
+            
+            <apex:outputpanel id="graceAndTolerancePanel">
+                <apex:pageBlockSection columns="2" id="gTPageBlock" title="Grace period and Pre bill days" rendered="{!renderLoanAmountPage}">
+                    <apex:inputField value="{!loanAccount.Grace_Period_for_Repayments__c}"/>
+                    <apex:inputField value="{!loanAccount.Pre_Bill_Days__c}"/>
+                    <apex:inputField value="{!loanAccount.Delinquency_Grace_Days__c}"/>
+                    <apex:inputField value="{!loanAccount.Write_off_Tolerance_Amount__c}"/>
+                </apex:pageBlockSection>                
+            </apex:outputpanel>
+            
+            <apex:outputpanel id="amzPanel">
+                <apex:pageBlockSection columns="2" id="amzPageBlock" title="Amortization" rendered="{!renderLoanAmountPage}">
+                    <apex:inputField value="{!loanAccount.LA_Amortization_Enabled__c}"/>
+                    <apex:inputField value="{!loanAccount.LA_Amortized_Balance_Type__c}"/>
+                    <apex:inputField value="{!loanAccount.LA_Amortization_Calculation_Method__c}"/>
+                    <apex:inputField value="{!loanAccount.LA_Amortization_Frequency__c}"/>
+                </apex:pageBlockSection>                
+            </apex:outputpanel>
+            
+            <apex:outputpanel id="Co-Applicant">
+                <apex:pageBlockSection columns="2" id="coApplicantPageBlock" title="Co applicant Information" rendered="{!renderLoanAmountPage}">
+                    <apex:inputField value="{!loanAccount.Co_Applicant__c}"/>
+                    <apex:inputField value="{!loanAccount.Guarantor__c}"/>
+                </apex:pageBlockSection>                
+            </apex:outputpanel>
+
+
+        </apex:pageBlock>
+        </apex:form>
+                   -->
+</apex:page>

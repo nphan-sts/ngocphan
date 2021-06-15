@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Batch_Size_For_Reschedule_Jobs__c</fullName>
+    <defaultValue>20</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This batch size will be considered for jobs which can reschedule the Loans. LoanRescheduleJob, ChangeInterestRateJob and FloatingRateRevisionJob.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This batch size will be considered for jobs which can reschedule the Loans. LoanRescheduleJob, ChangeInterestRateJob and FloatingRateRevisionJob.</inlineHelpText>
+    <label>Batch Size For Reschedule Jobs</label>
+    <precision>4</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

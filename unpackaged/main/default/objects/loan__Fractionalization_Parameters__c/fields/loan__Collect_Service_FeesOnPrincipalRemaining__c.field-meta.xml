@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Collect_Service_FeesOnPrincipalRemaining__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If this option is selected, service fee for investor is calculated on the principal remaining prior to this payment. If you are selecting this option, do not select 'Collect Service Fees on Principal' to avoid over charging the investor.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If this option is selected, service fee for investor is calculated on the principal remaining prior to this payment. If you are selecting this option, do not select 'Collect Service Fees on Principal' to avoid over charging the investor.</inlineHelpText>
+    <label>Collect Serv Fee On Principal Remaining</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

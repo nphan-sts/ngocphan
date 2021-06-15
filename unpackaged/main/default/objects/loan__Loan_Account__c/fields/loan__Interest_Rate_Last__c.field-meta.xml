@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Interest_Rate_Last__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Last Interest Rate</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the last interest rate that was applied on the loan.</inlineHelpText>
+    <label>Last Interest Rate</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>4</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

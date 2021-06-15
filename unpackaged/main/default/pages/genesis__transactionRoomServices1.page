@@ -1,0 +1,315 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" >
+<script type="text/javascript">
+    var __sfdcSessionId = '{!GETSESSIONID()}';
+</script>
+<script src="/soap/ajax/30.0/connection.js" type="text/javascript"></script>
+<script>
+    'use strict';    
+        //utility service
+        angular.module('transactionRoomApp')
+            .service('utilitiesService', ['vfr', '$q', '$timeout' , function(vfr,$q, $timeout) {
+                var factory = {};
+                factory.notifyUser = function(messageType, message) {
+                    noty({
+                          template: '<div class="noty_message" class="notifyContainer"><span class="noty_text"></span><div class="noty_close"></div></div>',
+                          text: message,
+                          timeout: factory.notyTimeout,
+                          type: messageType,
+                          dismissQueue: false,
+                          force: true
+                     });
+                 };          
+            return factory;
+        }]);
+                
+        // static data load services
+        angular.module('transactionRoomApp')
+            .service('staticDataService', ['vfr', '$q', '$timeout' , function(vfr,$q, $timeout) {
+                var factory = {};
+                var docCatSetupList = {
+                        promise: null,
+                        data: null
+                };
+                
+                var userSetupList = {
+                        promise: null,
+                        data: null
+                };
+                
+                var appPartyList = {
+                        promise: null,
+                        data: null
+                };
+                
+                var statusOptns = {
+                    promise: null,
+                    data: null
+                }
+                
+                var closedTaskStatus = {
+                    promise: null,
+                    data: null
+                }
+                
+                var fetchPicklistValues = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.getPicklistValues' , {} , false);
+                factory.adcPkListValues = function(param1,param2) {       
+                    var deferred = $q.defer();
+                    statusOptns.promise = deferred.promise;
+                    if (statusOptns.data) {
+                        $timeout(function() {
+                            deferred.resolve(statusOptns.data);
+                        }, 0);
+                    } else {
+                        //var fetchADCStatusOptns = vfr.describePicklistValues(nsPrefixRef + 'Application_Document_Category__c', nsPrefixRef + 'Status__c');
+                        fetchPicklistValues(param1, param2).then(function(data) {
+                            statusOptns.data = data;
+                            deferred.resolve(statusOptns.data);
+                        });
+                    }
+                    return statusOptns.promise;
+                };
+                
+                var queryAllDocCat = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.getAllDocumentCategories' , {} , false);
+                factory.docCatSetup = function() {
+                    var deferred = $q.defer();
+                    docCatSetupList.promise = deferred.promise;
+                    if (docCatSetupList.data) {
+                        $timeout(function() {
+                            deferred.resolve(docCatSetupList.data);
+                        }, 0);
+                    } else {
+                        queryAllDocCat().then(function(data) {
+                            docCatSetupList.data = data;
+                            deferred.resolve(docCatSetupList.data);
+                        });
+                    }
+                    return docCatSetupList.promise;
+                };
+                
+                var queryUsers = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.getAllUsers' , {} , true);
+                factory.userList = function(param1) {
+                    var deferred = $q.defer();
+                    userSetupList.promise = deferred.promise;
+                    if (userSetupList.data) {
+                        $timeout(function() {
+                            deferred.resolve(userSetupList.data);
+                        }, 0);
+                    } else {
+                        queryUsers(param1).then(function(data) {
+                            userSetupList.data = data;
+                            deferred.resolve(userSetupList.data);
+                        });
+                    }
+                    return userSetupList.promise;
+                };
+                
+                var queryParties = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.getAllPartiesOnApplication' , {} , true);
+                factory.partyList = function(param1) {
+                    var deferred = $q.defer();
+                    appPartyList.promise = deferred.promise;
+                    if (appPartyList.data) {
+                        $timeout(function() {
+                            deferred.resolve(appPartyList.data);
+                        }, 0);
+                    } else {
+                        queryParties(param1).then(function(data) {
+                            appPartyList.data = data;
+                            deferred.resolve(appPartyList.data);
+                        });
+                    }
+                    return appPartyList.promise;
+                };
+                
+                var queryClosedTaskStatus = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.getClosedTaskStatusName' , {} , true);
+                factory.closedTaskStatusList = function() {
+                    var deferred = $q.defer();
+                    closedTaskStatus.promise = deferred.promise;
+                    if (closedTaskStatus.data) {
+                        $timeout(function() {
+                            deferred.resolve(closedTaskStatus.data);
+                        }, 0);
+                    } else {
+                        queryClosedTaskStatus().then(function(data) {
+                            closedTaskStatus.data = data;
+                            deferred.resolve(closedTaskStatus.data);
+                        });
+                    }
+                    return closedTaskStatus.promise;
+                };
+                
+                return factory;
+            }]);
+        
+        angular.module('transactionRoomApp')
+            .service('onPageLoadService', ['vfr', function(vfr) {
+                var factory = {};
+                var userTypeQuery = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.isLoggedInUserInternal',{},false);
+                factory.getAtchList = function(param) {
+                    return userTypeQuery(param);
+                };
+                return factory;
+            }]);  
+        
+        // actions on application document category
+        angular.module('transactionRoomApp')
+            .service('actionsOnADCService', ['vfr', function(vfr) {
+                var factory = {}; 
+                
+                var addNewAppDocQuery = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.addApplicationDocuments' , {} , false);   
+                var addNewAppDocFolderQuery = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.addAppDocumentFolder' , {} , false); 
+                var deleteAppDocQuery = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.deleteApplicationDocuments' , {} , false); 
+                var undodeleteAppDocqQery = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.undoDeleteApplicationDocuments' , {} , false);  
+                var fetchSummaryObj = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.fetchSummaryObjForADC' , {} , false); 
+                var saveADCQuery = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.saveAppDocDetails' , {} , false);
+                var adcNotify = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.notify' , {} , false);
+                var cancelEdit = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.reQueryAppDocDetail' , {} , false);
+                
+                factory.addNewAppDoc = function(param1,param2) {
+                    return addNewAppDocQuery(param1,param2);
+                },
+                factory.addNewAppDocFolder = function(param1,param2,param3) {
+                    return addNewAppDocFolderQuery(param1,param2,param3);
+                }
+                factory.deleteAppDoc = function(param1,param2) {
+                    return deleteAppDocQuery(param1,param2);
+                }
+                factory.undodeleteAppDoc = function(param1,param2) {
+                    return undodeleteAppDocqQery(param1,param2);
+                }
+                factory.getChildId = function(appId,adcId){
+                    return fetchSummaryObj(appId,adcId);
+                }
+                factory.saveADC = function(param1,param2){
+                    return saveADCQuery(param1,param2);
+                }
+                factory.sendNotification = function(param1,param2){
+                    return adcNotify(param1,param2);
+                }
+                factory.fetchDetails = function(param1,param2){
+                    return cancelEdit(param1,param2);
+                }
+                return factory;
+        }]);
+        
+        
+        angular.module('transactionRoomApp')
+            .service('fetchAllADCService', ['vfr', function(vfr) {
+                
+                var factory = {};   
+                var getAllApplicationDocumentsQuery = vfr.send(nsPrefixDot +'TransactionRoomRemoteAction.getAllRelevantDocumentCategories' , {} , true);  
+                factory.getAllAppDocList = function(param) {  
+                     return getAllApplicationDocumentsQuery(param);
+                };
+                
+                var getApplicationTreeQuery = vfr.send(nsPrefixDot +'TransactionRoomRemoteAction.getApplicationTreeStr' , {} , true);
+                factory.getApplicationTree = function(param) {  
+                     return getApplicationTreeQuery(param);
+                };
+                
+                var getUserTasksQuery = vfr.send(nsPrefixDot +'TransactionRoomRemoteAction.getUserTasksForApplication' , {} , false);
+                factory.getUserTaskList = function(param) {  
+                     return getUserTasksQuery(param);
+                };
+                return factory;
+            }]);
+        
+        angular.module('transactionRoomApp')
+            .service('actionsOnAttachmentsService', ['vfr', function(vfr) {
+                var factory = {};
+                var linkDroppedAttachmentToADC = vfr.send(nsPrefixDot +'TransactionRoomRemoteAction.linkAttachmentToADC' ,{} , false);
+                var unlinkAttachmentFromADC = vfr.send(nsPrefixDot +'TransactionRoomRemoteAction.unlinkAttachmentFromADC' ,{} , false);
+                
+                factory.getLinkedAtchList = function(param1,param2,param3) {
+                    return linkDroppedAttachmentToADC(param1,param2,param3);
+                };
+                
+                factory.unLinkedAtchList = function(param1,param2,param3) {
+                    return unlinkAttachmentFromADC(param1,param2,param3);
+                };
+                
+                return factory;
+            }]); 
+             
+        angular.module('transactionRoomApp')
+            .service('fileUploaderService', ['vfr', function(vfr) {
+                var factory = {};
+                var createJunction = vfr.send(nsPrefixDot +'TransactionRoomRemoteAction.createJunction', {}, false);
+                var fileUploadFn = function(param1,param2,param3,param4,param5,param6) {
+                    var attachment         = new sforce.SObject('Attachment');
+                    attachment.Name        = param3;
+                    attachment.IsPrivate   = false;
+                    attachment.ContentType = param4;
+                    attachment.Body        = param5;
+                    attachment.Description = param3;
+                    attachment.ParentId    = param2;
+                    console.log('Uploading to server');
+                    
+                    var newAttachment;
+                    try {
+                        newAttachment = sforce.connection.create([attachment]);                        
+                        if(newAttachment[0].getBoolean("success")) {
+                            var d1 = new Date();
+                            console.log('on success time : ' + d1.getTime());
+                            console.log("new attachment created with id " + newAttachment[0].id);
+                            /*var junction = new sforce.SObject('genesis__AppDocCatAttachmentJunction__c');
+                            junction.genesis__Application_Document_Category__c = param1; 
+                            junction.genesis__AttachmentId__c = newAttachment[0].id;
+                            var newJunction = sforce.connection.create([junction]);
+                            var fullAttachment;
+                            if (newJunction[0].getBoolean("success")) { 
+                                fullAttachment = sforce.connection.retrieve("Id, Name, ParentId, BodyLength, CreatedDate," +
+                                                "LastModifiedDate, CreatedBy.Id, CreatedBy.Name," +
+                                                "LastModifiedBy.Id, LastModifiedBy.Name", "Attachment", [newAttachment[0].id]);
+                                if(fullAttachment[0] == null) {
+                                    throw "Retrieve failed";                                     
+                                }
+                                console.log("new junction created with id " + newJunction[0].id);                                        
+                                console.log('Uploading junction to server');
+                                var d3 = new Date();
+                                console.log(' after call time : ' + d3.getTime());
+                                console.log('done calling server');
+                            }
+                            else {                                        
+                                console.log("failed to create junction " + newJunction[0]);
+                            }*/
+                            var attachmentId = newAttachment[0].id;
+                            return createJunction(param1, attachmentId); 
+                            //return fullAttachment;
+                        } else {
+                            console.log('Document upload failed');
+                            throw "Document upload failed";
+                        }
+                    } catch (err) {
+                        throw err;
+                    }
+                };
+                //vfr.send(nsPrefixDot +'TransactionRoomRemoteAction.attachBlob', {} , false);
+                              
+                factory.registerImportRequest = function(param1,param2,param3,param4,param5,param6) {
+                
+                    return fileUploadFn(param1,param2,param3,param4,param5,param6);
+                };
+                
+                return factory;
+            }]);            
+                    
+        angular.module('transactionRoomApp')
+            .service('attachmentsService', ['vfr', function(vfr) {
+                var factory = {};
+                var isOpen = false;
+                var atchQuery = vfr.send(nsPrefixDot + 'TransactionRoomRemoteAction.getAllAttachments' ,{} , false); 
+                factory.getAtchList = function(param) {
+                    return atchQuery(param);
+                };
+                
+                factory.isOpen = function(){
+                    return isOpen;
+                }
+                
+                factory.toggle = function(){
+                    isOpen = !isOpen;
+                }
+                return factory;
+            }]);            
+</script>
+</apex:page>

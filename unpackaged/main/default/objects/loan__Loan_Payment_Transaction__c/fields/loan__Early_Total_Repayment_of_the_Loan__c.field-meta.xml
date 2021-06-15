@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Early_Total_Repayment_of_the_Loan__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>After a loan is disbursed, a client can at any time repay the loan in a single payment.
+he system calculates the total amount due as of the current date, including principal, interest, fees and penalties.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>After a loan is disbursed, a client can at any time repay the loan in a single payment. 
+the system calculates the total amount due as of the current date, including principal, interest, fees and penalties.</inlineHelpText>
+    <label>Pay-Off</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

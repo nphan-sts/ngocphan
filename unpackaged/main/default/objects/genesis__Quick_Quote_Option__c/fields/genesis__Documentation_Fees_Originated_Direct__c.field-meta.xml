@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Documentation_Fees_Originated_Direct__c</fullName>
+    <defaultValue>0.00</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Setup for the documentation fees when the quote is originated by Internal Sales Representative.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Setup for the documentation fees when the quote is originated by an Internal Sales Representative.</inlineHelpText>
+    <label>Documentation Fees (Direct)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

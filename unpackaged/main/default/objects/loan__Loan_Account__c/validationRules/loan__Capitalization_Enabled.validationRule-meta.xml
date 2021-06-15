@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Capitalization_Enabled</fullName>
+    <active>true</active>
+    <description>Capitalization is supported only if Interest Posting is Enabled on a contract.</description>
+    <errorConditionFormula>AND( NOT( loan__Is_Interest_Posting_Enabled__c),  loan__Is_Capitalization_Enabled__c )</errorConditionFormula>
+    <errorDisplayField>loan__Is_Capitalization_Enabled__c</errorDisplayField>
+    <errorMessage>Capitalization is not supported, Kindly enable Interest Posting first.</errorMessage>
+</ValidationRule>

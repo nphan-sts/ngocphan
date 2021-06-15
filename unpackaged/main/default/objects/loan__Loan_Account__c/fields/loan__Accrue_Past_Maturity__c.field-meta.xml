@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Accrue_Past_Maturity__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Indicates if interest accrual should happen after maturity.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If this is unchecked, then the account will stop accruing interest post maturity.</inlineHelpText>
+    <label>Accrue Past Maturity</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

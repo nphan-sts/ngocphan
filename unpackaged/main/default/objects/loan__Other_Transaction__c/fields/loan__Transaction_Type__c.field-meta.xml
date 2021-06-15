@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Transaction_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Transaction Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Reschedule</fullName>
+                <default>false</default>
+                <label>Reschedule</label>
+            </value>
+            <value>
+                <fullName>Extension</fullName>
+                <default>false</default>
+                <label>Extension</label>
+            </value>
+            <value>
+                <fullName>PrincipalAdjustment-Add</fullName>
+                <default>false</default>
+                <label>PrincipalAdjustment-Add</label>
+            </value>
+            <value>
+                <fullName>Refund</fullName>
+                <default>false</default>
+                <label>Refund</label>
+            </value>
+            <value>
+                <fullName>Additional Repayment</fullName>
+                <default>false</default>
+                <label>Additional Repayment</label>
+            </value>
+            <value>
+                <fullName>Stop Accrual</fullName>
+                <default>false</default>
+                <label>Stop Accrual</label>
+            </value>
+            <value>
+                <fullName>Start Accrual</fullName>
+                <default>false</default>
+                <label>Start Accrual</label>
+            </value>
+            <value>
+                <fullName>Rate Change</fullName>
+                <default>false</default>
+                <label>Rate Change</label>
+            </value>
+            <value>
+                <fullName>Loan Maintenance</fullName>
+                <default>false</default>
+                <label>Loan Maintenance</label>
+            </value>
+            <value>
+                <fullName>One Time ACH</fullName>
+                <default>false</default>
+                <label>One Time ACH</label>
+            </value>
+            <value>
+                <fullName>Payment Tolerance Change</fullName>
+                <default>false</default>
+                <label>Payment Tolerance Change</label>
+            </value>
+            <value>
+                <fullName>Charge Off</fullName>
+                <default>false</default>
+                <label>Charge Off</label>
+            </value>
+            <value>
+                <fullName>PayOff Quote Generation</fullName>
+                <default>false</default>
+                <label>PayOff Quote Generation</label>
+            </value>
+            <value>
+                <fullName>Recurring ACH</fullName>
+                <default>false</default>
+                <label>Recurring ACH</label>
+            </value>
+            <value>
+                <fullName>Interest Waive</fullName>
+                <default>false</default>
+                <label>Interest Waive</label>
+            </value>
+            <value>
+                <fullName>Due Day Change</fullName>
+                <default>false</default>
+                <label>Due Day Change</label>
+            </value>
+            <value>
+                <fullName>Credit Limit Change</fullName>
+                <default>false</default>
+                <label>Credit Limit Change</label>
+            </value>
+            <value>
+                <fullName>Index Rate Change</fullName>
+                <default>false</default>
+                <label>Index Rate Change</label>
+            </value>
+            <value>
+                <fullName>Delinquent Pmt Plan Reversal</fullName>
+                <default>false</default>
+                <label>Delinquent Pmt Plan Reversal</label>
+            </value>
+            <value>
+                <fullName>Charge Waive</fullName>
+                <default>false</default>
+                <label>Charge Waive</label>
+            </value>
+            <value>
+                <fullName>Charge Unwaive</fullName>
+                <default>false</default>
+                <label>Charge Unwaive</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

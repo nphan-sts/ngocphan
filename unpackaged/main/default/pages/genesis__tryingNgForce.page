@@ -1,0 +1,85 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" docType="html-5.0" showHeader="false" standardstylesheets="false" sidebar="false" standardController="Contact">
+  <html>
+  <head>
+  </head>
+
+<apex:remoteObjects >
+    <apex:remoteObjectModel name="Contact" jsShorthand="ContactGateway" fields="Id,FirstName,LastName,CreatedDate"> 
+</apex:remoteObjectModel>
+    </apex:remoteObjects>
+  <body ng-app="contactManager">
+         <div class="container">
+            <h1>Contact Manager</h1>
+            <div ng-view="ng-view">
+            </div>
+        </div>
+                          
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.0/angular-route.js" />
+
+    <script>
+    
+    angular.module('contactManager', ['ngRoute'])
+            .constant('resourceUrl', '/resource/'+Date.now()+'/ContactManagerSPA/app')
+            .config(['$routeProvider', 'resourceUrl', function($routeProvider, resourceUrl) {
+                $routeProvider
+                    .when('/', {
+                        templateUrl:  resourceUrl+'/contact/contact-list.html'
+                        ,controller: 'contactListController'
+                    })
+                    .when('/new', {
+                        templateUrl:  resourceUrl+'/contact/contact-new.html'
+                        ,controller: 'contactNewController'
+                    })
+                    .when('/edit/:contactId', {
+                        templateUrl:  resourceUrl+'/contact/contact-edit.html'
+                        ,controller: 'contactEditController'
+                    })
+                    .otherwise({
+                        redirectTo: '/'
+                    });
+            }]).service('contactGateway', SObjectModel.ContactGateway);
+        
+        
+        var ContactEntity = function() {
+        
+        };
+        
+        ContactEntity.fromRemoteObjectModel = function(model) {
+            var entity = new ContactEntity();
+            entity.id = model.get('Id');
+            entity.firstName = model.get('FirstName');
+            entity.lastName = model.get('LastName');
+            entity.createdDate = model.get('CreatedDate');
+            entity.favoriteBeerCategory = model.get('FavoriteBeerCategory');
+        
+            return entity;
+        }
+        
+        ContactEntity.prototype.toRemoteObjectModelDetails = function() {
+            var details = {};
+        
+            if (this.id) {
+                details.Id = this.id;
+            }
+        
+            details.FirstName = this.firstName;
+            details.LastName = this.lastName;
+            details.FavoriteBeerCategory = this.favoriteBeerCategory;
+        
+            return details;
+        }
+        
+        ContactEntity.prototype.id = '';
+        ContactEntity.prototype.firstName = '';
+        ContactEntity.prototype.lastName = '';
+        ContactEntity.prototype.createdDate = '';
+        ContactEntity.prototype.favoriteBeerCategory = '';
+        
+    </script>
+  </body>
+      
+  </html >
+    
+</apex:page>

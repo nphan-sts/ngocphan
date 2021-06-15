@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Center_Loan_Validation</fullName>
+    <active>false</active>
+    <description>This validation rule is deprecated.</description>
+    <errorConditionFormula>AND(
+ISPICKVAL( loan__Loan_Product_Name__r.loan__Loan_Product_Type__c  , 'Center-Group-Client'),
+ OR(
+         ISBLANK( loan__Client__r.loan__Center__c ) ,
+         ISBLANK( loan__Client__r.loan__Group__c )
+  )
+)</errorConditionFormula>
+    <errorMessage>The Loan Product is of type 'Center-Group-Client (Center Loan)'.  Client must be associated with a Center and a Group.</errorMessage>
+</ValidationRule>

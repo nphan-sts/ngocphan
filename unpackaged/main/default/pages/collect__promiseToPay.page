@@ -1,0 +1,45 @@
+<apex:page id="ptpPage" controller="collect.PromiseToPayCtrl" sidebar="false" showHeader="false">
+    <script src="{!URLFOR($Resource.collect__jQueryFiles, 'js/jquery-1.8.3.min.js')}"/>
+    <script src="{!URLFOR($Resource.collect__helperclose)}"/>
+    <script> function setFocusOnLoad(){} </script>
+    <script>
+        j$ = jQuery.noConflict();
+    </script>
+    <style type="text/css">
+            .bPageHeader {
+                display:none;
+            }
+        	.bPageFooter.noTableFooter {
+        		display:none;
+        	}
+    </style>
+    <!--<apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.modalheaderStyle,'')}"/>-->
+    <apex:form id="ptpForm">
+        <apex:pageblock mode="edit" id="topBlock">
+            <apex:inlineEditSupport />
+            <apex:pageBlockButtons location="bottom" >
+                <apex:commandButton value="Save" action="{!save}"
+                    		  		reRender="ptpForm"
+                    		  		id="saveBtn"
+                					oncomplete="({!closeModal}===true) ? closeFragment1() : {};"/>
+                <apex:commandButton value="Cancel" reRender="ptpForm" 
+                            		immediate="true"
+                            		action="{!cancel}" 
+                            		id="cancelBtn"/>
+            </apex:pageBlockButtons>
+            <apex:pageMessages />
+            	<apex:pageBlockSection columns="1" title="Promise to Pay Information">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Contract Name" for="conName"/>
+                    	<apex:outputfield id="conName" value="{!ptp.collect__Contract_Name__c}">                            
+                            <apex:inlineEditSupport disabled="true"/>
+                    	</apex:outputField>
+                	</apex:pageBlockSectionItem>
+                   	<apex:inputField value="{!ptp.collect__Promise_To_Pay_Date__c}"/>
+                    <apex:inputField value="{!ptp.collect__Promise_To_Pay_Amount__c}"/>
+                    <apex:inputField value="{!ptp.collect__Promise_Made_On__c}"/>
+                    <apex:inputField value="{!ptp.collect__Promise_Kept__c}"/>
+            	</apex:pageBlockSection>
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

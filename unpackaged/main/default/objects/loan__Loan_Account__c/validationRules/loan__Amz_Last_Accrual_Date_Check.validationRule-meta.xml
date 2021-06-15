@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Amz_Last_Accrual_Date_Check</fullName>
+    <active>true</active>
+    <description>For Amz Based loans, the last accrual date cannot be moved back.</description>
+    <errorConditionFormula>AND (ISCHANGED(loan__Last_Accrual_Date__c),PRIORVALUE(loan__Last_Accrual_Date__c) =  DATE(3000,12,31),ISPICKVAL(loan__Product_Type__c, 'Amz Based Loan'),
+CONTAINS( TEXT(loan__Loan_Status__c), 'Active'))</errorConditionFormula>
+    <errorMessage>For Amz Based loans, the last accrual date cannot be moved back.</errorMessage>
+</ValidationRule>

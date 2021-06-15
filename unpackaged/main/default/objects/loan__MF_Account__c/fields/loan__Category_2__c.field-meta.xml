@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Category_2__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Category 2</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Accrual Payable Interests</fullName>
+                <default>false</default>
+                <label>Accrual Payable Interests</label>
+            </value>
+            <value>
+                <fullName>Accrual Receivable Interests</fullName>
+                <default>false</default>
+                <label>Accrual Receivable Interests</label>
+            </value>
+            <value>
+                <fullName>Assets in The Union Credit Group</fullName>
+                <default>false</default>
+                <label>Assets in The Union Credit Group</label>
+            </value>
+            <value>
+                <fullName>Borrowings Overnight and Term Treasury</fullName>
+                <default>false</default>
+                <label>Borrowings Overnight and Term Treasury</label>
+            </value>
+            <value>
+                <fullName>Cash and Equivalent</fullName>
+                <default>false</default>
+                <label>Cash and Equivalent</label>
+            </value>
+            <value>
+                <fullName>Cash held in Banks and Other Financial Institutions</fullName>
+                <default>false</default>
+                <label>Cash held in Banks and Other Financial Institutions</label>
+            </value>
+            <value>
+                <fullName>Cash in Vaults</fullName>
+                <default>false</default>
+                <label>Cash in Vaults</label>
+            </value>
+            <value>
+                <fullName>Consumer Loans</fullName>
+                <default>false</default>
+                <label>Consumer Loans</label>
+            </value>
+            <value>
+                <fullName>Current Accounts</fullName>
+                <default>false</default>
+                <label>Current Accounts</label>
+            </value>
+            <value>
+                <fullName>Equipment Loans</fullName>
+                <default>false</default>
+                <label>Equipment Loans</label>
+            </value>
+            <value>
+                <fullName>Equity Investments</fullName>
+                <default>false</default>
+                <label>Equity Investments</label>
+            </value>
+            <value>
+                <fullName>Finance Loans to Banks and Other Financial Institutions</fullName>
+                <default>false</default>
+                <label>Finance Loans to Banks and Other Financial Institutions</label>
+            </value>
+            <value>
+                <fullName>Financial Borrowings</fullName>
+                <default>false</default>
+                <label>Financial Borrowings</label>
+            </value>
+            <value>
+                <fullName>Fixed Assets &amp; Depreciation</fullName>
+                <default>false</default>
+                <label>Fixed Assets &amp; Depreciation</label>
+            </value>
+            <value>
+                <fullName>Gross Loans</fullName>
+                <default>false</default>
+                <label>Gross Loans</label>
+            </value>
+            <value>
+                <fullName>Legal Reserves</fullName>
+                <default>false</default>
+                <label>Legal Reserves</label>
+            </value>
+            <value>
+                <fullName>Long Term Deposits</fullName>
+                <default>false</default>
+                <label>Long Term Deposits</label>
+            </value>
+            <value>
+                <fullName>Mortgage Loans</fullName>
+                <default>false</default>
+                <label>Mortgage Loans</label>
+            </value>
+            <value>
+                <fullName>Net ProfitLoss of Period +- From January</fullName>
+                <default>false</default>
+                <label>Net ProfitLoss of Period +- From January</label>
+            </value>
+            <value>
+                <fullName>Network Resources</fullName>
+                <default>false</default>
+                <label>Network Resources</label>
+            </value>
+            <value>
+                <fullName>Non Performing Loans</fullName>
+                <default>false</default>
+                <label>Non Performing Loans</label>
+            </value>
+            <value>
+                <fullName>Non Performing Securities</fullName>
+                <default>false</default>
+                <label>Non Performing Securities</label>
+            </value>
+            <value>
+                <fullName>Other Long Term Liabilities</fullName>
+                <default>false</default>
+                <label>Other Long Term Liabilities</label>
+            </value>
+            <value>
+                <fullName>Other Reserves</fullName>
+                <default>false</default>
+                <label>Other Reserves</label>
+            </value>
+            <value>
+                <fullName>Other Securities</fullName>
+                <default>false</default>
+                <label>Other Securities</label>
+            </value>
+            <value>
+                <fullName>Others Assets Stock,…</fullName>
+                <default>false</default>
+                <label>Others Assets Stock,…</label>
+            </value>
+            <value>
+                <fullName>Others Loans</fullName>
+                <default>false</default>
+                <label>Others Loans</label>
+            </value>
+            <value>
+                <fullName>Overdraft &amp; Treasury Loans</fullName>
+                <default>false</default>
+                <label>Overdraft &amp; Treasury Loans</label>
+            </value>
+            <value>
+                <fullName>Paid up Capital</fullName>
+                <default>false</default>
+                <label>Paid up Capital</label>
+            </value>
+            <value>
+                <fullName>Payable Accounts and other short term liabilities</fullName>
+                <default>false</default>
+                <label>Payable Accounts and other short term liabilities</label>
+            </value>
+            <value>
+                <fullName>Receivable Accounts</fullName>
+                <default>false</default>
+                <label>Receivable Accounts</label>
+            </value>
+            <value>
+                <fullName>Retained EarningsAccumulated Losses</fullName>
+                <default>false</default>
+                <label>Retained EarningsAccumulated Losses</label>
+            </value>
+            <value>
+                <fullName>Saving Accounts</fullName>
+                <default>false</default>
+                <label>Saving Accounts</label>
+            </value>
+            <value>
+                <fullName>Savings and Deposits:</fullName>
+                <default>false</default>
+                <label>Savings and Deposits:</label>
+            </value>
+            <value>
+                <fullName>Security Deposits</fullName>
+                <default>false</default>
+                <label>Security Deposits</label>
+            </value>
+            <value>
+                <fullName>Short Term Deposits</fullName>
+                <default>false</default>
+                <label>Short Term Deposits</label>
+            </value>
+            <value>
+                <fullName>Subsidies Prior Years</fullName>
+                <default>false</default>
+                <label>Subsidies Prior Years</label>
+            </value>
+            <value>
+                <fullName>Susidies Prior Current Year</fullName>
+                <default>false</default>
+                <label>Susidies Prior Current Year</label>
+            </value>
+            <value>
+                <fullName>Suspense Accounts</fullName>
+                <default>false</default>
+                <label>Suspense Accounts</label>
+            </value>
+            <value>
+                <fullName>Term Treasury Loans</fullName>
+                <default>false</default>
+                <label>Term Treasury Loans</label>
+            </value>
+            <value>
+                <fullName>Treasury Bills</fullName>
+                <default>false</default>
+                <label>Treasury Bills</label>
+            </value>
+            <value>
+                <fullName>Treasury Bills&amp;Placements</fullName>
+                <default>false</default>
+                <label>Treasury Bills&amp;Placements</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

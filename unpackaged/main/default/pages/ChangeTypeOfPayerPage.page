@@ -1,0 +1,26 @@
+<apex:page standardController="loan__Loan_Account__c"
+    extensions="ChangeTypeOfPayerController"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+    action="{!changeAppStatus}"
+    showHeader="false">
+    <apex:include pageName="clcommon__mintTheme"/>       
+    <apex:sectionHeader title="Change type of payer for Loan Number: {!loan__Loan_Account__c.Name}" />
+    <apex:form >
+        <apex:pageBlock title="Loan Detail">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!confirmChanges}" value="Confirm"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection title="Transaction Detail" columns="2"
+                rendered="{!(loan__Loan_Account__c.Id != null)}"                 >
+                <apex:outputField value="{!loan__Loan_Account__c.Name}" />
+                <apex:outputField value="{!loan__Loan_Account__c.loan__Loan_Product_Name__c}" />
+                <apex:outputField value="{!loan__Loan_Account__c.loan__Pre_Bill_Days__c }" />
+                <apex:outputField value="{!loan__Loan_Account__c.loan__Next_Due_Generation_Date__c }" />
+                <apex:outputField value="{!loan__Loan_Account__c.loan__Frequency_of_Loan_Payment__c}" />
+                <apex:outputField value="{!loan__Loan_Account__c.loan__Payment_Mode__c}" />
+            </apex:pageBlockSection>            
+        </apex:pageBlock>
+        
+    </apex:form>
+    
+</apex:page>

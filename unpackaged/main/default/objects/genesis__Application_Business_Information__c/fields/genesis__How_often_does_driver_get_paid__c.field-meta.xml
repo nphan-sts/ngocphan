@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__How_often_does_driver_get_paid__c</fullName>
+    <deprecated>false</deprecated>
+    <description>How often does driver get paid</description>
+    <externalId>false</externalId>
+    <inlineHelpText>How often does driver get paid</inlineHelpText>
+    <label>How often does driver get paid</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DAILY</fullName>
+                <default>false</default>
+                <label>DAILY</label>
+            </value>
+            <value>
+                <fullName>WEEKLY</fullName>
+                <default>false</default>
+                <label>WEEKLY</label>
+            </value>
+            <value>
+                <fullName>BI-WEEKLY</fullName>
+                <default>false</default>
+                <label>BI-WEEKLY</label>
+            </value>
+            <value>
+                <fullName>SEMI-MONTHLY</fullName>
+                <default>false</default>
+                <label>SEMI-MONTHLY</label>
+            </value>
+            <value>
+                <fullName>MONTHLY</fullName>
+                <default>false</default>
+                <label>MONTHLY</label>
+            </value>
+            <value>
+                <fullName>BI-MONTHLY</fullName>
+                <default>false</default>
+                <label>BI-MONTHLY</label>
+            </value>
+            <value>
+                <fullName>OTHERS</fullName>
+                <default>false</default>
+                <label>OTHERS</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

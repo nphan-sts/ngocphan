@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Ipt_Snapshot__c</fullName>
+    <deprecated>false</deprecated>
+    <description>It contains the snapshot of Open Ipt for flexi-Amz loans.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>It contains the snapshot of Open Ipt for flexi-Amz loans.</inlineHelpText>
+    <label>Ipt Snapshot</label>
+    <length>32768</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

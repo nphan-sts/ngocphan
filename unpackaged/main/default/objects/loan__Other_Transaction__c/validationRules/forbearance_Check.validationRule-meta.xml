@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>forbearance_Check</fullName>
+    <active>false</active>
+    <errorConditionFormula>AND(loan__Repayment_Start_Date__c-loan__Loan_Account__r.loan__Last_Accrual_Date__c &gt; 150,ISPICKVAL(loan__Transaction_Type__c,'Reschedule'))</errorConditionFormula>
+    <errorMessage>Forbearance up to max 6 month</errorMessage>
+</ValidationRule>

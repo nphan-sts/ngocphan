@@ -1,0 +1,52 @@
+<apex:page lightningStylesheets="true" standardController="loan__Payment_Mode__c" id="paymentModePage"
+	recordSetVar="paymentModeSet" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:form >
+		<apex:sectionHeader title="Payment Mode" />
+		<apex:pageblock id="paymentModeList">
+			<apex:actionRegion >
+				<apex:outputText value="Records per page: "></apex:outputText>
+				<apex:selectList value="{!pagesize}" size="1">
+					<apex:selectOption itemLabel="2" itemValue="2"></apex:selectOption>
+					<apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+					<apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+					<apex:selectOption itemLabel="25" itemValue="25"></apex:selectOption>
+					<apex:actionSupport event="onchange"
+						rerender="paymentModeTable, navigation" />
+				</apex:selectList>
+			</apex:actionRegion>
+
+			<apex:pageblockTable value="{!paymentModeSet}" id="paymentModeTable"
+				var="JA">
+				<apex:column headerValue="Payment Mode">
+					<apex:commandLink value="{!JA.Name}"
+						reRender="paymentModePage:paymentModeDetail">
+						<apex:param name="paymentMode" value="{!JA.ID}" />
+					</apex:commandLink>
+				</apex:column>
+			</apex:pageblockTable>
+		</apex:pageblock>
+		<apex:panelGrid columns="2" id="navigation">
+			<apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+			<apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+		</apex:panelGrid>
+	</apex:form>
+
+	<apex:outputPanel id="paymentModeDetail">
+		<apex:detail subject="{!$CurrentPage.parameters.paymentMode}"></apex:detail>
+	</apex:outputPanel>
+
+
+	<apex:sectionHeader title="Define a New Payment Mode" />
+	<apex:pageblock >
+		<table>
+			<tr>
+				<td>
+				    <apex:outputLink value="{!URLFOR($Action.loan__Payment_Mode__c.New)}">Define New Payment Mode</apex:outputLink>
+				</td>
+			</tr>
+		</table>
+	</apex:pageblock>
+
+</apex:page>

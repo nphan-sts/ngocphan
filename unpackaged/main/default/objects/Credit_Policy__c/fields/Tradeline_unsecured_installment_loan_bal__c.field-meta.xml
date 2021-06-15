@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tradeline_unsecured_installment_loan_bal__c</fullName>
+    <description>tradeline_unsecured_installment_loans_balance</description>
+    <externalId>false</externalId>
+    <label>Tradeline unsecured installment loan bal</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

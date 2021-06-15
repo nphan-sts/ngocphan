@@ -1,0 +1,133 @@
+<apex:page id="payArrangementPage" controller="collect.PaymentArrangementCtrl" showHeader="false" sidebar="false">
+    <script src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}"/>
+    <script src="{!URLFOR($Resource.helperclose)}"/>
+    <script> function setFocusOnLoad(){} </script>
+    <script>
+        j$ = jQuery.noConflict();
+    </script>
+    <script type="text/javascript">
+    	function callParentFunc(){
+        	window.parent.closeFragment();
+        }
+    	function callParentRefresh(){
+            window.parent.fragmentRefresh();
+        }
+        function popWindow(identifier){
+            var w = 450;
+            var h = 300;
+            var left = (screen.width) - w - 10;
+            var top = (screen.height) - h - 100;
+            var link = 'apex/clcommon__helpPage';
+            link = link + '?identifier=' + identifier;
+            var newwindow=window.open(link,'null','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=1, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+            newwindow.focus();
+        }
+    </script>
+    <style type="text/css">
+            .bPageHeader {
+                display:none;
+            }
+        	.bPageFooter.noTableFooter {
+        		display:none;
+        	}
+        	.requiredLegend {
+                display: none;
+            }
+        	.bPageBlock {
+                border-top: 0px;
+            }
+        	body { background-color:#f8f8f8; }
+            body .bPageBlock, body #bodyCell .bResource .secondaryPalette, body .secondaryPalette.bPageBlock, body .individualPalette .secondaryPalette.bPageBlock, body .bodyDiv .genericTable, body .genericPageBlockTable, body .bodyDiv .bSubBlock, body .bComponentBlock .bPageBlock, body .bMyDashboard .bPageBlock, body.rlHoverFrame .bPageBlock, body.subjectSelectionPopup div.choicesBox, body.lookupTab .secondaryPalette.bPageBlock, body.popupTab .secondaryPalette.bPageBlock, body.UserTagStatsPage .secondaryPalette.bPageBlock {
+                border-bottom: 0px;
+                border-left: 0px;
+                border-right: 0px;
+                border-radius: 1px;
+            }
+        	body .bEditBlock .pbBottomButtons, body .apexp .bPageBlock.apexDefaultPageBlock .pbBottomButtons {
+                border-top: 0px;
+            }
+            body .bEditBlock .pbBottomButtons, body .apexp .bPageBlock.apexDefaultPageBlock .pbBottomButtons {
+                margin-top: 15px;
+            }
+            .bPageBlock .detailList .labelCol {
+                width: 32%;
+            }
+    </style>
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.collect__modalheaderStyle,'')}"/>
+    <div style="height:280px; border:1px; position:relative">
+        <div style="height:310px !important; width:40%; overflow:auto; border:1px; position:absolute; left:0px">
+            <apex:form id="paForm">
+                <apex:pageblock mode="edit" id="topBlck">
+                    <apex:inlineEditSupport />
+                    <apex:pageBlockButtons location="bottom" >
+                        <apex:commandButton value="Generate" action="{!generate}"
+                                            reRender="paForm, topBlck2, saveButton"
+                                            id="generateButton"/>
+                        <apex:commandButton value="Cancel" reRender="paForm, topBlck2, initMsg, saveButton"
+                                            immediate="true"
+                                            action="{!cancel}" onclick="callParentFunc();"
+                                            id="cancelButton"/>
+                    </apex:pageBlockButtons>
+
+                    <apex:pageBlockSection id="paPBS" columns="1" title="Payment Arrangement">
+                        <apex:pageMessages />
+                        <apex:facet name="header">
+                            <apex:outputpanel >
+                                <apex:outputText style="font-weight:bold;font-size:13px;float:left;" value="Payment Arrangement"/>
+                                <apex:commandLink value="Help" id="thelink" onclick="popWindow('paymentArrangement');"
+                                                  reRender="dummy" style="text-decoration:none;color:green;padding:1px;font-size:15px;font-weight:bold;float:right;" styleClass="link-show" rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+                                <apex:commandLink value="Help" id="thelink2" onclick="popWindow('paymentArrangement');"
+                                                  reRender="dummy" styleClass="help-link"
+                                                  rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>
+                            </apex:outputpanel>
+                        </apex:facet>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Contract Name" for="contrName"/>
+                            <apex:outputField id="contrName" value="{!payArr.collect__Contract_Name__c}">
+                                <apex:inlineEditSupport disabled="true"/>
+                            </apex:outputField>
+                        </apex:pageBlockSectionItem>
+                        <apex:inputField value="{!payArr.collect__Start_Date__c}"/>
+                        <apex:inputField value="{!payArr.collect__Arrangement_Amount__c}"/>
+                        <apex:inputField value="{!payArr.collect__Mode_of_Payment__c}"/>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Occurence" for="paFreq"/>
+                            <apex:inputField id="paFreq" value="{!payArr.collect__Frequency__c}"/>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Frequency" for="paOccr"/>
+                            <apex:inputField id="paOccr" value="{!payArr.collect__Occurence__c}"/>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Total Arrangement Amount" for="paTotalAmt"/>
+                            <apex:outputText id="paTotalAmt" value="{!totalArrangementAmount}"/>
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                </apex:pageblock>
+            </apex:form>
+        </div>
+        <div style="height:250px !important; width:59% !important; overflow:auto; border:1px !important; position:absolute !important; right:0px !important">
+            <apex:form id="paForm2">
+                <apex:pageblock id="topBlck2" mode="edit" Rendered="true">
+                    <apex:pageBlockSection id="paSchedulePBS" columns="1" title="Payment Arrangement Schedule">
+                        <apex:pageMessage id="initMsg" summary="Please enter payment arrangement details to generate promise to pay schedule" severity="info" strength="3" Rendered="{!showInitMsg}"/>
+                        <apex:pageMessages id="p2pInsertMessage"/>
+
+                        <apex:pageBlockTable value="{!p2pWrapperObjList}" var="p2p" rules="rows,cols" style="overflow: auto" Rendered="{!showP2p}">
+                            <apex:column headerValue="Promise to pay date">
+                                <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                                    <apex:param value="{!p2p.promiseToPayDate}"/>
+                                </apex:outputText>
+                            </apex:column>
+                            <apex:column headerValue="Payment Mode" value="{!p2p.paymentMode}"/>
+                            <apex:column headerValue="Promise to pay amount" value="{!p2p.promiseToPayAmount}"/>
+                        </apex:pageBlockTable>
+                        <apex:commandButton value="Save" action="{!save}" disabled="{!NOT(showP2p)}" Rendered="{!showP2p}"
+                                            reRender="paPBS, topBlck2, p2pInsertMessage, saveButton"
+                                            id="saveButton" onclick="callParentRefresh();"/>
+                    </apex:pageBlockSection>
+                </apex:pageblock>
+            </apex:form>
+        </div>
+    </div>
+</apex:page>

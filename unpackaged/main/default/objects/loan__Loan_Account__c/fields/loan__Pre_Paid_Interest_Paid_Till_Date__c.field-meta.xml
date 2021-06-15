@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Pre_Paid_Interest_Paid_Till_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Pre-Paid Interest Paid Till Date.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the amount of Interest paid in advance till date.</inlineHelpText>
+    <label>Pre Paid Interest Paid Till Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

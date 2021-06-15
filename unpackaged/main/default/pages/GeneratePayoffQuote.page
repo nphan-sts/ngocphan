@@ -1,0 +1,212 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" showHeader="false" controller="PayoffQuoteController" id="PayoffQuote" renderAs="pdf" standardStylesheets="false" doctype="html-5.0">
+<head>
+  <title>Payoff Quote | Payoff</title>
+  <apex:stylesheet value="{!$Resource.PayoffStyleSheet}"/>
+  <style>
+    .table td.border-bottom-0 { border-bottom: 0 !important; }
+    .table td.border-top-0 { border-top: 0 !important; }
+    .table td.border-thick { border-width: 4px !important; }
+     h5{ text-align:center; }
+  </style>
+</head>
+<body>
+  <div class="px-3">
+  <table class="table mb-3">
+      <tr>
+        <td class="w-50" style="vertical-align: top;">
+          <strong>LOAN PAYOFF LETTER</strong><br />
+        </td>
+        <td class="w-50" style="vertical-align: top;">
+          <strong style="font-size:50px"> Payoff </strong><br />
+        </td>
+      </tr>
+    </table>
+    <p>
+        Regarding Loan ID: {!PayoffQuoteRec.loan__Loan_Account__r.Payoff_Loan_ID__c}    
+    </p>
+    <br style = "line-height:5;"/>
+      <p>
+          Dear {!contractRec.loan__Account__r.name},
+      </p>
+      <p>
+          Thank you for reaching out to us regarding your Payoff Loan! We're excited to help you take the next steps towards financial freedom. 
+          <strong>Your payoff amount is {!PayoffQuoteRec.loan__Poq_Total_Payoff_Amount__c}, which is good through <apex:outputText value=" {0,date,yyyy/MM/dd}"> 
+          <apex:param value="{!PayoffQuoteRec.loan__Poq_valid_till_Dt__c}"/> </apex:outputText> (the "Good-Through Date").</strong>
+      </p>
+      
+      <br style = "line-height:3;"/>
+      
+      <table class="table mb-3" style="width:50px">
+          <tr>
+             <td>
+                 Principal Balance:
+              </td> 
+              <td>
+                  ${!PayoffQuoteRec.loan__Poq_Principal_Bal__c}
+              </td>
+          </tr>
+          <tr>
+             <td>
+                 Accrued Interest:
+              </td> 
+              <td>
+                  ${!ROUND(PayoffQuoteRec.loan__Poq_Unpaid_Interest__c,2)}
+              </td>
+          </tr>
+          <tr class="border-top-0">
+             <td>
+                 Fees:
+              </td> 
+              <td>
+                  $0.00
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  -----------------------------
+              </td>
+              <td>
+                  -----------------------------
+              </td>
+          </tr>
+          <tr>
+             <td>
+                 <strong>Total Amount Owed**: </strong>
+              </td> 
+              <td>
+                  ${!PayoffQuoteRec.loan__Poq_Total_Payoff_Amount__c}
+              </td>
+              
+          </tr>
+      </table>
+      
+      <br style = "line-height:3;"/>
+      
+      <p>
+          If your payment is received by Payoff after the provided Good-Through Date, you will be responsible for 
+          additional interest as calculated $<apex:outputText value="{!ROUND(PayoffQuoteRec.loan__Poq_Interest_Per_Diem__c,2)}"/> for each subsequent calendar day. The per diem is the amount of 
+          interest accumulated per day on your unpaid principal.
+      </p>
+      <br style = "line-height:3;"/>
+      <p>
+          <strong>You can finish paying off your loan in two different ways:</strong>
+      </p>
+      
+      <br style = "line-height:2;"/>
+      
+      <strong><u>Payment by ACH</u></strong>
+      <br style = "line-height:1;"/>
+      
+      <p>
+          An ACH is an electronic debit from your bank account. If you would like to make your payment by ACH, 
+          please respond to this message, or send an email to payments@payoff.com, with the desired date to 
+          schedule your payoff. Remember, if your desired date is after the Good-Through Date listed above, we will 
+          need to regenerate another payoff quote for you.
+      </p>
+      
+      <br style = "line-height:2;"/>
+      
+      <strong><u>Payment by mail</u></strong>
+      <br style = "line-height:1;"/>
+      
+      <p>
+          Please allow 10 calendar days for mailed checks to be processed. To process a full payoff, checks must be
+          received by the Good-Through Date provided.
+      </p>
+      <ul>
+          <li>
+              Please make your check payable to Payoff, Inc.
+          </li>
+          <li>
+              Please specify your LOAN ID in the memo line of your check. Your LOAN ID is:
+              {!PayoffQuoteRec.loan__Loan_Account__r.Payoff_Loan_ID__c}
+          </li>
+          <li>
+              Please send ONLY your check. (Unfortunately, we are unable to process any special 
+              instructions that accompany the check, but you can always reach us at 
+              payments@payoff.com).
+          </li>
+      </ul>
+      
+      <br style = "line-height:2;"/>
+      
+      <strong>Mail Payments to:</strong>
+      <table class="table table-bordered">
+          <thead>
+              <tr>
+                <th>
+                    Via US Mail
+                </th>
+                  <th>
+                       Via FedEx, UPS etc
+                  </th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>
+                      <p>
+                          <!--Payoff Inc.
+                          DEPT LA 24683
+                          Pasadena, CA  91185-4683-->
+                          <!-- CRM-514: to use investor shipping address for 'VIA US MAIL' section -->
+                          {!investorDetails.loan__Account__r.Shippingstreet}<br/>
+                          {!investorDetails.loan__Account__r.ShippingCity}<br/>
+                          {!investorDetails.loan__Account__r.ShippingState}
+                          {!investorDetails.loan__Account__r.ShippingPostalCode}<br/>
+                          {!investorDetails.loan__Account__r.ShippingCountry}
+                      </p>
+                  </td>
+                  <td>
+                      <p>
+                          <!--Payoff Inc.
+                          24683
+                          14005 Live Oak Ave
+                          Irwindale, CA  91706-1300-->
+                          <!-- CRM-514: to use investor billing address for 'VIA FedEx' section -->
+                          {!investorDetails.loan__Account__r.Billingstreet}<br/>
+                          {!investorDetails.loan__Account__r.BillingCity}<br/>
+                          {!investorDetails.loan__Account__r.BillingState}
+                          {!investorDetails.loan__Account__r.BillingPostalCode}<br/>
+                          {!investorDetails.loan__Account__r.BillingCountry}
+                      </p>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+      
+      <br style = "line-height:2;"/>
+      
+      <strong><u>Please remember:</u></strong>
+      <br style = "line-height:1;"/>
+      
+      <ul>
+          <li>Requests received after 2:30 PM PT will be processed on the following business day.</li>
+          <li>For payments drawn through ACH, please allow  2 business days for processing.</li>
+          <li>It may take up to 5 days for this transaction to be reflected on your Payoff account.</li>
+          <li>Full payoffs cannot be made through our website at this time.</li>
+          <li>All amounts provided are subject to final validation of payments received.</li>
+      </ul>
+      
+      <br style = "line-height:5;"/>
+      
+      <p>
+          As always, we are available if you have any additional questions. Feel free to email us at 
+          success@payoff.com or call us at 1-800-878-0901.
+      </p>
+      
+      <br style = "line-height:3;"/>
+      <p>
+          Sincerely,<br/>
+          The Payoff Team
+      </p>
+      <hr class="my-5" style="border-top: 2px solid #001239 !important;" />
+      <br style = "line-height:2;"/>
+      <p>
+         <i>** The figures provided in this payoff email are based on the current statement of your loan and do not take 
+             into account any transactions that may occur after the date of this letter (e.g. if you have sent in a monthly 
+             payment or principal payment that has not yet been received and applied to your account)</i> 
+      </p>
+  </div>
+</body>
+</apex:page>

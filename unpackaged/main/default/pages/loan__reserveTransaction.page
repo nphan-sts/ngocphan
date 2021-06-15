@@ -1,0 +1,152 @@
+<apex:page lightningStylesheets="true" controller="loan.ReserveTxnController">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:sectionHeader title="Reserve Account Transaction" />
+	<apex:form id="reserveTxnForm">
+		<apex:pageBlock id="headerPageBlock" mode="edit">
+			<apex:pageBlockSection id="reserveAcc"
+				title="Select Reserve Account and Action">
+				<apex:inputField label="Reserve Account"
+					value="{!newReserveHoldTxn.loan__Misc_Account__c}" required="true" />
+				<apex:inputField label="Transaction Type"
+					value="{!newReserveHoldTxn.loan__Transaction_Type__c}" required="true" />
+			</apex:pageBlockSection>
+			<apex:pageBlockButtons location="bottom">
+				<c:BusyButton name="Continue" busyname="Fetching data..."
+					actionTo="{!fetchTxnDetails}"
+					reRenderTo="headerPageBlock,reserveTxnPB,reserveTxnTable"
+					style="margin-left:100px;" />
+			</apex:pageBlockButtons>
+		</apex:pageBlock>
+
+		<apex:pageBlock id="reserveTxnPB" mode="edit">
+			<apex:pageBlockSection id="reserveTxnPBS" title="Transactions"
+				columns="1">
+				<apex:pageblockTable value="{!reserveTxnWList}" id="reserveTxnTable"
+					var="reserveTxnVar" headerClass="fixedHeader"
+					styleClass="scrollableFixedHeader">
+					<apex:column width="5%" headerValue="Select">
+						<apex:inputCheckbox value="{!reserveTxnVar.check}"
+							disabled="{!newReserveHoldTxn.loan__Transaction_Type__c == 'Reserve Hold'}">
+							<apex:actionSupport action="{!setParentTxn}"
+								rerender="reserveTxnPB,reserveTxnTable" event="onchange"
+								status="recSelected" />
+						</apex:inputCheckbox>
+					</apex:column>
+
+					<apex:column headerValue="Reserve Transaction Id"
+						styleClass="scrollContent" value="{!reserveTxnVar.txn.Name}">
+						<!--<apex:commandLink action="{!showInvestorLoanAccountTxnsDetails}"
+                            reRender="headerPageBlock,InvLoanTransactionDetails"
+                            value="{!ILL.name}" status="txDetails">
+                            <apex:param name="investor_loan_id" value="{!reserveTxnVar.id}" />
+                        </apex:commandLink>-->
+					</apex:column>
+					<apex:column value="{!reserveTxnVar.txn.loan__Transaction_Type__c}"
+						headerValue="Transaction Type" styleClass="scrollContent">
+					</apex:column>
+					<apex:column value="{!reserveTxnVar.txn.loan__Transaction_Date__c}"
+						headerValue="Transaction Date" styleClass="scrollContent">
+					</apex:column>
+					<apex:column value="{!reserveTxnVar.txn.loan__Transaction_Amount__c}"
+						headerValue="Transaction Amount" styleClass="scrollContent">
+					</apex:column>
+					<apex:column value="{!reserveTxnVar.txn.loan__Reference__c}"
+						headerValue="Reference" styleClass="scrollContent">
+					</apex:column>
+					</apex:pageBlockTable>
+			</apex:pageBlockSection>
+			<center>
+				<apex:actionStatus id="recSelected">
+					<apex:facet name="start">
+						<apex:image value="/img/loading32.gif" style="height:15px;" />
+					</apex:facet>
+				</apex:actionStatus>
+			</center>
+
+			<apex:pageMessages />
+			<apex:pageBlockSection id="reserveHoldTxnPBS"
+				title="Reserve Hold Transaction Form" columns="2"
+				rendered="{!newReserveHoldTxn.loan__Transaction_Type__c == 'Reserve Hold'}">
+				<apex:outputField value="{!newReserveHoldTxn.loan__Misc_Account__c}" />
+
+				<apex:inputField value="{!newReserveHoldTxn.loan__Reference__c}"
+					rendered="{!newReserveHoldTxn.Id == null}" />
+				<apex:outputField value="{!newReserveHoldTxn.loan__Reference__c}"
+					rendered="{!newReserveHoldTxn.Id != null}" />
+
+				<apex:inputField value="{!newReserveHoldTxn.loan__Transaction_Date__c}"
+					rendered="{!newReserveHoldTxn.Id == null}" />
+				<apex:outputField value="{!newReserveHoldTxn.loan__Transaction_Date__c}"
+					rendered="{!newReserveHoldTxn.Id != null}" />
+
+				<apex:inputField value="{!newReserveHoldTxn.loan__Transaction_Amount__c}"
+					rendered="{!newReserveHoldTxn.Id == null}" />
+				<apex:outputField value="{!newReserveHoldTxn.loan__Transaction_Amount__c}"
+					rendered="{!newReserveHoldTxn.Id != null}" />
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection id="reserveReleaseTxnPBS"
+				title="Reserve Release Form" columns="2"
+				rendered="{!newReserveHoldTxn.loan__Transaction_Type__c == 'Reserve Release'}">
+				<apex:outputField value="{!newReserveHoldTxn.loan__Misc_Account__c}" />
+				<apex:outputField value="{!newReserveHoldTxn.loan__Parent_Transaction__c}" />
+
+				<apex:inputField value="{!newReserveHoldTxn.loan__To_Loan__c}"
+					rendered="{!newReserveHoldTxn.Id == null}" />
+				<apex:outputField value="{!newReserveHoldTxn.loan__To_Loan__c}"
+					rendered="{!newReserveHoldTxn.Id != null}" />
+
+				<apex:inputField value="{!newReserveHoldTxn.loan__Reference__c}"
+					rendered="{!newReserveHoldTxn.Id == null}" />
+				<apex:outputField value="{!newReserveHoldTxn.loan__Reference__c}"
+					rendered="{!newReserveHoldTxn.Id != null}" />
+
+				<apex:inputField value="{!newReserveHoldTxn.loan__Transaction_Date__c}"
+					rendered="{!newReserveHoldTxn.Id == null}" />
+				<apex:outputField value="{!newReserveHoldTxn.loan__Transaction_Date__c}"
+					rendered="{!newReserveHoldTxn.Id != null}" />
+
+				<apex:inputField value="{!newReserveHoldTxn.loan__Transaction_Amount__c}"
+					rendered="{!newReserveHoldTxn.Id == null}" />
+				<apex:outputField value="{!newReserveHoldTxn.loan__Transaction_Amount__c}"
+					rendered="{!newReserveHoldTxn.Id != null}" />
+			</apex:pageBlockSection>
+			<apex:pageBlockSection id="reserveReleasePaymentTxnPBS"
+				title="Loan Payment" columns="2"
+				rendered="{!AND(newReserveHoldTxn.loan__Transaction_Type__c == 'Reserve Release',pTxn.Id != null,newReserveHoldTxn.Id != null)}">
+				<apex:outputField value="{!pTxn.loan__Loan_Account__c}" />
+				<apex:outputField value="{!pTxn.loan__Payment_Mode__c}" />
+				<apex:outputField value="{!pTxn.loan__Transaction_Amount__c}" />
+				<apex:outputField value="{!pTxn.loan__Transaction_Date__c}" />
+			</apex:pageBlockSection>
+			<apex:pageBlockButtons location="bottom">
+				<!-- Reserve HOLD Buttons -->
+				<c:BusyButton name="Save" busyname="Saving transaction..."
+					actionTo="{!saveReserveHold}"
+					reRenderTo="reserveTxnPB,reserveTxnTable"
+					style="margin-left:100px;"
+					rendered="{!AND(newReserveHoldTxn.loan__Transaction_Type__c == 'Reserve Hold',newReserveHoldTxn.Id == null)}" />
+				<c:BusyButton name="New Reserve Hold" busyname="Rendering..."
+					actionTo="{!newReserveHoldTxn}"
+					reRenderTo="reserveTxnPB,reserveTxnTable"
+					style="margin-left:100px;"
+					rendered="{!AND(newReserveHoldTxn.loan__Transaction_Type__c == 'Reserve Hold',newReserveHoldTxn.Id != null)}" />
+
+				<!-- Reserve RELEASE Buttons -->
+				<c:BusyButton name="Save" busyname="Saving transaction..."
+					actionTo="{!saveReserveRelease}"
+					reRenderTo="reserveTxnPB,reserveTxnTable"
+					style="margin-left:100px;"
+					rendered="{!AND(newReserveHoldTxn.loan__Transaction_Type__c == 'Reserve Release',newReserveHoldTxn.Id == null)}" />
+				<c:BusyButton name="New Reserve Release" busyname="Rendering..."
+					actionTo="{!newReserveReleaseTxn}"
+					reRenderTo="reserveTxnPB,reserveTxnTable"
+					style="margin-left:100px;"
+					rendered="{!AND(newReserveHoldTxn.loan__Transaction_Type__c == 'Reserve Release',newReserveHoldTxn.Id != null)}" />
+
+			</apex:pageBlockButtons>
+		</apex:pageBlock>
+
+	</apex:form>
+</apex:page>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Keep_Same_Maturity_Date_on_FIT_Disbursal__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>For FIT loans, select this option to retain the original maturity date on future disbursals. By default, the maturity date gets extended on each disbursal. For example, if second disbursal happens on third month of a 12 month loan, then maturity date is extended by 3 months.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This option retains the original maturity date for FIT loans on future disbursals. By default, the maturity date gets extended on each disbursal. Eg, if second disbursal happens on third month of a 12 month loan, then maturity date is extended by 3 months</inlineHelpText>
+    <label>Keep Same Maturity Date on FIT Disbursal</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

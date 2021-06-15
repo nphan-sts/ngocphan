@@ -1,0 +1,55 @@
+<apex:page standardController="clcommon__Launchpad_App__c" extensions="clcommon.LaunchpadController">
+    
+    <style>
+        .moveRole {
+        	margin-left: 20% !important;
+        }
+                
+    </style>
+    
+    <script type="text/javascript">
+    	function addCssClassForRolesSection() {
+            var elem = document.getElementsByClassName('duelingListBox');
+            elem[0].className += ' moveRole';
+            elem[1].className += ' moveRole';
+        }
+        window.onload = function() {
+          	addCssClassForRolesSection();
+        };
+    </script>
+    
+    <apex:form id="myForm">
+        <apex:pageBlock title="Launchpad App" mode="edit">
+			<apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+            </apex:pageBlockButtons>
+             <apex:pageBlockSection title="Launchpad App Fields" columns="1">
+                 <apex:inputField value="{!app.Name}" required="true"/>
+                <apex:inputField value="{!app.clcommon__Description__c}"/>
+                <apex:inputField value="{!app.clcommon__Content_Source_Type__c}"/>
+                <apex:inputField value="{!app.clcommon__Content_Source__c}"/>
+                <apex:inputField value="{!app.clcommon__Behavior__c}"/>
+                <apex:inputField value="{!app.clcommon__Visual_Icon_Url__c}"/>  
+                
+            </apex:pageBlockSection> 
+            <apex:pageBlockSection id="rolesUI" title="Assign Roles To The App">
+                <c:MultiselectPicklist leftLabel="Available Roles"
+                    leftOption="{!allRoles}"
+                    rightLabel="Selected Roles"
+                    rightOption="{!selectedRoles}"
+                    size="14"
+                    width="150px"
+                    />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection id="profileUI" title="Assign Profiles To The App">
+                <c:MultiselectPicklist leftLabel="Available Profiles"
+                    leftOption="{!allProfiles}"
+                    rightLabel="Selected Profiles"
+                    rightOption="{!selectedProfiles}"
+                    size="14"
+                    width="150px"
+                    />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

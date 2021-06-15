@@ -1,0 +1,128 @@
+<apex:page standardController="Contact"  extensions="ints.lenddoDisplayController"> <!-- action="{!getLenddoVerification}" -->
+  <div id="lenddo_verify"></div>
+<script type="text/javascript">
+    var lenddo_cs={button:{'name':'blue_green_button'},
+    action:'popup',
+    ps_id:'548002837ec70ec34d9afd77',
+    c_id:'{!Contact.ID}',
+    verification_fields:{firstname:'{!JSENCODE(Contact.FirstName)}',lastname:'{!JSENCODE(Contact.LastName)}',birthdate:'{!JSENCODE(TEXT(contact.Birthdate))}',employer:'{!JSENCODE(contact.Employer__c)}',email:'{!JSENCODE(contact.email)}',mobilephone:'{!JSENCODE(contact.phone)}'},
+    onSubmit:function(cb){cb();}};
+    (function(){var la=document.createElement('script');
+    la.type='text/javascript';
+    la.async=true;
+    la.src=('https:'==document.location.protocol?'https://':'http://')+'authorize.lenddo.com/verify.js'+'?v='+Date.now();
+    var s=document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(la,s);})();
+</script>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<!--<apex:commandButton value="Get Lenddo Verification" disabled="{!disableGetLenddoVerificationButton}" action="{!getLenddoVerification}" />  -->
+<apex:outputpanel id="lenddoTable">
+        <apex:pageBlock >
+            <apex:pageblocksection >
+                    <apex:pageBlockTable value="{!responseList}" var="response" cellpadding="4" rowClasses="even,odd">
+                        <apex:column headerValue="Contact ID" value="{!response.ints__Contact__c}" />
+                         <apex:column headerValue="Birthdate Verified" >
+                             <apex:image id="Birthdate" value="{!If(response.ints__Birthday_Verified__c == TRUE, $Resource.ints__ok_green, If((response.ints__Birthday_Verified__c == FALSE) && ((CONTAINS(response.ints__Flags__c,'DB02')) || (CONTAINS(response.ints__Flags__c,'DB05')) || (CONTAINS(response.ints__Flags__c,'DB06'))), $Resource.ints__error_wrong, $Resource.ints__blank_checkbox))}" />
+                         </apex:column>
+                         <apex:column headerValue="Email Verified" >
+                             <apex:image id="Email_Verified" value="{!If(response.ints__Email_Verified__c == TRUE, $Resource.ints__ok_green, $Resource.ints__blank_checkbox)}" />
+                         </apex:column>
+                         <apex:column headerValue="Employer" >
+                             <apex:image id="Employer" value="{!If(response.Employer_Verified__c == TRUE, $Resource.ok_green, If((response.Employer_Verified__c == FALSE) &&
+                                 (CONTAINS(response.Flags__c,'EM02')), $Resource.error_wrong, $Resource.blank_checkbox))}" />
+                         </apex:column>
+                         <apex:column headerValue="Facebook Verified" >
+                             <apex:image id="Facebook_Verified" value="{!If(response.ints__Facebook_Verified__c == TRUE, $Resource.ints__ok_green, $Resource.ints__blank_checkbox)}" />
+                         </apex:column>
+                         <!--<apex:column headerValue="Member ID" value="{!response.member_id__c}" />-->
+                         <apex:column headerValue="Name Verified" >
+                             <apex:image id="Name" value="{!If(response.Name_Verified__c == TRUE, $Resource.ok_green, If((response.Name_Verified__c == FALSE) &&
+                                 ((CONTAINS(response.Flags__c,'NM02')) || (CONTAINS(response.Flags__c,'NM03')) || (CONTAINS(response.Flags__c,'NM04'))), $Resource.error_wrong, $Resource.blank_checkbox))}" />
+                         </apex:column>
+                         <apex:column headerValue="Phone Verified" >
+                             <apex:image id="Phone" value="{!If(response.Phone_Verified__c == TRUE, $Resource.ok_green, If((response.Phone_Verified__c == FALSE) &&
+                                 (CONTAINS(response.Flags__c,'EPH02')), $Resource.error_wrong, $Resource.blank_checkbox))}" />
+                         </apex:column>
+                         <apex:column headerValue="Top Employer verified" >
+                             <apex:image id="Top_Employer_Verified" value="{!If(response.ints__Top_Employer_Verified__c== TRUE, $Resource.ints__ok_green, $Resource.ints__blank_checkbox)}" />
+                         </apex:column>
+                         <apex:column headerValue="University Verified" >
+                             <apex:image id="University" value="{!If(response.University_Verified__c == TRUE, $Resource.ok_green, If((response.University_Verified__c == FALSE) &&
+                                 (CONTAINS(response.Flags__c,'UN02')), $Resource.error_wrong, $Resource.blank_checkbox))}" />
+                         </apex:column>
+                         <apex:column headerValue="Flags, if any" value="{!response.ints__Flags__c}" />
+                     </apex:pageBlockTable>
+                     <br/>
+                     <apex:outputLabel value="There is no verification report for this contact ID. Please ensure that the contact information has been submitted for Lenddo verification." rendered="{!responseList.size == 0}" />
+
+                     </apex:pageblocksection>
+                     </apex:pageBlock>
+                </apex:outputpanel>
+
+        <apex:outputpanel id="LegendTables">
+            <apex:pageBlock >
+                <!--<apex:pageblocksection >-->
+
+                <apex:outputlabel value="Name Flag Codes" / ><br/>
+                    <apex:pageBlockTable value="{!nameCodeList}" var="nameCode" cellpadding="4" rowClasses="even,odd" columnsWidth="100px, 200px">
+
+                        <apex:column headerValue="Code" value="{!nameCode[0]}" />
+                        <apex:column headerValue="Name" value="{!nameCode[1]}" />
+                        <apex:column headerValue="Description" value="{!nameCode[2]}" />
+
+                     </apex:pageBlockTable>
+ <!--                </apex:pageblocksection>
+           </apex:pageBlock>
+        </apex:outputpanel>
+
+        <apex:outputpanel id="DOBLegendTable">
+            <apex:pageBlock >
+                <apex:pageblocksection >-->
+                <br/>
+                <apex:outputlabel value="Date of Birth Flag Codes" / ><br/>
+                    <apex:pageBlockTable value="{!DOBList}" var="DOB" cellpadding="4" rowClasses="even,odd" columnsWidth="100px, 200px">
+
+                        <apex:column headerValue="Code" value="{!DOB[0]}" />
+                        <apex:column headerValue="Name" value="{!DOB[1]}" />
+                        <apex:column headerValue="Description" value="{!DOB[2]}" />
+
+                     </apex:pageBlockTable>
+
+                 <br/>
+                <apex:outputlabel value="Employment Flag Codes" / ><br/>
+                    <apex:pageBlockTable value="{!employmentList}" var="emp" cellpadding="4" rowClasses="even,odd" columnsWidth="100px, 200px">
+
+                        <apex:column headerValue="Code" value="{!emp[0]}" />
+                        <apex:column headerValue="Name" value="{!emp[1]}" />
+                        <apex:column headerValue="Description" value="{!emp[2]}" />
+
+                     </apex:pageBlockTable>
+
+                 <br/>
+                <apex:outputlabel value="University Flag Codes" / ><br/>
+                    <apex:pageBlockTable value="{!universityList}" var="university_list" cellpadding="4" rowClasses="even,odd" columnsWidth="100px, 200px">
+
+                        <apex:column headerValue="Code" value="{!university_list[0]}" />
+                        <apex:column headerValue="Name" value="{!university_list[1]}" />
+                        <apex:column headerValue="Description" value="{!university_list[2]}" />
+
+                     </apex:pageBlockTable>
+
+                <br/>
+                <apex:outputlabel value="Phone Flag Codes" / ><br/>
+                    <apex:pageBlockTable value="{!phoneList}" var="Phone_list" cellpadding="4" rowClasses="even,odd" columnsWidth="100px, 200px">
+
+                        <apex:column headerValue="Code" value="{!Phone_list[0]}" />
+                        <apex:column headerValue="Name" value="{!Phone_list[1]}" />
+                        <apex:column headerValue="Description" value="{!Phone_list[2]}" />
+
+                     </apex:pageBlockTable>
+             </apex:pageBlock>
+        </apex:outputpanel>
+</apex:page>

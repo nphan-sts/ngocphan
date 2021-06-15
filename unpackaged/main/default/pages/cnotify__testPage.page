@@ -1,0 +1,25 @@
+<apex:page >
+  <html>
+<head>
+   <script type="text/javascript" src="https://c.na10.visual.force.com/support/api/28.0/interaction.js"></script>
+   <script type="text/javascript">
+       var callback = function (response) {
+           if (response.result) {
+              alert('Screen pop was set successfully.');
+           }
+           else {
+              alert('Screen pop failed.' + result.error);
+           }
+        };
+       function screenPop() {
+                //Invokes API method
+                sforce.interaction.screenPop('/003F000001Jjh0t', true, callback);
+        }
+</script>
+</head>
+<body>
+       <!-- Note that '001x0000003DGQR' is an example of an object Id to screen pop. -->
+       <button onclick="screenPop();">screen pop to entity Id</button>
+</body>
+</html>
+</apex:page>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Product_Provider__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Class Name with Namespace which is used for creating the Product Object</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the Class Name which is used for creating the Product Object of the corresponding product</inlineHelpText>
+    <label>Product Provider</label>
+    <length>200</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,34 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Block_Code__c"
+      extensions="loan.LoanBlockCodeController"
+       sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+      id="revokeLoanBlockCode"  title="Revoke Loan Block Code" >
+<apex:include pageName="clcommon__mintTheme"/>
+
+      <script src="{!URLFOR($Resource.helperclose)}" />
+     <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:sectionHeader title=" Revoke Block Code" subtitle="" />
+    <apex:form >
+        <apex:pageBlock title="Revoke Block Code" id="blockCode">
+        <apex:pageMessages />
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Confirm" action="{!revokeBlockCode}" rendered="{!IF(AND(oLoanBlockCode.Id != null, blockCodeExpiredOrRevoked == false), true, false)}" />
+                <apex:commandButton value="Cancel" action="{!cancel}" rendered="{!IF(AND(oLoanBlockCode.Id != null, blockCodeExpiredOrRevoked == false), true, false)}" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection title="Block Code"
+                rendered="{!IF(AND(oLoanBlockCode.Id != null, blockCodeExpiredOrRevoked == false), true, false)}">
+                <apex:outputField value="{!oLoanBlockCode.loan__Loan_Account__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Block_Code__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Block_Code_Applied_On__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Block_Code_Expires_On__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_ACH__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Communication__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Stop_Accruals__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Disbursals__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Suspend_Charges__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Stop_Accrual_Entries__c}" />
+                <apex:outputField value="{!oLoanBlockCode.loan__Invalidate_Contract__c}" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        </apex:form>
+
+</apex:page>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Loan_Cancellation__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If true, the Loan Payment Transaction is for loan cancellation.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If true, the Loan Payment Transaction is for loan cancellation.</inlineHelpText>
+    <label>Loan Cancellation</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

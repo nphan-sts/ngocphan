@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Generate_Pricing_Options</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Generate Pricing Options</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT("/soap/ajax/13.0/connection.js")}
+{!REQUIRESCRIPT("/soap/ajax/10.0/apex.js")}
+var namespacePrefix = "{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}";
+if (namespacePrefix != null &amp;&amp; namespacePrefix != ""){
+namespacePrefix += "/";
+}
+var className = namespacePrefix + "StandardQQActionCtrl";
+var methodName = "generatePricingOptions";
+var retVal = sforce.apex.execute(className,methodName, {quickQuoteId:"{!genesis__Quick_Quotes__c.Id}"});
+window.alert(retVal);
+window.location.reload();</url>
+</WebLink>

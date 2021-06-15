@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Auto_Select_Bid</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Auto Select Bid</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT("/soap/ajax/15.0/connection.js")}
+{!REQUIRESCRIPT("/soap/ajax/15.0/apex.js")}
+var namespacePrefix = "{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}";
+if (namespacePrefix != null &amp;&amp; namespacePrefix != ""){
+namespacePrefix += "/";
+}
+var className = namespacePrefix + "AppraisalManagerImpl";
+var methodName = "callProcessBids";
+var parameter = "{!genesis__Appraisal_Request__c.Id}";
+var result = sforce.apex.execute(className,methodName,{appraisalRequestId:parameter});
+window.alert(result);
+window.location.reload();</url>
+</WebLink>

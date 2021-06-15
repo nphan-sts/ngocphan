@@ -1,0 +1,30 @@
+<apex:page standardController="Contact">
+ 	Hello {!Contact.FirstName} {!Contact.LastName}! This is your new Page
+  	<apex:outputText value="{0,date,yyyy'-'MM'-'dd}">
+		<apex:param value="{!contact.Birthdate}" />
+	</apex:outputText>
+  	{!Contact.Email}
+  	{!Contact.Employer__c}
+  	{!Contact.Phone}
+  	{!contact.ID}
+  
+	<h1>Congratulations</h1>
+  	This is your new Page: l2
+	<div id="lenddo_verify"></div>
+
+	<script type="text/javascript">
+		var lenddo_cs={button:{'name':'blue_green_button'},
+		action:'popup',
+		ps_id:'548002837ec70ec34d9afd77',
+		c_id:'{!Contact.ID}',
+		verification_fields:{firstname:'{!JSENCODE($ObjectType.Contact.Fields['FirstName'].Label)}',lastname:'{!JSENCODE($ObjectType.Contact.Fields['LastName'].Label)}',birthdate:'{!JSENCODE($ObjectType.Contact.Fields['Birthdate'].Label)}',employer:'{!JSENCODE($ObjectType.Contact.Fields['Employer__c'].Label)}',email:'{!JSENCODE($ObjectType.Contact.Fields['email'].Label)}',mobilephone:'{!JSENCODE($ObjectType.Contact.Fields['phone'].Label)}'},
+		onSubmit:function(cb){cb();}};
+		(function(){var la=document.createElement('script');
+			la.type='text/javascript';
+			la.async=true;
+			la.src=('https:'==document.location.protocol?'https://':'http://')+'authorize.lenddo.com/verify.js'+'?v='+Date.now();
+			var s=document.getElementsByTagName('script')[0];
+			s.parentNode.insertBefore(la,s);})();
+   
+	</script>
+</apex:page>

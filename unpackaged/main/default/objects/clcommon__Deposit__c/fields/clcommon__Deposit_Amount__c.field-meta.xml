@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Deposit_Amount__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field shows the current amount available for a particular deposit.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field shows the current amount available for a particular deposit.</inlineHelpText>
+    <label>Deposit Amount</label>
+    <precision>18</precision>
+    <required>true</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

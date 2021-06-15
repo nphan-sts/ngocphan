@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Charge_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Charge Type_deprecated</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Late Fees</fullName>
+                <default>false</default>
+                <label>Late Fees</label>
+            </value>
+            <value>
+                <fullName>NSF Fees</fullName>
+                <default>false</default>
+                <label>NSF Fees</label>
+            </value>
+            <value>
+                <fullName>Wire Fees</fullName>
+                <default>false</default>
+                <label>Wire Fees</label>
+            </value>
+            <value>
+                <fullName>Pay-Off Fees</fullName>
+                <default>false</default>
+                <label>Pay-Off Fees</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>true</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

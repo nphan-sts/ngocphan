@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Valuation_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Valuation Date of Vehicle</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Valuation Date of Vehicle</inlineHelpText>
+    <label>Valuation Date</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

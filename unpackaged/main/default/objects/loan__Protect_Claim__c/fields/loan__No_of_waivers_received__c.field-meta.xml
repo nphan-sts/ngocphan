@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__No_of_waivers_received__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>No of waivers received</label>
+    <summaryForeignKey>loan__Protect_Claim_LPT_Junction__c.loan__Protect_Claim__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

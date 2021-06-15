@@ -1,0 +1,83 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="genesis__Applications__c"
+    extensions="genesis.LoanApplicationController">
+    <apex:stylesheet value="{!$Resource.genesis__MFIStyles}" />
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+        j$ = jQuery.noConflict();
+
+        function confirmCancel() {
+            var isConfirm = confirm("Are you sure you want to cancel?");
+            if(isConfirm){             
+                return this.parent.parent.window.close();              
+            }
+        }
+    
+    </script>
+    
+    <apex:outputPanel >
+        <apex:form id="applicationForm">
+            <apex:pageBlock id="applicationId" mode="edit">
+                <apex:pageMessages />
+                <apex:pageBlockButtons location="both">
+                    <c:BusyButton name="Save" busyName="Saving"
+                        actionTo="{!saveapplication}"
+                        oncomplete="({!closeModal}===true) ? closeIframe('{!genesis__Applications__c.Id}') : {};"
+                        reRenderTo="applicationForm" />
+                    <apex:commandButton action="{!cancelapplication}" onclick="confirmCancel()" immediate="true" value="Cancel" />
+                </apex:pageBlockButtons>
+                <!--A new page section-->
+                <apex:outputpanel id="newapplicationPanel">
+                    <apex:pageBlockSection id="newapplicationSection" title="Customer Details">
+                        <apex:inputCheckbox value="{!isContact}" label="Contact">
+                            <apex:actionSupport action="{!setContact}" event="onchange" reRender="newapplicationPanel,applicationId" status="valueChange"/>
+                        </apex:inputCheckbox>
+                        <apex:inputCheckbox value="{!isAccount}" label="Account">
+                            <apex:actionSupport action="{!setAccount}" event="onchange" reRender="newapplicationPanel,applicationId" status="valueChange"/>
+                        </apex:inputCheckbox>
+                        <apex:inputField value="{!application.genesis__Contact__c}" rendered="{!isContact}"/>
+                        <apex:inputField value="{!application.genesis__Account__c}" rendered="{!isAccount}"/>
+                    </apex:pageBlockSection>
+                </apex:outputpanel>
+                
+                <apex:outputpanel id="headerid" rendered="{!isContact = true || isAccount = true}">
+                    <apex:pageBlockSection columns="2" id="DetailPageBlockSection" title="Basic Details" >
+                        <apex:inputField value="{!application.genesis__CL_Product__c}" rendered="{!$Setup.genesis__Org_Parameters__c.genesis__Use_CL_Product__c}" />                                                     
+                        <apex:inputField value="{!application.genesis__Product_Type__c}" required="true"/>
+                        <apex:inputField value="{!application.genesis__Payment_Frequency__c}" id="appPaymentFrequency" required="true"/>
+                        <apex:inputField value="{!application.genesis__Loan_Amount__c}" required="true"/>
+                        <apex:inputField value="{!application.genesis__Term__c}"/>
+                        <apex:inputField value="{!application.genesis__Expected_Start_Date__c}" required="true"/>   
+                        <apex:inputField value="{!application.genesis__Balloon_Payment__c}" required="false"/>    
+                        <apex:inputField value="{!application.genesis__Interest_Only_Period__c}" required="false"/>  
+                        <apex:inputField value="{!application.genesis__Expected_First_Payment_Date__c}" required="false"/> 
+                        <apex:inputField value="{!application.genesis__Status__c}"  /> 
+                        <apex:inputField value="{!application.genesis__Calculation_Action__c}"  /> 
+                        <apex:inputField value="{!application.genesis__Maturity_Date__c}"  />
+                        <apex:inputField value="{!application.genesis__Repayment_Procedure__c}"  /> 
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="2" id="AddlPageBlockSection" title="Interest Calculation" >
+                        <apex:inputField value="{!application.genesis__Days_Convention__c}" id="appDaysConvention" required="true"/>
+                        <apex:inputField value="{!application.genesis__Interest_Rate__c}" required="true"/>
+                        <apex:inputField value="{!application.genesis__Interest_Calculation_Method__c}" required="true"/>
+                    </apex:pageBlockSection>
+                    <!--<apex:pageBlockSection columns="2"  title="Funding in Tranches" >
+                        <apex:inputField value="{!application.Funding_in_Tranches__c}" required="true" label="Funding in Tranches">
+                            <apex:actionSupport event="onchange" reRender="headerid"/>
+                        </apex:inputField>
+                        <apex:inputField value="{!application.Draw_Period_End_Date__c}" rendered="{!application.Funding_in_Tranches__c}"/>
+                    </apex:pageBlockSection> -->
+                    
+                </apex:outputpanel>
+                <center><apex:actionStatus id="valueChange">
+                    <apex:facet name="start" >
+                        <apex:image value="/img/loading32.gif" style="height:15px;"/>
+                    </apex:facet>
+                </apex:actionStatus></center>
+                <c:FieldSetPanel value2="Applications__c" value3="{!application}" />
+                
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+</apex:page>

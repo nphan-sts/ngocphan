@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Status_API_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <description>API name of the Status</description>
+    <externalId>false</externalId>
+    <inlineHelpText>API name of the "Status"</inlineHelpText>
+    <label>Status API Name</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

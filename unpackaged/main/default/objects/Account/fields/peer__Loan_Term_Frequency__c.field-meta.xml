@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Loan_Term_Frequency__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>If Years are selected, the maximum loan term will be considered as number of years. If Contract Frequency is selected, the maximum loan term will be counted by the number of terms as per the frequency of the contract in which the investor is investing.</inlineHelpText>
+    <label>Loan Term Frequency</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Years</fullName>
+                <default>false</default>
+                <label>Years</label>
+            </value>
+            <value>
+                <fullName>Contract Frequency</fullName>
+                <default>false</default>
+                <label>Contract Frequency</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

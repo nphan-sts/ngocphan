@@ -1,0 +1,56 @@
+<apex:page lightningStylesheets="true" standardController="clcommon__Sliding_Billing_Setup__c" id="slidingBillingSetupPage" recordSetVar="slidingBillingSetups" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:form >
+        <apex:sectionHeader title="Sliding Billing Setups" />
+        <apex:pageblock id="slidingBillingSetupList">
+            <apex:actionRegion >
+                <apex:outputText value="Records per page "></apex:outputText>
+                <apex:selectList value="{!pagesize}" size="1">
+                    <apex:selectOption itemLabel="5" itemValue="5"></apex:selectOption>
+                    <apex:selectOption itemLabel="10" itemValue="10"></apex:selectOption>
+                    <apex:selectOption itemLabel="15" itemValue="15"></apex:selectOption>
+                    <apex:selectOption itemLabel="20" itemValue="20"></apex:selectOption>
+                    <apex:actionSupport event="onchange" rerender="slidingBillingSetupTable, navigation" />
+                </apex:selectList>
+            </apex:actionRegion>
+
+            <apex:pageblockTable value="{!slidingBillingSetups}" id="slidingBillingSetupTable" var="slb">
+                <apex:column headerValue="Index Name">
+                    <apex:commandLink value="{!slb.Name}"
+                                      reRender="slidingBillingSetupPage:slidingBillingSetupDetail"
+                                      status="indexChange">
+                        <apex:param name="slidingBillingSetup" value="{!slb.Id}" />
+                    </apex:commandLink>
+                </apex:column>
+            </apex:pageblockTable>
+
+            <apex:panelGrid columns="2" id="navigation">
+                <apex:commandLink action="{!previous}" rendered="{!hasPrevious}"> Previous </apex:commandLink>
+                <apex:commandLink action="{!next}" rendered="{!hasNext}"> Next </apex:commandLink>
+            </apex:panelGrid>
+
+        </apex:pageblock>
+
+        <center>
+            <apex:actionStatus id="indexChange">
+                <apex:facet name="start">
+                    <img src="/img/loading32.gif" />
+                </apex:facet>
+            </apex:actionStatus>
+        </center>
+
+    </apex:form>
+
+    <apex:outputPanel id="slidingBillingSetupDetail" layout="block">
+        <apex:detail subject="{!$CurrentPage.parameters.slidingBillingSetup}" inlineEdit="false"></apex:detail>
+    </apex:outputPanel>
+
+    <apex:sectionHeader title="Define a New Sliding Billing Setup" />
+    <table>
+        <tr><td><br/>
+            <apex:outputLink value="{!URLFOR($Action.clcommon__Sliding_Billing_Setup__c.New)}">Define a New Sliding Billing Setup</apex:outputLink>
+        </td></tr>
+    </table>
+
+</apex:page>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Interface_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Interface Name</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Loan Payment Transaction Interface</fullName>
+                <default>false</default>
+                <label>Loan Payment Transaction Interface</label>
+            </value>
+            <value>
+                <fullName>Due Details Interface</fullName>
+                <default>false</default>
+                <label>Due Details Interface</label>
+            </value>
+            <value>
+                <fullName>Charges Interface</fullName>
+                <default>false</default>
+                <label>Charges Interface</label>
+            </value>
+            <value>
+                <fullName>Repayment Schedule Summary Interface</fullName>
+                <default>false</default>
+                <label>Repayment Schedule Summary Interface</label>
+            </value>
+            <value>
+                <fullName>Consolidated Loan Payment Interface</fullName>
+                <default>false</default>
+                <label>Consolidated Loan Payment Interface</label>
+            </value>
+            <value>
+                <fullName>Loan Account Interface</fullName>
+                <default>false</default>
+                <label>Loan Account Interface</label>
+            </value>
+            <value>
+                <fullName>Flexible Rate Schedule Setup Interface</fullName>
+                <default>false</default>
+                <label>Flexible Rate Schedule Setup Interface</label>
+            </value>
+            <value>
+                <fullName>Disbursal Transaction Interface</fullName>
+                <default>false</default>
+                <label>Disbursal Transaction Interface</label>
+            </value>
+            <value>
+                <fullName>ACH Return Transaction Interface</fullName>
+                <default>false</default>
+                <label>ACH Return Transaction Interface</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

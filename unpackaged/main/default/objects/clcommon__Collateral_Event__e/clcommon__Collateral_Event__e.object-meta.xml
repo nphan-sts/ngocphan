@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>This event will be published when a collateral record is updated</description>
+    <eventType>StandardVolume</eventType>
+    <label>Collateral Event</label>
+    <pluralLabel>Collateral Event</pluralLabel>
+    <publishBehavior>PublishImmediately</publishBehavior>
+</CustomObject>

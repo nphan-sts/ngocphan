@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Recurring_Daily_must_have_Interval</fullName>
+    <active>true</active>
+    <description>If recurrence type if RecursDaily, then the Recurrence Interval must be provided.
+Also, if recurrence type is RecursEveryWeekday, then the Recurrence Interval must not be provided.</description>
+    <errorConditionFormula>OR(AND(ISPICKVAL(clcommon__RecurrenceType__c, "RecursDaily"), ISBLANK(clcommon__RecurrenceInterval__c)), AND(ISPICKVAL(clcommon__RecurrenceType__c, "RecursEveryWeekday"), NOT(ISBLANK(clcommon__RecurrenceInterval__c))))</errorConditionFormula>
+    <errorDisplayField>clcommon__RecurrenceInterval__c</errorDisplayField>
+    <errorMessage>One of the following :
+1. Recurrence interval MUST be set if the recurrence type is recursDAILY.
+2. Recurrence interval MUST NOT be set if the recurrence type is recursEVERYWEEKDAY.</errorMessage>
+</ValidationRule>

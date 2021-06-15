@@ -1,0 +1,185 @@
+<!-- Will function when invoked separately as well as through dashboard -->
+<apex:page controller="collect.OneTimeTransactionController" showHeader="false" sidebar="false" docType="html-5.0" >
+    <Script src="{!URLFOR($Resource.collect__jQueryFiles, 'js/jquery-1.8.3.min.js')}"/>
+    <Script src="{!URLFOR($Resource.collect__helperclose)}"/>
+        <Script>
+            function callParentFunc() {
+                window.parent.closeFragment();
+            }
+        </Script>
+
+    <style type="text/css">
+        .bPageHeader {
+            display:none;
+        }
+        .bPageFooter.noTableFooter {
+            display:none;
+        }
+        div.bodyDiv.brdPalette.brandPrimaryBrd {
+            height:930px;
+        }
+        .bodyDiv {
+            background-color: #f8f8f8;
+            border-top: 0px solid;
+            box-shadow: 0px 0px 0px hsla(0,0%,0%,.25)
+        }
+        .brdPalette {
+            border-top-color: #f8f8f8;
+        }
+        body.sfdcBody {
+            background: #f8f8f8;
+        }
+        .noSidebarCell, .sidebarCell .fixed {
+            padding: 0px;
+        }
+        .pbTitle {
+            white-space: nowrap
+        }
+        .contractSearchFS {
+            font-family: "Sans-serif";
+            font-weight: bold;
+            font-size: 12px;
+        }
+            div.table {border: 0px solid black; display: table; }
+            div.tr {border: 0px solid black; display: table-row; }
+            div.td {border: 0px solid black; display: table-cell; }
+
+        .bPageHeader {
+            display:none;
+        }
+        .bPageFooter.noTableFooter {
+            display:none;
+        }
+        .requiredLegend {
+            display: none;
+        }
+        .bPageBlock {
+            border-top: 0px;
+        }
+        body { background-color:#f8f8f8; }
+        body .bPageBlock, body #bodyCell .bResource .secondaryPalette, body .secondaryPalette.bPageBlock, body .individualPalette .secondaryPalette.bPageBlock, body .bodyDiv .genericTable, body .genericPageBlockTable, body .bodyDiv .bSubBlock, body .bComponentBlock .bPageBlock, body .bMyDashboard .bPageBlock, body.rlHoverFrame .bPageBlock, body.subjectSelectionPopup div.choicesBox, body.lookupTab .secondaryPalette.bPageBlock, body.popupTab .secondaryPalette.bPageBlock, body.UserTagStatsPage .secondaryPalette.bPageBlock {
+            border-bottom: 0px;
+            border-left: 0px;
+            border-right: 0px;
+            border-radius: 1px;
+        }
+        body .bEditBlock .pbBottomButtons, body .apexp .bPageBlock.apexDefaultPageBlock .pbBottomButtons {
+            border-top: 0px;
+        }
+        body .bEditBlock .pbBottomButtons, body .apexp .bPageBlock.apexDefaultPageBlock .pbBottomButtons {
+            margin-top: 15px;
+        }
+        .bPageBlock .detailList tr td, .bPageBlock .detailList tr th, .hoverDetail .bPageBlock .detailList tr td, .hoverDetail .bPageBlock .detailList tr th { border: 0px solid black; }
+    </style>
+
+    <Script>
+    j$ = jQuery.noConflict();
+
+    function callValidateAction(component, whatToValidate){
+        if(whatToValidate == 'BANK') {
+            validateBankAccount(document.getElementById(component).value);
+        }
+        else if(whatToValidate == 'PAYMENT MODE') {
+            validatePaymentMode(document.getElementById(component).value);
+        }
+    }
+
+    function callSetCustomerId(component) {
+        setCustomerId(document.getElementById(component).value);
+    }
+
+    </Script>
+
+    <apex:pageBlock >
+        <apex:outputPanel id="main">
+            <apex:form >
+                <div style="background-color:#CCCCCC; width=100%; padding: 6px; padding-bottom:10px; margin:10px;">
+                     <h1>
+                         New OTACH/Direct Debit
+                    </h1>
+                </div>
+                <apex:outputPanel id="msgPanel">
+                    <apex:pageMessages ></apex:pageMessages>
+                </apex:outputPanel>
+                <apex:pageBlock >
+                    <apex:actionFunction name="setCustomerId" action="{!setCustomerId}" reRender="bankAccountDetails, readonlyDetails, editableDetails, msgPanel" immediate="true">
+                        <apex:param name="customerId" value="" />
+                    </apex:actionFunction>
+                    <apex:actionFunction name="validateBankAccount" action="{!validateBankAccount}" reRender="bankAccountDetails" immediate="true">
+                        <apex:param name="bankId" value="" />
+                    </apex:actionFunction>
+                    <apex:actionFunction name="validatePaymentMode" action="{!validatePmtMode}" reRender="pmtModeSection" immediate="true">
+                        <apex:param name="pmtModeId" value="" />
+                    </apex:actionFunction>
+
+                    <apex:outputPanel >
+                        <apex:pageBlockSection columns="1">
+                            <apex:outputText value="{!contractName}" label="Contract Name"/>
+                            <apex:selectList label="Transaction Type" value="{! txnType}" size="1" multiselect="false" required="{! AND(NOT(showLoanFields), NOT(showLeaseFields)) }"
+                                             rendered="{! AND(NOT(showLoanFields), NOT(showLeaseFields)) }" style="width: 173px;">
+                                <apex:selectOptions value="{! thirdPartyOtachTxnType}"/>
+                            </apex:selectList>
+                        </apex:pageBlockSection>
+
+                        <apex:pageBlockSection id="pmtModeSection" columns="1">
+                            <apex:selectList id="pmtMode" label="Payment Mode" value="{! pmtMode['Name'] }" onchange="callValidateAction('{! $Component.pmtMode}', 'PAYMENT MODE')" size="1" multiselect="false"
+                                             required="{! AND(showLeaseFields, NOT(showPmtModeInputField)) }" rendered="{! AND(showLeaseFields, NOT(showPmtModeInputField)) }"  style="width: 173px;">
+                                <apex:selectOptions value="{! pmtModeType }"/>
+                            </apex:selectList>
+
+                            <apex:inputText id="pmtModeText" value="{! pmtMode['Name'] }" label="Payment Mode" required="{! AND(showLeaseFields, showPmtModeInputField) }" rendered="{! AND(showLeaseFields, showPmtModeInputField) }" style="width: 168px;"/>
+                        </apex:pageBlockSection>
+                        <apex:pageBlockSection columns="1">
+                            <apex:input type="datetime-local" value="{! txnDate}" label="Transaction Time" style="width: 168px;" rendered="{! AND(NOT(showLoanFields), NOT(showLeaseFields))}"/>
+                            <apex:selectList id="contact" label="Account/Contact" onchange="callSetCustomerId('{! $Component.contact}')"  size="1" multiselect="false" style="width: 173px;">
+                                <apex:selectOptions value="{!contacts}"/>
+                            </apex:selectList>
+                        </apex:pageBlockSection>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel id="bankAccountDetails">
+                        <apex:outputPanel title="Bank Account Details">
+                            <apex:pageBlockSection columns="1">
+                                <apex:selectList id="bank" label="Bank Name" onchange="callValidateAction('{! $Component.bank}', 'BANK')"
+                                                 rendered="{! AND(bankAccount[namespaceForBankAccountAndPmtModeQuery + 'Bank_Name__c'] == null, NOT(showBankInputField))}"
+                                                 size="1" multiselect="false" required="true" style="width: 173px;">
+                                    <apex:selectOptions value="{! bankAccounts}"/>
+                                </apex:selectList>
+                                <apex:inputText id="bankText" value="{! bankAccount[namespaceForBankAccountAndPmtModeQuery + 'Bank_Name__c'] }" label="Bank Name" required="{! showBankInputField }" rendered="{! showBankInputField }"  style="width: 168px;"
+                                                />
+                            </apex:pageBlockSection>
+                            <apex:outputPanel id="readonlyDetails" rendered="{! AND(NOT(bankAccount['Id'] == null), NOT(showBankInputField)) }">
+                                <apex:pageBlockSection columns="1">
+                                    <apex:outputField value="{! bankAccount[namespaceForBankAccountAndPmtModeQuery + 'Bank_Name__c'] }" />
+                                    <apex:outputField value="{! bankAccount[namespaceForBankAccountAndPmtModeQuery + 'Routing_Number__c'] }"/>
+                                    <apex:outputField value="{! bankAccount[namespaceForBankAccountAndPmtModeQuery + 'Bank_Account_Number__c'] }" label="Account Number"/>
+                                    <apex:outputField value="{! bankAccount[namespaceForBankAccountAndPmtModeQuery + 'Account_Type__c'] }"/>
+                                </apex:pageBlockSection>
+                            </apex:outputPanel>
+                            <apex:outputPanel id="editableDetails" rendered="{! showBankInputField }">
+                                <apex:pageBlockSection columns="1">
+                                    <apex:inputText value="{! bankAccount[namespaceForBankAccountAndPmtModeQuery + 'Routing_Number__c']}" label="Routing Number" required="true"  style="width: 168px;"/>
+                                    <apex:inputText value="{! bankAccountNumber}" label="Account Number" required="true" style="width: 168px;"/>
+                                    <apex:selectList label="Account Type" value="{! bankAccount[namespaceForBankAccountAndPmtModeQuery + 'Account_Type__c']}" size="1" multiselect="false" required="true" style="width: 173px;">
+                                        <apex:selectOptions value="{! bankAccountType}"/>
+                                    </apex:selectList>
+                                </apex:pageBlockSection>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                        <apex:pageBlockSection columns="1">
+                            <apex:input type="number" value="{! txnAmount }" rendered="true" label="Transaction Amount" style="width: 168px;"/>
+                            <apex:input type="number" value="{! feeAmount }" rendered="{! showLoanFields }" label="Fee Amount" style="width: 168px;"/>
+                            <apex:input type="datetime-local" value="{! txnDebitDate }" required="true" label="Debit Date" style="width: 168px;"/>
+                        </apex:pageBlockSection>
+                    </apex:outputPanel>
+
+                    <apex:pageBlockButtons location="bottom" html-align="left">
+                        <apex:commandButton action="{! saveFields }" status="busy" value="Save" />
+                        <apex:actionStatus startText="Working..." stopText="" id="busy" />
+                        <apex:commandButton action="{! refreshPage }" value="Cancel" immediate="true" html-formnovalidate="formnovalidate" onclick="callParentFunc();" />
+                    </apex:pageBlockButtons>
+                </apex:pageBlock>
+            </apex:form>
+        </apex:outputPanel>
+    </apex:pageBlock>
+</apex:page>

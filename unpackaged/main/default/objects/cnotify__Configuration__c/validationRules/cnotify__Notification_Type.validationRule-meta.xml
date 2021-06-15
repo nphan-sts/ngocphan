@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>cnotify__Notification_Type</fullName>
+    <active>true</active>
+    <description>At least one notification type should be selected.</description>
+    <errorConditionFormula>cnotify__Email_Notification__c = false &amp;&amp;  cnotify__Text_Notification__c = false</errorConditionFormula>
+    <errorMessage>At least one notification type should be selected</errorMessage>
+</ValidationRule>

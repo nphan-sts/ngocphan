@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Select_Equipment</fullName>
+    <availability>online</availability>
+    <displayType>massActionButton</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Select Equipment</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+    <url>{!REQUIRESCRIPT("/soap/ajax/13.0/connection.js")} 
+{!REQUIRESCRIPT("/soap/ajax/10.0/apex.js")} 
+
+
+var selectedEquipmentIds = {!GETRECORDIDS($ObjectType.ints__EquipmentDetail__c)};
+var SelectedIds="'"+selectedEquipmentIds[0]+"'";
+var blackBookId=''; 
+if(selectedEquipmentIds.length == 1){
+
+var qquery = sforce.connection.query("select ints__Blackbook_Result__c from ints__EquipmentDetail__c where Id in ("+SelectedIds+")");	
+var records = qquery.getArray("records");
+blackBookId = "'"+records[0].get("ints__Blackbook_Result__c")+"'";
+
+qquery = sforce.connection.query("select Name, genesis__Selected__c from ints__EquipmentDetail__c where ints__Blackbook_Result__r.Id in ("+blackBookId+")");
+records = qquery.getArray("records");
+var foundSel = false;
+for (index = 0; index &lt; records.length; ++index) {
+var selected = records[index].get("genesis__Selected__c");
+if(selected  == "true"){
+alert('Already detail record is selected with name : ' + records[index].get("Name"));
+foundSel = true;
+break;
+}
+}
+if(foundSel == false){
+var r = confirm("Click ''OK'' to continue with equipment detail selection."); 
+if (r){
+var retVal = sforce.apex.execute("genesis.EquipmentEvaluationController", "markEquipmentDetailSelected", {equipmentDetailId:selectedEquipmentIds});
+window.alert(retVal);
+window.location.reload();
+}
+}
+}else if (selectedEquipmentIds.length == 0) {
+alert('Please select appropriate detail record from the result.')
+}else{
+alert('One equipment cannot have multiple detail records.Please select only one record .')
+}</url>
+</WebLink>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Application_Limit_Rule</fullName>
+    <active>true</active>
+    <description>Total Application Limit of the Investor Should be Greater than Zero</description>
+    <errorConditionFormula>AND (
+ RecordTypeId == '012n00000000JmN',
+  Total_No_of_Application_Limit__c &lt;=0
+)</errorConditionFormula>
+    <errorDisplayField>Total_No_of_Application_Limit__c</errorDisplayField>
+    <errorMessage>Total Application Limit of the Investor Should be Greater than Zero</errorMessage>
+</ValidationRule>

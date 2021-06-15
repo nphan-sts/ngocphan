@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Detail__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Change in Cash Flow for which template detail needs to be recorded</description>
+    <externalId>false</externalId>
+    <label>Detail</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>Details of same template can be selected</errorMessage>
+        <filterItems>
+            <field>clcommon__Template_Detail__c.clcommon__Template__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.clcommon__Template__c</valueField>
+        </filterItems>
+        <infoMessage>Details of same template can be selected</infoMessage>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>clcommon__Template_Detail__c</referenceTo>
+    <relationshipLabel>Template Details</relationshipLabel>
+    <relationshipName>Template_Details</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

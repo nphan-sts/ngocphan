@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__All</fullName>
+    <columns>NAME</columns>
+    <columns>genesis__Department_No__c</columns>
+    <columns>genesis__Department__c</columns>
+    <columns>genesis__Product_Name__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+</ListView>

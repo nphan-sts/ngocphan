@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis_Scorecard__c</fullName>
+    <externalId>false</externalId>
+    <label>Scorecard</label>
+    <referenceTo>genesis__Scorecard__c</referenceTo>
+    <relationshipName>genesis_Scorecard1586830450137</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

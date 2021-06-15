@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Date_Check</fullName>
+    <active>true</active>
+    <description>Start Date should not be greater than End Date</description>
+    <errorConditionFormula>loan__Start_Date__c &gt;  loan__End_Date__c</errorConditionFormula>
+    <errorMessage>Start Date cannot be greater than End Date</errorMessage>
+</ValidationRule>

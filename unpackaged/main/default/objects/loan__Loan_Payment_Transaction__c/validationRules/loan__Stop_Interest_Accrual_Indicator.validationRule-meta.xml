@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Stop_Interest_Accrual_Indicator</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISPICKVAL(loan__Loan_Account__r.loan__Product_Type__c, 'Loan')&amp;&amp;  loan__Loan_Account__r.loan__Accrual_Stop_Indicator__c</errorConditionFormula>
+    <errorMessage>Daily Interest Accrual is stopped.You cannot make a Payment.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,23 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Account__c">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<c:HighlightsPanelMintTheme labels="Today's Payoff (approx.), Amount to Current, Oldest Unpaid Due Date, Payment Amount, Status"
+		value1="{!loan__Loan_Account__c.loan__Pay_Off_Amount_As_Of_Today__c}"
+		value2="{!loan__Loan_Account__c.loan__Amount_Due_Till_Current__c}"
+		value3="{!loan__Loan_Account__c.loan__Oldest_Due_Date__c}"
+		value4="{!IF(loan__Loan_Account__c.loan__Disbursal_Date__c != null,IF(loan__Loan_Account__c.loan__Closed_Date__c == null, loan__Loan_Account__c.loan__Pmt_Amt_Cur__c,0.0),0.0)}"
+		value5="{!loan__Loan_Account__c.loan__Loan_Status__c}"
+		class5="{!IF(loan__Loan_Account__c.loan__Loan_Status__c='Active - Bad Standing', 'red', 'green')}"
+		highlight="true" 
+		rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}" />
+		
+	<c:HighlightsPanel labels="Today's Payoff (approx.), Amount to Current, Oldest Unpaid Due Date, Payment Amount, Status"
+		value1="{!loan__Loan_Account__c.loan__Pay_Off_Amount_As_Of_Today__c}"
+		value2="{!loan__Loan_Account__c.loan__Amount_Due_Till_Current__c}"
+		value3="{!loan__Loan_Account__c.loan__Oldest_Due_Date__c}"
+		value4="{!IF(loan__Loan_Account__c.loan__Disbursal_Date__c != null,IF(loan__Loan_Account__c.loan__Closed_Date__c == null, loan__Loan_Account__c.loan__Pmt_Amt_Cur__c,0.0),0.0)}"
+		value5="{!loan__Loan_Account__c.loan__Loan_Status__c}"
+		class5="{!IF(loan__Loan_Account__c.loan__Loan_Status__c='Active - Bad Standing', 'red', 'green')}"
+		highlight="true" 
+		rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+</apex:page>

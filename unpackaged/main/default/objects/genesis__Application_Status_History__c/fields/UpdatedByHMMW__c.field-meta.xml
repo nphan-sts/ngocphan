@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>UpdatedByHMMW__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Used for LOS 215 to flag records updated by Happymoney</description>
+    <externalId>false</externalId>
+    <label>UpdatedByHMMW</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

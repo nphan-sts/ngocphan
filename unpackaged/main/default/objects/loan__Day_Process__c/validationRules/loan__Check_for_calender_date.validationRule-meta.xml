@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_for_calender_date</fullName>
+    <active>true</active>
+    <description>Current system date shouldn't be beyond the current calender date.</description>
+    <errorConditionFormula>AND(loan__Day_Started__c ,loan__Date__c  &gt; TODAY())</errorConditionFormula>
+    <errorMessage>Current system date shouldn't be beyond the current calender date.</errorMessage>
+</ValidationRule>

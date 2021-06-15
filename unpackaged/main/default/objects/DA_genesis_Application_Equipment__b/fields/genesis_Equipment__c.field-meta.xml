@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis_Equipment__c</fullName>
+    <externalId>false</externalId>
+    <label>Equipment</label>
+    <referenceTo>genesis__Equipment_Master__c</referenceTo>
+    <relationshipName>genesis_Equipment1582248518871</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

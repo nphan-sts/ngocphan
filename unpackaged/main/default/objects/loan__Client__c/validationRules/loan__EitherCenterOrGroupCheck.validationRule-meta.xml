@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__EitherCenterOrGroupCheck</fullName>
+    <active>false</active>
+    <description>The client's Loan Officer and the Group's/Center's Loan Officer must be the same.</description>
+    <errorConditionFormula>((loan__Group__c &lt;&gt; null) &amp;&amp; ( loan__Loan_Officer__r.Id   &lt;&gt; loan__Group__r.loan__Assigned_LO__r.Id))  || (( loan__Center__c  &lt;&gt; null) &amp;&amp; ( loan__Loan_Officer__r.Id   &lt;&gt;  loan__Center__r.loan__Loan_Officer__r.Id ))</errorConditionFormula>
+    <errorMessage>The client's Loan Officer and the Group's/Center's Loan Officer must be the same.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Next_Due_Generation_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Next Due Generation Date.</description>
+    <externalId>false</externalId>
+    <label>Next Due Generation Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

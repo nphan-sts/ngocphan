@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Custom_Commission_Calculation_Class__c</fullName>
+    <deprecated>false</deprecated>
+    <description>class name implementing ICommissionCalculation interface.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Field is applicable only for Commission Calculation Method 'Custom'. Name of a class implementing ICommissionCalculation should be provided in this field.</inlineHelpText>
+    <label>Custom Commission Calculation Class</label>
+    <length>40</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

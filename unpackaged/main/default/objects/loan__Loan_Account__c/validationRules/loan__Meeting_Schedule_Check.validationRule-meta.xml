@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Meeting_Schedule_Check</fullName>
+    <active>false</active>
+    <description>This validation rule is deprecated</description>
+    <errorConditionFormula>AND(
+NOT(ISPICKVAL( loan__Loan_Product_Name__r.loan__Loan_Product_Type__c , 'Group')),
+NOT($Setup.loan__Org_Parameters__c.loan__Integrate_Salesforce_CRM__c),
+OR(
+AND ( loan__Repayment_Tied_to_Meeting_Schedule__c ,
+ISBLANK( loan__Client__r.loan__Group__c ),
+ISBLANK( loan__Client__r.loan__Center__c )
+)
+,
+AND ( loan__Repayment_Tied_to_Meeting_Schedule__c ,
+NOT($Setup.loan__Org_Parameters__c.loan__Integrate_Salesforce_CRM__c),
+ISBLANK( loan__Client__r.loan__Group__r.loan__Meeting_Schedule__c ),
+ISBLANK( loan__Client__r.loan__Center__r.loan__Meeting_Schedule__c )
+)
+)
+)</errorConditionFormula>
+    <errorMessage>Client's group or center does not have a meeting schedule. Or Client is not associated with a Center or a Group.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Next_Amortize_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Next Amortization Date</description>
+    <externalId>false</externalId>
+    <inlineHelpText>It is the next date when Interest Amortize will run</inlineHelpText>
+    <label>Next Amortization Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

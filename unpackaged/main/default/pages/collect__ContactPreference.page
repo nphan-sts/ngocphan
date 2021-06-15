@@ -1,0 +1,122 @@
+<apex:page standardController="collect__Contact_Preference__c" tabStyle="collect__Contact_Preference__c" extensions="collect.ContactPreferenceCtrl" showHeader="false">
+     <style type="text/css">
+         select
+         {
+             color: #ccc;
+         }
+         option
+         {
+             color: #000;
+         }
+         option:first-child
+         {
+             color: #ccc;
+         }
+     </style> 
+     <script type="text/javascript">
+        function changeMe(sel)
+        {
+          sel.style.color = "#000";              
+        }
+        function changeAmPm(sel)
+        {
+          sel.style.color = "#000";              
+        }
+     </script>
+     <apex:form >
+     <apex:sectionheader title="Contact Preference Edit" subtitle="New Contact Preference" rendered="{!editMode}"></apex:sectionheader>
+     <apex:sectionheader title="Contact Preference Edit" subtitle="{!collect__Contact_Preference__c.Name}" rendered="{!NOT(editMode)}"></apex:sectionheader>
+     <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.collect__modalheaderStyle,'')}" />
+        <apex:pageblock mode="edit" id="ContactPreference_PageBlock" title="Contact Preference Edit">
+                
+            <!-----COMMAND BUTTONS----->
+            <!-----COMMAND BUTTONS----->
+            <apex:pageblockbuttons >
+                <apex:commandButton value="Edit" action="{!changeToEditMode}" rendered="{!NOT(editMode)}"/>
+                <apex:commandbutton value="Save" action="{!saveConPref}" rendered="{!editMode}"></apex:commandbutton>  
+                <apex:commandbutton value="Save and New" action="{!saveAndNewCp}" rendered="{!editMode}"></apex:commandbutton>            
+                <apex:commandbutton value="Cancel" action="{!cancelCp}" rendered="{!editMode}" immediate="true"></apex:commandbutton>
+            </apex:pageblockbuttons>
+           
+            <!-----CONTACT PREFERENCE PAGE--EDIT MODE--->
+            <!-----CONTACT PREFERENCE PAGE--EDIT MODE--->
+            <apex:outputPanel id="ContactPreference_InformationEdit" rendered="{!editMode}">
+                   <apex:pageBlockSection columns="1" id="infoEdit" title="Information">
+                       <apex:outputField value="{!contactPref.collect__Party__c}">
+                		<apex:inlineEditSupport disabled="true"/>
+                       </apex:outputField>
+                       <!-----TIME ZONE FIELD----->
+                       <apex:pageblocksectionitem id="selectTimeZoneItem">
+                       <apex:outputLabel value="{!$ObjectType.collect__Contact_Preference__c.Fields.collect__Time_Zone__c.label}" for="timeZone" html-font-weight="bold !important"></apex:outputLabel>
+                       <apex:selectList id="timeZone" value="{!timeZoneList}" size="1" multiselect="false" required="true" onchange="changeMe(this)">
+                           <apex:selectOptions value="{!TZof}"/>
+                       </apex:selectList>
+                       </apex:pageblocksectionitem><br/>
+                       
+                       <!-----START TIME FIELD----->
+                       <apex:pageblocksectionitem id="selectStartTimeItem">
+                       <apex:outputLabel value="{!$ObjectType.collect__Contact_Preference__c.Fields.collect__Start_Time__c.label}" for="startTime"></apex:outputLabel>
+                       <apex:panelGrid id="startTime" columns="3" style="margin-top: -3px; margin-left: -3px;">
+                           <apex:selectList value="{!selectStartHour}" size="1" multiselect="false" required="true" onchange="changeMe(this)">
+                               <apex:selectOptions value="{!hour}"/>
+                           </apex:selectList>
+                           <apex:selectList value="{!selectStartMinutes}" size="1" multiselect="false" required="true" onchange="changeMe(this)">
+                               <apex:selectOptions value="{!minutes}"/>
+                           </apex:selectList>
+                           <apex:selectList value="{!selectStartAmPm}" size="1" multiselect="false" required="true" onclick="changeAmPm(this)">
+                               <apex:selectOption itemValue="AM" itemLabel="AM"/>
+                               <apex:selectOption itemValue="PM" itemLabel="PM"/>
+                           </apex:selectList>
+                       </apex:panelGrid>
+                       </apex:pageblocksectionitem><br/>
+                       
+                       <!-----END TIME FIELD----->
+                       <apex:pageblocksectionitem id="selectEndTimeItem">
+                       <apex:outputLabel value="{!$ObjectType.collect__Contact_Preference__c.Fields.collect__End_Time__c.label}" for="endTime"></apex:outputLabel>
+                       <apex:panelGrid id="endTime" columns="3" style="margin-top: -5px; margin-left: -3px;">
+                           <apex:selectList value="{!selectEndHour}" size="1" multiselect="false" required="true" onchange="changeMe(this)">
+                               <apex:selectOptions value="{!hour}"/>
+                           </apex:selectList>
+                           <apex:selectList value="{!selectEndMinutes}" size="1" multiselect="false" required="true" onchange="changeMe(this)">
+                               <apex:selectOptions value="{!minutes}"/>
+                           </apex:selectList>
+                           <apex:selectList value="{!selectEndAmPm}" size="1" multiselect="false" required="true" onClick="changeAmPm(this)">
+                               <apex:selectOption itemValue="AM" itemLabel="AM"/>
+                               <apex:selectOption itemValue="PM" itemLabel="PM"/>
+                           </apex:selectList>
+                       </apex:panelGrid>
+                       </apex:pageblocksectionitem><br/>
+                       
+                       <apex:inputField value="{!contactPref.collect__Mode_of_Communication__c}"/><br/>
+                       <apex:inputField value="{!contactPref.collect__Preferred__c}"/>                     
+                   </apex:pageBlockSection>
+            </apex:outputPanel>
+            
+            <!-----CONTACT PREFERENCE PAGE--VIEW MODE--->
+            <!-----CONTACT PREFERENCE PAGE--VIEW MODE--->
+            <apex:outputPanel id="ContactPreference_InformationView" rendered="{!NOT(editMode)}">               
+                   <apex:pageBlockSection columns="2" id="infoView" title="Information">
+                       <apex:outputField value="{!contactPref.collect__Party__c}"/><br/>
+                       <apex:outputField value="{!contactPref.collect__Time_Zone__c}"/><br/>
+                       
+                       <apex:pageBlockSectionItem >
+                       <apex:outputLabel value="{!$ObjectType.collect__Contact_Preference__c.Fields.collect__Start_Time__c.label}" for="startTimeView"></apex:outputLabel>
+                       <apex:outputText id="startTimeView" value="{0,time,HH:mm:ss}">
+                           <apex:param value="{!displayStartDt}"/>
+                       </apex:outputText>
+                       </apex:pageBlockSectionItem><br/>
+                       
+                       <apex:pageBlockSectionItem >
+                       <apex:outputLabel value="{!$ObjectType.collect__Contact_Preference__c.Fields.collect__End_Time__c.label}" for="endTimeView"></apex:outputLabel>
+                       <apex:outputText id="endTimeView" value="{0,time,HH:mm:ss}">
+                           <apex:param value="{!displayEndDt}"/>
+                       </apex:outputText>
+                       </apex:pageBlockSectionItem><br/>  
+                       
+                       <apex:outputField value="{!contactPref.collect__Mode_of_Communication__c}"/><br/>          
+                       <apex:outputField value="{!contactPref.collect__Preferred__c}"/><br/>
+                   </apex:pageBlockSection>
+            </apex:outputPanel>
+       </apex:pageBlock>
+    </apex:form>
+</apex:page>

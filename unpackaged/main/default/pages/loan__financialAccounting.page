@@ -1,0 +1,40 @@
+<apex:page lightningStylesheets="true" id="orgPage" tabStyle="Organization_Preference__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:stylesheet value="{!$Resource.loan__MFIStyles}" />
+	<script type="text/javascript"
+		src="{!URLFOR($Resource.sidebarMenuTemplate)}" />
+	<script type="text/javascript"
+		src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+	<script>
+    var j$ = jQuery.noConflict();    
+    j$(document).ready(function(){
+       j$('.accounts').append(j$(addMenuHeader('Accounts...','80px')));       
+       j$('.accounts .quickloanmenu').append(addMenuItemWithLink('{!URLFOR($Action.MF_Account__c.New)}','createGeneralLedgerMru','','Create General Ledger Account'));
+       j$('.accounts .quickloanmenu').append(addMenuItemWithLink('listOfAccounts','viewChartOfAccountsMru','','View Chart of Accounts'));       
+       j$('.accounts .quickloanmenu').append(addMenuItemWithLink('searchGL','searchGLMru','','Search GL Accounts'));       
+       j$('.accountingTransactions').append(j$(addMenuHeader('Accounting Transactions...','80px')));       
+       j$('.accountingTransactions .quickloanmenu').append(addMenuItemWithLink('transaction','viewCreateAccountingTransactionsMru','','View/New Accounting Transaction'));       
+       j$('.accountingTransactions .quickloanmenu').append(addMenuItemWithLink('searchTransaction','searchTransactionsMru','','Search Transactions'));       
+
+    });   
+    </script>
+
+	<apex:form id="managementForm">
+		<div style="min-width: 800px">
+			<div class="mfiflexBlock"
+				style="height: 200px; float: left; width: 98%;">
+				<div class="mfiflexBlockHeading" id="bottomWrapper">
+					<h1 class="heading">Accounting</h1>
+				</div>
+				<div style="text-align: center; margin-top: 30px">
+					<div class="collapsible sidebar accounts" id="sidebarDiv"
+						style="display: inline-block;"></div>
+					<div class="collapsible sidebar accountingTransactions"
+						id="sidebarDiv" style="display: inline-block; margin-left: 30px">
+					</div>
+				</div>
+			</div>
+		</div>
+	</apex:form>
+</apex:page>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__End_Number__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This indicates the end number in resultRange that fits the range of results returned. While the lowerFetchLimit and higherFetchLimit determine the records that need to be kept in the cache, the startNumber and endNumber parameters determine the records that need to be returned by this API. For example, once the first set of 500 records are retrieved and kept in the cache, the records can be retrieved in smaller chunks of 100 records each. The first set will be returned by this API. To retrieve the remaining records from the cache, the ​getUserTransactions API has to be invoked providing the required starting and ending number as 101 and 200 respectively. Once the 500 records in the cache are retrieved, again the current API, executeUserSearchRequest needs to be called to cache the next set of records.</description>
+    <externalId>false</externalId>
+    <label>End Number</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

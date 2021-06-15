@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__VAT__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(OR(ISNULL(loan__Charge__r.peer__VAT_percent__c),  ISPICKVAL( loan__Charge__r.loan__Fee__r.loan__Time_of_charge__c, 'Late Fees')), 0, (loan__Transaction_Amount__c *  loan__Charge__r.peer__VAT_percent__c )/(1 + loan__Charge__r.peer__VAT_percent__c))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>VAT</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Early_Closure_Checkbox</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(NOT(ISPICKVAL(loan__Commission_Disbursement_Method__c,'Equal Installments')),
+loan__Full_Payment_on_Early_Closure__c)</errorConditionFormula>
+    <errorDisplayField>loan__Full_Payment_on_Early_Closure__c</errorDisplayField>
+    <errorMessage>Field is selectable only for 'Equal Installments' commission disbursement method.</errorMessage>
+</ValidationRule>

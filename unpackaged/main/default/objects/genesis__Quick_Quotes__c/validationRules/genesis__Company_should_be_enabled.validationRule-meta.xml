@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Company_should_be_enabled</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(genesis__Company__r.genesis__Enabled_Flag__c)</errorConditionFormula>
+    <errorMessage>Company should be Enabled</errorMessage>
+</ValidationRule>

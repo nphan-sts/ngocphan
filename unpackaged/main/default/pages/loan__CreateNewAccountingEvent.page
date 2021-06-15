@@ -1,0 +1,119 @@
+<apex:page controller="loan.CreateAccountingEventsController" tabStyle="Organization_Preference__tab" lightningStylesheets="true">
+
+
+    <apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:form id="importForm">
+
+        <apex:sectionHeader title="Create New Accounting Event" />
+        <apex:outputPanel >
+            <apex:pageBlock id="createPB" tabStyle="Organization_Preference__tab" mode="edit">
+                    <apex:pagemessages />
+                    <apex:pageBlockButtons id="buttonSection" location="top">
+                        <apex:actionRegion >
+                            <c:BusyButton name="Save" busyname="Saving Event..." actionTo="{!save}"/>
+                            <c:BusyButton name="Cancel" actionTo="{!cancel}"/>
+                            <c:BusyButton name="Go to Manage Events" actionTo="{!showManageEvents}"/>
+                        </apex:actionRegion>
+                    </apex:pageBlockButtons>
+
+                    <!-- Event Details -->
+
+                    <apex:pageBlockSection columns="1" id="sourceDetails" title="Event Details" showHeader="true" collapsible="false">
+                         <apex:actionFunction name="populateFields" action="{!populateObjectFields}" rerender="createPB" 
+                                              status="loadFields">
+                            <!--<apex:param name="firstParam" assignTo="{!ruleNumber}" value=""/>-->
+                        </apex:actionFunction>
+
+                        <apex:pageBlockSectionItem id="sectionName" helpText="Enter event name">
+                            <apex:outputLabel value="Event Name "/>
+                            <apex:inputText value="{!eventName}" id="eventName"/>
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem id="sectionOne" helpText="Shows list of SObjects for which accounting setup can be created.">
+                            <apex:outputLabel value="Events "/>
+                            <apex:outputPanel >
+                                <apex:selectList value="{!selectedEvent}" size="1"
+                                                onchange="populateFields();" label="Events">
+                                    <apex:selectOptions id="objectOptions" value="{!objects}" />
+                                </apex:selectList>
+                                <apex:actionstatus id="loadFields" startText="Loading.."/>
+                            </apex:outputPanel>
+                        </apex:pageblockSectionItem>
+
+                        <apex:pageBlockSectionItem id="sectionTwo" helpText="Select field which should be marked after successful creation of GL entries.">
+                            <apex:outputLabel value="GL Creation Identifier "/>
+                            <apex:selectList value="{!processCompletionIdentifier}" size="1" label="Process Identifier">
+                                <apex:selectOptions id="identifierOptions" value="{!identifiers}" />
+                            </apex:selectList>
+
+                        </apex:pageblockSectionItem>
+                    </apex:pageBlockSection>
+
+                    <!-- Source Criteria -->
+                    <apex:pageBlockSection columns="2" id="sourceCriteriaDetails" title="Source Criteria" showHeader="true" collapsible="false">
+                        <apex:pageBlockSectionItem helpText="Source Criteria for accounting event. This filter Clause should follow SOQL syntax.">
+                            <apex:outputLabel value="Source Criteria "/>
+                            <apex:inputTextarea value="{!sourceCriteria}" cols="50" rows="7"/>
+
+                        </apex:pageblockSectionItem>
+                    </apex:pageBlockSection>
+
+                    <!-- Accounting Rule Lines -->
+                    <apex:pageBlockSection columns="1" id="ruleLineDetails" title="Accounting Rule Lines" showHeader="true" collapsible="false">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputpanel id="inlinetablesec">
+                            <apex:pageBlockTable value="{!ruleLines}" var="row"><!-- Rule Lines -->
+                                <apex:variable value="{!0}" var="rowNumber" />
+                                <apex:column colspan="20" headerValue="Rule Line">
+                                    <apex:inputText value="{!row.accountingRuleLineName}"  />
+                                </apex:column>
+                                <apex:column colspan="20" headerValue="Credit GL">
+                                    <apex:selectList value="{!row.creditGLAccount}"
+                                                    label="Contract Status" multiselect="false" size="1" >
+                                        <apex:selectOptions value="{!chartOfAccounts}" />
+                                    </apex:selectList>
+                                </apex:column>
+                                <apex:column colspan="20" headerValue="Debit GL">
+                                    <apex:selectList value="{!row.debitGLAccount}"
+                                                    label="Contract Status" multiselect="false" size="1" >
+                                        <apex:selectOptions value="{!chartOfAccounts}" />
+                                    </apex:selectList>
+                                </apex:column>
+                                <apex:column colspan="20" headerValue="Transaction Date Field">
+                                    <apex:selectList value="{!row.txnDateFieldAPIName}"
+                                                    label="Contract Status" multiselect="false" size="1" >
+                                        <apex:selectOptions value="{!datefields}" />
+                                    </apex:selectList>
+                                </apex:column>
+                                <apex:column colspan="20" headerValue="Amount Field">
+                                    <apex:selectList value="{!row.amountFieldAPIName}"
+                                                    label="Contract Status" multiselect="false" size="1" >
+                                        <apex:selectOptions value="{!amountFields}" />
+                                    </apex:selectList>
+                                </apex:column>
+
+                                <apex:column colspan="20" headerValue="Action">
+                                    <apex:commandButton value="Remove" action="{!remove}" reRender="inlinetablesec,buttonPanel" status="removestatus">
+                                        <apex:param name="p1" value="{!rowNumber}" assignTo="{!numberOfRowClicked}"/>
+                                    </apex:commandButton>
+                                    <apex:actionstatus id="removestatus" startText="Removing.."/>
+                                </apex:column>
+                                <apex:column >
+                                    <apex:variable var="rowNumber" value="{!rowNumber+1}" />
+                                </apex:column>
+                            </apex:pageBlockTable>
+
+                            <apex:outPutPanel >
+                                <apex:commandlink value="Add Rule Line" action="{!add}" reRender="inlinetablesec" status="addrow"/>
+                                <apex:actionstatus id="addrow" startText="Adding Row.."/>
+                            </apex:outputpanel>
+                            </apex:outputpanel>
+
+                        </apex:pageblockSectionItem>
+                    </apex:pageBlockSection>
+
+                </apex:pageBlock>
+            </apex:outputPanel>
+    </apex:form>
+</apex:page>

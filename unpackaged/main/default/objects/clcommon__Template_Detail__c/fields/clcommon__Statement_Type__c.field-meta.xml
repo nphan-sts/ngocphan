@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Statement_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Statement Type</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>INCOME</fullName>
+                <default>false</default>
+                <label>INCOME</label>
+            </value>
+            <value>
+                <fullName>BALANCESHEET</fullName>
+                <default>false</default>
+                <label>BALANCESHEET</label>
+            </value>
+            <value>
+                <fullName>CASHFLOW</fullName>
+                <default>false</default>
+                <label>CASHFLOW</label>
+            </value>
+            <value>
+                <fullName>RATIO</fullName>
+                <default>false</default>
+                <label>RATIO</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

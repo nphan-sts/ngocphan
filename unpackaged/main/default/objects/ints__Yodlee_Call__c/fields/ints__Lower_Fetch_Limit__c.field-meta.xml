@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__Lower_Fetch_Limit__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This is the lower limit for the set of records that needs to be retrieved and kept in the cache (i.e., the value for m while retrieving from mth transaction to nth transactions). 
+See the description of higherFetchLimit for more details.</description>
+    <externalId>false</externalId>
+    <label>Lower Fetch Limit</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

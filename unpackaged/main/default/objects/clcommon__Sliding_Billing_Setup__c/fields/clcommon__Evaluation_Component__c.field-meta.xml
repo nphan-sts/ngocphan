@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Evaluation_Component__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Evaluation Component is the amount to be considered and checked against sliding billing ranges to determine the range and range amount. Bill amount or bill components is/are calculated from the range amount.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Select evaluation component on whose amount the billing range is selected and hence the bill amount or bill components is/are calculated.</inlineHelpText>
+    <label>Evaluation Component</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Principal Remaining</fullName>
+                <default>false</default>
+                <label>Principal Remaining</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

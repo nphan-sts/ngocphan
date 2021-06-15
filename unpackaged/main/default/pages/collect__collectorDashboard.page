@@ -1,0 +1,1796 @@
+<apex:page docType="html-5.0" sidebar="true" showHeader="true" standardStylesheets="false" controller="collect.CollectorDashboardCtrl">
+    <!--Remote Object for Interaction_Log__c-->
+    <apex:remoteObjects >
+        <apex:remoteObjectModel name="collect__Interaction_Log__c" jsShorthand="interactionLog" fields="Name,Id">
+            <apex:remoteObjectField name="collect__Contract_Name__c" jsShorthand="contractNameIL"/>
+            <apex:remoteObjectField name="collect__Account__c" jsShorthand="accountIdIL"/>
+            <apex:remoteObjectField name="collect__Contact__c" jsShorthand="contactIdIL"/>
+            <apex:remoteObjectField name="collect__Lease_Account_Id__c" jsShorthand="leaseAccountIdIL"/>
+            <apex:remoteObjectField name="collect__Loan_Account_Id__c" jsShorthand="loanAccountIdIL"/>
+            <apex:remoteObjectField name="collect__Dev_Contract__c" jsShorthand="contractAccountIdIL"/>
+            <apex:remoteObjectField name="collect__Interaction_Date__c" jsShorthand="interactionDateIL"/>
+            <apex:remoteObjectField name="collect__Comments__c" jsShorthand="commentsIL"/>
+        </apex:remoteObjectModel>
+    </apex:remoteObjects>
+    <!--Remote Object for Promise_To_Pay__c-->
+    <apex:remoteObjects >
+        <apex:remoteObjectModel name="collect__Promise_To_Pay__c" jsShorthand="promiseToPay" fields="Name,Id">
+            <apex:remoteObjectField name="collect__Contract_Name__c" jsShorthand="contractNamePTP"/>
+            <apex:remoteObjectField name="collect__Account__c" jsShorthand="accountIdPTP"/>
+            <apex:remoteObjectField name="collect__Contact__c" jsShorthand="contactIdPTP"/>
+            <apex:remoteObjectField name="collect__Lease_Account_Id__c" jsShorthand="leaseAccountIdPTP"/>
+            <apex:remoteObjectField name="collect__Loan_Account_Id__c" jsShorthand="loanAccountIdPTP"/>
+            <apex:remoteObjectField name="collect__Dev_Contract__c" jsShorthand="contractAccountIdPTP"/>
+            <apex:remoteObjectField name="collect__Interaction_Log__c" jsShorthand="interactionIdPTP"/>
+            <apex:remoteObjectField name="collect__Promise_To_Pay_Amount__c" jsShorthand="amountPTP"/>
+            <apex:remoteObjectField name="collect__Promise_To_Pay_Date__c" jsShorthand="datePTP"/>
+            <apex:remoteObjectField name="collect__Promise_Made_On__c" jsShorthand="promiseMadeOnPTP"/>
+            <apex:remoteObjectField name="collect__Promise_Broken__c" jsShorthand="promiseBrokenPTP"/>
+            <apex:remoteObjectField name="collect__Promise_Kept__c" jsShorthand="promiseKeptPTP"/>
+            <apex:remoteObjectField name="collect__Days_Past_Due__c" jsShorthand="daysPastDuePTP"/>
+            <apex:remoteObjectField name="collect__Tolerance_Amount__c" jsShorthand="toleranceAmountP2P"/>
+            <apex:remoteObjectField name="collect__Tolerance_Days__c" jsShorthand="toleranceDaysP2P"/>
+        </apex:remoteObjectModel>
+    </apex:remoteObjects>
+    <!--Remote Object for Payment_Arrangement__c-->
+    <apex:remoteObjects >
+        <apex:remoteObjectModel name="collect__Payment_Arrangement__c" jsShorthand="paymentArrangement" fields="Name,Id">
+            <apex:remoteObjectField name="collect__Contract_Name__c" jsShorthand="contractNamePA"/>
+            <apex:remoteObjectField name="collect__Account__c" jsShorthand="accountIdPA"/>
+            <apex:remoteObjectField name="collect__Contact__c" jsShorthand="contactIdPA"/>
+            <apex:remoteObjectField name="collect__Lease_Account_Id__c" jsShorthand="leaseAccountIdPA"/>
+            <apex:remoteObjectField name="collect__Loan_Account_Id__c" jsShorthand="loanAccountIdPA"/>
+            <apex:remoteObjectField name="collect__Contract__c" jsShorthand="contractIdPA"/>
+            <apex:remoteObjectField name="collect__Arrangement_Amount__c" jsShorthand="arrangementAmountPA"/>
+            <apex:remoteObjectField name="collect__Frequency__c" jsShorthand="frequencyPA"/>
+            <apex:remoteObjectField name="collect__Occurence__c" jsShorthand="occurencePA"/>
+            <apex:remoteObjectField name="collect__Status__c" jsShorthand="statusPA"/>
+            <apex:remoteObjectField name="collect__Active__c" jsShorthand="activePA"/>
+            <apex:remoteObjectField name="collect__Start_Date__c" jsShorthand="startDatePA"/>
+            <apex:remoteObjectField name="collect__End_Date__c" jsShorthand="endDatePA"/>
+        </apex:remoteObjectModel>
+    </apex:remoteObjects>
+    <!--Remote Object for Queue_Contract__c-->
+    <apex:remoteObjects >
+        <apex:remoteObjectModel name="collect__Queue_Contract__c" jsShorthand="queueContract" fields="Name,Id">
+            <apex:remoteObjectField name="collect__Contract_Name__c" jsShorthand="contractNameQC"/>
+            <apex:remoteObjectField name="collect__Days_Past_Due__c" jsShorthand="daysPastDueQC"/>
+            <apex:remoteObjectField name="collect__Follow_Up_Date__c" jsShorthand="followUpDateQC"/>
+            <apex:remoteObjectField name="collect__Delinquent_Amount__c" jsShorthand="delinquentAmountQC"/>
+            <apex:remoteObjectField name="collect__Lease_Account_Id__c" jsShorthand="leaseAccountIdQC"/>
+            <apex:remoteObjectField name="collect__Loan_Account_Id__c" jsShorthand="loanAccountIdQC"/>
+            <apex:remoteObjectField name="collect__Status__c" jsShorthand="statusQC"/>
+            <apex:remoteObjectField name="collect__Queue__c" jsShorthand="queueQC"/>
+            <apex:remoteObjectField name="collect__User__c" jsShorthand="userQC"/>
+            <apex:remoteObjectField name="collect__Collector__c" jsShorthand="collectorQC"/>
+        </apex:remoteObjectModel>
+    </apex:remoteObjects>
+    <html>
+        <head>
+            <meta charset="utf-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <meta name="mobile-web-app-capable" content="yes"/>
+            <meta name="apple-mobile-web-app-capable" content="yes"/>
+            <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+            <!-- Latest compiled and minified CSS -->
+            <apex:stylesheet value="{!URLFOR($Resource.collect__Bootstrap, 'Bootstrap/css/bootstrap.css')}"/>
+            <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>-->
+            <!-- Optional theme -->
+            <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>-->
+            <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+            <!--Polymer Imports-->
+            <!--<apex:includeScript value="{!URLFOR($Resource.Polymer, 'Polymer/components/bower_components/webcomponentsjs/webcomponents.js')}"/><link rel="import" href="{!URLFOR($Resource.Polymer, 'Polymer/components/bower_components/webcomponentsjs/webcomponents.js')}"/><link rel="import" href="{!URLFOR($Resource.Polymer, 'Polymer/components/bower_components/paper-toast/paper-toast.html')}"/><link rel="import" href="{!URLFOR($Resource.Polymer, 'Polymer/components/bower_components/paper-button/paper-button.html')}"/>-->
+            <!--Import Salesforce Scripts.-->
+            <script src="../../soap/ajax/29.0/connection.js" type="text/javascript"></script>
+            <script src="../../soap/ajax/29.0/apex.js" type="text/javascript"></script>
+            <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+            <script type="text/javascript">
+                google.load('visualization', '1', {packages: ['corechart', 'bar']});
+                google.setOnLoadCallback(drawGoogleCharts);
+            </script>
+            <script>
+                //Define angular module.
+                var Onsen = angular.module('Onsen',[]);
+                
+                  Onsen.controller('AppCtrl', ['$scope','$sce', function($scope,$sce){
+                  $scope.counter = 1;
+                  var queueSelectOptionJSON = '{!JSENCODE(queueSelectOptionJSON)}';
+                  var queueNames = angular.fromJson(queueSelectOptionJSON);
+                  for(var item in queueNames) {
+                      console.log(queueNames[item].queueId + ':' + queueNames[item].queueName);
+                  }
+                  $scope.queueNames = queueNames;
+                  drawGoogleCharts();
+                  
+                 
+                  
+                  
+                 
+                  
+                  // Function to pass selected Queues Id to Apex Controller.
+                  $scope.queueNameChange = function() {
+                      console.log($scope.selectedQueueOption.queueId + ': ' + $scope.selectedQueueOption.queueName);
+                      console.log('selectedQueueId: ' + "{!JSENCODE(selectedQueueId)}");
+                      //sforce.connection.sessionId = "{!$Api.Session_ID}";
+                      //console.log(sforce.connection.getUserInfo().userId);
+                      //console.log(sforce.connection.getUserInfo().userName);
+                      //populateContractsInQueue($scope.selectedQueueOption.queueId);
+                  }
+                              
+                
+                  // Loads first Contract from the queue.
+                  $scope.loadFirstContractDetails = function() {
+                      $scope.counter++; 
+                     //var mytimeout = $timeout($scope.onTimeout,1000);
+                      $scope.viewMode = false;
+                      //Load User details.
+                      //sforce.connection.sessionId = "{!$Api.Session_ID}";
+                      //$scope.userId = sforce.connection.getUserInfo().userId;
+                      //console.log('-----UserId-----' + $scope.userId);
+                      console.log('-----Current System Date-----:' + $scope.c);
+                  
+                     // console.log('rachit' + ': ' + $$scope.contractDetails.loanContractId);
+                      console.log('-----Inside loadFirstContractDetails-----');
+                      Visualforce.remoting.Manager.invokeAction(
+                          '{!$RemoteAction.CollectorDashboardCtrl.loadFirstContractDetails}', 
+                          $scope.selectedQueueOption.queueId,
+                          $scope.selectedQueueOption.productType,
+                          $scope.counter,
+                          loadAndShowContractDetails, 
+                          {escape: true}
+                      );
+                      
+                      //$('#toast3').show();
+                      document.querySelector('#toast3').show();
+                  }
+                  
+                  // Fetches Contract Details on the basis of Contract Name passed. - Method Starts.
+                  $scope.loadContractDetails = function() {
+                  
+                     // $scope.viewMode = true;
+                      $scope.viewMode = false;
+                      console.log('-----Loading Request Contract\'s Details-----');
+                      console.log('-----Request Contract Name:-----' + $scope.contractNameInput);
+                      
+                      Visualforce.remoting.Manager.invokeAction(
+                          '{!$RemoteAction.CollectorDashboardCtrl.loadContractDetails}',
+                          $scope.contractNameInput, 
+                          loadAndShowContractDetails, 
+                          {escape: true}
+                      );
+                  }
+                  
+                  // Fetches Contract Details on the basis of Contract Name passed. - Method Ends.
+                  
+                  // Load and shows contract details.
+                  function loadAndShowContractDetails(result, event){
+                      console.log('-----Original Result Recieved-----' + result);
+                      //Parse The result.
+                      var json = JSON.stringify(result);
+                      var resultJSON = angular.fromJson(json);
+                      var showActionsFlag = false; 
+                      
+                      console.log('-----Contract Details Fetched-----' + resultJSON);
+                      if (event.status) {
+                      
+                          if(resultJSON.contractName != null && resultJSON.contractName != '') {
+                              showActionsFlag = true;
+                          }
+                          console.log('-----Result Status-----' + event.status);
+                          console.log('-----Result received True-----' + resultJSON.delinquentDue);
+                      } else if (event.type === 'exception') {
+                          showActionsFlag = false;
+                          console.log('-----Result Status-----' + event.status);
+                          console.log('-----Result received Exception-----' + resultJSON);
+                      } else {
+                          showActionsFlag = false;
+                          console.log('-----Result Status-----' + event.status);
+                          console.log('-----Result received False-----' + resultJSON);
+                      }
+                      //Refresh the view after model change.
+                      $scope.$apply(function () {
+                          $scope.contractDetails = resultJSON;
+                          console.log('=====Action=====' +  $scope.contractDetails.action);
+                          
+                          //var date = new Date($scope.contractDetails.currentSystemDate);
+                          //$scope.currentSystemDate = (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear();
+                          $scope.currentSystemDate = $scope.contractDetails.currentSystemDate;
+                          $scope.currentSystemDateFormatted = new Date($scope.currentSystemDate);
+                          console.log('-----Current System Date-----:' + $scope.currentSystemDate);
+                          if($scope.contractDetails.contractType == 'loan') {
+                              $scope.isContractTypeLoan = true;
+                              $scope.isContractTypeLease = false;
+                              $scope.isThirdParty = false;
+                              fetchPromiseToPayRecordsForLoan();
+                              fetchInteractionLogsForLoan();
+                          } else if($scope.contractDetails.contractType == 'Lease') {
+                              $scope.isContractTypeLoan = false;
+                              $scope.isContractTypeLease = true;
+                              $scope.isThirdParty = false;
+                              fetchPromiseToPayRecordsForLease();
+                              fetchInteractionLogsForLease();
+                          }
+                             else{
+                             $scope.isContractTypeLoan = false;
+                             $scope.isContractTypeLease = false;
+                             $scope.isThirdParty = true;
+                             fetchPromiseToPayRecordsForThirdParty();
+                             fetchInteractionLogsForThirdParty();
+                          }
+                          if($scope.viewMode == true) {
+                              $scope.showActions = false;
+                          } else {
+                              $scope.showActions = showActionsFlag;
+                          }
+                          
+                          $scope.showSummaryFlag = showActionsFlag;
+                          $scope.showContractDetails = showActionsFlag;
+                          $scope.showInteractionLogsFlag = showActionsFlag;
+                          $scope.lastDueDate = resultJSON.lastDueDate;
+                      });
+                      
+                  }
+                  
+                  // Show Queue Detail in Google Bar Chart.
+                  function drawGoogleCharts() {
+                
+                  var chartData = [[]];
+                  chartData[0] = ['Queue', 'No. of Contracts'];
+                  
+                  for(var item in $scope.queueNames) {
+                      console.log($scope.queueNames[item].queueId + ':' + $scope.queueNames[item].queueName);
+                      var queueData = [$scope.queueNames[item].queueName, $scope.queueNames[item].contractsCount];
+                      chartData.push(queueData);
+                  }
+                  //tooltip: {textStyle:  {fontName: 'TimesNewRoman',fontSize: 12,bold: false}}
+                  var data = google.visualization.arrayToDataTable(chartData);
+                  var options = {
+                    tooltip: { isHtml: true},
+                    title: 'My Queues',
+                    chartArea: {width: '60%'},
+                    hAxis: {
+                      title: 'Total Contracts',
+                      minValue: 0
+                    },
+                    vAxis: {
+                      title: ''
+                    }
+                  };
+                
+                  var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+                
+                  chart.draw(data, options);
+                }
+                // Show Queue Detail in Google Bar Chart. - Ends Here.
+                  
+                  // Fetch Promise To Pay records for the Contract -- Method ends.
+                  function fetchPromiseToPayRecordsForLease() {
+                      console.log('-----Fetching Promise To Pay Records for Contract-----' + $scope.contractDetails.leaseContractId);
+                      
+                      var fetchPromiseToPayRecords = new SObjectModel.promiseToPay();
+                      fetchPromiseToPayRecords.retrieve({
+                          where: {
+                              leaseAccountIdPTP: { eq:$scope.contractDetails.leaseContractId}
+                          },
+                          limit: 100
+                      }, function(err, records){
+                          //logic to display/store records
+                          console.log('-----Promise To Pay Records fetched-----' + records);
+                          //Refresh the view after model change.
+                          $scope.$apply(function () {
+                              $scope.promiseToPayRecords = records;
+                          });
+                          
+                      });
+                  }
+                  // Fetch Promise To Pay records for the Contract -- Method ends.
+                  
+                  // Fetch Promise To Pay records for the Contract -- Method ends.
+                  function fetchPromiseToPayRecordsForLoan() {
+                      console.log('-----Fetching Promise To Pay Records for Contract-----' + $scope.contractDetails.loanContractId);
+                      console.log('-----Request Contract Name:-----' + $scope.contractDetails.dunningLetterList[0]);
+                      var fetchPromiseToPayRecords = new SObjectModel.promiseToPay();
+                      fetchPromiseToPayRecords.retrieve({
+                          where: {
+                              loanAccountIdPTP: { eq:$scope.contractDetails.loanContractId}
+                          },
+                          limit: 100
+                      }, function(err, records){
+                          //logic to display/store records
+                          console.log('-----Promise To Pay Records fetched-----' + records);
+                          //Refresh the view after model change.
+                          $scope.$apply(function () {
+                              $scope.promiseToPayRecords = records;
+                          });
+                          
+                      });
+                  }
+                  
+                  // Fetch Promise To Pay records for the Contract -- Method ends.
+                  function fetchPromiseToPayRecordsForThirdParty() {
+                      console.log('-----Fetching Promise To Pay Records for Contract-----' + $scope.contractDetails.thirdPartyContractId);
+                      console.log('-----Request Contract Name:-----' + $scope.contractDetails.dunningLetterList[0]);
+                      var fetchPromiseToPayRecords = new SObjectModel.promiseToPay();
+                      fetchPromiseToPayRecords.retrieve({
+                          where: {
+                              contractAccountIdPTP: { eq:$scope.contractDetails.thirdPartyContractId}
+                          },
+                          limit: 100
+                      }, function(err, records){
+                          //logic to display/store records
+                          console.log('-----Promise To Pay Records fetched-----' + records);
+                          //Refresh the view after model change.
+                          $scope.$apply(function () {
+                              $scope.promiseToPayRecords = records;
+                          });
+                          
+                      });
+                  }
+                  
+                  
+                  
+                  // Fetch Promise To Pay records for the Contract -- Method ends.
+                  
+                  // Delete Promise To Pay Record - Method Starts.
+                  $scope.deletePromiseToPay = function(record) {
+                  
+                      console.log('-----Promise to Pay Deletion-----' + record);
+                      if(record.get('promiseBrokenPTP') || record.get('promiseKeptPTP')) {
+                          alert('This record has been processed by the system, you can not delete it!');
+                          return;
+                      }
+                      
+                      if (confirm('Are you sure you want to delete this Promise To Pay record?')) {
+                          
+                          var promiseToPayDel = new SObjectModel.promiseToPay();
+                          promiseToPayDel.del(record.get('Id'));
+                          
+                          // Remove element from the List.
+                          var index = $scope.promiseToPayRecords.indexOf(record);
+                          console.log('-----Record to be deleted-----' + record.get('Id') + ' at index: ' + index);
+                          if (index > -1) {
+                              $scope.promiseToPayRecords.splice(index, 1);
+                          }
+                      }
+                      
+                  }
+                  // Delete Promise To Pay Record - Method Ends.
+                  
+                  // Fetch Interaction Logs for the Contract that was loaded.
+                  function fetchInteractionLogsForLease() {
+                      console.log('-----Fetching Interaction Logs for Contract-----' + $scope.contractDetails.leaseContractId);
+                      var fetchInteractionLogs = new SObjectModel.interactionLog();
+                      fetchInteractionLogs.retrieve({
+                          where: {
+                              leaseAccountIdIL: { eq:$scope.contractDetails.leaseContractId}
+                          },
+                          limit: 100
+                      }, function(err, records){
+                          //logic to display/store records
+                          //Refresh the view after model change.
+                          $scope.$apply(function () {
+                              $scope.interactionLogRecords = records;
+                          });
+                      });
+                  }
+                  // Fetch Interaction Logs for the Contract -- Method ends.
+                  
+                  // Fetch Interaction Logs for the Contract that was loaded.
+                  function fetchInteractionLogsForLoan() {
+                      console.log('-----Fetching Interaction Logs for Contract-----' + $scope.contractDetails.loanContractId);
+                      var fetchInteractionLogs = new SObjectModel.interactionLog();
+                      fetchInteractionLogs.retrieve({
+                          where: {
+                              loanAccountIdIL: { eq:$scope.contractDetails.loanContractId}
+                          },
+                          limit: 100
+                      }, function(err, records){
+                          //logic to display/store records
+                          //Refresh the view after model change.
+                          $scope.$apply(function () {
+                              $scope.interactionLogRecords = records;
+                          });
+                      });
+                  }
+                  
+                  function fetchInteractionLogsForThirdParty() {
+                      console.log('-----Fetching Interaction Logs for Contract-----' + $scope.contractDetails.thirdPartyContractId );
+                      var fetchInteractionLogs = new SObjectModel.interactionLog();
+                      fetchInteractionLogs.retrieve({
+                          where: {
+                              contractAccountIdIL: { eq:$scope.contractDetails.thirdPartyContractId}
+                          },
+                          limit: 100
+                      }, function(err, records){
+                          //logic to display/store records
+                          console.log('-----Interaction Log Records fetched-----' + records);
+                          //Refresh the view after model change.
+                          $scope.$apply(function () {
+                              $scope.interactionLogRecords = records;
+                          });
+                      });
+                  }
+                  
+                  $scope.get=function(x){
+                  return $sce.trustAsHtml(x);
+                  }
+                  // Fetch Interaction Logs for the Contract -- Method ends.
+                  
+                  // Populates and show Interaction Log.
+                  $scope.showInteractionLogForm = function() {
+                      console.log('-----Processing for Promise to Pay Records-----');
+                      $scope.contractNameIL = $scope.contractDetails.contractName;
+                      $scope.accountNameIL = $scope.contractDetails.customerInfo.accountName;
+                      $scope.contactNameIL = $scope.contractDetails.customerInfo.contactName;
+                      $scope.delinquencyDaysIL = $scope.contractDetails.daysPastDue;
+                      $scope.delinquentAmountIL = $scope.contractDetails.delinquentDue;
+                      $scope.followUpDateQC = new Date($scope.contractDetails.queueContract.followUpDate);
+                      $scope.interactionDateIL = $scope.currentSystemDateFormatted;
+                  }
+                  
+                  // Method to show ACH Form.
+                  $scope.showACHForm = function() {
+                      console.log('-----Processing for Promise to Pay Records-----');
+                      $scope.contractNameIL = $scope.contractDetails.contractName;
+                      $scope.accountNameIL = $scope.contractDetails.customerInfo.accountName;
+                      $scope.contactNameIL = $scope.contractDetails.customerInfo.contactName;
+                      $scope.delinquencyDaysIL = $scope.contractDetails.daysPastDue;
+                      $scope.delinquentAmountIL = $scope.contractDetails.delinquentDue;
+                      $scope.achDebitDateACH = $scope.currentSystemDateFormatted;
+                  }
+                  $scope.newPage = function (){
+                    // $scope.url = '/apex/loan__oneTimeACHTxn?scontrolCaching=1&id=contractDetails.loanContractId';
+                  }
+                  // Creates One Time ACH on Contract.
+                  $scope.createACHTransaction = function() {
+                      
+                      if(isNaN($scope.achRoutingNumberACH)) {
+                          alert('Routing Number must be numeric only!');
+                          return;
+                      }
+                      
+                      if($scope.achAccountTypeACH == null || $scope.achAccountTypeACH == '') {
+                          alert('Account Type must be selected!');
+                          return;
+                      }
+                      
+                      if($scope.achBankAccountNumberACH == null || $scope.achBankAccountNumberACH == '') {
+                          alert('Bank Account Number must be entered!');
+                          return;
+                      }
+                      
+                      if($scope.achCodeACH == null || $scope.achCodeACH == '') {
+                          alert('ACH Code must be entered!');
+                          return;
+                      }
+                      
+                      if(isNaN($scope.achPaymentAmountACH)) {
+                          alert('Payment Amount must be numeric only!');
+                          return;
+                      }
+                      
+                      if($scope.achDebitDateACH == null) {
+                          alert('ACH Debit Date must be entered!');
+                          return;
+                      }
+                      
+                      if($scope.achDebitDateACH < $scope.currentSystemDate) {
+                          alert('ACH Debit Date can not be behind current system date!');
+                          return;
+                      }
+                      
+                      if($scope.achBankNameACH == null || $scope.achBankNameACH == '') {
+                          alert('Bank Name can not be left empty!');
+                          return;
+                      }
+                      
+                      var debitDateObj = new Date($scope.achDebitDateACH);
+                      var debitDateFormatted = debitDateObj.getFullYear() + '-' + (debitDateObj.getMonth() + 1) + '-' + debitDateObj.getDate();
+                      
+                      var bankAccount = '{'
+                                       + '"isActive" : ' + true + ', '
+                                       + '"bankAccountNumber" : "' + $scope.achBankAccountNumberACH + '", '
+                                       + '"accountType"  : "' + $scope.achAccountTypeACH + '", '
+                                       + '"accountUsage"  : "' + 'Borrower/Investor Account' + '", '
+                                       + '"achCode"  : "' + $scope.achCodeACH + '", '
+                                       + '"bankName"  : "' + $scope.achBankNameACH + '", '
+                                       + '"routingNumber"  : "' + $scope.achRoutingNumberACH + '", '
+                                       + '"accountId"  : "' + $scope.contractDetails.customerInfo.accountId + '", '
+                                       + '"contactId"  : "' + $scope.contractDetails.customerInfo.contactId + '"'
+                                       + '}';
+                      
+                      var achDetails = '{'
+                                       + '"contractId" : "' + $scope.contractDetails.contractId + '", '
+                                       + '"productType"  : "' + $scope.contractDetails.contractType + '", '
+                                       + '"paymentAmount"  : ' + $scope.achPaymentAmountACH + ', '
+                                       + '"debitDate"  : "' + debitDateFormatted + '", '
+                                       + '"bankAccount" : ' + bankAccount 
+                                       + '}';
+                      
+                      Visualforce.remoting.Manager.invokeAction(
+                          '{!$RemoteAction.CollectorDashboardCtrl.createACHTransaction}',
+                          achDetails, 
+                          achDetailsCallBack, 
+                          {escape: true}
+                      );
+                      
+                      //Close the modal form.
+                      $('#achFormModal').modal('hide');
+                  }
+                  
+                  // Called when achDetails result is received from Controller.
+                  function achDetailsCallBack(result, event) {
+                      console.log('-----ACH Transaction Result-----' + result);
+                  }
+                  
+                  // Creates Interaction Log.
+                  $scope.createInteractionLog = function() {
+                      
+                      // Check if user has filled Interaction Date and Comments.
+                      if($scope.interactionDateIL == null) {
+                          alert('Interaction Date must be entered!');
+                          return;
+                      }
+                      
+                      if($scope.commentsIL == null || $scope.commentsIL == '') {
+                          alert('Interaction Comments must be entered!');
+                          return;
+                      }
+                      
+                      if($scope.followUpDateQC < $scope.currentSystemDate) {
+                          alert('Follow-Up Date can not be behind current system date!');
+                          return;
+                      }
+                      
+                      
+                      //Mark Contract processed as false initiallly.
+                      var isContractProcessed = false;
+                      //Do not allow user to go ahead and save record until all or none of Promise to Pay details are filled.
+                      if($scope.promiseToPayAmountIL == null && $scope.promiseToPayDateIL != null
+                          || $scope.promiseToPayAmountIL != null && $scope.promiseToPayDateIL == null) {
+                          alert('Both Promise To Pay Amount and Date must be entered or left blank!');
+                          return;
+                      }
+                      
+                      console.log('-----Creating Interaction Log-----');
+                      var interactionDetails = { contractNameIL: $scope.contractDetails.contractName, 
+                                                      accountIdIL: $scope.contractDetails.customerInfo.accountId, 
+                                                      contactIdIL: $scope.contractDetails.customerInfo.contactId,
+                                                      interactionDateIL: $scope.interactionDateIL,
+                                                      commentsIL: $scope.commentsIL,
+                                                      loanAccountIdIL: $scope.contractDetails.loanContractId,
+                                                      leaseAccountIdIL: $scope.contractDetails.leaseContractId,
+                                                      contractAccountIdIL: $scope.contractDetails.thirdPartyContractId
+                                                       };
+                      var interactionLogId = '';
+                      var createInteractionLogRecord = new SObjectModel.interactionLog();
+                      createInteractionLogRecord.create(interactionDetails, function(err) {
+                          if(err) { 
+                              console.log(err);
+                              alert(err.message);
+                          } else {
+                              // Update interaction log records list on this page to reflect the changes.
+                              //$scope.$apply(function () {
+                              //    $scope.interactionLogRecords.push(createInteractionLogRecord);
+                              //});
+                              
+                              //Update Queue Contract record as User has updated this Contract.
+                              var queueContract = new SObjectModel.queueContract({
+                                  Id: $scope.contractDetails.queueContract.queueContractId,
+                                  followUpDateQC: $scope.followUpDateQC,
+                                  userQC: $scope.userId
+                              });
+                              queueContract.update(function(err, ids) {
+                                  if(err) {
+                                      console.log('-----Error in updating Queue_Contract__c with Id-----' + queueContract.get('Id'));
+                                      console.log('-----Follow up Date-----' + queueContract.get('Follow_Up_Date__c'));
+                                  } else {
+                                      console.log('-----Queue_Contract__c record with Id updated successfully-----' + queueContract.get('Id'));
+                                      console.log('-----Follow up Date-----' + queueContract.get('Follow_Up_Date__c'));
+                                  }
+                              });
+                              
+                              //Now create Promise to Pay Record if Interaction Log is created and
+                              // Promise to Pay details are entered by the user. This call is inside callback function, which aynchronously waits for the Interaction Log
+                              // to be inserted in the database.
+                              
+                              // Promise To Pay details are not entered. Return.
+                              if($scope.promiseToPayAmountIL == null || $scope.promiseToPayDateIL == null) {
+                                  console.log('-----Promise To Pay details are not entered. Returning.-----');
+                                  return;
+                              }
+                              
+                              var promiseToPayDetails = { contractNamePTP: $scope.contractDetails.contractName, 
+                                                          accountIdPTP: $scope.contractDetails.accountId, 
+                                                          contactIdPTP: $scope.contractDetails.contactId,
+                                                          loanAccountIdPTP: $scope.contractDetails.loanContractId,
+                                                          contractAccountIdPTP: $scope.contractDetails.thirdPartyContractId,
+                                                          leaseAccountIdPTP: $scope.contractDetails.leaseContractId,
+                                                          interactionIdPTP: createInteractionLogRecord.get('Id'),
+                                                          amountPTP: $scope.promiseToPayAmountIL,
+                                                          promiseMadeOnPTP: new Date($scope.contractDetails.currentSystemDate),
+                                                          datePTP: $scope.promiseToPayDateIL,
+                                                          daysPastDuePTP: $scope.contractDetails.daysPastDue
+                                                       };
+                              console.log('-----promiseToPayDetails-----' + JSON.stringify(promiseToPayDetails));                         
+                              var createPromiseToPayRecord = new SObjectModel.promiseToPay();
+                              createPromiseToPayRecord.create(promiseToPayDetails, function(saveError) {                          
+                                  if(saveError) { 
+                                      console.log(saveError);
+                                      alert(saveError.message);
+                                  } else {
+                                      console.log(createPromiseToPayRecord.get('Id')); // Id is set when create completes
+                                      //$scope.$apply(function () {
+                                      //    $scope.promiseToPayRecords.push(createPromiseToPayRecord);
+                                      //});
+                                  }
+                              });
+                              // Done with creation of Promise To Pay Record.
+                          }
+                          
+                      });
+                      
+                      //Close the modal form.
+                      $('#interactionLogFormModal').modal('hide');
+                  }
+                  
+                }]);
+            </script>
+            <!-----Navigation Bar from OnsenUI----->
+            <style>
+                
+                .navigation-bar {
+                font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-weight: 400;
+                font-size: 17px;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                -webkit-background-clip: padding-box;
+                background-clip: padding-box;
+                white-space: nowrap;
+                overflow: hidden;
+                word-spacing: 0;
+                padding: 0;
+                margin: 0;
+                font: inherit;
+                color: inherit;
+                background: transparent;
+                border: none;
+                line-height: normal;
+                cursor: default;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                z-index: 2;
+                display: block;
+                height: 44px;
+                padding-left: 0;
+                padding-right: 0;
+                background: #fff;
+                color: #1f1f21;
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                border-bottom: 1px solid #ddd;
+                font-weight: 400;
+                width: 100%;
+                white-space: nowrap;
+                overflow: visible;
+                }
+                @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+                .navigation-bar {
+                border-bottom: none;
+                -webkit-background-size: 100% 1px;
+                background-size: 100% 1px;
+                background-repeat: no-repeat;
+                background-position: bottom;
+                background-image: -webkit-linear-gradient(90deg, #ddd, #ddd 50%, transparent 50%);
+                background-image: -moz-linear-gradient(90deg, #ddd, #ddd 50%, transparent 50%);
+                background-image: -o-linear-gradient(90deg, #ddd, #ddd 50%, transparent 50%);
+                background-image: linear-gradient(0deg, #ddd, #ddd 50%, transparent 50%);
+                }
+                }
+                .navigation-bar__line-height {
+                line-height: 44px;
+                padding-bottom: 0;
+                padding-top: 0;
+                }
+                .navigation-bar__bg {
+                background: #fff;
+                }
+                .navigation-bar__item,
+                .navigation-bar__left,
+                .navigation-bar__right,
+                .navigation-bar__center {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                -webkit-background-clip: padding-box;
+                background-clip: padding-box;
+                padding: 0;
+                margin: 0;
+                font: inherit;
+                color: inherit;
+                background: transparent;
+                border: none;
+                line-height: normal;
+                height: 44px;
+                vertical-align: top;
+                overflow: visible;
+                display: block;
+                vertical-align: middle;
+                float: left;
+                }
+                .navigation-bar__left {
+                max-width: 50%;
+                width: 27%;
+                text-align: left;
+                }
+                .navigation-bar__right {
+                max-width: 50%;
+                width: 27%;
+                text-align: right;
+                }
+                .navigation-bar__center {
+                width: 46%;
+                text-align: center;
+                line-height: 44px;
+                font-size: 17px;
+                font-weight: 500;
+                color: #1f1f21;
+                }
+                .navigation-bar__title {
+                line-height: 44px;
+                font-size: 17px;
+                font-weight: 500;
+                color: #1f1f21;
+                margin: 0;
+                padding: 0;
+                overflow: visible;
+                }
+                .navigation-bar__center:first-child:last-child {
+                width: 100%;
+                }
+                table th {
+                width: auto !important;
+                }
+            </style>
+            <style>
+                html *
+                    {
+                       font-size: 102%; !important;
+                       font-family: Arial !important;
+                    }
+            </style>
+            <style>
+                .google-visualization-tooltip { 
+
+                width: 150px !important;
+                border: none !important;
+                border-radius: 21px !important;
+                background-color: rgb(30, 50, 230)!important;
+                position: absolute !important;
+                box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75) !important;
+                background: -moz-linear-gradient(30deg, rgb(30, 50, 230) 30%, rgb(90, 140, 250) 70%) !important;
+                background: -webkit-linear-gradient(30deg, rgb(30, 50, 230) 30%, rgb(90, 140, 250) 70%) !important;
+                background: -o-linear-gradient(30deg, rgb(30, 50, 230) 30%, rgb(90, 140, 250) 70%) !important;
+                background: -ms-linear-gradient(30deg, rgb(30, 50, 230) 30%, rgb(90, 140, 250) 70%) !important;
+                background: linear-gradient(120deg, rgb(30, 50, 230) 30%, rgb(90, 140, 250) 70%) !important;
+                font-size:  10px !important;
+    
+              }
+              
+            </style>
+        </head>
+        <!--Body tag starts here.-->
+        <body ng-app="Onsen">
+            <div ng-controller="AppCtrl">
+            
+                <div class="bs">
+                    <!--bs class div starts here-->
+                    <div class="navigation-bar">
+                        <div class="navigation-bar__center">
+                            <b>Collector Dashboard</b>
+                        </div>
+                    </div>
+                    <form class="navbar-form navbar-center">
+                        <div class="row">
+                            <label>Select a Queue </label>&nbsp;
+                            
+                            <select class="form-control input-sm" data-ng-options="queue.queueName for queue in queueNames" ng-model="selectedQueueOption"></select>&nbsp;
+                            
+                            <button class="btn btn-primary btn-sm" ng-click="loadFirstContractDetails()">Get Next Contract</button>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-sm" ng-model="contractNameInput" placeholder="E.g. LAI-000123"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary btn-sm" ng-click="loadContractDetails()" type="button">Go!</button>
+                                    </span>
+                                </div>
+                                <!-- /input-group -->
+                            </div>
+                            <!-- /.col-lg-6 -->
+                        </div>
+                        <!-- /.row -->
+                    </form>
+                    <br/>
+                    <br/>
+                    <!--Chart Drawing starts here.-->
+                    <div id="chart_div" style="width: 450px; height: 300px;"></div>
+                    <!--Chart Drawing Ends here.-->
+                    
+                    <div class="panel panel-primary" ng-show="showContractDetails">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Currently Being Processed: {{contractDetails.contractName}}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <!--First Table Layout-->
+                            <div class="col-xs-4">
+                                <!--<h2 class="sub-header">Subtitle</h2>-->
+                                <div class="table-responsive">
+                                    <!--Table to show Contract Details.-->
+                                    <table class="table table-bordered">
+                                        <caption>
+                                            <b>Contract Details</b>
+                                        </caption>
+                                        <tbody>
+                                            <tr>
+                                                <td class="col-md-2">Contract Name</td>
+                                                <td class="col-md-2">{{contractDetails.contractName}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Days Past Due</td>
+                                                <td class="col-md-2">{{contractDetails.daysPastDue}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Delinquent Due</td>
+                                                <td class="col-md-2">{{contractDetails.delinquentDue | currency : '$' : 2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Late Charge Due</td>
+                                                <td class="col-md-2">{{contractDetails.lateChargesDue | currency : '$' : 2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">NSF Due</td>
+                                                <td class="col-md-2">{{contractDetails.nsfDue | currency : '$' : 2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Other Due</td>
+                                                <td class="col-md-2">{{contractDetails.otherDue | currency : '$' : 2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Total Due</td>
+                                                <td class="col-md-2">{{contractDetails.totalDue | currency : '$' : 2}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!--First table ends here.-->
+                                </div>
+                            </div>
+                            <!--First Table Layout Ends.-->
+                            <!--Second Table Layout Starts.-->
+                            <div class="col-xs-4">
+                                <!--<h2 class="sub-header">Latest Incidents</h2>-->
+                                <div class="table-responsive">
+                                    <!--Table to show Contract Details.-->
+                                    <table class="table table-bordered">
+                                        <caption>
+                                            <b>Borrower Details</b>
+                                        </caption>
+                                        <tbody>
+                                            <tr>
+                                                <td class="col-md-2">Name</td>
+                                                <td class="col-md-2">{{contractDetails.customerInfo.customerName}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Phone</td>
+                                                <td class="col-md-2">{{contractDetails.customerInfo.phone}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Email</td>
+                                                <td class="col-md-2">{{contractDetails.customerInfo.email}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Address</td>
+                                                <td class="col-md-2">{{contractDetails.customerInfo.address}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!--Second table ends here.-->
+                                </div>
+                                <div id="push"></div>
+                            </div>
+                            <!--Second Table Layout Ends.-->
+                            <!--Third Table Layout Starts.-->
+                            <div class="col-xs-4">
+                                <!--<h2 class="sub-header">Subtitle</h2>-->
+                                <div class="table-responsive">
+                                    <!--Table to show Delinquency Info Starts.-->
+                                    <table class="table table-bordered">
+                                        <caption>
+                                            <b>Delinquency Info</b>
+                                        </caption>
+                                        <tbody>
+                                            <tr>
+                                                <td class="col-md-2">Late By</td>
+                                                <td class="col-md-2">{{contractDetails.aging}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Last Payment Amount</td>
+                                                <td class="col-md-2">{{contractDetails.lastPaymentAmount | currency : '$' : 2 }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Last Payment Date</td>
+                                                <td class="col-md-2">{{contractDetails.lastPaymentDate | date }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Last Bill Amount</td>
+                                                <td class="col-md-2">{{contractDetails.lastDueAmount | currency : '$' : 2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-2">Last Bill Date</td>
+                                                <td class="col-md-2">{{lastDueDate | date }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!--Table to show Delinquency Info Ends.-->
+                                </div>
+                            </div>
+                            <!--Third Table Layout Ends.-->
+                        </div>
+                    </div>
+                    <!--Actions Panel Start.-->
+                    <div class="panel panel-primary" ng-show="showActions">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Actions</h3>
+                        </div>
+                        <!--Panel Body-->
+                        <div class="panel-body">
+                            <!--Card Actions-->
+                            <div class="card-actions">
+                                  <button class="btn btn-primary"  ng-show = "isThirdParty" ng-click="showACHForm()" data-toggle="modal" data-target="#achFormModal">ACH 
+                                    <span class="badge">create</span>
+                                </button> 
+                                <a class="btn btn-primary" ng-click="showInteractionLogForm()" data-toggle="modal" data-target="#interactionLogFormModal">Interaction Log 
+                                <span class="badge">create</span>
+                                </a>
+                                    
+                                
+                                <!-- <button class="btn btn-primary">{{ contractDetails.action }} 
+                                    <span class="badge">action</span>
+                                </button> -->
+                                <a class="btn btn-primary"  ng-show="isContractTypeLease" target="_blank" ng-href="/apex/cllease__oneTimeACHTxn?scontrolCaching=1&id={{contractDetails.leaseContractId}}"
+                                 ng-mousedown="newPage()" >ACH
+                                <span class="badge">create</span> 
+                                </a> 
+                                
+                                 <a class="btn btn-primary"  ng-show="isContractTypeLoan" target="_blank" ng-href="/apex/loan__oneTimeACHTxn?scontrolCaching=1&id={{contractDetails.loanContractId}}"
+                                 ng-mousedown="newPage()" >ACH
+                                <span class="badge">create</span> 
+                                </a> 
+                            </div>
+                            <!--Card Actions End here.-->
+                            <!-- Interaction Log Modal Starts-->
+                            <div id="interactionLogFormModal" ng-model="interactionLogFormModal" class="modal fade" role="dialog">
+                                <!--Modal Dialog-->
+                                <div class="modal-dialog modal-lg">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Enter Interaction Log Details</h4>
+                                        </div>
+                                        <!--Modal Body Starts-->
+                                        <div class="modal-body">
+                                            <form class="form-horizontal" method="post">
+                                                <fieldset>
+                                                    <!--<legend class="text-center header">Interaction Log Details</legend>-->
+                                                    <!--Contract Info Panel-->
+                                                    <div class="panel panel-primary">
+                                                        <div class="panel-heading">Contract Info</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <label for="contractNameIL" class="control-label col-xs-2">Contract Name</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>-->
+                                                                <div class="col-sm-4">
+                                                                    <input id="contractNameIL" name="contractNameIL" type="text" class="form-control input-md" ng-model="contractNameIL" disabled="true"/>
+                                                                </div>
+                                                                <label for="delinquencyDaysIL" class="control-label col-xs-2">Delinquency Days</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>-->
+                                                                <div class="col-sm-4">
+                                                                    <input id="delinquencyDaysIL" name="delinquencyDaysIL" type="text" class="form-control input-md" ng-model="delinquencyDaysIL" disabled="true"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="accountName" class="control-label col-xs-2">Account</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>-->
+                                                                <div class="col-sm-4">
+                                                                    <input id="accountNameIL" name="accountNameIL" type="text" class="form-control input-md" ng-model="accountNameIL" disabled="true"/>
+                                                                </div>
+                                                                <label for="delinquentAmountIL" class="control-label col-xs-2">Delinquent Amount</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>-->
+                                                                <div class="col-sm-4">
+                                                                    <input id="delinquentAmountIL" name="delinquentAmountIL" type="text" class="form-control input-md" ng-model="delinquentAmountIL" disabled="true"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="contactNameIL" class="control-label col-xs-2">Contact</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>-->
+                                                                <div class="col-sm-4">
+                                                                    <input id="contactNameIL" name="contactNameIL" type="text" class="form-control input-md" ng-model="contactNameIL" disabled="true"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--Contract Info Panel Ends.-->
+                                                    <!--Promise To Pay Info Panel-->
+                                                    <div class="panel panel-primary">
+                                                        <div class="panel-heading">Promise To Pay Details</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <label for="promiseToPayAmountIL" class="control-label col-xs-2">Promise To Pay Amount</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <input id="promiseToPayAmountIL" name="promiseToPayAmountIL" ng-model="promiseToPayAmountIL" type="number" placeholder="Promise To Pay Amount" class="form-control input-md" aria-describedby="sizing-addon3"/>
+                                                                </div>
+                                                                <label for="promiseToPayDateIL" class="control-label col-xs-2">Promise To Pay Date</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-phone-square bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <input id="promiseToPayDateIL" name="promiseToPayDateIL" ng-model="promiseToPayDateIL" type="date" placeholder="Promise To Pay Date" class="form-control input-md" aria-describedby="sizing-addon3"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--Promise To Pay Info Panel-->
+                                                    <!--Other Info Panel-->
+                                                    <div class="panel panel-primary">
+                                                        <div class="panel-heading">Other Log Details</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <label for="interactionDateIL" class="control-label col-xs-2">Interaction Date</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <input id="interactionDateIL" name="interactionDateIL" ng-model="interactionDateIL" type="date" placeholder="Interaction Date" class="form-control input-md" aria-describedby="sizing-addon3"/>
+                                                                </div>
+                                                                <label for="followUpDateLabelQC" class="control-label col-xs-2">Follow-Up Date</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <input id="followUpDateIdQC" name="followUpDateNameQC" date-parser="MM/DD/YYYY" ng-model="followUpDateQC" type="date" placeholder="Follow-Up Date" class="form-control input-md" aria-describedby="sizing-addon3"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="commentsIL" class="control-label col-xs-2">Comments</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>-->
+                                                                <div class="col-md-8">
+                                                                    <textarea class="form-control" rows="5" id="commentsIL" ng-model="commentsIL" placeholder="Comments"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--Other Info Panel Ends Here.-->
+                                                    <div class="form-group">
+                                                        <div class="col-md-12 text-center">
+                                                            <button type="submit" class="btn btn-primary btn-md" ng-click="createInteractionLog()">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                        <!--Modal Body Ends-->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                        </div>
+                                        <!-- Modal Footer Ends.-->
+                                    </div>
+                                    <!-- Modal content ends.-->
+                                </div>
+                                <!--Modal Dialog-->
+                            </div>
+                            <!-- Interaction Log Modal Ends-->
+                            <!-- ACH Modal Starts-->
+                            <div id="achFormModal" ng-model="achModal" class="modal fade" role="dialog">
+                                <!--Modal Dialog-->
+                                <div class="modal-dialog modal-lg">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Enter ACH Details</h4>
+                                        </div>
+                                        <!--Modal Body Starts-->
+                                        <div class="modal-body">
+                                            <form class="form-horizontal" method="post">
+                                                <fieldset>
+                                                    <!--<legend class="text-center header">Interaction Log Details</legend>-->
+                                                    <!--Contract Info Panel-->
+                                                    <div class="panel panel-primary">
+                                                        <div class="panel-heading">Contract Info</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <label for="contractNameIL" class="control-label col-xs-2">Contract Name</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>-->
+                                                                <div class="col-sm-4">
+                                                                    <input id="contractNameIL" name="contractNameIL" type="text" class="form-control input-md" ng-model="contractNameIL" disabled="true"/>
+                                                                </div>
+                                                                <label for="delinquencyDaysIL" class="control-label col-xs-2">Delinquency Days</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>-->
+                                                                <div class="col-sm-4">
+                                                                    <input id="delinquencyDaysIL" name="delinquencyDaysIL" type="text" class="form-control input-md" ng-model="delinquencyDaysIL" disabled="true"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="accountName" class="control-label col-xs-2">Account</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>-->
+                                                                <div class="col-sm-4">
+                                                                    <input id="accountNameIL" name="accountNameIL" type="text" class="form-control input-md" ng-model="accountNameIL" disabled="true"/>
+                                                                </div>
+                                                                <label for="delinquentAmountIL" class="control-label col-xs-2">Delinquent Amount</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>-->
+                                                                <div class="col-sm-4">
+                                                                    <input id="delinquentAmountIL" name="delinquentAmountIL" type="text" class="form-control input-md" ng-model="delinquentAmountIL" disabled="true"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="contactNameIL" class="control-label col-xs-2">Contact</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>-->
+                                                                <div class="col-sm-4">
+                                                                    <input id="contactNameIL" name="contactNameIL" type="text" class="form-control input-md" ng-model="contactNameIL" disabled="true"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--Contract Info Panel Ends.-->
+                                                    <!--ACH Fields-->
+                                                    <div class="panel panel-primary">
+                                                        <div class="panel-heading">ACH Details</div>
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <label for="achRoutingNumberACH" class="control-label col-xs-2">ACH Routing Number</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-phone-square bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <input id="achRoutingNumberACH" name="achRoutingNumberACH" ng-model="achRoutingNumberACH" type="number" placeholder="Routing Number" class="form-control input-md"/>
+                                                                </div>
+                                                                <label for="achAccountTypeACH" class="control-label col-xs-2">ACH Account Type</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <!--<input id="achAccountTypeACH" name="achAccountTypeACH" ng-model="achAccountTypeACH" type="text" placeholder="Account Type" class="form-control input-md"/>-->
+                                                                    <select class="form-control input-sm" multiple="false" data-ng-options="accountType for accountType in ['Saving', 'Checking']" ng-model="achAccountTypeACH" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="achBankAccountNumberACH" class="control-label col-xs-2">ACH Bank Account Number</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-phone-square bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <input id="achBankAccountNumberACH" name="achBankAccountNumberACH" ng-model="achBankAccountNumberACH" type="text" placeholder="Bank Account Number" class="form-control input-md"/>
+                                                                </div>
+                                                                <label for="achCodeACH" class="control-label col-xs-2">ACH Code</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <input id="achCodeACH" name="achCodeACH" ng-model="achCodeACH" type="text" placeholder="ACH Code" class="form-control input-md"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="achPaymentAmountACH" class="control-label col-xs-2">ACH Payment Amount</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <input id="achPaymentAmountACH" name="achPaymentAmountACH" ng-model="achPaymentAmountACH" type="number" placeholder="Payment Amount" class="form-control input-md"/>
+                                                                </div>
+                                                                <label for="achDebitDateACH" class="control-label col-xs-2">ACH Debit Date</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <input id="achDebitDateACH" name="achDebitDateACH" ng-model="achDebitDateACH" type="date" date-format="MM-dd-yyyy" placeholder="Debit Date" class="form-control input-md"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="achBankNameACH" class="control-label col-xs-2">ACH Bank Name</label>
+                                                                <!--<span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-phone-square bigicon"></i></span>-->
+                                                                <div class="col-md-4">
+                                                                    <input id="achBankNameACH" name="achBankNameACH" ng-model="achBankNameACH" type="text" placeholder="Bank Name" class="form-control input-md"/>
+                                                                </div>
+                                                                <!--<label for="achFeeAmountACH" class="control-label col-xs-2">ACH Fee Amount</label>
+                                                                <div class="col-md-4">
+                                                                    <input id="achFeeAmountACH" name="achFeeAmountACH" ng-model="achFeeAmountACH" type="number" placeholder="Fee Amount" class="form-control input-md"/>
+                                                                </div>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--ACH Fields-->
+                                                    <div class="form-group">
+                                                        <div class="col-md-12 text-center">
+                                                            <button type="submit" class="btn btn-primary btn-md" ng-click="createACHTransaction()">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                        <!--Modal Body Ends-->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                        </div>
+                                        <!-- Modal Footer Ends.-->
+                                    </div>
+                                    <!-- Modal content ends.-->
+                                </div>
+                                <!--Modal Dialog-->
+                            </div>
+                            <!-- ACH Modal Ends-->
+                        </div>
+                        <!--Panel Body Ends-->
+                    </div>
+                    <!--Actions Panel Ends.-->
+                    <!--Detail Tabs end here.-->
+                    <!--Other Dashboard Info Panel Starts here.-->
+                    <div class="panel panel-primary" ng-show="showSummaryFlag">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Summary</h3>
+                        </div>
+                        <div class="panel-body">
+                            <!--Native Tabs Start Here.-->
+                            <ul class="nav nav-tabs nav-justified" id="myTab">
+                                <li class="active">
+                                    <a href="#interactionLogTable" data-toggle="tab">Interaction Log</a>
+                                </li>
+                                <li>
+                                    <a href="#promiseToPayRecordsTable" data-toggle="tab">Promise To Pay</a>
+                                </li>
+                                <li>
+                                    <a href="#paymentsTable" data-toggle="tab">Payments</a>
+                                </li>
+                                <li>
+                                    <a href="#billsTable" data-toggle="tab">Bills</a>
+                                </li>
+                                <li>
+                                    <a href="#chargesTable" data-toggle="tab">Charges</a>
+                                </li>
+                                <li>
+                                    <a href="#notificationsTable" data-toggle="tab">Notifications</a>
+                                </li>
+                                <li>
+                                    <a href="#dunningLettersTable" data-toggle="tab">DunningLetters</a>
+                                </li>
+                            </ul>
+                            <div id='content' class="tab-content">
+                                <div class="tab-pane fade in active" id="interactionLogTable">
+                                    <!--Interaction Logs Table Layout-->
+                                    <div class="col-xs-12">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive" align="center">
+                                            <!--Table to show Contract Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Interaction Log Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Contract Name</th>
+                                                        <th>Interaction Date</th>
+                                                        <th>Comments</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="interactionLogRec in interactionLogRecords">
+                                                    <tr>
+                                                        <td class="col-md-2">{{interactionLogRec.get('contractNameIL')}}</td>
+                                                        <td class="col-md-2">{{interactionLogRec.get('interactionDateIL') | date }}</td>
+                                                        <td class="col-md-2">{{interactionLogRec.get('commentsIL')}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Interaction Logs table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Interaction Log Table Layout Ends.-->
+                                </div>
+                                <div class="tab-pane fade" id="promiseToPayRecordsTable">
+                                    <!--Promise To Pay Records Table Layout starts here.-->
+                                    <div class="col-xs-12">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Contract Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Promise To Pay Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Contract Name</th>
+                                                        <th>Promise To Pay Date</th>
+                                                        <th>Promise Made On</th>
+                                                        <th>Promise To Pay Amount</th>
+                                                        <th>Promise Kept?</th>
+                                                        <th>Promise Broken?</th>
+                                                        <th>Remove</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="promiseToPayRec in promiseToPayRecords">
+                                                    <tr>
+                                                        <td class="col-md-2">{{promiseToPayRec.get('contractNamePTP')}}</td>
+                                                        <td class="col-md-2">{{promiseToPayRec.get('datePTP') | date }}</td>
+                                                        <td class="col-md-2">{{promiseToPayRec.get('promiseMadeOnPTP') | date }}</td>
+                                                        <td class="col-md-2">{{promiseToPayRec.get('amountPTP') | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isPromiseKept" ng-checked="{{promiseToPayRec.get('promiseKeptPTP')}}" />
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isPromiseBroken" ng-checked="{{promiseToPayRec.get('promiseBrokenPTP')}}" />
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <button type="submit" class="btn btn-primary btn-sm" ng-click="deletePromiseToPay(promiseToPayRec)">Remove</button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Promise To Pay table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Promise To Pay Records Table Layout ends here.-->
+                                </div>
+                                <div class="tab-pane fade" id="paymentsTable">
+                                    <!--Lease Repayment Records Table Layout starts here.-->
+                                    <div class="col-xs-12" ng-show="isContractTypeLease">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Repayment Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Payment Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Payment</th>
+                                                        <th>Transaction Date</th>
+                                                        <th>Transaction Amount</th>
+                                                        <th>Fees</th>
+                                                        <th>Excess</th>
+                                                        <th>Cleared</th>
+                                                        <th>Reversed</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="paymentRec in contractDetails.paymentTxnsList">
+                                                    <tr>
+                                                        <td class="col-md-2">{{paymentRec.paymentName}}</td>
+                                                        <td class="col-md-2">{{paymentRec.txnDate | date }}</td>
+                                                        <td class="col-md-2">{{paymentRec.txnAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{paymentRec.fees | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{paymentRec.excess | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isCleared" ng-checked="{{paymentRec.isCleared}}" />
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isReversed" ng-checked="{{paymentRec.isReversed}}" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Repayment Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Repayment Records Table Layout ends here.-->
+                                    <!--ThirdPartyContract Payment Records Table Layout starts here.-->
+                                    <div class="col-xs-12" ng-show="isThirdParty">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Repayment Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Payment Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Payment</th>
+                                                        <th>Transaction Date</th>
+                                                        <th>Transaction Amount</th>
+                                                        <th>Fees</th>
+                                                        <th>Excess</th>
+                                                        <th>Cleared</th>
+                                                        <th>Reversed</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="paymentRec in contractDetails.paymentTxnsList">
+                                                    <tr>
+                                                        <td class="col-md-2">{{paymentRec.paymentName}}</td>
+                                                        <td class="col-md-2">{{paymentRec.txnDate | date }}</td>
+                                                        <td class="col-md-2">{{paymentRec.txnAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{paymentRec.fees | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{paymentRec.excess | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isCleared" ng-checked="{{paymentRec.isCleared}}" />
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isReversed" ng-checked="{{paymentRec.isReversed}}" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Repayment Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Repayment Records Table Layout ends here.-->
+                                    
+                                    
+                                    <!--Loan Repayment Records Table Layout starts here.-->
+                                    <div class="col-xs-12" ng-show="isContractTypeLoan">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Repayment Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Payment Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Payment</th>
+                                                        <th>Transaction Date</th>
+                                                        <th>Transaction Amount</th>
+                                                        <th>Principal</th>
+                                                        <th>Interest</th>
+                                                        <th>Fees</th>
+                                                        <th>Excess</th>
+                                                        <th>Cleared</th>
+                                                        <th>Reversed</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="paymentRec in contractDetails.paymentTxnsList">
+                                                    <tr>
+                                                        <td class="col-md-2">{{paymentRec.paymentName}}</td>
+                                                        <td class="col-md-2">{{paymentRec.txnDate | date }}</td>
+                                                        <td class="col-md-2">{{paymentRec.txnAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{paymentRec.principal | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{paymentRec.interest | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{paymentRec.fees | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{paymentRec.excess | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isCleared" ng-checked="{{paymentRec.isCleared}}" />
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isReversed" ng-checked="{{paymentRec.isReversed}}" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Repayment Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Repayment Records Table Layout ends here.-->
+                                </div>
+                                <div class="tab-pane fade" id="billsTable">
+                                    <!--Lease Bill Records Table Layout starts here.-->
+                                    <div class="col-xs-12" ng-show="isContractTypeLease">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Bill Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Bill Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Bill</th>
+                                                        <th>Due Date</th>
+                                                        <th>Tax Due Amount</th>
+                                                        <th>Rental Due Amount</th>
+                                                        <th>Total Due Amount</th>
+                                                        <th>Total Paid Amount</th>
+                                                        <th>Late Charge Applied?</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="billRec in contractDetails.billsList">
+                                                    <tr>
+                                                        <td class="col-md-2">{{billRec.billName}}</td>
+                                                        <td class="col-md-2">{{billRec.dueDate | date }}</td>
+                                                        <td class="col-md-2">{{billRec.taxDueAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{billRec.rentalDueAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{billRec.totalDueAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{billRec.totalPaidAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isLateChargeApplied" ng-checked="{{billRec.isLateChargeApplied}}" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Bill Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Bill Records Table Layout ends here.-->
+                                    <div class="col-xs-12" ng-show="isThirdParty">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Bill Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Bill Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Bill</th>
+                                                        <th>Due Date</th>
+                                                        <th>Tax Due Amount</th>
+                                                        <th>Rental Due Amount</th>
+                                                        <th>Total Due Amount</th>
+                                                        <th>Total Paid Amount</th>
+                                                        <th>Late Charge Applied?</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="billRec in contractDetails.billsList">
+                                                    <tr>
+                                                        <td class="col-md-2">{{billRec.billName}}</td>
+                                                        <td class="col-md-2">{{billRec.dueDate | date }}</td>
+                                                        <td class="col-md-2">{{billRec.taxDueAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{billRec.rentalDueAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{billRec.totalDueAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{billRec.totalPaidAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isLateChargeApplied" ng-checked="{{billRec.isLateChargeApplied}}" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Bill Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Bill Records Table Layout ends here.-->
+                                    
+                                    <!--Loan Bill Records Table Layout starts here.-->
+                                    <div class="col-xs-12" ng-show="isContractTypeLoan">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Bill Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Bill Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Bill</th>
+                                                        <th>Due Date</th>
+                                                        <th>Due Amount</th>
+                                                        <th>Payment Date</th>
+                                                        <th>Payment Amount</th>
+                                                        <th>Is Payment Satisfied?</th>
+                                                        <th>Late Charge Applied?</th>
+                                                        <th>Is Primary?</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="billRec in contractDetails.billsList">
+                                                    <tr>
+                                                        <td class="col-md-2">{{billRec.billName}}</td>
+                                                        <td class="col-md-2">{{billRec.dueDate | date }}</td>
+                                                        <td class="col-md-2">{{billRec.dueAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{billRec.paymentDate | date }}</td>
+                                                        <td class="col-md-2">{{billRec.paymentAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isPaymentSatisfied" ng-checked="{{billRec.isPaymentSatisfied}}" />
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isLateChargeApplied" ng-checked="{{billRec.isLateChargeApplied}}" />
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isPrimary" ng-checked="{{billRec.isPrimary}}" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Bill Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Bill Records Table Layout ends here.-->
+                                </div>
+                                <div class="tab-pane fade" id="chargesTable">
+                                    <!--One table is used to show Charges for  Loan -->
+                                    <!--Charge Records Table Layout starts here.-->
+                                    <div class="col-xs-12" ng-show="isContractTypeLoan">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Bill Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Charge Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Charge</th>
+                                                        <th>Created Date</th>
+                                                        <th>Fee Type</th>
+                                                        <th>Time Of Charge</th>
+                                                        <th>Due Amount</th>
+                                                        <th>Paid Amount</th>
+                                                        <th>Is Paid</th>
+                                                        <th>Is Waived</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="chargeRec in contractDetails.chargesList">
+                                                    <tr>
+                                                        <td class="col-md-2" >
+                                                        <a target="_blank" ng-href="/apex/loan__waiveUnwaiveCharge?scontrolCaching=1&id={{chargeRec.chargeId}}">{{chargeRec.chargeName}}</a> 
+                                                         <!-- <a target="_blank" ng-href="/apex/loan__/{{chargeRec.chargeId}}">{{chargeRec.chargeName}}</a> -->
+                                                        </td>
+                                                        <td class="col-md-2">{{chargeRec.createdDate | date }}</td>
+                                                        <td class="col-md-2">{{chargeRec.timeOfCharge}}</td>
+                                                        <td class="col-md-2">{{chargeRec.fee}}</td>
+                                                        <td class="col-md-2">{{chargeRec.balanceAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{chargeRec.paidAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isPaid" ng-checked="{{chargeRec.isPaid}}" />
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isWaived" ng-checked="{{chargeRec.isWaived }}" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Charge Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-xs-12" ng-show="isThirdParty">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Bill Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Charge Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Charge</th>
+                                                        <th>Created Date</th>
+                                                        <th>Fee Type</th>
+                                                        <th>Time Of Charge</th>
+                                                        <th>Due Amount</th>
+                                                        <th>Paid Amount</th>
+                                                        <th>Is Paid</th>
+                                                        <th>Is Waived</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="chargeRec in contractDetails.chargesList">
+                                                    <tr>
+                                                        <td class="col-md-2">{{chargeRec.chargeName}}</td>
+                                                        <td class="col-md-2">{{chargeRec.createdDate | date }}</td>
+                                                        <td class="col-md-2">{{chargeRec.timeOfCharge}}</td>
+                                                        <td class="col-md-2">{{chargeRec.fee}}</td>
+                                                        <td class="col-md-2">{{chargeRec.balanceAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{chargeRec.paidAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isPaid" ng-checked="{{chargeRec.isPaid}}" />
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isWaived" ng-checked="{{chargeRec.isWaived }}" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Charge Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-xs-12" ng-show="isContractTypeLease">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Bill Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Charge Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Charge</th>
+                                                        <th>Created Date</th>
+                                                        <th>Fee Type</th>
+                                                        <th>Time Of Charge</th>
+                                                        <th>Due Amount</th>
+                                                        <th>Paid Amount</th>
+                                                        <th>Is Paid</th>
+                                                        <th>Is Waived</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="chargeRec in contractDetails.chargesList">
+                                                    <tr>
+                                                       <!-- <td class="col-md-2" >
+                                                       <!-- <a target="_blank" ng-href="/apex/cllease__waiveUnwaiveCharge?scontrolCaching=1&id={{chargeRec.chargeId}}">{{chargeRec.chargeName}}</a> -->
+                                                         <!-- <a target="_blank" ng-href="/apex/loan__/{{chargeRec.chargeId}}">{{chargeRec.chargeName}}</a> 
+                                                        </td> -->
+                                                        <td class="col-md-2">{{chargeRec.chargeName}}</td>
+                                                        <td class="col-md-2">{{chargeRec.createdDate | date }}</td>
+                                                        <td class="col-md-2">{{chargeRec.timeOfCharge}}</td>
+                                                        <td class="col-md-2">{{chargeRec.fee}}</td>
+                                                        <td class="col-md-2">{{chargeRec.balanceAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">{{chargeRec.paidAmount | currency : '$' : 2 }}</td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isPaid" ng-checked="{{chargeRec.isPaid}}" />
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <input type="checkbox" disabled="true" name="isWaived" ng-checked="{{chargeRec.isWaived }}" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Charge Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Charge Records Table Layout ends here.-->
+                                </div>
+                                <div class="tab-pane fade" id="notificationsTable">
+                                    <!--Notification Records Table Layout starts here.-->
+                                    <div class="col-xs-12">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Notification Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Notification Details</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sent Date</th>
+                                                        <th>Type</th>
+                                                        <th>Message</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="notificationRec in contractDetails.notificationsList">
+                                                    <tr>
+                                                        <td class="col-md-2">{{notificationRec.notification.CreatedDate | date}}</td>
+                                                        <td class="col-md-2">{{notificationRec.communicationType}}</td>
+                                                        <td class="col-md-2">{{notificationRec.notification.cnotify__Message__c}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Notifications Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Notifications Records Table Layout ends here.-->
+                                </div>
+                                <div class="tab-pane fade" id="dunningLettersTable">
+                                    <!--Dunning Letter Records Table Layout starts here.-->
+                                    <div class="col-xs-12">
+                                        <!--<h2 class="sub-header">Subtitle</h2>-->
+                                        <div class="table-responsive">
+                                            <!--Table to show Dunning Letter Details.-->
+                                            <table class="table table-bordered">
+                                                <caption>
+                                                    <b>Dunning Letters</b>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sent Date</th>
+                                                         <!-- <th>HTML</th> -->
+                                                        <th>Letter</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="dunningLetterRec in contractDetails.dunningLetterList">
+                                                    <tr>
+                                                        <td class="col-md-2">{{dunningLetterRec.dunningLetters.CreatedDate | date}}</td>
+                                                        <!-- <td class="col-md-2">
+                                                        <div ng-bind-html = "get(dunningLetterRec.dunningLetters.Body__c)" >
+                                                        
+                                                        </div>
+                                                        </td> -->
+                                                        <!-- <td class="col-md-2"><span ng-bind-html = 'func(dunningLetterRec.dunningLetters.Body__c)'></span></td> --><!--dunningLetterRec.dunningLetters.Body__c-->
+                                                        <!--<td class="col-md-2"><apex:outputlabel escape="false" value="{!dunningLetterRec.dunningLetters.Body__c}" /></td>-->
+                                                        <td class="col-md-2">{{dunningLetterRec.dunningLetters.Dunning_Letter_Text_Body__c}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--Dunning Letters Records table ends here.-->
+                                        </div>
+                                    </div>
+                                    <!--Dunning Letters Records Table Layout ends here.-->
+                                </div>
+                            </div>
+                            <!--Native Tabs End Here.-->
+                        </div>
+                        <!--Dashboard Panel Body Ends here.-->
+                        <!--Dashboard Nested Information Panel Ends Here.-->
+                    </div>
+                    <!--Other Dashboard Info Panel Ends here.-->
+                </div>
+            </div>
+            <!--bs class div ends here-->
+            <!--App Ctrl Div ends here.-->
+        </body>
+    </html>
+</apex:page>

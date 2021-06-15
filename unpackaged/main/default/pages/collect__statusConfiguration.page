@@ -1,0 +1,68 @@
+<apex:page standardController="collect__Status_Config__c" extensions="collect.StatusConfigCntrl" >
+<apex:include pageName="clcommon__mintTheme"/>
+<apex:outputPanel id="statusConfig">
+
+<script type="text/javascript">
+    var saveData = function () {
+      window.parent.postMessage({!statusOnsave}, '*');
+    };
+
+    var cancelFunctionality = function () {
+      window.parent.postMessage({!statusOncancel}, '*');
+    };
+    </script>
+<style type="text/css">
+select:not([multiple]) {
+    height: 27px !important;
+}
+
+select[multiple] {
+    height: inherit !important;
+    padding: 6px 12px 6px 16px !important;
+}
+
+select[multiple] > option {
+    padding: 6px !important;
+}
+
+</style>
+    <apex:form id="statusConfigForm" styleClass="mint-lightning-page">        
+
+        <apex:sectionHeader subtitle="{!IF(newConfig.Id != NULL, newConfig.Name, 'Status Config')}" title="Status Config Detail"/>
+        <apex:pagemessages />
+        <apex:pageBlock title="Status Config Detail" rendered="{!statusPresent}">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!saveConfig}" reRender="statusConfig" oncomplete="saveData()"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" onclick="cancelFunctionality()"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection title="Information" showHeader="false" id="information" columns="1">
+                <apex:inputField value="{!newConfig.collect__Source_System__c}" required="true"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection showHeader="false" columns="2">
+                <apex:outputField id="statusAPIName" value="{!newConfig.collect__Status_API_Name__c}" rendered="false"/>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Status"></apex:outputLabel>
+                    <apex:selectList value="{!newConfig.collect__Status__c}" size="1" required="true"
+                            onchange="populateStatuses(this.options[this.selectedIndex].value, this.options[this.selectedIndex].label)">
+                         <apex:selectOptions value="{!allStatuses}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Allowed Statuses"></apex:outputLabel>
+                    <apex:selectList id="allowedStatuses" value="{!allowedStatuses}"
+                            multiselect="true" size="3" >
+                         <apex:selectOptions value="{!childStatuses}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:actionRegion >
+            <apex:actionFunction name="populateStatuses" action="{!getStatusValues}"
+                    reRender="allowedStatuses,statusAPIName">
+                <apex:param assignTo="{!statusName}" value="" name="statusName"/>
+                <apex:param assignTo="{!statusLabel}" value="" name="statusLabel"/>
+            </apex:actionFunction>
+        </apex:actionRegion>
+    </apex:form>
+  </apex:outputPanel>
+</apex:page>

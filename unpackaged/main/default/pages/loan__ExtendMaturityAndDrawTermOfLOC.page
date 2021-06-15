@@ -1,0 +1,73 @@
+<!--author : Nitin S.
+This VF Page is used as a qucik menu loan action item for extending the Maturity date and/or Draw term for LOC type loans -->
+
+<apex:page lightningStylesheets="true" id="extendMaturityNDrawTerm" standardController="loan__Loan_Account__c" extensions="loan.ExtendMaturityAndDrawTermOfLOCController" tabStyle="loan__Loan_Account__c" 
+        sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}" title="Term Extension">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}"/> 
+    <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+    <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+    <script src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}"/>
+    <script src="{!URLFOR($Resource.helperclose)}"/>
+    <script>
+      j$ = jQuery.noConflict();
+    </script>
+ 
+    <apex:sectionHeader title="Term Extension" id="extendMaturityNDrawTermSection"/>
+    <apex:form id="extendMaturityNDrawTermForm">
+        <apex:commandLink value="Help On Term Extension" id="thelink" onclick="popWindow('Term Extension');" 
+                            reRender="dummy" style="text-decoration:none;color:green;padding:1px" styleClass="link-show"
+                          rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+        <apex:commandLink value="Help On Term Extension" id="thelink2" onclick="popWindow('Term Extension');" 
+                            reRender="dummy" styleClass="help-link" 
+                            rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>  
+        <apex:pageBlock id="noactionbox" rendered="{!(!allowTermExtension)}">
+            <apex:pageMessage severity="info" summary="{!$Label.loan__cl019614}" rendered="true" strength="3"/>
+        </apex:pageBlock>
+        
+        <apex:pageBlock mode="edit" id="extendMaturityNDrawTermTxn" rendered="{!(allowTermExtension)}">
+            <apex:pageMessages />
+            
+            <apex:pageBlockButtons location="both">
+                <c:BusyButton name="Validate" busyname="Validating..." actionTo="{!Validate}"
+                    oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};"
+                    reRenderTo="extendMaturityNDrawTermForm" style="margin-left:80px;"/>
+                <c:BusyButton name="Submit" busyname="Changing term..."
+                    actionTo="{!submit}" reRenderTo="extendMaturityNDrawTermForm"
+                    oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};" />
+                <apex:commandButton value="Cancel" action="{!cancel}" onclick="closeIframe()" immediate="true"/>                
+            </apex:pageBlockButtons>            
+
+            <apex:pageBlockSection id="currentMaturityNDrawTermDetails" title="Current Term" columns="2">
+                <apex:outputField value="{!loanAccount.Name}" />
+                <apex:outputField value="{!loanAccount.loan__Maturity_Date_Current__c}" />              
+                <apex:outputField value="{!loanAccount.loan__Term_Cur__c}" />
+                <apex:outputField value="{!loanAccount.loan__draw_term__c}" />
+            </apex:pageBlockSection>
+
+            <apex:outputPanel id="newExtendMaturityNDrawTermPanel">
+                <apex:pageBlockSection title="Extend Maturity Date or Draw Term" id="extendmaturitydate">
+                    <apex:pageBlockSection columns="1" >
+                        <apex:selectList value="{!selectedvalue}" label="Extend" multiselect="false" size="1">
+                            <apex:actionSupport event="onchange" action="{!displayfields}"/>
+                            <apex:selectOption itemValue="select" itemLabel="Select"/>
+                            <apex:selectOption itemValue="Term" itemLabel="Term (Maturity Date)"/>
+                            <apex:selectOption itemValue="DrawTerm" itemLabel="Draw Term"/>
+                            <apex:selectOption itemValue="Both" itemLabel="Both"/>
+                        </apex:selectList>
+                        
+                        <apex:inputField id="newterm" label="New Term" value="{!loanAccount.loan__Term_Cur__c}" rendered="{!changeTerm}" />
+                        <apex:inputField id="newdrawterm" label="New Draw Term" value="{!loanAccount.loan__draw_term__c}" rendered="{!changeDrawTerm}"/>
+                    </apex:pageBlockSection>
+                    
+                    <script>
+                        function confirmAction(message) {
+                            return confirm(message);
+                        }
+                    </script>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>        
+    </apex:form>    
+</apex:page>

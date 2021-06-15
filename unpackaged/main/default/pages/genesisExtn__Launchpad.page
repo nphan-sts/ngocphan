@@ -1,0 +1,5 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" standardController="clcommon__Launchpad_App_Subscription__c" extensions="skuid.Redirects"
+       showHeader="false" sidebar="false" readonly="true" docType="html-5.0"
+        action="{!IF(canUseSkuid,'',redirect)}" title="Launchpad">
+    <skuid:page page="LaunchPadView" />
+</apex:page>

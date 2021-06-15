@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>staging__File_Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>File Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Active</fullName>
+                <default>false</default>
+                <label>Active</label>
+            </value>
+            <value>
+                <fullName>Active Default Notice</fullName>
+                <default>false</default>
+                <label>Active Default Notice</label>
+            </value>
+            <value>
+                <fullName>Claim</fullName>
+                <default>false</default>
+                <label>Claim</label>
+            </value>
+            <value>
+                <fullName>Closed</fullName>
+                <default>false</default>
+                <label>Closed</label>
+            </value>
+            <value>
+                <fullName>Default Notice Expired</fullName>
+                <default>false</default>
+                <label>Default Notice Expired</label>
+            </value>
+            <value>
+                <fullName>Default Notice Instructed</fullName>
+                <default>false</default>
+                <label>Default Notice Instructed</label>
+            </value>
+            <value>
+                <fullName>Default Notice Requested</fullName>
+                <default>false</default>
+                <label>Default Notice Requested</label>
+            </value>
+            <value>
+                <fullName>First Payment Default</fullName>
+                <default>false</default>
+                <label>First Payment Default</label>
+            </value>
+            <value>
+                <fullName>Judgement Entered</fullName>
+                <default>false</default>
+                <label>Judgement Entered</label>
+            </value>
+            <value>
+                <fullName>Judgement Filed</fullName>
+                <default>false</default>
+                <label>Judgement Filed</label>
+            </value>
+            <value>
+                <fullName>Judgment Instructed</fullName>
+                <default>false</default>
+                <label>Judgment Instructed</label>
+            </value>
+            <value>
+                <fullName>Judgment Requested</fullName>
+                <default>false</default>
+                <label>Judgment Requested</label>
+            </value>
+            <value>
+                <fullName>Legal</fullName>
+                <default>false</default>
+                <label>Legal</label>
+            </value>
+            <value>
+                <fullName>New Work</fullName>
+                <default>false</default>
+                <label>New Work</label>
+            </value>
+            <value>
+                <fullName>Not in Arrears</fullName>
+                <default>false</default>
+                <label>Not in Arrears</label>
+            </value>
+            <value>
+                <fullName>PIF</fullName>
+                <default>false</default>
+                <label>PIF</label>
+            </value>
+            <value>
+                <fullName>POS auction date set</fullName>
+                <default>false</default>
+                <label>POS auction date set</label>
+            </value>
+            <value>
+                <fullName>POS form 14/Section 130 expired</fullName>
+                <default>false</default>
+                <label>POS form 14/Section 130 expired</label>
+            </value>
+            <value>
+                <fullName>POS form 14/Section 130 sent</fullName>
+                <default>false</default>
+                <label>POS form 14/Section 130 sent</label>
+            </value>
+            <value>
+                <fullName>POS Instructed</fullName>
+                <default>false</default>
+                <label>POS Instructed</label>
+            </value>
+            <value>
+                <fullName>POS Obtained</fullName>
+                <default>false</default>
+                <label>POS Obtained</label>
+            </value>
+            <value>
+                <fullName>POS Requested</fullName>
+                <default>false</default>
+                <label>POS Requested</label>
+            </value>
+            <value>
+                <fullName>POS Sale achieved</fullName>
+                <default>false</default>
+                <label>POS Sale achieved</label>
+            </value>
+            <value>
+                <fullName>Recall</fullName>
+                <default>false</default>
+                <label>Recall</label>
+            </value>
+            <value>
+                <fullName>Shortfall</fullName>
+                <default>false</default>
+                <label>Shortfall</label>
+            </value>
+            <value>
+                <fullName>SIF</fullName>
+                <default>false</default>
+                <label>SIF</label>
+            </value>
+            <value>
+                <fullName>SKIP</fullName>
+                <default>false</default>
+                <label>SKIP</label>
+            </value>
+            <value>
+                <fullName>SOC Instructed</fullName>
+                <default>false</default>
+                <label>SOC Instructed</label>
+            </value>
+            <value>
+                <fullName>SOC Issued</fullName>
+                <default>false</default>
+                <label>SOC Issued</label>
+            </value>
+            <value>
+                <fullName>SOC Requested</fullName>
+                <default>false</default>
+                <label>SOC Requested</label>
+            </value>
+            <value>
+                <fullName>SOC Served</fullName>
+                <default>false</default>
+                <label>SOC Served</label>
+            </value>
+            <value>
+                <fullName>WOP Instructed</fullName>
+                <default>false</default>
+                <label>WOP Instructed</label>
+            </value>
+            <value>
+                <fullName>WOP Requested</fullName>
+                <default>false</default>
+                <label>WOP Requested</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,140 @@
+<apex:page lightningStylesheets="true" standardController="Account"
+	extensions="loan.InvestorLoanStatementGeneratorController"
+	sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+	showHeader="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+<apex:include pageName="clcommon__mintTheme"/>
+
+	<apex:stylesheet value="{!$Resource.loan__StatementStyleSheet}" />
+	<apex:sectionHeader title="Investor Statement" />
+
+	<apex:pageBlock title="Investor Details">
+		<table class="mfiflex-namevaluetable" summary="Loan Details">
+			<tbody>
+				<tr>
+					<td class="mfiflex-fbold">Investor Name</td>
+					<td>{!account.Name}</td>
+
+				</tr>
+				<tr>
+					<td class="mfiflex-fbold">Total Investment Amount</td>
+					<td>{!totalInvestmentAmount }</td>
+				</tr>
+				<tr>
+					<td class="mfiflex-fbold">Total Interest Received</td>
+					<td>{!totalInterestReceived }</td>
+				</tr>
+				<tr>
+					<td class="mfiflex-fbold">Total Accrued Interest</td>
+					<td>{!accruedInterest }</td>
+				</tr>
+
+				<tr>
+					<td class="mfiflex-fbold">Total Outstanding Principal</td>
+					<td>{!outstandingPrincipal }</td>
+				</tr>
+				<!--<tr>
+                    <td class="mfiflex-fbold">Billing Method</td>
+                    <td>{!loanAccount.Interest_Calculation_Method__c}</td>        
+                </tr>
+                <tr>
+                    <td class="mfiflex-fbold">Time Counting Method</td>
+                    <td>{!loanAccount.Time_Counting_Method__c}</td>
+                </tr>
+                <tr>
+                    <td class="mfiflex-fbold">Balance Amount</td>
+                    <td>{!loanAccount.Total_Amount_Remaining__c} </td>
+                </tr>-->
+			</tbody>
+		</table>
+	</apex:pageBlock>
+
+	<apex:pageBlock id="investorOrderPageBlock" title="Investment Details"
+		mode="edit">
+		<apex:dataTable value="{! investorLoanList }" var="listItem"
+			id="amzSch" headerClass="dkbkg denter"
+			style="font-size:12px;width: 100%;" border="0" cellpadding="8">
+
+
+
+			<apex:column headerClass="left" headerValue="Loan Account"
+				value="{! listItem.Loan__c}" styleClass="left" />
+			<apex:column headerClass="left" headerValue="Investor Loan ID"
+				value="{! listItem.name}" styleClass="left" />
+
+			<apex:column headerClass="left" headerValue="Investment Amount"
+				value="{! listItem.Investment_Amount__c}" styleClass="left" />
+			<!-- <apex:column headerClass="left" headerValue="Share" value="{! listItem.Share__c}" styleClass="left"/> -->
+			<apex:column headerClass="left" headerValue="Total Amount Paid"
+				value="{! listItem.Total_Amount_Paid__c}" styleClass="left" />
+			<apex:column headerClass="left" headerValue="Principal Amount Paid"
+				value="{! listItem.Principal_Amount_Paid__c}" styleClass="left" />
+			<!-- <apex:column headerClass="left" headerValue="Principal Amount Remaining" value="{! (listItem.Investment_Amount__c - listItem.Principal_Amount_Paid__c)}" styleClass="left"/> -->
+			<apex:column headerClass="left" headerValue="Interest Amount Paid"
+				value="{! listItem.Interest_Amount_Paid__c}" styleClass="left" />
+			<apex:column headerClass="left" headerValue="Interest Balance"
+				value="{! listItem.Inv_Interest_Posted_Amt__c}" styleClass="left" />
+			<apex:column headerClass="left" headerValue="Late Fee Amount Paid"
+				value="{! listItem.Late_Fees_Amount_Paid__c}" styleClass="left" />
+
+			<!--
+      <apex:column> 
+           <apex:dataTable value="{!listItem.Investor_Loan_Txns__r}" var="inner">
+            <apex:column headerValue="Name" value="{!inner.Name}" />
+            <apex:column headerValue="Id" value="{!inner.Id}" />
+           </apex:dataTable> 
+       </apex:column>-->
+		</apex:dataTable>
+	</apex:pageBlock>
+
+
+	<apex:form >
+		<apex:pageBlock title="Choose duration To See Transactions"
+			mode="edit">
+			<!--<apex:pageblockButtons >           
+               <c:BusyButton name="Preview" busyname="Generating Preview..." actionTo="{!submitDuration}"  
+                               reRenderTo="txnDetails"/> 
+                <c:BusyButton name="Download Statement" busyname="Downloading..." actionTo="{!saveAsPdf}" oncomplete="({!closeModal}===true) ? function reload(){window.top.location.href='/apex/tabbedLoanAccount?id=' + j$('#loanRedirectId').text(); closeIframe();}() : {};"/> 
+             </apex:pageblockButtons> -->
+			<apex:pageBlockSection columns="3">
+				<apex:inputField label="StartDate" value="{!search.loan__Start_Date__c}">
+				</apex:inputField>
+				<apex:inputField label="EndDate" value="{!search.loan__End_Date__c}">
+				</apex:inputField>
+				<apex:commandButton action="{!submitDuration}" title="submit"
+					reRender="txnDetailsPageBlock, txnDetailsDataTable" value="submit"
+					status="txnDetails" />
+			</apex:pageBlockSection>
+			<center>
+				<apex:actionStatus id="txnDetails">
+					<apex:facet name="start">
+						<apex:image value="/img/loading32.gif" style="height:15px;" />
+					</apex:facet>
+				</apex:actionStatus>
+			</center>
+		</apex:pageBlock>
+	</apex:form>
+	<apex:pageBlock id="txnDetailsPageBlock" title="Transaction Details"
+		mode="edit">
+		<apex:dataTable value="{! investorLoanAccountTxnList }"
+			var="txnListItem" id="txnDetailsDataTable" headerClass="dkbkg denter"
+			style="font-size:12px;width: 100%;" border="0" cellpadding="8"
+			cellspacing="1" rendered="{!(showTxnDetails==True)}">
+
+			<apex:column headerClass="left" headerValue="Transaction Date"
+				value="{! txnListItem.Transaction_Date__c}" styleClass="left" />
+			<apex:column headerClass="left" headerValue="Transaction Amount"
+				value="{! txnListItem.Txn_Amount__c}" styleClass="left" />
+			<apex:column headerClass="left" headerValue="Principal Paid"
+				value="{! txnListItem.Principal_Paid__c}" styleClass="left" />
+			<apex:column headerClass="left" headerValue="Interest Paid"
+				value="{! txnListItem.Interest_Paid__c}" styleClass="left" />
+			<apex:column headerClass="left" headerValue="Late Fees Paid"
+				value="{! txnListItem.Late_Fees_Paid__c}" styleClass="left" />
+			<apex:column headerClass="left" headerValue="Reason"
+				value="{! txnListItem.Reason__c}" styleClass="left" />
+			<apex:column headerClass="left" headerValue="Transaction Description"
+				value="{! txnListItem.Txn_Description__c}" styleClass="left" />
+
+		</apex:dataTable>
+	</apex:pageBlock>
+</apex:page>

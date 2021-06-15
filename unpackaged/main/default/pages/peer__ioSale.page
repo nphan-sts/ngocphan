@@ -1,0 +1,49 @@
+<apex:page standardController="loan__Investor_Loan__c" extensions="peer.IOSaleController" title="Investment Order Sale" docType="html-5.0">
+    <apex:include pageName="clcommon__mintTheme"/>
+    <apex:form >
+        <apex:pageblock mode="edit" title="Investment Order Sale" id="pg0">
+            <apex:pageblockButtons location="top">
+                <apex:commandButton value="Preview" action="{!preview}" reRender="pg0, pg1, pg2"/>
+                <apex:commandButton value="Execute Sale" action="{!executeSale}" reRender="pg0, pg1, pg2"/>
+                
+            </apex:pageblockButtons>
+            <apex:pageMessages />
+            <apex:pageBlockSection columns="2" >
+            <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+                <apex:outputText label="Investment Order"><apex:outputLink value="{!ioForSale.Id}"> {!ioForSale.Name}</apex:outputLink> </apex:outputText>
+                <apex:outputField value="{!txn.loan__Transaction_Date__c}"/>
+                <apex:inputField label="Buyer" value="{!newIO.loan__Account__c}" required="true"/>
+                <apex:input label="Sale Price" value="{!salePrice}" required="true"/>
+                <apex:outputField value="{!txn.peer__Sale_Price_Per_Share__c}" rendered="{!isPreview}"/>
+            </apex:outputpanel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock mode="edit" title="Details" id="pg1">
+        <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+            <apex:pageBlockSection >
+                <apex:outputField value="{!ioForSale.loan__Account__c}"/>
+                <apex:outputField value="{!ioForSale.loan__Loan__c}"/>
+                <apex:outputField value="{!ioForSale.loan__Certificate_Rate__c}"/>
+                <apex:outputField value="{!ioForSale.loan__Service_Rate__c}"/>
+                <apex:outputField value="{!ioForSale.peer__Number_of_Shares__c}"/>
+                <apex:outputField value="{!ioForSale.loan__Enabled_Flag__c}"/>
+            </apex:pageBlockSection>
+            </apex:outputpanel>
+        </apex:pageblock>
+        <apex:pageBlock mode="edit" title="New IO" rendered="{!success}" id="pg2">
+        <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+            <apex:pageBlockSection >
+                <apex:outputField value="{!ioForSale.loan__Account__c}"/>
+                <apex:outputlabel ></apex:outputlabel>
+                <apex:outputField value="{!newIO.loan__Account__c}"/>
+                <apex:outputField value="{!newIO.loan__Loan__c}"/>
+                <apex:outputField value="{!newIO.loan__Certificate_Rate__c}"/>
+                <apex:outputField value="{!newIO.loan__Service_Rate__c}"/>
+                <apex:outputField value="{!newIO.loan__Enabled_Flag__c}"/>
+                <apex:outputField value="{!txn.peer__Sale_Price_Per_Share__c}"/>
+            </apex:pageBlockSection>
+            </apex:outputpanel>
+        </apex:pageblock>
+    </apex:form>
+  
+</apex:page>

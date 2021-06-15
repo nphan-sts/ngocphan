@@ -1,0 +1,467 @@
+<apex:page lightningStylesheets="true" standardController="loan__Data_Migration_Batch__c"
+    extensions="loan.InterfaceController"
+    tabStyle="Organization_Preference__tab" sidebar="false">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:variable var="oldUI" value="classicUI" rendered="{!$User.UIThemeDisplayed != 'Theme4d'}">
+        <script type="text/javascript" src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+        <apex:stylesheet value="/sCSS/Theme3/default/versioning.css" />
+        <apex:stylesheet value="/sCSS/Theme3/default/extended.css" />
+    </apex:variable>
+    <style>
+div.pbSubsection {
+    max-width: 1200px;
+    overflow: auto;
+    max-height: 600px;
+    margin: auto
+}
+
+.totalRecordsLabel {
+    background-color: #FFF
+}
+
+.mfiflexImportedTable td,.createdRecordsLabel {
+    background-color: #d5f7e0
+}
+
+.showFieldsLabel {
+    font-weight: 700;
+    margin-left: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: .9em;
+    color: #333;
+    float: right
+}
+
+.showAllFieldsLabel:hover,.showLessFieldsLabel:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: gray
+}
+
+table.mfiflexErrorTable tbody tr,.erroredRecordsLabel {
+    background-color: #ffd4d9
+}
+
+table.mfiflexEligibleTable tbody tr,.eligibleRecordsLabel {
+    background-color: #fcfcac
+}
+
+td.mfiflexViewCol {
+    text-decoration: underline;
+    background-color: #f2f3f3;
+    width: 40px
+}
+
+td.mfiflexViewCol:hover {
+    font-style: italic;
+    cursor: pointer;
+    background-color: #FFF
+}
+
+.mfiflexIDCol,.mfiflexHiddenCol {
+    display: none
+}
+
+.mfiflexProgressBar {
+    width: 200px;
+    height: 15px;
+    border-radius: 6px;
+    border: 1px solid #fff;
+    background-color: #fffeee;
+    overflow: hidden;
+    border: 2px solid lightgray
+}
+
+.mfiflexProgressValue {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 0;
+    background: #b2e1ff;
+    background: -moz-linear-gradient(top, rgba(178, 225, 255, 1) 0,
+        rgba(102, 182, 252, 1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(178,
+        225, 255, 1)), color-stop(100%, rgba(102, 182, 252, 1)));
+    background: -webkit-linear-gradient(top, rgba(178, 225, 255, 1) 0,
+        rgba(102, 182, 252, 1) 100%);
+    background: -o-linear-gradient(top, rgba(178, 225, 255, 1) 0,
+        rgba(102, 182, 252, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(178, 225, 255, 1) 0,
+        rgba(102, 182, 252, 1) 100%);
+    background: linear-gradient(to bottom, rgba(178, 225, 255, 1) 0,
+        rgba(102, 182, 252, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b2e1ff',
+        endColorstr='#66b6fc', GradientType=0)
+}
+
+.mfiflexEligibleTable .mfiflexErrorCol,.mfiflexImportedTable .mfiflexErrorCol
+    {
+    display: none
+}
+
+.interfaceRecordsTable {
+    width: 100%;
+    max-height: 1000px;
+    overflow: auto;
+    border: 1px solid gray;
+    border-collapse: collapse
+}
+
+.interfaceRecordsTable th,.interfaceRecordsTable td {
+    height: 25px;
+    width: auto;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0px 10px 0px 10px !important;
+    border: 1px solid lightgray;
+    font-family: sans-serif;
+    font-size: 1.0em
+}
+
+.interfaceRecordsTable thead {
+    color: #000;
+    font-size: .9em;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f2f3f3;
+}
+
+.contentTab {
+    height: 1000px
+}
+
+div.interfaceTableWrapper {
+    width: 100%;
+    max-width: 1200px;
+    height: 500px;
+    max-height: 600px;
+    overflow: auto;
+    margin: auto;
+    margin-bottom: 20px;
+}
+</style>
+    <script>
+        function disableOnSubmit(input) {
+        disableAfterTimeout(\'' + input.id + '\');
+        }
+        function disableAfterTimeout(id) {
+        var toDisable = document.getElementById( id );
+        toDisable.disabled = 'disabled';
+        // Use the Salesforce CSS style to make the button appear disabled
+        toDisable.className = 'btnDisabled';
+        toDisable.value = "Process Records"
+        }
+       </script>
+    <script type="text/javascript">
+        function scrollToElement(e) {
+            j$("html, body").animate({
+                scrollTop: e.offset().top
+            }, 500)
+        }
+
+        function setProgress(e) {
+            j$(".mfiflexProgressValue").width(j$(".mfiflexProgressBar").width() * e / 100)
+        }
+
+        function fetchIRecs(e, t, n) {
+            var r = t.replace(/[\[\] ]/g, "");
+            var i = r.split(",");
+            showResult(false, true);
+            j$(".interfaceRecordsTable thead").empty();
+            j$(".interfaceRecordsTable tbody").empty();
+            Visualforce.remoting.Manager.invokeAction("{!$RemoteAction.InterfaceController.getIRecords}", e, n, function (e, t) {
+                eligibleSelected = [];
+                if (t.status) {
+                    refreshTables(e, i)
+                } else if (t.type === "exception") {
+                    showResult(false, false);
+                    alert("Sorry! Something went wrong...")
+                } else {
+                    alert(e)
+                }
+            }, {
+                escape: true
+            })
+        }
+
+        function isBasicField(e) {
+            var t = e.replace("loan__", "").replace("mfiforce__", "");
+            for (var n = 0; n < basicFields.length; n++)
+                if (t.toLowerCase() == basicFields[n]) return true;
+            return false
+        }
+
+        function getRow(e, t, n) {
+            var r = [];
+            r.push('<td class="mfiflexViewCol">View</td>');
+            for (var i = 0; i < t.length; i++) {
+                var s = t[i];
+                var o = e[s];
+                if (!o) o = "";
+                var u = "<td>";
+                if (!n[s]) u = '<td class="mfiflexHiddenCol">';
+                if (s.toUpperCase() === "ID") {
+                    r.push('<td class="mfiflexIDCol">' + o + "</td>")
+                } else if (s.indexOf("Date") > -1 || s.toUpperCase() === "SYSTEMMODSTAMP") {
+                    r.push(u + formatDate(o) + "</td>")
+                } else {
+                    r.push(u + o + "</td>")
+                } if (s.indexOf("Stage__c") > 0) {
+                    stage = o
+                }
+            }
+            r.join("");
+            return r
+        }
+
+        function refreshTables(e, t) {
+            eligibleSelected = [];
+            if (e.length < 1) { showResult(true, false); return; }
+            var n = [],
+                r = [],
+                i = [],
+                s = [],
+                o = [];
+            var u = new Object;
+            var a = new Object;
+            for (var f = 0; f < e.length; f++) {
+                for (var l in e[f]) {
+                    if (!u[l]) {
+                        if (isBasicField(l)) {
+                            n.unshift(l);
+                            a[l] = true
+                        } else n.push(l);
+                        u[l] = true
+                    }
+                }
+                if (Object.keys(u).length == t.length) break
+            }
+            r.push("<th>View</th>");
+            for (var f = 0; f < n.length; f++) {
+                var c = n[f];
+                if (c.toUpperCase() != "ID") {
+                    var h = "<th>";
+                    if (!a[c]) {
+                        h = '<th class="mfiflexHiddenCol">'
+                    }
+                    var p = c.replace("loan__", "").replace("mfiforce__", "").replace("__c", "").replace(/[_]/g, " ");
+                    r.push(h + p + "</th>")
+                }
+            }
+            j$(".mfiflexEligibleTable .tableHead").append('<th style="width:20px;"><input id="selectAllCheckBox" type="checkbox"/></th>');
+            j$(".tableHead").append(r.join(""));
+            for (var f = 0; f < e.length; f++) {
+                body = getRow(e[f], n, a);
+                if (stage == "Pre-Import") {
+                    i.push('<tr><td style="width: 20px"><input type="checkbox"/></td>' + body + "</tr>")
+                } else if (stage == "Error") {
+                    o.push("<tr>" + body + "</tr>")
+                } else if (stage == "Record Created") {
+                    s.push("<tr>" + body + "</tr>")
+                }
+            }
+            j$(".mfiflexEligibleTable .tableBody").append(i.join(""));
+            j$(".mfiflexErrorTable .tableBody").append(o.join(""));
+            j$(".mfiflexImportedTable .tableBody").append(s.join(""));
+            showResult(true, false)
+        }
+
+        function showResult(e, t) {
+            j$("#tabPanelWrapper").hide();
+            j$(".interfaceInfoDiv img").hide();
+            j$(".interfaceInfoDiv").hide();
+            if (e) j$("#tabPanelWrapper").show();
+            if (t) j$(".interfaceInfoDiv img").show();
+            if (t) j$(".interfaceInfoDiv").show();
+            j$("#eligibleSelectedCount").text("Selected : 0")
+        }
+
+        function formatDate(e) {
+            var t = new Date(e);
+            return t.toLocaleDateString();
+            //return [t.getFullYear(),t.getMonth() + 1,t.getDate()].join("-")
+        }
+
+        var eligibleSelected = [];
+        function setSelected() {
+            j$("#eligibleSelectedCount").text("Selected : " + eligibleSelected.length);
+            if (eligibleSelected.length != 0) setSelectedRecords(eligibleSelected.join(","));
+            else setSelectedRecords(null)
+        }
+        j$ = jQuery.noConflict();
+        var basicFields = ["id", "name", "incoming_id__c", "incoming_loan_id__c", "stage__c", "batch__c", "data_migration_batch__c", "processing_error__c"];
+        j$("td.mfiflexViewCol").live("click", function () {
+            window.open("{!hostUrl}"+"/" + j$(this).parent("tr:first").find("td.mfiflexIDCol").text());
+        });
+        j$(".showAllFieldsLabel").live("click", function () {
+             j$("th.mfiflexHiddenCol").show();
+             j$('.interfaceRecordsTable tr').each(function() {
+                 j$(this).find('.mfiflexHiddenCol').show();
+             });
+             scrollToElement(j$("#tabPanelWrapper"));
+        });
+        j$(".showLessFieldsLabel").live("click", function () {
+             j$('.interfaceRecordsTable tr').each(function() {
+                 j$(this).find('.mfiflexHiddenCol').hide();
+             });
+             j$("th.mfiflexHiddenCol").hide();
+             scrollToElement(j$("#tabPanelWrapper"));
+        });
+        j$(".mfiflexEligibleTable tr td input:checkbox").live("click", function () {
+            var value = j$(this).parents('tr:first').find('td.mfiflexIDCol').text();
+            if(j$(this).is(':checked')) {
+                eligibleSelected.push(value);
+            } else {
+                eligibleSelected.splice(eligibleSelected.indexOf(value), 1);
+            }
+            setSelected();
+        });
+        j$(".mfiflexEligibleTable input#selectAllCheckBox").live("click", function () {
+            var e = j$(this).is(":checked");
+            eligibleSelected = [];
+            j$(".mfiflexEligibleTable tr input:checkbox").each(function () {
+                var value = j$(this).parents('tr:first').find('td.mfiflexIDCol').text();
+                j$(this).removeAttr("checked");
+                if (e) { j$(this).attr("checked", "checked") ; eligibleSelected.push(value); }
+            });
+            setSelected();
+        })
+    </script>
+    <c:modalIFrameWindow />
+    <c:modalSpinner statusText="Loading, please wait while the request is being processed..." />
+    <apex:sectionHeader title="Process Interface Records" />
+    <apex:form id="listBlock">
+        <apex:actionFunction reRender="" name="setSelectedRecords"
+            action="{!selectRecords}">
+            <apex:param name="selectedRecords" value="{!selectedRecords}" />
+        </apex:actionFunction>
+        <apex:actionPoller enabled="{!jobInProgress}" interval="5"
+            reRender="jobStatusRefresh" action="{!getCurrentJobStatus}"
+            oncomplete="setProgress({!percentageProgress})" />
+        <apex:pageBlock id="uploadBlock" mode="edit">
+            <apex:pageMessages id="PageMessages" />
+            <apex:pageBlockSection title="Batch" columns="1" collapsible="false">
+                <apex:inputField value="{!loan__Data_Migration_Batch__c.Name}" />
+                <apex:inputField value="{!loan__Data_Migration_Batch__c.loan__Interface_Name__c}"
+                    required="true"
+                    rendered="{!IF(loan__Data_Migration_Batch__c.ID == null, true, false)}" />
+                <apex:inputField value="{!loan__Data_Migration_Batch__c.loan__Batch_Name__c}"
+                    required="true"
+                    rendered="{!IF(loan__Data_Migration_Batch__c.ID == null, true, false)}" />
+                <apex:outputField value="{!loan__Data_Migration_Batch__c.loan__Interface_Name__c}"
+                    rendered="{!IF(loan__Data_Migration_Batch__c.ID == null, false, true)}" />
+                <apex:outputField value="{!loan__Data_Migration_Batch__c.loan__Batch_Name__c}"
+                    rendered="{!IF(loan__Data_Migration_Batch__c.ID == null, false, true)}" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection id="jobStatusRefresh" columns="1"
+                rendered="{!jobInProgress}">
+                <apex:outputLabel value="Status : {!jobStatus}" />
+                <apex:outputPanel >
+                    <div class="mfiflexProgressBar">
+                        <div class="mfiflexProgressValue" />
+                    </div>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Show/Refresh records"
+                    oncomplete="fetchIRecs('{!Query}', '{!ProcessedFields}', '{!BatchID}')"
+                    reRender="listBlock,recentblock" status="mfiflexModalMessage" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        <apex:pageBlock mode="edit"
+            rendered="{!IF(loan__Data_Migration_Batch__c.loan__Interface_Name__c == null, false, true)}">
+            <!--  -->
+            <apex:pageBlockSection columns="1"
+                title="Current status for {!loan__Data_Migration_Batch__c.loan__Interface_Name__c}">
+                <apex:outputPanel styleClass="recordStatsPanel">
+                    <apex:pageBlockTable value="{!ImportedRecordsCount}" width="400"
+                        var="stat">
+                        <apex:column value="{!stat.Batch}" headerValue="Scope" />
+                        <apex:column value="{!stat.Total}" headerValue="Total Records"
+                            styleClass="totalRecordsLabel" />
+                        <apex:column value="{!stat.Eligible}"
+                            headerValue="Eligible Records" styleClass="eligibleRecordsLabel" />
+                        <apex:column value="{!stat.UnBatched}"
+                            headerValue="UnBatched Records" styleClass="eligibleRecordsLabel" />
+                        <apex:column value="{!stat.Created}" headerValue="Created Records"
+                            styleClass="createdRecordsLabel" />
+                        <apex:column value="{!stat.Error}" headerValue="Failed Records"
+                            styleClass="erroredRecordsLabel" />
+                        <apex:column value="{!stat.Percentage}%" headerValue="Percentage" />
+                    </apex:pageBlockTable>
+                    <br />
+                    <apex:outputLabel styleClass="showLessFieldsLabel showFieldsLabel">Show less</apex:outputLabel>
+                    <apex:outputLabel styleClass="showFieldsLabel">  |  </apex:outputLabel>
+                    <apex:outputLabel styleClass="showAllFieldsLabel showFieldsLabel">Show all fields</apex:outputLabel>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="top" styleClass="buttonPageBlock"
+                id="pbButtons">
+                <apex:commandButton value="Process records"
+                    action="{!processRecords}" disabled="{!jobInProgress}"
+                    reRender="listBlock,recentblock" status="mfiflexModalMessage"
+                    onclick="this.className='btnDisabled';" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:pageBlock >
+        <div
+            style="width: 100%; height: 30px; text-align: center; display: none;"
+            class="interfaceInfoDiv">
+            <img src="/img/loading32.gif"
+                style="display: none; height: 20px; width: 20px;" />
+        </div>
+        <apex:form >
+            <div
+                style="width: auto; height: auto; display: none; margin-bottom: 20px;"
+                id="tabPanelWrapper">
+                <apex:tabPanel switchType="client" width="100%" headerSpacing="10">
+                    <apex:tab label="Eligible interface Records" disabled="false">
+                        <div id="eligibleSelectedCount" style="height: 20px; margin: 5px;">
+                        </div>
+                        <div class="interfaceTableWrapper">
+                            <table class="interfaceRecordsTable mfiflexEligibleTable">
+                                <thead class="tableHead">
+                                </thead>
+                                <tbody class="tableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </apex:tab>
+                    <apex:tab label="Created records" disabled="false">
+                        <div class="interfaceTableWrapper">
+                            <table class="interfaceRecordsTable mfiflexImportedTable">
+                                <thead class="tableHead">
+                                </thead>
+                                <tbody class="tableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </apex:tab>
+                    <apex:tab label="Failed records" disabled="false">
+                        <div class="interfaceTableWrapper">
+                            <table class="interfaceRecordsTable mfiflexErrorTable">
+                                <thead class="tableHead">
+                                </thead>
+                                <tbody class="tableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </apex:tab>
+                </apex:tabPanel>
+            </div>
+        </apex:form>
+        <apex:pageBlockSection columns="1" title="Recent Batches"
+            collapsible="true" id="recentblock">
+            <apex:pageBlockTable value="{!recentBatches}" var="batch">
+                <apex:column >
+                    <a target="_parent"
+                        href="{!URLFOR($Action.Data_Migration_Batch__c.View, batch.id)}">{!batch.Name}</a>
+                </apex:column>
+                <apex:column value="{!batch.loan__Interface_Name__c}" />
+                <apex:column value="{!batch.loan__Batch_Name__c}" />
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:page>

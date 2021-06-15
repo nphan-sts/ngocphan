@@ -1,0 +1,137 @@
+<apex:page lightningStylesheets="true" id="waivePage" standardController="loan__Loan_Account__c" extensions="loan.WaiverController" tabStyle="loan__Loan_Account__c" 
+        sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}" title="Waiver">
+<apex:include pageName="clcommon__mintTheme"/>
+<apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}"/>  
+ <script src = "{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}"/>
+ <script src = "{!URLFOR($Resource.helperclose)}"/>
+ <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+ <script type = "text/javascript" src = "{!$Resource.ShowPage_JS}"/>
+ <script>
+      j$ = jQuery.noConflict();
+ </script>
+ 
+ <apex:sectionHeader title="Waiver" id="waiverSection"/>
+ <div style="height:300px;">
+ 
+ <apex:form id="waiverFormSelection">
+     <apex:pageBlock mode="edit" id="waiveTxn">
+     <apex:pageBlockButtons location="both">
+         <c:BusyButton name="Save" busyName="Saving" actionTo="{!save}" 
+         disabled="{!(otherLoanTxn.Id != null)}" 
+         oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};" 
+         reRenderTo="waiverFormSelection" style="margin-left:120px;"/>
+         <apex:commandButton value="Cancel" action="{!cancel}" onclick="closeIframe()" immediate="true"/>
+     </apex:pageBlockButtons>
+     <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+         <apex:pageMessage summary="{!WaiverWarning}" severity="warning"  escape="false" strength="3" rendered="{!WaiverWarning != null}"/>
+         <apex:pageMessages />
+         <apex:outputPanel id="waiverPanel">
+             <apex:pageBlock id="waiverSelectionBlock">
+             <apex:pageBlockSection id="waiverblockSection">
+                 
+                 <apex:selectList value="{!waiverType}" multiselect="false" size="1" label="Waiver Type" id="waiverType">
+                     <apex:actionSupport event="onchange" action="{!selectWaiver}" reRender="waiverFormSelection, waiverPanel, InterestwaivePanel, ChargewaivePanel, IoawaivePanel" status="changeValue"/>
+                     <apex:selectOptions value="{!waiverTypes}"/>
+                  </apex:selectList>
+                     
+                 <center><apex:actionStatus id="changeValue">
+                     <apex:facet name="start">
+                         <apex:image value="/img/loading32.gif" style="height:12px;" />
+                     </apex:facet>
+                 </apex:actionStatus></center>
+             </apex:pageBlockSection>
+             </apex:pageBlock>
+         </apex:outputPanel>
+         
+         <!-- Interest Waiver UI -->
+         <apex:outputPanel id="InterestwaivePanel" rendered="{!interestWaiver}">
+            <!-- <apex:pageBlockSection id="interestWaiverblockSection" title="Interest Waiver" rendered="{!interestWaiver}"> -->
+                <apex:pageMessage summary="There are uncleared payment transactions exist on this loan account, please backdate the transaction before them.
+                      <br/> Transaction Date can be backdated up to last transaction date." severity="warning"  escape="false" strength="3" 
+                      rendered="{!AND(unclearedTxnExist==true,isAmzBasedLoan == true)}"/>
+                  <center><apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+                      <apex:pageBlockSection title="Waive Interest" columns="2" rendered="{!interestWaiver}">
+                          <apex:outputField value="{!otherLoanTxn.loan__Loan_Account__c}"/>
+                          <apex:outputText value="{!totalAmount}" label="Total Interest till Today"/>
+                          <apex:inputText value="{!waivePercentage}" label="Waive Percentage (%)">
+                              <apex:actionSupport event="onchange" action="{!waivePercentageChange}" reRender="InterestwaivePanel" status="changeValue"/>
+                          </apex:inputText>
+                          <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}" label="Transaction Date" rendered="{!(isAmzBasedLoan==false)}"/>
+                          <apex:inputField value="{!otherLoanTxn.loan__Txn_Date__c}" label="Transaction Date" rendered="{!(isAmzBasedLoan)}"/>                      
+                          <apex:inputText value="{!waiveAmount}" label="Waive Amount">
+                              <apex:actionSupport event="onchange" action="{!waiveAmountChange}" reRender="InterestwaivePanel" status="changeValue"/>
+                          </apex:inputText>
+                      </apex:pageBlockSection>
+        
+                      <apex:pageBlockSection title="Transaction Detail" columns="2" rendered="{!(otherLoanTxn.Id != null)}">
+                          <apex:outputField value="{!otherLoanTxn.loan__Loan_Account__c}"/>
+                          <apex:outputField value="{!otherLoanTxn.loan__Transaction_Type__c}"/>
+                          <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}"/>
+                          <apex:outputField value="{!otherLoanTxn.loan__Waived_Interest__c}"/>
+                      </apex:pageBlockSection>
+                  </apex:outputpanel></center>
+            <!--</apex:pageBlockSection> -->
+         </apex:outputPanel>
+         
+         <!-- Charge Waiver UI -->
+         <apex:outputPanel id="chargewaiverPanel">
+         <center><apex:outputPanel id="ChargewaivePanel" styleClass="mint-lightning-wrapper mint-lightning-wrapper-center" rendered="{!chargeWaiver}">
+            <apex:pageBlockSection id="ChargeWaiverblockSection" title="Waive Charge" rendered="{!chargeWaiver}">
+                <apex:outputField value="{!otherLoanTxn.loan__Loan_Account__c}"/>
+                <apex:selectList value="{!feesToBeWaived}" multiselect="true" size="5" label="Fee Type" rendered="{!validateFees}" id="Fee">
+                   <apex:actionSupport event="onchange" action="{!calculateChargeAmount}" reRender="ChargeWaiverblockSection" status="changeValue"/>
+                   <apex:selectOptions value="{!allItems}"/>
+                </apex:selectList>
+                
+                <apex:outputText value="{!totalAmount}" label="Total Charge Amount till Today"/>
+                <apex:inputText value="{!waivePercentage}" label="Waive Percentage (%)">
+                   <apex:actionSupport event="onchange" action="{!waivePercentageChange}" reRender="ChargewaivePanel" status="changeValue"/>
+                </apex:inputText>
+                <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}" label="Transaction Date" rendered="{!(isAmzBasedLoan==false)}"/>
+                <apex:inputField value="{!otherLoanTxn.loan__Txn_Date__c}" label="Transaction Date" rendered="{!(isAmzBasedLoan)}"/>
+                <apex:inputText value="{!waiveAmount}" label="Waive Amount">
+                   <apex:actionSupport event="onchange" action="{!waiveAmountChange}" reRender="ChargewaivePanel" status="changeValue"/>
+                </apex:inputText>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Transaction Detail" columns="2" rendered="{!(otherLoanTxn.Id != null)}">
+               <apex:outputField value="{!otherLoanTxn.loan__Loan_Account__c}"/>
+               <apex:outputField value="{!otherLoanTxn.loan__Transaction_Type__c}"/>
+               <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}"/>
+               <apex:outputField value="{!otherLoanTxn.loan__Txn_Amt__c}"/>
+            </apex:pageBlockSection>
+         </apex:outputPanel></center>
+         </apex:outputPanel>
+         
+         <!-- Interest On Arrears Waiver UI -->
+         <apex:outputPanel id="IoawaivePanel" rendered="{!ioaWaiver}">
+            	<apex:pageMessage summary="There are uncleared payment transactions exist on this loan account, please backdate the transaction before them.
+                      <br/> Transaction Date can be backdated up to last transaction date." severity="warning"  escape="false" strength="3" 
+                      rendered="{!AND(unclearedTxnExist==true,isAmzBasedLoan == true)}"/>
+                <center><apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+                    <apex:pageBlockSection title="Waive Interest On Arrears" columns="2" rendered="{!ioaWaiver}">
+                        <apex:outputField value="{!otherLoanTxn.loan__Loan_Account__c}"/>
+                        <apex:outputText value="{!totalAmount}" label="Total Interest On Arrears till Today"/>
+                        <apex:inputText value="{!waivePercentage}" label="Waive Percentage (%)">
+                            <apex:actionSupport event="onchange" action="{!waivePercentageChange}" reRender="IoawaivePanel" status="changeValue"/>
+                        </apex:inputText>
+                        <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}" label="Transaction Date" rendered="{!(isAmzBasedLoan==false)}"/>
+                        <apex:inputField value="{!otherLoanTxn.loan__Txn_Date__c}" label="Transaction Date" rendered="{!(isAmzBasedLoan)}"/>                      
+                        <apex:inputText value="{!waiveAmount}" label="Waive Amount">
+                            <apex:actionSupport event="onchange" action="{!waiveAmountChange}" reRender="IoawaivePanel" status="changeValue"/>
+                        </apex:inputText>
+                    </apex:pageBlockSection>
+        
+                    <apex:pageBlockSection title="Transaction Detail" columns="2" rendered="{!(otherLoanTxn.Id != null)}">
+                        <apex:outputField value="{!otherLoanTxn.loan__Loan_Account__c}"/>
+                        <apex:outputField value="{!otherLoanTxn.loan__Transaction_Type__c}"/>
+                        <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}"/>
+                        <apex:outputField value="{!otherLoanTxn.loan__Txn_Amt__c}"/>
+                     </apex:pageBlockSection>
+                </apex:outputpanel></center>
+         </apex:outputPanel>
+         
+     </apex:outputpanel>
+     </apex:pageBlock>
+ </apex:form>
+ </div>
+</apex:page>

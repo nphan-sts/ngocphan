@@ -1,0 +1,4 @@
+<apex:page lightningStylesheets="{!$User.UIThemeDisplayed == 'Theme4d'}" showHeader="true" sidebar="false" readonly="true" docType="html-5.0" 
+    title="Application's Parallel Tasks"  >
+    <skuid:page page="ParallelTaskTab" />
+</apex:page>

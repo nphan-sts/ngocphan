@@ -1,0 +1,9 @@
+<apex:page controller="clcommon.HelpPageController" showHeader="false" sidebar="false" showQuickActionVfHeader="false" showChat="false">
+	<apex:stylesheet value="{!$Resource.clcommon__HelpPageCL_CSS}" />
+	<html>
+        <body>
+			<apex:image id="theImage" value="{!$Resource.clcommon__UnderConstruction}" styleClass="img" rendered="{!noData}" />
+        	<apex:outputText value="{!helpInformation.clcommon__Help_Text__c}" escape="true" rendered="{!staticHelp}" />
+    	</body>
+    </html>
+</apex:page>

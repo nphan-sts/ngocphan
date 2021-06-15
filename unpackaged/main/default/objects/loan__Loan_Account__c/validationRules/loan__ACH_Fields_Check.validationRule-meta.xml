@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__ACH_Fields_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(  NOT($Setup.loan__ACH_Parameters__c.loan__Use_Lock_Based_ACH__c),
+loan__ACH_On__c ,
+OR(ISBLANK( loan__ACH_Routing_Number__c ),ISBLANK( loan__ACH_Account_Number__c ), ISBLANK( loan__ACH_Debit_Amount__c ), ISBLANK( loan__ACH_Next_Debit_Date__c ))
+)</errorConditionFormula>
+    <errorMessage>One of the required ACH fields is missing:
+Routing number, Account number, Debit amount or Next debit date</errorMessage>
+</ValidationRule>

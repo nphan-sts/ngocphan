@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Submitting_Party_ID__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This is a unique key assigned to the third party application by MeridianLink. This key has to be confidential. An error will be returned if this identifier is blank or does not match the values that CreditAPI has on record.</inlineHelpText>
+    <label>Submitting Party ID</label>
+    <length>255</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

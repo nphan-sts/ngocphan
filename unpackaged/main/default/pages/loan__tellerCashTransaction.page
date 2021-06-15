@@ -1,0 +1,37 @@
+<apex:page standardController="loan__Teller_Cash_Transaction__c"
+	extensions="loan.TellerCashTransactionController2"
+	id="tellerCashTransaction" title="Teller Cash Transaction">
+	<apex:pageMessage rendered="{!NOT(isTeller)}" severity="Error"
+		summary="You are not the teller. Please check your isTeller flag in user information."
+		title="Teller information incorrect." />
+	<apex:form >
+		<apex:pageBlock rendered="{!isTeller}">
+			<apex:pageMessages />
+			<apex:pageBlockSection title="Create New Teller Cash Transaction"
+				collapsible="false" id="pbs">
+				<apex:inputField value="{!txn.loan__Transaction_For__c}" required="true">
+					<apex:actionSupport event="onchange" rerender="pbs2" />
+				</apex:inputField>
+				<apex:outputField value="{!txn.loan__Date__c}" />
+				<apex:inputField value="{!txn.loan__Transaction_Type__c}" required="true">
+					<apex:actionSupport event="onchange" rerender="pbs2" />
+				</apex:inputField>
+				<apex:outputLabel value="" />
+			</apex:pageBlockSection>
+			<apex:pageBlockSection id="pbs2">
+				<apex:inputField value="{!txn.loan__Amount__c}"
+					rendered="{!IF(AND(txn.loan__Transaction_For__c == 'Loan', txn.loan__Transaction_Type__c == 'Case Dispensed / Expense'), false, true)}" />
+				<apex:outputLabel value=""
+					rendered="{!IF(AND(txn.loan__Transaction_For__c == 'Loan', txn.loan__Transaction_Type__c == 'Case Dispensed / Expense'), false, true)}" />
+				<apex:inputField value="{!txn.loan__Loan_Account__c}" id="loanaccount"
+					rendered="{!IF(txn.loan__Transaction_For__c=='Loan', true, false)}" />
+				<apex:inputField value="{!txn.loan__Savings_Account__c}" id="savaccount"
+					rendered="{!IF(txn.loan__Transaction_For__c=='Savings', true, false)}" />
+				<apex:inputField value="{!txn.loan__MF_Account_Tag__c}" id="mfacctag"
+					rendered="{!IF(txn.loan__Transaction_For__c=='GL', true, false)}" />
+			</apex:pageBlockSection>
+			<apex:commandButton action="{!save}" value="Save" />
+			<apex:commandButton action="{!cancel}" value="Cancel" />
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Start_Meet</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Start Meet</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT("https://www.moxtra.com/api/js/moxtra-latest.js")}
+{!REQUIRESCRIPT("/soap/ajax/13.0/connection.js")}
+{!REQUIRESCRIPT("/soap/ajax/10.0/apex.js")}
+
+Moxtra.clientId = '{!$Setup.peer__Meet_Configuration__c.peer__Client_Id__c}';
+var retVal;
+
+var appId = '{!peer__Loan_Application__c.Id}';
+var accountId = '{!peer__Loan_Application__c.peer__BorrowerId__c}';
+var binderId = '{!peer__Loan_Application__c.peer__Binder_Id__c}';
+
+if(binderId.length == 0){
+binderId = sforce.apex.execute("peer.StartMeet","createBinder",{loanAppId:appId});
+}
+Moxtra.binder_Id = binderId;
+
+var checker = sforce.apex.execute("peer.StartMeet","meetChecker",{binderId:binderId,loanAppId:appId});
+
+var contactEmail = sforce.apex.execute("peer.StartMeet","emailChecker",{accountId:accountId});
+
+var options = {
+iframe: false,
+
+success: function(event) {
+
+retVal = sforce.apex.execute("peer.StartMeet","inviteUser",{appId:appId,accountId:accountId,sessionKey:event.session_key,sessionId:event.session_id});
+
+if(retVal != '1')
+alert(retVal);
+},
+error: function(event) {
+alert("error code: " + event.error_code + " message: " + error_message);
+},
+save: function(event) {
+alert("Meet saved on binder: " + event.binder_id);
+},
+invite: function(event) {
+alert("session key: " + event.session_key + " session id: " + event.session_id);
+},
+invited: function(event) {
+alert("session key: " + event.session_key +" session id: " + event.session_id);
+},
+exit: function(event) {
+//alert("Meet exit event: " + event.action);
+},
+extension:{
+"css_file":
+{
+"use" : true
+}
+}
+};
+
+if(checker != '1'){
+alert(checker);
+}
+else if(contactEmail != '1'){
+if(confirm("Contact(s) " + contactEmail + " is(are) missing EmailId. Do you still wish to start meet?")){
+Moxtra.meet(options);
+}
+}
+else if(contactEmail == '1'){
+Moxtra.meet(options);
+}</url>
+</WebLink>

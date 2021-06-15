@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Interest_Only_Validation</fullName>
+    <active>true</active>
+    <description>Dates for repayment in Interest Only to be taken only if it is greater than the loan expected start date</description>
+    <errorConditionFormula>AND(ISPICKVAL(clcommon__Payment_Type__c,"Interest Only"), (clcommon__Payment_Start_Date__c &lt;  genesis__Application__r.genesis__Expected_Start_Date__c))</errorConditionFormula>
+    <errorMessage>Please select date greater than or equal to loan expected start date</errorMessage>
+</ValidationRule>

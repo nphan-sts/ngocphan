@@ -1,0 +1,45 @@
+<apex:page lightningStylesheets="true" standardController="Account" extensions="loan.LoanInvestorServiceRateController" sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}" showHeader="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:sectionHeader title="Change Service Rate" />
+    <apex:form id="serviceRateForm">
+     
+
+            <apex:pageBlock id="headerPageBlock" mode="edit">
+            <apex:pageMessages />
+             <apex:pageBlockSection id="chooseLoan" title="Choose Loan">
+                   <apex:selectList id="loan" value="{!selected}" multiselect="false" size="1">﻿
+                       <apex:selectOptions value="{!loanList}"></apex:selectOptions>
+                           <apex:actionSupport action="{!showServiceRate}"
+                              event="onchange" status="Change" reRender="headerPageBlock,showServiceRateBlock" />
+                    </apex:selectList>
+            </apex:pageBlockSection>
+            <center>
+                  <apex:actionStatus id="Change">
+                     <apex:facet name="start">
+                    <apex:image value="/img/loading32.gif" style="height:15px;" />
+                </apex:facet>
+            </apex:actionStatus> </center>
+             <apex:pageBlockSection id="showServiceRateBlock" title="Update Service Rate" columns="4" rendered="{!(showServiceRate==True)}">
+             
+                  <apex:outputText label="Old Service Rate"
+                    value="{! oldServiceRate}" />
+                  <apex:inputField label="New Service Rate"
+                    value="{!investorLoan.loan__Service_Rate__c}" />
+                     <apex:actionStatus id="save">
+                     <apex:facet name="start">
+                    <apex:image value="/img/loading32.gif" style="height:15px;" />
+                </apex:facet>
+            </apex:actionStatus>
+                    <apex:commandButton action="{!updateServiceRate}" value="Save"
+                    id="saveButton" rerender="headerPageBlock,showServiceRateBlock" status="save" />
+            </apex:pageBlockSection>
+             
+
+
+ </apex:pageBlock>
+           
+     
+   
+   </apex:form>
+</apex:page>

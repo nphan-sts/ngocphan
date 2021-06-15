@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>cnotify__Days_value_for_Loan_Events</fullName>
+    <active>true</active>
+    <errorConditionFormula>(ISPICKVAL(cnotify__Event__c, 'Loan Payment Reminder Before Due') &amp;&amp; ISBLANK( cnotify__Day__c ))  || (ISPICKVAL(cnotify__Event__c, 'Loan Payment Reminder After Due') &amp;&amp; ISBLANK( cnotify__Day__c ))</errorConditionFormula>
+    <errorMessage>Please provide value in Days Field</errorMessage>
+</ValidationRule>

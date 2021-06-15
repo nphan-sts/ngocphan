@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>X14day_s_Before_Expiration_Date__c</fullName>
+    <description>/*Created By Nupur */
+ For Email Trigger --  "offer_expiration_14_days.liquid"</description>
+    <externalId>false</externalId>
+    <formula>IF( Differenc_Between_Today_and_Expiry_Date__c == $Setup.Expiry_Date__c.Alert_Before_Expiration_Date__c , TRUE, FALSE)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>14day's Before Expiration Date</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_Clear_Flag</fullName>
+    <active>true</active>
+    <errorConditionFormula>(loan__Loan_Payment_Transaction__r.loan__Cleared__c == false &amp;&amp; loan__Loan_Payment_Transaction__r.loan__Rejected__c == false) ||  loan__Loan_Payment_Transaction__r.loan__Rejected__c == true</errorConditionFormula>
+    <errorMessage>An uncleared or rejected payment transaction cannot be reversed.</errorMessage>
+</ValidationRule>

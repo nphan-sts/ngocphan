@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Launchpad_App__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Launchpad App</label>
+    <referenceTo>clcommon__Launchpad_App__c</referenceTo>
+    <relationshipLabel>Launchpad App Subscriptions</relationshipLabel>
+    <relationshipName>Launchpad_App_Subscriptions</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

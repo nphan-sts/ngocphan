@@ -1,0 +1,64 @@
+<!-- Tie to our custom controller and use our custom parent's object style -->
+<apex:page lightningStylesheets="true" controller="loan.LoanProductAssignmentAction"
+	tabStyle="Product_Management__tab">
+<apex:include pageName="clcommon__mintTheme"/>
+
+
+	<apex:sectionHeader title="Loan Product Assignment Summary" />
+
+	<apex:form id="searchForm">
+		<apex:pageBlock title="Loan Product Search" mode="edit">
+
+			<apex:pageblockSection title="Select a Loan Product" columns="2"
+				collapsible="true">
+
+				<apex:inputField value="{!searchObj.loan__Loan_Product__c}" />
+
+			</apex:pageblockSection>
+
+			<apex:commandButton value="Search" action="{!doSearch}"
+				status="searchStatus" reRender="assignToBranchId" />
+			<br></br>
+			<apex:actionStatus id="searchStatus" startText="Searching..." />
+
+		</apex:pageBlock>
+
+		<apex:pageBlock title="Assign Loan Products to Company" mode="edit"
+			id="assignToBranchId">
+			<apex:pageMessages />
+			<apex:pageBlockTable value="{!branchList}" var="branchEntry"
+				width="100%">
+
+				<apex:column width="50%">
+					<apex:outputLabel value="{!branchEntry.branch.Name}"
+						id="description" />
+					<apex:facet name="header">Company Name</apex:facet>
+				</apex:column>
+				<apex:column width="50%">
+					<apex:facet name="header">Select Companies</apex:facet>
+					<apex:inputCheckbox value="{!branchEntry.checked}">
+						<apex:actionSupport action="{!checkSubBranches}"
+							rerender="assignToBranchId" event="onchange"
+							status="otherBranchStatus">
+							<apex:param name="checkedBranch"
+								value="{!branchEntry.branch.Name}" assignTo="{!checkedBranch}" />
+							<apex:param name="checkedBranchValue"
+								value="{!branchEntry.checked}" assignTo="{!checkedBranchValue}" />
+						</apex:actionSupport>
+						</apex:inputCheckBox>
+						<apex:actionStatus id="otherBranchStatus"
+							startText="checking all sub companies..." />
+				</apex:column>
+
+			</apex:pageBlockTable>
+
+			<apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="Save" action="{!save}" />
+			</apex:pageBlockButtons>
+
+		</apex:pageBlock>
+
+	</apex:form>
+
+
+</apex:page>

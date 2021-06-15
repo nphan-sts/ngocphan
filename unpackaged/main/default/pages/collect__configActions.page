@@ -1,0 +1,53 @@
+<apex:page controller="collect.ConfigActionsCntrl" lightningStylesheets="true">
+<apex:include pageName="clcommon__mintTheme"/>
+
+<apex:variable var="mintTable" value="mintTable" rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c=='Mint'}">
+    <apex:stylesheet value="{!URLFOR($Resource.collect__MintCLCollectionsPack, 'mint-table.css')}"/>
+    <apex:includeScript loadOnReady="true" value="{!URLFOR($Resource.collect__MintCLCollectionsPack, 'mint-table.js')}"/>    
+</apex:variable>
+
+<apex:variable var="ActionHeader" value="{!IF($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint', '', 'Actions')}"/>
+
+    <apex:form id="configForm">        
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="New Action Config" action="{!newConfig}"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!records}" var="config" rules="cols, rows">
+                <apex:variable value="{!-1}" var="rowNumber" />
+                <apex:column styleClass="action-column">
+                    <apex:facet name="header" >{!ActionHeader}</apex:facet>                        
+                    <apex:commandLink action="{!editConfig}" value="Edit">
+                        <apex:param name="sourceSystem" value="{!config.sourceSystemId}"/>
+                    </apex:commandLink> &nbsp; | &nbsp;   
+                    <apex:commandLink action="{!deleteConfig}" value="Delete" reRender="configForm" 
+                                    oncomplete="updateActionLinksToIcons();" rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}">
+                        <apex:param name="sourceSystem" value="{!config.sourceSystemId}"/>
+                        <apex:param name="rowNumber" value="{!rowNumber}"/>
+                     </apex:commandLink>
+                    <apex:commandLink action="{!deleteConfig}" value="Delete" reRender="configForm"
+                                    rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}">
+                        <apex:param name="sourceSystem" value="{!config.sourceSystemId}"/>
+                        <apex:param name="rowNumber" value="{!rowNumber}"/>
+                     </apex:commandLink>
+                </apex:column>
+                <apex:column headerValue="Source System" value="{!config.sourceSystem}"/>
+                <apex:column headerValue="Action Codes">
+                    <apex:repeat value="{!config.actionCodes}" var="action">
+                        <apex:outputText value="{!action}"></apex:outputText>
+                        <br/>
+                    </apex:repeat>
+                </apex:column>
+                <apex:column headerValue="Action Codes for Contact Counter">
+                    <apex:repeat value="{!config.actionCodesforContactCounter}" var="counter">
+                        <apex:outputText value="{!counter}"></apex:outputText>
+                        <br/>
+                    </apex:repeat>
+                </apex:column>
+                <apex:column >
+                    <apex:variable var="rowNumber" value="{!rowNumber+1}" />
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>     
+</apex:page>

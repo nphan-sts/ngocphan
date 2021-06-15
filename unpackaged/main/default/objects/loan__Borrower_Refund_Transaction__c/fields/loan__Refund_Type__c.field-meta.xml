@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Refund_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Is the refund for 'repayment transaction' or 'excess return  after loan is closed.</description>
+    <externalId>false</externalId>
+    <label>Refund Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Repayment Transaction</fullName>
+                <default>false</default>
+                <label>Repayment Transaction</label>
+            </value>
+            <value>
+                <fullName>Excess Return</fullName>
+                <default>false</default>
+                <label>Excess Return</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

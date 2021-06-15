@@ -1,0 +1,71 @@
+<apex:page standardController="loan__Transfer_Transaction__c"
+	id="transferTransactionPage" extensions="loan.TransferTransactionController">
+	<apex:form >
+		<apex:pageBlock title="Create New Transfer Transaction" id="pgBlock">
+			<apex:pagemessages >
+			</apex:pagemessages>
+			<apex:commandButton action="{!createTransferTransaction}"
+				value="Create New Transfer Transaction" rerender="pgBlock" />
+			<apex:pageblockSection title="Transfer Transaction Details"
+				collapsible="false" rendered="{!NOT(ISNULL(txn))}">
+				<apex:inputField id="if1" value="{!txn.loan__Transaction_Type__c}"
+					required="true" rendered="{!ISNULL(txn.Id)}">
+					<apex:actionSupport rerender="pgBlock, if6" event="onchange" />
+				</apex:inputField>
+				<apex:outputField id="off1" value="{!txn.loan__Transaction_Type__c}"
+					rendered="{!NOT(ISNULL(txn.Id))}" />
+
+				<apex:outputField id="of1" value="{!txn.loan__Transaction_Date__c}" />
+				<apex:outputField id="of2" value="{!txn.loan__Voucher_Number__c}" />
+				<apex:outputLabel id="dummy1" value="" />
+				<apex:inputField id="if2" value="{!txn.loan__From_Loan_Account__c}"
+					rendered="{{!AND(
+                                  OR(txn.Transaction_Type__c='Loan to Savings', txn.Transaction_Type__c='Loan to Loan'),
+                                  ISNULL(txn.Id))}" />
+				<apex:outputField id="off2" value="{!txn.loan__From_Loan_Account__c}"
+					rendered="{!AND(
+                                  OR(txn.Transaction_Type__c='Loan to Savings', txn.Transaction_Type__c='Loan to Loan'),
+                                  NOT(ISNULL(txn.Id)))}" />
+
+				<apex:inputField id="if3" value="{!txn.loan__From_Savings_Account__c}"
+					rendered="{!AND(
+                              OR(txn.Transaction_Type__c='Savings to Loan', txn.Transaction_Type__c='Savings to Savings'),
+                              ISNULL(txn.Id))}" />
+				<apex:outputField id="off3" value="{!txn.loan__From_Savings_Account__c}"
+					rendered="{!AND(
+                              OR(txn.Transaction_Type__c='Savings to Loan', txn.Transaction_Type__c='Savings to Savings'),
+                              NOT(ISNULL(txn.Id)))}" />
+
+				<apex:inputField id="if4" value="{!txn.loan__To_Loan_Account__c}"
+					rendered="{!AND(
+                              OR(txn.Transaction_Type__c='Savings to Loan', txn.Transaction_Type__c='Loan to Loan'),
+                              ISNULL(txn.Id))}" />
+				<apex:outputField id="off4" value="{!txn.loan__To_Loan_Account__c}"
+					rendered="{!AND(
+                              OR(txn.Transaction_Type__c='Savings to Loan', txn.Transaction_Type__c='Loan to Loan'),
+                              NOT(ISNULL(txn.Id)))}" />
+
+				<apex:inputField id="if5" value="{!txn.loan__To_Savings_Account__c}"
+					rendered="{!AND(
+                              OR(txn.Transaction_Type__c='Savings to Savings', txn.Transaction_Type__c='Loan to Savings'),
+                              ISNULL(txn.Id))}" />
+				<apex:outputField id="off5" value="{!txn.loan__To_Savings_Account__c}"
+					rendered="{!AND(
+                              OR(txn.Transaction_Type__c='Savings to Savings', txn.Transaction_Type__c='Loan to Savings'),
+                              NOT(ISNULL(txn.Id)))}" />
+
+				<apex:inputField id="if6" value="{!txn.loan__Amount__c}"
+					rendered="{!ISNULL(txn.Id)}" />
+				<apex:outputField id="off6" value="{!txn.loan__Amount__c}"
+					rendered="{!NOT(ISNULL(txn.Id))}" />
+				<apex:outputLabel id="dummy2" value="" />
+
+				<apex:commandButton action="{!save}" value="Save"
+					status="saveStatus" reRender="pgBlock"
+					rendered="{!IF(ISNULL(txn.Id), true, false)}" />
+				<apex:outputLabel id="dummy3" value="" />
+				<apex:actionStatus id="saveStatus" startText="Saving..." />
+			</apex:pageblockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

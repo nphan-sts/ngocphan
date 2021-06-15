@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Loan_Application_Status_Check</fullName>
+    <active>false</active>
+    <errorConditionFormula>ISNEW() &amp;&amp; NOT(ISPICKVAL(peer__Loan_Application__r.peer__Stage__c,'In Funding'))</errorConditionFormula>
+    <errorMessage>Loan application stage is invalid. Booking can be created only in 'In Funding' stage.</errorMessage>
+</ValidationRule>

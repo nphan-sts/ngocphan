@@ -1,0 +1,150 @@
+<apex:page lightningStylesheets="true" id="paymentChangePage" standardController="loan__Loan_Account__c"
+    extensions="loan.PaymentChangeController" tabStyle="loan__Loan_Account__c"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+    title="Payment Amount Change">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+    <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+      j$ = jQuery.noConflict();
+ </script>
+ 
+    <apex:sectionHeader title="{!loanAccount.Name}" subtitle="Change Payment Amount" id="paymentChangeSection" />
+    <apex:form id="paymentChangeForm">
+        <apex:commandLink value="Help On Payment Amount Change" id="thelink" onclick="popWindow('Payment Amount Change');" 
+                          reRender="dummy" style="text-decoration:none;color:green;padding:1px" styleClass="link-show"
+                          rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+        
+        <apex:commandLink value="Help On Payment Amount Change" id="thelink2" onclick="popWindow('Payment Amount Change');" 
+        reRender="dummy" styleClass="help-link" 
+        rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>  
+        
+        <br/><br/>
+        
+        <apex:pageBlock mode="edit" id="paymentChangeTxn">
+            <apex:pageMessages />
+            <apex:pageBlockButtons location="both">
+                <c:BusyButton name="Preview" busyName="Calculating Payment Amount..." actionTo="{!preview}"
+                    disabled="{!(otherLoanTxn.Id != null)}"
+                    oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};"
+                    reRenderTo="paymentChangeTxn,newPaymentAmount" style="margin-left:80px;" />                    
+                <c:BusyButton name="Save" busyName="Saving" actionTo="{!save}"
+                    disabled="{!(otherLoanTxn.Id != null)}"
+                    oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};"
+                    reRenderTo="paymentChangeForm"  />
+                <apex:commandButton value="Cancel" action="{!cancel}"
+                    onclick="closeIframe()" immediate="true" />
+            </apex:pageBlockButtons>
+            <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+            <apex:pageBlockSection title="Loan Details" columns="2"
+                rendered="{!(otherLoanTxn.Id == null)}">
+                <apex:outputField value="{!loanAccount.loan__Pmt_Amt_Cur__c}" />
+                <apex:outputField value="{!loanAccount.loan__Interest_Rate__c}" />
+                <apex:outputField value="{!otherLoanTxn.loan__Txn_Date__c}" />
+                <apex:outputText label="Remaining Term" value="{!remainingTerm}" />
+                <!-- <apex:outputText label="Balance Principal" value="{!balancePrincipalOnLastBill}" /> -->
+                <apex:outputField value="{!loanAccount.loan__Maturity_Date_Current__c}" />
+                <apex:outputField value="{!loanAccount.loan__Next_Installment_Date__c}" />
+            </apex:pageBlockSection>
+            </apex:outputPanel>
+            
+            <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+            <apex:pageBlockSection title="Parameters" columns="2"
+                rendered="{!(otherLoanTxn.Id == null)}">
+                <apex:inputField value="{!otherLoanTxn.Payment_Auto_Compute_Flag__c }" label="Auto Compute Payment Amount">
+                    <apex:actionSupport action="{!changedAutoComputeFlag}"
+                    rerender="paymentChangeTxn,newPaymentAmount"
+                    event="onchange" />                
+                </apex:inputField>
+                <apex:inputField value="{!otherLoanTxn.loan__Payment_Amount__c}" label="Requested Payment Amount" required="true" rendered="{!AND(UncheckAutoComputePmt,loanAccount.loan__Recalculate_Interest_Flag__c == false)}">
+                    <apex:actionSupport action="{!changedPaymentAmount}"
+                    rerender="paymentChangeTxn,newPaymentAmount"
+                    event="onchange" />
+                </apex:inputField> 
+                
+            <apex:outputPanel id="pmntSchedulePanel" rendered="{!AND(UncheckAutoComputePmt,loanAccount.loan__Recalculate_Interest_Flag__c == true)}">
+            
+            <!--rendered="{!UncheckAutoComputePmt}" >-->
+                <apex:pageblockTable id="defCommHierarchyNewViewTableNonEdit" value="{!paymentScheduleList}" var="pmtSch" headerClass="fixedHeader" styleClass="scrollableFixedHeader">
+                    <apex:variable var="rowNumber" value="{!-1}" />
+                    <apex:column headerValue="Sequence">
+                        <apex:outputField value="{!pmtSch.loan__Sequence__c}" />
+                    </apex:column>
+                    <apex:column headerValue="Payment Amount">
+                        <apex:inputField value="{!pmtSch.loan__Payment_Amount__c}" required="true" style="width:85px"/>
+                    </apex:column>
+                    <apex:column headerValue="Number of Payments">
+                        <apex:inputField value="{!pmtSch.loan__Term__c}" required="true" style="width:35px"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:commandButton title="Remove Row" value="Remove" style="height:10px" image="{!URLFOR($Resource.loan__Delete_Button_Red)}" action="{!deleteRow}" reRender="pmntSchedulePanel">
+                            <apex:param name="removeRec" value="{!rowNumber}" assignTo="{!numberOfRowClicked}"/>
+                      </apex:commandButton>
+                    </apex:column>
+                    <apex:column >
+                        <apex:variable var="rowNumber" value="{!rowNumber+1}" />
+                    </apex:column>
+                </apex:pageblockTable>     
+                <apex:panelGrid columns="1" id="addAnotherRow">
+                    <apex:commandButton title="Add Another Row" value="Add Another Row" image="{!URLFOR($Resource.loan__Add_Button_Green)}" action="{!addRow}" reRender="pmntSchedulePanel"/>                               
+                </apex:panelGrid>  
+            </apex:outputPanel>                
+            </apex:pageBlockSection>
+            </apex:outputpanel>
+            
+            <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+            <apex:pageBlockSection id="newPaymentAmount"  title="Results" columns="2"
+                rendered="{!(isPreview==True)}">
+                <apex:outputField value="{!otherLoanTxn.loan__Payment_Amount__c}" label="New Payment Amount"/> 
+                <apex:outputText value="{!calc.loan__Rate__c}" label="New Interest Rate" rendered="{!loanAccount.loan__Recalculate_Interest_Flag__c}"/>
+                <apex:outputText value="{!newMaturityDate}" label="New Maturity Date" rendered="{!loanAccount.loan__Recalculate_Interest_Flag__c}"/>                  
+            </apex:pageBlockSection>
+            </apex:outputpanel>
+            
+            <apex:pageBlockSection id="amzSchedule"  columns="2" rendered="{!(isPreview==True)}">
+                        <apex:pageBlockSection columns="1" id="RSSSection"
+                            title="Repayment Schedule">
+                            <apex:pageblockTable value="{!rssRecsList}" id="rssTable"
+                                var="RSS" headerClass="tableRight" styleClass="tableRight">
+                                <apex:column value="{!RSS.loan__RSS_Seq__c}" width="20%"
+                                    headerValue="Sequence Number" />
+                                <apex:column value="{!RSS.loan__RSS_Repayment_Dt__c}" width="20%"
+                                    headerValue="Repayment Start Date" headerClass="tableLeft"
+                                    styleClass="tableLeft" />
+                                <apex:column value="{!RSS.loan__RSS_Repayment_Amt__c}" width="20%"
+                                    headerValue="Repayment Amount" />
+                                <apex:column value="{!RSS.loan__RSS_No_Of_Pmts__c}" width="20%"
+                                    headerValue="Number of Payments" />
+                            </apex:pageblockTable>
+                        </apex:pageBlockSection>
+            
+                        <apex:pageBlockSection columns="1" id="RSSection"
+                            title="Amortization Schedule">
+                            <apex:pageblockTable value="{!emiList}" id="emiTable" var="EMI"
+                                headerClass="tableRight" styleClass="tableRight">
+                                <apex:column value="{!EMI.paymentNo}" width="20%"
+                                    headerValue="Payment#" />
+                                <apex:column value="{!EMI.amount}" width="20%"
+                                    headerValue="Amount" />
+                                <apex:column value="{!EMI.dueDateString}" width="20%"
+                                    headerValue="DueDate" headerClass="tableLeft"
+                                    styleClass="tableLeft" />
+                                <apex:column value="{!EMI.interest}" width="20%"
+                                    headerValue="Interest" />
+                                <apex:column value="{!EMI.principal}" width="20%"
+                                    headerValue="Principal" />
+                                <apex:column value="{!EMI.balance}" width="20%"
+                                    headerValue="Balance" />
+                            </apex:pageblockTable>
+                        </apex:pageBlockSection>  
+               </apex:pageBlockSection> 
+            
+        </apex:pageBlock>
+    </apex:form>
+
+</apex:page>

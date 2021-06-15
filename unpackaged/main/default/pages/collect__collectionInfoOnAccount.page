@@ -1,0 +1,204 @@
+<apex:page standardController="Account"
+    extensions="collect.CollectionInfoOnAccountCtrl">
+<style>
+      .ui-widget-header {background-color: #CCCCCC; color:Black;border-bottom-color: #B3B3B3;
+                         border-left-color: #B3B3B3;border-right-color: #B3B3B3;border-top-color: #B3B3B3; background-image:none}
+   </style>    
+    <c:importvisualstrap theme="lumen"/>
+    
+    <c:PageBlockTableEnhancerADV targetPbTableIds="dLPB,assetsPB,ptpPB" 
+            paginate="true" defaultPageSize="5" 
+            pageSizeOptions="5,10,20,30,40,50,100" 
+            />
+                        
+    <!--Tab Panel -->  
+    <c:Tabpanel >  
+        <!--First Tab-->  
+        <c:Tab title="Promise-to-Pay Details">  
+            <c:visualstrapblock >
+                <c:panel type="primary" title="Promise-to-Pay History">
+                    <apex:pageBlock >
+                        <apex:pageBlockTable value="{!acc.Promise_To_Pay__r}" var="ptp" id="ptpPB">   
+                            <apex:column value="{!ptp.Name}"/>   
+                            <!--  <apex:column value="{!ptp.Contract__c}"/>-->      
+                            <apex:column value="{!ptp.collect__Promise_Broken__c}"/>                            
+                            <apex:column value="{!ptp.collect__Promise_Kept__c}"/>   
+                            <apex:column value="{!ptp.collect__Promise_To_Pay_Amount__c}"/>   
+                            <apex:column value="{!ptp.collect__Promise_To_Pay_Date__c}"/>
+                        </apex:pageBlockTable>              
+                    </apex:pageBlock>   
+                </c:panel>
+            </c:visualstrapblock>  
+        </c:Tab>  
+        <!--Second Tab -->  
+        
+        <!--Second Tab -->  
+        <c:Tab title="Contracts(Loan)" rendered="{!isLoanPackageInstalled}">  
+                <c:visualstrapblock >
+                    <c:panel type="primary" title="Contracts(Loan)">
+                        <apex:pageBlock >
+                            <!---------------------------------------------------->
+                            <!--PAGE BLOCK TABLE FOR SHOWING LOAN ACCOUNTS LIST-->
+                            <!---------------------------------------------------->
+                            <apex:pageBlockTable value="{!loanAccountRecordsList}" var="loanAccRec" id="assetsPBLoan"  rendered="{!isLoanPackageInstalled }">   
+                                <apex:column >
+                                    <apex:facet name="header">Name</apex:facet>
+                                    {!loanAccRec.loanName}
+                                </apex:column>   
+                                <apex:column > 
+                                    <apex:facet name="header">Today's Payoff</apex:facet>
+                                    {!loanAccRec.todaysPayOff}   
+                                </apex:column>
+                                <apex:column > 
+                                    <apex:facet name="header">Current Payment Amount</apex:facet>
+                                    {!loanAccRec.currentPaymentAmount}   
+                                </apex:column>
+                                <apex:column > 
+                                    <apex:facet name="header">Oldest Unpaid Due Date</apex:facet>
+                                    {!loanAccRec.oldestUnpaidDueDateStr}   
+                                </apex:column>
+                                <apex:column > 
+                                    <apex:facet name="header">Amount to Current</apex:facet>
+                                    {!loanAccRec.amountToCurrent}   
+                                </apex:column>
+                                <apex:column > 
+                                    <apex:facet name="header">Status</apex:facet>
+                                    {!loanAccRec.Status}   
+                                </apex:column>
+                            </apex:pageBlockTable>
+                            
+                        </apex:pageBlock>
+                    </c:panel>
+                </c:visualstrapblock>            
+        </c:Tab>
+        
+        <!--Third Tab -->  
+        <c:Tab title="Contracts(Lease)" rendered="{!isLeasePackageInstalled}">  
+                <c:visualstrapblock >
+                    <c:panel type="primary" title="Contracts(Lease)">
+                        <apex:pageBlock >
+                            
+                            <!---------------------------------------------------->
+                            <!--PAGE BLOCK TABLE FOR SHOWING LEASE ACCOUNTS LIST-->
+                            <!---------------------------------------------------->
+                            <apex:pageBlockTable value="{!leaseAccountRecordsList}" var="leaseAccRec" id="assetsPBLease"  rendered="{!isLeasePackageInstalled }">   
+                                <apex:column >
+                                    <apex:facet name="header">Name</apex:facet>
+                                    {!leaseAccRec.leaseName}  
+                                </apex:column>   
+                                <apex:column > 
+                                    <apex:facet name="header">Today's Payoff</apex:facet>
+                                    {!leaseAccRec.todaysPayOff}
+                                </apex:column>
+                                <apex:column > 
+                                    <apex:facet name="header">Current Payment Amount</apex:facet>
+                                    {!leaseAccRec.currentPaymentAmount}
+                                </apex:column>
+                                <apex:column > 
+                                    <apex:facet name="header">Oldest Unpaid Due Date</apex:facet>
+                                    {!leaseAccRec.oldestUnpaidDueDateStr}   
+                                </apex:column>
+                                <apex:column > 
+                                    <apex:facet name="header">Amount to Current</apex:facet>
+                                    {!leaseAccRec.amountToCurrent}   
+                                </apex:column>
+                                <apex:column > 
+                                    <apex:facet name="header">Status</apex:facet>
+                                    {!leaseAccRec.Status}   
+                                </apex:column>
+                            </apex:pageBlockTable>
+                        </apex:pageBlock>
+                    </c:panel>
+                </c:visualstrapblock>            
+        </c:Tab>
+        
+        <c:Tab title="Activity">
+            <c:visualstrapblock >
+                <c:panel type="primary" title="Interactions">
+                        <apex:pageBlock >
+                            <apex:pageBlockTable value="{!acc.Interaction_Logs__r}" var="dL" id="assetsPB">   
+                                <apex:column value="{!dL.collect__Contract_Name__c}"/>
+                                <apex:column value="{!dL.collect__Interaction_Date__c}"/>
+                                <apex:column value="{!dL.collect__Comments__c}"/>   
+                            </apex:pageBlockTable>
+                        </apex:pageBlock>
+                </c:panel>
+            </c:visualstrapblock>
+        </c:Tab>
+        <!--c:Tab title="Test">
+            <c:visualstrapblock >
+                <c:panel type="primary" title="Contracts">
+                    <apex:repeat value="{!acc.loan__Loan_Accounts__r}" var="l" id="loanRepeat">
+                    <c:row >
+                        <c:column type="col-md-3">
+                            <div class="glow">
+                                <c:well style="text-align:center">                           
+                                    <c:row >
+                                        <c:column type="col-md-4" style="font-size:30px">
+                                            <c:glyph icon="time" style="color:red"/>                       
+                                        </c:column>
+                                        <c:column type="col-md-8">                                
+                                            <h3>
+                                                {!l.Name}
+                                            </h3>
+                                            <p class="text-muted infolabel">Contract ID</p>                       
+                                        </c:column>
+                                    </c:row>                            
+                                </c:well>
+                            </div> 
+                        </c:column>
+                        <c:column type="col-md-3">
+                            <c:well style="text-align:center">
+                                <c:row >
+                                    <c:column type="col-md-4" style="font-size:30px">
+                                        <c:glyph icon="flag"/>                        
+                                    </c:column>
+                                    <c:column type="col-md-8">                                
+                                        <h3>
+                                            {!l.loan__Pay_Off_Amount_As_Of_Today__c}
+                                        </h3>
+                                        <p class="text-muted infolabel">Promise Broken?</p>                       
+                                    </c:column>
+                                </c:row>
+                            </c:well>
+                        </c:column>
+                        <c:column type="col-md-3">
+                            <c:well style="text-align:center">
+                                <c:row >
+                                    <c:column type="col-md-4" style="font-size:30px">
+                                        <c:glyph icon="filter"/>                        
+                                    </c:column>
+                                    <c:column type="col-md-8">                                
+                                        <h3>
+                                            {!l.loan__Pmt_Amt_Cur__c}
+                                        </h3>
+                                        <p class="text-muted infolabel">Promise to Pay Amount</p>                       
+                                    </c:column>
+                                </c:row>
+                            </c:well>
+                        </c:column>
+                        <c:column type="col-md-3">
+                            <c:well style="text-align:center">
+                                <c:row >
+                                    <c:column type="col-md-4" style="font-size:30px">
+                                        <c:glyph icon="comment"/>                        
+                                    </c:column>
+                                    <c:column type="col-md-8">                                
+                                        <h3>
+                                            {!l.loan__Oldest_Due_Date__c}
+                                        </h3>
+                                        <p class="text-muted infolabel">Promise to Pay Date</p>                       
+                                    </c:column>
+                                </c:row>
+                            </c:well>
+                        </c:column>
+                    </c:row>
+                    </apex:repeat>
+                </c:panel>
+            </c:visualstrapblock>
+        </c:Tab-->  
+    </c:Tabpanel>  
+   
+    
+        
+</apex:page>

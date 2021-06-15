@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Product_Sub_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Product Sub Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>genesis__Product_Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>OPERATING LEASE</fullName>
+                <default>false</default>
+                <label>OPERATING LEASE</label>
+            </value>
+            <value>
+                <fullName>FINANCE LEASE</fullName>
+                <default>false</default>
+                <label>FINANCE LEASE</label>
+            </value>
+            <value>
+                <fullName>UNDEFINED</fullName>
+                <default>false</default>
+                <label>UNDEFINED</label>
+            </value>
+            <value>
+                <fullName>CLOSE ENDED</fullName>
+                <default>false</default>
+                <label>CLOSE ENDED</label>
+            </value>
+            <value>
+                <fullName>OPEN ENDED</fullName>
+                <default>false</default>
+                <label>OPEN ENDED</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>LEASE</controllingFieldValue>
+            <valueName>OPERATING LEASE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>LEASE</controllingFieldValue>
+            <valueName>FINANCE LEASE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>LOAN</controllingFieldValue>
+            <valueName>UNDEFINED</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>LINE OF CREDIT</controllingFieldValue>
+            <valueName>CLOSE ENDED</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>LINE OF CREDIT</controllingFieldValue>
+            <valueName>OPEN ENDED</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

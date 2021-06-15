@@ -1,0 +1,118 @@
+@isTest
+
+private class TestWSGetPricingOffer{
+    @testSetup static void methodName() {
+        //Creating Account
+        Account accTest = new Account(
+                                Name = 'Test',
+                                loan__Investor__c=False,
+                                cnotify__Email__c = 'abc@test.com',
+                                loan__SOCIAL_SECURITY_NUMBER__c = '123'
+                                );
+        insert accTest;
+        System.assertEquals('Test',accTest.Name,'Wrong Account');
+        
+        //Creating Application
+        genesis__Applications__c appTest= new genesis__Applications__c(
+                                        genesis__Due_Day__c = 20,
+                                        genesis__Expected_First_Payment_Date__c = system.Today(),
+                                        genesis__Expected_Start_Date__c = system.Today(),
+                                        genesis__Funding_in_Tranches__c = true,
+                                        Borrower_s_Email__c = null,
+                                        genesis__Account__c = accTest.Id,
+                                        Application_Start_DateV2__c = system.Today(),
+                                        DocuSignFlag__c=true,
+                                        genesis__Status__c = 'agent_verified',
+                                        genesis__Draw_Period_End_Date__c = system.Today()
+                                        );
+        insert appTest;
+        System.assertEquals(null,appTest.Borrower_s_Email__c,'Borrower Email is not null');
+       
+    }
+
+    Testmethod static void method1(){
+        
+        Account acc =[Select id, name from Account where name='Test' limit 1];
+        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
+      
+        String jsonStr = '{"offers":[{"type1":"1","term_months":3,"amount":"1200","Is_Offer_Selected":true,"monthly_payment":"1100","origination_fee_rate":"2","interest_rate":"3","apr":"10.30%","above_prime_max":"3","segment":"2","pricing_tier":"3","origination_fee":"150","key":"Test"}],"applicationId":app.id}';
+        RestRequest req = new RestRequest(); 
+        RestResponse res = new RestResponse();
+        
+        req.requestURI = '/services/apexrest/offers';
+        req.requestBody = Blob.valueOf(jsonStr);
+        req.httpMethod = 'POST';
+                
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        WSGetPricingOffer.parse();
+        Test.stopTest();
+    }
+    
+    Testmethod static void method2(){
+        
+        Account acc =[Select id, name from Account where name='Test' limit 1];
+        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
+        
+        Map<String,String> reqMap = new Map<String,String>(); 
+        reqMap.put('applicationId',app.id);
+        String jsonStr= JSON.serialize(reqMap);
+        RestRequest req = new RestRequest(); 
+        RestResponse res = new RestResponse();
+        
+        req.requestURI = '/services/apexrest/offers';
+        req.requestBody = Blob.valueOf(jsonStr);
+        req.httpMethod = 'POST';
+                
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        WSGetPricingOffer.parse();
+        Test.stopTest();
+    }
+    
+    Testmethod static void method3(){
+        
+        Account acc =[Select id, name from Account where name='Test' limit 1];
+        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
+        
+        String jsonStr = '{"Test":"abc"}';
+        RestRequest req = new RestRequest(); 
+        RestResponse res = new RestResponse();
+        
+        req.requestURI = '/services/apexrest/offers';
+        req.requestBody = Blob.valueOf(jsonStr);
+        req.httpMethod = 'POST';
+                
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        WSGetPricingOffer.parse();
+        Test.stopTest();
+    }
+    
+    Testmethod static void method4(){
+        
+        Account acc =[Select id, name from Account where name='Test' limit 1];
+        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
+      
+        String jsonStr = '{"offers":[{"Is_Offer_Selected":true,"above_prime_max":"3","segment":"2","pricing_tier":"3","origination_fee":"150","key":"Test"}],"applicationId":app.id}';
+        RestRequest req = new RestRequest(); 
+        RestResponse res = new RestResponse();
+        
+        req.requestURI = '/services/apexrest/offers';
+        req.requestBody = Blob.valueOf(jsonStr);
+        req.httpMethod = 'POST';
+                
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        WSGetPricingOffer.parse();
+        Test.stopTest();
+    }
+}

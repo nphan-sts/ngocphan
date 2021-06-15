@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Share_Capital_Account_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISNEW()  &amp;&amp; loan__Savings_Account__r.loan__Share_Capital_Account__c == true &amp;&amp; ISPICKVAL(loan__Transaction_Type__c,"Withdrawal") &amp;&amp;
+ NOT(ISPICKVAL(loan__Savings_Account__r.loan__Client_ID__r.loan__Status__c, "Closed"))</errorConditionFormula>
+    <errorMessage>The funds in this 'Share Capital' account can only be withdrawn once client ends his/her membership. The client status should be 'Closed'.</errorMessage>
+</ValidationRule>

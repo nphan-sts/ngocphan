@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_TDS_Percentage</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(ISPICKVAL(loan__TDS_Type__c,''))  &amp;&amp; ( ISNULL(loan__TDS_Percentage__c) ||  loan__TDS_Percentage__c &lt;= 0)</errorConditionFormula>
+    <errorMessage>TDS Percentage cannot be Zero or null</errorMessage>
+</ValidationRule>

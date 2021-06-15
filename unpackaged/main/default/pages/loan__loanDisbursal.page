@@ -1,0 +1,212 @@
+<apex:page lightningStylesheets="true" standardController="loan__Loan_Disbursal_Transaction__c" extensions="loan.LoanDisbursalController" sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}">
+<apex:include pageName="clcommon__mintTheme"/>
+
+    <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}" />
+    <apex:stylesheet value="{!$Resource.loan__MFIStyles}" />
+    <script
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+    <script src="{!URLFOR($Resource.helperclose)}" />
+    <script>
+        j$ = jQuery.noConflict();
+    </script>
+    <script>
+        function confirmCancel() {
+            var isConfirm = confirm("Are you sure you want to cancel?");
+            if(isConfirm){
+                return this.parent.parent.window.close();                
+            }
+        }
+        
+        
+    </script>
+    <script type="text/javascript"
+        src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}" />
+
+    <script>
+        function testify(){
+            alert(j$('').length);
+        };
+      function scrolify(tblAsJQueryObject, height){
+        var oTbl = tblAsJQueryObject;
+        
+        // for very large tables you can remove the four lines below
+        // and wrap the table with <div> in the mark-up and assign
+        // height and overflow property  
+        var oTblDiv = $("<div/>");
+        oTblDiv.css('height', height);
+        oTblDiv.css('overflow-y','scroll');
+        oTbl.wrap(oTblDiv);
+
+        // save original width
+        oTbl.attr("data-item-original-width", oTbl.width());
+        oTbl.find('thead tr td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        }); 
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).attr("data-item-original-width",$(this).width());
+        });                 
+
+
+        // clone the original table
+        var newTbl = oTbl.clone();
+
+        // remove table header from original table
+        oTbl.find('thead tr').remove();                 
+        // remove table body from new table
+        newTbl.find('tbody tr').remove();   
+
+        oTbl.parent().parent().prepend(newTbl);
+        newTbl.wrap("<div/>");
+
+        // replace ORIGINAL COLUMN width                
+        newTbl.width(newTbl.attr('data-item-original-width'));
+        newTbl.find('thead tr td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });     
+        oTbl.width(oTbl.attr('data-item-original-width'));      
+        oTbl.find('tbody tr:eq(0) td').each(function(){
+            $(this).width($(this).attr("data-item-original-width"));
+        });                 
+    }
+
+    function callScroll() {
+        scrolify($('.scrollableFixedHeader'), 300); // 160 is height
+    }
+    </script>
+
+    <apex:sectionHeader title="New Loan Disbursal Transaction" id="loanDisbSection" />
+    <apex:form >
+       <apex:pageBlock mode="edit" id="createDisbursalTransaction">
+          <apex:pageMessages />
+          <apex:pageMessage summary="REMINDER: Contract is delinquent, please verify the disbursal eligibility." severity="Warning"  escape="false" strength="3" rendered="{!(disbursalCheck ==True)}" />
+          <apex:pageBlockButtons >
+             <c:BusyButton name="Validate" actionTo="{!validate}" busyname="Validating..." reRenderTo="createDisbursalTransaction"/>
+             <c:BusyButton name="Save" actionTo="{!save}" busyname="Saving.." reRenderTo="createDisbursalTransaction"/>
+             <!-- <apex:commandButton value="Cancel" immediate="true"
+                   action="{!URLFOR($Action.Loan_Disbursal_Transaction__c.Tab,$ObjectType.Loan_Disbursal_Transaction__c)}" /> -->
+             <apex:commandButton value="Cancel" action="{!cancel}" />    
+             <c:BusyButton name="Regenerate Distributions" actionTo="{!generateDists}" busyname="Regenerating.." reRenderTo="createDisbursalTransaction"/>
+          </apex:pageBlockButtons>   
+
+		<apex:outputPanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+          <apex:pageBlockSection title="Loan Account Details" rendered="{!IF(loanAccount.loan__Product_Type__c == 'Line of Credit',false,true)}">
+             <apex:outputField value="{!loanDisbTxn.loan__Loan_Account__c}"/>
+             <apex:outputField value="{!loanDisbTxn.loan__Financed_Amount__c}"/>
+             <apex:outputField value="{!loanAccount.loan__Loan_Amount__c}" />
+             <apex:outputField value="{!loanDisbTxn.loan__Pre_Paid_Fee__c}" />
+             <apex:pageBlockSectionItem />
+             <apex:outputField value="{!loanDisbTxn.loan__Refinanced_Amount__c}"/>
+          </apex:pageBlockSection>
+          </apex:outputPanel>
+          
+          <apex:outputPanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+          <apex:pageBlockSection title="Loan Account Details" rendered="{!IF(loanAccount.loan__Product_Type__c == 'Line of Credit',true,false)}">
+              <!--Added by Arjun  for Line of Credit-->
+             <apex:outputField value="{!loanDisbTxn.loan__Loan_Account__c}" />
+             <apex:outputText value="{!IF(loanAccount.loan__Credit_Limit_Current__c != null,loanAccount.loan__Credit_Limit_Current__c,loanAccount.loan__Credit_Limit__c)}" label="Credit Limit" />
+             <apex:outputField value="{!loanAccount.loan__Principal_Remaining__c}" label="Principal Due" />
+             <apex:outputField value="{!loanAccount.loan__Interest_Remaining__c}" label="Interest Due" />
+          </apex:pageBlockSection>
+          </apex:outputPanel>
+
+		<apex:outputPanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+          <apex:pageBlockSection columns="2" id="DisbursementPageBlock" title="Transaction Details">
+             <apex:inputField value="{!loanDisbTxn.loan__Disbursed_Amt__c}" label="Transaction Amount" required="True"/>
+             <!-- Changed by Simran -->
+             <!-- Changed Transaction Dae to input field to allow back-dated reversal -->
+             <!-- <apex:outputField value="{!loanDisbTxn.loan__Disbursal_Date__c}" label="Transaction Date" /> --> 
+             <apex:inputField value="{!loanDisbTxn.loan__Disbursal_Date__c}" label="Transaction Date" required="True" rendered="{!IF(loanAccount.loan__Product_Type__c == 'Line of Credit',false,true)}"/>
+             <!-- Extra Disbursal Date field is to maintain form's consistency --> 
+             <apex:inputField value="{!loanDisbTxn.loan__Disbursal_Date__c}" label="Transaction Date" required="True" rendered="{!IF(loanAccount.loan__Product_Type__c == 'Line of Credit',true,false)}"/>
+
+             <apex:inputField value="{!loanDisbTxn.loan__Mode_of_Payment__c}" required="True" id="paymentMode" />
+             <apex:inputField value="{!loanDisbTxn.loan__Reference__c}" />
+             <apex:inputField value="{!loanDisbTxn.loan__Cleared__c}" />
+             <apex:inputField value="{!loanDisbTxn.loan__Reversed__c}" />
+             <apex:inputField value="{!loanDisbTxn.loan__Rejected__c}" />
+             <!-- Nitin S. added the following inputField, to get the P+I start date from the user, at the time of disbursement -->
+             <apex:inputField value="{!loanDisbTxn.loan__Number_Of_Interest_Only_Payments__c}" label="Number Of Interest Only Payments" rendered="{!IF(loanAccount.loan__Funding_in_Tranches__c == true, true , false)}"/>
+          </apex:pageBlockSection>
+		</apex:outputPanel>
+		
+          <!-- Added by Simran - Disbursement Distribution Feature -->
+          <apex:pageBlockSection columns="1" id="DisbursalDistributionSection" title="Transaction Distributions">
+          
+              <apex:pageBlockTable id="distributionTable" value="{!distributionsList}" var="distRec" headerClass="fixedHeader" styleClass="scrollableFixedHeader">
+                  <apex:variable value="{!-1}" var="rowNumber"/>
+                  <apex:column > 
+                      <apex:facet name="header">Distribution Type</apex:facet>
+                      <apex:outputField value="{!distRec.disbursalDist.loan__Distribution_Type__c}"/>
+                  </apex:column> 
+                  <apex:column > 
+                      <apex:facet name="header">Distribution Amount</apex:facet>
+                      <apex:inputField value="{!distRec.disbursalDist.loan__Distribution_Amount__c}" rendered="{!distRec.disbursalDist.loan__Distribution_Type__c == disbursementTypeDist}"/>
+                      <apex:outputField value="{!distRec.disbursalDist.loan__Distribution_Amount__c}" rendered="{!NOT(distRec.disbursalDist.loan__Distribution_Type__c == disbursementTypeDist)}"/>
+                  </apex:column>
+                  <apex:column > 
+                      <apex:facet name="header">Name of Entity</apex:facet>
+                      <apex:inputField value="{!distRec.disbursalDist.loan__Name_of_Entity__c}" rendered="{!distRec.disbursalDist.loan__Source_Record_ID__c == null}"/>
+                      <apex:outputField value="{!distRec.disbursalDist.loan__Name_of_Entity__c}" rendered="{!distRec.disbursalDist.loan__Source_Record_ID__c != null}"/>
+                  </apex:column>
+                  <apex:column > 
+                      <apex:facet name="header">Bank Account</apex:facet>
+                      <apex:inputField value="{!distRec.disbursalDist.loan__Bank_Account__c}" rendered="{!distRec.disbursalDist.loan__Distribution_Type__c == disbursementTypeDist}"/>
+                      <apex:outputText value="-" rendered="{!NOT(distRec.disbursalDist.loan__Distribution_Type__c == disbursementTypeDist)}"/>
+                  </apex:column>
+                  <apex:column > 
+                      <apex:facet name="header">Reference</apex:facet>
+                      <apex:inputField value="{!distRec.disbursalDist.loan__Reference__c}"/>
+                  </apex:column>
+                  <apex:column > 
+                      <apex:facet name="header">Source Record</apex:facet>
+                      <apex:outputField value="{!distRec.disbursalDist.loan__Source_Record_Name__c}"/>
+                  </apex:column> 
+                  <apex:column >
+                  	  <apex:commandButton title="Remove Distribution" 
+                  	  						value="Remove" 
+                  	  						action="{!removeDistributionRow}" 
+                  	  						reRender="createDisbursalTransaction" 
+                  	  						disabled="{!NOT(distRec.allowRecordRemoval)}" 
+                  	  						rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}">
+                          <apex:param name="removeRec" value="{!rowNumber}" assignTo="{!numberOfRowClicked}"/>
+                      </apex:commandButton>
+                      <apex:commandButton title="Remove Distribution" 
+                      						value="Remove" 
+                      						image="{!IF(distRec.allowRecordRemoval,URLFOR($Resource.loan__Delete_Button_Red),URLFOR($Resource.loan__Delete_Button_Grey))}" 
+                      						action="{!removeDistributionRow}" 
+                      						reRender="createDisbursalTransaction" 
+                      						disabled="{!NOT(distRec.allowRecordRemoval)}"
+                      						rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}">
+                          <apex:param name="removeRec" value="{!rowNumber}" assignTo="{!numberOfRowClicked}"/>
+                      </apex:commandButton>
+                  </apex:column>
+                  <apex:column >
+                      <apex:variable var="rowNumber" value="{!rowNumber+1}" />
+                  </apex:column>
+              </apex:pageBlockTable>
+              <apex:panelGrid columns="1" id="addAnotherRow">
+                  <apex:commandButton title="Add Another Distribution" 
+                  						value="Add Another Distribution" 
+                  						action="{!addDistributionRow}" 
+                  						reRender="createDisbursalTransaction" 
+                  						status="addRow"
+                  						rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>
+                  <apex:commandButton title="Add Another Distribution" 
+                  						value="Add Another Row" 
+                  						image="{!URLFOR($Resource.loan__Add_Button_Green)}" 
+                  						action="{!addDistributionRow}" 
+                  						reRender="createDisbursalTransaction" 
+                  						status="addRow"
+                  						rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+              </apex:panelGrid>              
+          </apex:pageBlockSection>
+
+          <center><apex:actionStatus id="addRow">
+              <apex:facet name="start" >
+                  <apex:image value="/img/loading32.gif" style="height:15px;"/>
+              </apex:facet>
+          </apex:actionStatus></center>
+                 
+       </apex:pageBlock>
+    </apex:form>            
+</apex:page>

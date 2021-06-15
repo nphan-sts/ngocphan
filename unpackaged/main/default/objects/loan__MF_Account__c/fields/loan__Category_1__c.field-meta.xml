@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Category_1__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Category 1</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Treasury and Operations with Banks and Other Financial Institutions FI</fullName>
+                <default>false</default>
+                <label>Treasury and Operations with Banks and Other Financial Institutions FI</label>
+            </value>
+            <value>
+                <fullName>Operations with Clients</fullName>
+                <default>false</default>
+                <label>Operations with Clients</label>
+            </value>
+            <value>
+                <fullName>Financial Instruments</fullName>
+                <default>false</default>
+                <label>Financial Instruments</label>
+            </value>
+            <value>
+                <fullName>Fixed Assets</fullName>
+                <default>false</default>
+                <label>Fixed Assets</label>
+            </value>
+            <value>
+                <fullName>Other Assets</fullName>
+                <default>false</default>
+                <label>Other Assets</label>
+            </value>
+            <value>
+                <fullName>Other liabilities</fullName>
+                <default>false</default>
+                <label>Other liabilities</label>
+            </value>
+            <value>
+                <fullName>Subsidies</fullName>
+                <default>false</default>
+                <label>Subsidies</label>
+            </value>
+            <value>
+                <fullName>Earnings</fullName>
+                <default>false</default>
+                <label>Earnings</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

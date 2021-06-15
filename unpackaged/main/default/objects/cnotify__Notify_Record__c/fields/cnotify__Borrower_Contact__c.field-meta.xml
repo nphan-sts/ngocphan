@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>cnotify__Borrower_Contact__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>This field is taken for testing purpose on this Notify_Record__c object.</description>
+    <externalId>false</externalId>
+    <label>Borrower Contact</label>
+    <referenceTo>Contact</referenceTo>
+    <relationshipLabel>Notify Record (Borrower Contact)</relationshipLabel>
+    <relationshipName>Borrower_Notify_Records</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

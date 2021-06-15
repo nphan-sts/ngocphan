@@ -1,0 +1,119 @@
+<apex:page lightningStylesheets="true" id="dueDateChange" standardController="loan__Loan_Account__c" extensions="loan.DueDayChangeController" tabStyle="loan__Loan_Account__c" 
+        sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}" title="Due DateChange">
+<apex:include pageName="clcommon__mintTheme"/>
+
+ <apex:stylesheet value="{!IF($CurrentPage.Parameters.modal == 'true', $Resource.loan__modalheaderStyle,'')}"/> 
+ <apex:stylesheet value="{!$Resource.loan__HelpLink_CSS}" />
+ <script type= "text/javascript" src="{!$Resource.ShowPage_JS}"/>
+ <script src="{!URLFOR($Resource.jQueryFiles, 'js/jquery-1.8.3.min.js')}"/>
+ <script src="{!URLFOR($Resource.helperclose)}"/>
+ <script>
+      j$ = jQuery.noConflict();
+ </script>
+ 
+  <apex:sectionHeader title="Change Due Day Of Loan" id="dueDayChangeSection"/>
+      <apex:form id="dueDayChangeForm">
+          <apex:commandLink value="Help On Changing a Due Day" id="thelink" onclick="popWindow('Change Due Day');" 
+                            reRender="dummy" style="text-decoration:none;color:green;padding:1px" styleClass="link-show"
+                            rendered="{!NOT($Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint')}"/>
+          
+          <apex:commandLink value="Help On Changing a Due Day" id="thelink2" onclick="popWindow('Change Due Day');" 
+        reRender="dummy" styleClass="help-link" 
+        rendered="{!$Setup.clcommon__CL_Platform_Settings__c.clcommon__Theme_Name__c == 'Mint'}"/>  
+          <br/><br/>
+          
+          <apex:pageBlock mode="edit" id="dueDayChangeTxn">
+              <apex:pageMessages />
+              <apex:pageBlockButtons location="both">
+                <c:BusyButton name="Preview" busyName="Modifying due date..." actionTo="{!preview}"
+                    disabled="{!(dueDayChange.Id != null)}"
+                    oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};"
+                    reRenderTo="dueDayChangeForm" style="margin-left:80px;" rendered="{!(isLoc == false)}"/>                                  
+                  <c:BusyButton name="Save" busyName="Saving" actionTo="{!save}" 
+                      disabled="{!(dueDayChange.Id != null)}" 
+                      oncomplete="({!closeModal}===true) ? closeIframe('{!loanAccount.Id}') : {};" 
+                      reRenderTo="dueDayChangeForm" />
+                  <apex:commandButton value="Cancel" action="{!cancel}" onclick="closeIframe()" immediate="true"/>
+              </apex:pageBlockButtons>
+              <apex:outputpanel styleClass="mint-lightning-wrapper mint-lightning-wrapper-center">
+              <apex:pageBlockSection id="currentDueDayDetails" title="Current Due Day" columns="2">
+                  <apex:outputField value="{!loanAccount.Name}" />
+                  <apex:outputField value="{!dueDayChange.loan__Txn_Date__c}" />              
+                  <apex:outputField value="{!loanAccount.loan__Due_Day__c}" />
+                  <apex:outputField value="{!loanAccount.loan__Frequency_of_Loan_Payment__c}" />
+              </apex:pageBlockSection>
+              <apex:outputPanel id="newDueDayPanel">
+              <apex:pageBlockSection title="New Due Day">
+                  <apex:pageBlockSectionItem helpText="This is the proposed due day of the month for this loan."  rendered="{!(weeklyLoan==false)}">
+                      <apex:outputLabel >New Due Day</apex:outputLabel>
+                      <apex:inputField value="{!dueDayChange.loan__New_Due_Day__c}" required="true"/>
+                  </apex:pageBlockSectionItem>
+                  <apex:pageblocksectionItem helpText="This is the proposed next due date for this loan.">
+                      <apex:outputLabel >New Due Date</apex:outputLabel>
+                      <apex:inputField value="{!dueDayChange.loan__Due_Date__c}" required="true"/>
+                  </apex:pageblocksectionItem>
+              </apex:pageBlockSection>
+              </apex:outputPanel>
+              <apex:outputPanel id="changeACHDatePanel">
+              <apex:pageBlockSection >
+                  <apex:pageblocksectionItem helpText="Tick to change the ACH Debit Date with Due Date change. The new ACH Next Debit Date will be same as the New Due Date" rendered="{!isACHSetupOn}">
+                      <apex:outputLabel >Change ACH Debit Date</apex:outputLabel>
+                      <apex:inputCheckbox value="{!changeACHDate}">
+                          <apex:actionSupport event="onchange" action="{!changeACHDateHandler}" reRender="changeACHDatePanel"/>
+                      </apex:inputCheckbox>
+                  </apex:pageblocksectionItem>
+              </apex:pageBlockSection>
+              </apex:outputPanel>
+          <apex:pageBlockSection id="amzSchedule"  columns="2" rendered="{!(isPreview==True)}">
+                        <apex:pageBlockSection columns="1" id="RSSSection" rendered="{!(isLoc == false)}"
+                            title="Repayment Schedule">
+                            <apex:pageblockTable value="{!rssRecsList}" id="rssTable"
+                                var="RSS" headerClass="tableRight" styleClass="tableRight">
+                                <apex:column value="{!RSS.loan__RSS_Seq__c}" width="20%"
+                                    headerValue="Sequence Number" />
+                                <apex:column value="{!RSS.loan__RSS_Repayment_Dt__c}" width="20%"
+                                    headerValue="Repayment Start Date" headerClass="tableLeft"
+                                    styleClass="tableLeft" />
+                                <apex:column value="{!RSS.loan__RSS_Repayment_Amt__c}" width="20%"
+                                    headerValue="Repayment Amount" />
+                                <apex:column value="{!RSS.loan__RSS_No_Of_Pmts__c}" width="20%"
+                                    headerValue="Number of Payments" />
+                            </apex:pageblockTable>
+                        </apex:pageBlockSection>
+                        <apex:pageBlockSection columns="1" id="RSSection" rendered="{!(isLoc == false)}"
+                            title="Amortization Schedule">
+                            <apex:pageblockTable value="{!emiList}" id="emiTable" var="EMI"
+                                headerClass="tableRight" styleClass="tableRight">
+                                <apex:column value="{!EMI.paymentNo}" width="20%"
+                                    headerValue="Payment#" />
+                                <apex:column value="{!EMI.amount}" width="20%"
+                                    headerValue="Amount" />
+                                <apex:column value="{!EMI.dueDateString}" width="20%"
+                                    headerValue="DueDate" headerClass="tableLeft"
+                                    styleClass="tableLeft" />
+                                <apex:column value="{!EMI.interest}" width="20%"
+                                    headerValue="Interest" />
+                                <apex:column value="{!EMI.principal}" width="20%"
+                                    headerValue="Principal" />
+                                <apex:column value="{!EMI.balance}" width="20%"
+                                    headerValue="Balance" />
+                            </apex:pageblockTable>
+                        </apex:pageBlockSection>  
+               </apex:pageBlockSection>
+              </apex:outputpanel>
+
+              <!-- Commenting this section as it is never displayed to the user -->
+              <!-- 
+              <apex:pageBlockSection id="transactionDetails" title="Transaction Detail" columns="2" rendered="{!(dueDayChange.Id != null)}">
+                  <apex:outputField value="{!dueDayChange.Loan_Account__c}"/>
+                  <apex:outputField value="{!dueDayChange.Transaction_Type__c}"/>
+                  <apex:outputField value="{!dueDayChange.loan__Txn_Date__c}"/>
+                  <apex:outputField value="{!loanAccount.loan__Due_Day__c}"/>
+                  <apex:outputField value="{!dueDayChange.Old_Due_Day__c}"/>
+                  <apex:outputField value="{!loanAccount.Next_Installment_Date__c}" label="Next Due Date" />
+              </apex:pageBlockSection>
+              -->
+          </apex:pageBlock>
+    </apex:form>
+    
+</apex:page>

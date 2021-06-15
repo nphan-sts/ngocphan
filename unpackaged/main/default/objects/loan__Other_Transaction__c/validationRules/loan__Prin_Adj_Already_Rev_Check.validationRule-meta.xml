@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Prin_Adj_Already_Rev_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+ISPICKVAL( loan__Transaction_Type__c , 'PrincipalAdjustment-Add Reversal'),
+ loan__Reversed__c
+)</errorConditionFormula>
+    <errorMessage>Transaction is already reversed.</errorMessage>
+</ValidationRule>

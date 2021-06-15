@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Field_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Field Name</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>ccount Name</fullName>
+                <default>false</default>
+                <label>ccount Name</label>
+            </value>
+            <value>
+                <fullName>Account Number</fullName>
+                <default>false</default>
+                <label>Account Number</label>
+            </value>
+            <value>
+                <fullName>Account Owner</fullName>
+                <default>false</default>
+                <label>Account Owner</label>
+            </value>
+            <value>
+                <fullName>Account Site</fullName>
+                <default>false</default>
+                <label>Account Site</label>
+            </value>
+            <value>
+                <fullName>Account Source</fullName>
+                <default>false</default>
+                <label>Account Source</label>
+            </value>
+            <value>
+                <fullName>Annual Revenue</fullName>
+                <default>false</default>
+                <label>Annual Revenue</label>
+            </value>
+            <value>
+                <fullName>Billing Address</fullName>
+                <default>false</default>
+                <label>Billing Address</label>
+            </value>
+            <value>
+                <fullName>Created By</fullName>
+                <default>false</default>
+                <label>Created By</label>
+            </value>
+            <value>
+                <fullName>Data.com Key</fullName>
+                <default>false</default>
+                <label>Data.com Key</label>
+            </value>
+            <value>
+                <fullName>Description</fullName>
+                <default>false</default>
+                <label>Description</label>
+            </value>
+            <value>
+                <fullName>Employees</fullName>
+                <default>false</default>
+                <label>Employees</label>
+            </value>
+            <value>
+                <fullName>Fax</fullName>
+                <default>false</default>
+                <label>Fax</label>
+            </value>
+            <value>
+                <fullName>Industry</fullName>
+                <default>false</default>
+                <label>Industry</label>
+            </value>
+            <value>
+                <fullName>Last Modified By</fullName>
+                <default>false</default>
+                <label>Last Modified By</label>
+            </value>
+            <value>
+                <fullName>Ownership</fullName>
+                <default>false</default>
+                <label>Ownership</label>
+            </value>
+            <value>
+                <fullName>Parent Account</fullName>
+                <default>false</default>
+                <label>Parent Account</label>
+            </value>
+            <value>
+                <fullName>Partner Account</fullName>
+                <default>false</default>
+                <label>Partner Account</label>
+            </value>
+            <value>
+                <fullName>Phone</fullName>
+                <default>false</default>
+                <label>Phone</label>
+            </value>
+            <value>
+                <fullName>Rating</fullName>
+                <default>false</default>
+                <label>Rating</label>
+            </value>
+            <value>
+                <fullName>Shipping Address</fullName>
+                <default>false</default>
+                <label>Shipping Address</label>
+            </value>
+            <value>
+                <fullName>SIC Code</fullName>
+                <default>false</default>
+                <label>SIC Code</label>
+            </value>
+            <value>
+                <fullName>SIC Description</fullName>
+                <default>false</default>
+                <label>SIC Description</label>
+            </value>
+            <value>
+                <fullName>Ticker Symbol</fullName>
+                <default>false</default>
+                <label>Ticker Symbol</label>
+            </value>
+            <value>
+                <fullName>Type</fullName>
+                <default>false</default>
+                <label>Type</label>
+            </value>
+            <value>
+                <fullName>Website</fullName>
+                <default>false</default>
+                <label>Website</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
