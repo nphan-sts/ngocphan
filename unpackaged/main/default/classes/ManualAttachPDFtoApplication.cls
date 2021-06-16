@@ -21,7 +21,8 @@ global with sharing class ManualAttachPDFtoApplication {
                 bodyCSN = blob.valueOf('Test String');
             //body = pdf.getContent();
             
-            attachCSN.Body = bodyCSN;   
+            attachCSN.Body = bodyCSN;
+            system.debug('Test');
             //attachments.add(attachCSN);
             //insert attachments;
         } catch (VisualforceException e) {
