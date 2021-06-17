@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Routing_Number_Should_be_9_Digits_Only</fullName>
-    <active>true</active>
-    <errorConditionFormula>NOT(ISNUMBER( loan__Routing_Number__c ) &amp;&amp; ( LEN( loan__Routing_Number__c ) = 9 ))</errorConditionFormula>
-    <errorDisplayField>loan__Account__c</errorDisplayField>
-    <errorMessage>Routing number should be of 9 digits. Please check the Routing Number.</errorMessage>
-</ValidationRule>

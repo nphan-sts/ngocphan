@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>clcommon__Check_Retry_Configuration</fullName>
-    <active>true</active>
-    <errorConditionFormula>AND(ISPICKVAL(clcommon__Retry__c , 'Enabled'),  OR(ISBLANK(clcommon__Number_of_Retry_Attempts__c),  ISNULL(clcommon__Number_of_Retry_Attempts__c), ISBLANK(clcommon__Retry_Attempt_Interval__c),  ISNULL(clcommon__Retry_Attempt_Interval__c )))</errorConditionFormula>
-    <errorMessage>Please provide Number of Retry Attempts and/or Retry Attempt Interval.</errorMessage>
-</ValidationRule>

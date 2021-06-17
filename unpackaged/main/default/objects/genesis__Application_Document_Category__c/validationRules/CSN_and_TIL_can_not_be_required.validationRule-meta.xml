@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>CSN_and_TIL_can_not_be_required</fullName>
-    <active>true</active>
-    <errorConditionFormula>IF(((Name ='Credit Score Notice'||Name ='Adverse Action Notice'|| Name ='TIL Document') &amp;&amp; (genesis__Required__c  = true)), true, false)</errorConditionFormula>
-    <errorDisplayField>genesis__Required__c</errorDisplayField>
-    <errorMessage>You can not make this document required!</errorMessage>
-</ValidationRule>

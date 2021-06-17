@@ -1,3 +1,0 @@
-<apex:page showHeader="false" controller="clcommon.HelpTextManipulator">
-	<apex:outputText > {!$Label[processedLabelId]} </apex:outputText>
-</apex:page>

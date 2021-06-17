@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>clcommon__Master_Object_Configuration</fullName>
-    <active>true</active>
-    <description>To indicate that this is a master object configuration</description>
-    <label>Master Object Configuration</label>
-</RecordType>

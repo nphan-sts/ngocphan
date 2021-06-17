@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Flat_Rate_Validation</fullName>
-    <active>true</active>
-    <description>With commission calculation method as Flat ensure that factor has to be equal to 100%.</description>
-    <errorConditionFormula>ISPICKVAL(loan__Calculation_Method__c , 'Flat Amount') &amp;&amp; (loan__Factor__c != 1.00 )</errorConditionFormula>
-    <errorMessage>With commission calculation method as flat the factor has to be equal to 100%.</errorMessage>
-</ValidationRule>

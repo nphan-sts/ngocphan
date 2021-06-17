@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Backdated_Payment_date_check</fullName>
-    <active>false</active>
-    <description>Backdated payment should not go before contract date.</description>
-    <errorConditionFormula>loan__Transaction_Date__c &lt;  loan__Loan_Account__r.loan__Disbursal_Date__c</errorConditionFormula>
-    <errorDisplayField>loan__Transaction_Date__c</errorDisplayField>
-    <errorMessage>Transaction date should be after contract date.</errorMessage>
-</ValidationRule>

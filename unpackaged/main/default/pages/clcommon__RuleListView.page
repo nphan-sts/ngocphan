@@ -1,3 +1,0 @@
-<apex:page id="orgPage">
-    <apex:ListViews type="clcommon__Rule__c"  />
-</apex:page>

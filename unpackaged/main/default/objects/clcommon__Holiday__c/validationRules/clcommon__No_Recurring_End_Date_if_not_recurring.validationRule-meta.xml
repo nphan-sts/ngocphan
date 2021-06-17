@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>clcommon__No_Recurring_End_Date_if_not_recurring</fullName>
-    <active>true</active>
-    <description>Recurrence End Date cannot be set if the holiday is not marked as Recurring</description>
-    <errorConditionFormula>AND(NOT(clcommon__IsRecurrence__c), NOT(ISBLANK(clcommon__RecurrenceEndDateOnly__c)))</errorConditionFormula>
-    <errorDisplayField>clcommon__RecurrenceEndDateOnly__c</errorDisplayField>
-    <errorMessage>Recurrence End Date cannot be set if the holiday is not marked as Recurring</errorMessage>
-</ValidationRule>

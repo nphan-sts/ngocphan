@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customSettingsType>List</customSettingsType>
-    <description>This contains the mapping of Quick Quote fields to Application fields</description>
-    <enableFeeds>false</enableFeeds>
-    <label>Quick Quote - Application Mapping</label>
-    <visibility>Public</visibility>
-</CustomObject>

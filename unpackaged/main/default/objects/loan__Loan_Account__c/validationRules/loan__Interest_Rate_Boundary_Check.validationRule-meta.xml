@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Interest_Rate_Boundary_Check</fullName>
-    <active>false</active>
-    <description>Interest Rate Boundary Check</description>
-    <errorConditionFormula>AND(NOT(ISNULL(loan__Contractual_Interest_Rate__c)), OR(loan__Contractual_Interest_Rate__c/100 &gt; loan__Loan_Product_Name__r.loan__Max_Interest_Rate__c, loan__Contractual_Interest_Rate__c/100 &lt; loan__Loan_Product_Name__r.loan__Min_Interest_Rate__c))</errorConditionFormula>
-    <errorDisplayField>loan__Contractual_Interest_Rate__c</errorDisplayField>
-    <errorMessage>The Interest Rate should fall between the Limits specified in the Lending Product.</errorMessage>
-</ValidationRule>

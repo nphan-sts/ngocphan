@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Current_Account_Interest_Rate</fullName>
-    <active>true</active>
-    <errorConditionFormula>ISPICKVAL( loan__Product_Type__c , 'Current') 
-&amp;&amp;
-loan__Interest_Rate__c &gt; 0</errorConditionFormula>
-    <errorMessage>For current accounts, interest rate must be 0.</errorMessage>
-</ValidationRule>

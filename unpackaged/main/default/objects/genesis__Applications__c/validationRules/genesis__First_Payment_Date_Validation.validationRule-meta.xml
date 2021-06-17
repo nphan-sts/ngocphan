@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>genesis__First_Payment_Date_Validation</fullName>
-    <active>true</active>
-    <description>Expected First Payment Date should be greater than or equal to the Start Date.</description>
-    <errorConditionFormula>genesis__Expected_First_Payment_Date__c &lt;  genesis__Expected_Start_Date__c</errorConditionFormula>
-    <errorMessage>Expected First Payment Date should be greater than or equal to the Start Date.</errorMessage>
-</ValidationRule>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Interest_Rate_Negative</fullName>
-    <active>true</active>
-    <errorConditionFormula>loan__Interest_Rate__c &lt; 0</errorConditionFormula>
-    <errorDisplayField>loan__Interest_Rate__c</errorDisplayField>
-    <errorMessage>The interest rate cannot be negative.</errorMessage>
-</ValidationRule>

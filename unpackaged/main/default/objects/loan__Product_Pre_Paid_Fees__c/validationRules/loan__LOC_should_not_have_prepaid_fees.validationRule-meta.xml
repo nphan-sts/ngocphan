@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__LOC_should_not_have_prepaid_fees</fullName>
-    <active>false</active>
-    <description>Line Of Credit should not have pre-paid fees</description>
-    <errorConditionFormula>If(ISPICKVAL(loan__Lending_Product__r.loan__Loan_Product_Type__c,'Line of Credit'), true,false)</errorConditionFormula>
-    <errorMessage>Prepaid fee is not applicable for a Line of Credit (LoC).</errorMessage>
-</ValidationRule>

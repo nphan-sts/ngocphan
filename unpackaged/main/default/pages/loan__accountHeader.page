@@ -1,9 +1,0 @@
-<apex:page lightningStylesheets="true" standardController="Account"
-	extensions="loan.AccountHeaderController">
-<apex:include pageName="clcommon__mintTheme"/>
-
-	<c:HighlightsPanel labels="Today's Total Pay-Off, Total Amount to Current, Total Payment Amount, Status"
-		value1="{!totalPayOffAmount}" value2="{!totalOverDueAmount}"
-		value3="{!nextRepaymentAmount}" value4="{!loanStatus}"
-		class4="{!statusClass}" />
-</apex:page>

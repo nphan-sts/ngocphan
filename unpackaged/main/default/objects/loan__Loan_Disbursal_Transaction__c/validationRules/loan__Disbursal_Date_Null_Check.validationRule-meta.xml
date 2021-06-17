@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Disbursal_Date_Null_Check</fullName>
-    <active>true</active>
-    <errorConditionFormula>ISBLANK(loan__Disbursal_Date__c)</errorConditionFormula>
-    <errorMessage>Disbursal Transaction Date cannot be null.</errorMessage>
-</ValidationRule>

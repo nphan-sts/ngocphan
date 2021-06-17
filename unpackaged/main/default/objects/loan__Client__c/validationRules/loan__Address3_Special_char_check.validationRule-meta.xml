@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Address3_Special_char_check</fullName>
-    <active>false</active>
-    <description>Address Special_char_check</description>
-    <errorConditionFormula>NOT(REGEX( loan__Address_3__c , "^[a-zA-Z0-9-&amp;/#\\s]*$"))</errorConditionFormula>
-    <errorDisplayField>loan__Address_3__c</errorDisplayField>
-    <errorMessage>Address should not include special characters</errorMessage>
-</ValidationRule>

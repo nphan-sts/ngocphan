@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Negative_Delinquency_Grace_Days_Check</fullName>
-    <active>true</active>
-    <description>"Delinquency Grace Days" cannot be negative</description>
-    <errorConditionFormula>loan__Delinquency_Grace_Days__c &lt; 0</errorConditionFormula>
-    <errorDisplayField>loan__Delinquency_Grace_Days__c</errorDisplayField>
-    <errorMessage>'Delinquency Grace Days' cannot be negative</errorMessage>
-</ValidationRule>

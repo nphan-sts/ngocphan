@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>clcommon__Dynamic_Query_Data_cannot_be_null</fullName>
-    <active>true</active>
-    <description>Parameter Query Data cannot be NULL</description>
-    <errorConditionFormula>AND(ISBLANK( clcommon__Parameter_Query_Data__c ),
-    ISPICKVAL( clcommon__Type__c , 'SUB_QUERY') )</errorConditionFormula>
-    <errorMessage>Parameter Query Data cannot be NULL</errorMessage>
-</ValidationRule>

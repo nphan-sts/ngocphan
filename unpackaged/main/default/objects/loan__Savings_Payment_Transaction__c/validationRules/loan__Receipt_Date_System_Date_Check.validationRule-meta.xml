@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Receipt_Date_System_Date_Check</fullName>
-    <active>false</active>
-    <description>Deprecated since we can't use $User.mfiforce__Current_System_Date__c</description>
-    <errorConditionFormula>loan__Receipt_Date__c  &gt;  TODAY()</errorConditionFormula>
-    <errorMessage>The Receipt date cannot be past the current calendar date.</errorMessage>
-</ValidationRule>

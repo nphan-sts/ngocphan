@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Total_Investment_Limit_Rule</fullName>
-    <active>true</active>
-    <description>Total Investment Limit of Investor Should be greater than zero</description>
-    <errorConditionFormula>AND( RecordTypeId == '012n00000000JmN',  Total_Investment_Limit__c &lt;= 0)</errorConditionFormula>
-    <errorDisplayField>Total_Investment_Limit__c</errorDisplayField>
-    <errorMessage>Total Investment Limit of the Investor Should be Greater than Zero</errorMessage>
-</ValidationRule>

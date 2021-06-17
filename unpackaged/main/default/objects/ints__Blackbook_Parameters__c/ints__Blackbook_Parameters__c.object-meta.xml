@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customSettingsType>Hierarchy</customSettingsType>
-    <description>This will contain all the parameters that can be useful for invoking apis of blackbook</description>
-    <enableFeeds>false</enableFeeds>
-    <label>Blackbook Parameters</label>
-    <visibility>Public</visibility>
-</CustomObject>

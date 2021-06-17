@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>clcommon__Status_Code_Name_Case_Insensitive</fullName>
-    <active>true</active>
-    <errorConditionFormula>AND(LOWER(Name) = LOWER(VLOOKUP
-       ( $ObjectType.clcommon__Contingency_Status_Code__c.Fields.Name  , $ObjectType.clcommon__Contingency_Status_Code__c.Fields.Name, Name )),OR(ISNEW(), ISCHANGED(Name)))</errorConditionFormula>
-    <errorDisplayField>Name</errorDisplayField>
-    <errorMessage>This contingency status code already exists. Please try again with different name.</errorMessage>
-</ValidationRule>

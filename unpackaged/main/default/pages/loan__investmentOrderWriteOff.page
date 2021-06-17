@@ -1,8 +1,0 @@
-<apex:page lightningStylesheets="true" controller="loan.InvestmentOrderWriteOffController">
-<apex:include pageName="clcommon__mintTheme"/>
-
-  <!-- Begin Default Content REMOVE THIS -->
-  <h1>Congratulations</h1>
-  This is your new Page: investmentOrderWriteOff
-  <!-- End Default Content REMOVE THIS -->
-</apex:page>

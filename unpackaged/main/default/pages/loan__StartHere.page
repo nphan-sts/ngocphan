@@ -1,5 +1,0 @@
-<apex:page lightningStylesheets="true" >
-<apex:include pageName="clcommon__mintTheme"/>
-
-	<p>This tab has been deprecated.</p>
-</apex:page>
