@@ -1,0 +1,11 @@
+<apex:page controller="OAuthController">
+  <apex:form >
+    <apex:commandButton action="{!insertTokenId}" oncomplete="closeWindow();" value="Upload to BOX"/>
+  </apex:form>
+  <script>
+      window.onload = insertTokenId();
+      function closeWindow(){
+          window.close();
+      }
+  </script>
+</apex:page>

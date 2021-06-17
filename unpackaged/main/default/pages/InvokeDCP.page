@@ -1,0 +1,15 @@
+<apex:page standardController="genesis__Applications__c" extensions="InvokeDCPController" recordSetVar="apps" action="{!invokeDCP}">
+   <apex:form >
+       <apex:pageBlock title="Invoke DCP">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!callDCP}" value="Confirm"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!eligibleApps}" var="app">
+                <apex:column value="{!app.name}"/>
+                <apex:column value="{!app.genesis__account__r.name}"/>
+                <apex:column value="{!app.genesis__Status__c}"/> 
+                <apex:column value="{!app.OwnerID}"/> 
+            </apex:pageBlockTable> 
+        </apex:pageBlock>
+    </apex:form>    
+</apex:page>
