@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Days14</fullName>
-    <active>false</active>
-    <errorConditionFormula>Differenc_Between_Today_and_Expiry_Date__c == 14</errorConditionFormula>
-    <errorDisplayField>genesis__No_Of_Payments_Required_Upfront__c</errorDisplayField>
-    <errorMessage>Expiry Date is not valid</errorMessage>
-</ValidationRule>

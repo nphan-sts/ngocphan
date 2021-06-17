@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>clcommon__Alphanumeric_Query_Name</fullName>
-    <active>true</active>
-    <description>Query Name can only contain numbers and alphabets</description>
-    <errorConditionFormula>NOT(REGEX(clcommon__Query_Name__c,'[a-zA-Z0-9]+'))</errorConditionFormula>
-    <errorMessage>Query Name is an alphanumeric field</errorMessage>
-</ValidationRule>

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <deploymentStatus>Deployed</deploymentStatus>
-    <label>DA Budget Line Item</label>
-    <pluralLabel>DA Budget Line Item</pluralLabel>
-</CustomObject>

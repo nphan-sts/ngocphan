@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__ACH_Payment_Amount_Check</fullName>
-    <active>true</active>
-    <errorConditionFormula>$Setup.loan__ACH_Parameters__c.loan__Use_Lock_Based_ACH__c  = true &amp;&amp;
-NOT(ISBLANK( loan__OT_ACH_Payment_Amount__c )) &amp;&amp; (loan__OT_ACH_Payment_Amount__c &lt;= 0) &amp;&amp;
-(ISPICKVAL(loan__Transaction_Type__c , 'One Time ACH')|| ISPICKVAL(loan__Transaction_Type__c , 'Recurring ACH'))</errorConditionFormula>
-    <errorMessage>ACH payment amount cannot be zero or negative.</errorMessage>
-</ValidationRule>

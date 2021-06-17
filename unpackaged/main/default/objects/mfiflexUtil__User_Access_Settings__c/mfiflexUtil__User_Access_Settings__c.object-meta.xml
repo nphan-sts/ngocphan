@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customSettingsType>Hierarchy</customSettingsType>
-    <description>Object stores security settings for an application.</description>
-    <enableFeeds>false</enableFeeds>
-    <label>User Access Settings</label>
-    <visibility>Public</visibility>
-</CustomObject>

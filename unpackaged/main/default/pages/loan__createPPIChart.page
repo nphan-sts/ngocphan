@@ -1,5 +1,0 @@
-<apex:page lightningStylesheets="true" controller="loan.PPIChartController">
-<apex:include pageName="clcommon__mintTheme"/>
-
-
-</apex:page>

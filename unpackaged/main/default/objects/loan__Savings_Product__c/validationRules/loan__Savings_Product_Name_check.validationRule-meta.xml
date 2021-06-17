@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Savings_Product_Name_check</fullName>
-    <active>true</active>
-    <errorConditionFormula>REGEX( Name , "[a-bA-B0-9-\\s]")</errorConditionFormula>
-    <errorMessage>Name can't include special characters</errorMessage>
-</ValidationRule>

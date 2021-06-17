@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Check_Transaction_amount</fullName>
-    <active>true</active>
-    <errorConditionFormula>OR(loan__Transaction_Amount__c == 0,
-ISBLANK( loan__Transaction_Amount__c ))</errorConditionFormula>
-    <errorDisplayField>loan__Transaction_Amount__c</errorDisplayField>
-    <errorMessage>Transaction amount can not be zero.</errorMessage>
-</ValidationRule>

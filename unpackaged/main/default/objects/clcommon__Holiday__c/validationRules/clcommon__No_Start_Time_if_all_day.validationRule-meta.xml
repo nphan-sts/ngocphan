@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>clcommon__No_Start_Time_if_all_day</fullName>
-    <active>true</active>
-    <description>This validation rule is applied if a holiday is marked as an all day event and then tries to set the start time as well.</description>
-    <errorConditionFormula>AND(AND(clcommon__IsAllDay__c, NOT(ISBLANK(clcommon__StartTimeInMinutes__c))),NOT(clcommon__IsRecurrence__c))</errorConditionFormula>
-    <errorDisplayField>clcommon__StartTimeInMinutes__c</errorDisplayField>
-    <errorMessage>Start time cannot be defined if the holiday is an all day event.</errorMessage>
-</ValidationRule>

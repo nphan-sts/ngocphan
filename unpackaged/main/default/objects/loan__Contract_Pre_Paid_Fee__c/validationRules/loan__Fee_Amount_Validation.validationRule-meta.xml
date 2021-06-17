@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Fee_Amount_Validation</fullName>
-    <active>true</active>
-    <errorConditionFormula>loan__Amount__c &lt; 0</errorConditionFormula>
-    <errorMessage>Pre-Paid Fee Amount should be greater than or equal to 0.</errorMessage>
-</ValidationRule>

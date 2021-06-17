@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customSettingsType>Hierarchy</customSettingsType>
-    <description>This setting is used for getting the URL for Clarity Services</description>
-    <enableFeeds>false</enableFeeds>
-    <label>Clarity</label>
-    <visibility>Public</visibility>
-</CustomObject>

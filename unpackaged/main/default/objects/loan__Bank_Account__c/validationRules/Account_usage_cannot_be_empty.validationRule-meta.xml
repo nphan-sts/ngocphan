@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Account_usage_cannot_be_empty</fullName>
-    <active>false</active>
-    <errorConditionFormula>ISBLANK(loan__Account_Usage__c)</errorConditionFormula>
-    <errorDisplayField>loan__Account_Usage__c</errorDisplayField>
-    <errorMessage>Please select value for Account Usage. If this is a borrower Bank Account please select the value Borrower/Investor Account.</errorMessage>
-</ValidationRule>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>clcommon__Is_DayOfMonth_valid_for_MonthOfYear</fullName>
-    <active>true</active>
-    <description>This is a validation rule that checks if the given Recurring Day of Month is valid for the chosen Recurring Month of Year.</description>
-    <errorConditionFormula>OR(AND(OR(ISPICKVAL(clcommon__RecurrenceMonthOfYear__c, "February"),ISPICKVAL(clcommon__RecurrenceMonthOfYear__c, "April"),ISPICKVAL(clcommon__RecurrenceMonthOfYear__c, "June"),ISPICKVAL(clcommon__RecurrenceMonthOfYear__c, "September"),ISPICKVAL(clcommon__RecurrenceMonthOfYear__c, "November")),clcommon__RecurrenceDayOfMonth__c = 31),AND(ISPICKVAL(clcommon__RecurrenceMonthOfYear__c, "February"),clcommon__RecurrenceDayOfMonth__c = 30))</errorConditionFormula>
-    <errorDisplayField>clcommon__RecurrenceDayOfMonth__c</errorDisplayField>
-    <errorMessage>Recurring Day of Month is not a valid day for the chosen Recurring Month of Year</errorMessage>
-</ValidationRule>

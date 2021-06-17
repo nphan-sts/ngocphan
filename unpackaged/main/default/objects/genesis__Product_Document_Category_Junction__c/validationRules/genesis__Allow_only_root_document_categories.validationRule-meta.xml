@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>genesis__Allow_only_root_document_categories</fullName>
-    <active>true</active>
-    <description>In product document category, allow only root document categories.</description>
-    <errorConditionFormula>NOT(ISBLANK(genesis__Document_Category__r.genesis__Parent_Document_Category__c))</errorConditionFormula>
-    <errorDisplayField>genesis__Document_Category__c</errorDisplayField>
-    <errorMessage>Only root document categories are allowed.</errorMessage>
-</ValidationRule>

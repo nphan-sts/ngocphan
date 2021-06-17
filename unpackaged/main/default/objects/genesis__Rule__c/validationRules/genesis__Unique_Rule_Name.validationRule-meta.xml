@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>genesis__Unique_Rule_Name</fullName>
-    <active>true</active>
-    <errorConditionFormula>IF( (ISNEW() ||  ISCHANGED(Name)) &amp;&amp; Name =  VLOOKUP( $ObjectType.genesis__Rule__c.Fields.Name ,  $ObjectType.genesis__Rule__c.Fields.Name , Name),true,false )</errorConditionFormula>
-    <errorMessage>Rule Name must be Unique</errorMessage>
-</ValidationRule>

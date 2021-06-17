@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Accrual_Terms_Non_Zero_Check</fullName>
-    <active>true</active>
-    <errorConditionFormula>AND(loan__Accrual_Required__c,OR(loan__Accrual_Terms__c &lt;= 0, ISNULL(loan__Accrual_Terms__c)))</errorConditionFormula>
-    <errorMessage>Accrual terms must be a positive value.</errorMessage>
-</ValidationRule>

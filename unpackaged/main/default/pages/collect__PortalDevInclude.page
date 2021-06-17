@@ -1,4 +1,0 @@
-<apex:page showHeader="false" sidebar="false">
-    <apex:stylesheet value="{!URLFOR($Resource.collect__PortalCSSPackV2Latest)}"/>
-    <apex:includeScript loadOnReady="true" value="{!URLFOR($Resource.collect__PortalJSPackV2Latest)}"/>
-</apex:page>

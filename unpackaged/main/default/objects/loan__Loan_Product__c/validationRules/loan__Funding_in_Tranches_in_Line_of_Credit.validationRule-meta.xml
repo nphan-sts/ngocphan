@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Funding_in_Tranches_in_Line_of_Credit</fullName>
-    <active>true</active>
-    <errorConditionFormula>AND(ISPICKVAL(loan__Loan_Product_Type__c, 'Line of Credit'), loan__Funding_in_Tranches__c)</errorConditionFormula>
-    <errorMessage>Funding in Tranches cannot be checked for 'Line of Credit' Product Type</errorMessage>
-</ValidationRule>

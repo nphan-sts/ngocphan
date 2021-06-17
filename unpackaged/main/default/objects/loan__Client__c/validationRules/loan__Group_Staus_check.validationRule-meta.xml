@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Group_Staus_check</fullName>
-    <active>true</active>
-    <description>Group_Staus_check</description>
-    <errorConditionFormula>NOT(ISBLANK(loan__Group__c) || ISNULL(loan__Group__c))
-&amp;&amp; NOT( ISPICKVAL( loan__Group__r.loan__Group_Status__c , 'Approved') )</errorConditionFormula>
-    <errorMessage>The Group is not yet  Approved</errorMessage>
-</ValidationRule>

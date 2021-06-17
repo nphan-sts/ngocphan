@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Receipt_Date_Check</fullName>
-    <active>true</active>
-    <errorConditionFormula>loan__Receipt_Date__c &gt; TODAY()</errorConditionFormula>
-    <errorMessage>Receipt date cannot be greater than calendar date.</errorMessage>
-</ValidationRule>

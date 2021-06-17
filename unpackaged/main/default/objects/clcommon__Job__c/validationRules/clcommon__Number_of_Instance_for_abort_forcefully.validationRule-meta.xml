@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>clcommon__Number_of_Instance_for_abort_forcefully</fullName>
-    <active>true</active>
-    <description>If abort forcefully is set as true than the number of instances should not be greater than one.</description>
-    <errorConditionFormula>AND((clcommon__Abort_Mutliple_Instances__c = true),  clcommon__Number_Of_Instances__c  &gt; 1)</errorConditionFormula>
-    <errorMessage>If abort forcefully is set as true than the number of instances should not be greater than one.</errorMessage>
-</ValidationRule>

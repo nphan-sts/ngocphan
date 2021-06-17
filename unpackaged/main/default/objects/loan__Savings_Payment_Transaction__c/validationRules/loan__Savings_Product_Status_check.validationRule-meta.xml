@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Savings_Product_Status_check</fullName>
-    <active>true</active>
-    <errorConditionFormula>NOT(ISPICKVAL(loan__Savings_Account__r.loan__Savings_Product_Name__r.loan__Status__c, 'Active'))</errorConditionFormula>
-    <errorMessage>The Savings Product is not Active yet! Please submit for approval.</errorMessage>
-</ValidationRule>

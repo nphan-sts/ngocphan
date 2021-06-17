@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Cleared_LPT_cannot_be_rejected</fullName>
-    <active>true</active>
-    <description>Cleared payments cannot be rejected.</description>
-    <errorConditionFormula>IF(NOT(ISBLANK(loan__Loan_Snapshot__c))&amp;&amp; loan__Rejected__c = true, true,false)</errorConditionFormula>
-    <errorMessage>You cannot Reject a Cleared payment, please Reverse the cleared payment instead.</errorMessage>
-</ValidationRule>

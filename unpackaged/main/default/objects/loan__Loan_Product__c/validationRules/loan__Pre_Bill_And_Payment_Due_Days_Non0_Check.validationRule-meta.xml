@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Pre_Bill_And_Payment_Due_Days_Non0_Check</fullName>
-    <active>true</active>
-    <description>Pre-bill days and Payment due days can not be non zero simultaneously for same Lending Product</description>
-    <errorConditionFormula>NOT(ISNULL(loan__Pre_Bill_Days__c)) &amp;&amp; (loan__Pre_Bill_Days__c != 0) &amp;&amp; NOT(ISNULL(loan__Payment_Due_Days__c)) &amp;&amp; (loan__Payment_Due_Days__c != 0)</errorConditionFormula>
-    <errorDisplayField>loan__Payment_Due_Days__c</errorDisplayField>
-    <errorMessage>Pre Bill Days and Payment Due Days can not be non zero simultaneously for same Lending Product</errorMessage>
-</ValidationRule>

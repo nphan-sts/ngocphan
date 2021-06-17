@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customSettingsType>Hierarchy</customSettingsType>
-    <description>Veda Comprehensive custom setting.</description>
-    <enableFeeds>false</enableFeeds>
-    <label>Veda Comprehensive</label>
-    <visibility>Public</visibility>
-</CustomObject>

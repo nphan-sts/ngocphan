@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Greater_than_charge_date</fullName>
-    <active>true</active>
-    <errorConditionFormula>loan__Last_Accrual_Date__c &gt;  loan__Date__c</errorConditionFormula>
-    <errorDisplayField>loan__Last_Accrual_Date__c</errorDisplayField>
-    <errorMessage>Last accrual date cannot be less than charge date</errorMessage>
-</ValidationRule>

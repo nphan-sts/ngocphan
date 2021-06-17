@@ -1,8 +1,0 @@
-<apex:page lightningStylesheets="true" standardController="loan__Repayment_Schedule__c">
-<apex:include pageName="clcommon__mintTheme"/>
-
-	<apex:includeScript value="{!$Resource.loan__BarCodeJS}" />
-	<br />
-	<br />
-
-</apex:page>

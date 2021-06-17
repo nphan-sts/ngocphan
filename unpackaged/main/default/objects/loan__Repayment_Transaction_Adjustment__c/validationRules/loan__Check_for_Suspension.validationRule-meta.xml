@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Check_for_Suspension</fullName>
-    <active>true</active>
-    <errorConditionFormula>loan__Loan_Payment_Transaction__r.loan__Loan_Account__r.loan__Suspended__c == true</errorConditionFormula>
-    <errorMessage>Unsupported operation - You cannot pass a reversal transaction on a suspended account.</errorMessage>
-</ValidationRule>

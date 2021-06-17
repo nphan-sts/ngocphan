@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__maximum_deposite_greater_rule</fullName>
-    <active>false</active>
-    <errorConditionFormula>loan__minimum_amount_for_fixed_deposit__c  &gt; loan__maximum_amount_for_fixed_deposit__c</errorConditionFormula>
-    <errorMessage>Maximum amount for fixed deposit should always greater than minimum amount for fixed deposit.</errorMessage>
-</ValidationRule>

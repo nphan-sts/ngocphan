@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customSettingsType>Hierarchy</customSettingsType>
-    <description>TransUnion Canada Credit Bureau Integration for Credit Pull</description>
-    <enableFeeds>false</enableFeeds>
-    <label>TransUnion Canada Credit Pull Parameters</label>
-    <visibility>Public</visibility>
-</CustomObject>

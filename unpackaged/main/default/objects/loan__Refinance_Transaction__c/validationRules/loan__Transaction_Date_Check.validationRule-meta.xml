@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Transaction_Date_Check</fullName>
-    <active>true</active>
-    <errorConditionFormula>loan__Refinance_Transaction_Date__c == null</errorConditionFormula>
-    <errorMessage>Transaction date cannot be null.</errorMessage>
-</ValidationRule>

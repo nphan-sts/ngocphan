@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customSettingsType>List</customSettingsType>
-    <description>This contains all the mapping between the Pricing Option of quick Quote and Pricing Detail of Application</description>
-    <enableFeeds>false</enableFeeds>
-    <label>Pricing Options-Pricing Detail Mapping</label>
-    <visibility>Public</visibility>
-</CustomObject>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Frequency_check</fullName>
-    <active>true</active>
-    <errorConditionFormula>AND(ISPICKVAL(loan__Type__c,'RECURRING'),OR(ISNULL(TEXT(loan__Frequency__c)),ISBLANK(TEXT(loan__Frequency__c))))</errorConditionFormula>
-    <errorDisplayField>loan__Frequency__c</errorDisplayField>
-    <errorMessage>Frequency can not be null for 'Recurring' type.</errorMessage>
-</ValidationRule>

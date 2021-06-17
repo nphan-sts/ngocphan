@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Reschedule_Option_Empty_Check</fullName>
-    <active>true</active>
-    <description>Reschedule option on excess payment must be selected, if excess threshold % for reschedule is positive on lending product</description>
-    <errorConditionFormula>AND(loan__Excess_Threshold_For_Reschedule__c &gt; 0 , ISPICKVAL(loan__Reschedule_Option_on_Excess_Payment__c, ''))</errorConditionFormula>
-    <errorDisplayField>loan__Reschedule_Option_on_Excess_Payment__c</errorDisplayField>
-    <errorMessage>You must select a reschedule option on excess payment as a non zero excess threshold % for reschedule is specified on lending product.</errorMessage>
-</ValidationRule>

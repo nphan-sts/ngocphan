@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Fee_Accrual_Method_Check</fullName>
-    <active>true</active>
-    <description>Provide Accrual Method when Accrual Required is true</description>
-    <errorConditionFormula>AND(loan__Accrual_Required__c, ISPICKVAL(loan__Accrual_Method__c, ''))</errorConditionFormula>
-    <errorMessage>Accrual Method should be specified when Accrual Required is true.</errorMessage>
-</ValidationRule>

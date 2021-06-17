@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__GovernmentID_Special_char_check</fullName>
-    <active>true</active>
-    <description>GovernmentID_Special_char_check</description>
-    <errorConditionFormula>NOT(REGEX(  loan__Government_ID__c  , "^[a-zA-Z0-9-\\s]*$"))</errorConditionFormula>
-    <errorDisplayField>loan__Government_ID__c</errorDisplayField>
-    <errorMessage>GovernmentID should not include special characters</errorMessage>
-</ValidationRule>

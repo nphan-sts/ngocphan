@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customSettingsType>List</customSettingsType>
-    <description>Used to store the details of each third party system feeding data into CL Collections Staging Interface.</description>
-    <enableFeeds>false</enableFeeds>
-    <label>Staging Interface Settings</label>
-    <visibility>Public</visibility>
-</CustomObject>

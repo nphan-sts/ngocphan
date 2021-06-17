@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>loan__Client_Family_Detail</fullName>
-    <active>true</active>
-    <description>Client ID and Related To person should not be same.</description>
-    <errorConditionFormula>loan__Client__c   =  loan__Related_To__c</errorConditionFormula>
-    <errorDisplayField>loan__Related_To__c</errorDisplayField>
-    <errorMessage>This Id can not be same as Client.</errorMessage>
-</ValidationRule>
