@@ -14,10 +14,11 @@ public class MW_Utilities {
         }
         return toList;
     }
-
-    public static void clearDCPForEBP(Approved_Offer__c offer) {
+    
+    public static Boolean clearDCPForEBP(Approved_Offer__c offer) {
         if (getPicklistValues(Pricing_Offer__c.EBP_Offer_Code__c).contains(offer.EBP_Offer_Code__c)) {
-            CustomTriggerOnApplicationHandler.payAtFundingForUpdate(offer.Application__c);
+            CustomTriggerOnApplicationHandler.payAtFundingForUpdate(app.Id);
         }
     }
 }
+
