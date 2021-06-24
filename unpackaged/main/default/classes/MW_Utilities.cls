@@ -17,7 +17,7 @@ public class MW_Utilities {
 
     public static void clearDCPForEBP(Approved_Offer__c offer) {
         if (getPicklistValues(Pricing_Offer__c.EBP_Offer_Code__c).contains(offer.EBP_Offer_Code__c)) {
-            CustomTriggerOnApplicationHandler.payAtFundingForUpdate(offer.Application__r.Id);
+            CustomTriggerOnApplicationHandler.payAtFundingForUpdate(offer.Application__c);
         }
     }
 }
