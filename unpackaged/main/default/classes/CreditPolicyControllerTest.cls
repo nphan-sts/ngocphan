@@ -27,7 +27,10 @@ private class CreditPolicyControllerTest {
         Insert app;
         Credit_Policy__c cPolicy = new Credit_Policy__c(
             Application__c=app.Id,
-            FICO__C=10.20
+            FICO__C=10.20,
+            final_decision__c='Approve',
+            pricing_test_bucket__c='Test',
+            request_intent__c='application'
         );
         test.stopTest();
     }

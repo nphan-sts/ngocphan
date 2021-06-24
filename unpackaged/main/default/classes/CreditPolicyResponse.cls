@@ -320,6 +320,10 @@ global class CreditPolicyResponse {
                     CPid = CPResponse.cpData.id;
                     if(CPResponse.cpData.final_decision__c !=null){
                     String attname = 'cbr_'+LeadID+'.xml';
+                    if (CPResponse.cpData.final_decision__c == 'Approve' && CPResponse.cpData.pricing_test_bucket__c != NULL && 
+                        CPResponse.cpData.request_intent__c == 'application') {
+                        attname = 'cbr_'+LeadID+'_origination.xml';  // LOP-112
+                    }
                     Attachment a = new Attachment(parentid=appId, Name = attname , Body = Blob.valueOf(json) );
                     insert a;
                     }

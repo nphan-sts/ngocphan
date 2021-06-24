@@ -49,7 +49,9 @@ public class AdverseActionController{
                         Manual_Adverse_Action_Decline__r.Name,
                         manual_adverse_action_decline__r.reason__c,
                 (SELECT Id, No_Hit__c FROM Adverse__r),
-                (select FICO__C, Bureau_Inquiry_Date__c from Credit_Policy__r)
+                (select FICO__C, Bureau_Inquiry_Date__c from Credit_Policy__r 
+                    where request_intent__c = 'application' 
+                    order by lastmodifieddate desc Limit 1)
                 from genesis__Applications__c
                 where id =: appId ]);
 
@@ -113,7 +115,9 @@ public class AdverseActionController{
                     manual_adverse_action_decline__r.reason__c,
                     genesis__Account__r.State__c,genesis__Account__r.ZIP_Code__c, genesis__Loan_Amount__c,
             (SELECT Id, No_Hit__c FROM Adverse__r),
-            (select FICO__C, Bureau_Inquiry_Date__c from Credit_Policy__r)
+            (select FICO__C, Bureau_Inquiry_Date__c from Credit_Policy__r 
+                where request_intent__c = 'application' 
+                order by lastmodifieddate desc Limit 1)
             from genesis__Applications__c
             where id =: appId LIMIT 1]);
             System.debug('...Results....' +adverseResults  );

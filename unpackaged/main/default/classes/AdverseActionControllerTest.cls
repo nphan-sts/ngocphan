@@ -35,7 +35,10 @@ private class AdverseActionControllerTest {
         Credit_Policy__c creditObj = new Credit_Policy__c(
           Application__c=app.Id,
             FICO__C=10,
-            Bureau_Inquiry_Date__c= '10/10/2010' 
+            Bureau_Inquiry_Date__c= '10/10/2010',
+            final_decision__c='Approve',
+            pricing_test_bucket__c='Test',
+            request_intent__c='application'
         );
         Insert creditObj;
         Adverse_Actions__c advAc_Obj = new Adverse_Actions__c(

@@ -5,8 +5,9 @@ public with sharing class CreditPolicyController {
     public CreditPolicyController(){   
         Id appId = ApexPages.currentPage().getParameters().get('Id');
         if(appId != null){  
-            creditPolicyRec = [select FICO__C from Credit_Policy__c  where Application__c= : appId order by createddate Limit 1]; /*LOS-158 (changed LastModifiedDate)
-                                                                                                                                        *to createddate)*/       
+            creditPolicyRec = [select FICO__C from Credit_Policy__c  where Application__c= : appId 
+                and final_decision__c = 'Approve' and pricing_test_bucket__c != NULL and request_intent__c = 'application' 
+                order by lastmodifieddate desc Limit 1];      
             
             if(creditPolicyRec!=null && !creditPolicyRec.isEmpty() && creditPolicyRec[0].FICO__C!=null) {               
                 creditPolicyRec[0].FICO__C = creditPolicyRec[0].FICO__C.setScale(0);
