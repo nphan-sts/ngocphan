@@ -258,7 +258,32 @@ private class TestCreditPolicyResponse {
          System.assert(obj != null);
          Test.stopTest();
      }
-    
+
+    Testmethod static void canParseParserV6Fields(){
+
+         Manual_Adverse_Action_Decline__c mda = new 	Manual_Adverse_Action_Decline__c();
+         mda.Decline_Name__c = 'insufficient tradeline balance';
+         mda.Description__c = 'So we are unable to proceed with your loan application.';
+         mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
+         mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
+         insert mda;
+     	 Account acc1 = [Select id,name from Account where name='Test' limit 1];
+
+         genesis__Applications__c app1 = [select id,genesis__Status__c,Lead_ID__c from genesis__Applications__c where genesis__Status__c='Offer shown' limit 1];
+         app1.Manual_Adverse_Action_Decline__c = mda.Id;
+
+         update app1;
+        StaticResource sr = [Select id,name,body from StaticResource where name='CreditPolicyTestParserV6'];
+         //String bureau = '{"HIAP01_home_equity_monthly_payment":-1,"AADM12_credit_vision_alternative_risk_score":1234,"AGG901_non_mortgage_increases_last_3_mo":6789}';
+         String json = sr.body.toString();
+         Test.StartTest();
+         CreditPolicyResponse obj = new CreditPolicyResponse();
+         obj.parse(json,acc1.id,app1.id, app1.Lead_ID__c);
+         //obj.parse(json1,acc1.id,app1.id, app1.Lead_ID__c);
+         System.assert(obj != null);
+         Test.stopTest();
+     }
+
     Testmethod static void method4(){
          
          Manual_Adverse_Action_Decline__c mda = new 	Manual_Adverse_Action_Decline__c();

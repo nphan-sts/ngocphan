@@ -1,0 +1,10 @@
+# Created manually
+
+# Intellij metadata directory
+.idea/
+
+# Illuminated Cloud Intellij plugin directory
+IlluminatedCloud/
+
+# SalesforceDX
+.sfdx/
