@@ -86,7 +86,9 @@ global with sharing class WSGetPricingOffer {
         public String above_prime_max {get;set;} 
         public String type1 {get;set;} 
         public Boolean Is_Offer_Selected {get;set;}
-      
+        public String ebp_offer_code {get;set;}
+        public String ebp_parent_offer_key {get;set;}
+
         public Offers(JSONParser parser,String applicationId) {
             
             Pricing_Offer__c pOffer =new Pricing_Offer__c(); 
@@ -154,7 +156,14 @@ global with sharing class WSGetPricingOffer {
                             pOffer.Type__c = type1;
                             
                         } 
-                        
+                        else if (text == 'ebp_offer_code') {
+                            ebp_offer_code = parser.getText();
+                            pOffer.EBP_Offer_Code__c = ebp_offer_code;
+                        }
+                        else if (text == 'ebp_parent_offer_key') {
+                            ebp_parent_offer_key = parser.getText();
+                            pOffer.EBP_Parent_Offer_Key__c = ebp_parent_offer_key;
+                        }
                         else {
                             System.debug(LoggingLevel.WARN, 'Offers consuming unrecognized property: '+text);
                             consumeObject(parser);
