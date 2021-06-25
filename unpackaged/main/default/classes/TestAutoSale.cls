@@ -106,7 +106,7 @@ public Class TestAutoSale{
         //investor bank acc.
         loan__Bank_Account__c bainv = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Active__c = true,
                                                  Unmasked_Bank_Account_Number__c = '99999999',
@@ -125,7 +125,7 @@ public Class TestAutoSale{
         
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Active__c = true,
                                                  Unmasked_Bank_Account_Number__c = '99999999',

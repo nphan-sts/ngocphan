@@ -77,7 +77,7 @@ public class TestUpdatePromissoryFieldJob {
         loan__Bank_Account__c ba = new loan__Bank_Account__c(
             loan__Bank_Account_Number__c = '123234324',
             loan__Bank_Name__c = 'Test_Bank',
-            loan__Routing_Number__c = '99999999',
+            loan__Routing_Number__c = '999999999',
             Unmasked_Bank_Account_Number__c = '123234324',
             loan__Account_Type__c = 'Checking',
             loan__Account__c = acc.Id,

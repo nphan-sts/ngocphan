@@ -1,5 +1,5 @@
 /***********Modification History**************
-Pallavi			LOS-156			2019-11-21
+Pallavi         LOS-156         2019-11-21
 /********************************************/
 @isTest
 public class TestDeactivatebankAccounts {
@@ -22,10 +22,11 @@ public class TestDeactivatebankAccounts {
         loan__bank_account__c bank = new loan__bank_account__c();
         bank.Account_Number__c = '123456800';
         bank.loan__Account__c = acc.id;
+        bank.loan__Routing_Number__c = '999999999';
         bank.loan__Account_Type__c = 'Saving';
         bank.loan__Bank_Name__c='ABc';
         bank.Unmasked_Bank_Account_Number__c='123456800';
-        bank.loan__Account_Usage__c = 'Borrower/Investor Account';	//LOS-156
+        bank.loan__Account_Usage__c = 'Borrower/Investor Account';  //LOS-156
         insert bank;
         
          genesis__Applications__c app = new genesis__Applications__c(
@@ -39,7 +40,7 @@ public class TestDeactivatebankAccounts {
          genesis__Draw_Period_End_Date__c = system.Today(),
          Employment_Status__c = 'Full Time',
          genesis__Loan_Amount__c=1000,
-         Bank_Account__c = bank.id	//pallavi
+         Bank_Account__c = bank.id  //pallavi
         );      
         Insert app;
         

@@ -13,7 +13,7 @@ public class TestLoanPaymentFilegen {
         //loan.TestHelper2.createOrgBankAccounts();
         loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Account_Usage__c = 'Collections Trust Account',
                                                  //loan__Contact__c = con.id,
@@ -62,7 +62,7 @@ public class TestLoanPaymentFilegen {
        
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  Unmasked_Bank_Account_Number__c = '123234324',
                                                  loan__Contact__c = a1.id);

@@ -1,3 +1,11 @@
+/* ****************Modification History******************
+ * Created By        Date          JIRA number
+ * 		
+ * 		1. Neha          2020/09/14        CRM-796
+ * Modified By        Date          JIRA number
+ *      1. Pallavi       2021/05/21        LSP-219
+ *      
+ ******************Modification History******************/
 Public class MigratedPaymentReversalController{
     
     public String currentRecordId {get;set;}
@@ -110,6 +118,8 @@ Public class MigratedPaymentReversalController{
                             from loan__Loan_account_Due_Details__c
                             where id in : dueIds
                             order by loan__Due_Date__c DESC];
+        
+        List<Date> dueDate = new List<Date>();	//LSP-219
                             
         if(billsToBeUpdated.size() > 0 && billsToBeUpdated != NULL){       
                      
@@ -122,12 +132,21 @@ Public class MigratedPaymentReversalController{
                 due.loan__Payment_Date__c = NULL;
                 due.loan__Payment_Amt__c = 0.00;
                 due.loan__Payment_Satisfied__c = false;
-             
+             	dueDate.add(due.loan__Due_Date__c);	//LSP-219
             }
         
             update billsToBeUpdated;       
         }
-        
+        //LSP-219
+        List<loan__Repayment_Schedule__c> AMZsToBeUpdated = [select id,loan__isPaid__c  
+                                                            from loan__Repayment_Schedule__c
+                                                            where loan__Due_Date__c in : dueDate and loan__isPaid__c = true];
+        for(loan__Repayment_Schedule__c amz : AMZsToBeUpdated){
+                amz.loan__isPaid__c = false;               
+            }
+        if(AMZsToBeUpdated.size()>0)
+            update AMZsToBeUpdated;
+        //LSP-219
         updateLoan();
     }
     

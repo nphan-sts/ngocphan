@@ -46,7 +46,7 @@ class TestCustomACHReturnFileParser{
         insert con; 
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Account__c = b1.id,
                                                  Unmasked_Bank_Account_Number__c = '123234324',
@@ -58,7 +58,7 @@ class TestCustomACHReturnFileParser{
         
         loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Account_Usage__c = 'Collections Trust Account',
                                                  loan__Contact__c = con.id,
@@ -219,7 +219,7 @@ class TestCustomACHReturnFileParser{
         insert con;
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  Unmasked_Bank_Account_Number__c = '123234324',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Account__c = b1.id);
@@ -228,7 +228,7 @@ class TestCustomACHReturnFileParser{
         loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
                                                  loan__Bank_Name__c = 'Some Bank',
                                                  Unmasked_Bank_Account_Number__c = '123234324',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Account_Usage__c = 'Collections Trust Account',
                                                  loan__Account__c = b1.id,
@@ -380,7 +380,7 @@ class TestCustomACHReturnFileParser{
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
                                                  loan__Bank_Name__c = 'Some Bank',
                                                  Unmasked_Bank_Account_Number__c = '123234324',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Account__c = b1.id);
         insert ba;
@@ -391,7 +391,7 @@ class TestCustomACHReturnFileParser{
         loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
                                                  loan__Bank_Name__c = 'Some Bank',
                                                  Unmasked_Bank_Account_Number__c = '123234324',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Account_Usage__c = 'Collections Trust Account',
                                                  loan__Contact__c = con.id,

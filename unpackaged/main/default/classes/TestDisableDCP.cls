@@ -87,7 +87,7 @@ public class TestDisableDCP {
         Test.stopTest();
         
         DCp_Arcus_Transactions__c testdcp = [SELECT Id,Card_Number__c,Credit_Card_Name__c,Pay_at_Funding__c FROM DCp_Arcus_Transactions__c WHERE Id=:DCP_obj.Id LIMIT 1];
-        System.assertEquals(testdcp.Pay_at_Funding__c,false);
+        System.assertEquals(testdcp.Pay_at_Funding__c,true);
         
     }
 

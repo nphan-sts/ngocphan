@@ -61,7 +61,7 @@ public Class TestChangeTypeOfPayerController{
         dummyClient.peer__First_Name__c = 'Test';
         insert dummyClient;
         
-        Account invacc = new Account(			//LOS-28
+        Account invacc = new Account(           //LOS-28
             Name = 'Investor',
             loan__Investor__c = true,
             Amount_Invested__c = 1000,
@@ -89,7 +89,7 @@ public Class TestChangeTypeOfPayerController{
         //investor bank acc.
         loan__Bank_Account__c bainv = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Active__c = true,
                                                  Unmasked_Bank_Account_Number__c = '99999999',
@@ -109,7 +109,7 @@ public Class TestChangeTypeOfPayerController{
         
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Active__c = true,
                                                  Unmasked_Bank_Account_Number__c = '99999999',
@@ -132,7 +132,7 @@ public Class TestChangeTypeOfPayerController{
         loanAccount.Loan__Pay_off_Amount_As_Of_Today__c = loanAccount.loan__Fees_Remaining__c + loanAccount.loan__Principal_Remaining__c;
         loanAccount.loan__Delinquent_Amount__c             = 5000;
         loanAccount.loan__Next_Due_Generation_Date__c = date.today().adddays(15);
-        loanAccount.loan__Interest_Rate__c              = 10.0;	//LOS-28
+        loanAccount.loan__Interest_Rate__c              = 10.0; //LOS-28
         //loanAccount.Investor_Account__c = invacc.id;  //commented(LOS-28)
         upsert loanAccount;  
         system.assertNotEquals(loanAccount.id,null,'LoanAccount not inserted');
@@ -233,7 +233,7 @@ public Class TestChangeTypeOfPayerController{
         //investor bank acc.
         loan__Bank_Account__c bainv = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Active__c = true,
                                                  Unmasked_Bank_Account_Number__c = '99999999',
@@ -252,7 +252,7 @@ public Class TestChangeTypeOfPayerController{
         
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
+                                                 loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Active__c = true,
                                                  Unmasked_Bank_Account_Number__c = '99999999',
