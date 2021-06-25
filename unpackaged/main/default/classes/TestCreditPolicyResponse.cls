@@ -274,12 +274,10 @@ private class TestCreditPolicyResponse {
 
          update app1;
         StaticResource sr = [Select id,name,body from StaticResource where name='CreditPolicyTestParserV6'];
-         //String bureau = '{"HIAP01_home_equity_monthly_payment":-1,"AADM12_credit_vision_alternative_risk_score":1234,"AGG901_non_mortgage_increases_last_3_mo":6789}';
          String json = sr.body.toString();
          Test.StartTest();
          CreditPolicyResponse obj = new CreditPolicyResponse();
          obj.parse(json,acc1.id,app1.id, app1.Lead_ID__c);
-         //obj.parse(json1,acc1.id,app1.id, app1.Lead_ID__c);
          System.assert(obj != null);
          Test.stopTest();
      }
