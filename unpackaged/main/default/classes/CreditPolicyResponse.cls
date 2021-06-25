@@ -435,50 +435,94 @@ global class CreditPolicyResponse {
             global String bureau_request_uid {get;set;}   
             global Integer AADM12_credit_vision_alternative_risk_score {get;set;} 
             global Integer AGG901_non_mortgage_increases_last_3_mo {get;set;}  
-            global Integer AGG909_mo_since_max_bankcard_balance {get;set;}     
-            global String AGG911_max_bankcard_utilization   {get;set;}  
-            global Integer AGGS903_monthly_spend    {get;set;}  
-            global Integer AT02S_open_trades    {get;set;}   
-            global Integer AT03S_satisfactory_open_trades   {get;set;}   
-            global Integer AT103S_percent_satisfactory_trades_last_24_mo {get;set;}     
-            global Integer AT104S_percent_trades_opened_last_24_mo  {get;set;}  
-            global Integer AT20S_mo_since_oldest_trade_opened {get;set;}   
-            global Integer BC02S_open_credit_cards {get;set;}   
-            global Integer BC20S_mo_since_oldest_credit_card_opened {get;set;}      
-            global Integer BR109S_revolving_trades_with_past_due_over_50_days {get;set;}    
-            global String EPAY01_ATTR06_student_loan_monthly_payment {get;set;}  
-            global String EPAY01_ATTR10_payments_mortgage_trade_highest_high_credit {get;set;}  
-            global Integer EPAY01_AUP1003_auto_trade_monthly_payment {get;set;}  
-            global Integer FI02S_installment_trades {get;set;}      
-            global Integer G058S_trades_30_days_past_due_last_6_mo {get;set;}  
-            global Integer G061S_trades_30_days_past_due_last_24_mo {get;set;}      
-            global Integer G069S_trades_90_days_past_due_last_12_mo {get;set;}      
-            global Integer G095S_mo_since_global_record {get;set;}     
+            global Integer W55_AGG901_non_mortgage_increases_last_3_mo {get;set;}
+            global Integer AGG909_mo_since_max_bankcard_balance {get;set;}
+            global Integer W55_AGG909_mo_since_max_agg_bnkcrd_bal_over_last_12mo {get;set;}
+            global String AGG911_max_bankcard_utilization   {get;set;}
+            global String W55_AGG911_max_agg_bnkcrd_util_over_last_year   {get;set;}
+            global Integer AGGS903_monthly_spend    {get;set;}
+            global Integer W55_AGGS903_monthly_spend    {get;set;}
+            global Integer AT02S_open_trades    {get;set;}
+            global Integer V71_AT02S_open_trades    {get;set;}
+            global Integer AT03S_satisfactory_open_trades   {get;set;}
+            global Integer V71_AT03S_satisfactory_open_trades   {get;set;}
+            global Integer AT103S_percent_satisfactory_trades_last_24_mo {get;set;}
+            global Integer V71_AT103S_percent_satisfactory_trades_last_24_mo {get;set;}
+            global Integer AT104S_percent_trades_opened_last_24_mo  {get;set;}
+            global Integer V71_AT104S_pct_all_trd_opned_pst_24mo_all_trd  {get;set;}
+            global Integer AT20S_mo_since_oldest_trade_opened {get;set;}
+            global Integer V71_AT20S_mo_since_oldest_trd_opn {get;set;}
+            global Integer BC02S_open_credit_cards {get;set;}
+            global Integer V71_BC02S_open_credit_cards {get;set;}
+            global Integer BC20S_mo_since_oldest_credit_card_opened {get;set;}
+            global Integer V71_BC20S_mo_since_oldest_cc_trd_opned {get;set;}
+            global Integer BR109S_revolving_trades_with_past_due_over_50_days {get;set;}
+            global Integer V71_BR109S_revolving_trades_with_past_due_over_50_days {get;set;}
+            global String EPAY01_ATTR06_student_loan_monthly_payment {get;set;}
+            global String W49_ATTR06_cur_pmt_amt_1st_most_recently_updated_opn_pers_ln {get;set;}
+            global String EPAY01_ATTR10_payments_mortgage_trade_highest_high_credit {get;set;}
+            global String W49_ATTR10_payments_mortgage_trade_highest_high_credit {get;set;}
+            global Integer EPAY01_AUP1003_auto_trade_monthly_payment {get;set;}
+            global Integer W49_AUP1003_auto_trade_monthly_payment {get;set;}
+            global Integer FI02S_installment_trades {get;set;}
+            global Integer V71_FI02S_installment_trades {get;set;}
+            global Integer G058S_trades_30_days_past_due_last_6_mo {get;set;}
+            global Integer V71_G058S_num_trd_30_or_more_dpd_pst_6mo {get;set;}
+            global Integer G061S_trades_30_days_past_due_last_24_mo {get;set;}
+            global Integer V71_G061S_num_trd_30_or_more_dpd_pst_24mo {get;set;}
+            global Integer G069S_trades_90_days_past_due_last_12_mo {get;set;}
+            global Integer V71_G069S_trades_90_days_past_due_last_12_mo {get;set;}
+            global Integer G095S_mo_since_global_record {get;set;}
             global Integer G209S_mo_since_recent_charge_off_opened {get;set;}  
-            global Integer G215B_non_medical_collections {get;set;}     
-            global Integer HIAP01_home_equity_monthly_payment {get;set;}    
-            global Integer IN33S_installment_trades_balance {get;set;}      
-            global Integer IN34S_utilization_installment_trades_last_12_mo {get;set;}   
-            global Integer INAP01_installment_trades_monthly_payment {get;set;}     
-            global Integer MT101S_total_mortgage_balance {get;set;}     
-            global Integer MT21S_mo_since_recent_mortgage_trade_opened {get;set;}   
-            global String PAYMNT08_min_payment_revolving_ratio {get;set;}   
-            global Integer RE101S_revolving_trades_balance {get;set;}   
-            global Integer RE31S_percent_high_revolving_trade_utilization {get;set;}    
-            global Integer RE33S_open_revolving_trades_balance {get;set;}   
-            global Integer REAP01_revolving_trade_monthly_payment {get;set;}    
-            global Integer RVLR04_retail_revolver_trade_balance {get;set;}      
-            global String RVLR14_revolver_transactor_inactive_pattern {get;set;}    
-            global Integer SCRG082_trades_past_due_last_2_mo {get;set;}     
-            global Integer SCRG085_trades_90_days_past_due_last_2_mo {get;set;}     
-            global Integer SCRG086_trades_120_days_past_due_last_2_mo {get;set;}    
-            global Integer SCRG087_trades_150_days_past_due_last_2_mo {get;set;}    
-            global Integer SCRIN07_installment_trades_opened_last_12_mo {get;set;}      
-            global Integer S114S_inquiries_last_6_mo {get;set;}     
-            global Integer ST06S_student_loan_trades_opened_last_6_mo {get;set;}    
-            global Integer TRV01_mo_since_overlimit_on_bankcard {get;set;}      
-            global Integer TRV02_mo_overlimit_on_bankcard {get;set;}   
-            global Integer TRV12_revolving_high_credit_increases_last_3_mo {get;set;}   
+            global Integer V71_G209S_mo_since_recent_charge_off_opened {get;set;}
+            global Integer G215B_non_medical_collections {get;set;}
+            global Integer V71_G215B_non_medical_collections {get;set;}
+            global Integer HIAP01_home_equity_monthly_payment {get;set;}
+            global Integer V71_HIAP01_home_equity_monthly_payment {get;set;}
+            global Integer IN33S_installment_trades_balance {get;set;}
+            global Integer V71_IN33S_installment_trades_balance {get;set;}
+            global Integer IN34S_utilization_installment_trades_last_12_mo {get;set;}
+            global Integer V71_IN34S_utilization_installment_trades_last_12_mo {get;set;}
+            global Integer INAP01_installment_trades_monthly_payment {get;set;}
+            global Integer V71_INAP01_installment_trades_monthly_payment {get;set;}
+            global Integer MT101S_total_mortgage_balance {get;set;}
+            global Integer V71_MT101S_total_mortgage_balance {get;set;}
+            global Integer MT21S_mo_since_recent_mortgage_trade_opened {get;set;}
+            global Integer V71_MT21S_mo_since_recent_mortgage_trade_opened {get;set;}
+            global String PAYMNT08_min_payment_revolving_ratio {get;set;}
+            global String W55_PAYMNT08_ratio_actual_min_pmt_for_rvl_trd_last_mo {get;set;}
+            global Integer RE101S_revolving_trades_balance {get;set;}
+            global Integer V71_RE101S_revolving_trades_balance {get;set;}
+            global Integer RE31S_percent_high_revolving_trade_utilization {get;set;}
+            global Integer V71_RE31S_pct_opn_rvl_trd_gt_75pct_credln_verif_pst_12mo {get;set;}
+            global Integer RE33S_open_revolving_trades_balance {get;set;}
+            global Integer V71_RE33S_open_revolving_trades_balance {get;set;}
+            global Integer REAP01_revolving_trade_monthly_payment {get;set;}
+            global Integer V71_REAP01_total_sched_mo_pmt_for_all_rvl_trd_verif_pst_12mo {get;set;}
+            global Integer RVLR04_retail_revolver_trade_balance {get;set;}
+            global Integer W55_RVLR04_retail_revolver_trade_balance {get;set;}
+            global String RVLR14_revolver_transactor_inactive_pattern {get;set;}
+            global String W55_RVLR14_revolver_transactor_inactive_pattern {get;set;}
+            global Integer SCRG082_trades_past_due_last_2_mo {get;set;}
+            global Integer N05_G082_trades_past_due_last_2_mo {get;set;}
+            global Integer SCRG085_trades_90_days_past_due_last_2_mo {get;set;}
+            global Integer N05_G085_trades_90_days_past_due_last_2_mo {get;set;}
+            global Integer SCRG086_trades_120_days_past_due_last_2_mo {get;set;}
+            global Integer N05_G086_trades_120_days_past_due_last_2_mo {get;set;}
+            global Integer SCRG087_trades_150_days_past_due_last_2_mo {get;set;}
+            global Integer N05_G087_trades_150_days_past_due_last_2_mo {get;set;}
+            global Integer SCRIN07_installment_trades_opened_last_12_mo {get;set;}
+            global Integer N05_IN07_installment_trades_opened_last_12_mo {get;set;}
+            global Integer S114S_inquiries_last_6_mo {get;set;}
+            global Integer V71_S114S_num_dedup_inq_pst_6mo_excl_auto_mtg_inq {get;set;}
+            global Integer ST06S_student_loan_trades_opened_last_6_mo {get;set;}
+            global Integer V71_ST06S_student_loan_trades_opened_last_6_mo {get;set;}
+            global Integer TRV01_mo_since_overlimit_on_bankcard {get;set;}
+            global Integer W55_TRV01_num_mo_since_overlimit_on_a_bnkcrd {get;set;}
+            global Integer TRV02_mo_overlimit_on_bankcard {get;set;}
+            global Integer W55_TRV02_num_mo_overlimit_on_a_bnkcrd_over_last_12mo {get;set;}
+            global Integer TRV12_revolving_high_credit_increases_last_3_mo {get;set;}
+            global Integer W55_TRV12_num_rvl_high_cred_incr_last_3mo {get;set;}
             global List<Inquiries> inquiries {get;set;}
             global Integer fico_score;  
             global String consumer_id;
@@ -505,7 +549,9 @@ global class CreditPolicyResponse {
             global String bureau_inquiry_date {get;set;} 
             global String bureau_report_uid {get;set;}
             global Integer G095S_mo_since_public_record {get;set;}
-        } 
+            global Integer V71_G095S_mo_since_public_record {get;set;}
+            global Integer V71_AT09S_num_trd_opned_pst_24mo {get;set;}
+        }
         
         global class Inquiries {
             global String ecoa_designator {get;set;} 
@@ -859,6 +905,40 @@ global class CreditPolicyResponse {
                         obj.AlternativeRiskScore__c =   bureauReq.AADM12_credit_vision_alternative_risk_score;
                     if(bureauReq.AT103S_percent_satisfactory_trades_last_24_mo!=null)
                         obj.Satisfactory_Trades_All_Trades__c = bureauReq.AT103S_percent_satisfactory_trades_last_24_mo;
+
+                    /* LOP-241 update parser to v6 */
+                    if(bureauReq.V71_G058S_num_trd_30_or_more_dpd_pst_6mo !=null)
+                        obj.X30_Delinq_6months__c = bureauReq.V71_G058S_num_trd_30_or_more_dpd_pst_6mo;
+                    if(bureauReq.V71_RE31S_pct_opn_rvl_trd_gt_75pct_credln_verif_pst_12mo !=null)
+                        obj.Rev_75_12months__c =    bureauReq.V71_RE31S_pct_opn_rvl_trd_gt_75pct_credln_verif_pst_12mo;
+                    if(bureauReq.V71_BC20S_mo_since_oldest_cc_trd_opned!=null)
+                        obj.Age_Oldest_Crc_mo__c =  bureauReq.V71_BC20S_mo_since_oldest_cc_trd_opned;
+                    if(bureauReq.W55_AGG901_non_mortgage_increases_last_3_mo!=null)
+                        obj.Bal_Increases_3mo__c =  bureauReq.W55_AGG901_non_mortgage_increases_last_3_mo;
+                    if(bureauReq.W55_AGG911_max_agg_bnkcrd_util_over_last_year!=null)
+                        obj.Agg_utilization_12mo__c =   bureauReq.W55_AGG911_max_agg_bnkcrd_util_over_last_year;
+                    if(bureauReq.W55_TRV12_num_rvl_high_cred_incr_last_3mo!=null)
+                        obj.Rev_Inc_3mo__c =    bureauReq.W55_TRV12_num_rvl_high_cred_incr_last_3mo;
+                    if(bureauReq.W55_PAYMNT08_ratio_actual_min_pmt_for_rvl_trd_last_mo!=null)
+                        obj.Revolving_Actual_Min_payment_1mo__c =   bureauReq.W55_PAYMNT08_ratio_actual_min_pmt_for_rvl_trd_last_mo;
+                    if(bureauReq.V71_G215B_non_medical_collections!=null)
+                        obj.Non_med_Col_0__c =  bureauReq.V71_G215B_non_medical_collections;
+                    if(bureauReq.V71_G209S_mo_since_recent_charge_off_opened!=null)
+                        obj.Recent_Charge_off_mo__c =   bureauReq.V71_G209S_mo_since_recent_charge_off_opened;
+                    if(bureauReq.V71_FI02S_installment_trades!=null)
+                        obj.Open_Fin_Inst_Trades__c =   bureauReq.V71_FI02S_installment_trades;
+                    if(bureauReq.V71_S114S_num_dedup_inq_pst_6mo_excl_auto_mtg_inq!=null)
+                        obj.Deduped_inq_6mo__c =    bureauReq.V71_S114S_num_dedup_inq_pst_6mo_excl_auto_mtg_inq;
+                    if(bureauReq.V71_G095S_mo_since_public_record!=null){
+                        if(bureauReq.V71_G095S_mo_since_public_record<0) obj.MosSinceDerog__c = 0;
+                        if(bureauReq.V71_G095S_mo_since_public_record>=0) obj.MosSinceDerog__c =  bureauReq.V71_G095S_mo_since_public_record; }
+                    if(bureauReq.V71_G069S_trades_90_days_past_due_last_12_mo!=null)
+                        obj.trades_90_Day_Delinq_in_last_12_mos__c =  bureauReq.V71_G069S_trades_90_days_past_due_last_12_mo;
+                    if(bureauReq.V71_AT103S_percent_satisfactory_trades_last_24_mo!=null)
+                        obj.Satisfactory_Trades_All_Trades__c = bureauReq.V71_AT103S_percent_satisfactory_trades_last_24_mo;
+                    if(bureauReq.V71_AT09S_num_trd_opned_pst_24mo!=null) {
+                        obj.Num_Trades_Opened_Past_24mo__c = bureauReq.V71_AT09S_num_trd_opned_pst_24mo;
+                    }
                 }
                 
             }
