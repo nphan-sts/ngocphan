@@ -1,4 +1,4 @@
-@RestResource(urlMapping='/skipapay')
+@RestResource(urlMapping='/skipapay/')
 global with sharing class MW_SkipAPayController {
 	@HttpPost
 	global static Response SkipAPayController() {
@@ -68,9 +68,11 @@ global with sharing class MW_SkipAPayController {
 				loan,
 				numberOfSkips
 			);
-			helper.rescheduleLoan(new Map<String, String>());
+			Response rescheduleReponse = helper.rescheduleLoan(new Map<String, String>());
 
-			res.status = peer.Constants.SUCCESS;
+			res.status = rescheduleReponse.status;
+			res.errorCode = rescheduleReponse.errorCode;
+			res.errorMessage = rescheduleReponse.errorMessage;
 			return res;
 		} catch (Exception e) {
 			res.errorCode = 'INVALID_INPUT';
