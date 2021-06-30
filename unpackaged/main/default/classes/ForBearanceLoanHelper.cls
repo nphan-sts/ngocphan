@@ -34,8 +34,8 @@ global class ForBearanceLoanHelper {
         System.debug('Loan to process: '+loanAccount.Name +' with numberOfSkips as '+numberOfSkips);
     }
 
-    global Response rescheduleLoan(Map<String,String> contractSAPerror) {	//CRM-952
-        Response res = new Response();
+    global RestResponse rescheduleLoan(Map<String,String> contractSAPerror) {	//CRM-952
+        RestResponse res = new RestResponse();
         Date CPDExpireDate;
         String CPDReason;
         this.contractSAPerror = contractSAPerror;
@@ -107,9 +107,8 @@ global class ForBearanceLoanHelper {
                 batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
                 insert batch;
                 contractSAPerror.put(lAtobeUpdated.Name,batch.loan__Message__c);	//CRM-952
-                res.status = peer.Constants.ERROR;
-                res.errorMessage = batch.loan__Message__c;
-                res.errorCode = 'INVALID_INPUT';
+                res.statusCode = 404;
+                res.responseBody = Blob.valueOf(batch.loan__Message__c);
                 return res;
             }
             
@@ -122,9 +121,8 @@ global class ForBearanceLoanHelper {
                     batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
                     insert batch;
                     contractSAPerror.put(lAtobeUpdated.Name,batch.loan__Message__c);	//CRM-952
-                    res.status = peer.Constants.ERROR;
-                    res.errorMessage = batch.loan__Message__c;
-                    res.errorCode = 'INVALID_INPUT';
+                    res.statusCode = 409;
+                    res.responseBody = Blob.valueOf(batch.loan__Message__c);
                     return res;
                 }
             }
@@ -134,18 +132,16 @@ global class ForBearanceLoanHelper {
             if(checkIfNachaisSent()){
                 //to check if payment for next month has to be skipped                
                 System.Debug('Nacha is already sent');
-                res.status = peer.Constants.ERROR;
-                res.errorMessage = 'Nacha is already sent::'+ lAtobeUpdated.Name;
-                res.errorCode = 'INVALID_INPUT';
+                res.statusCode = 409;
+                res.responseBody = Blob.valueOf('Nacha is already sent::'+ lAtobeUpdated.Name);
                 return res;
             }// if NACHA is not sent, loan is rescheduled as it is done for any other loan
             
             System.debug('isEligibleForReschedule----' + isEligibleForReschedule);  //pallavi
             
             if(isEligibleForReschedule == false){
-                res.status = peer.Constants.ERROR;
-                res.errorMessage = 'Loan is not eligible for reschedule ::'+ lAtobeUpdated.Name;
-                res.errorCode = 'INVALID_INPUT';
+                res.statusCode = 409;
+                res.responseBody = Blob.valueOf('Loan is not eligible for reschedule ::'+ lAtobeUpdated.Name);
                 return res; //don't process the loan if it is not eligible for rescheduling
             }
 
@@ -260,7 +256,7 @@ global class ForBearanceLoanHelper {
             lAtobeUpdated.U_LoanModTermExt__c = lAtobeUpdated.U_LoanModTermExt__c != null ? lAtobeUpdated.U_LoanModTermExt__c + Integer.valueOf(numberOfSkips):Integer.valueOf(numberOfSkips);
             /* LSP-3 end */
             update lAtobeUpdated;
-            res.status = peer.Constants.SUCCESS;
+            res.statusCode = 200;
             return res;
 
         } catch (Exception e) {          
@@ -273,9 +269,8 @@ global class ForBearanceLoanHelper {
             System.debug(logginglevel.error,'error stackTrace'+e.getStackTraceString());
             System.debug(logginglevel.error,'error message'+e.getMessage());
 
-            res.status = peer.Constants.ERROR;
-            res.errorMessage = batch.loan__Message__c;
-            res.errorCode = 'INVALID_INPUT';
+            res.statusCode = 500;
+            res.responseBody = Blob.valueOf(batch.loan__Message__c);
             return res;
         }
         

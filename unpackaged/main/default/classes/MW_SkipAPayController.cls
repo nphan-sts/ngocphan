@@ -1,8 +1,8 @@
 @RestResource(urlMapping='/skipapay/')
 global with sharing class MW_SkipAPayController {
 	@HttpPost
-	global static Response SkipAPayController() {
-		Response res = new Response();
+	global static void SkipAPayController() {
+		RestResponse res = RestContext.response;
 		try {
 			RestRequest req = RestContext.request;
 			Id loanId;
@@ -15,10 +15,9 @@ global with sharing class MW_SkipAPayController {
 				reqParams.get('loanId') == null ||
 				reqParams.get('numberOfSkips') == null
 			) {
-				res.errorCode = 'INVALID_INPUT';
-				res.errorMessage = 'both LoanId and numberOfSkips is required';
-				res.status = peer.Constants.ERROR;
-				return res;
+				
+                res.statusCode = 404;
+                res.responseBody = Blob.valueOf('both LoanId and numberOfSkips is required');
 			}
 
 			loanId = (Id) reqParams.get('loanId');
@@ -68,23 +67,20 @@ global with sharing class MW_SkipAPayController {
 				loan,
 				numberOfSkips
 			);
-			Response rescheduleReponse = helper.rescheduleLoan(new Map<String, String>());
+			RestResponse temp = new RestResponse();
+			temp = helper.rescheduleLoan(new Map<String, String>());
+			res.statusCode = temp.statusCode;
+			res.responseBody = temp.responseBody;
 
-			res.status = rescheduleReponse.status;
-			res.errorCode = rescheduleReponse.errorCode;
-			res.errorMessage = rescheduleReponse.errorMessage;
-			return res;
 		} catch (Exception e) {
-			res.errorCode = 'INVALID_INPUT';
-			res.errorMessage = e.getMessage();
 			System.debug(logginglevel.error, 'line number' + e.getLineNumber());
 			System.debug(
 				logginglevel.error,
 				'error stackTrace' + e.getStackTraceString()
 			);
-
-			res.status = peer.Constants.ERROR;
-			return res;
+			
+            res.statusCode = 500;
+            res.responseBody =  Blob.valueOf(e.getMessage());
 		}
 	}
 }
