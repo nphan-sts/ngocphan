@@ -108,7 +108,7 @@ global class ForBearanceLoanHelper {
                 insert batch;
                 contractSAPerror.put(lAtobeUpdated.Name,batch.loan__Message__c);	//CRM-952
                 res.statusCode = 404;
-                res.responseBody = Blob.valueOf(batch.loan__Message__c);
+                res.responseBody = Blob.valueOf(JSON.serialize('{"message": "' + batch.loan__Message__c + '"}'));
                 return res;
             }
             
@@ -122,7 +122,7 @@ global class ForBearanceLoanHelper {
                     insert batch;
                     contractSAPerror.put(lAtobeUpdated.Name,batch.loan__Message__c);	//CRM-952
                     res.statusCode = 409;
-                    res.responseBody = Blob.valueOf(batch.loan__Message__c);
+                    res.responseBody = Blob.valueOf(JSON.serialize('{"message" : "' + batch.loan__Message__c + '"}'));
                     return res;
                 }
             }
@@ -133,7 +133,7 @@ global class ForBearanceLoanHelper {
                 //to check if payment for next month has to be skipped                
                 System.Debug('Nacha is already sent');
                 res.statusCode = 409;
-                res.responseBody = Blob.valueOf('Nacha is already sent::'+ lAtobeUpdated.Name);
+                res.responseBody = Blob.valueOf(JSON.serialize('{"message": "' + 'Nacha is already sent::'+ lAtobeUpdated.Name + '"}'));
                 return res;
             }// if NACHA is not sent, loan is rescheduled as it is done for any other loan
             
@@ -141,7 +141,7 @@ global class ForBearanceLoanHelper {
             
             if(isEligibleForReschedule == false){
                 res.statusCode = 409;
-                res.responseBody = Blob.valueOf('Loan is not eligible for reschedule ::'+ lAtobeUpdated.Name);
+                res.responseBody = Blob.valueOf(JSON.serialize('{"message": "' + 'Loan is not eligible for reschedule ::'+ lAtobeUpdated.Name + '"}'));
                 return res; //don't process the loan if it is not eligible for rescheduling
             }
 
@@ -257,6 +257,7 @@ global class ForBearanceLoanHelper {
             /* LSP-3 end */
             update lAtobeUpdated;
             res.statusCode = 200;
+            res.responseBody = Blob.valueOf(JSON.serialize('{"message": ""}'));
             return res;
 
         } catch (Exception e) {          
@@ -270,7 +271,7 @@ global class ForBearanceLoanHelper {
             System.debug(logginglevel.error,'error message'+e.getMessage());
 
             res.statusCode = 500;
-            res.responseBody = Blob.valueOf(batch.loan__Message__c);
+            res.responseBody = Blob.valueOf(JSON.serialize('{"message": "' + batch.loan__Message__c + '"}'));
             return res;
         }
         
