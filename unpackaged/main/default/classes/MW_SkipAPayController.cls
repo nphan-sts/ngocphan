@@ -3,6 +3,7 @@ global with sharing class MW_SkipAPayController {
 	@HttpPost
 	global static void SkipAPayController() {
 		RestResponse res = RestContext.response;
+		res.addHeader('Content-Type', 'application/json');
 		try {
 			RestRequest req = RestContext.request;
 			Id loanId;

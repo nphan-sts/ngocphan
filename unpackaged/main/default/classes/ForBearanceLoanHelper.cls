@@ -108,7 +108,7 @@ global class ForBearanceLoanHelper {
                 insert batch;
                 contractSAPerror.put(lAtobeUpdated.Name,batch.loan__Message__c);	//CRM-952
                 res.statusCode = 404;
-                res.responseBody = Blob.valueOf(JSON.serialize('{"message": "' + batch.loan__Message__c + '"}'));
+                res.responseBody = Blob.valueOf('{"message": "' + batch.loan__Message__c + '"}');
                 return res;
             }
             
@@ -121,8 +121,8 @@ global class ForBearanceLoanHelper {
                     batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
                     insert batch;
                     contractSAPerror.put(lAtobeUpdated.Name,batch.loan__Message__c);	//CRM-952
-                    res.statusCode = 409;
-                    res.responseBody = Blob.valueOf(JSON.serialize('{"message" : "' + batch.loan__Message__c + '"}'));
+                    res.statusCode = 405;
+                    res.responseBody = Blob.valueOf('{"message" : "' + batch.loan__Message__c + '"}');
                     return res;
                 }
             }
@@ -132,16 +132,16 @@ global class ForBearanceLoanHelper {
             if(checkIfNachaisSent()){
                 //to check if payment for next month has to be skipped                
                 System.Debug('Nacha is already sent');
-                res.statusCode = 409;
-                res.responseBody = Blob.valueOf(JSON.serialize('{"message": "' + 'Nacha is already sent::'+ lAtobeUpdated.Name + '"}'));
+                res.statusCode = 405;
+                res.responseBody = Blob.valueOf('{"message": "' + 'Nacha is already sent::'+ lAtobeUpdated.Name + '"}');
                 return res;
             }// if NACHA is not sent, loan is rescheduled as it is done for any other loan
             
             System.debug('isEligibleForReschedule----' + isEligibleForReschedule);  //pallavi
             
             if(isEligibleForReschedule == false){
-                res.statusCode = 409;
-                res.responseBody = Blob.valueOf(JSON.serialize('{"message": "' + 'Loan is not eligible for reschedule ::'+ lAtobeUpdated.Name + '"}'));
+                res.statusCode = 405;
+                res.responseBody = Blob.valueOf('{"message": "' + 'Loan is not eligible for reschedule ::'+ lAtobeUpdated.Name + '"}');
                 return res; //don't process the loan if it is not eligible for rescheduling
             }
 
@@ -256,8 +256,8 @@ global class ForBearanceLoanHelper {
             lAtobeUpdated.U_LoanModTermExt__c = lAtobeUpdated.U_LoanModTermExt__c != null ? lAtobeUpdated.U_LoanModTermExt__c + Integer.valueOf(numberOfSkips):Integer.valueOf(numberOfSkips);
             /* LSP-3 end */
             update lAtobeUpdated;
-            res.statusCode = 200;
-            res.responseBody = Blob.valueOf(JSON.serialize('{"message": ""}'));
+            res.statusCode = 201;
+            res.responseBody = Blob.valueOf('{}');
             return res;
 
         } catch (Exception e) {          
@@ -271,7 +271,7 @@ global class ForBearanceLoanHelper {
             System.debug(logginglevel.error,'error message'+e.getMessage());
 
             res.statusCode = 500;
-            res.responseBody = Blob.valueOf(JSON.serialize('{"message": "' + batch.loan__Message__c + '"}'));
+            res.responseBody = Blob.valueOf('{"message": "' + batch.loan__Message__c + '"}');
             return res;
         }
         
