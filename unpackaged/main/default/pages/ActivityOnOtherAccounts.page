@@ -3,7 +3,7 @@
     <table style="border-spacing: 5px; width:100%">
         <thead></thead>
         <tbody>
-            <apex:outputPanel rendered="{!IF(IsAcctExist, false, true)}">
+            <apex:outputPanel rendered="{!IF(IsAcctActivitiesExist, false, true)}">
                 <table>
                     <tr>
                         <td>No Activity Found.</td>

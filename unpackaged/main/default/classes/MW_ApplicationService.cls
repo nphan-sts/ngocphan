@@ -155,20 +155,21 @@ public class MW_ApplicationService {
                 }
 
                 //if any existing active application
-                List<genesis__Applications__c> listPreExistAcctsActiveApps = [
-                    SELECT Id, Name, genesis__Status__c, genesis__Account__c 
-                    FROM genesis__Applications__c 
-                    WHERE 
-                    genesis__Account__c IN :setPreExistAcctIds
-                    AND genesis__Status__c IN
-                    (
-                        'agent_document_verification_pending', 'agent_verification_pending',
-                        'agent_verified', 'docusign_loan_docs_sent', 'docusign_loan_docs_complete', 
-                        'pre_funding', 'Approved for funding'
-                    )
-                ];
-
-                For (genesis__Applications__c app : listPreExistAcctsActiveApps) {
+                For (genesis__Applications__c app : 
+                        [
+                            SELECT Id, Name, genesis__Status__c, genesis__Account__c 
+                            FROM genesis__Applications__c 
+                            WHERE 
+                            genesis__Account__c IN :setPreExistAcctIds
+                            AND genesis__Status__c IN
+                            (
+                                'agent_document_verification_pending', 'agent_verification_pending',
+                                'agent_verified', 'docusign_loan_docs_sent', 'docusign_loan_docs_complete', 
+                                'pre_funding', 'Approved for funding'
+                            )
+                        ]
+                    ) 
+                {
                     mapPreExistAcctsActiveApps.put(app.genesis__Account__c, app);
                 }
 
@@ -226,8 +227,8 @@ public class MW_ApplicationService {
                     Insert preExistAcctsPost;
                 }
                 
-            } //if(mapCurrentAccts.size() > 0)
-        } //if(mapCurrentApps != null)
+            } //If(mapCurrentAccts.size() > 0)
+        } //If(mapCurrentApps.size() > 0)
     }
 
 }

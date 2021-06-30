@@ -1,6 +1,6 @@
 public with sharing class ActivityOnOtherAccountsController {
     public String AcctId { get; set; }
-    public Boolean IsAcctExist { get; set; }
+    public Boolean IsAcctActivitiesExist { get; set; }
     public List<AcctActivity> AcctActivities {get; set;}
     
     public class AcctActivity{
@@ -22,13 +22,11 @@ public with sharing class ActivityOnOtherAccountsController {
     public void PopulateAcctActivities()
     {
         System.debug('AcctId=' + AcctId);
-        IsAcctExist = string.isEmpty(AcctId) ? false : true;
+        IsAcctActivitiesExist = false;
         
-        IF (IsAcctExist == true) {
+        IF (string.isEmpty(AcctId) == false) {
             Set<String> setDuplicateSsn = new Set<String>();
             Map<Id, genesis__Applications__c> mapCurrentApps = new Map<Id, genesis__Applications__c>();
-            Map<Id, Account> mapPreExistAccts = new Map<Id, Account>();
-            Set<Id> setPreExistAcctIds = new Set<Id>();
             List<AcctActivity> tempAcctActivities = new List<AcctActivity>();
 
             List<genesis__Applications__c> listApps = [
@@ -43,37 +41,34 @@ public with sharing class ActivityOnOtherAccountsController {
                         mapCurrentApps.put(app.genesis__Account__c, app);
                         setDuplicateSsn.Add(app.Bureau_SSN__c);
             }
-
             System.debug('setDuplicateSsn=' + setDuplicateSsn);
 
-            List<Account> listPreExistAccts = [
+            Map<Id, Account> mapPreExistAccts = new Map<Id, Account>(
+                [
                         SELECT Id, Name, social_security_number_uniqueness_field__c, 
                         loan__SOCIAL_SECURITY_NUMBER__c, cnotify__Email__c, peer__Date_of_Birth__c
                         FROM Account 
                         WHERE 
-                        social_security_number_uniqueness_field__c IN :setDuplicateSsn
-                        OR
-                        loan__SOCIAL_SECURITY_NUMBER__c IN :setDuplicateSsn
-                ];
-
-            For (Account acct : listPreExistAccts) {
-                mapPreExistAccts.put(acct.Id, acct);
-                setPreExistAcctIds.add(acct.Id);
-                System.debug('acct.loan__SOCIAL_SECURITY_NUMBER__c=' + acct.loan__SOCIAL_SECURITY_NUMBER__c);
-            }
+                        (
+                            social_security_number_uniqueness_field__c IN :setDuplicateSsn
+                            OR
+                            loan__SOCIAL_SECURITY_NUMBER__c IN :setDuplicateSsn
+                        )
+                        AND Id != :AcctId
+                ]);
 
             List<genesis__Applications__c> listPreExistAcctsActiveApps = [
                 SELECT Id, Name, Lead_ID__c, Applicant_Name__c, CreatedDate, Bureau_SSN__c, 
                 Bureau_DOB__c, genesis__Status__c, genesis__Account__c
                 FROM genesis__Applications__c 
                 WHERE 
-                genesis__Account__c IN :setPreExistAcctIds
+                genesis__Account__c IN :mapPreExistAccts.keySet()
             ];
 
             List<loan__Loan_Account__c> preExistLoanAccts = [
                 SELECT Id, Name, loan__Account__c,lead_Guid__c, loan__Loan_Status__c, CreatedDate
                 FROM loan__Loan_Account__c 
-                WHERE loan__Account__c IN :setPreExistAcctIds
+                WHERE loan__Account__c IN :mapPreExistAccts.keySet()
             ];
 
             For (Id acctId : mapPreExistAccts.keySet()) {
@@ -89,6 +84,9 @@ public with sharing class ActivityOnOtherAccountsController {
                 System.debug('acctActy=' + acctActy);
                 tempAcctActivities.Add(acctActy);
             }
+
+            IsAcctActivitiesExist = mapPreExistAccts.size()>0 ? true : false;
+
             AcctActivities = tempAcctActivities;
         }
     }
