@@ -7,6 +7,8 @@ public with sharing class ActivityOnOtherAccountsController {
         public Account Acct {get; set;}
         public List<genesis__Applications__c> Apps {get; set;}
         public List<loan__loan_account__c> Loans {get; set;}
+        public Boolean IsAppsExist {get; set;}
+        public Boolean IsLoansExist {get; set;}
     }
 
     public ActivityOnOtherAccountsController() {
@@ -77,8 +79,10 @@ public with sharing class ActivityOnOtherAccountsController {
                 AcctActivity acctActy = new AcctActivity();
                 acctActy.Acct = preExistAcct;
                 acctActy.Apps = getAcctApps(acctId, listPreExistAcctsActiveApps);
+                acctActy.IsAppsExist = acctActy.Apps.size() > 0 ? true: false;
                 System.debug('acctActy.Apps=' + acctActy.Apps);
                 acctActy.Loans = getAcctLoans(acctId, preExistLoanAccts);
+                acctActy.IsLoansExist = acctActy.Loans.size() > 0 ? true: false;
                 System.debug('acctActy.Loans=' + acctActy.Loans);
                 
                 System.debug('acctActy=' + acctActy);
