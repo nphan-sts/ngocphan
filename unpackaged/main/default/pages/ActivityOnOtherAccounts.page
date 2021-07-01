@@ -27,13 +27,15 @@
                     <td><apex:outputText value="{!aa.Acct.social_security_number_uniqueness_field__c}" /></td>
                     <td><apex:outputText value="{!aa.Acct.loan__SOCIAL_SECURITY_NUMBER__c}" /></td>
                 </tr>
-                <tr style="background-color:lightgray">
-                    <td>Application / Loan</td>
-                    <td>GUID</td>
-                    <td>Created</td>
-                    <td>Status</td>
-                    <td></td>
-                </tr>   
+                <apex:outputPanel rendered="{!IF(aa.Apps == null && aa.Loans == null, false, true)}">
+                    <tr style="background-color:lightgray">
+                        <td>Application / Loan</td>
+                        <td>GUID</td>
+                        <td>Created</td>
+                        <td>Status</td>
+                        <td></td>
+                    </tr>
+                </apex:outputPanel>
                 <apex:repeat value="{!aa.Apps}" var="app">
                 <tr>
                     <td><apex:outputlink value="/{!app.Id}" target="_blank">{!app.Name}</apex:outputlink></td>
