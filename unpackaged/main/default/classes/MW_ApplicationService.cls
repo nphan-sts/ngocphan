@@ -186,6 +186,8 @@ public class MW_ApplicationService {
                         )
                     {
                         existingDuplAcct.loan__SOCIAL_SECURITY_NUMBER__c = NULL; //by workflow, it would update to social_security_number_uniqueness_field__c
+                        existingDuplAcct.Encrypted_SSN__c = NULL;
+                        existingDuplAcct.ints__SSN__c = NULL;
                         currentAcct.loan__SOCIAL_SECURITY_NUMBER__c = app.Bureau_SSN__c;
                         updatePreExistAccts.Add(existingDuplAcct);
                         updateCurrentAccts.Add(currentAcct);
