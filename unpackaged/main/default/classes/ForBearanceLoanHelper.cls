@@ -256,7 +256,7 @@ global class ForBearanceLoanHelper {
             lAtobeUpdated.U_LoanModTermExt__c = lAtobeUpdated.U_LoanModTermExt__c != null ? lAtobeUpdated.U_LoanModTermExt__c + Integer.valueOf(numberOfSkips):Integer.valueOf(numberOfSkips);
             /* LSP-3 end */
             update lAtobeUpdated;
-            res.statusCode = 201;
+            res.statusCode = 204;
             res.responseBody = Blob.valueOf('{}');
             return res;
 
