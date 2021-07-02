@@ -21,7 +21,7 @@ private class MW_SkipAPayControllerTest {
         genesis__Org_Parameters__c genorg = genesis__Org_Parameters__c.getOrgDefaults();
         genorg.genesis__Disable_Triggers__c = true;
         upsert genorg;
-       
+       //comm
         //Creating Account
          Account acc = new Account(
             Name = 'Test',
