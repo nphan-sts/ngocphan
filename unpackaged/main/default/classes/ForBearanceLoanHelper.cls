@@ -257,7 +257,6 @@ global class ForBearanceLoanHelper {
             /* LSP-3 end */
             update lAtobeUpdated;
             res.statusCode = 204;
-            res.responseBody = Blob.valueOf('{}');
             return res;
 
         } catch (Exception e) {          
