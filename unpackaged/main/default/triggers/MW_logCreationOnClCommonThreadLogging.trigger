@@ -20,12 +20,7 @@ trigger MW_logCreationOnClCommonThreadLogging on clcommon__Thread_Logging__c(
 		} else if (String.isBlank(entry.clcommon__Status__c) == true) {
 			type = 'Warning';
 		} else {
-			if(entry.clcommon__Status__c == 'Success' || entry.clcommon__Status__c == 'Initializing') {
-				type = 'Info';
-			}
-			else {
-				continue;
-			}
+			type = 'Info';
 		}
 
 		new MW_LogTriggerHelper().construct(entry.Name, apexClass, label, type, JSON.serialize(entry));
