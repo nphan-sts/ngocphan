@@ -31,7 +31,7 @@ global class CreditPolicyResponse {
             public String segment {get;set;} 
             public String pricing_tier {get;set;} 
             public String above_prime_max {get;set;} 
-            public String type {get;set;} 
+            public String type {get;set;}
             public Boolean Is_Offer_Selected {get;set;}
             
         }
@@ -115,10 +115,12 @@ global class CreditPolicyResponse {
             global String age_flag {get;set;} 
             global String student_loan_flag {get;set;} 
 			global String pricing_test_bucket {get;set;}	//pallavi(LOS-197)
+            global String pricing_policy_gem_version {get;set;}
         }
         
         global class Risk_models {
-            global V3 v3 {get;set;} 
+            global V3 v3 {get;set;}
+            global V6 v6 {get;set;}
         }
         
         global class credit_policy_decision {
@@ -181,7 +183,7 @@ global class CreditPolicyResponse {
             **/
             global String raw_bureau_data {get;set;}
             global String bureau_subset {get;set;}
-            
+
             
             
         }
@@ -264,7 +266,17 @@ global class CreditPolicyResponse {
             global String code;
             global String description;
         }
-        
+
+        /*
+         v6.0 key, parsed manually
+         */
+        global class V6 {
+            global String risk_model_decision {get;set;}
+            global Double risk_model_score {get;set;}
+            global Double logistic_prediction_of_default {get;set;}
+            global Integer invalid_risk_model_variable_count {get;set;}
+        }
+
         global class V3 {
             global String risk_model_decision {get;set;} 
             global String risk_model_score {get;set;} 
@@ -308,12 +320,36 @@ global class CreditPolicyResponse {
         {    
             //json=json.replace('type', 'type1');
             //System.(' : Before Deserilize : '+json);
-            
+
             CreditPolicyResponse CPResponse = new CreditPolicyResponse();
             try{
                 String BureauResponse ;
                 Id CPid;
-                CPResponse = (CreditPolicyResponse) System.JSON.deserialize(json.replace('\\\\', ''), CreditPolicyResponse.class);
+                String unescapedString = json.replace('\\\\', '');
+                CPResponse = (CreditPolicyResponse) System.JSON.deserialize(unescapedString, CreditPolicyResponse.class);
+
+                /*
+                parse credit_policy_decision.data.risk_models['6.0'] manually, due to non de-serializable key
+                TODO either create some better helper methods for similar use cases or find a good user friendly lib
+                */
+                if (CPResponse.credit_policy_decision.credit_policy_version == '6.0') {
+                    Map<String, Object> untypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(unescapedString);
+                    Map<String, Object> untypedCreditPolicyDecision = (Map<String, Object>) untypedResponse.get('credit_policy_decision');
+                    Map<String, Object> untypedData = (Map<String, Object>) untypedCreditPolicyDecision.get('data');
+                    Map<String, Object> untypedRiskModels = (Map<String, Object>) untypedData.get('risk_models');
+                    Map<String, Object> untypedV6 = (Map<String, Object>) untypedRiskModels.get('6.0');
+                    if (untypedV6 != null) {
+                        CreditPolicyResponse.V6 v6 = new CreditPolicyResponse.V6();
+                        v6.invalid_risk_model_variable_count = (Integer) untypedV6.get('invalid_risk_model_variable_count');
+                        v6.logistic_prediction_of_default = (Double) untypedV6.get('logistic_prediction_of_default');
+                        v6.risk_model_decision = (String) untypedV6.get('risk_model_decision');
+                        v6.risk_model_score = (Double) untypedV6.get('risk_model_score');
+
+                        CPResponse.credit_policy_decision.data.risk_models.v6 = v6;
+                        CPResponse.credit_policy_decision.risk_models.v6 = v6;
+                    }
+                }
+
                 CPResponse.cpData = mappingOfFields(CPResponse,accountID,appId,json);
                 if(CPResponse.cpData != null){
                     insert CPResponse.cpData;
@@ -422,8 +458,8 @@ global class CreditPolicyResponse {
                 clcommon__batch_process_log__c logs = new clcommon__batch_process_log__c(clcommon__Message__c='Error in parsing Credit Policy response:  '+ex.getlinenumber()+'Error: '+ex.getMessage());
                 insert logs;
                 System.debug('Exception: '+ex.getMessage());
-                System.debug('Exception stack: '+ex.getStackTraceString() + 'Mes**' + ex.getMessage());
-                throw new ints.IntegrationException(' API call failure Message: '+ex.getMessage());
+                System.debug('Exception stack: '+ex.getStackTraceString() + 'Mes**' + ex.getMessage() + ' on line number ' + ex.getLineNumber());
+                throw new ints.IntegrationException(' API call failure Message: '+ex.getMessage() + ' on line number ' + ex.getLineNumber());
             }
             return CPResponse;
         }
@@ -528,9 +564,17 @@ global class CreditPolicyResponse {
             global String consumer_id;
             global List<String> fico_score_factors {get;set;} 
             global Boolean file_inquiries_impacted_score {get;set;} 
-            global List<Trades> trades {get;set;} 
-            global List<String> bureau_social_security_number {get;set;} 
-            global List<String> bureau_date1_of_birth {get;set;} 
+            global List<Trades> trades {get;set;}
+
+            /* Bureau changed bureau_date_of_birth array to string in 6.2.  Handling this manually.*/
+            /*global List<String> bureau_social_security_number {get;set;}*/
+            global List<String> manual_bureau_social_security_number {get;set;}
+            global String manual_bureau_social_security_number_str {get;set;}
+
+            /* Bureau changed bureau_date_of_birth array to string in 6.2.  Handling this manually.*/
+            /*global List<String> bureau_date1_of_birth {get;set;}*/
+            global List<String> manual_bureau_date1_of_birth {get;set;}
+            global String manual_bureau_date1_of_birth_str {get;set;}
             global Integer months_since_oldest_trade {get;set;} 
             global Integer inquiries_last_6_months {get;set;} 
             global Integer number_of_open_trades {get;set;} 
@@ -826,9 +870,15 @@ global class CreditPolicyResponse {
             if(BureauResponse!=null){  
                 System.debug('***BureauResponse***' + BureauResponse);
                 //obj.bureau_subset__c = String.ValueOf(CPResponse.credit_policy_decision.bureau_subset);
-                
+
+                /**
+                 * NOTE: the following line names all fields with date in the bureau string.
+                 * Not sure the history of it, seems dangerous
+                 */
                 BureauResponse = BureauResponse.replace('date', 'date1');           
-                CreditPolicyResponse.BureauRequestAPI bureauReq = (BureauRequestAPI)System.JSON.deserialize(BureauResponse,BureauRequestAPI.class);  
+                CreditPolicyResponse.BureauRequestAPI bureauReq = (BureauRequestAPI)System.JSON.deserialize(BureauResponse,BureauRequestAPI.class);
+                Map<String, Object> bureauUntypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(BureauResponse);
+
                 if(bureauReq!=null){
                     //obj.bureau_subset__c = String.ValueOf(BureauResponse);
                     if(bureauReq.fico_score!=null)
@@ -838,27 +888,16 @@ global class CreditPolicyResponse {
                         if(bureauReq.fico_score_factors.size()>0)
                             obj.Score_Factors__c =bureauReq.fico_score_factors[0]; 
                     }
-                    System.debug('****bureau_social_security_number****' + bureauReq.bureau_social_security_number );
-                    if(bureauReq.bureau_social_security_number !=null){
-                     System.debug('****bureau_social_security_number2****' + bureauReq.bureau_social_security_number );
-                        if(bureauReq.bureau_social_security_number.size()>0)
-                         System.debug('****bureau_social_security_number3****' + bureauReq.bureau_social_security_number );
-                            applistToUpdate[0].Bureau_SSN__c = String.valueOF(bureauReq.bureau_social_security_number[0]);
-                    }
+
+                    parseBureauSSN(bureauUntypedResponse, bureauReq, applistToUpdate);
+
                     if(bureauReq.consumer_id !=null){
                         System.debug('****consumer id****' + bureauReq.consumer_id );
                         applistToUpdate[0].TU_Consumer_Id__c = String.valueOF(bureauReq.consumer_id);
                     }
-                    if(bureauReq.bureau_date1_of_birth !=null){
-                     System.debug('****bureau_date1_of_birth2****' + bureauReq.bureau_date1_of_birth );
-                        if(bureauReq.bureau_date1_of_birth.size()>0)
-                         System.debug('****bureau_date1_of_birth3****' + bureauReq.bureau_date1_of_birth );
-                            // applistToUpdate[0].Bureau_DOB__c = String.valueOF(bureauReq.bureau_date1_of_birth[0]);
-                         date burdt = date.valueof(bureauReq.bureau_date1_of_birth[0]);   
-                         String BureauDOB = burdt.format();
-                         applistToUpdate[0].Bureau_DOB__c = BureauDOB;
-                         System.debug('*****bureauDOB****' + BureauDOB );
-                    }
+
+                    parseBureauDateOfBirth(bureauUntypedResponse, bureauReq, applistToUpdate);
+
                     if(bureauReq.inquiries_last_6_months!=null)         
                         obj.Inquiries_Last_6_Mo__c = bureauReq.inquiries_last_6_months;
                     if(bureauReq.months_since_oldest_trade!=null)
@@ -947,8 +986,72 @@ global class CreditPolicyResponse {
     
             return obj;
             
-        } 
-        
+        }
+
+        /**
+         * This handles the surprise data type change to string from array.
+         * Handle the date of birth field in a generic way just in case bureau reverts to original array.
+         * Since its manual, setting available fields back to previously parsed.
+         *
+         * @param bureauUntypedResponse json object parsed untyped
+         * @param bureauReq The previously deserialized json response
+         * @param applistToUpdate The Application instance we're updating
+         */
+        private static void parseBureauDateOfBirth(Map<String, Object> bureauUntypedResponse, BureauRequestAPI bureauReq, List<genesis__Applications__c> applistToUpdate) {
+
+            Object bureauBirthDateObj = bureauUntypedResponse.get('bureau_date1_of_birth');
+            if (bureauBirthDateObj == null) {
+                return;
+            }
+
+            Date dobDateTime;
+            if (bureauBirthDateObj instanceof List<Object>) {
+                bureauReq.manual_bureau_date1_of_birth = listObjToListStr((List<Object>) bureauBirthDateObj);
+                dobDateTime = Date.valueOf(bureauReq.manual_bureau_date1_of_birth[0]);
+            } else {
+                bureauReq.manual_bureau_date1_of_birth_str = (String) bureauBirthDateObj;
+                dobDateTime = Date.valueOf(bureauReq.manual_bureau_date1_of_birth_str);
+            }
+
+            String BureauDOB = dobDateTime.format();
+            applistToUpdate[0].Bureau_DOB__c = BureauDOB;
+            System.debug('*****bureauDOB****' + BureauDOB );
+        }
+
+        /**
+         * This handles the surprise data type change to string from array.
+         * Similar premise to date of birth change above.
+         *
+         * @param bureauUntypedResponse json object parsed untyped
+         * @param bureauReq The previously deserialized json response
+         * @param applistToUpdate The Application instance we're updating
+         */
+        private static void parseBureauSSN(Map<String, Object> bureauUntypedResponse, BureauRequestAPI bureauReq, List<genesis__Applications__c> applistToUpdate) {
+            Object ssnObj = bureauUntypedResponse.get('bureau_social_security_number');
+            System.debug('****bureau_social_security_number****' + ssnObj);
+            if (ssnObj == null) {
+                return;
+            }
+
+            String finalSsn;
+            if (ssnObj instanceof List<Object>) {
+                bureauReq.manual_bureau_social_security_number = listObjToListStr((List<Object>) ssnObj);
+                finalSsn = bureauReq.manual_bureau_social_security_number[0];
+            } else {
+                bureauReq.manual_bureau_social_security_number_str = (String) ssnObj;
+                finalSsn = bureauReq.manual_bureau_social_security_number_str;
+            }
+            applistToUpdate[0].Bureau_SSN__c = finalSsn;
+        }
+
+        private static List<String> listObjToListStr(List<Object> objs) {
+            List<String> strs = new List<String>();
+            for (Object obj : objs) {
+                strs.add(obj == null ? null : obj.toString());
+            }
+            return strs;
+        }
+
         global static List<Credit_Report_Details__c> fieldMapping(CreditPolicyResponse CPResponse,String bureauResponse, String accountID,String appId){
             list<Credit_Report_Details__c> listReport = new list<Credit_Report_Details__c>();
             
