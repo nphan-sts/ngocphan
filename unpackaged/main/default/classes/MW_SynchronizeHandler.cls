@@ -1441,10 +1441,28 @@ global with sharing class MW_SynchronizeHandler {
                    }
                 }
             }
-
+            
             if(appSet.size()>0) {
-                Sync_application(appSet, 'sync_application');
+                Boolean ebpEnabled = false;
+                string firstelement = new list<string>(appSet)[0];
+                
+                List<Pricing_Offer__c> availablePricingOffers = [SELECT EBP_Offer_Code__c from Pricing_Offer__c WHERE Application__c = :firstelement];
+                
+                for(Pricing_Offer__c offer: availablePricingOffers) {
+                    if(offer.EBP_Offer_Code__c != null && offer.EBP_Offer_Code__c.length() != 0) {
+                        ebpEnabled = true;
+                        break;
+                    }
+                }
+
+                if(ebpEnabled) {
+                    Sync_application(appSet, 'offer_reselect');
+                }
+                else {
+                    Sync_application(appSet, 'sync_application');
+                }
             }
+
         }
     }
 
