@@ -2,23 +2,26 @@ trigger MW_logCreationOnClCommonBatchProcessLog on clcommon__Batch_Process_Log__
 	after insert,
 	after update
 ) {
-	for (clcommon__Batch_Process_Log__c entry : Trigger.new) {
-		MW_LogUtility_Queueable.Log log = new MW_LogUtility_Queueable.Log();
-		log.apexClass = 'clcommon__Batch_Process_Log__c';
-		log.label = 'Batch Process Log';
-		log.message = JSON.serialize(entry);
+	private static String apexClass = 'clcommon__Batch_Process_Log__c';
+	private static String label = 'Batch Process Log';
 
+	loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
+	if(org.loan__Disable_Triggers__c) {
+		return;
+	}
+	
+	for (clcommon__Batch_Process_Log__c entry : Trigger.new) {
+		String type = '';
 		if (entry.clcommon__Type__c == 'Exception') {
-			log.type = 'Error';
+			type = 'Error';
 		} else if (entry.clcommon__Type__c == 'Warning') {
-			log.type = entry.clcommon__Type__c;
+			type = entry.clcommon__Type__c;
 		} else if (String.isBlank(entry.clcommon__Type__c) == true) {
-			log.type = 'Warning';
+			type = 'Warning';
 		} else {
-			log.type = 'Info';
+			type = 'Info';
 		}
 
-		//System.enqueueJob(new MW_LogUtility_Queueable(log));
+		new MW_LogTriggerHelper().construct(entry.Name, apexClass, label, type, JSON.serialize(entry));
 	}
-
 }

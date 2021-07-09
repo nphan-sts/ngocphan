@@ -90,4 +90,147 @@ public class MW_ApplicationService {
         }
     }
 
+    //LOP-220, LOP-221, LOP-222, LOP-257
+    public static void pifLoanUpdates(List< genesis__Applications__c > apps, Map<Id, genesis__Applications__c> newMap, Map<Id, genesis__Applications__c> oldMap){
+        Map<Id, genesis__Applications__c> mapCurrentApps = new Map<Id, genesis__Applications__c>();
+        Map<Id, genesis__Applications__c> mapPreExistAcctsActiveApps = new Map<Id, genesis__Applications__c>();
+        Map<Id, Account> mapCurrentAccts = new Map<Id, Account>();
+        Map<Id, loan__Loan_Account__c> mapExistingLoanAccts = new Map<Id, loan__Loan_Account__c>();
+        Set<Id> setCurrentAcctIds = new Set<Id>();
+        Set<Id> setPreExistAcctIds = new Set<Id>();
+        Set<String> setDuplicateSsn = new Set<String>();
+        List<Account> updateCurrentAccts = new List<Account>();
+        List<Account> updatePreExistAccts = new List<Account>();
+        List<loan__Loan_Account__c> updateExistingLoanAccts = new List<loan__Loan_Account__c>();
+
+        For(genesis__Applications__c app : apps) {
+            If(
+                (app.genesis__Status__c != oldMap.get(app.Id).genesis__Status__c && app.genesis__Status__c == 'kba_fail')
+                ||
+                (app.genesis__Status__c != oldMap.get(app.Id).genesis__Status__c && app.genesis__Status__c == 'kba_success') 
+            )
+            {
+                    mapCurrentApps.put(app.genesis__Account__c, app);
+                    setCurrentAcctIds.add(app.genesis__Account__c);
+                    setDuplicateSsn.Add(app.Bureau_SSN__c);
+            }
+        }
+
+        If(mapCurrentApps.size() > 0)
+        {
+            List<Account> listCurrentAccts = [
+                        SELECT Id, Name, social_security_number_uniqueness_field__c
+                        FROM Account 
+                        WHERE Id IN :setCurrentAcctIds AND social_security_number_uniqueness_field__c = NULL
+                ];
+
+                For (Account acct : listCurrentAccts) {
+                    mapCurrentAccts.put(acct.Id, acct);
+                }
+
+            If(mapCurrentAccts.size() > 0)
+            {
+                Map<String, Account> mapExistingDuplicateAccts = new Map<String, Account>();
+                List<FeedItem> preExistAcctsPost = new List<FeedItem>();
+
+                List<Account> listDuplicateAccts = [
+                    SELECT Id, Name, social_security_number_uniqueness_field__c
+                    FROM Account 
+                    WHERE social_security_number_uniqueness_field__c IN :setDuplicateSsn
+                ];
+                
+                For (Account acct : listDuplicateAccts) {
+                        mapExistingDuplicateAccts.put(acct.social_security_number_uniqueness_field__c, acct);
+                        setPreExistAcctIds.Add(acct.Id);
+                }
+
+                //
+                List<loan__Loan_Account__c> listExistingLoanAcct = [
+                    SELECT Id, loan__Account__c, loan__Loan_Status__c
+                    FROM loan__Loan_Account__c 
+                    WHERE loan__Account__c IN :setPreExistAcctIds AND loan__Loan_Status__c = 'Closed - Obligations met'
+                ];
+                For (loan__Loan_Account__c loanAcct : listExistingLoanAcct) {
+                    mapExistingLoanAccts.put(loanAcct.loan__Account__c, loanAcct);
+                }
+
+                //if any existing active application
+                For (genesis__Applications__c app : 
+                        [
+                            SELECT Id, Name, genesis__Status__c, genesis__Account__c 
+                            FROM genesis__Applications__c 
+                            WHERE 
+                            genesis__Account__c IN :setPreExistAcctIds
+                            AND genesis__Status__c IN
+                            (
+                                'agent_document_verification_pending', 'agent_verification_pending',
+                                'agent_verified', 'docusign_loan_docs_sent', 'docusign_loan_docs_complete', 
+                                'pre_funding', 'Approved for funding'
+                            )
+                        ]
+                    ) 
+                {
+                    mapPreExistAcctsActiveApps.put(app.genesis__Account__c, app);
+                }
+
+                For (Id acctId : mapCurrentAccts.keySet()) {
+                    genesis__Applications__c app = mapCurrentApps.get(acctId);
+                    Account currentAcct = mapCurrentAccts.get(acctId);
+                    Account existingDuplAcct = mapExistingDuplicateAccts.get(app.Bureau_SSN__c);
+                    loan__Loan_Account__c existingLoanAcct = mapExistingLoanAccts.get(existingDuplAcct.Id);
+                    Boolean IsPreExistAcctActiveAppThere = mapPreExistAcctsActiveApps.get(existingDuplAcct.Id) != null? true: false;
+
+                    If( IsPreExistAcctActiveAppThere == false 
+                            && 
+                            (existingLoanAcct == null || existingLoanAcct.loan__Loan_Status__c == 'Closed - Obligations met')
+                        )
+                    {
+                        existingDuplAcct.loan__SOCIAL_SECURITY_NUMBER__c = NULL; //by workflow, it would update to social_security_number_uniqueness_field__c
+                        existingDuplAcct.Encrypted_SSN__c = NULL;
+                        existingDuplAcct.ints__SSN__c = NULL;
+                        currentAcct.loan__SOCIAL_SECURITY_NUMBER__c = app.Bureau_SSN__c;
+                        updatePreExistAccts.Add(existingDuplAcct);
+                        updateCurrentAccts.Add(currentAcct);
+
+                        //Adding account post
+                        FeedItem acctPost = new FeedItem();
+                        acctPost.ParentId = existingDuplAcct.Id;
+                        acctPost.Body = 'SSN was moved to ';
+                        acctPost.Title = currentAcct.Id;
+                        acctPost.LinkUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + currentAcct.Id;
+                        
+                        preExistAcctsPost.Add(acctPost);
+                    
+                        If(existingLoanAcct != null)
+                        {
+                            existingLoanAcct.loan__Account__c = currentAcct.Id;
+                            updateExistingLoanAccts.Add(existingLoanAcct);
+                        }
+                    }
+                }
+
+                If(updatePreExistAccts.Size() > 0)
+                {
+                    Update updatePreExistAccts;
+                }
+
+                If(updateCurrentAccts.Size() > 0)
+                {
+                    Update updateCurrentAccts;
+                }
+
+                If(updateExistingLoanAccts.Size() > 0)
+                {
+                    Update updateExistingLoanAccts;
+                }
+
+                If(preExistAcctsPost.Size() > 0)
+                {
+                    Insert preExistAcctsPost;
+                }
+                
+            } //If(mapCurrentAccts.size() > 0)
+        } //If(mapCurrentApps.size() > 0)
+    }
+
 }

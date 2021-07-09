@@ -274,14 +274,15 @@ Public class CustomTriggerOnApplicationHandler{
     public static Boolean payAtFundingForUpdate(Id appId){
         try{
             List<dcp_arcus_transactions__c> arcusTransactions = [select id, name, pay_at_funding__c from dcp_arcus_transactions__c
-                                                                      where Application__r.id = :appId];
+                                                                      where Application__r.id = :appId and pay_at_funding__c = true];
             List<dcp_arcus_transactions__c> arcusTransactionsToUpdate = new List<dcp_arcus_transactions__c>();
                       for(dcp_arcus_transactions__c txn:arcusTransactions){
                          txn.pay_at_funding__c = false;
                          arcusTransactionsToUpdate.add(txn);
                          System.debug('txn.pay_at_funding__c: '+ txn.pay_at_funding__c);
                        }
-            update arcusTransactionsToUpdate;
+            if (arcusTransactionsToUpdate.size() > 0)
+                update arcusTransactionsToUpdate;
             System.debug('Updated all DCP transactions..');
             return true;
       }catch(Exception e){
