@@ -40,6 +40,8 @@ public with sharing class MW_GlobalTestUtility {
         if (recordtype == 'Investor') {
             objAccount.RecordTypeId = GetRecTypeId('Account', recordtype);
             objAccount.Name = 'AccountTest';
+            objAccount.peer__First_Name__c ='Account';
+            objAccount.peer__Last_Name__c = 'Test';
             objAccount.Annual_Funded_Cap__c = 100;
             objAccount.Total_Funded_YTD__c = 81;
             //Annual_Available_Balance__c = 19;
@@ -56,12 +58,14 @@ public with sharing class MW_GlobalTestUtility {
 
         else if (recordtype == 'Member') {
             objAccount.RecordTypeId = GetRecTypeId('Account', recordtype);
-            objAccount.Name = 'Test';
+            objAccount.Name = 'AccountTest';
+            objAccount.peer__First_Name__c ='Account';
+            objAccount.peer__Last_Name__c = 'Test';
             objAccount.loan__Investor__c = False;
-            objAccount.cnotify__Email__c = 'abc@test.com';
-            objAccount.loan__SOCIAL_SECURITY_NUMBER__c = '12345';
+            objAccount.cnotify__Email__c = 'test@happymoney.com';
             objAccount.Annual_Individual_Income__c = 100000;
             objAccount.Monthly_Housing_Payment__c = 1200;
+            objAccount.loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9);
         }
         return objAccount;
 
