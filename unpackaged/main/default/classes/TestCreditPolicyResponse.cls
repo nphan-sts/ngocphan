@@ -311,6 +311,94 @@ private class TestCreditPolicyResponse {
     }
 
     /**
+     * Parse the actual example request that failed on the QA deployment.
+     * The previous version stands for backwards compatibility.
+     */
+    @IsTest static void canParseParserV6FieldsQARemoveDataKey() {
+        Manual_Adverse_Action_Decline__c mda = new 	Manual_Adverse_Action_Decline__c();
+        mda.Decline_Name__c = 'insufficient tradeline balance';
+        mda.Description__c = 'So we are unable to proceed with your loan application.';
+        mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
+        mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
+        insert mda;
+        Account acc1 = [SELECT Id,Name FROM Account WHERE Name ='Test' LIMIT 1];
+
+        genesis__Applications__c app1 = [SELECT Id,genesis__Status__c,Lead_ID__c FROM genesis__Applications__c WHERE genesis__Status__c='Offer shown' LIMIT 1];
+        app1.Manual_Adverse_Action_Decline__c = mda.Id;
+
+        update app1;
+        StaticResource sr = [SELECT Id,Name,Body FROM StaticResource WHERE Name='CreditPolicyTestParserV6QARemoveDataKey'];
+        String json = sr.Body.toString();
+        Test.startTest();
+        CreditPolicyResponse obj = new CreditPolicyResponse();
+        obj = obj.parse(json,acc1.Id,app1.Id, app1.Lead_ID__c);
+
+        System.assert(obj != null);
+        CreditPolicyResponse.credit_policy_decision cpd = obj.credit_policy_decision;
+        CreditPolicyResponse.Decision_codes decision_codes = cpd.decision_codes;
+        System.assert(decision_codes.invalid_input_knockout_codes != null);
+        System.assert(decision_codes.prebureau_knockout_codes != null);
+        System.assert(decision_codes.postbureau_knockout_codes != null);
+        System.assert(decision_codes.risk_model_codes != null);
+        System.assert(cpd.id == null);
+        System.assert(cpd.applicant_id == null);
+        System.assert(cpd.credit_policy_gem_version != null);
+        System.assert(cpd.source == null);
+        System.assert(cpd.no_hit == false);
+        System.assert(cpd.frozen_report == false);
+        System.assert(cpd.pricing_segment == null);
+        System.assert(cpd.pricing_tier != null);
+
+        for (CreditPolicyResponse.offers offer : cpd.offers) {
+            System.assert(offer.key != null);
+            System.assert(offer.amount != null);
+            System.assert(offer.term_months != null);
+            System.assert(offer.apr != null);
+            System.assert(offer.interest_rate != null);
+            System.assert(offer.origination_fee_rate != null);
+            System.assert(offer.monthly_payment != null);
+            System.assert(offer.origination_fee != null);
+            System.assert(offer.segment != null);
+            System.assert(offer.pricing_tier != null);
+            System.assert(offer.above_prime_max != null);
+            System.assert(offer.type != null);
+            System.assert(offer.Is_Offer_Selected == null);
+        }
+        System.assert(cpd.debt_to_income != null);
+        System.assert(cpd.federal_tax_payment != null);
+        System.assert(cpd.net_disposable_income != null);
+        System.assert(cpd.overlimit_trend == null);
+        System.assert(cpd.percent_delinquency != null);
+        System.assert(cpd.tri_highest_card_type_i == null);
+        System.assert(cpd.tri_highest_card_type_t == null);
+        System.assert(cpd.tradeline_unsecured_installment_loans_opened_last_12_mo != null);
+        System.assert(cpd.pricing_policy_filters == null);
+        System.assert(cpd.adverse_action_template != null);
+        System.assert(cpd.created_at == null);
+        System.assert(cpd.updated_at == null);
+
+        CreditPolicyResponse.V6 v6 = cpd.risk_models.v6;
+        System.assert(v6.risk_model_decision != null);
+        System.assert(v6.risk_model_score != null);
+        System.assert(v6.logistic_prediction_of_default != null);
+        System.assert(v6.invalid_risk_model_variable_count != null);
+
+        System.assert(cpd.request_context != null);
+        System.assert(cpd.tradeline_dti_with_lie_detector != null);
+        System.assert(cpd.tradeline_ndi_with_lie_detector != null);
+        System.assert(cpd.tradeline_unsecured_installment_loans_opened_last_3_mo == null);
+        System.assert(cpd.final_decision_level != null);
+        System.assert(cpd.days_since_open_unsecured_loan != null);
+        System.assert(cpd.tradeline_alliant_charge_off != null);
+        System.assert(cpd.tradeline_summary_of_balances != null);
+        System.assert(cpd.age_flag == null);
+        System.assert(cpd.student_loan_flag == null);
+        System.assert(cpd.funding_model != null);
+
+        Test.stopTest();
+    }
+
+    /**
      * Check non null status for fields present in previous versions.
      */
     @IsTest static void canParseParserV6FieldsQANullChecks(){
