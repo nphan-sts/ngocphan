@@ -364,7 +364,7 @@ global class CreditPolicyResponse {
 
             CPResponse.credit_policy_decision.risk_models.v6 = v6;
         }
-        
+
         global CreditPolicyResponse parse(String json,String accountID,String appId, String LeadID) 
         {    
             //json=json.replace('type', 'type1');
