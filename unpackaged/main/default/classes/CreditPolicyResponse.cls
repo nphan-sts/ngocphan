@@ -162,8 +162,9 @@ global class CreditPolicyResponse {
             global String updated_at {get;set;} 
             global String loan_amount_counteroffer {get;set;} 
             global Risk_models risk_models {get;set;} 
-            global String request_context {get;set;} 
-            global Data data {get;set;} 
+            global String request_context {get;set;}
+            /* leaving this in for backwards compat, but data key removed in v6 */
+            global Data data {get;set;}
             global Double tradeline_dti_with_lie_detector {get;set;} 
             global Double tradeline_ndi_with_lie_detector {get;set;} 
             global String tradeline_unsecured_installment_loans_opened_last_3_mo {get;set;} 
@@ -315,7 +316,55 @@ global class CreditPolicyResponse {
         global TradelineAnalysis parse(String json) {
             return (TradelineAnalysis) System.JSON.deserialize(json, TradelineAnalysis.class);
         }
-        
+
+        /**
+         * parse credit_policy_decision.data.risk_models['6.0'] manually, due to non de-serializable key
+         * TODO either create some better helper methods for similar use cases or find a good user friendly lib
+         * @param unescapedString The complete response ready for parsing
+         * @param CPResponse The response collecting parsed data
+         */
+        global void parseV6RiskModel(String unescapedString, CreditPolicyResponse CPResponse) {
+            if (CPResponse.credit_policy_decision.credit_policy_version != '6.0') {
+                return;
+            }
+
+            Map<String, Object> untypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(unescapedString);
+            if (untypedResponse == null) {
+                throw new IllegalArgumentException('invalid string to parse as json');
+            }
+
+            Map<String, Object> untypedCreditPolicyDecision = (Map<String, Object>) untypedResponse.get('credit_policy_decision');
+            if (untypedCreditPolicyDecision == null) {
+                throw new IllegalArgumentException('JSON document does not contain credit_policy_decision');
+            }
+
+            Map<String, Object> untypedRiskModels = (Map<String, Object>) untypedCreditPolicyDecision.get('risk_models');
+            if (untypedRiskModels == null) {
+                return;
+            }
+
+            Map<String, Object> untypedV6 = (Map<String, Object>) untypedRiskModels.get('6.0');
+            if (untypedV6 == null) {
+                return;
+            }
+
+            CreditPolicyResponse.V6 v6 = new CreditPolicyResponse.V6();
+            v6.invalid_risk_model_variable_count = (Integer) untypedV6.get('invalid_risk_model_variable_count');
+            v6.logistic_prediction_of_default = (Double) untypedV6.get('logistic_prediction_of_default');
+            v6.risk_model_decision = (String) untypedV6.get('risk_model_decision');
+            v6.risk_model_score = (Double) untypedV6.get('risk_model_score');
+
+            /* leaving this in for backwards compat, but data key removed in v6, create data key for risk models v6 only */
+            if (CPResponse.credit_policy_decision.data != null) {
+                if (CPResponse.credit_policy_decision.data.risk_models == null) {
+                    CPResponse.credit_policy_decision.data.risk_models = new Risk_models();
+                }
+                CPResponse.credit_policy_decision.data.risk_models.v6 = v6;
+            }
+
+            CPResponse.credit_policy_decision.risk_models.v6 = v6;
+        }
+
         global CreditPolicyResponse parse(String json,String accountID,String appId, String LeadID) 
         {    
             //json=json.replace('type', 'type1');
@@ -328,27 +377,7 @@ global class CreditPolicyResponse {
                 String unescapedString = json.replace('\\\\', '');
                 CPResponse = (CreditPolicyResponse) System.JSON.deserialize(unescapedString, CreditPolicyResponse.class);
 
-                /*
-                parse credit_policy_decision.data.risk_models['6.0'] manually, due to non de-serializable key
-                TODO either create some better helper methods for similar use cases or find a good user friendly lib
-                */
-                if (CPResponse.credit_policy_decision.credit_policy_version == '6.0') {
-                    Map<String, Object> untypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(unescapedString);
-                    Map<String, Object> untypedCreditPolicyDecision = (Map<String, Object>) untypedResponse.get('credit_policy_decision');
-                    Map<String, Object> untypedData = (Map<String, Object>) untypedCreditPolicyDecision.get('data');
-                    Map<String, Object> untypedRiskModels = (Map<String, Object>) untypedData.get('risk_models');
-                    Map<String, Object> untypedV6 = (Map<String, Object>) untypedRiskModels.get('6.0');
-                    if (untypedV6 != null) {
-                        CreditPolicyResponse.V6 v6 = new CreditPolicyResponse.V6();
-                        v6.invalid_risk_model_variable_count = (Integer) untypedV6.get('invalid_risk_model_variable_count');
-                        v6.logistic_prediction_of_default = (Double) untypedV6.get('logistic_prediction_of_default');
-                        v6.risk_model_decision = (String) untypedV6.get('risk_model_decision');
-                        v6.risk_model_score = (Double) untypedV6.get('risk_model_score');
-
-                        CPResponse.credit_policy_decision.data.risk_models.v6 = v6;
-                        CPResponse.credit_policy_decision.risk_models.v6 = v6;
-                    }
-                }
+                parseV6RiskModel(unescapedString, CPResponse);
 
                 CPResponse.cpData = mappingOfFields(CPResponse,accountID,appId,json);
                 if(CPResponse.cpData != null){
