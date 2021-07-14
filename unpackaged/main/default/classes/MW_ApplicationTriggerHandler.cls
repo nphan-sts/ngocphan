@@ -30,7 +30,6 @@ public class MW_ApplicationTriggerHandler {
 			MW_SynchronizeHandler.postAppDetailsOnWebHook(oldMap, newMap);
 			MW_SynchronizeHandler.preventIsAfterRecursionOnApplication = true;
 			MW_SynchronizeHandler.createOrgniationRecords(newRecords);
-			MW_ApplicationService.pifLoanUpdates(newRecords, newMap, oldMap);
 		}
 	}
 
