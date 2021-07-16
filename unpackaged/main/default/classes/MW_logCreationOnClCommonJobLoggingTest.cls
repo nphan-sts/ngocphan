@@ -31,7 +31,7 @@ public class MW_logCreationOnClCommonJobLoggingTest {
 		insert dagLogging;
 
 		clcommon__Job_Logging__c log = new clcommon__Job_Logging__c(
-			clcommon__Status__c = 'Success',
+			clcommon__Status__c = 'Failure',
 			clcommon__DAG_Logging__c = dagLogging.Id
 		);
 
@@ -54,7 +54,7 @@ public class MW_logCreationOnClCommonJobLoggingTest {
 		insert dagLogging;
 
 		clcommon__Job_Logging__c log = new clcommon__Job_Logging__c(
-			clcommon__Status__c = 'Success',
+			clcommon__Status__c = null,
 			clcommon__DAG_Logging__c = dagLogging.Id
 		);
 
