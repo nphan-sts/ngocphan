@@ -20,7 +20,7 @@ public class MW_logCreationOnDagLoggingTest {
 	static void insertError() {
 		// Test data setup
 		clcommon__DAG_Logging__c log = new clcommon__DAG_Logging__c(
-			clcommon__Status__c = 'Success'
+			clcommon__Status__c = 'Failure'
 		);
 
 		// Perform test
@@ -37,7 +37,7 @@ public class MW_logCreationOnDagLoggingTest {
 	static void insertWarning() {
 		// Test data setup
 		clcommon__DAG_Logging__c log = new clcommon__DAG_Logging__c(
-			clcommon__Status__c = 'Success'
+			clcommon__Status__c = null
 		);
 
 		// Perform test
