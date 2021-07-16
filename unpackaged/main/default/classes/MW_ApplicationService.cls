@@ -177,13 +177,11 @@ public class MW_ApplicationService {
                     genesis__Applications__c app = mapCurrentApps.get(acctId);
                     Account currentAcct = mapCurrentAccts.get(acctId);
                     Account existingDuplAcct = mapExistingDuplicateAccts.get(app.Bureau_SSN__c);
-                    loan__Loan_Account__c existingLoanAcct = mapExistingLoanAccts.get(existingDuplAcct.Id);
+                    loan__Loan_Account__c existingClosedLoanAcct = mapExistingLoanAccts.get(existingDuplAcct.Id);
+                    Boolean IsPreExistClosedLoanThere = existingClosedLoanAcct != null? true: false;
                     Boolean IsPreExistAcctActiveAppThere = mapPreExistAcctsActiveApps.get(existingDuplAcct.Id) != null? true: false;
 
-                    If( IsPreExistAcctActiveAppThere == false 
-                            && 
-                            (existingLoanAcct == null || existingLoanAcct.loan__Loan_Status__c == 'Closed - Obligations met')
-                        )
+                    If( IsPreExistAcctActiveAppThere == false && IsPreExistClosedLoanThere == true)
                     {
                         existingDuplAcct.loan__SOCIAL_SECURITY_NUMBER__c = NULL; //by workflow, it would update to social_security_number_uniqueness_field__c
                         existingDuplAcct.Encrypted_SSN__c = NULL;
@@ -201,10 +199,10 @@ public class MW_ApplicationService {
                         
                         preExistAcctsPost.Add(acctPost);
                     
-                        If(existingLoanAcct != null)
+                        If(existingClosedLoanAcct != null)
                         {
-                            existingLoanAcct.loan__Account__c = currentAcct.Id;
-                            updateExistingLoanAccts.Add(existingLoanAcct);
+                            existingClosedLoanAcct.loan__Account__c = currentAcct.Id;
+                            updateExistingLoanAccts.Add(existingClosedLoanAcct);
                         }
                     }
                 }
