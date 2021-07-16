@@ -43,7 +43,7 @@ public class MW_logCreationOnClCommonThLoggingTest {
 		insert jobLogging;
 
 		clcommon__Thread_Logging__c log = new clcommon__Thread_Logging__c(
-			clcommon__Status__c = 'Success',
+			clcommon__Status__c = 'Failure',
 			clcommon__Job_Logging__c = jobLogging.Id
 		);
 
@@ -72,7 +72,7 @@ public class MW_logCreationOnClCommonThLoggingTest {
 		insert jobLogging;
 
 		clcommon__Thread_Logging__c log = new clcommon__Thread_Logging__c(
-			clcommon__Status__c = 'Success',
+			clcommon__Status__c = null,
 			clcommon__Job_Logging__c = jobLogging.Id
 		);
 
