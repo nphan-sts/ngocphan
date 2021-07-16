@@ -1,3 +1,7 @@
+/* ****************Modification History******************
+ *      1. Pallavi       2021/07/09        LSP-261    
+ *      
+ ******************Modification History******************/
 @isTest
 public class TestMigratedPaymentReversalController{
 
@@ -121,7 +125,9 @@ public class TestMigratedPaymentReversalController{
                                           loan__Account__r.cnotify__Email__c,
                                           loan__Loan_Product_Name__r.name, 
                                           loan__Payment_Amount__c, 
-                                          loan__Next_Installment_Date__c, 
+                                          loan__Next_Installment_Date__c,
+                                          loan__Interest_Rate__c,               //LSP-261
+                                          loan__Pay_Off_Amount_As_Of_Today__c,  //LSP-261
                                           (select id,name,loan_Is_Migrated__c,
                                           loan__Transaction_Date__c, 
                                           loan__Transaction_Time__c,
@@ -175,7 +181,9 @@ public class TestMigratedPaymentReversalController{
                                           loan__Account__r.cnotify__Email__c,
                                           loan__Loan_Product_Name__r.name, 
                                           loan__Payment_Amount__c, 
-                                          loan__Next_Installment_Date__c, 
+                                          loan__Next_Installment_Date__c,
+                                          loan__Interest_Rate__c,               //LSP-261
+                                          loan__Pay_Off_Amount_As_Of_Today__c,  //LSP-261
                                           (select id,name,loan_Is_Migrated__c,
                                           loan__Transaction_Date__c, 
                                           loan__Transaction_Time__c,
