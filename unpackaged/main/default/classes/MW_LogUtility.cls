@@ -20,6 +20,17 @@ public class MW_LogUtility {
     }
 
     /**
+	 * The Data Object for carrying DAG log data. This data will be common
+	 *  for all generic job logs.
+	 */
+	public class JobLog {
+		public String apexClass;
+		public String label;
+		public String message;
+		public String type;
+	}
+
+    /**
      * This is used to carry exception data to send in a log, since Exception
      *  objects aren't JSON serializable.
      */
