@@ -8,8 +8,6 @@ trigger CustomAccountTrigger on Account (after insert, after update,before inser
     
     if (!genesis.CustomSettingsUtil.getOrgParameters().genesis__Disable_Triggers__c /*|| ! TestTriggerParameter.disableTriggerTest*/) {  // CRM-979 (commented TestTriggerParameter.disableTriggerTest because it's not needed)
         
-        
-        
         if(trigger.isBefore && (trigger.isUpdate || trigger.isInsert)){
             
             for(Account acc : trigger.new){  
@@ -18,6 +16,7 @@ trigger CustomAccountTrigger on Account (after insert, after update,before inser
                     acc.Encrypted_SSN__c = '*******' + acc.loan__SOCIAL_SECURITY_NUMBER__c.right(4);
                 }
                 /*CRM-619*/
+                /*
                 if(!Test.isRunningTest()) {
                 if(trigger.isUpdate){
                     if((acc.peer__First_Name__c != null) && ((acc.peer__First_Name__c != Trigger.oldMap.get(acc.id).peer__First_Name__c) || (acc.peer__Last_Name__c != Trigger.oldMap.get(acc.id).peer__Last_Name__c))){
@@ -30,12 +29,15 @@ trigger CustomAccountTrigger on Account (after insert, after update,before inser
                 else if(trigger.isInsert)
                     acc.name = acc.peer__First_Name__c + ' ' + acc.peer__Last_Name__c;
                 }
+                */
                 /*CRM-619*/
+                /*
                 if(Test.isRunningTest()) {
                     acc.loan__social_security_number__c = string.valueOf(math.random()).right(9);  //LOS-63
                     acc.peer__First_Name__c ='test';
                     acc.peer__Last_Name__c = 'account';
                 }
+                */
             }
         }
 
