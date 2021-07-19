@@ -35,7 +35,9 @@ public class TestCustomTriggerOnApplication {
             Amount_Invested__c = 1200,
             Number_Of_Applications_Invested__c =3,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            peer__First_Name__c ='Test',
+			peer__Last_Name__c = 'Account',
+            loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9),
             Investor_Code__c = 'TNA'
             );
         insert acc;
@@ -55,7 +57,9 @@ public class TestCustomTriggerOnApplication {
             loan__Investor__c=True,
             Number_Of_Applications_Invested__c =2,
             cnotify__Email__c = 'abcd@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '1234',
+            peer__First_Name__c ='Test',
+			peer__Last_Name__c = 'NewAccount',
+            loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9),
             Investor_Code__c = 'TNA'
             );
         insert acc1;
@@ -139,7 +143,9 @@ public class TestCustomTriggerOnApplication {
             Amount_Invested__c = 1200,
             Number_Of_Applications_Invested__c =3,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            peer__First_Name__c ='Test',
+			peer__Last_Name__c = 'Account',
+            loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9),
             Investor_Code__c = 'TNA'
             );
         insert acc;
@@ -152,7 +158,9 @@ public class TestCustomTriggerOnApplication {
             Number_Of_Applications_Invested__c =2,
             Amount_Invested__c = 1100,
             cnotify__Email__c = 'abcd@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '1234',
+            peer__First_Name__c ='Test',
+			peer__Last_Name__c = 'NewAccount',
+            loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9),
             Investor_Code__c = 'TNA'
             );
         insert acc1;
@@ -811,7 +819,7 @@ public class TestCustomTriggerOnApplication {
             City__c='CANADA',
             State__c='CA',
             ZIP_Code__c='123456',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9)
         );
         Insert acco;
         //pallavi
@@ -931,7 +939,7 @@ public class TestCustomTriggerOnApplication {
             City__c='CANADA',
             State__c='CA',
             ZIP_Code__c='123456',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9)
         );
         Insert acco;
         //pallavi
@@ -1059,7 +1067,7 @@ public class TestCustomTriggerOnApplication {
             City__c='CANADA',
             State__c='CA',
             ZIP_Code__c='123456',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9)
         );
         Insert acco;
         //pallavi

@@ -1,11 +1,14 @@
 public class TestDataFactory {
 
-    public static Account createTestAccount() {
+	public static Account createTestAccount() {
         return new Account(Name = 'Test Account',
         					loan__Investor__c = false,
                            	cnotify__Email__c = 'test@test.com',
-                           	loan__SOCIAL_SECURITY_NUMBER__c = '123456789',
-                            social_security_number_uniqueness_field__c = '123456789');
+							peer__First_Name__c ='Test',
+							peer__Last_Name__c = 'Account',
+                           	loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9)
+                            //social_security_number_uniqueness_field__c = string.valueOf(math.random()).right(9)
+						);
     }
 
     public static Account createTestInvestor() {
@@ -56,14 +59,14 @@ public class TestDataFactory {
     }
 
     public static genesis__Document_Category__c createTestDocumentCategory(Id partyTypeId, String catName, String code) {
-        	return new genesis__Document_Category__c(genesis__Responsible_Party_Type__c = partyTypeId,
-        											genesis__Applicable_For__c = 'PARTY',
-    												genesis__Category_Name__c = catName,
-        											Code_FF__c = code);
+    	return new genesis__Document_Category__c(genesis__Responsible_Party_Type__c = partyTypeId,
+    											genesis__Applicable_For__c = 'PARTY',
+												genesis__Category_Name__c = catName,
+    											Code_FF__c = code);
     }
-    
+
     public static genesis__Application_Document_Category__c createTestApplicationDocumentCategory(String name, Id appId, Id catId,
-    		String boxUrl, String status) {
+            String boxUrl, String status) {
     	return new genesis__Application_Document_Category__c(name = name,
         													genesis__Active__c = true,
         													genesis__Application__c = appId,
@@ -71,5 +74,4 @@ public class TestDataFactory {
         													Box_URl__c = boxUrl,
         													genesis__Status__c = status);
     }
-
 }
