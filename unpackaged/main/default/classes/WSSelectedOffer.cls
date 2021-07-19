@@ -81,14 +81,13 @@ global with sharing class WSSelectedOffer{
                  where Application__c=:approvedOffers.applicationID and
                  Is_Offer_Selected__c=:true ];
         if(poffer.size()>0){
-            for(Pricing_Offer__c p : pOffer){
-                if(p.EBP_Offer_Code__c == null || p.EBP_Offer_Code__c.length() == 0) {
-                    res.errorCode = PayoffConstants.ERROR;
-                    res.status = PayoffConstants.FAIL;
-                    res.errorMessage = 'One loan offer is already selected . Contact the support team for any queries';
-                    return res;
-                }
+            if(offer.EBP_Offer_Code__c == null || offer.EBP_Offer_Code__c.length() == 0) {
+                res.errorCode = PayoffConstants.ERROR;
+                res.status = PayoffConstants.FAIL;
+                res.errorMessage = 'One loan offer is already selected . Contact the support team for any queries';
+                return res;
             }
+           
         }
                                       
         pOffer = [select id,
