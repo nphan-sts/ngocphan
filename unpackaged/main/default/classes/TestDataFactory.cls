@@ -1,6 +1,5 @@
 public class TestDataFactory {
 
-    //Vikram
 	public static Account createTestAccount() {
         return new Account(Name = 'Test Account',
         					loan__Investor__c = false,
