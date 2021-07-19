@@ -76,15 +76,19 @@ global with sharing class WSSelectedOffer{
                                        where id=:approvedOffers.applicationID 
                                       limit 1];
                                       
-        poffer= [select id,name ,Is_Offer_Selected__c
+        poffer= [select id,name ,Is_Offer_Selected__c, EBP_Offer_Code__c
                  from Pricing_Offer__c
                  where Application__c=:approvedOffers.applicationID and
                  Is_Offer_Selected__c=:true ];
         if(poffer.size()>0){
-            res.errorCode = PayoffConstants.ERROR;
-            res.status = PayoffConstants.FAIL;
-            res.errorMessage = 'One loan offer is already selected . Contact the support team for any queries';
-            return res;
+            for(Pricing_Offer__c p : pOffer){
+                if(p.EBP_Offer_Code__c == null || p.EBP_Offer_Code__c.length() == 0) {
+                    res.errorCode = PayoffConstants.ERROR;
+                    res.status = PayoffConstants.FAIL;
+                    res.errorMessage = 'One loan offer is already selected . Contact the support team for any queries';
+                    return res;
+                }
+            }
         }
                                       
         pOffer = [select id,
