@@ -26,13 +26,15 @@ public class MW_DataDogCallOut {
 	 * This is the bridge between process builder to Datadog
 	 */
 	@InvocableMethod
-	public static void invocableSend(List<String> messages) {
-		if(messages == null || messages.size() == 0) {
-			return;
-		}
-		
-		send(messages[0], new List<string>());
-	}
+    public static void invocableSend(List<String> messages) {
+        if(messages == null || messages.size() == 0) {
+            return;
+        }
+        for (String message : messages) {
+            send(message, new List<string>());
+        }
+
+    }
 	
 	/**
 	 * This takes a MW_LogUtility.Log and converts it to JSON to send to DataDog.
