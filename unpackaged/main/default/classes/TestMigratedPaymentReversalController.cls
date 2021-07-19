@@ -141,12 +141,14 @@ public class TestMigratedPaymentReversalController{
                                           loan__Account__r.Borrower_s_Last_Name__c,
                                           loan__Loan_Product_Name__c 
                                           from loan__Loan_Account__c];
+        
+     Decimal initialPayoff = LAList[0].loan__Pay_Off_Amount_As_Of_Today__c; //LSP-261
     
      loan__Loan_Account__c loanAccount = LAList[0];
      payments = [select id,name,loan_Is_Migrated__c,
                                           loan__Transaction_Date__c, 
                                           loan__Transaction_Time__c,
-                                          loan__Principal__c,loan__Interest__c, 
+                                          loan__Principal__c,loan__Interest__c,
                                           (select id,name,
                                             loan__Due__c  
                                             from loan__Due_Payments__r)
@@ -155,16 +157,30 @@ public class TestMigratedPaymentReversalController{
                                           where id =: DPD.loan__Loan_Payment_Transaction__c];
                                           
      System.debug(logginglevel.error, 'loanAccount ::'+loanAccount + 'payments ::'+payments);
-     
+     /*LSP-261*/   
+     Decimal totalAmountReversed = 0.0;
+        for(loan__Loan_Payment_Transaction__c pay : payments){
+            totalAmountReversed = totalAmountReversed + pay.loan__Principal__c + pay.loan__Interest__c;
+        }   
+     /*LSP-261*/   
      MigratedPaymentReversalController ctl = new MigratedPaymentReversalController(new ApexPages.StandardController (loanAccount));     
      ctl.currentRecordId = loanAccount.Id;
      ctl.NumOfPayments = String.valueof(1);
      ctl.migratedLoan = loanAccount;
      ctl.getPayments();
      
-     ctl.paymentsToBeReversed = payments;    
+     ctl.paymentsToBeReversed = payments;
+     Test.startTest();  //LSP-261
      ctl.reversePayments();
-        
+     /*LSP-261*/   
+     List<Repayment_Txn_Reversal_Migrated_Payment__c> rev = [select id from Repayment_Txn_Reversal_Migrated_Payment__c
+                                                            where Loan_Payment_Transaction__c in: payments];   
+     System.assertEquals(rev.size(), payments.size());
+     loan__loan_account__c contract = [select id,loan__Pay_Off_Amount_As_Of_Today__c from loan__loan_account__c
+                                            where id =: LAList[0].id];
+     System.assertEquals(initialPayoff + totalAmountReversed, contract.loan__Pay_Off_Amount_As_Of_Today__c); 
+     Test.stopTest();
+     /*LSP-261*/   
     }
     
     Testmethod static void method2(){
@@ -200,16 +216,35 @@ public class TestMigratedPaymentReversalController{
     
      loan__Loan_Account__c loanAccount = LAList[0];
      payments = LAList[0].loan__Loan_Payment_Transactions__r;
+        
+     Decimal initialPayoff = LAList[0].loan__Pay_Off_Amount_As_Of_Today__c; //LSP-261   
                                           
      System.debug(logginglevel.error, 'loanAccount ::'+loanAccount + 'payments ::'+payments);
+        
+     /*LSP-261*/   
+     Decimal totalAmountReversed = 0.0;
+        for(loan__Loan_Payment_Transaction__c pay : payments){
+            totalAmountReversed = totalAmountReversed + pay.loan__Principal__c + pay.loan__Interest__c;
+        }   
+     /*LSP-261*/     
      
      MigratedPaymentReversalController ctl = new MigratedPaymentReversalController(new ApexPages.StandardController (loanAccount));     
      ctl.currentRecordId = loanAccount.Id;
      ctl.NumOfPayments = String.valueof(1);
      ctl.migratedLoan = loanAccount;     
      ctl.getPayments();
-     ctl.paymentsToBeReversed = payments;     
+     ctl.paymentsToBeReversed = payments;
+     Test.startTest();  //LSP-261   
      ctl.reversePayments();
+     /*LSP-261*/   
+     List<Repayment_Txn_Reversal_Migrated_Payment__c> rev = [select id from Repayment_Txn_Reversal_Migrated_Payment__c
+                                                            where Loan_Payment_Transaction__c in: payments];   
+     System.assertEquals(rev.size(), payments.size());
+     loan__loan_account__c contract = [select id,loan__Pay_Off_Amount_As_Of_Today__c from loan__loan_account__c
+                                            where id =: LAList[0].id];
+     System.assertEquals(initialPayoff + totalAmountReversed, contract.loan__Pay_Off_Amount_As_Of_Today__c);   
+     Test.stopTest();
+     /*LSP-261*/      
         
     }
     
