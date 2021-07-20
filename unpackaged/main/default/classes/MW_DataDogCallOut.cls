@@ -33,7 +33,6 @@ public class MW_DataDogCallOut {
         for (String message : messages) {
             send(message, new List<string>());
         }
-        
     }
 	
 	/**
