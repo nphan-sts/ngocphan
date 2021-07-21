@@ -1444,20 +1444,21 @@ global with sharing class MW_SynchronizeHandler {
             
             if(appSet.size()>0) {
                 Boolean ebpEnabled = false;
-                Boolean offerChanged = false;
+                Boolean mxChangedTheOffer = false;
                 string firstelement = new list<string>(appSet)[0];
                 genesis__Applications__c oldApp = oldAppMap.get(firstelement);
                 genesis__Applications__c newApp = newAppMap.get(firstelement);
 
                 if(
-                    oldApp.genesis__Loan_Amount__c != newApp.genesis__Loan_Amount__c ||
+                    (oldApp.genesis__Loan_Amount__c != newApp.genesis__Loan_Amount__c ||
                     oldApp.genesis__APR__c != newApp.genesis__APR__c ||
                     oldApp.genesis__Term__c != newApp.genesis__Term__c ||
                     oldApp.Origination_fee__c != newApp.Origination_fee__c ||
                     oldApp.genesis__Monthly_Debt_Payments__c != newApp.genesis__Monthly_Debt_Payments__c ||
-                    oldApp.genesis__Interest_Rate__c != newApp.genesis__Interest_Rate__c
+                    oldApp.genesis__Interest_Rate__c != newApp.genesis__Interest_Rate__c) &&
+                    newApp.genesis__Interest_Rate__c == 'offer_shown'
                 ) {
-                    offerChanged = true;
+                    mxChangedTheOffer = true;
                 }
 
                 List<Pricing_Offer__c> availablePricingOffers = [SELECT EBP_Offer_Code__c from Pricing_Offer__c WHERE Application__c = :firstelement];
@@ -1469,7 +1470,7 @@ global with sharing class MW_SynchronizeHandler {
                     }
                 }
 
-                if(ebpEnabled && offerChanged) {
+                if(ebpEnabled && mxChangedTheOffer) {
                     Sync_application(appSet, 'offer_reselect');
                 }
                 else {
