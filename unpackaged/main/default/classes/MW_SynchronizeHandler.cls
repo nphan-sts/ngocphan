@@ -1456,7 +1456,7 @@ global with sharing class MW_SynchronizeHandler {
                     oldApp.Origination_fee__c != newApp.Origination_fee__c ||
                     oldApp.genesis__Monthly_Debt_Payments__c != newApp.genesis__Monthly_Debt_Payments__c ||
                     oldApp.genesis__Interest_Rate__c != newApp.genesis__Interest_Rate__c) &&
-                    newApp.genesis__Interest_Rate__c == 'offer_shown'
+                    newApp.genesis__Status__c == 'offer_shown'
                 ) {
                     mxChangedTheOffer = true;
                 }
