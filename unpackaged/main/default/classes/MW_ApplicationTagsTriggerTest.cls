@@ -1,7 +1,12 @@
 @isTest
 private class MW_ApplicationTagsTriggerTest {
+    
+    private static genesis__Org_Parameters__c cso;
+    
     @testSetup
     static void setupTestData() {
+        cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
+        insert cso;
         
         genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
         insert app;
@@ -10,7 +15,8 @@ private class MW_ApplicationTagsTriggerTest {
         appTags.Application__c = app.Id;
         insert appTags;
         
-        
+        cso.genesis__Disable_Triggers__c = false;
+        update cso;
     }
     
     static testMethod void checkDeleteTagsPermissionsTest(){
@@ -53,6 +59,12 @@ private class MW_ApplicationTagsTriggerTest {
     }
     
     static testMethod void checkAddTagsPermissionsTest() {
+        if( cso == null ){
+            cso = [SELECT ID FROM genesis__Org_Parameters__c LIMIT 1];
+        }
+        cso.genesis__Disable_Triggers__c = true;
+        upsert cso;
+        
         User userFraud = MW_GlobalTestUtility.GetUser('TestUser@HappyMoney.com.Test');
         userFraud.ProfileId = UserInfo.getProfileId();
         insert userFraud;
@@ -60,11 +72,15 @@ private class MW_ApplicationTagsTriggerTest {
         Test.startTest();
         system.runAs(userFraud) {
             
+            
             genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
-                insert app;
-                Application_Tags__c appTags = MW_GlobalTestUtility.GetApplicationTag('Needs Review');
-                appTags.Application__c = app.Id;
+            insert app;
+            Application_Tags__c appTags = MW_GlobalTestUtility.GetApplicationTag('Needs Review');
+            appTags.Application__c = app.Id;
+            
             try {
+                cso.genesis__Disable_Triggers__c = false;
+                update cso;
                 insert appTags;
                 
             } catch (exception e) {
@@ -81,16 +97,17 @@ private class MW_ApplicationTagsTriggerTest {
         system.runAs(userFraud1) {
             
             genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
-                insert app;
-                Application_Tags__c appTags = MW_GlobalTestUtility.GetApplicationTag('Needs Review');
-                appTags.Application__c = app.Id;
+            insert app;
+            Application_Tags__c appTags = MW_GlobalTestUtility.GetApplicationTag('Needs Review');
+            appTags.Application__c = app.Id;
+            
             try {
                 
                 insert appTags;
                 
             } catch (exception e) {
                 System.debug('****** Exception Caught :   '+e.getMessage());
-               // System.assert(e.getMessage().contains('You do not have access to add this record!'));
+                // System.assert(e.getMessage().contains('You do not have access to add this record!'));
                 
             }
         }
