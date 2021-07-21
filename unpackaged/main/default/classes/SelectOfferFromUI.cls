@@ -138,7 +138,7 @@ global class SelectOfferFromUI {
                 app.Origination_fee__c=p.Origination_fee__c;
                 app.genesis__Monthly_Debt_Payments__c=p.Monthly_Payment__c;
                 app.genesis__Interest_Rate__c=p.Interest_Rate__c;
-                if(pOffer.EBP_Offer_Code__c == null || pOffer.EBP_Offer_Code__c.length() == 0) {
+                if(p.EBP_Offer_Code__c == null || p.EBP_Offer_Code__c.length() == 0) {
                     app.genesis__Status__c='offer_accepted';
                 }
                 else {
