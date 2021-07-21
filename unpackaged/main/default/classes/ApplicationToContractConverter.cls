@@ -2,6 +2,7 @@
  * Last Modified by        Date          JIRA number
  *      1. Pallavi        2020/01/27     LOS-28(Remove references to InvestorAccount field on CL contract)
  *      2. Pallavi        2020/05/19     CRM-557/LOP-56(DCP - additional fields on Disbursal transaction)
+ *      3. Anusha      2021/06/14   LSP-256 IO Interest Calculation Must Use Accrual Start Date Not Contract Date
  ******************Modification History******************/
 global class ApplicationToContractConverter implements ints.IProcessContract{
     
@@ -239,13 +240,13 @@ global class ApplicationToContractConverter implements ints.IProcessContract{
             Account investor=[SELECT id,loan__Collect_Service_Fees_on__c,Funding_Partner__c,loan__Service_Rate_On_Investment__c 
                               FROM Account 
                               WHERE id = :application.Investor__c];
-            
             loan__Investor_Loan__c inv = new loan__Investor_Loan__c(loan__Loan__c = lAccount.Id, loan__Account__c = investor.id,
                                                                     loan__Investment_Amount__c = lAccount.loan__Loan_Amount__c ,
                                                                     loan__Collect_Service_Fees_On__c =investor.loan__Collect_Service_Fees_on__c,
                                                                     loan__Certificate_Rate__c = lAccount.loan__interest_rate__c,
                                                                     loan__Service_Rate__c = investor.loan__Service_Rate_On_Investment__c ,
-                                                                    loan__Investor_Start_Date__c = systemDate,
+                                                                    //loan__Investor_Start_Date__c = systemDate,//LSP-256 (commented)
+                                                                    loan__Investor_Start_Date__c = systemDate.addDays(Integer.valueOf(la.loan__Accrual_Start_Days__c)),//LSP-256 (added)
                                                                     Buyer__c = investor.Funding_Partner__c);
             List<loan__Investor_Loan__c> ios = new List<loan__Investor_Loan__c>();
             ios.add(inv); 
