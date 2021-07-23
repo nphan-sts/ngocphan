@@ -19,13 +19,23 @@
                     <th>S-SSN</th>
                 </tr>
                 <tr>
-                    <td><apex:outputlink value="/{!aa.Acct.Id}" target="_blank">{!aa.Acct.Name}</apex:outputlink></td>
-                    <td><apex:outputText value="{!aa.Acct.cnotify__Email__c}" /></td>
-                    <td><apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
-                        <apex:param value="{!aa.Acct.peer__Date_of_Birth__c}"/>
-                    </apex:outputText></td>
-                    <td><apex:outputText value="{!aa.Acct.social_security_number_uniqueness_field__c}" /></td>
-                    <td><apex:outputText value="{!aa.Acct.loan__SOCIAL_SECURITY_NUMBER__c}" /></td>
+                    <td>
+                        <apex:outputlink value="/{!aa.Acct.Id}" target="_blank">{!aa.Acct.Name}</apex:outputlink>
+                    </td>
+                    <td>
+                        <apex:outputText value="{!aa.Acct.cnotify__Email__c}" />
+                    </td>
+                    <td>
+                        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!aa.Acct.peer__Date_of_Birth__c}" />
+                        </apex:outputText>
+                    </td>
+                    <td>
+                        <apex:outputText value="{!aa.Acct.social_security_number_uniqueness_field__c}" />
+                    </td>
+                    <td>
+                        <apex:outputText value="{!aa.Acct.loan__SOCIAL_SECURITY_NUMBER__c}" />
+                    </td>
                 </tr>
                 <apex:outputPanel rendered="{!IF(aa.IsAppsExist || aa.IsLoansExist, true, false)}">
                     <tr style="background-color:lightgray">
@@ -37,23 +47,39 @@
                     </tr>
                 </apex:outputPanel>
                 <apex:repeat value="{!aa.Apps}" var="app">
-                <tr>
-                    <td><apex:outputlink value="/{!app.Id}" target="_blank">{!app.Name}</apex:outputlink></td>
-                    <td><apex:outputText value="{!app.Lead_ID__c}" /></td>
-                    <td><apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
-                    <apex:param value="{!app.CreatedDate}"/>
-                    </apex:outputText></td>
-                    <td><apex:outputText value="{!app.genesis__Status__c}"/></td>
-                    <td></td>
-                </tr>
+                    <tr>
+                        <td>
+                            <apex:outputlink value="/{!app.Id}" target="_blank">{!app.Name}</apex:outputlink>
+                        </td>
+                        <td>
+                            <apex:outputText value="{!app.Lead_ID__c}" />
+                        </td>
+                        <td>
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!app.CreatedDate}" />
+                            </apex:outputText>
+                        </td>
+                        <td>
+                            <apex:outputText value="{!app.genesis__Status__c}" />
+                        </td>
+                        <td></td>
+                    </tr>
                 </apex:repeat>
                 <apex:repeat value="{!aa.Loans}" var="loan">
-                    <td><apex:outputlink value="/{!loan.Id}" target="_blank">{!loan.Name}</apex:outputlink></td>
-                    <td><apex:outputText value="{!loan.lead_Guid__c}" /></td>
-                    <td><apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
-                    <apex:param value="{!loan.CreatedDate}"/>
-                    </apex:outputText></td>
-                    <td><apex:outputText value="{!loan.loan__Loan_Status__c}"/></td>
+                    <td>
+                        <apex:outputlink value="/{!loan.Id}" target="_blank">{!loan.Name}</apex:outputlink>
+                    </td>
+                    <td>
+                        <apex:outputText value="{!loan.lead_Guid__c}" />
+                    </td>
+                    <td>
+                        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!loan.CreatedDate}" />
+                        </apex:outputText>
+                    </td>
+                    <td>
+                        <apex:outputText value="{!loan.loan__Loan_Status__c}" />
+                    </td>
                     <td></td>
                 </apex:repeat>
             </apex:repeat>

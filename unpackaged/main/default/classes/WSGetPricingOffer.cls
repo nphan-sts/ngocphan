@@ -88,6 +88,7 @@ global with sharing class WSGetPricingOffer {
         public Boolean Is_Offer_Selected {get;set;}
         public String ebp_offer_code {get;set;}
         public String ebp_parent_offer_key {get;set;}
+
         public Offers(JSONParser parser,String applicationId) {
             
             Pricing_Offer__c pOffer =new Pricing_Offer__c(); 
