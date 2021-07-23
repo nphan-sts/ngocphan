@@ -49,6 +49,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_75';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -63,7 +65,9 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_75',
+                                            EBP_Parent_Offer_Key__c = ''    
                                             );
         insert appOffer;  
         Test.startTest();
@@ -134,6 +138,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_90';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -148,7 +154,9 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_90',
+                                            EBP_Parent_Offer_Key__c = ''  
                                             );
         insert appOffer;  
         Test.startTest();
@@ -225,6 +233,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -239,7 +249,9 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''    
                                             );
         insert appOffer;  
         Test.startTest();
@@ -328,6 +340,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -342,7 +356,9 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''   
                                             );
         insert appOffer;  
         Test.startTest();
@@ -430,6 +446,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -444,7 +462,9 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''       
                                             );
         insert appOffer;
         Test.startTest();
@@ -516,6 +536,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -530,7 +552,9 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = '' 
                                             );
         insert appOffer;
         Test.startTest();
@@ -602,6 +626,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -616,7 +642,9 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''      
                                             );
         insert appOffer;
         Test.startTest();
@@ -827,6 +855,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -841,7 +871,9 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''       
                                             );
         insert appOffer;  
         Test.startTest();
