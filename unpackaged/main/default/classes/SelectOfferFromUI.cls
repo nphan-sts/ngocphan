@@ -125,6 +125,7 @@ global class SelectOfferFromUI {
                 approve.Segment__c=p.Segment__c;
                 approve.Term__c=p.Term__c;
                 approve.Type__c=p.Type__c;
+                
                 approve.EBP_Offer_Code__c=p.EBP_Offer_Code__c;
                 approve.EBP_Parent_Offer_Key__c=p.EBP_Parent_Offer_Key__c;
 
@@ -220,6 +221,8 @@ global class SelectOfferFromUI {
                         update p; 
 
                     }
+
+
                     MW_Utilities.clearDCPForEBP(approve);
                     
                 } catch(System.Exception err){
