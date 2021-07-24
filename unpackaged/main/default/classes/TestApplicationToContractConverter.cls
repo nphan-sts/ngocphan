@@ -53,9 +53,11 @@ private class TestApplicationToContractConverter{
             loan__Investor__c = True,
             Is_Funding_Partner__c = True,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123456789'//LSP-256
             );
         acc1.loan__Undeployed_Funds__c = 50000;//LSP-256
+        acc1.peer__First_Name__c ='test';//LSP-256
+        acc1.peer__Last_Name__c = 'account';//LSP-256
         insert acc1;
         
         //Creating Account
@@ -66,7 +68,9 @@ private class TestApplicationToContractConverter{
             Funding_Partner__c = acc1.id,
             loan__Service_Rate_On_Investment__c =12.45,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123456779',
+            peer__First_Name__c ='test',//LSP-256
+            peer__Last_Name__c = 'account'//LSP-256
             );
         insert acc;
         Account acc2 = new Account(
@@ -76,8 +80,10 @@ private class TestApplicationToContractConverter{
             //Funding_Partner__c = acc1.id,
             loan__Service_Rate_On_Investment__c =12.45,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123456777'
             );
+        acc2.peer__First_Name__c ='test';//LSP-256
+        acc2.peer__Last_Name__c = 'account';//LSP-256
         acc2.loan__Undeployed_Funds__c = 5000;//LSP-256
         insert acc2;
         System.assertEquals('Test',acc.Name,'Wrong Account');
