@@ -76,7 +76,7 @@ global with sharing class WSSelectedOffer{
                                        where id=:approvedOffers.applicationID 
                                       limit 1];
                                       
-        poffer= [select id,name ,Is_Offer_Selected__c
+        poffer= [select id,name ,Is_Offer_Selected__c, EBP_Offer_Code__c
                  from Pricing_Offer__c
                  where Application__c=:approvedOffers.applicationID and
                  Is_Offer_Selected__c=:true ];
