@@ -1441,7 +1441,7 @@ global with sharing class MW_SynchronizeHandler {
                    }
                 }
             }
-
+            
             if(appSet.size()>0) {
                 Boolean ebpEnabled = false;
                 Boolean mxChangedTheOffer = false;
@@ -1477,6 +1477,7 @@ global with sharing class MW_SynchronizeHandler {
                     Sync_application(appSet, 'sync_application');
                 }
             }
+
         }
     }
 
