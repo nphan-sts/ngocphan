@@ -12,7 +12,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -72,8 +73,9 @@ public class TestSelectOfferFromUI{
         insert appOffer;  
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
         SelectOfferFromUI.getselectedoffer(app.id);
+        System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
         //SelectOfferFromUI.getselectedoffer(app1.id);
         Test.stopTest();
              
@@ -86,7 +88,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -100,7 +103,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc1;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -161,9 +165,10 @@ public class TestSelectOfferFromUI{
         insert appOffer;  
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
         SelectOfferFromUI.getselectedoffer(app.id);
         //SelectOfferFromUI.getselectedoffer(app1.id);
+        System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
         Test.stopTest();
              
     }
@@ -176,7 +181,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -192,7 +198,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 200
             );
         insert acc1;
@@ -256,7 +263,8 @@ public class TestSelectOfferFromUI{
         insert appOffer;  
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
         Test.stopTest();
     }
     
@@ -267,7 +275,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -283,7 +292,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -300,7 +310,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test2.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc2;
@@ -363,7 +374,8 @@ public class TestSelectOfferFromUI{
         insert appOffer;  
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
         Test.stopTest();
     }
     
@@ -373,7 +385,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -389,7 +402,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -470,7 +484,9 @@ public class TestSelectOfferFromUI{
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
         //SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('Success', result, 'Success');
+
         Test.stopTest();
     }
     
@@ -480,7 +496,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -496,7 +513,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -560,7 +578,8 @@ public class TestSelectOfferFromUI{
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
         //SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('Success', result, 'Success');
         Test.stopTest();
     }
     
@@ -570,7 +589,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -586,7 +606,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -649,7 +670,8 @@ public class TestSelectOfferFromUI{
         insert appOffer;
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('Success', result, 'Success');
         Test.stopTest();
     }
     
@@ -659,7 +681,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -675,7 +698,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -701,7 +725,8 @@ public class TestSelectOfferFromUI{
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
         
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('No active investors available', result, 'No available investor');
         Test.stopTest();
     }
     
@@ -711,7 +736,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -727,13 +753,16 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
                                         
         Test.startTest();
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(null);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(null);
+        System.assertEquals('Error Attempt to de-reference a null object Occured at line number:22', result, 'Success');
+
         Test.stopTest();
     }
     
@@ -743,7 +772,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -759,7 +789,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -798,7 +829,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -814,7 +846,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 200
             );
         insert acc1;
@@ -878,7 +911,8 @@ public class TestSelectOfferFromUI{
         insert appOffer;  
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('Success', result, 'Success');
         Test.stopTest();
     }
     //CRM-1022 - end

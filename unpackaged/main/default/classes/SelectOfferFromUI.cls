@@ -138,7 +138,12 @@ global class SelectOfferFromUI {
                 app.Origination_fee__c=p.Origination_fee__c;
                 app.genesis__Monthly_Debt_Payments__c=p.Monthly_Payment__c;
                 app.genesis__Interest_Rate__c=p.Interest_Rate__c;
-                app.genesis__Status__c='offer_accepted';
+                if(p.EBP_Offer_Code__c == null || p.EBP_Offer_Code__c.length() == 0) {
+                    app.genesis__Status__c='offer_accepted';
+                }
+                else {
+                    app.genesis__Status__c='offer_shown';
+                }
                 Decimal financeamount= Decimal.valueOf(string.valueof(p.Amount__c - p.Origination_fee__c)); // change by Saryu to capture decimal value and round to 2
                 app.genesis__Financed_Amount__c=genesis.ValueUtil.round(financeamount);
                 system.debug('finance amount'+financeamount);

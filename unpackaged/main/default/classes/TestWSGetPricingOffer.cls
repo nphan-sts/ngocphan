@@ -7,7 +7,9 @@ private class TestWSGetPricingOffer{
                                 Name = 'Test',
                                 loan__Investor__c=False,
                                 cnotify__Email__c = 'abc@test.com',
-                                loan__SOCIAL_SECURITY_NUMBER__c = '123'
+                                loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+                                peer__Last_Name__c = 'Test'
+
                                 );
         insert accTest;
         System.assertEquals('Test',accTest.Name,'Wrong Account');
@@ -47,7 +49,8 @@ private class TestWSGetPricingOffer{
         RestContext.response = res;
         
         Test.startTest();
-        WSGetPricingOffer.parse();
+        WSGetPricingOffer.Response response = WSGetPricingOffer.parse();
+        System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
         Test.stopTest();
     }
     
@@ -70,7 +73,8 @@ private class TestWSGetPricingOffer{
         RestContext.response = res;
         
         Test.startTest();
-        WSGetPricingOffer.parse();
+        WSGetPricingOffer.Response response = WSGetPricingOffer.parse();
+        System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
         Test.stopTest();
     }
     
@@ -91,7 +95,8 @@ private class TestWSGetPricingOffer{
         RestContext.response = res;
         
         Test.startTest();
-        WSGetPricingOffer.parse();
+        WSGetPricingOffer.Response response = WSGetPricingOffer.parse();
+        System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
         Test.stopTest();
     }
     
@@ -112,7 +117,8 @@ private class TestWSGetPricingOffer{
         RestContext.response = res;
         
         Test.startTest();
-        WSGetPricingOffer.parse();
+        WSGetPricingOffer.Response response = WSGetPricingOffer.parse();
+        System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
         Test.stopTest();
     }
 }
