@@ -274,7 +274,7 @@ Public class CustomTriggerOnApplicationHandler{
     public static Boolean payAtFundingForUpdate(Id appId){
         try{
             List<dcp_arcus_transactions__c> arcusTransactions = [select id, name, pay_at_funding__c from dcp_arcus_transactions__c
-            where Application__r.id = :appId and pay_at_funding__c = true];
+                                                                      where Application__r.id = :appId and pay_at_funding__c = true];
             List<dcp_arcus_transactions__c> arcusTransactionsToUpdate = new List<dcp_arcus_transactions__c>();
                       for(dcp_arcus_transactions__c txn:arcusTransactions){
                          txn.pay_at_funding__c = false;

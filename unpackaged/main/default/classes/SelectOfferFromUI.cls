@@ -125,7 +125,6 @@ global class SelectOfferFromUI {
                 approve.Segment__c=p.Segment__c;
                 approve.Term__c=p.Term__c;
                 approve.Type__c=p.Type__c;
-                
                 approve.EBP_Offer_Code__c=p.EBP_Offer_Code__c;
                 approve.EBP_Parent_Offer_Key__c=p.EBP_Parent_Offer_Key__c;
 
@@ -145,7 +144,7 @@ global class SelectOfferFromUI {
                 else {
                     app.genesis__Status__c='offer_shown';
                 }
-                
+
                 Decimal financeamount= Decimal.valueOf(string.valueof(p.Amount__c - p.Origination_fee__c)); // change by Saryu to capture decimal value and round to 2
                 app.genesis__Financed_Amount__c=genesis.ValueUtil.round(financeamount);
                 system.debug('finance amount'+financeamount);
@@ -221,7 +220,6 @@ global class SelectOfferFromUI {
                         update p; 
 
                     }
-
 
                     MW_Utilities.clearDCPForEBP(approve);
                     
