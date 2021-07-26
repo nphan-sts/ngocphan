@@ -315,6 +315,25 @@ public class TestSelectOfferFromUI{
             Amount_Invested__c = 8000
             );
         insert acc2;
+
+        Account acc3 = new Account(
+            Name = 'DifferentInvestor2',
+            loan__Investor__c=true,
+            loan__active__c = 'Yes',
+            Investor_Alloted_Weight__c = 2,
+            Investor_Current_Weight__c = 0,
+            Monthly_Funded_Cap__c = 10000,
+            Total_Funded_MTD__c = null,
+            Total_Funded_YTD__c = null,
+            Total_Funded_Till_date__c = null,
+            Monthly_Allocation_Cap__c = 10,
+            Total_Allocations_MTD__c =0,
+            cnotify__Email__c = 'abc@test2.com',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
+            Amount_Invested__c = 8000
+            );
+        insert acc3;
         
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -376,6 +395,10 @@ public class TestSelectOfferFromUI{
        	app.genesis__Financed_Amount__c = 1050.00;
         String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
         System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
+        app.Investor__c = acc3.Id;
+        update app;
+        String result2 = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('No such investors available', result2, 'No available investors');
         Test.stopTest();
     }
     
@@ -915,6 +938,5 @@ public class TestSelectOfferFromUI{
         System.assertEquals('Success', result, 'Success');
         Test.stopTest();
     }
-    //CRM-1022 - end
-    
+    //CRM-1022 - end   
 }
