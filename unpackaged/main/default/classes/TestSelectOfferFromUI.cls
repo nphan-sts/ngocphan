@@ -84,6 +84,8 @@ public class TestSelectOfferFromUI{
     testmethod static void method2(){
         
         //Creating Account
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.allowSave = true;
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -91,7 +93,7 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc;
+        database.insert(acc, dml);
          Account acc1 = new Account(
             Name = 'Test',
             loan__Investor__c=true,
@@ -106,7 +108,7 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc1;
+        database.insert(acc1, dml);
         System.assertEquals('Test',acc.Name,'Wrong Account');
         
         //Creating Application
@@ -177,6 +179,8 @@ public class TestSelectOfferFromUI{
     testmethod static void method3SingleInvestor(){
         
         //Creating Account
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.allowSave = true;
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -184,7 +188,7 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc;
+        database.insert(acc, dml);
          Account acc1 = new Account(
             Name = 'Test',
             loan__Investor__c=true,
@@ -202,7 +206,7 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 200
             );
-        insert acc1;
+            database.insert(acc1, dml);
         System.assertEquals('Test',acc.Name,'Wrong Account');
         
         //Creating Application
@@ -271,6 +275,8 @@ public class TestSelectOfferFromUI{
     testmethod static void method4TwoInvestors(){
         
         //Creating Account
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.allowSave = true;
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -278,7 +284,7 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc;
+            database.insert(acc, dml);
          Account acc1 = new Account(
             Name = 'Test',
             loan__Investor__c=true,
@@ -296,7 +302,7 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
-        insert acc1;
+            database.insert(acc1, dml);
         Account acc2 = new Account(
             Name = 'DifferentInvestor',
             loan__Investor__c=true,
@@ -314,7 +320,7 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
-        insert acc2;
+            database.insert(acc2, dml);
 
         Account acc3 = new Account(
             Name = 'DifferentInvestor2',
@@ -333,7 +339,7 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
-        insert acc3;
+            database.insert(acc3, dml);
         
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -404,6 +410,8 @@ public class TestSelectOfferFromUI{
     
    	testmethod static void method5InvestorCurrentWeightNotZero(){
         //Creating Account
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.allowSave = true;
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -411,8 +419,8 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc;
-         Account acc1 = new Account(
+            database.insert(acc, dml);
+            Account acc1 = new Account(
             Name = 'Test',
             loan__Investor__c=true,
             loan__active__c = 'Yes',
@@ -429,8 +437,8 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
-        insert acc1;
-        /*Account acc2 = new Account(
+            database.insert(acc1, dml);
+            /*Account acc2 = new Account(
             Name = 'DifferentInvestor',
             loan__Investor__c=true,
             loan__active__c = 'Yes',
@@ -515,6 +523,8 @@ public class TestSelectOfferFromUI{
     
     testmethod static void method6currentWeightZeroNotEqualtoTotalInvestor(){
         //Creating Account
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.allowSave = true;
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -522,8 +532,8 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc;
-         Account acc1 = new Account(
+            database.insert(acc, dml);
+            Account acc1 = new Account(
             Name = 'Test',
             loan__Investor__c=true,
             loan__active__c = 'Yes',
@@ -540,7 +550,7 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
-        insert acc1;
+            database.insert(acc1, dml);
                 
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -608,6 +618,8 @@ public class TestSelectOfferFromUI{
     
     testmethod static void method7InvestorCurrentWeightGreater(){
         //Creating Account
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.allowSave = true;
         Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -615,8 +627,8 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc;
-         Account acc1 = new Account(
+            database.insert(acc, dml);
+            Account acc1 = new Account(
             Name = 'Test',
             loan__Investor__c=true,
             loan__active__c = 'Yes',
@@ -633,7 +645,7 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
-        insert acc1;
+            database.insert(acc1, dml);
                
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -700,6 +712,9 @@ public class TestSelectOfferFromUI{
     
     testmethod static void method8NoActiveInvestor(){
         //Creating Account
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.allowSave = true;
+        
         Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -707,7 +722,7 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc;
+        database.insert(acc, dml);
          Account acc1 = new Account(
             Name = 'Test',
             loan__Investor__c=true,
@@ -725,7 +740,8 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
-        insert acc1;
+            database.insert(acc1, dml);
+        
         
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -755,6 +771,8 @@ public class TestSelectOfferFromUI{
     
     testmethod static void method9AppNull(){
         //Creating Account
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.allowSave = true;
         Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -762,8 +780,8 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc;
-         Account acc1 = new Account(
+            database.insert(acc, dml);
+            Account acc1 = new Account(
             Name = 'Test',
             loan__Investor__c=true,
             loan__active__c = 'No',
@@ -780,7 +798,7 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
-        insert acc1;
+            database.insert(acc1, dml);
                                         
         Test.startTest();
         String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(null);
@@ -791,6 +809,8 @@ public class TestSelectOfferFromUI{
     
     testmethod static void method10GetSelectedOfferCatch(){
         //Creating Account
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.allowSave = true;
         Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -798,7 +818,8 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc;
+        database.insert(acc, dml);    
+        
          Account acc1 = new Account(
             Name = 'Test',
             loan__Investor__c=true,
@@ -816,7 +837,7 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
-        insert acc1;
+        database.insert(acc1, dml);
         
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -848,6 +869,8 @@ public class TestSelectOfferFromUI{
     testmethod static void method11InvestedAmountNotNull(){
         
         //Creating Account
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.allowSave = true;
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -855,7 +878,7 @@ public class TestSelectOfferFromUI{
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
             peer__Last_Name__c = 'Test'
             );
-        insert acc;
+        database.insert(acc, dml);
          Account acc1 = new Account(
             Name = 'Test',
             loan__Investor__c=true,
@@ -873,7 +896,7 @@ public class TestSelectOfferFromUI{
             peer__Last_Name__c = 'Test',
             Amount_Invested__c = 200
             );
-        insert acc1;
+        database.insert(acc1, dml);
         System.assertEquals('Test',acc.Name,'Wrong Account');
         
         //Creating Application
