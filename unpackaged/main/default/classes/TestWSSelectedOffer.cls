@@ -7,7 +7,8 @@ private class TestWSSelectedOffer{
                                 Name = 'Test',
                                 loan__Investor__c=False,
                                 cnotify__Email__c = 'abc@test.com',
-                                loan__SOCIAL_SECURITY_NUMBER__c = '123'
+                                loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+                                peer__Last_Name__c = 'Test'
                                 );
         insert accTest;
         System.assertEquals('Test',accTest.Name,'Wrong Account');

@@ -12,7 +12,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -49,6 +50,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_75';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -63,13 +66,16 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_75',
+                                            EBP_Parent_Offer_Key__c = ''    
                                             );
         insert appOffer;  
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
         SelectOfferFromUI.getselectedoffer(app.id);
+        System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
         //SelectOfferFromUI.getselectedoffer(app1.id);
         Test.stopTest();
              
@@ -82,7 +88,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -96,7 +103,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc1;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -134,6 +142,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_90';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -148,14 +158,17 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_90',
+                                            EBP_Parent_Offer_Key__c = ''    
                                             );
         insert appOffer;  
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
         SelectOfferFromUI.getselectedoffer(app.id);
         //SelectOfferFromUI.getselectedoffer(app1.id);
+        System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
         Test.stopTest();
              
     }
@@ -168,7 +181,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -184,7 +198,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 200
             );
         insert acc1;
@@ -225,6 +240,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -239,12 +256,15 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''  
                                             );
         insert appOffer;  
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
         Test.stopTest();
     }
     
@@ -255,7 +275,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -271,7 +292,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -288,10 +310,30 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test2.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc2;
+
+        Account acc3 = new Account(
+            Name = 'DifferentInvestor2',
+            loan__Investor__c=true,
+            loan__active__c = 'Yes',
+            Investor_Alloted_Weight__c = 2,
+            Investor_Current_Weight__c = 0,
+            Monthly_Funded_Cap__c = 10000,
+            Total_Funded_MTD__c = null,
+            Total_Funded_YTD__c = null,
+            Total_Funded_Till_date__c = null,
+            Monthly_Allocation_Cap__c = 10,
+            Total_Allocations_MTD__c =0,
+            cnotify__Email__c = 'abc@test2.com',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
+            Amount_Invested__c = 8000
+            );
+        insert acc3;
         
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -328,6 +370,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -342,12 +386,19 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''    
                                             );
         insert appOffer;  
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
+        app.Investor__c = acc3.Id;
+        update app;
+        String result2 = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('No such investors available', result2, 'No available investors');
         Test.stopTest();
     }
     
@@ -357,7 +408,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -373,7 +425,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -430,6 +483,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -444,13 +499,17 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''    
                                             );
         insert appOffer;
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
         //SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('Success', result, 'Success');
+
         Test.stopTest();
     }
     
@@ -460,7 +519,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -476,7 +536,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -516,6 +577,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -530,13 +593,16 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''    
                                             );
         insert appOffer;
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
         //SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('Success', result, 'Success');
         Test.stopTest();
     }
     
@@ -546,7 +612,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -562,7 +629,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -602,6 +670,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -616,12 +686,15 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''    
                                             );
         insert appOffer;
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('Success', result, 'Success');
         Test.stopTest();
     }
     
@@ -631,7 +704,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -647,7 +721,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -673,7 +748,8 @@ public class TestSelectOfferFromUI{
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
         
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('No active investors available', result, 'No available investor');
         Test.stopTest();
     }
     
@@ -683,7 +759,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -699,13 +776,16 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
                                         
         Test.startTest();
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(null);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(null);
+        System.assertEquals('Error Attempt to de-reference a null object Occured at line number:22', result, 'Success');
+
         Test.stopTest();
     }
     
@@ -715,7 +795,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -731,7 +812,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 8000
             );
         insert acc1;
@@ -770,7 +852,8 @@ public class TestSelectOfferFromUI{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
          Account acc1 = new Account(
@@ -786,7 +869,8 @@ public class TestSelectOfferFromUI{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+            peer__Last_Name__c = 'Test',
             Amount_Invested__c = 200
             );
         insert acc1;
@@ -827,6 +911,8 @@ public class TestSelectOfferFromUI{
         pOfferTrue.Segment__c = 'prime';
         pOfferTrue.Term__c = 24;
         pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
         insert pOfferTrue;
         Approved_Offer__c appOffer = new Approved_Offer__c( 
                                             Above_prime_max__c = 'false',
@@ -841,14 +927,16 @@ public class TestSelectOfferFromUI{
                                             Pricing_Tier__c = 't2',
                                             Segment__c = 'prime',
                                             Term__c = 24,
-                                            Type__c ='test'    
+                                            Type__c ='test',
+                                            EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                                            EBP_Parent_Offer_Key__c = ''    
                                             );
         insert appOffer;  
         Test.startTest();
        	app.genesis__Financed_Amount__c = 1050.00;
-        SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('Success', result, 'Success');
         Test.stopTest();
     }
-    //CRM-1022 - end
-    
+    //CRM-1022 - end   
 }

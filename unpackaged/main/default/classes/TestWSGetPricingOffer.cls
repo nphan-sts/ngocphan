@@ -7,7 +7,9 @@ private class TestWSGetPricingOffer{
                                 Name = 'Test',
                                 loan__Investor__c=False,
                                 cnotify__Email__c = 'abc@test.com',
-                                loan__SOCIAL_SECURITY_NUMBER__c = '123'
+                                loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
+                                peer__Last_Name__c = 'Test'
+
                                 );
         insert accTest;
         System.assertEquals('Test',accTest.Name,'Wrong Account');
@@ -35,7 +37,7 @@ private class TestWSGetPricingOffer{
         Account acc =[Select id, name from Account where name='Test' limit 1];
         genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
       
-        String jsonStr = '{"offers":[{"type1":"1","term_months":3,"amount":"1200","Is_Offer_Selected":true,"monthly_payment":"1100","origination_fee_rate":"2","interest_rate":"3","apr":"10.30%","above_prime_max":"3","segment":"2","pricing_tier":"3","origination_fee":"150","key":"Test"}],"applicationId":app.id}';
+        String jsonStr = '{"offers":[{"type1":"1","term_months":3,"amount":"1200","Is_Offer_Selected":true,"monthly_payment":"1100","origination_fee_rate":"2","interest_rate":"3","apr":"10.30%","above_prime_max":"3","segment":"2","pricing_tier":"3","origination_fee":"150","key":"Test","ebp_offer_code":"2021Feb_ebp_DCP_optout","ebp_parent_offer_key":""}],"applicationId":app.id}';
         RestRequest req = new RestRequest(); 
         RestResponse res = new RestResponse();
         
@@ -47,7 +49,8 @@ private class TestWSGetPricingOffer{
         RestContext.response = res;
         
         Test.startTest();
-        WSGetPricingOffer.parse();
+        WSGetPricingOffer.Response response = WSGetPricingOffer.parse();
+        System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
         Test.stopTest();
     }
     
@@ -70,7 +73,8 @@ private class TestWSGetPricingOffer{
         RestContext.response = res;
         
         Test.startTest();
-        WSGetPricingOffer.parse();
+        WSGetPricingOffer.Response response = WSGetPricingOffer.parse();
+        System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
         Test.stopTest();
     }
     
@@ -91,7 +95,8 @@ private class TestWSGetPricingOffer{
         RestContext.response = res;
         
         Test.startTest();
-        WSGetPricingOffer.parse();
+        WSGetPricingOffer.Response response = WSGetPricingOffer.parse();
+        System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
         Test.stopTest();
     }
     
@@ -100,7 +105,7 @@ private class TestWSGetPricingOffer{
         Account acc =[Select id, name from Account where name='Test' limit 1];
         genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
       
-        String jsonStr = '{"offers":[{"Is_Offer_Selected":true,"above_prime_max":"3","segment":"2","pricing_tier":"3","origination_fee":"150","key":"Test"}],"applicationId":app.id}';
+        String jsonStr = '{"offers":[{"Is_Offer_Selected":true,"above_prime_max":"3","segment":"2","pricing_tier":"3","origination_fee":"150","key":"Test","ebp_offer_code":"2021Feb_ebp_DCP_optout","ebp_parent_offer_key":""}],"applicationId":app.id}';
         RestRequest req = new RestRequest(); 
         RestResponse res = new RestResponse();
         
@@ -112,7 +117,8 @@ private class TestWSGetPricingOffer{
         RestContext.response = res;
         
         Test.startTest();
-        WSGetPricingOffer.parse();
+        WSGetPricingOffer.Response response = WSGetPricingOffer.parse();
+        System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
         Test.stopTest();
     }
 }
