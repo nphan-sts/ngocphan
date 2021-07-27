@@ -205,6 +205,14 @@ public with sharing class InvestorAllocation{
                                             FROM   Credit_Policy__r) // LOP-217
                                             FROM genesis__Applications__c
                                             WHERE id =: appId];
+
+            // LOP-217 treat null as 0
+            for (Credit_Policy__c cp : app.Credit_Policy__r) {
+                if (cp.Num_Trades_Opened_Past_24mo__c == null) {
+                    cp.Num_Trades_Opened_Past_24mo__c = 0;
+                }
+            }
+
             List<DCP_arcus_transactions__c> txns = new List<DCP_arcus_transactions__c>();
             txns = [select id from DCP_arcus_transactions__c where application__c =: appId];
             system.debug('Txns: .. '+ txns.size());
