@@ -1,5 +1,6 @@
 public with sharing class ActivityOnOtherAccountsController {
     public String AcctId { get; set; }
+    public Boolean IsSsnExist {get; set;}
     public Boolean IsAcctActivitiesExist { get; set; }
     public List<AcctActivity> AcctActivities {get; set;}
     
@@ -24,6 +25,7 @@ public with sharing class ActivityOnOtherAccountsController {
     public void PopulateAcctActivities()
     {
         System.debug('AcctId=' + AcctId);
+        IsSsnExist = true;
         IsAcctActivitiesExist = false;
         
         IF (string.isEmpty(AcctId) == false) {
@@ -41,8 +43,18 @@ public with sharing class ActivityOnOtherAccountsController {
 
             For(genesis__Applications__c app : listApps) {
                         mapCurrentApps.put(app.genesis__Account__c, app);
-                        setDuplicateSsn.Add(app.Bureau_SSN__c);
+                        
+                        if(string.isEmpty(app.Bureau_SSN__c) == false){
+                            setDuplicateSsn.Add(app.Bureau_SSN__c);
+                        }
             }
+            
+            if(setDuplicateSsn.size() == 0)
+            {
+                IsSsnExist = false;
+                return;
+            }
+
             System.debug('setDuplicateSsn=' + setDuplicateSsn);
 
             Map<Id, Account> mapPreExistAccts = new Map<Id, Account>(
