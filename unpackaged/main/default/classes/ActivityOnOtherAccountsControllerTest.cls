@@ -7,7 +7,9 @@ private class ActivityOnOtherAccountsControllerTest {
     
     //Create pre-exist account
     Account preExistAct = MW_GlobalTestUtility.GetAccount('Member');
-    preExistAct.Name = 'PreExistAct';
+    //preExistAct.Name = 'PreExist Act';
+    preExistAct.peer__First_Name__c ='PreExist';
+    preExistAct.peer__Last_Name__c = 'Act';
     Insert preExistAct;
 
     //Create app for pre-exist account
@@ -30,7 +32,9 @@ private class ActivityOnOtherAccountsControllerTest {
 
     //Create one more Account
     Account actWithDuplicateSsn = MW_GlobalTestUtility.GetAccount('Member');
-    actWithDuplicateSsn.Name = 'ActWithDuplicateSsn';
+    //actWithDuplicateSsn.Name = 'ActWithDuplicate Ssn';
+    actWithDuplicateSsn.peer__First_Name__c ='ActWithDuplicate';
+    actWithDuplicateSsn.peer__Last_Name__c = 'Ssn';
     Insert actWithDuplicateSsn;
 
     //Create app for one more account with duplicate SSN
@@ -44,7 +48,7 @@ private class ActivityOnOtherAccountsControllerTest {
   
   @isTest static void TestActivities(){
     //call controller          
-    Account actWithDuplicateSsn = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicateSsn' LIMIT 1];
+    Account actWithDuplicateSsn = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn' LIMIT 1];
     ActivityOnOtherAccountsController actyOnOtherAcct = new ActivityOnOtherAccountsController();
     actyOnOtherAcct.AcctId = actWithDuplicateSsn.Id;
     actyOnOtherAcct.PopulateAcctActivities();
