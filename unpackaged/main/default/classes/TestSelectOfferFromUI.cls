@@ -208,7 +208,7 @@ public class TestSelectOfferFromUI{
                                             Term__c = 24,
                                             Type__c ='test',
                                             EBP_Offer_Code__c = '2021Feb_ebp_DCP_90',
-                                            EBP_Parent_Offer_Key__c = ''    
+                                            EBP_Parent_Offer_Key__c = '' 
                                             );
         insert appOffer;  
         Test.startTest();
@@ -284,7 +284,7 @@ public class TestSelectOfferFromUI{
                                             Term__c = 24,
                                             Type__c ='test',
                                             EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
-                                            EBP_Parent_Offer_Key__c = ''  
+                                            EBP_Parent_Offer_Key__c = '' 
                                             );
         insert appOffer;  
         Test.startTest();
@@ -357,7 +357,7 @@ public class TestSelectOfferFromUI{
                                             Term__c = 24,
                                             Type__c ='test',
                                             EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
-                                            EBP_Parent_Offer_Key__c = ''    
+                                            EBP_Parent_Offer_Key__c = '' 
                                             );
         insert appOffer;  
         Test.startTest();
@@ -438,7 +438,7 @@ public class TestSelectOfferFromUI{
                                             Term__c = 24,
                                             Type__c ='test',
                                             EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
-                                            EBP_Parent_Offer_Key__c = ''    
+                                            EBP_Parent_Offer_Key__c = '' 
                                             );
         insert appOffer;
         Test.startTest();
@@ -512,7 +512,7 @@ public class TestSelectOfferFromUI{
                                             Term__c = 24,
                                             Type__c ='test',
                                             EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
-                                            EBP_Parent_Offer_Key__c = ''    
+                                            EBP_Parent_Offer_Key__c = '' 
                                             );
         insert appOffer;
         Test.startTest();
@@ -588,7 +588,7 @@ public class TestSelectOfferFromUI{
                                             Term__c = 24,
                                             Type__c ='test',
                                             EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
-                                            EBP_Parent_Offer_Key__c = ''    
+                                            EBP_Parent_Offer_Key__c = '' 
                                             );
         insert appOffer;
         Test.startTest();
@@ -757,7 +757,7 @@ public class TestSelectOfferFromUI{
                                             Term__c = 24,
                                             Type__c ='test',
                                             EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
-                                            EBP_Parent_Offer_Key__c = ''    
+                                            EBP_Parent_Offer_Key__c = '' 
                                             );
         insert appOffer;  
         Test.startTest();
