@@ -144,6 +144,7 @@ global class SelectOfferFromUI {
                 else {
                     app.genesis__Status__c='offer_shown';
                 }
+
                 Decimal financeamount= Decimal.valueOf(string.valueof(p.Amount__c - p.Origination_fee__c)); // change by Saryu to capture decimal value and round to 2
                 app.genesis__Financed_Amount__c=genesis.ValueUtil.round(financeamount);
                 system.debug('finance amount'+financeamount);
@@ -219,6 +220,7 @@ global class SelectOfferFromUI {
                         update p; 
 
                     }
+
                     MW_Utilities.clearDCPForEBP(approve);
                     
                 } catch(System.Exception err){
