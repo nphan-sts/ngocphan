@@ -16,8 +16,6 @@ trigger CustomAccountTrigger on Account (after insert, after update,before inser
                     acc.Encrypted_SSN__c = '*******' + acc.loan__SOCIAL_SECURITY_NUMBER__c.right(4);
                 }
                 /*CRM-619*/
-                /*
-                if(!Test.isRunningTest()) {
                 if(trigger.isUpdate){
                     if((acc.peer__First_Name__c != null) && ((acc.peer__First_Name__c != Trigger.oldMap.get(acc.id).peer__First_Name__c) || (acc.peer__Last_Name__c != Trigger.oldMap.get(acc.id).peer__Last_Name__c))){
                         if(acc.peer__Last_Name__c == null)
@@ -26,10 +24,10 @@ trigger CustomAccountTrigger on Account (after insert, after update,before inser
                             acc.name = acc.peer__First_Name__c + ' ' + acc.peer__Last_Name__c;
                     }
                 }
-                else if(trigger.isInsert)
+                else if(trigger.isInsert){
                     acc.name = acc.peer__First_Name__c + ' ' + acc.peer__Last_Name__c;
                 }
-                */
+                
                 /*CRM-619*/
                 /*
                 if(Test.isRunningTest()) {
