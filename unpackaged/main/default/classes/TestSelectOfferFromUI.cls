@@ -5,19 +5,92 @@
  ******************Modification History******************/
 @isTest
 public class TestSelectOfferFromUI{
-    testmethod static void method1(){
-        
+    @testSetup static void methodName() {
         //Creating Account
-         Account acc = new Account(
-            Name = 'Test',
+        Account acc = new Account(
+            Name = 'TestF1Name TestL1Name',
             loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
+            cnotify__Email__c = 'abc1@test.com',
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
+            peer__First_Name__c = 'TestF1Name',
+            peer__Last_Name__c='TestL1Name', 
+            City__c='TestCity',
+            State__c='TestState',
+            ZIP_Code__c='12345'
             );
         insert acc;
-        System.assertEquals('Test',acc.Name,'Wrong Account');
-        
+       
+
+        Account acc1 = new Account(
+            Name = 'TestF2Name TestL2Name',
+            loan__Investor__c=true,
+            loan__active__c = 'Yes',
+            Investor_Alloted_Weight__c = 2,
+            Investor_Current_Weight__c = 0,
+            Monthly_Funded_Cap__c = 10000,
+            Total_Funded_MTD__c = 500,
+            Monthly_Allocation_Cap__c = 10,
+            Total_Allocations_MTD__c =0,
+            cnotify__Email__c = 'abc2@test.com',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123124',
+            peer__First_Name__c = 'TestF2Name',
+            peer__Last_Name__c='TestL2Name', 
+            City__c='TestCity',
+            State__c='TestState',
+            ZIP_Code__c='12345'
+            );
+            
+            insert acc1;
+
+        Account acc2 = new Account(
+            Name = 'TestF3Name TestL3Name',
+            loan__Investor__c=true,
+            loan__active__c = 'Yes',
+            Investor_Alloted_Weight__c = 2,
+            Investor_Current_Weight__c = 0,
+            Monthly_Funded_Cap__c = 10000,
+            Total_Funded_MTD__c = null,
+            Total_Funded_YTD__c = null,
+            Total_Funded_Till_date__c = null,
+            Monthly_Allocation_Cap__c = 10,
+            Total_Allocations_MTD__c =0,
+            cnotify__Email__c = 'abc3@test2.com',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123125',
+            Amount_Invested__c = 8000,
+            peer__First_Name__c = 'TestF3Name',
+            peer__Last_Name__c='TestL3Name', 
+            City__c='TestCity',
+            State__c='TestState',
+            ZIP_Code__c='12345'
+            );
+            insert acc2;
+
+        Account acc3 = new Account(
+            Name = 'TestF4Name TestL4Name',
+            loan__Investor__c=true,
+            loan__active__c = 'Yes',
+            Investor_Alloted_Weight__c = 2,
+            Investor_Current_Weight__c = 0,
+            Monthly_Funded_Cap__c = 10000,
+            Total_Funded_MTD__c = null,
+            Total_Funded_YTD__c = null,
+            Total_Funded_Till_date__c = null,
+            Monthly_Allocation_Cap__c = 10,
+            Total_Allocations_MTD__c =0,
+            cnotify__Email__c = 'abc4@test2.com',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123126',
+            Amount_Invested__c = 8000,
+            peer__First_Name__c = 'TestF4Name',
+            peer__Last_Name__c='TestL4Name', 
+            City__c='TestCity',
+            State__c='TestState',
+            ZIP_Code__c='12345'
+            );
+            insert acc3;
+    }
+
+    @isTest static void method1(){
+        Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
@@ -81,36 +154,9 @@ public class TestSelectOfferFromUI{
              
     }
     
-    testmethod static void method2(){
-        
-        //Creating Account
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.allowSave = true;
-         Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-        database.insert(acc, dml);
-         Account acc1 = new Account(
-            Name = 'Test',
-            loan__Investor__c=true,
-            loan__active__c = 'Yes',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = 0,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = 500,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-        database.insert(acc1, dml);
-        System.assertEquals('Test',acc.Name,'Wrong Account');
-        
+    @isTest static void method2(){
+        Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
+        Account acc1 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
@@ -176,39 +222,15 @@ public class TestSelectOfferFromUI{
     }
     
     //CRM-1022 - start
-    testmethod static void method3SingleInvestor(){
-        
-        //Creating Account
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.allowSave = true;
-         Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-        database.insert(acc, dml);
-         Account acc1 = new Account(
-            Name = 'Test',
-            loan__Investor__c=true,
-            loan__active__c = 'Yes',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = 0,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 200
-            );
-            database.insert(acc1, dml);
-        System.assertEquals('Test',acc.Name,'Wrong Account');
-        
+    @isTest static void method3SingleInvestor(){   
+        Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
+        Account acc1 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
+        Account acc2 =[Select id, name from Account where name='TestF3Name TestL3Name' limit 1];
+        acc2.loan__active__c = 'No';
+        update acc2;
+        Account acc3 =[Select id, name from Account where name='TestF4Name TestL4Name' limit 1];
+        acc3.loan__active__c = 'No';
+        update acc3;
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
@@ -270,77 +292,18 @@ public class TestSelectOfferFromUI{
         String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
         System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
         Test.stopTest();
+        acc2.loan__active__c = 'Yes';
+        update acc2;
+        acc3.loan__active__c = 'Yes';
+        update acc3;
     }
     
-    testmethod static void method4TwoInvestors(){
-        
-        //Creating Account
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.allowSave = true;
-         Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-            database.insert(acc, dml);
-         Account acc1 = new Account(
-            Name = 'Test',
-            loan__Investor__c=true,
-            loan__active__c = 'Yes',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = 0,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 8000
-            );
-            database.insert(acc1, dml);
-        Account acc2 = new Account(
-            Name = 'DifferentInvestor',
-            loan__Investor__c=true,
-            loan__active__c = 'Yes',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = 0,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test2.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 8000
-            );
-            database.insert(acc2, dml);
-
-        Account acc3 = new Account(
-            Name = 'DifferentInvestor2',
-            loan__Investor__c=true,
-            loan__active__c = 'Yes',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = 0,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test2.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 8000
-            );
-            database.insert(acc3, dml);
-        
+    @isTest static void method4TwoInvestors(){
+        Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
+        Account acc2 =[Select id, name from Account where name='TestF3Name TestL3Name' limit 1];
+        Account acc3 =[Select id, name from Account where name='TestF4Name TestL4Name' limit 1];
+        acc3.loan__active__c = 'No';
+        update acc3;
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
@@ -406,55 +369,21 @@ public class TestSelectOfferFromUI{
         String result2 = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
         System.assertEquals('No such investors available', result2, 'No available investors');
         Test.stopTest();
+        acc3.loan__active__c = 'Yes';
+        update acc3;
     }
     
-   	testmethod static void method5InvestorCurrentWeightNotZero(){
-        //Creating Account
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.allowSave = true;
-         Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-            database.insert(acc, dml);
-            Account acc1 = new Account(
-            Name = 'Test',
-            loan__Investor__c=true,
-            loan__active__c = 'Yes',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = 1,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 8000
-            );
-            database.insert(acc1, dml);
-            /*Account acc2 = new Account(
-            Name = 'DifferentInvestor',
-            loan__Investor__c=true,
-            loan__active__c = 'Yes',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = 1,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test2.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123',
-            Amount_Invested__c = 8000
-            );
-        insert acc2;*/
+    @isTest static void method5InvestorCurrentWeightNotZero(){
+        Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
+        Account acc1 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
+        acc1.Investor_Current_Weight__c = 1;
+        update acc1;
+        Account acc2 =[Select id, name from Account where name='TestF3Name TestL3Name' limit 1];
+        acc2.loan__active__c = 'No';
+        update acc2;
+        Account acc3 =[Select id, name from Account where name='TestF4Name TestL4Name' limit 1];
+        acc3.loan__active__c = 'No';
+        update acc3;
         
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -519,39 +448,17 @@ public class TestSelectOfferFromUI{
         System.assertEquals('Success', result, 'Success');
 
         Test.stopTest();
+        acc1.Investor_Current_Weight__c = 0;
+        update acc1;
+        acc2.loan__active__c = 'Yes';
+        update acc2;
+        acc3.loan__active__c = 'Yes';
+        update acc3;
     }
     
-    testmethod static void method6currentWeightZeroNotEqualtoTotalInvestor(){
-        //Creating Account
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.allowSave = true;
-         Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-            database.insert(acc, dml);
-            Account acc1 = new Account(
-            Name = 'Test',
-            loan__Investor__c=true,
-            loan__active__c = 'Yes',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = 0,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 8000
-            );
-            database.insert(acc1, dml);
-                
+    @isTest static void method6currentWeightZeroNotEqualtoTotalInvestor(){
+        Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
+
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
@@ -616,37 +523,18 @@ public class TestSelectOfferFromUI{
         Test.stopTest();
     }
     
-    testmethod static void method7InvestorCurrentWeightGreater(){
-        //Creating Account
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.allowSave = true;
-        Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-            database.insert(acc, dml);
-            Account acc1 = new Account(
-            Name = 'Test',
-            loan__Investor__c=true,
-            loan__active__c = 'Yes',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = 3,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 8000
-            );
-            database.insert(acc1, dml);
-               
+    @isTest static void method7InvestorCurrentWeightGreater(){
+        Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
+        Account acc1 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
+        acc1.Investor_Current_Weight__c = 3;
+        update acc1;
+        Account acc2 =[Select id, name from Account where name='TestF3Name TestL3Name' limit 1];
+        acc2.loan__active__c = 'No';
+        update acc2;
+        Account acc3 =[Select id, name from Account where name='TestF4Name TestL4Name' limit 1];
+        acc3.loan__active__c = 'No';
+        update acc3;
+
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
@@ -708,41 +596,26 @@ public class TestSelectOfferFromUI{
         String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
         System.assertEquals('Success', result, 'Success');
         Test.stopTest();
+        acc1.Investor_Current_Weight__c = 0;
+        update acc1;
+        acc2.loan__active__c = 'Yes';
+        update acc2;
+        acc3.loan__active__c = 'Yes';
+        update acc3;
     }
     
-    testmethod static void method8NoActiveInvestor(){
-        //Creating Account
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.allowSave = true;
-        
-        Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-        database.insert(acc, dml);
-         Account acc1 = new Account(
-            Name = 'Test',
-            loan__Investor__c=true,
-            loan__active__c = 'No',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = null,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 8000
-            );
-            database.insert(acc1, dml);
-        
-        
+    @isTest static void method8NoActiveInvestor(){
+        Account acc1 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
+        acc1.loan__active__c = 'No';
+        update acc1;
+        Account acc2 =[Select id, name from Account where name='TestF3Name TestL3Name' limit 1];
+        acc2.loan__active__c = 'No';
+        update acc2;
+        Account acc3 =[Select id, name from Account where name='TestF4Name TestL4Name' limit 1];
+        acc3.loan__active__c = 'No';
+        update acc3;
+        Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
+
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
@@ -767,38 +640,19 @@ public class TestSelectOfferFromUI{
         String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
         System.assertEquals('No active investors available', result, 'No available investor');
         Test.stopTest();
+
+        acc1.loan__active__c = 'Yes';
+        update acc1;
+        acc2.loan__active__c = 'Yes';
+        update acc2;
+        acc3.loan__active__c = 'Yes';
+        update acc3;
     }
     
-    testmethod static void method9AppNull(){
-        //Creating Account
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.allowSave = true;
-        Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-            database.insert(acc, dml);
-            Account acc1 = new Account(
-            Name = 'Test',
-            loan__Investor__c=true,
-            loan__active__c = 'No',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = null,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 8000
-            );
-            database.insert(acc1, dml);
+    @isTest static void method9AppNull(){
+        Account acc1 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
+        acc1.loan__active__c = 'No';
+        update acc1;
                                         
         Test.startTest();
         String result = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(null);
@@ -807,38 +661,18 @@ public class TestSelectOfferFromUI{
         Test.stopTest();
     }
     
-    testmethod static void method10GetSelectedOfferCatch(){
-        //Creating Account
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.allowSave = true;
-        Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-        database.insert(acc, dml);    
-        
-         Account acc1 = new Account(
-            Name = 'Test',
-            loan__Investor__c=true,
-            loan__active__c = 'No',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = null,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 8000
-            );
-        database.insert(acc1, dml);
-        
+    @isTest static void method10GetSelectedOfferCatch(){
+        Account acc1 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
+        acc1.loan__active__c = 'No';
+        update acc1;
+        Account acc2 =[Select id, name from Account where name='TestF3Name TestL3Name' limit 1];
+        acc2.loan__active__c = 'No';
+        update acc2;
+        Account acc3 =[Select id, name from Account where name='TestF4Name TestL4Name' limit 1];
+        acc3.loan__active__c = 'No';
+        update acc3;
+        Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
+
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
@@ -866,39 +700,10 @@ public class TestSelectOfferFromUI{
         Test.stopTest();
     }
     
-    testmethod static void method11InvestedAmountNotNull(){
-        
-        //Creating Account
-        Database.DMLOptions dml = new Database.DMLOptions();
-        dml.DuplicateRuleHeader.allowSave = true;
-         Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test'
-            );
-        database.insert(acc, dml);
-         Account acc1 = new Account(
-            Name = 'Test',
-            loan__Investor__c=true,
-            loan__active__c = 'Yes',
-            Investor_Alloted_Weight__c = 2,
-            Investor_Current_Weight__c = 0,
-            Monthly_Funded_Cap__c = 10000,
-            Total_Funded_MTD__c = null,
-            Total_Funded_YTD__c = null,
-            Total_Funded_Till_date__c = null,
-            Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c =0,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-            peer__Last_Name__c = 'Test',
-            Amount_Invested__c = 200
-            );
-        database.insert(acc1, dml);
-        System.assertEquals('Test',acc.Name,'Wrong Account');
-        
+    @isTest static void method11InvestedAmountNotNull(){
+        Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
+        Account acc1 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
+
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
