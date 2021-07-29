@@ -33,6 +33,20 @@ public with sharing class ActivityOnOtherAccountsController {
             Map<Id, genesis__Applications__c> mapCurrentApps = new Map<Id, genesis__Applications__c>();
             List<AcctActivity> tempAcctActivities = new List<AcctActivity>();
 
+            Account currentAcct = [SELECT Id, Name, social_security_number_uniqueness_field__c, 
+            loan__SOCIAL_SECURITY_NUMBER__c, cnotify__Email__c, peer__Date_of_Birth__c
+            FROM Account WHERE Id = :AcctId];
+
+            If  (currentAcct == null){
+                return;
+            } 
+            
+            if(string.isEmpty(currentAcct.social_security_number_uniqueness_field__c) == false ){
+                setDuplicateSsn.Add(currentAcct.social_security_number_uniqueness_field__c);
+            }else if(string.isEmpty(currentAcct.loan__SOCIAL_SECURITY_NUMBER__c) == false){
+                setDuplicateSsn.Add(currentAcct.loan__SOCIAL_SECURITY_NUMBER__c);
+            }
+
             List<genesis__Applications__c> listApps = [
                 SELECT Id, Name, Lead_ID__c, Applicant_Name__c, CreatedDate, Bureau_SSN__c, 
                 Bureau_DOB__c, genesis__Status__c, genesis__Account__c 
