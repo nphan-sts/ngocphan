@@ -10,7 +10,9 @@ private class MW_ApplicationServiceTest {
     
     //Create pre-exist account
     Account preExistAct = MW_GlobalTestUtility.GetAccount('Member');
-    preExistAct.Name = 'PreExistAct';
+    //preExistAct.Name = 'PreExistAct';
+    preExistAct.peer__First_Name__c ='PreExist';
+    preExistAct.peer__Last_Name__c = 'Act';
     Insert preExistAct;
     System.debug('preExistAct=' + preExistAct);
 
@@ -34,7 +36,9 @@ private class MW_ApplicationServiceTest {
 
     //Create one more Account
     Account actWithDuplicateSsn = MW_GlobalTestUtility.GetAccount('Member');
-    actWithDuplicateSsn.Name = 'ActWithDuplicateSsn';
+    //actWithDuplicateSsn.Name = 'ActWithDuplicateSsn';
+    actWithDuplicateSsn.peer__First_Name__c ='ActWithDuplicate';
+    actWithDuplicateSsn.peer__Last_Name__c = 'Ssn';
     actWithDuplicateSsn.loan__SOCIAL_SECURITY_NUMBER__c = null;
     Insert actWithDuplicateSsn;
 
@@ -49,14 +53,14 @@ private class MW_ApplicationServiceTest {
   }
   
   @isTest static void TestPifLoanUpdates(){
-    genesis__Applications__c appForDuplicateAct = [SELECT Id, Name, Bureau_SSN__c, genesis__Status__c, genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__r.Name = 'ActWithDuplicateSsn' LIMIT 1];
+    genesis__Applications__c appForDuplicateAct = [SELECT Id, Name, Bureau_SSN__c, genesis__Status__c, genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__r.Name = 'ActWithDuplicate Ssn' LIMIT 1];
     System.debug('appForDuplicateAct=' + appForDuplicateAct);
     appForDuplicateAct.genesis__Status__c = 'kba_fail';
     Update appForDuplicateAct;
 
-    Account preExistAct = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'PreExistAct' LIMIT 1];
+    Account preExistAct = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'PreExist Act' LIMIT 1];
 
-    Account actWithDuplicateSsn = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicateSsn' LIMIT 1];
+    Account actWithDuplicateSsn = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn' LIMIT 1];
 
     loan__Loan_Account__c loanForPreExistAcct = [SELECT Id, loan__Account__c, loan__Loan_Status__c FROM loan__Loan_Account__c WHERE loan__Account__c =: actWithDuplicateSsn.Id LIMIT 1];
 
