@@ -107,7 +107,7 @@ public class MW_ApplicationService {
             If(
                 (app.genesis__Status__c != oldMap.get(app.Id).genesis__Status__c && app.genesis__Status__c == 'kba_fail')
                 ||
-                (app.genesis__Status__c != oldMap.get(app.Id).genesis__Status__c && app.genesis__Status__c == 'kba_success') 
+                (app.genesis__Status__c != oldMap.get(app.Id).genesis__Status__c && app.genesis__Status__c == 'kba_success')
             )
             {
                     mapCurrentApps.put(app.genesis__Account__c, app);
@@ -120,7 +120,7 @@ public class MW_ApplicationService {
         {
             List<Account> listCurrentAccts = [
                         SELECT Id, Name, social_security_number_uniqueness_field__c
-                        FROM Account 
+                        FROM Account
                         WHERE Id IN :setCurrentAcctIds AND social_security_number_uniqueness_field__c = NULL
                 ];
 
@@ -135,10 +135,10 @@ public class MW_ApplicationService {
 
                 List<Account> listDuplicateAccts = [
                     SELECT Id, Name, social_security_number_uniqueness_field__c
-                    FROM Account 
+                    FROM Account
                     WHERE social_security_number_uniqueness_field__c IN :setDuplicateSsn
                 ];
-                
+
                 For (Account acct : listDuplicateAccts) {
                         mapExistingDuplicateAccts.put(acct.social_security_number_uniqueness_field__c, acct);
                         setPreExistAcctIds.Add(acct.Id);
@@ -147,7 +147,7 @@ public class MW_ApplicationService {
                 //
                 List<loan__Loan_Account__c> listExistingLoanAcct = [
                     SELECT Id, loan__Account__c, loan__Loan_Status__c
-                    FROM loan__Loan_Account__c 
+                    FROM loan__Loan_Account__c
                     WHERE loan__Account__c IN :setPreExistAcctIds AND loan__Loan_Status__c = 'Closed - Obligations met'
                 ];
                 For (loan__Loan_Account__c loanAcct : listExistingLoanAcct) {
@@ -155,20 +155,20 @@ public class MW_ApplicationService {
                 }
 
                 //if any existing active application
-                For (genesis__Applications__c app : 
+                For (genesis__Applications__c app :
                         [
-                            SELECT Id, Name, genesis__Status__c, genesis__Account__c 
-                            FROM genesis__Applications__c 
-                            WHERE 
+                            SELECT Id, Name, genesis__Status__c, genesis__Account__c
+                            FROM genesis__Applications__c
+                            WHERE
                             genesis__Account__c IN :setPreExistAcctIds
                             AND genesis__Status__c IN
                             (
                                 'agent_document_verification_pending', 'agent_verification_pending',
-                                'agent_verified', 'docusign_loan_docs_sent', 'docusign_loan_docs_complete', 
+                                'agent_verified', 'docusign_loan_docs_sent', 'docusign_loan_docs_complete',
                                 'pre_funding', 'Approved for funding'
                             )
                         ]
-                    ) 
+                    )
                 {
                     mapPreExistAcctsActiveApps.put(app.genesis__Account__c, app);
                 }
@@ -177,13 +177,11 @@ public class MW_ApplicationService {
                     genesis__Applications__c app = mapCurrentApps.get(acctId);
                     Account currentAcct = mapCurrentAccts.get(acctId);
                     Account existingDuplAcct = mapExistingDuplicateAccts.get(app.Bureau_SSN__c);
-                    loan__Loan_Account__c existingLoanAcct = mapExistingLoanAccts.get(existingDuplAcct.Id);
+                    loan__Loan_Account__c existingClosedLoanAcct = mapExistingLoanAccts.get(existingDuplAcct.Id);
+                    Boolean IsPreExistClosedLoanThere = existingClosedLoanAcct != null? true: false;
                     Boolean IsPreExistAcctActiveAppThere = mapPreExistAcctsActiveApps.get(existingDuplAcct.Id) != null? true: false;
 
-                    If( IsPreExistAcctActiveAppThere == false 
-                            && 
-                            (existingLoanAcct == null || existingLoanAcct.loan__Loan_Status__c == 'Closed - Obligations met')
-                        )
+                    If( IsPreExistAcctActiveAppThere == false && IsPreExistClosedLoanThere == true)
                     {
                         existingDuplAcct.loan__SOCIAL_SECURITY_NUMBER__c = NULL; //by workflow, it would update to social_security_number_uniqueness_field__c
                         existingDuplAcct.Encrypted_SSN__c = NULL;
@@ -198,13 +196,13 @@ public class MW_ApplicationService {
                         acctPost.Body = 'SSN was moved to ';
                         acctPost.Title = currentAcct.Id;
                         acctPost.LinkUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + currentAcct.Id;
-                        
+
                         preExistAcctsPost.Add(acctPost);
-                    
-                        If(existingLoanAcct != null)
+
+                        If(existingClosedLoanAcct != null)
                         {
-                            existingLoanAcct.loan__Account__c = currentAcct.Id;
-                            updateExistingLoanAccts.Add(existingLoanAcct);
+                            existingClosedLoanAcct.loan__Account__c = currentAcct.Id;
+                            updateExistingLoanAccts.Add(existingClosedLoanAcct);
                         }
                     }
                 }
@@ -228,7 +226,7 @@ public class MW_ApplicationService {
                 {
                     Insert preExistAcctsPost;
                 }
-                
+
             } //If(mapCurrentAccts.size() > 0)
         } //If(mapCurrentApps.size() > 0)
     }

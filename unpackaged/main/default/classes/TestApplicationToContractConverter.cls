@@ -1,6 +1,7 @@
 /* ****************Modification History*****************************************************************
  * Modified by      Date        JIRA number
  *     Pallavi      2020/05/22      LOP-56/CRM-557(fixed routing number)
+ *     Anusha       2021/07/14      LSP-256 IO Interest Calculation Must Use Accrual Start Date Not Contract Date
  ******************Modification History*****************************************************************/
 @isTest
 private class TestApplicationToContractConverter{
@@ -52,8 +53,11 @@ private class TestApplicationToContractConverter{
             loan__Investor__c = True,
             Is_Funding_Partner__c = True,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123456789'//LSP-256
             );
+        acc1.loan__Undeployed_Funds__c = 50000;//LSP-256
+        acc1.peer__First_Name__c ='test';//LSP-256
+        acc1.peer__Last_Name__c = 'account';//LSP-256
         insert acc1;
         
         //Creating Account
@@ -64,7 +68,9 @@ private class TestApplicationToContractConverter{
             Funding_Partner__c = acc1.id,
             loan__Service_Rate_On_Investment__c =12.45,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123456779',
+            peer__First_Name__c ='test',//LSP-256
+            peer__Last_Name__c = 'account'//LSP-256
             );
         insert acc;
         Account acc2 = new Account(
@@ -74,8 +80,11 @@ private class TestApplicationToContractConverter{
             //Funding_Partner__c = acc1.id,
             loan__Service_Rate_On_Investment__c =12.45,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123456777'
             );
+        acc2.peer__First_Name__c ='test';//LSP-256
+        acc2.peer__Last_Name__c = 'account';//LSP-256
+        acc2.loan__Undeployed_Funds__c = 5000;//LSP-256
         insert acc2;
         System.assertEquals('Test',acc.Name,'Wrong Account');
         
@@ -88,7 +97,7 @@ private class TestApplicationToContractConverter{
         bnk1.loan__Active__c = true;
         bnk1.loan__Account_Type__c = 'Savings';  //pallavi(LOS-63)
         bnk1.loan__Account_Usage__c = 'Borrower/Investor Account';  //pallavi(LOS-63)
-	bnk1.loan__Routing_Number__c = '999999999'; //CRM-557
+    bnk1.loan__Routing_Number__c = '999999999'; //CRM-557
         insert bnk1;
         //
         loan__Payment_Mode__c pm1 = new loan__Payment_Mode__c();
@@ -188,7 +197,7 @@ private class TestApplicationToContractConverter{
         bnk.loan__Active__c = true;
         bnk.loan__Account_Type__c = 'Savings';  //pallavi(LOS-63)
         bnk.loan__Account_Usage__c = 'Borrower/Investor Account';  //pallavi(LOS-63)
-	bnk.loan__Routing_Number__c = '999999999'; //CRM-557
+    bnk.loan__Routing_Number__c = '999999999'; //CRM-557
         insert bnk;
         //
         loan__Payment_Mode__c pm = new loan__Payment_Mode__c();
@@ -210,10 +219,20 @@ private class TestApplicationToContractConverter{
         Savepoint sp = Database.setSavepoint();
         ApplicationToContractConverter appconvert = new ApplicationToContractConverter();
         appconvert.setContracts(AppVsLoanAppMap);
-        appconvert.processContract();
+        String msg = appconvert.processContract();//LSP-256 (capturing returned msg, so it can be used in assert)
+        System.assertEquals('Application converted to Loan successfully!!', msg);//LSP-256
         ApplicationToContractConverter.getApplicationDetails(app.id);
         ApplicationToContractConverter.callDCPIntegration(app.id);
-        
+        //LSP-256 start
+        List<genesis__applications__c> convertedApp = [select id,CL_Contract__c from genesis__applications__c where id =:app.id];
+        System.assert(convertedApp.get(0).CL_Contract__c != null);   
+        id contractId = convertedApp.get(0).CL_Contract__c;
+        List<loan__Investor_Loan__c> ioCreated = [select id, name, loan__Investor_Start_Date__c, loan__Loan__r.loan__Accrual_Start_Date__c 
+                                                           from loan__Investor_Loan__c where loan__Loan__c =:contractId order by createdDate desc limit 1];
+        if(ioCreated != null && ioCreated.size()>0){
+            System.assertEquals(ioCreated.get(0).loan__Loan__r.loan__Accrual_Start_Date__c, ioCreated.get(0).loan__Investor_Start_Date__c); 
+        }        
+        //LSP-256 end
         Test.StopTest();
    }
    

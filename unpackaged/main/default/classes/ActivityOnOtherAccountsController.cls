@@ -1,5 +1,6 @@
 public with sharing class ActivityOnOtherAccountsController {
     public String AcctId { get; set; }
+    public Boolean IsSsnExist {get; set;}
     public Boolean IsAcctActivitiesExist { get; set; }
     public List<AcctActivity> AcctActivities {get; set;}
     
@@ -24,12 +25,27 @@ public with sharing class ActivityOnOtherAccountsController {
     public void PopulateAcctActivities()
     {
         System.debug('AcctId=' + AcctId);
+        IsSsnExist = true;
         IsAcctActivitiesExist = false;
         
         IF (string.isEmpty(AcctId) == false) {
             Set<String> setDuplicateSsn = new Set<String>();
             Map<Id, genesis__Applications__c> mapCurrentApps = new Map<Id, genesis__Applications__c>();
             List<AcctActivity> tempAcctActivities = new List<AcctActivity>();
+
+            Account currentAcct = [SELECT Id, Name, social_security_number_uniqueness_field__c,
+            loan__SOCIAL_SECURITY_NUMBER__c, cnotify__Email__c, peer__Date_of_Birth__c
+            FROM Account WHERE Id = :AcctId];
+
+            If  (currentAcct == null){
+                return;
+            }
+
+            if(string.isEmpty(currentAcct.social_security_number_uniqueness_field__c) == false ){
+                setDuplicateSsn.Add(currentAcct.social_security_number_uniqueness_field__c);
+            }else if(string.isEmpty(currentAcct.loan__SOCIAL_SECURITY_NUMBER__c) == false){
+                setDuplicateSsn.Add(currentAcct.loan__SOCIAL_SECURITY_NUMBER__c);
+            }
 
             List<genesis__Applications__c> listApps = [
                 SELECT Id, Name, Lead_ID__c, Applicant_Name__c, CreatedDate, Bureau_SSN__c, 
@@ -41,8 +57,18 @@ public with sharing class ActivityOnOtherAccountsController {
 
             For(genesis__Applications__c app : listApps) {
                         mapCurrentApps.put(app.genesis__Account__c, app);
-                        setDuplicateSsn.Add(app.Bureau_SSN__c);
+
+                        if(string.isEmpty(app.Bureau_SSN__c) == false){
+                            setDuplicateSsn.Add(app.Bureau_SSN__c);
+                        }
             }
+
+            if(setDuplicateSsn.size() == 0)
+            {
+                IsSsnExist = false;
+                return;
+            }
+
             System.debug('setDuplicateSsn=' + setDuplicateSsn);
 
             Map<Id, Account> mapPreExistAccts = new Map<Id, Account>(
