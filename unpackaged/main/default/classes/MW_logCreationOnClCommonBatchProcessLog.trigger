@@ -19,7 +19,7 @@ trigger MW_logCreationOnClCommonBatchProcessLog on clcommon__Batch_Process_Log__
 		} else if (String.isBlank(entry.clcommon__Type__c) == true) {
 			type = 'Warning';
 		} else {
-			continue;
+			type = 'Info';
 		}
 
 		new MW_LogTriggerHelper().construct(entry.Name, apexClass, label, type, JSON.serialize(entry));

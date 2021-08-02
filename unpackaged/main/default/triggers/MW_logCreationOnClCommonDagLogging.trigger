@@ -1,4 +1,3 @@
-
 trigger MW_logCreationOnClCommonDagLogging on clcommon__DAG_Logging__c(
 	after insert,
 	after update
