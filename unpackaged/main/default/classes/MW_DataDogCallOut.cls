@@ -30,7 +30,7 @@ public class MW_DataDogCallOut {
         if(messages == null || messages.size() == 0) {
             return;
         }
-		sendJsonBatch(message)
+		sendJsonBatch(message);
     }
 	
 	/**
