@@ -30,7 +30,7 @@ public class MW_DataDogCallOut {
         if(messages == null || messages.size() == 0) {
             return;
         }
-		sendJsonBatch(message);
+		sendJsonBatch(messages);
     }
 	
 	/**
@@ -104,10 +104,6 @@ public class MW_DataDogCallOut {
 	/**
 	 * This takes a List of JSON messages and send to DataDog.
 	 */
-	public static HttpResponse sendJsonBatch(List<String> messages) {
-		return sendJsonBatch(messages, new List<String>());
-	}
-
 	public static HttpResponse sendJsonBatch(
 		List<String> logs
 	) {
@@ -121,9 +117,9 @@ public class MW_DataDogCallOut {
 		List<Map<String, Object>> bodies = new List<Map<String, Object>>();
 		for (String log : logs) {
 			Map<String, Object> body = new Map<String, Object>();
-			body.put('ddtags', String.join(additionalTags, ','));
+			body.put('ddtags', '');
 			body.put('ddsource', 'Salesforce');
-			body.put('message', message);
+			body.put('message', log);
 			body.put('service', service);
 			bodies.add(body);
 		}
