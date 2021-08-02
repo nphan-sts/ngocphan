@@ -86,7 +86,7 @@ public class MW_DataDogCallOutTest {
 	@isTest
 	static void bulkJsonPostMWDataDogCallOut() {
 		Test.startTest();
-		List<MW_LogUtility.Log> logs = new List<MW_LogUtility.Log>();
+		List<String> logs = new List<String>();
 
 		MW_LogUtility.Log log = new MW_LogUtility.Log();
 		log.data = 'test message';
@@ -96,14 +96,14 @@ public class MW_DataDogCallOutTest {
 		log.type = 'info';
 		log.statusCode = 200;
 
-		logs.add(log);
-		logs.add(log);
+		logs.add(JSON.serialize(log));
+		logs.add(JSON.serialize(log));
 
 		// Associate the callout with a mock response
 		Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
 
 		// Call method to test
-		HttpResponse result = MW_DataDogCallOut.sendJsonBatch(JSON.serialize(logs));
+		HttpResponse result = MW_DataDogCallOut.sendJsonBatch(logs);
 		// Verify mock response is not null
 		System.assertNotEquals(
 			null,
