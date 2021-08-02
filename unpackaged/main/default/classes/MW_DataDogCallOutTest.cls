@@ -84,6 +84,48 @@ public class MW_DataDogCallOutTest {
 	}
 
 	@isTest
+	static void bulkJsonPostMWDataDogCallOut() {
+		Test.startTest();
+		List<MW_LogUtility.Log> logs = new List<MW_LogUtility.Log>();
+
+		MW_LogUtility.Log log = new MW_LogUtility.Log();
+		log.data = 'test message';
+		log.applicationId = 'test id';
+		log.leadId = 'test lead id';
+		log.apexClass = 'test class';
+		log.type = 'info';
+		log.statusCode = 200;
+
+		logs.add(log);
+		logs.add(log);
+
+		// Associate the callout with a mock response
+		Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
+
+		// Call method to test
+		HttpResponse result = MW_DataDogCallOut.sendJsonBatch(JSON.serialize(logs));
+		// Verify mock response is not null
+		System.assertNotEquals(
+			null,
+			result,
+			'The callout returned a null response.'
+		);
+		// Verify status code
+		System.assertEquals(
+			200,
+			result.getStatusCode(),
+			'The status code is not 200.'
+		);
+		// Verify content type
+		System.assertEquals(
+			'application/json;charset=UTF-8',
+			result.getHeader('Content-Type'),
+			'The content type value is not expected.'
+		);
+		Test.stopTest();
+	}
+
+	@isTest
 	static void bulkPostMWDataDogCallOut() {
 		Test.startTest();
 		List<MW_LogUtility.Log> logs = new List<MW_LogUtility.Log>();
