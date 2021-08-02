@@ -21,7 +21,7 @@ trigger MW_logCreationOnClCommonJobLogging on clcommon__Job_Logging__c(
 		} else if (String.isBlank(entry.clcommon__Status__c) == true) {
 			type = 'Warning';
 		} else {
-			continue;
+			type = 'Info';
 		}
 
 		new MW_LogTriggerHelper().construct(entry.Name, apexClass, label, type, JSON.serialize(entry));

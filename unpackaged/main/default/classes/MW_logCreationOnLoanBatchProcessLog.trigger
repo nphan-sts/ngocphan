@@ -20,7 +20,7 @@ trigger MW_logCreationOnLoanBatchProcessLog on loan__Batch_Process_Log__c(
 		} else if (String.isBlank(entry.loan__Type__c) == true) {
 			type = 'Warning';
 		} else {
-			continue;
+			type = 'Info';
 		}
 
 		new MW_LogTriggerHelper().construct(entry.Name, apexClass, label, type, JSON.serialize(entry));
