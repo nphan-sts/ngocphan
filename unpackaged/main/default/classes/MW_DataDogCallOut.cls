@@ -30,10 +30,7 @@ public class MW_DataDogCallOut {
         if(messages == null || messages.size() == 0) {
             return;
         }
-        for (String message : messages) {
-            send(message, new List<string>());
-        }
-        
+		sendJsonBatch(messages);
     }
 	
 	/**
@@ -105,12 +102,52 @@ public class MW_DataDogCallOut {
 	}
 
 	/**
+	 * This takes a List of JSON messages and send to DataDog.
+	 */
+	public static HttpResponse sendJsonBatch(
+		List<String> logs
+	) {
+		HttpResponse response = new HttpResponse();
+		if (String.isEmpty(apiKey) || String.isEmpty(url)) {
+			System.debug(
+				'DataDog API Key or URL is not set; unable to send logs to DataDog.'
+			);
+			return response;
+		}
+		List<Map<String, Object>> bodies = new List<Map<String, Object>>();
+		for (String log : logs) {
+			Map<String, Object> body = new Map<String, Object>();
+			body.put('ddtags', '');
+			body.put('ddsource', 'Salesforce');
+			body.put('message', log);
+			body.put('service', service);
+			bodies.add(body);
+		}
+
+		HttpRequest req = new HttpRequest();
+		req.setEndpoint(url);
+		req.setTimeout(2 /* seconds */ * 1000 /* milliseconds */);
+		req.setMethod('POST');
+		req.setHeader('DD-API-KEY', apiKey);
+		req.setHeader('Content-Type', 'application/json');
+		req.setBody(JSON.serialize(bodies));
+		Http http = new Http();
+		try {
+			response = http.send(req);
+		} catch (Exception e) {
+			System.debug('Unable to contact DataDog.' + e.getMessage());
+		}
+		return response;
+	}
+
+	/**
 	 * This takes a List of MW_LogUtility.Log and converts it to JSON to send to DataDog.
 	 * Additionally, it adds additional tags for severity, lead ID, and account ID.
 	 */
 	public static HttpResponse sendBatch(List<MW_LogUtility.Log> logs) {
 		return sendBatch(logs, new List<String>());
 	}
+
 	public static HttpResponse sendBatch(
 		List<MW_LogUtility.Log> logs,
 		List<String> additionalTags
