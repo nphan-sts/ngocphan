@@ -117,7 +117,7 @@ public class MW_DataDogCallOut {
 		List<Map<String, Object>> bodies = new List<Map<String, Object>>();
 		for (String log : logs) {
 			Map<String, Object> body = new Map<String, Object>();
-			body.put('ddtags', '');
+			body.put('ddtags', String.join(tags, ','));
 			body.put('ddsource', 'Salesforce');
 			body.put('message', log);
 			body.put('service', service);
