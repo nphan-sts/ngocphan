@@ -1441,7 +1441,7 @@ global with sharing class MW_SynchronizeHandler {
                    }
                 }
             }
-            
+
             if(appSet.size()>0) {
                 Boolean ebpEnabled = false;
                 Boolean mxChangedTheOffer = false;
@@ -1462,7 +1462,7 @@ global with sharing class MW_SynchronizeHandler {
                 }
 
                 List<Pricing_Offer__c> availablePricingOffers = [SELECT EBP_Offer_Code__c from Pricing_Offer__c WHERE Application__c = :firstelement];
-                
+
 
                 for(Pricing_Offer__c offer: availablePricingOffers) {
                     if(offer.EBP_Offer_Code__c != null && offer.EBP_Offer_Code__c.length() != 0) {
@@ -1477,7 +1477,6 @@ global with sharing class MW_SynchronizeHandler {
                     Sync_application(appSet, 'sync_application');
                 }
             }
-
         }
     }
 
