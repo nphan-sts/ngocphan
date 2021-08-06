@@ -1462,7 +1462,7 @@ global with sharing class MW_SynchronizeHandler {
                 }
 
                 List<Pricing_Offer__c> availablePricingOffers = [SELECT EBP_Offer_Code__c from Pricing_Offer__c WHERE Application__c = :firstelement];
-                
+
 
                 for(Pricing_Offer__c offer: availablePricingOffers) {
                     if(offer.EBP_Offer_Code__c != null && offer.EBP_Offer_Code__c.length() != 0) {
