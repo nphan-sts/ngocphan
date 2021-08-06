@@ -1,7 +1,8 @@
 /* ****************Modification History*****************************************************************
  * Modified by      Date        JIRA number
  *     Pallavi      2020/05/22      LOP-56/CRM-557(fixed routing number)
- *     Anusha       2021/07/14      LSP-256 IO Interest Calculation Must Use Accrual Start Date Not Contract Date
+ * 	   Anusha		2021/07/14 		LSP-256 IO Interest Calculation Must Use Accrual Start Date Not Contract Date
+ * 	   Anusha		2021/07/21 		LSP-218 update APS type to last billed amount in ApplicationToContractConverter CLS case #02694756(added assert)
  ******************Modification History*****************************************************************/
 @isTest
 private class TestApplicationToContractConverter{
@@ -97,7 +98,7 @@ private class TestApplicationToContractConverter{
         bnk1.loan__Active__c = true;
         bnk1.loan__Account_Type__c = 'Savings';  //pallavi(LOS-63)
         bnk1.loan__Account_Usage__c = 'Borrower/Investor Account';  //pallavi(LOS-63)
-    bnk1.loan__Routing_Number__c = '999999999'; //CRM-557
+	bnk1.loan__Routing_Number__c = '999999999'; //CRM-557
         insert bnk1;
         //
         loan__Payment_Mode__c pm1 = new loan__Payment_Mode__c();
@@ -197,7 +198,7 @@ private class TestApplicationToContractConverter{
         bnk.loan__Active__c = true;
         bnk.loan__Account_Type__c = 'Savings';  //pallavi(LOS-63)
         bnk.loan__Account_Usage__c = 'Borrower/Investor Account';  //pallavi(LOS-63)
-    bnk.loan__Routing_Number__c = '999999999'; //CRM-557
+	bnk.loan__Routing_Number__c = '999999999'; //CRM-557
         insert bnk;
         //
         loan__Payment_Mode__c pm = new loan__Payment_Mode__c();
@@ -233,6 +234,18 @@ private class TestApplicationToContractConverter{
             System.assertEquals(ioCreated.get(0).loan__Loan__r.loan__Accrual_Start_Date__c, ioCreated.get(0).loan__Investor_Start_Date__c); 
         }        
         //LSP-256 end
+        //LSP-218 start
+        List<loan__loan_account__c> laCreated = [select id, name, loan__Loan_Product_Name__r.name 
+                                                           from loan__loan_account__c where id =:contractId limit 1];
+        if(laCreated != null && laCreated.size()>0){
+            if(laCreated.get(0).loan__Loan_Product_Name__r.name == 'Auto Payer'){
+               List<loan__Automated_Payment_Setup__c> aps =  [select id, name, loan__Amount_Type__c from loan__Automated_Payment_Setup__c
+                                                             where loan__CL_Contract__c =:laCreated.get(0).id and loan__Type__c = 'RECURRING'
+                                                             order by createdDate desc limit 1];
+               System.assertEquals('LAST BILLED AMOUNT',aps.get(0).loan__Amount_Type__c);
+            }
+        } 
+        //LSP-218 end
         Test.StopTest();
    }
    

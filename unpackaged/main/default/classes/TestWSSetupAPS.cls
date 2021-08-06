@@ -1,6 +1,7 @@
 /* ****************Modification History*****************************************************************
  * Modified by      Date            JIRA number
   *    Pallavi      2020/12/15      CRM-845
+  *    Anusha		2020/06/04      LSP-223
  ******************Modification History*****************************************************************/
 @isTest(SeeAllData = false)
 public class TestWSSetupAPS {
@@ -105,7 +106,7 @@ public class TestWSSetupAPS {
                                                                   loan__Active__c = true,
                                                                   loan__Bank_Account_Number__c = '12345',
                                                                   loan__Bank_Name__c = 'Test Bank',
-                                                                  loan__Routing_Number__c = '999999999',	//CRM-845
+                                                                  loan__Routing_Number__c = '999999999',  //CRM-845
                                                                   loan__Account_Type__c = 'Checking',  //pallavi
                                                                   Unmasked_Bank_Account_Number__c = '12345');
         insert bankAcc;
@@ -189,13 +190,13 @@ public class TestWSSetupAPS {
                                                                   loan__Active__c = true,
                                                                   loan__Bank_Account_Number__c = '12345',
                                                                   loan__Bank_Name__c = 'Test Bank',
-                                                                  loan__Routing_Number__c = '999999999',	//CRM-845
+                                                                  loan__Routing_Number__c = '999999999',  //CRM-845
                                                                   Unmasked_Bank_Account_Number__c = '12345',
                                                                   loan__Account_Type__c = 'Checking'  );//pallavi
         loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
                                       loan__Bank_Name__c = 'Some Bank',
                                       Unmasked_Bank_Account_Number__c = '123234324',
-                                      loan__Routing_Number__c = '999999999',	//CRM-845
+                                      loan__Routing_Number__c = '999999999',  //CRM-845
                                         loan__Account_Type__c = 'Checking',
                                       loan__Account_Usage__c = 'Collections Trust Account',
                                       loan__Account__c = acc.id,
@@ -267,7 +268,7 @@ public class TestWSSetupAPS {
         loan__Automated_Payment_Setup__c automatedPaymentSetup = [select id,name,loan__installment_payment__c
                                                                  from loan__Automated_Payment_Setup__c 
                                                                   where loan__cl_contract__c=:lAcct.id];
-        System.assertEquals(automatedPaymentSetup.loan__installment_payment__c,false);	//CRM-845
+        System.assertEquals(automatedPaymentSetup.loan__installment_payment__c,false);  //CRM-845
         /*CRM-845*/
         loan__Loan_account_Due_Details__c bill = new loan__Loan_account_Due_Details__c(loan__DD_Primary_Flag__c = true,
                                                                                       loan__Payment_Satisfied__c = false,
@@ -301,7 +302,7 @@ public class TestWSSetupAPS {
                                                                   loan__Active__c = true,
                                                                   loan__Bank_Account_Number__c = '12345',
                                                                   loan__Bank_Name__c = 'Test Bank',
-                                                                  loan__Routing_Number__c = '999999999',	//CRM-845
+                                                                  loan__Routing_Number__c = '999999999',  //CRM-845
                                                                   loan__Account_Type__c = 'Checking',  //pallavi
                                                                   Unmasked_Bank_Account_Number__c = '12345');
         insert bankAcc ;
@@ -348,7 +349,7 @@ public class TestWSSetupAPS {
                                                                   loan__Active__c = true,
                                                                   loan__Bank_Account_Number__c = '12345',
                                                                   loan__Bank_Name__c = 'Test Bank',
-                                                                  loan__Routing_Number__c = '999999999',	//CRM-845
+                                                                  loan__Routing_Number__c = '999999999',  //CRM-845
                                                                   loan__Account_Type__c = 'Checking',  //pallavi
                                                                   Unmasked_Bank_Account_Number__c = '12345');
         insert bankAcc ;
@@ -395,7 +396,7 @@ public class TestWSSetupAPS {
                                                                   loan__Active__c = true,
                                                                   loan__Bank_Account_Number__c = '12345',
                                                                   loan__Bank_Name__c = 'Test Bank',
-                                                                  loan__Routing_Number__c = '999999999',	//CRM-845
+                                                                  loan__Routing_Number__c = '999999999',  //CRM-845
                                                                   loan__Account_Type__c = 'Checking',  //pallavi
                                                                   Unmasked_Bank_Account_Number__c = '12345');
         insert bankAcc ;
@@ -443,7 +444,7 @@ public class TestWSSetupAPS {
                                                                   loan__Active__c = true,
                                                                   loan__Bank_Account_Number__c = '12345',
                                                                   loan__Bank_Name__c = 'Test Bank',
-                                                                  loan__Routing_Number__c = '999999999',	//CRM-845
+                                                                  loan__Routing_Number__c = '999999999',  //CRM-845
                                                                   loan__Account_Type__c = 'Checking',  //pallavi
                                                                   Unmasked_Bank_Account_Number__c = '12345');
         insert bankAcc ;
@@ -490,7 +491,7 @@ public class TestWSSetupAPS {
                                                                   loan__Active__c = true,
                                                                   loan__Bank_Account_Number__c = '12345',
                                                                   loan__Bank_Name__c = 'Test Bank',
-                                                                  loan__Routing_Number__c = '999999999',	//CRM-845
+                                                                  loan__Routing_Number__c = '999999999',  //CRM-845
                                                                   loan__Account_Type__c = 'Checking',  //pallavi
                                                                   Unmasked_Bank_Account_Number__c = '12345');
         insert bankAcc ;
@@ -538,7 +539,7 @@ public class TestWSSetupAPS {
                                                                   loan__Active__c = true,
                                                                   loan__Bank_Account_Number__c = '12345',
                                                                   loan__Bank_Name__c = 'Test Bank',
-                                                                  loan__Routing_Number__c = '999999999',	//CRM-845
+                                                                  loan__Routing_Number__c = '999999999',  //CRM-845
                                                                   loan__Account_Type__c = 'Checking',  //pallavi
                                                                   Unmasked_Bank_Account_Number__c = '12345');
         insert bankAcc ;
@@ -575,13 +576,13 @@ public class TestWSSetupAPS {
                                                                   loan__Active__c = true,
                                                                   loan__Bank_Account_Number__c = '12345',
                                                                   loan__Bank_Name__c = 'Test Bank',
-                                                                  loan__Routing_Number__c = '999999999',	//CRM-845
+                                                                  loan__Routing_Number__c = '999999999',  //CRM-845
                                                                   loan__Account_Type__c = 'Checking',  //pallavi
                                                                   Unmasked_Bank_Account_Number__c = '12345' );
         loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
                                       loan__Bank_Name__c = 'Some Bank',
                                       Unmasked_Bank_Account_Number__c = '123234324',
-                                      loan__Routing_Number__c = '999999999',	//CRM-845(for field custm validation)
+                                      loan__Routing_Number__c = '999999999',  //CRM-845(for field custm validation)
                                         loan__Account_Type__c = 'Checking',
                                       loan__Account_Usage__c = 'Collections Trust Account',
                                       loan__Account__c = acc.id,
@@ -627,4 +628,143 @@ public class TestWSSetupAPS {
         
         
     }
+    
+    //LSP-223 - start
+    @isTest
+    static void testCOContracts(){
+
+        loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
+        loan__Loan_Account__c lAcct = createLoanAccount();
+        
+        loan__Org_Parameters__c org = loan.CustomSettingsUtil.getOrgParameters();
+        System.debug('org params: '+org.loan__Enable_New_Spread_Option__c);
+        org.loan__Disable_Triggers__c = true;
+        org.loan__Enable_New_Spread_Option__c = true;
+        upsert org;
+        System.debug('org params..: '+org.loan__Enable_New_Spread_Option__c);
+        System.debug('enable new spread: '+loan.CustomSettingsUtil.getOrgParameters());
+		
+        Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000);
+        insert acc;
+        lAcct.loan__Loan_Status__c = loan.LoanConstants.LOAN_STATUS_CLOSED_WRITTEN_OFF;
+        lAcct.loan__Account__c = acc.id;
+        lAcct.loan__Contact__c = null;
+        lAcct.lead_Guid__c = 'qwertt';
+        update(lAcct);
+
+        Account invacc = new Account(
+            Name = 'Investor',
+            loan__Investor__c = true,
+            Amount_Invested__c = 1000,
+            Number_Of_Applications_Invested__c = 3, 
+            Total_No_of_Application_Limit__c = 30,
+            Last_Application_assigned_on__c = system.now()-7,
+            Total_Investment_Limit__c = 1000000,
+            loan__Undeployed_Funds__c = 500000,
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'TestFName1',
+            peer__Last_Name__c='TestLName2',
+            no_of_shares_to_be_Sold__c = 1,
+            Number_of_Days__c = 0,
+            loan__Active__c = 'YES', 
+            City__c='CANADA',
+            State__c='CA',
+            ZIP_Code__c='123456'
+        );
+        Insert invacc;
+
+        loan__Bank_Account__c bankAcc = new loan__Bank_Account__c(loan__Account__c = invacc.id,
+                                                                  loan__Active__c = true,
+                                                                  loan__Bank_Account_Number__c = '12345',
+                                                                  loan__Bank_Name__c = 'Test Bank',
+                                                                  loan__Routing_Number__c = '999999999',
+                                                                  Unmasked_Bank_Account_Number__c = '12345',
+                                                                  loan__Account_Type__c = 'Checking'  );
+        loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
+                                      loan__Bank_Name__c = 'Some Bank',
+                                      Unmasked_Bank_Account_Number__c = '123234324',
+                                      loan__Routing_Number__c = '999999999',  //CRM-845
+                                        loan__Account_Type__c = 'Checking',
+                                      loan__Account_Usage__c = 'Collections Trust Account',
+                                      loan__Account__c = acc.id,
+                                            loan__Active__c = True);
+        insert bankAcc ;
+        
+        loan__Payment_Mode__c paymentMode = [select id,name from loan__Payment_Mode__c where name='ACH' limit 1];
+        loan__Automated_Payment_Configuration__c apc = loan.TestHelper2.createAutomatedPaymentConfiguration('LOAN PAYMENT',
+                                                       paymentMode,
+                                                       collectionTrustBA,
+                                                       'loan.LoanPaymentTxnNACHAGen');
+
+
+    	apc.loan__Bank_Account__c = bankAcc.id;
+    	update apc;        
+        
+        list<loan__Investor_Loan__c> ioList = new list<loan__Investor_Loan__c>();
+         
+           loan__Investor_Loan__c lo = new loan__Investor_Loan__c();
+           lo.loan__Certificate_Rate__c                   = 1.0;
+           lo.Buyer__c                                    = invacc.id;
+           lo.loan__Service_Rate__c                       = 10.0;
+           lo.loan__Account__c                            = invacc.id;
+           lo.loan__Loan__c                               = lAcct.id;
+           lo.loan__Share__c                              = 100;
+           lo.loan__Status__c                             = 'Closed - Written Off';
+           lo.loan__Enabled_Flag__c                       =  true;
+           lo.loan__Inv_Accrued_Interest_Amt__c           =  0;
+           lo.loan__Investment_Amount__c                  = 1000;
+           lo.loan__Principal_Amount_Paid__c              = 2;
+           lo.loan__Loan_Principal_Remaining__c           =1000;
+           lo.loan__Investor_Start_Date__c                = System.today();
+           
+         
+           insert lo;
+        
+          lAcct.loan__Account__c = invacc.id;
+          update lAcct;
+        
+        loan__Loan_Payment_Spread__c coSpread = new loan__Loan_Payment_Spread__c();
+        coSpread.Name = 'Default Write Off Recovery Spread';
+        coSpread.loan__Order_Of_Payment__c = 'Principal';
+        insert coSpread;
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+
+        req.requestURI =  '/services/apexrest/OTPOMBPEndpoint';
+        req.httpMethod = 'POST';
+		List<loan__loan_account__C> lll =[select id, name, loan__Loan_Status__c from loan__loan_account__C where  lead_Guid__c =:lAcct.lead_Guid__c];
+        system.debug('loan status: '+lll.get(0).loan__Loan_Status__c);
+        String jsonStr = '{"leadGuid" :"'+lAcct.lead_Guid__c+'",  "bankAccountId" : "' + bankAcc.id + '", "transactionAmount" : ' + 1000
+            + ', "debitDate" : "' + String.valueOf(Date.today()) +
+            + '", "type" : "ONE TIME", "paymentModeName":"ACH", "amountType":"FIXED AMOUNT","installmentOmbp": '+true+
+            + ', "feeAmount" : ' + 100 +
+            '}';
+        req.requestBody = Blob.valueOf(jsonStr);
+
+        RestContext.request = req;
+        RestContext.response = res;
+
+        Test.startTest();
+        Response results = WSSetupAPS.createAPSSetup();
+        System.debug('res:'+results);
+        //Test.stopTest();
+        System.assert(results.status.equalsIgnoreCase(peer.Constants.SUCCESS));
+        loan__Automated_Payment_Setup__c automatedPaymentSetup = [select id,name,loan__installment_payment__c
+                                                                 from loan__Automated_Payment_Setup__c 
+                                                                  where loan__cl_contract__c=:lAcct.id];
+        System.assertEquals(automatedPaymentSetup.loan__installment_payment__c,false);
+        
+        loan__Loan_account_Due_Details__c bill = new loan__Loan_account_Due_Details__c(loan__DD_Primary_Flag__c = true,
+                                                                                      loan__Payment_Satisfied__c = false,
+                                                                                      loan__Due_Date__c = System.today().adddays(2),
+                                                                                      loan__Loan_Account__c = lAcct.id);
+        insert bill;
+        RestContext.request = req;
+        RestContext.response = res;
+
+        results = WSSetupAPS.createAPSSetup();
+        Test.stopTest();
+    }
+    //LSP-223 - end
 }

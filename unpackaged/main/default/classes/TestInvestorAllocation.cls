@@ -210,6 +210,7 @@ private class TestInvestorAllocation{
 
     /**
      * Confirm that rulesets work correctly when using related objects.
+     * Retrigger relaxed quality gate
      */
     @IsTest static void testCreditPolicyRelationRuleCriteria() {
 
