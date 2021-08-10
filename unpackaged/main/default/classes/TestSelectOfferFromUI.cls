@@ -143,8 +143,16 @@ public class TestSelectOfferFromUI{
                                             EBP_Offer_Code__c = '2021Feb_ebp_DCP_75',
                                             EBP_Parent_Offer_Key__c = ''    
                                             );
-        insert appOffer;  
+        insert appOffer;
+
         Test.startTest();
+
+        CL_Document__c document = new CL_Document__c();
+        document.Doc1__c = 'Credit Score Notice';
+        document.Doc2__c = 'TIL Document';
+        document.Doc3__c = 'Adverse Action Notice';
+        insert document;
+
        	app.genesis__Financed_Amount__c = 1050.00;
         String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
         SelectOfferFromUI.getselectedoffer(app.id);
@@ -212,6 +220,13 @@ public class TestSelectOfferFromUI{
                                             );
         insert appOffer;  
         Test.startTest();
+
+        CL_Document__c document = new CL_Document__c();
+        document.Doc1__c = 'Credit Score Notice';
+        document.Doc2__c = 'TIL Document';
+        document.Doc3__c = 'Adverse Action Notice';
+        insert document;
+
        	app.genesis__Financed_Amount__c = 1050.00;
         String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
         SelectOfferFromUI.getselectedoffer(app.id);
