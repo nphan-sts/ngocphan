@@ -65,8 +65,16 @@ public class TestSelectOfferFromUI{
                                             Term__c = 24,
                                             Type__c ='test'    
                                             );
-        insert appOffer;  
+        insert appOffer;
+
         Test.startTest();
+
+        CL_Document__c document = new CL_Document__c();
+        document.Doc1__c = 'Credit Score Notice';
+        document.Doc2__c = 'TIL Document';
+        document.Doc3__c = 'Adverse Action Notice';
+        insert document;
+
        	app.genesis__Financed_Amount__c = 1050.00;
         SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
         SelectOfferFromUI.getselectedoffer(app.id);
@@ -154,6 +162,13 @@ public class TestSelectOfferFromUI{
                                             );
         insert appOffer;  
         Test.startTest();
+
+        CL_Document__c document = new CL_Document__c();
+        document.Doc1__c = 'Credit Score Notice';
+        document.Doc2__c = 'TIL Document';
+        document.Doc3__c = 'Adverse Action Notice';
+        insert document;
+
        	app.genesis__Financed_Amount__c = 1050.00;
         SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
         SelectOfferFromUI.getselectedoffer(app.id);

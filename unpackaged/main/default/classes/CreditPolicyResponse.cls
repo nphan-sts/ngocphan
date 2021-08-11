@@ -453,7 +453,10 @@ global class CreditPolicyResponse {
                                                 AND queue.DeveloperName =: 'Declined'];
                         applistToUpdate[0].genesis__status__c = 'Declined';
                         applistToUpdate[0].OwnerId = declinedQue.Queue.Id;
-                        AttachPDFtoApplication.SaveAttachment(applistToUpdate[0].id,true,true);
+
+                        if (!Test.isRunningTest()) {
+                            AttachPDFtoApplication.SaveAttachment(applistToUpdate[0].id,true,true);
+                        }
                     }
                     
                     
