@@ -6,10 +6,10 @@
 * be set to true
 *If no investor is allocated, application should move to Review Queue**/
 /* ****************Modification History******************
-* Created By        Date          JIRA number
-*1. Pallavi        2020/10/05     CRM-928(Previous Investor Current Weight number decreased when re-allocating applications)
-*2. Pallavi        2020/10/08     CRM-927(Invested Amount Missing for applications)
-*3. Anusha			2021/01/18	   LOP-72 (Modify Investor Allocation Round Robin to Better Balance Allocations for Investors with Different APR Limits)
+ * Created By        Date          JIRA number
+ *1. Pallavi        2020/10/05     CRM-928(Previous Investor Current Weight number decreased when re-allocating applications)
+ *2. Pallavi        2020/10/08     CRM-927(Invested Amount Missing for applications)
+ *3. Anusha			2021/01/18	   LOP-72 (Modify Investor Allocation Round Robin to Better Balance Allocations for Investors with Different APR Limits)
 ; ******************Modification History******************/
 public with sharing class InvestorAllocation{
     public static boolean isInvAllocExecuting=true;
@@ -42,146 +42,146 @@ public with sharing class InvestorAllocation{
     
     
     /*public static boolean runInvestorAllocationFieldsUpdate(Id appid) {
-Boolean retValue = false;
-system.debug('runBusinessRuleEngine');
-Account investorAcc;
-Boolean againRulePasses = False;
-try{
-genesis__Applications__c app = [Select id,name,
-Investor__c,
-genesis__status__c,
-genesis__loan_amount__c,
-Invested_Amount__c,
-genesis__Lending_Product__c,
-Last_Investor_Assigned_On__c
-FROM genesis__Applications__c
-WHERE id =: appId];
-system.debug('Investor: .. '+ app.Investor__c);
-//Check if the Applicastions has already assigned investor.                                        
-if(app.Investor__c != null){ 
-
-investorAcc = [Select id,name,
-Investment_Rules__c,
-loan__Investor__c,
-(Select id,name,
-Invested_Amount__c
-from Applications__r 
-Order By Last_Investor_Assigned_On__c Desc
-Limit 1),
-Investor_Alloted_Weight__c,
-Investor_Current_Weight__c,
-Last_Application_assigned_on__c,
-Amount_Invested__c,
-Number_Of_Applications_Invested__c
-FROM Account
-WHERE id =: app.Investor__c
-];
-
-}
-//IDs of Rules which are failed
-Set<ID> setruleIDs = new Set<ID>();
-//hitting the product API for execution of rules.                                            
-List<genesis__checklist__c> listCheck = genesis.RulesAPI.evaluateRules(app,null,true,false);
-
-if(!listCheck.isEmpty()){
-
-for(genesis__checklist__c chList : listCheck){
-
-if(chList.genesis__Message__c.containsIgnoreCase('Fail')){
-setruleIDs.add(chList.genesis__Rule__c);
-System.Debug('****Not Passed*****' + chList.genesis__Rule__c + chList.genesis__Message__c);
-}
-
-}
-}
-//Quering the investor whose rules are passed.
-List<Account> listInvestor = [Select id,name,
-Investment_Rules__c,
-loan__Investor__c,
-Last_Application_assigned_on__c,
-Amount_Invested__c,
-Number_Of_Applications_Invested__c
-FROM Account
-WHERE loan__Investor__c = true
-AND loan__Active__c = 'Yes'
-AND Investment_Rules__c not in: setruleIDs
-AND Remaining_Amount__c >=: app.genesis__loan_amount__c
-AND Remaining_Applications__c >=: 1
-order by Last_Application_assigned_on__c
-];
-System.Debug('listInvestor after Quering the investor whose rules are passed. '+ listInvestor);                             
-if(!listInvestor.isEmpty()){
-//If there is any Investor then update the Application Investor and update the Investor's Last Application Assigned on.
-//Else send the Application to Review
-for(Account acc : listInvestor){  
-System.Debug('outside if(acc.id == investorAcc.id)');          
-if(investorAcc != null){
-if(acc.id == investorAcc.id){
-System.Debug('acc = investor acc');
-genesis__Applications__c investorApp = investorAcc.Applications__r[0];
-System.Debug('Investor App Id'+ investorApp.id);
-//if(app.id == investorApp.id){  pallavi(commented) LOS-70
-System.Debug('In old Investor');
-acc.Amount_Invested__c = acc.Amount_Invested__c - app.Invested_Amount__c;
-app.Invested_Amount__c = app.genesis__loan_amount__c;
-acc.Amount_Invested__c = acc.Amount_Invested__c + app.Invested_Amount__c;
-acc.Last_Application_assigned_on__c = system.now();
-app.Last_Investor_Assigned_On__c = acc.Last_Application_assigned_on__c;                         
-againRulePasses = true;
-/*CRM-804*/
-    /*integer i = 1;
-while(i<=10){
-try{
-Update acc;
-i = 11;
-}
-catch(Exception e){
-if(e.getMessage().contains('UNABLE_TO_LOCK_ROW')){
-i = i+1;
-}
-else{
-i = 10;
-}
-}
-}
-/*CRM-804*/
-    /*update app;
-Break;
-//}     LOS-70
-}
-}
-}
-}
-System.Debug('againRulePasses____' + againRulePasses);
-if(listInvestor != null && listInvestor.size() > 0 && againRulePasses == False){
-app.Investor__c = listInvestor[0].id;
-System.Debug('In new Investor');
-update listInvestor;	//no use of this line. have to check
-update app;
-System.debug('***app.Investor__c***'+app.Investor__c+'**'+listInvestor[0].id);
-retValue = true;
-}
-// This may happen after Redecision..
-else if(listInvestor == null && listInvestor.size() == 0 && againRulePasses == False && app.Investor__c != null){
-app.Investor__c = null;
-update app;
-System.Debug('set investor to null____' + listinvestor);
-retValue = false;
-}
-
-}
-catch(Exception ex){
-loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
-bplog.loan__Origin__c = 'Business Rule Engine' ;
-bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString();
-bplog.loan__Type__c = 'Exception';
-bplog.loan__Time__c = DateTime.now();
-insert bplog;
-
-//throw ex;
-}   
-return retValue;
-}*/
+        Boolean retValue = false;
+        system.debug('runBusinessRuleEngine');
+        Account investorAcc;
+        Boolean againRulePasses = False;
+        try{
+            genesis__Applications__c app = [Select id,name,
+                                            Investor__c,
+                                            genesis__status__c,
+                                            genesis__loan_amount__c,
+                                            Invested_Amount__c,
+                                            genesis__Lending_Product__c,
+                                            Last_Investor_Assigned_On__c
+                                            FROM genesis__Applications__c
+                                            WHERE id =: appId];
+            system.debug('Investor: .. '+ app.Investor__c);
+            //Check if the Applicastions has already assigned investor.                                        
+            if(app.Investor__c != null){ 
+                
+                investorAcc = [Select id,name,
+                               Investment_Rules__c,
+                               loan__Investor__c,
+                               (Select id,name,
+                                Invested_Amount__c
+                                from Applications__r 
+                                Order By Last_Investor_Assigned_On__c Desc
+                                Limit 1),
+                               Investor_Alloted_Weight__c,
+                               Investor_Current_Weight__c,
+                               Last_Application_assigned_on__c,
+                               Amount_Invested__c,
+                               Number_Of_Applications_Invested__c
+                               FROM Account
+                               WHERE id =: app.Investor__c
+                              ];
+                
+            }
+            //IDs of Rules which are failed
+            Set<ID> setruleIDs = new Set<ID>();
+            //hitting the product API for execution of rules.                                            
+            List<genesis__checklist__c> listCheck = genesis.RulesAPI.evaluateRules(app,null,true,false);
+            
+            if(!listCheck.isEmpty()){
+                
+                for(genesis__checklist__c chList : listCheck){
+                    
+                    if(chList.genesis__Message__c.containsIgnoreCase('Fail')){
+                        setruleIDs.add(chList.genesis__Rule__c);
+                        System.Debug('****Not Passed*****' + chList.genesis__Rule__c + chList.genesis__Message__c);
+                    }
+                    
+                }
+            }
+            //Quering the investor whose rules are passed.
+            List<Account> listInvestor = [Select id,name,
+                                          Investment_Rules__c,
+                                          loan__Investor__c,
+                                          Last_Application_assigned_on__c,
+                                          Amount_Invested__c,
+                                          Number_Of_Applications_Invested__c
+                                          FROM Account
+                                          WHERE loan__Investor__c = true
+                                          AND loan__Active__c = 'Yes'
+                                          AND Investment_Rules__c not in: setruleIDs
+                                          AND Remaining_Amount__c >=: app.genesis__loan_amount__c
+                                          AND Remaining_Applications__c >=: 1
+                                          order by Last_Application_assigned_on__c
+                                         ];
+            System.Debug('listInvestor after Quering the investor whose rules are passed. '+ listInvestor);                             
+            if(!listInvestor.isEmpty()){
+                //If there is any Investor then update the Application Investor and update the Investor's Last Application Assigned on.
+                //Else send the Application to Review
+                for(Account acc : listInvestor){  
+                    System.Debug('outside if(acc.id == investorAcc.id)');          
+                    if(investorAcc != null){
+                        if(acc.id == investorAcc.id){
+                            System.Debug('acc = investor acc');
+                            genesis__Applications__c investorApp = investorAcc.Applications__r[0];
+                            System.Debug('Investor App Id'+ investorApp.id);
+                            //if(app.id == investorApp.id){  pallavi(commented) LOS-70
+                            System.Debug('In old Investor');
+                            acc.Amount_Invested__c = acc.Amount_Invested__c - app.Invested_Amount__c;
+                            app.Invested_Amount__c = app.genesis__loan_amount__c;
+                            acc.Amount_Invested__c = acc.Amount_Invested__c + app.Invested_Amount__c;
+                            acc.Last_Application_assigned_on__c = system.now();
+                            app.Last_Investor_Assigned_On__c = acc.Last_Application_assigned_on__c;                         
+                            againRulePasses = true;
+                            /*CRM-804*/
+                            /*integer i = 1;
+                            while(i<=10){
+                                try{
+                                    Update acc;
+                                    i = 11;
+                                }
+                                catch(Exception e){
+                                    if(e.getMessage().contains('UNABLE_TO_LOCK_ROW')){
+                                        i = i+1;
+                                    }
+                                    else{
+                                        i = 10;
+                                    }
+                                }
+                            }
+                            /*CRM-804*/
+                            /*update app;
+                            Break;
+                            //}     LOS-70
+                        }
+                    }
+                }
+            }
+            System.Debug('againRulePasses____' + againRulePasses);
+            if(listInvestor != null && listInvestor.size() > 0 && againRulePasses == False){
+                app.Investor__c = listInvestor[0].id;
+                System.Debug('In new Investor');
+                update listInvestor;	//no use of this line. have to check
+                update app;
+                System.debug('***app.Investor__c***'+app.Investor__c+'**'+listInvestor[0].id);
+                retValue = true;
+            }
+            // This may happen after Redecision..
+            else if(listInvestor == null && listInvestor.size() == 0 && againRulePasses == False && app.Investor__c != null){
+                app.Investor__c = null;
+                update app;
+                System.Debug('set investor to null____' + listinvestor);
+                retValue = false;
+            }
+            
+        }
+        catch(Exception ex){
+            loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
+            bplog.loan__Origin__c = 'Business Rule Engine' ;
+            bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString();
+            bplog.loan__Type__c = 'Exception';
+            bplog.loan__Time__c = DateTime.now();
+            insert bplog;
+            
+            //throw ex;
+        }   
+        return retValue;
+    }*/
     public static boolean runInvestorAllocationBasedOnWeighting (Id appid) {
         boolean againRulePasses = false;
         boolean retvalue = true;
@@ -189,7 +189,7 @@ return retValue;
         // System.debug('initial count' + count);
         List<clcommon__batch_process_log__c> lstBpl = new List<clcommon__batch_process_log__c>();
         system.debug('------In Investor Allocation-------');    //pallavi
-        try{system.debug('investorreallocation---->>>');
+        try{
             genesis__Applications__c app = [Select id,name,
                                             Investor__c,DCP_Investor_Eligibility__c,
                                             genesis__status__c,
@@ -205,14 +205,14 @@ return retValue;
                                             FROM   Credit_Policy__r) // LOP-217
                                             FROM genesis__Applications__c
                                             WHERE id =: appId];
-            
+
             // LOP-217 treat null as 0
             for (Credit_Policy__c cp : app.Credit_Policy__r) {
                 if (cp.Num_Trades_Opened_Past_24mo__c == null) {
                     cp.Num_Trades_Opened_Past_24mo__c = 0;
                 }
             }
-            
+
             List<DCP_arcus_transactions__c> txns = new List<DCP_arcus_transactions__c>();
             txns = [select id from DCP_arcus_transactions__c where application__c =: appId];
             system.debug('Txns: .. '+ txns.size());
@@ -392,10 +392,8 @@ return retValue;
                 Integer totalInvestor = listInvestor.size();
                 Integer allotedWeightCount = 0;
                 Integer currentWeightZero = 0;
-                Integer InvestorAllocationSatisfied = 0;
                 Decimal investorWithLargestWeight = 0;
                 Account investorAccountWithLargestWeight = null;
-                system.debug(investorAccountWithLargestWeight);
                 for(Account acc : listInvestor) {
                     if(acc.Investor_Current_Weight__c ==0) {
                         currentWeightZero++;
@@ -405,19 +403,10 @@ return retValue;
                 if(currentWeightZero == totalInvestor) {
                     for(Account acc : listInvestor) {
                         if(investorWithLargestWeight < acc.Investor_Alloted_Weight__c) {
-                            InvestorAllocationSatisfied++;
-                            if(acc.Current_Month_s_Available_Funded_Balance__c>=app.genesis__Loan_Amount__c && acc.Current_Month_s_Available_Allocation__c>0) {//LOP-72 (Changed 'acc.Current_Month_s_Available_Funded_Balance__c>0' to 'acc.Current_Month_s_Available_Funded_Balance__c>=app.genesis__Loan_Amount__c')
+                          	if(acc.Current_Month_s_Available_Funded_Balance__c>=app.genesis__Loan_Amount__c && acc.Current_Month_s_Available_Allocation__c>0) {//LOP-72 (Changed 'acc.Current_Month_s_Available_Funded_Balance__c>0' to 'acc.Current_Month_s_Available_Funded_Balance__c>=app.genesis__Loan_Amount__c')
                                 investorWithLargestWeight = acc.Investor_Alloted_Weight__c;
                                 investorAccountWithLargestWeight = acc;
-                                system.debug('investordd--->'+investorAccountWithLargestWeight);
-                                
-                                app.Investor__c = investorAccountWithLargestWeight.id;                   
-                                
-                                app.Last_Investor_Assigned_On__c = System.now();
-                                app.Invested_Amount__c = app.genesis__loan_amount__c;	//CRM-927
-                                investorAccountWithLargestWeight.Investor_Current_Weight__c  = investorAccountWithLargestWeight.Investor_Current_Weight__c+1;
-                                investorAccountWithLargestWeight.Last_Application_assigned_on__c = System.now();
-                            }else {
+                           }else {
                                 clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
                                 bpl.clcommon__Log_Level__c = 'INFO';
                                 bpl.clcommon__Type__c = 'Info';
@@ -427,29 +416,14 @@ return retValue;
                             }
                             
                         }
-                        
-                        else {
-                                clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
-                                bpl.clcommon__Log_Level__c = 'INFO';
-                                bpl.clcommon__Type__c = 'Info';
-                                bpl.clcommon__Batch_Id__c = app.id;
-                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
-                                lstBpl.add(bpl);
-                            }
-                                                    
-                        }
-                    if(InvestorAllocationSatisfied==0){
-                            app.investor__C = null;
-                            app.Last_Investor_Assigned_On__c = System.now();
-                            app.Invested_Amount__c = 0;
-                            app.genesis__status__c = 'review';
-                            update app; 
-                    }  
+                    }
+                    app.Investor__c = investorAccountWithLargestWeight.id;
+                    app.Last_Investor_Assigned_On__c = System.now();
+                    app.Invested_Amount__c = app.genesis__loan_amount__c;	//CRM-927
+                    investorAccountWithLargestWeight.Investor_Current_Weight__c  = investorAccountWithLargestWeight.Investor_Current_Weight__c+1;
+                    investorAccountWithLargestWeight.Last_Application_assigned_on__c = System.now();
                     
-                    //   }
-                    
-                } 
-                else {
+                } else {
                     integer flag=0;
                     integer countOfFailure = 0;
                     System.debug('account list'+listInvestor);
@@ -510,7 +484,6 @@ return retValue;
                     }    
                     /*CRM-927*/
                     /*CRM-804*/
-                    if(investorAccountWithLargestWeight!=null){
                     integer i = 1;
                     while(i<=10){
                         try{
@@ -540,7 +513,6 @@ return retValue;
                             }
                         }
                     }  
-                    }    
                     /*CRM-804*/
                     
                     if(app.Total_Arcus_Transactions__c > 0 && app.genesis__status__c == 'agent_document_verification_pending'
@@ -554,8 +526,7 @@ return retValue;
                     //update app;	//CRM-927(commented to optimise)
                     retValue = true;
                 } else {
-                    //app.Investor__c = null; 
-                    system.debug('set to null');
+                    //app.Investor__c = null;
                     app.genesis__status__c = 'review';
                     List<QueueSobject> lstQueues = [SELECT Queue.Id,queue.Name, QueueId FROM QueueSobject 
                                                     WHERE SobjectType = 'genesis__Applications__c' 
@@ -682,7 +653,7 @@ return retValue;
                 }                   
             }
             /*CRM-928*/
-           }
+        }
         catch(Exception ex){
             loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
             bplog.loan__Origin__c = 'Business Rule Engine' ;
@@ -695,8 +666,7 @@ return retValue;
         
         return retValue;
         
-        
-    }  
+    }
     
     
 }

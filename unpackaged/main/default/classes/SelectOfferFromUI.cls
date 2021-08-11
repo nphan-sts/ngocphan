@@ -65,7 +65,7 @@ global class SelectOfferFromUI {
         // LOP-217 treat null as 0
         for (Credit_Policy__c cp : app.Credit_Policy__r) {
             if (cp.Num_Trades_Opened_Past_24mo__c == null) {
-                cp.Num_Trades_Opened_Past_24mo__c = 0.0;
+                cp.Num_Trades_Opened_Past_24mo__c = 0;
             }
         }
 
@@ -88,7 +88,9 @@ global class SelectOfferFromUI {
                 Pricing_Tier__c,
                 Segment__c,
                 Term__c,
-                Type__c
+                Type__c,
+                EBP_Offer_Code__c,
+                EBP_Parent_Offer_Key__c
                 from Pricing_Offer__c
                 where Application__c=:applicationID 
                 and id=:offerID ];
@@ -108,7 +110,9 @@ global class SelectOfferFromUI {
                   Pricing_Tier__c,
                   Segment__c,
                   Term__c,
-                  Type__c
+                  Type__c,
+                  EBP_Offer_Code__c,
+                  EBP_Parent_Offer_Key__c
                   from Approved_Offer__c
                   where Application__c=:applicationID];
         system.debug('approve1'+approve1);
@@ -133,7 +137,9 @@ global class SelectOfferFromUI {
                 approve.Segment__c=p.Segment__c;
                 approve.Term__c=p.Term__c;
                 approve.Type__c=p.Type__c;
-                
+                approve.EBP_Offer_Code__c=p.EBP_Offer_Code__c;
+                approve.EBP_Parent_Offer_Key__c=p.EBP_Parent_Offer_Key__c;
+
                 insert approve;
                 
                 system.debug('approve'+approve);
@@ -150,7 +156,6 @@ global class SelectOfferFromUI {
                 else {
                     app.genesis__Status__c='offer_shown';
                 }
-              
                 Decimal financeamount= Decimal.valueOf(string.valueof(p.Amount__c - p.Origination_fee__c)); // change by Saryu to capture decimal value and round to 2
                 app.genesis__Financed_Amount__c=genesis.ValueUtil.round(financeamount);
                 system.debug('finance amount'+financeamount);
@@ -226,7 +231,6 @@ global class SelectOfferFromUI {
                         update p; 
 
                     }
-
                     MW_Utilities.clearDCPForEBP(approve);
                     
                 } catch(System.Exception err){

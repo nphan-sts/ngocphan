@@ -3,13 +3,14 @@ private class TestCreditPolicyResponse {
 	@testSetup static void setup(){
             //Creating Account
          Account acc = new Account(
-            Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            peer__First_Name__c= 'Testfname',
+            peer__Last_Name__c= 'Testlname',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123'
             );
         insert acc;
-        System.assertEquals('Test',acc.Name,'Wrong Account');
+        System.assertEquals('Testlname',acc.peer__Last_Name__c,'Wrong Account');
         
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -38,7 +39,7 @@ private class TestCreditPolicyResponse {
         mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
         mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
         insert mda;
-     	Account acc1 = [Select id,name from Account where name='Test' limit 1];
+     	Account acc1 = [Select id,name from Account where name='Testfname Testlname' limit 1];
          
         genesis__Applications__c app1 = [select id,genesis__Status__c,Lead_ID__c from genesis__Applications__c where genesis__Status__c='Offer shown' limit 1];
         app1.Manual_Adverse_Action_Decline__c = mda.Id;
@@ -184,7 +185,7 @@ private class TestCreditPolicyResponse {
 
          Test.stopTest();
      }
-    
+
     Testmethod static void method2(){
          
          Manual_Adverse_Action_Decline__c mda = new 	Manual_Adverse_Action_Decline__c();
@@ -193,7 +194,7 @@ private class TestCreditPolicyResponse {
          mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
          mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
          insert mda;
-     	 Account acc1 = [Select id,name from Account where name='Test' limit 1];
+     	 Account acc1 = [Select id,name from Account where name='Testfname Testlname' limit 1];
          
          genesis__Applications__c app1 = [select id,genesis__Status__c,Lead_ID__c from genesis__Applications__c where genesis__Status__c='Offer shown' limit 1];
          app1.Manual_Adverse_Action_Decline__c = mda.Id;
@@ -219,7 +220,7 @@ private class TestCreditPolicyResponse {
          mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
          mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
          insert mda;
-     	 Account acc1 = [Select id,name from Account where name='Test' limit 1];
+     	 Account acc1 = [Select id,name from Account where name='Testfname Testlname' limit 1];
          
          genesis__Applications__c app1 = [select id,genesis__Status__c,Lead_ID__c from genesis__Applications__c where genesis__Status__c='Offer shown' limit 1];
          app1.Manual_Adverse_Action_Decline__c = mda.Id;
@@ -244,7 +245,7 @@ private class TestCreditPolicyResponse {
          mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
          mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
          insert mda;
-     	 Account acc1 = [Select id,name from Account where name='Test' limit 1];
+     	 Account acc1 = [Select id,name from Account where name='Testfname Testlname' limit 1];
          
          genesis__Applications__c app1 = [select id,genesis__Status__c,Lead_ID__c from genesis__Applications__c where genesis__Status__c='Offer shown' limit 1];
          app1.Manual_Adverse_Action_Decline__c = mda.Id;
@@ -269,7 +270,7 @@ private class TestCreditPolicyResponse {
          mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
          mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
          insert mda;
-     	 Account acc1 = [Select id,name from Account where name='Test' limit 1];
+     	 Account acc1 = [Select id,name from Account where name='Testfname Testlname' limit 1];
 
          genesis__Applications__c app1 = [select id,genesis__Status__c,Lead_ID__c from genesis__Applications__c where genesis__Status__c='Offer shown' limit 1];
          app1.Manual_Adverse_Action_Decline__c = mda.Id;
@@ -295,7 +296,7 @@ private class TestCreditPolicyResponse {
         mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
         mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
         insert mda;
-        Account acc1 = [SELECT Id,Name FROM Account WHERE Name ='Test' LIMIT 1];
+        Account acc1 = [SELECT Id,Name FROM Account WHERE Name ='Testfname Testlname' LIMIT 1];
 
         genesis__Applications__c app1 = [SELECT Id,genesis__Status__c,Lead_ID__c FROM genesis__Applications__c WHERE genesis__Status__c='Offer shown' LIMIT 1];
         app1.Manual_Adverse_Action_Decline__c = mda.Id;
@@ -321,7 +322,7 @@ private class TestCreditPolicyResponse {
         mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
         mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
         insert mda;
-        Account acc1 = [SELECT Id,Name FROM Account WHERE Name ='Test' LIMIT 1];
+        Account acc1 = [SELECT Id,Name FROM Account WHERE Name ='Testfname Testlname' LIMIT 1];
 
         genesis__Applications__c app1 = [SELECT Id,genesis__Status__c,Lead_ID__c FROM genesis__Applications__c WHERE genesis__Status__c='Offer shown' LIMIT 1];
         app1.Manual_Adverse_Action_Decline__c = mda.Id;
@@ -409,7 +410,7 @@ private class TestCreditPolicyResponse {
         mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
         mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
         insert mda;
-        Account acc1 = [SELECT Id,Name FROM Account WHERE Name='Test' LIMIT 1];
+        Account acc1 = [SELECT Id,Name FROM Account WHERE Name='Testfname Testlname' LIMIT 1];
 
         genesis__Applications__c app1 = [SELECT Id,genesis__Status__c,Lead_ID__c FROM genesis__Applications__c WHERE genesis__Status__c='Offer shown' LIMIT 1];
         app1.Manual_Adverse_Action_Decline__c = mda.Id;
@@ -543,7 +544,7 @@ private class TestCreditPolicyResponse {
          mda.Name = 'Expiration_decline_insufficient_tradeline_balances';
          mda.Reason__c = 'Your unsecured consumer debt does not support the amount requested.';
          insert mda;
-     	 Account acc1 = [Select id,name from Account where name='Test' limit 1];
+     	 Account acc1 = [Select id,name from Account where name='Testfname Testlname' limit 1];
          
          genesis__Applications__c app1 = [select id,genesis__Status__c,Lead_ID__c from genesis__Applications__c where genesis__Status__c='Offer shown' limit 1];
          app1.Manual_Adverse_Action_Decline__c = mda.Id;
@@ -564,5 +565,5 @@ private class TestCreditPolicyResponse {
          Test.stopTest();
      }
     
-    
+
 }
