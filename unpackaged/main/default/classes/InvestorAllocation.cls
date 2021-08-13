@@ -197,9 +197,22 @@ public with sharing class InvestorAllocation{
                                             Invested_Amount__c,
                                             genesis__Lending_Product__c,
                                             Last_Investor_Assigned_On__c,
-                                            Total_Arcus_Transactions__c
+                                            Total_Arcus_Transactions__c,
+                                            (SELECT Num_Trades_Opened_Past_24mo__c,
+                                                    Net_Disposable_Income_NDI_Num__c,
+                                                    FICO__c,
+                                                    Debt_to_Income_DTI__c
+                                            FROM   Credit_Policy__r) // LOP-217
                                             FROM genesis__Applications__c
                                             WHERE id =: appId];
+
+            // LOP-217 treat null as 0
+            for (Credit_Policy__c cp : app.Credit_Policy__r) {
+                if (cp.Num_Trades_Opened_Past_24mo__c == null) {
+                    cp.Num_Trades_Opened_Past_24mo__c = 0;
+                }
+            }
+
             List<DCP_arcus_transactions__c> txns = new List<DCP_arcus_transactions__c>();
             txns = [select id from DCP_arcus_transactions__c where application__c =: appId];
             system.debug('Txns: .. '+ txns.size());
