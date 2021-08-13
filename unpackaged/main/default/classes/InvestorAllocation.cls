@@ -189,7 +189,7 @@ public with sharing class InvestorAllocation{
         // System.debug('initial count' + count);
         List<clcommon__batch_process_log__c> lstBpl = new List<clcommon__batch_process_log__c>();
         system.debug('------In Investor Allocation-------');    //pallavi
-        try{
+       try{system.debug('investorreallocation---->>>');
             genesis__Applications__c app = [Select id,name,
                                             Investor__c,DCP_Investor_Eligibility__c,
                                             genesis__status__c,
@@ -392,8 +392,10 @@ public with sharing class InvestorAllocation{
                 Integer totalInvestor = listInvestor.size();
                 Integer allotedWeightCount = 0;
                 Integer currentWeightZero = 0;
+                Integer InvestorAllocationSatisfied = 0;
                 Decimal investorWithLargestWeight = 0;
                 Account investorAccountWithLargestWeight = null;
+                system.debug(investorAccountWithLargestWeight);
                 for(Account acc : listInvestor) {
                     if(acc.Investor_Current_Weight__c ==0) {
                         currentWeightZero++;
@@ -405,7 +407,16 @@ public with sharing class InvestorAllocation{
                         if(investorWithLargestWeight < acc.Investor_Alloted_Weight__c) {
                           	if(acc.Current_Month_s_Available_Funded_Balance__c>=app.genesis__Loan_Amount__c && acc.Current_Month_s_Available_Allocation__c>0) {//LOP-72 (Changed 'acc.Current_Month_s_Available_Funded_Balance__c>0' to 'acc.Current_Month_s_Available_Funded_Balance__c>=app.genesis__Loan_Amount__c')
                                 investorWithLargestWeight = acc.Investor_Alloted_Weight__c;
+                                InvestorAllocationSatisfied++;
                                 investorAccountWithLargestWeight = acc;
+                                system.debug('investordd--->'+investorAccountWithLargestWeight);
+                                
+                                app.Investor__c = investorAccountWithLargestWeight.id;                   
+                                
+                                app.Last_Investor_Assigned_On__c = System.now();
+                                app.Invested_Amount__c = app.genesis__loan_amount__c;  //CRM-927
+                                investorAccountWithLargestWeight.Investor_Current_Weight__c  = investorAccountWithLargestWeight.Investor_Current_Weight__c+1;
+                                investorAccountWithLargestWeight.Last_Application_assigned_on__c = System.now();
                            }else {
                                 clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
                                 bpl.clcommon__Log_Level__c = 'INFO';
@@ -416,14 +427,29 @@ public with sharing class InvestorAllocation{
                             }
                             
                         }
+                        
+                         else {
+                            clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
+                            bpl.clcommon__Log_Level__c = 'INFO';
+                            bpl.clcommon__Type__c = 'Info';
+                            bpl.clcommon__Batch_Id__c = app.id;
+                            bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
+                            lstBpl.add(bpl);
+                        }
+                        
                     }
-                    app.Investor__c = investorAccountWithLargestWeight.id;
-                    app.Last_Investor_Assigned_On__c = System.now();
-                    app.Invested_Amount__c = app.genesis__loan_amount__c;	//CRM-927
-                    investorAccountWithLargestWeight.Investor_Current_Weight__c  = investorAccountWithLargestWeight.Investor_Current_Weight__c+1;
-                    investorAccountWithLargestWeight.Last_Application_assigned_on__c = System.now();
+                    if(InvestorAllocationSatisfied==0){
+                        app.investor__C = null;
+                        app.Last_Investor_Assigned_On__c = System.now();
+                        app.Invested_Amount__c = 0;
+                        app.genesis__status__c = 'review';
+                        update app; 
+                    }
+                   
+                    //}
                     
-                } else {
+                } 
+                else {
                     integer flag=0;
                     integer countOfFailure = 0;
                     System.debug('account list'+listInvestor);
@@ -484,6 +510,7 @@ public with sharing class InvestorAllocation{
                     }    
                     /*CRM-927*/
                     /*CRM-804*/
+                    if(investorAccountWithLargestWeight!=null){ 
                     integer i = 1;
                     while(i<=10){
                         try{
@@ -512,7 +539,8 @@ public with sharing class InvestorAllocation{
                                 return false;
                             }
                         }
-                    }  
+                    } 
+                 }
                     /*CRM-804*/
                     
                     if(app.Total_Arcus_Transactions__c > 0 && app.genesis__status__c == 'agent_document_verification_pending'
@@ -527,6 +555,7 @@ public with sharing class InvestorAllocation{
                     retValue = true;
                 } else {
                     //app.Investor__c = null;
+                 system.debug('set to null');
                     app.genesis__status__c = 'review';
                     List<QueueSobject> lstQueues = [SELECT Queue.Id,queue.Name, QueueId FROM QueueSobject 
                                                     WHERE SobjectType = 'genesis__Applications__c' 
@@ -666,6 +695,7 @@ public with sharing class InvestorAllocation{
         
         return retValue;
         
+    
     }
     
     
