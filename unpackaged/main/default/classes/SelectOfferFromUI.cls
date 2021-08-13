@@ -52,12 +52,24 @@ global class SelectOfferFromUI {
                                        genesis__Financed_Amount__c,
                                        genesis__Status__c,
                                        Investor__c,
-                                       Investor__r.name	//remove
+                                       Investor__r.name,	//remove
+                                        (SELECT Num_Trades_Opened_Past_24mo__c,
+                                        Net_Disposable_Income_NDI_Num__c,
+                                        FICO__c,
+                                        Debt_to_Income_DTI__c
+                                        FROM   Credit_Policy__r) // LOP-217
                                        from genesis__Applications__c
                                        where id=:applicationID 
                                        limit 1];
 
-        system.debug('app'+app);
+        // LOP-217 treat null as 0
+        for (Credit_Policy__c cp : app.Credit_Policy__r) {
+            if (cp.Num_Trades_Opened_Past_24mo__c == null) {
+                cp.Num_Trades_Opened_Past_24mo__c = 0;
+            }
+        }
+
+       system.debug('app'+app);
         oldAppStatus = app.genesis__Status__c;	//CRM-1022 (pallavi)
         oldLoanAmount = app.genesis__Loan_Amount__c;	//CRM-1022 (pallavi)
        	oldInvestorId = app.Investor__c; //CRM-1022
