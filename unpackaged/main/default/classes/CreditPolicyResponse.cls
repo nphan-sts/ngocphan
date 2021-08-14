@@ -115,10 +115,12 @@ global class CreditPolicyResponse {
             global String age_flag {get;set;} 
             global String student_loan_flag {get;set;} 
 			global String pricing_test_bucket {get;set;}	//pallavi(LOS-197)
+            global String pricing_policy_gem_version {get;set;}
         }
         
         global class Risk_models {
             global V3 v3 {get;set;}
+            global V6 v6 {get;set;}
         }
         
         global class credit_policy_decision {
@@ -161,6 +163,7 @@ global class CreditPolicyResponse {
             global String loan_amount_counteroffer {get;set;} 
             global Risk_models risk_models {get;set;} 
             global String request_context {get;set;}
+            /* leaving this in for backwards compat, but data key removed in v6 */
             global Data data {get;set;}
             global Double tradeline_dti_with_lie_detector {get;set;} 
             global Double tradeline_ndi_with_lie_detector {get;set;} 
@@ -265,6 +268,16 @@ global class CreditPolicyResponse {
             global String description;
         }
 
+        /*
+         v6.0 key, parsed manually
+         */
+        global class V6 {
+            global String risk_model_decision {get;set;}
+            global Double risk_model_score {get;set;}
+            global Double logistic_prediction_of_default {get;set;}
+            global Integer invalid_risk_model_variable_count {get;set;}
+        }
+
         global class V3 {
             global String risk_model_decision {get;set;} 
             global String risk_model_score {get;set;} 
@@ -304,6 +317,54 @@ global class CreditPolicyResponse {
             return (TradelineAnalysis) System.JSON.deserialize(json, TradelineAnalysis.class);
         }
 
+        /**
+         * parse credit_policy_decision.data.risk_models['6.0'] manually, due to non de-serializable key
+         * TODO either create some better helper methods for similar use cases or find a good user friendly lib
+         * @param unescapedString The complete response ready for parsing
+         * @param CPResponse The response collecting parsed data
+         */
+        global void parseV6RiskModel(String unescapedString, CreditPolicyResponse CPResponse) {
+            if (CPResponse.credit_policy_decision.credit_policy_version != '6.0') {
+                return;
+            }
+
+            Map<String, Object> untypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(unescapedString);
+            if (untypedResponse == null) {
+                throw new IllegalArgumentException('invalid string to parse as json');
+            }
+
+            Map<String, Object> untypedCreditPolicyDecision = (Map<String, Object>) untypedResponse.get('credit_policy_decision');
+            if (untypedCreditPolicyDecision == null) {
+                throw new IllegalArgumentException('JSON document does not contain credit_policy_decision');
+            }
+
+            Map<String, Object> untypedRiskModels = (Map<String, Object>) untypedCreditPolicyDecision.get('risk_models');
+            if (untypedRiskModels == null) {
+                return;
+            }
+
+            Map<String, Object> untypedV6 = (Map<String, Object>) untypedRiskModels.get('6.0');
+            if (untypedV6 == null) {
+                return;
+            }
+
+            CreditPolicyResponse.V6 v6 = new CreditPolicyResponse.V6();
+            v6.invalid_risk_model_variable_count = (Integer) untypedV6.get('invalid_risk_model_variable_count');
+            v6.logistic_prediction_of_default = (Double) untypedV6.get('logistic_prediction_of_default');
+            v6.risk_model_decision = (String) untypedV6.get('risk_model_decision');
+            v6.risk_model_score = (Double) untypedV6.get('risk_model_score');
+
+            /* leaving this in for backwards compat, but data key removed in v6, create data key for risk models v6 only */
+            if (CPResponse.credit_policy_decision.data != null) {
+                if (CPResponse.credit_policy_decision.data.risk_models == null) {
+                    CPResponse.credit_policy_decision.data.risk_models = new Risk_models();
+                }
+                CPResponse.credit_policy_decision.data.risk_models.v6 = v6;
+            }
+
+            CPResponse.credit_policy_decision.risk_models.v6 = v6;
+        }
+
         global CreditPolicyResponse parse(String json,String accountID,String appId, String LeadID) 
         {    
             //json=json.replace('type', 'type1');
@@ -313,7 +374,11 @@ global class CreditPolicyResponse {
             try{
                 String BureauResponse ;
                 Id CPid;
-                CPResponse = (CreditPolicyResponse) System.JSON.deserialize(json.replace('\\\\', ''), CreditPolicyResponse.class);
+                String unescapedString = json.replace('\\\\', '');
+                CPResponse = (CreditPolicyResponse) System.JSON.deserialize(unescapedString, CreditPolicyResponse.class);
+
+                parseV6RiskModel(unescapedString, CPResponse);
+
                 CPResponse.cpData = mappingOfFields(CPResponse,accountID,appId,json);
                 if(CPResponse.cpData != null){
                     insert CPResponse.cpData;
@@ -425,8 +490,8 @@ global class CreditPolicyResponse {
                 clcommon__batch_process_log__c logs = new clcommon__batch_process_log__c(clcommon__Message__c='Error in parsing Credit Policy response:  '+ex.getlinenumber()+'Error: '+ex.getMessage());
                 insert logs;
                 System.debug('Exception: '+ex.getMessage());
-                System.debug('Exception stack: '+ex.getStackTraceString() + 'Mes**' + ex.getMessage());
-                throw new ints.IntegrationException(' API call failure Message: '+ex.getMessage());
+                System.debug('Exception stack: '+ex.getStackTraceString() + 'Mes**' + ex.getMessage() + ' on line number ' + ex.getLineNumber());
+                throw new ints.IntegrationException(' API call failure Message: '+ex.getMessage() + ' on line number ' + ex.getLineNumber());
             }
             return CPResponse;
         }
@@ -438,58 +503,110 @@ global class CreditPolicyResponse {
             global String bureau_request_uid {get;set;}   
             global Integer AADM12_credit_vision_alternative_risk_score {get;set;} 
             global Integer AGG901_non_mortgage_increases_last_3_mo {get;set;}  
+            global Integer W55_AGG901_non_mortgage_increases_last_3_mo {get;set;}
             global Integer AGG909_mo_since_max_bankcard_balance {get;set;}
+            global Integer W55_AGG909_mo_since_max_agg_bnkcrd_bal_over_last_12mo {get;set;}
             global String AGG911_max_bankcard_utilization   {get;set;}
+            global String W55_AGG911_max_agg_bnkcrd_util_over_last_year   {get;set;}
             global Integer AGGS903_monthly_spend    {get;set;}
+            global Integer W55_AGGS903_monthly_spend    {get;set;}
             global Integer AT02S_open_trades    {get;set;}
+            global Integer V71_AT02S_open_trades    {get;set;}
             global Integer AT03S_satisfactory_open_trades   {get;set;}
+            global Integer V71_AT03S_satisfactory_open_trades   {get;set;}
             global Integer AT103S_percent_satisfactory_trades_last_24_mo {get;set;}
+            global Integer V71_AT103S_percent_satisfactory_trades_last_24_mo {get;set;}
             global Integer AT104S_percent_trades_opened_last_24_mo  {get;set;}
+            global Integer V71_AT104S_pct_all_trd_opned_pst_24mo_all_trd  {get;set;}
             global Integer AT20S_mo_since_oldest_trade_opened {get;set;}
+            global Integer V71_AT20S_mo_since_oldest_trd_opn {get;set;}
             global Integer BC02S_open_credit_cards {get;set;}
+            global Integer V71_BC02S_open_credit_cards {get;set;}
             global Integer BC20S_mo_since_oldest_credit_card_opened {get;set;}
+            global Integer V71_BC20S_mo_since_oldest_cc_trd_opned {get;set;}
             global Integer BR109S_revolving_trades_with_past_due_over_50_days {get;set;}
+            global Integer V71_BR109S_revolving_trades_with_past_due_over_50_days {get;set;}
             global String EPAY01_ATTR06_student_loan_monthly_payment {get;set;}
+            global String W49_ATTR06_cur_pmt_amt_1st_most_recently_updated_opn_pers_ln {get;set;}
             global String EPAY01_ATTR10_payments_mortgage_trade_highest_high_credit {get;set;}
+            global String W49_ATTR10_payments_mortgage_trade_highest_high_credit {get;set;}
             global Integer EPAY01_AUP1003_auto_trade_monthly_payment {get;set;}
+            global Integer W49_AUP1003_auto_trade_monthly_payment {get;set;}
             global Integer FI02S_installment_trades {get;set;}
+            global Integer V71_FI02S_installment_trades {get;set;}
             global Integer G058S_trades_30_days_past_due_last_6_mo {get;set;}
+            global Integer V71_G058S_num_trd_30_or_more_dpd_pst_6mo {get;set;}
             global Integer G061S_trades_30_days_past_due_last_24_mo {get;set;}
+            global Integer V71_G061S_num_trd_30_or_more_dpd_pst_24mo {get;set;}
             global Integer G069S_trades_90_days_past_due_last_12_mo {get;set;}
+            global Integer V71_G069S_trades_90_days_past_due_last_12_mo {get;set;}
             global Integer G095S_mo_since_global_record {get;set;}
             global Integer G209S_mo_since_recent_charge_off_opened {get;set;}  
+            global Integer V71_G209S_mo_since_recent_charge_off_opened {get;set;}
             global Integer G215B_non_medical_collections {get;set;}
+            global Integer V71_G215B_non_medical_collections {get;set;}
             global Integer HIAP01_home_equity_monthly_payment {get;set;}
+            global Integer V71_HIAP01_home_equity_monthly_payment {get;set;}
             global Integer IN33S_installment_trades_balance {get;set;}
+            global Integer V71_IN33S_installment_trades_balance {get;set;}
             global Integer IN34S_utilization_installment_trades_last_12_mo {get;set;}
+            global Integer V71_IN34S_utilization_installment_trades_last_12_mo {get;set;}
             global Integer INAP01_installment_trades_monthly_payment {get;set;}
+            global Integer V71_INAP01_installment_trades_monthly_payment {get;set;}
             global Integer MT101S_total_mortgage_balance {get;set;}
+            global Integer V71_MT101S_total_mortgage_balance {get;set;}
             global Integer MT21S_mo_since_recent_mortgage_trade_opened {get;set;}
+            global Integer V71_MT21S_mo_since_recent_mortgage_trade_opened {get;set;}
             global String PAYMNT08_min_payment_revolving_ratio {get;set;}
+            global String W55_PAYMNT08_ratio_actual_min_pmt_for_rvl_trd_last_mo {get;set;}
             global Integer RE101S_revolving_trades_balance {get;set;}
+            global Integer V71_RE101S_revolving_trades_balance {get;set;}
             global Integer RE31S_percent_high_revolving_trade_utilization {get;set;}
+            global Integer V71_RE31S_pct_opn_rvl_trd_gt_75pct_credln_verif_pst_12mo {get;set;}
             global Integer RE33S_open_revolving_trades_balance {get;set;}
+            global Integer V71_RE33S_open_revolving_trades_balance {get;set;}
             global Integer REAP01_revolving_trade_monthly_payment {get;set;}
+            global Integer V71_REAP01_total_sched_mo_pmt_for_all_rvl_trd_verif_pst_12mo {get;set;}
             global Integer RVLR04_retail_revolver_trade_balance {get;set;}
+            global Integer W55_RVLR04_retail_revolver_trade_balance {get;set;}
             global String RVLR14_revolver_transactor_inactive_pattern {get;set;}
+            global String W55_RVLR14_revolver_transactor_inactive_pattern {get;set;}
             global Integer SCRG082_trades_past_due_last_2_mo {get;set;}
+            global Integer N05_G082_trades_past_due_last_2_mo {get;set;}
             global Integer SCRG085_trades_90_days_past_due_last_2_mo {get;set;}
+            global Integer N05_G085_trades_90_days_past_due_last_2_mo {get;set;}
             global Integer SCRG086_trades_120_days_past_due_last_2_mo {get;set;}
+            global Integer N05_G086_trades_120_days_past_due_last_2_mo {get;set;}
             global Integer SCRG087_trades_150_days_past_due_last_2_mo {get;set;}
+            global Integer N05_G087_trades_150_days_past_due_last_2_mo {get;set;}
             global Integer SCRIN07_installment_trades_opened_last_12_mo {get;set;}
+            global Integer N05_IN07_installment_trades_opened_last_12_mo {get;set;}
             global Integer S114S_inquiries_last_6_mo {get;set;}
+            global Integer V71_S114S_num_dedup_inq_pst_6mo_excl_auto_mtg_inq {get;set;}
             global Integer ST06S_student_loan_trades_opened_last_6_mo {get;set;}
+            global Integer V71_ST06S_student_loan_trades_opened_last_6_mo {get;set;}
             global Integer TRV01_mo_since_overlimit_on_bankcard {get;set;}
+            global Integer W55_TRV01_num_mo_since_overlimit_on_a_bnkcrd {get;set;}
             global Integer TRV02_mo_overlimit_on_bankcard {get;set;}
+            global Integer W55_TRV02_num_mo_overlimit_on_a_bnkcrd_over_last_12mo {get;set;}
             global Integer TRV12_revolving_high_credit_increases_last_3_mo {get;set;}
+            global Integer W55_TRV12_num_rvl_high_cred_incr_last_3mo {get;set;}
             global List<Inquiries> inquiries {get;set;}
             global Integer fico_score;  
             global String consumer_id;
             global List<String> fico_score_factors {get;set;} 
             global Boolean file_inquiries_impacted_score {get;set;} 
             global List<Trades> trades {get;set;}
-            global List<String> bureau_social_security_number {get;set;}
-            global List<String> bureau_date1_of_birth {get;set;}
+
+            /* Bureau changed bureau_date_of_birth array to string in 6.2.  Handling this manually.*/
+            /*global List<String> bureau_social_security_number {get;set;}*/
+            global List<String> manual_bureau_social_security_number {get;set;}
+            global String manual_bureau_social_security_number_str {get;set;}
+
+            /* Bureau changed bureau_date_of_birth array to string in 6.2.  Handling this manually.*/
+            /*global List<String> bureau_date1_of_birth {get;set;}*/
+            global List<String> manual_bureau_date1_of_birth {get;set;}
+            global String manual_bureau_date1_of_birth_str {get;set;}
             global Integer months_since_oldest_trade {get;set;} 
             global Integer inquiries_last_6_months {get;set;} 
             global Integer number_of_open_trades {get;set;} 
@@ -508,6 +625,8 @@ global class CreditPolicyResponse {
             global String bureau_inquiry_date {get;set;} 
             global String bureau_report_uid {get;set;}
             global Integer G095S_mo_since_public_record {get;set;}
+            global Integer V71_G095S_mo_since_public_record {get;set;}
+            global Integer V71_AT09S_num_trd_opned_pst_24mo {get;set;}
         }
         
         global class Inquiries {
@@ -784,8 +903,14 @@ global class CreditPolicyResponse {
                 System.debug('***BureauResponse***' + BureauResponse);
                 //obj.bureau_subset__c = String.ValueOf(CPResponse.credit_policy_decision.bureau_subset);
 
+                /**
+                 * NOTE: the following line names all fields with date in the bureau string.
+                 * Not sure the history of it, seems dangerous
+                 */
                 BureauResponse = BureauResponse.replace('date', 'date1');           
                 CreditPolicyResponse.BureauRequestAPI bureauReq = (BureauRequestAPI)System.JSON.deserialize(BureauResponse,BureauRequestAPI.class);
+                Map<String, Object> bureauUntypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(BureauResponse);
+
                 if(bureauReq!=null){
                     //obj.bureau_subset__c = String.ValueOf(BureauResponse);
                     if(bureauReq.fico_score!=null)
@@ -795,27 +920,16 @@ global class CreditPolicyResponse {
                         if(bureauReq.fico_score_factors.size()>0)
                             obj.Score_Factors__c =bureauReq.fico_score_factors[0]; 
                     }
-                    System.debug('****bureau_social_security_number****' + bureauReq.bureau_social_security_number );
-                    if(bureauReq.bureau_social_security_number !=null){
-                     System.debug('****bureau_social_security_number2****' + bureauReq.bureau_social_security_number );
-                        if(bureauReq.bureau_social_security_number.size()>0)
-                         System.debug('****bureau_social_security_number3****' + bureauReq.bureau_social_security_number );
-                            applistToUpdate[0].Bureau_SSN__c = String.valueOF(bureauReq.bureau_social_security_number[0]);
-                    }
+
+                    parseBureauSSN(bureauUntypedResponse, bureauReq, applistToUpdate);
+
                     if(bureauReq.consumer_id !=null){
                         System.debug('****consumer id****' + bureauReq.consumer_id );
                         applistToUpdate[0].TU_Consumer_Id__c = String.valueOF(bureauReq.consumer_id);
                     }
-                    if(bureauReq.bureau_date1_of_birth !=null){
-                     System.debug('****bureau_date1_of_birth2****' + bureauReq.bureau_date1_of_birth );
-                        if(bureauReq.bureau_date1_of_birth.size()>0)
-                         System.debug('****bureau_date1_of_birth3****' + bureauReq.bureau_date1_of_birth );
-                            // applistToUpdate[0].Bureau_DOB__c = String.valueOF(bureauReq.bureau_date1_of_birth[0]);
-                         date burdt = date.valueof(bureauReq.bureau_date1_of_birth[0]);
-                         String BureauDOB = burdt.format();
-                         applistToUpdate[0].Bureau_DOB__c = BureauDOB;
-                         System.debug('*****bureauDOB****' + BureauDOB );
-                    }
+
+                    parseBureauDateOfBirth(bureauUntypedResponse, bureauReq, applistToUpdate);
+
                     if(bureauReq.inquiries_last_6_months!=null)         
                         obj.Inquiries_Last_6_Mo__c = bureauReq.inquiries_last_6_months;
                     if(bureauReq.months_since_oldest_trade!=null)
@@ -862,6 +976,40 @@ global class CreditPolicyResponse {
                         obj.AlternativeRiskScore__c =   bureauReq.AADM12_credit_vision_alternative_risk_score;
                     if(bureauReq.AT103S_percent_satisfactory_trades_last_24_mo!=null)
                         obj.Satisfactory_Trades_All_Trades__c = bureauReq.AT103S_percent_satisfactory_trades_last_24_mo;
+
+                    /* LOP-241 update parser to v6 */
+                    if(bureauReq.V71_G058S_num_trd_30_or_more_dpd_pst_6mo !=null)
+                        obj.X30_Delinq_6months__c = bureauReq.V71_G058S_num_trd_30_or_more_dpd_pst_6mo;
+                    if(bureauReq.V71_RE31S_pct_opn_rvl_trd_gt_75pct_credln_verif_pst_12mo !=null)
+                        obj.Rev_75_12months__c =    bureauReq.V71_RE31S_pct_opn_rvl_trd_gt_75pct_credln_verif_pst_12mo;
+                    if(bureauReq.V71_BC20S_mo_since_oldest_cc_trd_opned!=null)
+                        obj.Age_Oldest_Crc_mo__c =  bureauReq.V71_BC20S_mo_since_oldest_cc_trd_opned;
+                    if(bureauReq.W55_AGG901_non_mortgage_increases_last_3_mo!=null)
+                        obj.Bal_Increases_3mo__c =  bureauReq.W55_AGG901_non_mortgage_increases_last_3_mo;
+                    if(bureauReq.W55_AGG911_max_agg_bnkcrd_util_over_last_year!=null)
+                        obj.Agg_utilization_12mo__c =   bureauReq.W55_AGG911_max_agg_bnkcrd_util_over_last_year;
+                    if(bureauReq.W55_TRV12_num_rvl_high_cred_incr_last_3mo!=null)
+                        obj.Rev_Inc_3mo__c =    bureauReq.W55_TRV12_num_rvl_high_cred_incr_last_3mo;
+                    if(bureauReq.W55_PAYMNT08_ratio_actual_min_pmt_for_rvl_trd_last_mo!=null)
+                        obj.Revolving_Actual_Min_payment_1mo__c =   bureauReq.W55_PAYMNT08_ratio_actual_min_pmt_for_rvl_trd_last_mo;
+                    if(bureauReq.V71_G215B_non_medical_collections!=null)
+                        obj.Non_med_Col_0__c =  bureauReq.V71_G215B_non_medical_collections;
+                    if(bureauReq.V71_G209S_mo_since_recent_charge_off_opened!=null)
+                        obj.Recent_Charge_off_mo__c =   bureauReq.V71_G209S_mo_since_recent_charge_off_opened;
+                    if(bureauReq.V71_FI02S_installment_trades!=null)
+                        obj.Open_Fin_Inst_Trades__c =   bureauReq.V71_FI02S_installment_trades;
+                    if(bureauReq.V71_S114S_num_dedup_inq_pst_6mo_excl_auto_mtg_inq!=null)
+                        obj.Deduped_inq_6mo__c =    bureauReq.V71_S114S_num_dedup_inq_pst_6mo_excl_auto_mtg_inq;
+                    if(bureauReq.V71_G095S_mo_since_public_record!=null){
+                        if(bureauReq.V71_G095S_mo_since_public_record<0) obj.MosSinceDerog__c = 0;
+                        if(bureauReq.V71_G095S_mo_since_public_record>=0) obj.MosSinceDerog__c =  bureauReq.V71_G095S_mo_since_public_record; }
+                    if(bureauReq.V71_G069S_trades_90_days_past_due_last_12_mo!=null)
+                        obj.trades_90_Day_Delinq_in_last_12_mos__c =  bureauReq.V71_G069S_trades_90_days_past_due_last_12_mo;
+                    if(bureauReq.V71_AT103S_percent_satisfactory_trades_last_24_mo!=null)
+                        obj.Satisfactory_Trades_All_Trades__c = bureauReq.V71_AT103S_percent_satisfactory_trades_last_24_mo;
+                    if(bureauReq.V71_AT09S_num_trd_opned_pst_24mo!=null) {
+                        obj.Num_Trades_Opened_Past_24mo__c = bureauReq.V71_AT09S_num_trd_opned_pst_24mo;
+                    }
                 }
                 
             }
@@ -870,6 +1018,70 @@ global class CreditPolicyResponse {
     
             return obj;
             
+        }
+
+        /**
+         * This handles the surprise data type change to string from array.
+         * Handle the date of birth field in a generic way just in case bureau reverts to original array.
+         * Since its manual, setting available fields back to previously parsed.
+         *
+         * @param bureauUntypedResponse json object parsed untyped
+         * @param bureauReq The previously deserialized json response
+         * @param applistToUpdate The Application instance we're updating
+         */
+        private static void parseBureauDateOfBirth(Map<String, Object> bureauUntypedResponse, BureauRequestAPI bureauReq, List<genesis__Applications__c> applistToUpdate) {
+
+            Object bureauBirthDateObj = bureauUntypedResponse.get('bureau_date1_of_birth');
+            if (bureauBirthDateObj == null) {
+                return;
+            }
+
+            Date dobDateTime;
+            if (bureauBirthDateObj instanceof List<Object>) {
+                bureauReq.manual_bureau_date1_of_birth = listObjToListStr((List<Object>) bureauBirthDateObj);
+                dobDateTime = Date.valueOf(bureauReq.manual_bureau_date1_of_birth[0]);
+            } else {
+                bureauReq.manual_bureau_date1_of_birth_str = (String) bureauBirthDateObj;
+                dobDateTime = Date.valueOf(bureauReq.manual_bureau_date1_of_birth_str);
+            }
+
+            String BureauDOB = dobDateTime.format();
+            applistToUpdate[0].Bureau_DOB__c = BureauDOB;
+            System.debug('*****bureauDOB****' + BureauDOB );
+        }
+
+        /**
+         * This handles the surprise data type change to string from array.
+         * Similar premise to date of birth change above.
+         *
+         * @param bureauUntypedResponse json object parsed untyped
+         * @param bureauReq The previously deserialized json response
+         * @param applistToUpdate The Application instance we're updating
+         */
+        private static void parseBureauSSN(Map<String, Object> bureauUntypedResponse, BureauRequestAPI bureauReq, List<genesis__Applications__c> applistToUpdate) {
+            Object ssnObj = bureauUntypedResponse.get('bureau_social_security_number');
+            System.debug('****bureau_social_security_number****' + ssnObj);
+            if (ssnObj == null) {
+                return;
+            }
+
+            String finalSsn;
+            if (ssnObj instanceof List<Object>) {
+                bureauReq.manual_bureau_social_security_number = listObjToListStr((List<Object>) ssnObj);
+                finalSsn = bureauReq.manual_bureau_social_security_number[0];
+            } else {
+                bureauReq.manual_bureau_social_security_number_str = (String) ssnObj;
+                finalSsn = bureauReq.manual_bureau_social_security_number_str;
+            }
+            applistToUpdate[0].Bureau_SSN__c = finalSsn;
+        }
+
+        private static List<String> listObjToListStr(List<Object> objs) {
+            List<String> strs = new List<String>();
+            for (Object obj : objs) {
+                strs.add(obj == null ? null : obj.toString());
+            }
+            return strs;
         }
 
         global static List<Credit_Report_Details__c> fieldMapping(CreditPolicyResponse CPResponse,String bureauResponse, String accountID,String appId){
