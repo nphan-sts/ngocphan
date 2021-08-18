@@ -27,7 +27,7 @@ public class QueueAssignment{
         List<genesis__Applications__c> appList = new List<genesis__Applications__c>();
         
         appList = [select id,name,Sift_Status__c,
-                            Affiliate_Partner__c,                               
+                            Affiliate_Partner__c, utm_medium__c,                               
                          (select id,Application__c,Precise_ID_Overall_SCore__c,
                                  Precise_ID_First_Payment_Default__c,
                                  Precise_ID_ID_Theft__c,
