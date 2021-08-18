@@ -403,7 +403,7 @@ private class TestInvestorAllocation{
         Account applicantAccount = GetApplicantAccount();
         insert applicantAccount;
 
-        genesis__Applications__c appInsert = GetOfferAcceptedApplication(investor, applicantAccount);
+        genesis__Applications__c appInsert = GetADVPApplication(investor, applicantAccount);
         insert appInsert;
 
         /* using identical query to InvestorAllocation */
@@ -488,7 +488,7 @@ private class TestInvestorAllocation{
         Account applicantAccount = GetApplicantAccount();
         insert applicantAccount;
 
-        genesis__Applications__c appInsert = GetOfferAcceptedApplication(investor, applicantAccount);
+        genesis__Applications__c appInsert = GetADVPApplication(investor, applicantAccount);
         insert appInsert;
 
         Credit_Policy__c creditPolicy = new Credit_Policy__c();
@@ -1664,7 +1664,7 @@ private class TestInvestorAllocation{
         return acco;
     }
 
-    private static genesis__Applications__c GetOfferAcceptedApplication(Account investor, Account applicant) {
+    private static genesis__Applications__c GetADVPApplication(Account investor, Account applicant) {
         genesis__Applications__c app1 = new genesis__Applications__c(
                 genesis__Due_Day__c = 20,
                 genesis__Expected_First_Payment_Date__c = System.today(),
@@ -1674,7 +1674,7 @@ private class TestInvestorAllocation{
                 Investor__c  = investor.Id,
                 Invested_Amount__c  = 1000,
                 Application_Start_DateV2__c = System.today(),
-                genesis__Status__c = 'Offer_accepted',
+                genesis__Status__c = 'agent_document_verification_pending',
                 genesis__Draw_Period_End_Date__c = System.today(),
                 Employment_Status__c    = 'Full Time',
                 genesis__Loan_Amount__c = 1000
