@@ -387,23 +387,23 @@ private class TestInvestorAllocation{
         CL_Document__c docs = MW_GlobalTestUtility.getCLDocumentRecord();
         insert docs;
 
-        genesis__Rule__c rule = MW_GlobalTestUtility.GetRule('Test FICO Only Rule', '1');
+        genesis__Rule__c rule = GetRule('Test FICO Only Rule', '1');
         insert rule;
 
-        genesis__RuleCriteria__c ficoCriteria = MW_GlobalTestUtility.GetCreditPolicyCriteria(1, rule);
+        genesis__RuleCriteria__c ficoCriteria = GetCreditPolicyCriteria(1, rule);
         ficoCriteria.genesis__Field_API_Name__c    = 'FICO__c';
         ficoCriteria.genesis__Field_Name__c        = 'FICO';
         ficoCriteria.genesis__Matching_Type__c     = '>=';
         ficoCriteria.genesis__Matching_Value__c    = '640';
         insert ficoCriteria;
 
-        Account investor = MW_GlobalTestUtility.GetInvestorWithRuleset(rule);
+        Account investor = GetInvestorWithRuleset(rule);
         insert investor;
 
-        Account applicantAccount = MW_GlobalTestUtility.GetApplicantAccount();
+        Account applicantAccount = GetApplicantAccount();
         insert applicantAccount;
 
-        genesis__Applications__c appInsert = MW_GlobalTestUtility.GetOfferAcceptedApplication(investor, applicantAccount);
+        genesis__Applications__c appInsert = GetOfferAcceptedApplication(investor, applicantAccount);
         insert appInsert;
 
         /* using identical query to InvestorAllocation */
@@ -465,30 +465,30 @@ private class TestInvestorAllocation{
         CL_Document__c docs = MW_GlobalTestUtility.getCLDocumentRecord();
         insert docs;
 
-        genesis__Rule__c rule = MW_GlobalTestUtility.GetRule('Test Deref Rule', '(1 AND 2)');
+        genesis__Rule__c rule = GetRule('Test Deref Rule', '(1 AND 2)');
         insert rule;
 
-        genesis__RuleCriteria__c ficoCriteria = MW_GlobalTestUtility.GetCreditPolicyCriteria(1, rule);
+        genesis__RuleCriteria__c ficoCriteria = GetCreditPolicyCriteria(1, rule);
         ficoCriteria.genesis__Field_API_Name__c    = 'FICO__c';
         ficoCriteria.genesis__Field_Name__c        = 'FICO';
         ficoCriteria.genesis__Matching_Type__c     = '>=';
         ficoCriteria.genesis__Matching_Value__c    = '620';
         insert ficoCriteria;
 
-        genesis__RuleCriteria__c tradeCriteria = MW_GlobalTestUtility.GetCreditPolicyCriteria(2, rule);
+        genesis__RuleCriteria__c tradeCriteria = GetCreditPolicyCriteria(2, rule);
         tradeCriteria.genesis__Field_API_Name__c    = 'Num_Trades_Opened_Past_24mo__c';
         tradeCriteria.genesis__Field_Name__c        = 'Num Trades Opened Past 24mo';
         tradeCriteria.genesis__Matching_Type__c     = '<';
         tradeCriteria.genesis__Matching_Value__c    = '10';
         insert tradeCriteria;
 
-        Account investor = MW_GlobalTestUtility.GetInvestorWithRuleset(rule);
+        Account investor = GetInvestorWithRuleset(rule);
         insert investor;
 
-        Account applicantAccount = MW_GlobalTestUtility.GetApplicantAccount();
+        Account applicantAccount = GetApplicantAccount();
         insert applicantAccount;
 
-        genesis__Applications__c appInsert = MW_GlobalTestUtility.GetOfferAcceptedApplication(investor, applicantAccount);
+        genesis__Applications__c appInsert = GetOfferAcceptedApplication(investor, applicantAccount);
         insert appInsert;
 
         Credit_Policy__c creditPolicy = new Credit_Policy__c();
@@ -1627,5 +1627,84 @@ private class TestInvestorAllocation{
                  
         test.stopTest();
      }
-    
+
+    private static Account GetInvestorWithRuleset(genesis__Rule__c rule) {
+        Account acc1 = new Account(
+                Name = 'Test1',
+                loan__Investor__c = true,
+                Amount_Invested__c = 1000,
+                Investment_Rules__c = rule.Id,
+                Number_Of_Applications_Invested__c = 3,
+                Total_No_of_Application_Limit__c = 30,
+                Last_Application_assigned_on__c = System.now()-7,
+                Total_Investment_Limit__c = 1000000,
+                loan__Undeployed_Funds__c = 500000,
+                cnotify__Email__c = 'no-reply@testorganization.com',
+                peer__First_Name__c = 'TestFName1',
+                peer__Last_Name__c='TestLName2',
+                loan__Active__c = 'YES',
+                City__c='CANADA',
+                State__c='CA',
+                ZIP_Code__c='123456'
+        );
+        return acc1;
+    }
+
+    private static Account GetApplicantAccount() {
+        Account acco = new Account(
+                Name = 'Test',
+                loan__Investor__c= false,
+                cnotify__Email__c = 'no-reply@testorganization.com',
+                peer__First_Name__c = 'TestFName2',
+                peer__Last_Name__c='TestLName2',
+                City__c='CANADA',
+                State__c='CA',
+                ZIP_Code__c='123456'
+        );
+        return acco;
+    }
+
+    private static genesis__Applications__c GetOfferAcceptedApplication(Account investor, Account applicant) {
+        genesis__Applications__c app1 = new genesis__Applications__c(
+                genesis__Due_Day__c = 20,
+                genesis__Expected_First_Payment_Date__c = System.today(),
+                genesis__Expected_Start_Date__c = System.today(),
+                genesis__Funding_in_Tranches__c = false,
+                genesis__Account__c = applicant.Id,
+                Investor__c  = investor.Id,
+                Invested_Amount__c  = 1000,
+                Application_Start_DateV2__c = System.today(),
+                genesis__Status__c = 'Offer_accepted',
+                genesis__Draw_Period_End_Date__c = System.today(),
+                Employment_Status__c    = 'Full Time',
+                genesis__Loan_Amount__c = 1000
+        );
+        return app1;
+    }
+
+    private static genesis__Rule__c GetRule(String name, String expression) {
+        genesis__Rule__c rule = new genesis__Rule__c();
+        rule.Name                       = name;
+        rule.genesis__Enabled__c        = true;
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Message_failure__c = 'FAIL cannot allocate to ' + name;
+        rule.genesis__Message_success__c = 'Successful allocation to ' + name;
+        rule.genesis__Evaluation_Expression__c = expression;
+        return rule;
+    }
+
+    private static genesis__RuleCriteria__c GetCreditPolicyCriteria(Decimal sequenceNum, genesis__Rule__c rule) {
+        genesis__RuleCriteria__c criteria = new genesis__RuleCriteria__c(
+                genesis__Criteria_Sequence__c = sequenceNum,
+                genesis__Field_Type__c        = 'DOUBLE',
+                genesis__Maximum_Value__c     = '',
+                genesis__Minimum_Value__c     = '',
+                genesis__Related_Object__c    = 'Credit_Policy__c',
+                genesis__Rule_Object_Reference__c = 'Application__r',
+                genesis__Rule__c = rule.Id,
+                genesis__Stipulation_Type__c = 'FUNDING'
+        );
+        return criteria;
+    }
+
 }

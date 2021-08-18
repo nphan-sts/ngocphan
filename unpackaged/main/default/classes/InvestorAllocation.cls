@@ -323,7 +323,9 @@ public with sharing class InvestorAllocation{
                 bpl.clcommon__Log_Level__c = 'INFO';
                 bpl.clcommon__Type__c = 'Info';
                 bpl.clcommon__Batch_Id__c = app.id;
-                bpl.clcommon__Message__c = 'Can not allocate to the investor '+a.name+' because of one of the following reason \n 1.Either it is inactive\n2.Available balance less than Loan Amount\n3.Rule didnt passed.\n4.Monthly Allocation less than 0';
+                bpl.clcommon__Message__c = 'Can not allocate to the investor '+a.name+' ' +
+                        'for Lead Id: ' + app.Lead_ID__c + ' ' +
+                        'because of one of the following reason \n 1.Either it is inactive\n2.Available balance less than Loan Amount\n3.Rule didnt passed.\n4.Monthly Allocation less than 0';
                 lstBpl.add(bpl);
             }
             
@@ -367,7 +369,9 @@ public with sharing class InvestorAllocation{
                                             clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
                                             bpl.clcommon__Type__c = 'Exception';
                                             bpl.clcommon__Batch_Id__c = app.id;
-                                            bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' because of error updating investor account. Exception : '+e.getMessage();
+                                            bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' ' +
+                                                    'for Lead Id: ' + app.Lead_ID__c + ' ' +
+                                                    'because of error updating investor account. Exception : '+e.getMessage();
                                             insert bpl;
                                             return false;
                                         }
@@ -377,7 +381,9 @@ public with sharing class InvestorAllocation{
                                         clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
                                         bpl.clcommon__Type__c = 'Exception';
                                         bpl.clcommon__Batch_Id__c = app.id;
-                                        bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' because of error updating investor account. Exception : '+e.getMessage();
+                                        bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' ' +
+                                                'for Lead Id: ' + app.Lead_ID__c + ' ' +
+                                                'because of error updating investor account. Exception : '+e.getMessage();
                                         insert bpl;
                                         return false;
                                     }
@@ -419,7 +425,9 @@ public with sharing class InvestorAllocation{
                                 bpl.clcommon__Log_Level__c = 'INFO';
                                 bpl.clcommon__Type__c = 'Info';
                                 bpl.clcommon__Batch_Id__c = app.id;
-                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
+                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' ' +
+                                        'for Lead Id: ' + app.Lead_ID__c + ' ' +
+                                        'because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
                                 lstBpl.add(bpl);
                             }
                             
@@ -466,7 +474,9 @@ public with sharing class InvestorAllocation{
                                 bpl.clcommon__Log_Level__c = 'INFO';
                                 bpl.clcommon__Type__c = 'Info';
                                 bpl.clcommon__Batch_Id__c = app.id;
-                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
+                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' ' +
+                                        'for Lead Id: ' + app.Lead_ID__c + ' ' +
+                                        'because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
                                 lstBpl.add(bpl);
                             }
                             
@@ -505,7 +515,9 @@ public with sharing class InvestorAllocation{
                                     clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
                                     bpl.clcommon__Type__c = 'Exception';
                                     bpl.clcommon__Batch_Id__c = app.id;
-                                    bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAccountWithLargestWeight.name+' because of error updating investor account. Exception : '+e.getMessage();
+                                    bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAccountWithLargestWeight.name+' ' +
+                                            'for Lead Id: ' + app.Lead_ID__c + ' ' +
+                                            'because of error updating investor account. Exception : '+e.getMessage();
                                     insert bpl;
                                     return false;
                                 }
@@ -515,7 +527,9 @@ public with sharing class InvestorAllocation{
                                 clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c(); //LOP-72
                                 bpl.clcommon__Type__c = 'Exception';
                                 bpl.clcommon__Batch_Id__c = app.id;
-                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAccountWithLargestWeight.name+' because of error updating investor account. Exception : '+e.getMessage();
+                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAccountWithLargestWeight.name+' ' +
+                                        'for Lead Id: ' + app.Lead_ID__c + ' ' +
+                                        'because of error updating investor account. Exception : '+e.getMessage();
                                 insert bpl;
                                 return false;
                             }
@@ -594,7 +608,9 @@ public with sharing class InvestorAllocation{
                 bpl.clcommon__Log_Level__c = 'INFO';
                 bpl.clcommon__Type__c = 'Info';
                 bpl.clcommon__Batch_Id__c = app.id;
-                bpl.clcommon__Message__c = 'Can not allocate to any investor because of one of the following reason \n 1.Either it is inactive\n2.Available balance less than Loan Amount\n3.Rule didnt passed.\n4.Monthly Allocation less than 0';
+                bpl.clcommon__Message__c = 'Can not allocate to any investor ' +
+                        'for Lead Id: ' + app.Lead_ID__c + ' ' +
+                        'because of one of the following reason \n 1.Either it is inactive\n2.Available balance less than Loan Amount\n3.Rule didnt passed.\n4.Monthly Allocation less than 0';
                 insert bpl;
                 retvalue=false;
                 //update app;	//CRM-927(commented to optimise)
@@ -643,7 +659,9 @@ public with sharing class InvestorAllocation{
                                 clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
                                 bpl.clcommon__Type__c = 'Exception';
                                 bpl.clcommon__Batch_Id__c = app.id;
-                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAcc.name+' because of error updating investor account. Exception : '+e.getMessage();
+                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAcc.name+' ' +
+                                        'for Lead Id: ' + app.Lead_ID__c + ' ' +
+                                        'because of error updating investor account. Exception : '+e.getMessage();
                                 insert bpl;
                                 return false;
                             }
@@ -653,7 +671,9 @@ public with sharing class InvestorAllocation{
                             clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c(); //LOP-72
                             bpl.clcommon__Type__c = 'Exception';
                             bpl.clcommon__Batch_Id__c = app.id;
-                            bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAcc.name+' because of error updating investor account. Exception : '+e.getMessage();
+                            bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAcc.name+' ' +
+                                    'for Lead Id: ' + app.Lead_ID__c + ' ' +
+                                    'because of error updating investor account. Exception : '+e.getMessage();
                             insert bpl;
                             return false;
                         }

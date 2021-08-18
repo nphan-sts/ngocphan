@@ -71,60 +71,6 @@ public with sharing class MW_GlobalTestUtility {
 
     }
 
-    public static Account GetInvestorWithRuleset(genesis__Rule__c rule) {
-        Account acc1 = new Account(
-                Name = 'Test1',
-                loan__Investor__c = true,
-                Amount_Invested__c = 1000,
-                Investment_Rules__c = rule.Id,
-                Number_Of_Applications_Invested__c = 3,
-                Total_No_of_Application_Limit__c = 30,
-                Last_Application_assigned_on__c = System.now()-7,
-                Total_Investment_Limit__c = 1000000,
-                loan__Undeployed_Funds__c = 500000,
-                cnotify__Email__c = 'no-reply@testorganization.com',
-                peer__First_Name__c = 'TestFName1',
-                peer__Last_Name__c='TestLName2',
-                loan__Active__c = 'YES',
-                City__c='CANADA',
-                State__c='CA',
-                ZIP_Code__c='123456'
-        );
-        return acc1;
-    }
-
-    public static Account GetApplicantAccount() {
-        Account acco = new Account(
-                Name = 'Test',
-                loan__Investor__c= false,
-                cnotify__Email__c = 'no-reply@testorganization.com',
-                peer__First_Name__c = 'TestFName2',
-                peer__Last_Name__c='TestLName2',
-                City__c='CANADA',
-                State__c='CA',
-                ZIP_Code__c='123456'
-        );
-        return acco;
-    }
-
-    public static genesis__Applications__c GetOfferAcceptedApplication(Account investor, Account applicant) {
-        genesis__Applications__c app1 = new genesis__Applications__c(
-                genesis__Due_Day__c = 20,
-                genesis__Expected_First_Payment_Date__c = System.today(),
-                genesis__Expected_Start_Date__c = System.today(),
-                genesis__Funding_in_Tranches__c = false,
-                genesis__Account__c = applicant.Id,
-                Investor__c  = investor.Id,
-                Invested_Amount__c  = 1000,
-                Application_Start_DateV2__c = System.today(),
-                genesis__Status__c = 'Offer_accepted',
-                genesis__Draw_Period_End_Date__c = System.today(),
-                Employment_Status__c    = 'Full Time',
-                genesis__Loan_Amount__c = 1000
-        );
-        return app1;
-    }
-
     public static Profile GetProfile(string name) {
         Profile profile = [SELECT Id FROM Profile WHERE Name = :name];
         return profile;
@@ -175,31 +121,6 @@ public with sharing class MW_GlobalTestUtility {
                 genesis__Expected_Start_Date__c = system.Today(),
                 LEAD_ID__C = 'c9149473-e69f-ee12-38a7-d18b0cba847d');
         return objApp;
-    }
-
-    public static genesis__Rule__c GetRule(String name, String expression) {
-        genesis__Rule__c rule = new genesis__Rule__c();
-        rule.Name                       = name;
-        rule.genesis__Enabled__c        = true;
-        rule.genesis__Object_Type__c    = 'genesis__applications__c';
-        rule.genesis__Message_failure__c = 'FAIL cannot allocate to ' + name;
-        rule.genesis__Message_success__c = 'Successful allocation to ' + name;
-        rule.genesis__Evaluation_Expression__c = expression;
-        return rule;
-    }
-
-    public static genesis__RuleCriteria__c GetCreditPolicyCriteria(Decimal sequenceNum, genesis__Rule__c rule) {
-        genesis__RuleCriteria__c criteria = new genesis__RuleCriteria__c(
-                genesis__Criteria_Sequence__c = sequenceNum,
-                genesis__Field_Type__c        = 'DOUBLE',
-                genesis__Maximum_Value__c     = '',
-                genesis__Minimum_Value__c     = '',
-                genesis__Related_Object__c    = 'Credit_Policy__c',
-                genesis__Rule_Object_Reference__c = 'Application__r',
-                genesis__Rule__c = rule.Id,
-                genesis__Stipulation_Type__c = 'FUNDING'
-        );
-        return criteria;
     }
 
     // Application Object Alert using same util class to cover testing

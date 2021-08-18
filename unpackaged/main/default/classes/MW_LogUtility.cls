@@ -93,7 +93,7 @@ public class MW_LogUtility {
                 bpl.clcommon__Message__c =
                         className + ': ' +
                         'App with Lead Id: ' + leadId +
-                        ' investor rule execution failed with description:"' + description + '" ' +
+                        ' failed investor allocation rule execution with description:"' + description + '" ' +
                         ' and message: "' + checklist.genesis__Message__c + '"';
                 insert bpl;
             }
@@ -105,7 +105,7 @@ public class MW_LogUtility {
                 bpl.clcommon__Message__c =
                         className + ': ' +
                         'App with Lead Id: ' + leadId +
-                        ' investor rule had at least 1 null field during execution which evaluated rule to: "' +
+                        ' had at least 1 null field during execution of allocation rule which evaluated rule to: "' +
                         checklist.genesis__Result__c + '".' +
                         ' Complete rule result: ' + description;
                 insert bpl;
