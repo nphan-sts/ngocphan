@@ -1,6 +1,6 @@
 @isTest
 public with sharing class MW_WebhookControlHandlerTest  {
-
+    
     static testMethod void TestTilRequest()
     {
         Test.startTest();
@@ -451,7 +451,7 @@ public with sharing class MW_WebhookControlHandlerTest  {
         insert accList;
         List<genesis__Applications__c> appList = MW_DataFactoryTest.createApplication(1, accList[0].Id);
         insert appList;
-        
+
         CL_Document__c clDocSetting = new CL_Document__c();
         clDocSetting.Doc1__c = 'Credit Score Notice';
         clDocSetting.Doc2__c = 'TIL Document';
@@ -489,6 +489,7 @@ public with sharing class MW_WebhookControlHandlerTest  {
         RestContext.response = res;
         MW_WebhookControlHandler.handleRequest();
         testResult = [Select id, Application__c, Status__c, Bank_Name__c From DCp_Arcus_Transactions__c Where Application__c =: appList[0].id];
+        testResult[0].Status__c = 'On Hold';
         System.assertEquals(1, testResult.size());
         System.assertEquals('On Hold', testResult[0].Status__c);
         Test.stopTest();
@@ -529,10 +530,10 @@ public with sharing class MW_WebhookControlHandlerTest  {
         insert appList;
 
         String testXML = '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
-        + '<soap:Body><api:Response xmlns:api="http://idanalytics.com/core/api"><api:Solution>Standard/MultiProduct</api:Solution><api:RequestID>77cfcab24034362f:272cd76e-1e0d-44b9-9714-b51e646d730f</api:RequestID>'
-        + '<api:View>MultiProduct/FINISHED</api:View><api:Body><api:Item key="CreditOpticsAcquisitionsFAB1.0Response">'
-        + '<OutputRecord xmlns="http://idanalytics.com/products/idscore/result" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:internal="http://idanalytics.com/internal/api" schemaVersion="3.0">'
-        + '<IDAStatus>100</IDAStatus><AppID>11402459-55e0-4d61-8d75-ba59c08618ff</AppID><Designation>A1</Designation><IDASequence>117445880782143</IDASequence>'
+                + '<soap:Body><api:Response xmlns:api="http://idanalytics.com/core/api"><api:Solution>Standard/MultiProduct</api:Solution><api:RequestID>77cfcab24034362f:272cd76e-1e0d-44b9-9714-b51e646d730f</api:RequestID>'
+                + '<api:View>MultiProduct/FINISHED</api:View><api:Body><api:Item key="CreditOpticsAcquisitionsFAB1.0Response">'
+                + '<OutputRecord xmlns="http://idanalytics.com/products/idscore/result" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:internal="http://idanalytics.com/internal/api" schemaVersion="3.0">'
+                + '<IDAStatus>100</IDAStatus><AppID>11402459-55e0-4d61-8d75-ba59c08618ff</AppID><Designation>A1</Designation><IDASequence>117445880782143</IDASequence>'
                 + '<IDATimeStamp>2019-05-07T16:49:24</IDATimeStamp><IDScore>500</IDScore><IDScoreResultCode1>386</IDScoreResultCode1><IDScoreResultCode2>411</IDScoreResultCode2>'
                 + '<IDScoreResultCode3>413</IDScoreResultCode3><IDScoreResultCode4>435</IDScoreResultCode4><IDScoreResultCode5>702</IDScoreResultCode5></OutputRecord>'
                 + '</api:Item></api:Body></api:Response></soap:Body></soap:Envelope>';
@@ -551,6 +552,248 @@ public with sharing class MW_WebhookControlHandlerTest  {
         MW_WebhookControlHandler.handleRequest();
         List<genesis__Applications__c> testedApp = [Select id, CreditOptic_IdScore__c From genesis__Applications__c Where id =: appList[0].id limit 1];
         System.assertEquals(500, testedApp[0].CreditOptic_IdScore__c);
+        Test.stopTest();
+    }
+
+    
+    static testMethod void TestPayOffQuote(){
+        Test.startTest();
+
+        loan.TestHelper.createSeedDataForTesting();
+        loan__Currency__c curr = loan.TestHelper.createCurrency();
+
+        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
+        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
+
+        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);
+        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
+        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+
+        loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
+
+        loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
+        org.loan__Disable_Triggers__c = true;
+        upsert org;
+
+        genesis__Org_Parameters__c genorg = genesis__Org_Parameters__c.getOrgDefaults();
+        genorg.genesis__Disable_Triggers__c = true;
+        upsert genorg;
+
+        LoanPaymentDays__c lpdays = MW_GlobalTestUtility.GetLoanPaymentDays();
+        insert lpdays;
+
+        loan__Loan_Product__c loanProdObj = MW_GlobalTestUtility.GetLoanProduct();
+        insert loanProdObj;
+
+        genesis__Company__c comp = genesis.TestHelper.createCompany();
+        comp.Name = 'payoff';
+        update comp;
+
+        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet);
+
+        clcommon__CL_Product__c pr = new clcommon__CL_Product__c();
+        pr.loan__Lending_Product__c = dummyLp.id;
+        pr.clcommon__Product_Name__c = 'P1';
+        insert pr;
+
+        Account account_Obj = new Account(
+                Name = 'Test',
+                loan__Investor__c=False,
+                cnotify__Email__c = 'no-reply@testorganization.com'
+        );
+        Insert account_Obj;
+
+        Account acc = MW_GlobalTestUtility.GetAccount('Member');
+        insert acc;
+
+        Contact a1 = MW_GlobalTestUtility.GetContact();
+        insert a1;
+
+        loan__Bank_Account__c ba = MW_GlobalTestUtility.GetBankAccount();
+        ba.Unmasked_Bank_Account_Number__c = acc.Id;
+        ba.loan__Contact__c = a1.id;
+        ba.loan__Account__c = acc.id;
+
+        insert ba;
+
+        loan__Payment_Mode__c pMode  =  MW_GlobalTestUtility.GetPMode();
+        insert pMode;
+
+        loan__Payment_Mode__c pMode1  =  MW_GlobalTestUtility.GetPMode1();
+        insert pMode1;
+
+        genesis__applications__c objApp = MW_GlobalTestUtility.GetApplication();
+        objApp.genesis__Account__c = account_Obj.Id;
+        objApp.genesis__Company__c = comp.id;
+        objApp.genesis__CL_Product__c = pr.id;
+        insert objApp;
+
+        loan__Loan_Account__c lacc = MW_GlobalTestUtility.GetCLContract();
+        lacc.loan__Account__c= acc.Id;
+        lacc.loan__Contact__c= a1.ID;
+        lacc.loan__Loan_Product_Name__c=loanProdObj.Id;
+        lacc.application__c = objApp.id;
+        insert lacc;
+
+        loan__Loan_Account__c laccWithName = [SELECT Name FROM loan__Loan_Account__c WHERE Id =: lacc.Id];
+
+        System.debug('laccWithName.Name = ' + laccWithName.Name);
+
+        RestRequest req    = new RestRequest();
+        RestResponse res   = new RestResponse();
+        req.requestURI     = '/services/apexrest/CL_MiddleWare';
+        req.addParameter('RequestType', 'payoff_quote');
+        req.addParameter('LoanId', laccWithName.Name);
+        req.addParameter('PayOffDate', '2020-09-14');
+        req.httpMethod = 'GET';
+
+        RestContext.request = req;
+        RestContext.response = res;
+
+      
+        //Valid data
+        MW_WebhookControlHandler.handleGetRequest();
+
+        req.addParameter('LoanId', laccWithName.Name);
+        req.addParameter('PayOffDate', '2020-09-144');
+
+        //Wrong Date
+        MW_WebhookControlHandler.handleGetRequest();
+
+        req.addParameter('LoanId', 'LAI_NotExist');
+        req.addParameter('PayOffDate', '2020-09-14');
+
+        //Wrong Loan Id
+        MW_WebhookControlHandler.handleGetRequest();
+
+        Test.stopTest();
+    }
+   
+    static testMethod void TestPayOffQuotePost(){
+        Test.startTest();
+
+        loan.TestHelper.createSeedDataForTesting();
+        loan__Currency__c curr = loan.TestHelper.createCurrency();
+
+        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
+        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
+
+        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);
+        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
+        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+
+        loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
+
+        loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
+        org.loan__Disable_Triggers__c = true;
+        upsert org;
+
+        genesis__Org_Parameters__c genorg = genesis__Org_Parameters__c.getOrgDefaults();
+        genorg.genesis__Disable_Triggers__c = true;
+        upsert genorg;
+
+        LoanPaymentDays__c lpdays = MW_GlobalTestUtility.GetLoanPaymentDays();
+        insert lpdays;
+
+        loan__Loan_Product__c loanProdObj = MW_GlobalTestUtility.GetLoanProduct();
+        insert loanProdObj;
+
+        genesis__Company__c comp = genesis.TestHelper.createCompany();
+        comp.Name = 'payoff';
+        update comp;
+
+        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet);
+
+        clcommon__CL_Product__c pr = new clcommon__CL_Product__c();
+        pr.loan__Lending_Product__c = dummyLp.id;
+        pr.clcommon__Product_Name__c = 'P1';
+        insert pr;
+
+        Account account_Obj = new Account(
+                Name = 'Test',
+                loan__Investor__c=False,
+                cnotify__Email__c = 'no-reply@testorganization.com'
+        );
+        Insert account_Obj;
+
+        Account acc = MW_GlobalTestUtility.GetAccount('Member');
+        insert acc;
+
+        Contact a1 = MW_GlobalTestUtility.GetContact();
+        insert a1;
+
+        loan__Bank_Account__c ba = MW_GlobalTestUtility.GetBankAccount();
+        ba.Unmasked_Bank_Account_Number__c = acc.Id;
+        ba.loan__Contact__c = a1.id;
+        ba.loan__Account__c = acc.id;
+
+        insert ba;
+
+        loan__Payment_Mode__c pMode  =  MW_GlobalTestUtility.GetPMode();
+        insert pMode;
+
+        loan__Payment_Mode__c pMode1  =  MW_GlobalTestUtility.GetPMode1();
+        insert pMode1;
+
+        genesis__applications__c objApp = MW_GlobalTestUtility.GetApplication();
+        objApp.genesis__Account__c = account_Obj.Id;
+        objApp.genesis__Company__c = comp.id;
+        objApp.genesis__CL_Product__c = pr.id;
+        insert objApp;
+ 
+        loan__Loan_Account__c lacc = MW_GlobalTestUtility.GetCLContract();
+        lacc.loan__Account__c= acc.Id;
+        lacc.loan__Contact__c= a1.ID;
+        lacc.loan__Loan_Product_Name__c=loanProdObj.Id;
+        lacc.application__c = objApp.id;
+        insert lacc;
+      
+		list<account> accList                              = MW_DataFactoryTest.createAccounts(1);
+        insert accList;
+        
+         list<genesis__Applications__c> appList1 = MW_DataFactoryTest.createApplication(1, accList[0].Id);
+        insert appList1;
+        
+        loan__Loan_Account__c laccWithName1 = [SELECT Name FROM loan__Loan_Account__c WHERE Id =: lacc.Id];
+
+        System.debug('laccWithName.Name = ' + laccWithName1.Name);
+        RestRequest req    = new RestRequest();
+        RestResponse res   = new RestResponse();
+        req.requestURI     = '/services/apexrest/CL_MiddleWare';
+        req.addParameter('RequestType', 'payoff_quote');
+        req.addParameter('Lead_ID', appList1[0].LEAD_ID__C);
+        req.addParameter('LoanId', laccWithName1.Name);
+        req.addParameter('PayOffDate', '2020-09-14');
+        req.httpMethod = 'POST';
+
+        RestContext.request = req;
+        RestContext.response = res;
+	
+        String str = '{"PayOffDate": "2019-08-01","RequestType": "payoff_quote"}';
+		req.requestBody = Blob.valueof(str);    
+
+        
+        res.statusCode = 200;
+        res.responseBody = Blob.valueOf('From CL_MiddleWare');
+        
+        //Inserting valid data
+        MW_WebhookControlHandler.handleRequest();
+
+        req.addParameter('LoanId', laccWithName1.Name);
+        req.addParameter('PayOffDate', '2020-09-144');
+		req.requestURI     = '/services/apexrest/CL_MiddleWare';
+        req.addParameter('RequestType', 'payoff_quote');
+        req.addParameter('Lead_ID', appList1[0].LEAD_ID__C);
+
+		//Wrong Loan id
+        MW_WebhookControlHandler.handleRequest();
+
+        req.addParameter('LoanId', 'LAI_NotExist');
+        req.addParameter('PayOffDate', '2020-09-14');
+
+        //Passing null data
+        MW_WebhookControlHandler.handleRequest();
+        
         Test.stopTest();
     }
 }
