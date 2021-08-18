@@ -35,9 +35,23 @@ public with sharing class InvestorAllocation{
     @InvocableMethod
     public static void allocateInvestor(list<id> appId){
         if(appId !=null && appId.size()>0) {
-            runInvestorAllocationBasedOnWeighting(appId[0]);
+            List<Credit_Policy__c> creditPolicies = [select Id from Credit_Policy__c  where Application__c =: appId[0]];
+            if (creditPolicies.size() > 0) {
+                runInvestorAllocationBasedOnWeighting(appId[0]);
+            } else {
+                genesis__Applications__c failApp =
+                    [SELECT Id, Lead_ID__c
+                    FROM    genesis__Applications__c
+                    WHERE   Id =: appId[0]];
+
+                MW_LogUtility.errorMessage(
+                        'InvestorAllocation',
+                        failApp.Id,
+                        failApp.Lead_ID__c,
+                        'allocateInvestor',
+                        'No application credit policy record found.  Skipped investor allocation at status: ' + failApp.genesis__Status__c);
+            }
         }
-        
     }
     
     
@@ -191,27 +205,16 @@ public with sharing class InvestorAllocation{
         system.debug('------In Investor Allocation-------');    //pallavi
         try{
             genesis__Applications__c app = [Select id,name,
+                                            Lead_ID__c,
                                             Investor__c,DCP_Investor_Eligibility__c,
                                             genesis__status__c,
                                             genesis__loan_amount__c,
                                             Invested_Amount__c,
                                             genesis__Lending_Product__c,
                                             Last_Investor_Assigned_On__c,
-                                            Total_Arcus_Transactions__c,
-                                            (SELECT Num_Trades_Opened_Past_24mo__c,
-                                                    Net_Disposable_Income_NDI_Num__c,
-                                                    FICO__c,
-                                                    Debt_to_Income_DTI__c
-                                            FROM   Credit_Policy__r) // LOP-217
+                                            Total_Arcus_Transactions__c
                                             FROM genesis__Applications__c
                                             WHERE id =: appId];
-
-            // LOP-217 treat null as 0
-            for (Credit_Policy__c cp : app.Credit_Policy__r) {
-                if (cp.Num_Trades_Opened_Past_24mo__c == null) {
-                    cp.Num_Trades_Opened_Past_24mo__c = 0;
-                }
-            }
 
             List<DCP_arcus_transactions__c> txns = new List<DCP_arcus_transactions__c>();
             txns = [select id from DCP_arcus_transactions__c where application__c =: appId];
@@ -248,7 +251,12 @@ public with sharing class InvestorAllocation{
             if(!listCheck.isEmpty()){
                 
                 for(genesis__checklist__c chList : listCheck){
-                    
+
+                    MW_LogUtility.sendAllocationRulesetErrors('InvestorAllocation',
+                            app.Id,
+                            app.Lead_ID__c,
+                            chList);
+
                     if(chList.genesis__Message__c.containsIgnoreCase('Fail')){
                         setruleIDs.add(chList.genesis__Rule__c);
                         System.Debug('****Not Passed*****' + chList.genesis__Rule__c + chList.genesis__Message__c);

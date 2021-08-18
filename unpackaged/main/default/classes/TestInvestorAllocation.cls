@@ -374,6 +374,195 @@ private class TestInvestorAllocation{
         Test.stopTest();
     }
 
+
+    /**
+     * Demonstrate that RulesAPI will return the exception message in the checklist.description if an exception occurs.
+     * For every field access attempt on the null object, a checklist will be produced.  A final checklist
+     * will contain the summary of the rule execution.
+     */
+    @IsTest static void testExceptionChecklistsInCaseOfMissingCreditPolicy() {
+
+        Test.startTest();
+
+        CL_Document__c docs = MW_GlobalTestUtility.getCLDocumentRecord();
+        insert docs;
+
+        genesis__Rule__c rule = MW_GlobalTestUtility.GetRule('Test FICO Only Rule', '1');
+        insert rule;
+
+        genesis__RuleCriteria__c ficoCriteria = MW_GlobalTestUtility.GetCreditPolicyCriteria(1, rule);
+        ficoCriteria.genesis__Field_API_Name__c    = 'FICO__c';
+        ficoCriteria.genesis__Field_Name__c        = 'FICO';
+        ficoCriteria.genesis__Matching_Type__c     = '>=';
+        ficoCriteria.genesis__Matching_Value__c    = '640';
+        insert ficoCriteria;
+
+        Account investor = MW_GlobalTestUtility.GetInvestorWithRuleset(rule);
+        insert investor;
+
+        Account applicantAccount = MW_GlobalTestUtility.GetApplicantAccount();
+        insert applicantAccount;
+
+        genesis__Applications__c appInsert = MW_GlobalTestUtility.GetOfferAcceptedApplication(investor, applicantAccount);
+        insert appInsert;
+
+        /* using identical query to InvestorAllocation */
+        genesis__Applications__c appTest =
+            [SELECT Id,
+                    Name,
+                    Investor__c,
+                    DCP_Investor_Eligibility__c,
+                    genesis__Status__c,
+                    genesis__Loan_Amount__c,
+                    Invested_Amount__c,
+                    genesis__Lending_Product__c,
+                    Last_Investor_Assigned_On__c,
+                    Total_Arcus_Transactions__c
+             FROM   genesis__Applications__c
+             WHERE  Id =: appInsert.Id
+             LIMIT 1];
+
+        new InvestorAllocation(true);
+        InvestorAllocation.runInvestorRule(appTest.Id);
+        List<genesis__Checklist__c> checklists = genesis.RulesAPI.evaluateRules(appTest, null, true, false);
+
+        System.assertEquals(2, checklists.size());
+
+        genesis__Checklist__c exceptionChecklist = checklists.get(0);
+        genesis__Checklist__c summaryChecklist = checklists.get(1);
+
+        System.debug('Fail exception checklist description: ' + exceptionChecklist.genesis__Description__c);
+        System.debug('Fail exception checklist message: ' + exceptionChecklist.genesis__Message__c);
+        System.assert(exceptionChecklist.genesis__Description__c.containsIgnoreCase('exception'), 'First checklist.description will contain the exception text');
+        System.assert(exceptionChecklist.genesis__Message__c.containsIgnoreCase('fail') , 'First checklist.message will contain the exception rule specifics');
+
+        System.debug('Fail summary checklist description: ' + summaryChecklist.genesis__Description__c);
+        System.assertEquals('FAIL cannot allocate to Test FICO Only Rule', summaryChecklist.genesis__Message__c);
+
+        Test.stopTest();
+    }
+
+    /**
+     * Demonstrate three things
+     *
+     * 1. We can remove the credit policy subquery from the application selection since it does nothing.
+     * The RulesAPI class will query credit policy on its own, regardless if we pass in the data with a value or try to update it.
+     * The top level Application field values are still required.
+     *
+     *      Per cls internal logging, the RulesAPI query appears like:
+     * SELECT Name,Id,(SELECT fico__c,num_trades_opened_past_24mo__c FROM Credit_Policy__r ORDER BY ID DESC) FROM genesis__applications__c WHERE Id IN:parentIds
+     *
+     * 2. When the credit policy is present, but only a field is null, RulesAPI will not produce an exception message in the description field,
+     * but will show up as a null result.  The checklist.message field result will produce the failure message.
+     * In this scenario, only 1 checklist will be produced.
+     *
+     * 3. When we update the credit policy object record, the rule evaluation produces one successful, valid checklist.
+     */
+    @IsTest static void testNullFieldProducesNullResult() {
+
+        Test.startTest();
+
+        CL_Document__c docs = MW_GlobalTestUtility.getCLDocumentRecord();
+        insert docs;
+
+        genesis__Rule__c rule = MW_GlobalTestUtility.GetRule('Test Deref Rule', '(1 AND 2)');
+        insert rule;
+
+        genesis__RuleCriteria__c ficoCriteria = MW_GlobalTestUtility.GetCreditPolicyCriteria(1, rule);
+        ficoCriteria.genesis__Field_API_Name__c    = 'FICO__c';
+        ficoCriteria.genesis__Field_Name__c        = 'FICO';
+        ficoCriteria.genesis__Matching_Type__c     = '>=';
+        ficoCriteria.genesis__Matching_Value__c    = '620';
+        insert ficoCriteria;
+
+        genesis__RuleCriteria__c tradeCriteria = MW_GlobalTestUtility.GetCreditPolicyCriteria(2, rule);
+        tradeCriteria.genesis__Field_API_Name__c    = 'Num_Trades_Opened_Past_24mo__c';
+        tradeCriteria.genesis__Field_Name__c        = 'Num Trades Opened Past 24mo';
+        tradeCriteria.genesis__Matching_Type__c     = '<';
+        tradeCriteria.genesis__Matching_Value__c    = '10';
+        insert tradeCriteria;
+
+        Account investor = MW_GlobalTestUtility.GetInvestorWithRuleset(rule);
+        insert investor;
+
+        Account applicantAccount = MW_GlobalTestUtility.GetApplicantAccount();
+        insert applicantAccount;
+
+        genesis__Applications__c appInsert = MW_GlobalTestUtility.GetOfferAcceptedApplication(investor, applicantAccount);
+        insert appInsert;
+
+        Credit_Policy__c creditPolicy = new Credit_Policy__c();
+        creditPolicy.FICO__c = 650;
+        creditPolicy.Num_Trades_Opened_Past_24mo__c = null;
+        creditPolicy.Application__c = appInsert.Id;
+        insert creditPolicy;
+
+        /* used identical query to InvestorAllocation */
+        genesis__Applications__c appTest =
+        [SELECT Id,
+                Name,
+                Investor__c,
+                DCP_Investor_Eligibility__c,
+                genesis__Status__c,
+                genesis__Loan_Amount__c,
+                Invested_Amount__c,
+                genesis__Lending_Product__c,
+                Last_Investor_Assigned_On__c,
+                Total_Arcus_Transactions__c,
+                (SELECT FICO__c,
+                        Num_Trades_Opened_Past_24mo__c
+                 FROM   Credit_Policy__r)
+        FROM   genesis__Applications__c
+        WHERE  Id =: appInsert.Id
+        LIMIT 1];
+
+        /* attempt to set a default value for null 24 mo fields */
+        for (Credit_Policy__c cpTest : appTest.Credit_Policy__r) {
+            cpTest.Num_Trades_Opened_Past_24mo__c = 1;
+        }
+
+        /*
+        Produce the expected null value in the description json string.
+         */
+        new InvestorAllocation(true);
+        InvestorAllocation.runInvestorRule(appTest.Id);
+        List<genesis__Checklist__c> checklistsFail = genesis.RulesAPI.evaluateRules(appTest, null, true, false);
+
+        System.assertEquals(1, checklistsFail.size());
+        genesis__Checklist__c failChecklist = checklistsFail.get(0);
+
+        System.assert(failChecklist.genesis__Description__c != null);
+        System.assert(failChecklist.genesis__Description__c.containsIgnoreCase('"ActualResult" : null'));
+        System.assertEquals('FAIL cannot allocate to Test Deref Rule', failChecklist.genesis__Message__c);
+        System.assert(failChecklist.genesis__Result__c == false);
+
+        System.debug('Fail checklist description: ' + failChecklist.genesis__Description__c);
+        System.debug('Fail checklist message: ' + failChecklist.genesis__Message__c);
+
+        /*
+        Update the credit policy object and produce one valid checklist message.
+         */
+        creditPolicy.Num_Trades_Opened_Past_24mo__c = 9;
+        update creditPolicy;
+
+        new InvestorAllocation(true);
+        InvestorAllocation.runInvestorRule(appTest.Id);
+        List<genesis__Checklist__c> checklistsPass = genesis.RulesAPI.evaluateRules(appTest, null, true, false);
+
+        System.assertEquals(1, checklistsPass.size());
+        genesis__Checklist__c passChecklist = checklistsPass.get(0);
+
+        System.assert(passChecklist.genesis__Description__c != null);
+        System.assert(!passChecklist.genesis__Description__c.containsIgnoreCase('"ActualResult" : null'));
+        System.assertEquals('Successful allocation to Test Deref Rule', passChecklist.genesis__Message__c);
+        System.assert(passChecklist.genesis__Result__c == true);
+
+        System.debug('Success checklist description: ' + passChecklist.genesis__Description__c);
+        System.debug('Success checklist message: ' + passChecklist.genesis__Message__c);
+
+        Test.stopTest();
+    }
+
     @isTest static Void InvestorAllocation_UsecaseWeightAllocation(){
         test.startTest();
         
@@ -1008,6 +1197,12 @@ private class TestInvestorAllocation{
             DCP_Investor_Eligibility__c = false
         );      
         Insert app1;
+
+         Credit_Policy__c creditPolicy = new Credit_Policy__c();
+         creditPolicy.FICO__c = 750.0;
+         creditPolicy.Net_Disposable_Income_NDI__c = '2400';
+         creditPolicy.Application__c = app1.Id;
+         insert creditPolicy;
         
         DCp_Arcus_Transactions__c DCP_obj = new DCp_Arcus_Transactions__c();
         DCP_obj.Application__c = app1.Id;
@@ -1095,7 +1290,7 @@ private class TestInvestorAllocation{
          document.Doc2__c = 'TIL Document';
          document.Doc3__c = 'Adverse Action Notice';
          insert document;
-        
+
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
             genesis__Criteria_Sequence__c = 1.0,
             genesis__Field_API_Name__c    = 'genesis__Account__r.State__c',

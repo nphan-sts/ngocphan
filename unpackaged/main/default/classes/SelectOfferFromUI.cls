@@ -43,6 +43,7 @@ global class SelectOfferFromUI {
         Approved_Offer__c approve = new Approved_Offer__c();
         List<Approved_Offer__c> approve1;
         genesis__Applications__c app =[select id,
+                                       Lead_ID__c,
                                        genesis__Term__c,
                                        genesis__APR__c,
                                        Origination_fee__c,
@@ -52,22 +53,10 @@ global class SelectOfferFromUI {
                                        genesis__Financed_Amount__c,
                                        genesis__Status__c,
                                        Investor__c,
-                                       Investor__r.name,	//remove
-                                        (SELECT Num_Trades_Opened_Past_24mo__c,
-                                        Net_Disposable_Income_NDI_Num__c,
-                                        FICO__c,
-                                        Debt_to_Income_DTI__c
-                                        FROM   Credit_Policy__r) // LOP-217
+                                       Investor__r.name	//remove
                                        from genesis__Applications__c
                                        where id=:applicationID 
                                        limit 1];
-
-        // LOP-217 treat null as 0
-        for (Credit_Policy__c cp : app.Credit_Policy__r) {
-            if (cp.Num_Trades_Opened_Past_24mo__c == null) {
-                cp.Num_Trades_Opened_Past_24mo__c = 0;
-            }
-        }
 
        system.debug('app'+app);
         oldAppStatus = app.genesis__Status__c;	//CRM-1022 (pallavi)
@@ -293,7 +282,12 @@ global class SelectOfferFromUI {
             if(!listCheck.isEmpty()){
                 
                 for(genesis__checklist__c chList : listCheck){
-                    
+
+                    MW_LogUtility.sendAllocationRulesetErrors('SelectOfferFromUI',
+                            app.Id,
+                            app.Lead_ID__c,
+                            chList);
+
                     if(chList.genesis__Message__c.containsIgnoreCase('Fail')){
                         setruleIDs.add(chList.genesis__Rule__c);
                         System.Debug('****Not Passed*****' + chList.genesis__Rule__c + chList.genesis__Message__c);
