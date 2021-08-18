@@ -86,7 +86,7 @@ public class MW_LogUtility {
 
         if (description != null) {
 
-            if (description.containsIgnoreCase('exception') || description.containsIgnoreCase('null')) {
+            if (description.containsIgnoreCase('exception')) {
                 clcommon__Batch_Process_Log__c bpl = new clcommon__Batch_Process_Log__c();
                 bpl.clcommon__Type__c = 'Exception';
                 bpl.clcommon__Batch_Id__c = appId;
@@ -95,19 +95,6 @@ public class MW_LogUtility {
                         'App with Lead Id: ' + leadId +
                         ' failed investor allocation rule execution with description:"' + description + '" ' +
                         ' and message: "' + checklist.genesis__Message__c + '"';
-                insert bpl;
-            }
-
-            if (description.containsIgnoreCase('"ActualResult" : null')) {
-                clcommon__Batch_Process_Log__c bpl = new clcommon__Batch_Process_Log__c();
-                bpl.clcommon__Type__c = 'Exception';
-                bpl.clcommon__Batch_Id__c = appId;
-                bpl.clcommon__Message__c =
-                        className + ': ' +
-                        'App with Lead Id: ' + leadId +
-                        ' had at least 1 null field during execution of allocation rule which evaluated rule to: "' +
-                        checklist.genesis__Result__c + '".' +
-                        ' Complete rule result: ' + description;
                 insert bpl;
             }
         }
