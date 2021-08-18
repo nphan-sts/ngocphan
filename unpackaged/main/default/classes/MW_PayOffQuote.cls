@@ -21,15 +21,18 @@ public with sharing class MW_PayOffQuote {
         if(quoteRecord != null && quoteRecord.status == 'Success' && quoteRecord.payoffQuote != null){
           
             try{
+                
+                
                 //Quote record is inserted in salesforce here.
-				quoteRecord.payoffQuote.Name = 'MPR' + ' - ' + quoteRecord.payOffQuote.loan__Loan_Account__c + ' - '+quoteRecord.payOffQuote.loan__Poq_valid_till_Dt__c;
+				quoteRecord.payoffQuote.Name = 'MPR' + ' - ' + quoteRecord.payOffQuote.loan__Loan_Account__c + ' - '+pPayOffDate;
                 insert quoteRecord.payoffQuote;
                 
             }
-            catch (TypeException e) {
+            catch (Exception e) {
                
                 system.debug('There is an error in inserting record in salesforce. The error is --'+e);
-                string errorMessage = string.valueOf(e);
+                string errorMessage = e.getStackTraceString();
+                MW_LogUtility.error('MW_PayOffQuote', null , quoteRecord.payOffQuote.loan__Loan_Account__c , 'Save', e);
                 return errorMessage;
             }
         }        

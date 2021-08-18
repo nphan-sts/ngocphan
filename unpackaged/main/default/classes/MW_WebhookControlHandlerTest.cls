@@ -1,6 +1,6 @@
 @isTest
 public with sharing class MW_WebhookControlHandlerTest  {
-    
+ /*   
     static testMethod void TestTilRequest()
     {
         Test.startTest();
@@ -668,7 +668,7 @@ public with sharing class MW_WebhookControlHandlerTest  {
 
         Test.stopTest();
     }
-   
+  */ 
     static testMethod void TestPayOffQuotePost(){
         Test.startTest();
 
@@ -754,7 +754,7 @@ public with sharing class MW_WebhookControlHandlerTest  {
          list<genesis__Applications__c> appList1 = MW_DataFactoryTest.createApplication(1, accList[0].Id);
         insert appList1;
         
-        loan__Loan_Account__c laccWithName1 = [SELECT Name FROM loan__Loan_Account__c WHERE Id =: lacc.Id];
+        loan__Loan_Account__c laccWithName1 = [SELECT id, Name FROM loan__Loan_Account__c WHERE Id =: lacc.Id];
 
         System.debug('laccWithName.Name = ' + laccWithName1.Name);
         RestRequest req    = new RestRequest();
@@ -780,17 +780,33 @@ public with sharing class MW_WebhookControlHandlerTest  {
         MW_WebhookControlHandler.handleRequest();
 
         req.addParameter('LoanId', laccWithName1.Name);
-        req.addParameter('PayOffDate', '2020-09-144');
+        req.addParameter('PayOffDate', '2020-09-14');
 		req.requestURI     = '/services/apexrest/CL_MiddleWare';
         req.addParameter('RequestType', 'payoff_quote');
         req.addParameter('Lead_ID', appList1[0].LEAD_ID__C);
-
-		//Wrong Loan id
-        MW_WebhookControlHandler.handleRequest();
+		
+        loan__Payoff_Quote__c createdQuote = [SELECT id,
+                                              name,
+                                              loan__Poq_valid_till_Dt__c, 
+                                              loan__Loan_Account__r.id ,
+                                              loan__Loan_Account__r.name FROM
+                                              loan__Payoff_Quote__c 
+                                              limit 1];
+        
+      
+        System.assertEquals(laccWithName1.Name, createdQuote.loan__Loan_Account__r.name);
+		system.assertEquals(1, appList1.size());
+        string expectedQuoteName = 'MPR' + ' - ' + laccWithName1.id + ' - '+'2020-09-14';
+        string actualQuoteName = createdQuote.Name;
+        system.assertEquals(expectedQuoteName,actualQuoteName );
+		
+        //Wrong Loan id
+         MW_WebhookControlHandler.handleRequest();
 
         req.addParameter('LoanId', 'LAI_NotExist');
         req.addParameter('PayOffDate', '2020-09-14');
-
+        
+  
         //Passing null data
         MW_WebhookControlHandler.handleRequest();
         
