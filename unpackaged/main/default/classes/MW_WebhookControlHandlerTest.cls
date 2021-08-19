@@ -1,6 +1,6 @@
 @isTest
 public with sharing class MW_WebhookControlHandlerTest  {
- /*   
+    
     static testMethod void TestTilRequest()
     {
         Test.startTest();
@@ -597,9 +597,10 @@ public with sharing class MW_WebhookControlHandlerTest  {
         insert pr;
 
         Account account_Obj = new Account(
-                Name = 'Test',
+                Name = 'testFirstName',
                 loan__Investor__c=False,
-                cnotify__Email__c = 'no-reply@testorganization.com'
+                cnotify__Email__c = 'no-reply@testorganization.com',
+             	peer__Last_Name__c= 'testLastName'
         );
         Insert account_Obj;
 
@@ -668,7 +669,7 @@ public with sharing class MW_WebhookControlHandlerTest  {
 
         Test.stopTest();
     }
-  */ 
+   
     static testMethod void TestPayOffQuotePost(){
         Test.startTest();
 
@@ -710,9 +711,10 @@ public with sharing class MW_WebhookControlHandlerTest  {
         insert pr;
 
         Account account_Obj = new Account(
-                Name = 'Test',
+                Name = 'testFirstName',
                 loan__Investor__c=False,
-                cnotify__Email__c = 'no-reply@testorganization.com'
+                cnotify__Email__c = 'no-reply@testorganization.com',
+            	 peer__Last_Name__c= 'testLastNAme'
         );
         Insert account_Obj;
 
