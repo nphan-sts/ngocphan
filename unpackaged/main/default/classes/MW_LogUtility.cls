@@ -113,10 +113,10 @@ public class MW_LogUtility {
      * @param appId App id if available
      * @param leadId Lead id if available
      * @param method String method where it occurs
-     * @param message Message providing additional context for this scenario.
+     * @param data A map containing informative keys and values for context
      */
-    public static void errorMessage(String cls, String appId, String leadId, String method, String message) {
-        emit('Error', cls, appId, leadId, method, message, null);
+    public static void errorMessage(String cls, String appId, String leadId, String method, Object data) {
+        emit('Error', cls, appId, leadId, method, data, null);
     }
 
     /**
