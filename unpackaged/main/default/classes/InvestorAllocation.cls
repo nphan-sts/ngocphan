@@ -40,16 +40,17 @@ public with sharing class InvestorAllocation{
                 runInvestorAllocationBasedOnWeighting(appId[0]);
             } else {
                 genesis__Applications__c failApp =
-                    [SELECT Id, Lead_ID__c
+                    [SELECT Id, Lead_ID__c, genesis__Status__c
                     FROM    genesis__Applications__c
                     WHERE   Id =: appId[0]];
 
-                MW_LogUtility.errorMessage(
-                        'InvestorAllocation',
-                        failApp.Id,
-                        failApp.Lead_ID__c,
-                        'allocateInvestor',
-                        'No application credit policy record found.  Skipped investor allocation at status: ' + failApp.genesis__Status__c);
+                Map<String, Object> msg = new Map<String, Object>();
+                msg.put('app.Id', failApp.Id);
+                msg.put('app.Lead_ID__c', failApp.Lead_ID__c);
+                msg.put('app.genesis__Status__c.', failApp.genesis__Status__c);
+                msg.put('message', 'No application credit policy record found.  Skipped allocation in InvestorAllocation.allocateInvestor');
+
+                MW_LogUtility.errorMessage('InvestorAllocation', failApp.Id, failApp.Lead_ID__c, 'allocateInvestor', msg);
             }
         }
     }

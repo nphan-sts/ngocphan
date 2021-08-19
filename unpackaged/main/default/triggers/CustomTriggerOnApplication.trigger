@@ -200,12 +200,14 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                            //ApplicationAttachmentHandler.attachmentHandler(app.Id, app.Investor__r.Name, 'TIL');  //commented for LOS-135
                            result = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
                        } else {
-                            MW_LogUtility.errorMessage(
-                                    'CustomTriggerOnApplication',
-                                    app.Id,
-                                    app.Lead_ID__c,
-                                    'on genesis__Applications__c',
-                                    'No application credit policy record found.  Skipped investor allocation at status: ' + app.genesis__Status__c);
+
+                           Map<String, Object> msg = new Map<String, Object>();
+                           msg.put('app.Id', app.Id);
+                           msg.put('app.Lead_ID__c', app.Lead_ID__c);
+                           msg.put('app.genesis__Status__c.', app.genesis__Status__c);
+                           msg.put('message', 'No application credit policy record found.  Skipped allocation in CustomTriggerOnApplication');
+
+                           MW_LogUtility.errorMessage('CustomTriggerOnApplication', app.Id, app.Lead_ID__c, 'on genesis__Applications__c', msg);
                        }
                    }
                 /*(LOS-135)*/
