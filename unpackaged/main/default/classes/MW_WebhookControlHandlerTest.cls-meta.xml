@@ -12,6 +12,11 @@
         <namespace>cnotify</namespace>
     </packageVersions>
     <packageVersions>
+        <majorNumber>6</majorNumber>
+        <minorNumber>9</minorNumber>
+        <namespace>dsfs</namespace>
+    </packageVersions>
+    <packageVersions>
         <majorNumber>2</majorNumber>
         <minorNumber>7011</minorNumber>
         <namespace>genesis</namespace>
@@ -20,6 +25,11 @@
         <majorNumber>2</majorNumber>
         <minorNumber>7016</minorNumber>
         <namespace>loan</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>2</majorNumber>
+        <minorNumber>7004</minorNumber>
+        <namespace>peer</namespace>
     </packageVersions>
     <status>Active</status>
 </ApexClass>
