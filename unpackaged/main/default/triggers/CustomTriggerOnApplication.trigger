@@ -205,9 +205,9 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                            msg.put('app.Id', app.Id);
                            msg.put('app.Lead_ID__c', app.Lead_ID__c);
                            msg.put('app.genesis__Status__c.', app.genesis__Status__c);
-                           msg.put('message', 'No application credit policy record found.  Skipped allocation in CustomTriggerOnApplication');
+                           msg.put('app.msg', 'No application credit policy record found.  Ignoring allocation request in CustomTriggerOnApplication');
 
-                           MW_LogUtility.errorMessage('CustomTriggerOnApplication', app.Id, app.Lead_ID__c, 'on genesis__Applications__c', msg);
+                           MW_LogUtility.errorMessage('CustomTriggerOnApplication', 'Ignore Investor Allocation', msg);
                        }
                    }
                 /*(LOS-135)*/

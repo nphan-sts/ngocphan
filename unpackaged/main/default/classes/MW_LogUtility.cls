@@ -108,15 +108,13 @@ public class MW_LogUtility {
     }
 
     /**
-     * Log as an error where only a string message is available.
+     * Log an informative map as an error
      * @param cls Class where it occurs
-     * @param appId App id if available
-     * @param leadId Lead id if available
-     * @param method String method where it occurs
-     * @param data A map containing informative keys and values for context
+     * @param label A label that unites this error message with potentially other error messages of same variety
+     * @param info A map containing informative keys and values for context
      */
-    public static void errorMessage(String cls, String appId, String leadId, String method, Object data) {
-        emit('Error', cls, appId, leadId, method, data, null);
+    public static void errorMessage(String cls, String label, Object info) {
+        new MW_LogTriggerHelper().construct('Error Message', cls, label, 'Error', JSON.serialize(info));
     }
 
     /**

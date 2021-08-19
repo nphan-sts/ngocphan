@@ -48,9 +48,9 @@ public with sharing class InvestorAllocation{
                 msg.put('app.Id', failApp.Id);
                 msg.put('app.Lead_ID__c', failApp.Lead_ID__c);
                 msg.put('app.genesis__Status__c.', failApp.genesis__Status__c);
-                msg.put('message', 'No application credit policy record found.  Skipped allocation in InvestorAllocation.allocateInvestor');
+                msg.put('app.msg', 'No application credit policy record found.  Ignoring allocation request in InvestorAllocation.allocateInvestor');
 
-                MW_LogUtility.errorMessage('InvestorAllocation', failApp.Id, failApp.Lead_ID__c, 'allocateInvestor', msg);
+                MW_LogUtility.errorMessage('InvestorAllocation', 'Ignore Investor Allocation', msg);
             }
         }
     }
