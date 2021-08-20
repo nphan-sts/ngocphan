@@ -325,7 +325,7 @@ public class TestSelectOfferFromUI{
                                             genesis__Status__c = 'offer_accepted',
                                             genesis__Draw_Period_End_Date__c = system.Today(),
             								Invested_Amount__c = 200,
-            								genesis__loan_amount__c = 8000,
+            								genesis__Loan_Amount__c = 15000,
             								Investor__c = acc2.id
                                             );
         insert app;
