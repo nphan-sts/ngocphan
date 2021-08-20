@@ -193,6 +193,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                            && !InvestorAllocation.allocationForADVPcalled ) {   //CLS-1121,1216,1095
 
                        List<Credit_Policy__c> creditPolicies = [select Id from Credit_Policy__c  where Application__c= : app.Id];
+                       System.debug('creditPolicies size check: ' + creditPolicies.size());
                        if (creditPolicies.size() > 0) {
                            String res = genesis.ScorecardAPI.generateScorecard(app.id);
                            boolean result = true;
@@ -207,6 +208,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                            msg.put('app.genesis__Status__c.', app.genesis__Status__c);
                            msg.put('app.msg', 'No application credit policy record found.  Ignoring allocation request in CustomTriggerOnApplication');
 
+                           System.debug('sending datadog creditPolicies error');
                            MW_LogUtility.errorMessage('CustomTriggerOnApplication', 'Ignore Investor Allocation', msg);
                        }
                    }
