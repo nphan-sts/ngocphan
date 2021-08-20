@@ -6,7 +6,7 @@
 @isTest
 public class TestSelectOfferFromUI{
     @testSetup static void methodName() {
-        //Creating Account
+        // retriggering update
         Account acc = new Account(
             Name = 'TestF1Name TestL1Name',
             loan__Investor__c=False,
