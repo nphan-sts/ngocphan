@@ -2,7 +2,8 @@
  * Last Modified by        Date          JIRA number
  *      1. Pallavi        2020/01/27     LOS-28(Remove references to InvestorAccount field on CL contract)
  *      2. Pallavi        2020/05/19     CRM-557/LOP-56(DCP - additional fields on Disbursal transaction)
- *      3. Anusha      2021/06/14   LSP-256 IO Interest Calculation Must Use Accrual Start Date Not Contract Date
+ * 		3. Anusha		  2021/05/17	 LSP-218 update APS type to last billed amount in ApplicationToContractConverter CLS case #02694756	
+ * 		4. Anusha		  2021/06/14	 LSP-256 IO Interest Calculation Must Use Accrual Start Date Not Contract Date
  ******************Modification History******************/
 global class ApplicationToContractConverter implements ints.IProcessContract{
     
@@ -162,7 +163,8 @@ global class ApplicationToContractConverter implements ints.IProcessContract{
                 
                 loan__Automated_Payment_Setup__c aps = new loan__Automated_Payment_Setup__c();
                 aps.loan__Type__c = 'RECURRING';
-                aps.loan__Amount_Type__c= loan.LoanConstants.CURRENT_PAYMENT_AMOUNT;
+                //aps.loan__Amount_Type__c= loan.LoanConstants.CURRENT_PAYMENT_AMOUNT;//commented for LSP-218
+                aps.loan__Amount_Type__c = loan.LoanConstants.LAST_BILLED_AMOUNT;//LSP-218
                 //aps.loan__Transaction_Amount__c=loanApplication.genesis__Payment_Amount__c; No need to set transaction because 
                 aps.loan__CL_Contract__c=lAccount.Id;
                 aps.loan__Payment_Mode__c = apc.loan__Payment_Mode__c;

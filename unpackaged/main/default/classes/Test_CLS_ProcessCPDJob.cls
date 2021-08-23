@@ -1,7 +1,11 @@
 @isTest
 public class Test_CLS_ProcessCPDJob {
     
-    static loan__Loan_Account__c createLoanAccount() {
+    @testSetup
+    public static void testSetupData() {
+        loan__Org_Parameters__c loanParam = new loan__Org_Parameters__c(loan__Disable_Triggers__c = true);
+        insert loanParam;
+        
         //Creating Seed Data for Testing
         loan.TestHelper.createSeedDataForTesting();
 
@@ -45,18 +49,14 @@ public class Test_CLS_ProcessCPDJob {
                                                     dummyFeeSet,
                                                     dummyLoanPurpose,
                                                     dummyOffice);
-         
-        return loanAccount;
-        
        
     } 
     
     @isTest
     static void testMehod1(){
-       
-        
+               
         //Create a dummy Loan Account
-        loan__Loan_Account__c loanAccount = createLoanAccount();
+        loan__Loan_Account__c loanAccount = [SELECT ID FROM loan__Loan_Account__c LIMIT 1];
         
 
         Date systemDate = TestHelper.getCurrentSystemDate();
@@ -79,6 +79,9 @@ public class Test_CLS_ProcessCPDJob {
         loanAccount.CPD_Unpaid_Due_Date__c = systemdate.addDays(-1);    //pallavi
         update loanAccount;
         
+        loan__Org_Parameters__c loanParam = loan__Org_Parameters__c.getOrgDefaults();
+        loanParam.loan__Disable_Triggers__c = false;
+        update loanParam;
         
         Test.startTest();
         CLS_ProcessCPDJob dm = new CLS_ProcessCPDJob(); //pallavi
@@ -89,9 +92,8 @@ public class Test_CLS_ProcessCPDJob {
      @isTest
     static void testMehod2(){
        
-        
         //Create a dummy Loan Account
-        loan__Loan_Account__c loanAccount = createLoanAccount();
+        loan__Loan_Account__c loanAccount = [SELECT ID FROM loan__Loan_Account__c LIMIT 1];
         
 
         Date systemDate = TestHelper.getCurrentSystemDate();
@@ -114,6 +116,9 @@ public class Test_CLS_ProcessCPDJob {
         loanAccount.CPD_Unpaid_Due_Date__c = systemdate.addDays(-1);
         update loanAccount;
         
+        loan__Org_Parameters__c loanParam = loan__Org_Parameters__c.getOrgDefaults();
+        loanParam.loan__Disable_Triggers__c = false;
+        update loanParam;
         
         Test.startTest();
         List<String> contract = new List<String>();
