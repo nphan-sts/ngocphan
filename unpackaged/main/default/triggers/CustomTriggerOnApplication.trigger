@@ -162,10 +162,13 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                       TalxIntegration.CallTalxResponse(app.Id, app.genesis__account__c);
                    }
                    else if(/*app.investor__c==null &&*/ app.genesis__Status__c == 'offer_accepted' && app.genesis__Status__c != oldApp.genesis__Status__c ){
+                       /* LOP-315, remove allocation attempt at offer_accepted */
+                       /*
                        boolean res = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
                        if(res) {
                            ApplicationAttachmentHandler.savePdfAttachment(app.Id);
                        }
+                        */
                    }
                    /*else if(app.genesis__Status__c == 'offer_accepted' &&
                            (app.genesis__Loan_Amount__c != oldApp.genesis__Loan_Amount__c ||
@@ -188,11 +191,26 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                    }
                    else if(app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c
                            && !InvestorAllocation.allocationForADVPcalled ) {   //CLS-1121,1216,1095
-                       String res = genesis.ScorecardAPI.generateScorecard(app.id);
-                       boolean result = true;
-                       //ApplicationAttachmentHandler.attachmentHandler(app.Id, app.Investor__r.Name, 'TILDocument_forDCP');  //commented for LOS-135
-                       //ApplicationAttachmentHandler.attachmentHandler(app.Id, app.Investor__r.Name, 'TIL');  //commented for LOS-135
-                       result = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
+
+                       List<Credit_Policy__c> creditPolicies = [select Id from Credit_Policy__c  where Application__c= : app.Id];
+                       System.debug('creditPolicies size check: ' + creditPolicies.size());
+                       if (creditPolicies.size() > 0) {
+                           String res = genesis.ScorecardAPI.generateScorecard(app.id);
+                           boolean result = true;
+                           //ApplicationAttachmentHandler.attachmentHandler(app.Id, app.Investor__r.Name, 'TILDocument_forDCP');  //commented for LOS-135
+                           //ApplicationAttachmentHandler.attachmentHandler(app.Id, app.Investor__r.Name, 'TIL');  //commented for LOS-135
+                           result = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
+                       } else {
+
+                           Map<String, Object> msg = new Map<String, Object>();
+                           msg.put('app.Id', app.Id);
+                           msg.put('app.Lead_ID__c', app.Lead_ID__c);
+                           msg.put('app.genesis__Status__c.', app.genesis__Status__c);
+                           msg.put('app.msg', 'No application credit policy record found.  Ignoring allocation request in CustomTriggerOnApplication');
+
+                           System.debug('sending datadog creditPolicies error');
+                           MW_LogUtility.errorMessage('CustomTriggerOnApplication', 'Ignore Investor Allocation', msg);
+                       }
                    }
                 /*(LOS-135)*/
                 else if(app.genesis__status__c == 'docusign_loan_docs_sent' && app.genesis__status__c != oldapp.genesis__Status__c){
