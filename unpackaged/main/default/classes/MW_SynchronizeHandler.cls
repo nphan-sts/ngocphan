@@ -1443,7 +1443,39 @@ global with sharing class MW_SynchronizeHandler {
             }
 
             if(appSet.size()>0) {
-                Sync_application(appSet, 'sync_application');
+                Boolean ebpEnabled = false;
+                Boolean mxChangedTheOffer = false;
+                string firstelement = new list<string>(appSet)[0];
+                genesis__Applications__c oldApp = oldAppMap.get(firstelement);
+                genesis__Applications__c newApp = newAppMap.get(firstelement);
+
+                if(
+                    (oldApp.genesis__Loan_Amount__c != newApp.genesis__Loan_Amount__c ||
+                    oldApp.genesis__APR__c != newApp.genesis__APR__c ||
+                    oldApp.genesis__Term__c != newApp.genesis__Term__c ||
+                    oldApp.Origination_fee__c != newApp.Origination_fee__c ||
+                    oldApp.genesis__Monthly_Debt_Payments__c != newApp.genesis__Monthly_Debt_Payments__c ||
+                    oldApp.genesis__Interest_Rate__c != newApp.genesis__Interest_Rate__c) &&
+                    newApp.genesis__Status__c == 'offer_shown'
+                ) {
+                    mxChangedTheOffer = true;
+                }
+
+                List<Pricing_Offer__c> availablePricingOffers = [SELECT EBP_Offer_Code__c from Pricing_Offer__c WHERE Application__c = :firstelement];
+                
+
+                for(Pricing_Offer__c offer: availablePricingOffers) {
+                    if(offer.EBP_Offer_Code__c != null && offer.EBP_Offer_Code__c.length() != 0) {
+                        ebpEnabled = true;
+                    }
+                }
+
+                if(ebpEnabled && mxChangedTheOffer) {
+                    Sync_application(appSet, 'offer_reselect');
+                }
+                else {
+                    Sync_application(appSet, 'sync_application');
+                }
             }
         }
     }

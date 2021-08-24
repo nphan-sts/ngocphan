@@ -71,7 +71,7 @@ private class TestApplicationToContractConverter{
             cnotify__Email__c = 'abc@test.com',
             loan__SOCIAL_SECURITY_NUMBER__c = '123456779',
             peer__First_Name__c ='test',//LSP-256
-        	peer__Last_Name__c = 'account'//LSP-256
+            peer__Last_Name__c = 'account'//LSP-256
             );
         insert acc;
         Account acc2 = new Account(

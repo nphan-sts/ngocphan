@@ -1,9 +1,10 @@
 /* ****************Modification History******************
  * Created By        Date          JIRA number
- * 		
- * 		1. Neha          2020/09/14        CRM-796
+ *     
+ *     1. Neha          2020/09/14        CRM-796
  * Modified By        Date          JIRA number
  *      1. Pallavi       2021/05/21        LSP-219
+ *      2. Pallavi       2021/07/09        LSP-261    
  *      
  ******************Modification History******************/
 Public class MigratedPaymentReversalController{
@@ -19,7 +20,12 @@ Public class MigratedPaymentReversalController{
     loan__Loan_account_Due_Details__c oldestDue;
     Set<Id> dueIds = new Set<Id>();
     Decimal totalPrincipal = 0.00;
-    Decimal totalInterest = 0.00; 
+    Decimal totalInterest = 0.00;
+    /*LSP-261*/
+    loan.GlobalLoanUtilFacade loanUtil = new loan.GlobalLoanUtilFacade();
+    Date currentSystemDate = loanUtil.getCurrentSystemDate();
+    List<Repayment_Txn_Reversal_Migrated_Payment__c> reversalList = new List<Repayment_Txn_Reversal_Migrated_Payment__c>();
+    /*LSP-261*/
     
     public MigratedPaymentReversalController(ApexPages.StandardController controller) {
                
@@ -32,7 +38,9 @@ Public class MigratedPaymentReversalController{
                 loan__Pre_Bill_Days__c,
                 loan__Principal_Remaining__c,
                 loan__Principal_Paid__c,
-                loan__Interest_Paid__c                                  
+                loan__Interest_Paid__c,
+                loan__Interest_Rate__c,  //LSP-261
+                loan__Pay_Off_Amount_As_Of_Today__c  //LSP-261            
                 from loan__loan_account__c 
                 where isMigrated__c = true and 
                 id =: currentRecordId];      
@@ -73,7 +81,7 @@ Public class MigratedPaymentReversalController{
     
     public void reversePayments(){
         
-        reversalsToBeInserted = new List<loan__Repayment_Transaction_Adjustment__c>();                       
+                              
         System.debug(logginglevel.error,'paymentsToBeReversed ::'+paymentsToBeReversed);
         
         if(paymentsToBeReversed != NULL && paymentsToBeReversed.size() > 0){
@@ -93,18 +101,18 @@ Public class MigratedPaymentReversalController{
                 System.debug(logginglevel.error,'totalPrincipal ::'+totalPrincipal);
                 System.debug(logginglevel.error,'totalInterest ::'+totalInterest);
                 
-                //create reversal record for every pmt           
-                loan__Repayment_Transaction_Adjustment__c reversal = new loan__Repayment_Transaction_Adjustment__c();
-                reversal.loan__Loan_Payment_Transaction__c = lpt.id;
-                reversal.loan__Adjustment_Txn_Date__c = date.today();
-                reversal.loan__Reason_Code__c = 'Human Error';
-                reversal.loan__Reference__c = 'Legacy Payment reversal';
-                reversalsToBeInserted.add(reversal);
+                Decimal totalAmount = totalPrincipal+totalInterest;
+                insertReversals(lpt,totalPrincipal,totalAmount);
+                
                 
              }   
                      
-             System.debug(logginglevel.error, 'reversalsToBeInserted :: '+reversalsToBeInserted);
              
+             /*LSP-261*/
+            System.debug('reversalList--' + reversalList.size());
+             if(reversalList.size()>0)
+                 insert reversalList;
+             /*LSP-261*/
              update paymentsToBeReversed;
              //insert reversalsToBeInserted;
              
@@ -119,7 +127,7 @@ Public class MigratedPaymentReversalController{
                             where id in : dueIds
                             order by loan__Due_Date__c DESC];
         
-        List<Date> dueDate = new List<Date>();	//LSP-219
+        List<Date> dueDate = new List<Date>();  //LSP-219
                             
         if(billsToBeUpdated.size() > 0 && billsToBeUpdated != NULL){       
                      
@@ -132,7 +140,7 @@ Public class MigratedPaymentReversalController{
                 due.loan__Payment_Date__c = NULL;
                 due.loan__Payment_Amt__c = 0.00;
                 due.loan__Payment_Satisfied__c = false;
-             	dueDate.add(due.loan__Due_Date__c);	//LSP-219
+               dueDate.add(due.loan__Due_Date__c);  //LSP-219
             }
         
             update billsToBeUpdated;       
@@ -174,7 +182,7 @@ Public class MigratedPaymentReversalController{
             migratedLoan.loan__Last_Accrual_Date__c = lastPaidDueDate;
             migratedLoan.loan__Next_Installment_Date__c = lastUnpaidDueDate;
             migratedLoan.loan__Next_Due_Generation_Date__c = date.newinstance(lastUnpaidDueDate.year(), lastUnpaidDueDate.month(), (lastUnpaidDueDate.day() - preBillDays));
-            migratedLoan.loan__Oldest_Due_Date__c = lastUnpaidDueDate; 
+            migratedLoan.loan__Oldest_Due_Date__c = lastUnpaidDueDate;
             
             System.debug(logginglevel.error, 'lastUnpaidDueDate:: '+lastUnpaidDueDate);
             System.debug(logginglevel.error, 'lastPaidDueDate :: '+lastPaidDueDate);
@@ -217,15 +225,29 @@ Public class MigratedPaymentReversalController{
         
         migratedLoan.loan__Principal_Remaining__c = migratedLoan.loan__Principal_Remaining__c + totalPrincipal;
         migratedLoan.loan__Principal_Paid__c = migratedLoan.loan__Principal_Paid__c - totalPrincipal;
-        migratedLoan.loan__Interest_Paid__c = migratedLoan.loan__Interest_Paid__c - totalInterest;          
+        migratedLoan.loan__Interest_Paid__c = migratedLoan.loan__Interest_Paid__c - totalInterest;
+        migratedLoan.loan__Pay_Off_Amount_As_Of_Today__c = migratedLoan.loan__Pay_Off_Amount_As_Of_Today__c + totalPrincipal + totalInterest;//LSP-261
         
         System.debug(logginglevel.error, 'After : migratedLoan :: '+migratedLoan);  
         
-        update migratedLoan;  
+        update migratedLoan;
         
         RescheduleMigratedLoan rml = new RescheduleMigratedLoan(currentRecordId,lastUnpaidDueDate, lastPaidDueDate);
         rml.rescheduleLoan();
     
     }
-       
+    /*LSP-261*/
+    public void insertReversals(loan__Loan_Payment_Transaction__c paymentsReversed,Decimal principalReversed,Decimal totalAmount){
+        Repayment_Txn_Reversal_Migrated_Payment__c reversal = new Repayment_Txn_Reversal_Migrated_Payment__c();
+        reversal.Balance__c = migratedLoan.loan__Principal_Remaining__c + principalReversed;
+        reversal.Cleared__c = true;
+        reversal.Adjustment_Txn_Date__c = currentSystemDate;
+        reversal.Interest_Rate__c = migratedLoan.loan__Interest_Rate__c;
+        reversal.Payoff_Balance__c = migratedLoan.loan__Pay_Off_Amount_As_Of_Today__c + totalAmount;
+        reversal.Reason_Code__c = 'NSF';
+        reversal.Loan_Payment_Transaction__c = paymentsReversed.id;
+        reversal.Reference__c = 'Legacy Payment reversal';
+        reversalList.add(reversal);
+    }
+    /*LSP-261*/   
 }

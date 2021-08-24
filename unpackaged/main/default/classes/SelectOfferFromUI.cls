@@ -52,12 +52,24 @@ global class SelectOfferFromUI {
                                        genesis__Financed_Amount__c,
                                        genesis__Status__c,
                                        Investor__c,
-                                       Investor__r.name	//remove
+                                       Investor__r.name,	//remove
+                                        (SELECT Num_Trades_Opened_Past_24mo__c,
+                                        Net_Disposable_Income_NDI_Num__c,
+                                        FICO__c,
+                                        Debt_to_Income_DTI__c
+                                        FROM   Credit_Policy__r) // LOP-217
                                        from genesis__Applications__c
                                        where id=:applicationID 
                                        limit 1];
-        
-        system.debug('app'+app);
+
+        // LOP-217 treat null as 0
+        for (Credit_Policy__c cp : app.Credit_Policy__r) {
+            if (cp.Num_Trades_Opened_Past_24mo__c == null) {
+                cp.Num_Trades_Opened_Past_24mo__c = 0;
+            }
+        }
+
+       system.debug('app'+app);
         oldAppStatus = app.genesis__Status__c;	//CRM-1022 (pallavi)
         oldLoanAmount = app.genesis__Loan_Amount__c;	//CRM-1022 (pallavi)
        	oldInvestorId = app.Investor__c; //CRM-1022
@@ -76,7 +88,9 @@ global class SelectOfferFromUI {
                 Pricing_Tier__c,
                 Segment__c,
                 Term__c,
-                Type__c
+                Type__c,
+                EBP_Offer_Code__c,
+                EBP_Parent_Offer_Key__c
                 from Pricing_Offer__c
                 where Application__c=:applicationID 
                 and id=:offerID ];
@@ -96,7 +110,9 @@ global class SelectOfferFromUI {
                   Pricing_Tier__c,
                   Segment__c,
                   Term__c,
-                  Type__c
+                  Type__c,
+                  EBP_Offer_Code__c,
+                  EBP_Parent_Offer_Key__c
                   from Approved_Offer__c
                   where Application__c=:applicationID];
         system.debug('approve1'+approve1);
@@ -121,7 +137,9 @@ global class SelectOfferFromUI {
                 approve.Segment__c=p.Segment__c;
                 approve.Term__c=p.Term__c;
                 approve.Type__c=p.Type__c;
-                
+                approve.EBP_Offer_Code__c=p.EBP_Offer_Code__c;
+                approve.EBP_Parent_Offer_Key__c=p.EBP_Parent_Offer_Key__c;
+
                 insert approve;
                 
                 system.debug('approve'+approve);
@@ -132,7 +150,12 @@ global class SelectOfferFromUI {
                 app.Origination_fee__c=p.Origination_fee__c;
                 app.genesis__Monthly_Debt_Payments__c=p.Monthly_Payment__c;
                 app.genesis__Interest_Rate__c=p.Interest_Rate__c;
-                app.genesis__Status__c='offer_accepted';
+                if(p.EBP_Offer_Code__c == null || p.EBP_Offer_Code__c.length() == 0) {
+                    app.genesis__Status__c='offer_accepted';
+                }
+                else {
+                    app.genesis__Status__c='offer_shown';
+                }
                 Decimal financeamount= Decimal.valueOf(string.valueof(p.Amount__c - p.Origination_fee__c)); // change by Saryu to capture decimal value and round to 2
                 app.genesis__Financed_Amount__c=genesis.ValueUtil.round(financeamount);
                 system.debug('finance amount'+financeamount);
@@ -208,6 +231,7 @@ global class SelectOfferFromUI {
                         update p; 
 
                     }
+                    MW_Utilities.clearDCPForEBP(approve);
                     
                 } catch(System.Exception err){
                     Database.rollback(sp);
