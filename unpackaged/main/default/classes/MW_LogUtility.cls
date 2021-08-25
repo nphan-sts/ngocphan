@@ -75,10 +75,46 @@ public class MW_LogUtility {
     }
 
     /**
+     * @param className The class name executing the allocation.
+     * @param appId The app id associated with this attempt
+     * @param leadId The lead id for sharing
+     * @param checklist The checklist instance to gather information
+     */
+    public static void sendAllocationRulesetErrors(String className, String appId, String leadId, genesis__Checklist__c checklist) {
+
+        String description = checklist.genesis__Description__c;
+
+        if (description != null) {
+
+            if (description.containsIgnoreCase('exception')) {
+                clcommon__Batch_Process_Log__c bpl = new clcommon__Batch_Process_Log__c();
+                bpl.clcommon__Type__c = 'Exception';
+                bpl.clcommon__Batch_Id__c = appId;
+                bpl.clcommon__Message__c =
+                        className + ': ' +
+                        'App with Lead Id: ' + leadId +
+                        ' failed investor allocation rule execution with description:"' + description + '" ' +
+                        ' and message: "' + checklist.genesis__Message__c + '"';
+                insert bpl;
+            }
+        }
+    }
+
+    /**
      * Log out an exception object.
      */
     public static void error(String cls, String appId, String leadId, String method, Exception ex) {
         emit('Error', cls, appId, leadId, method, new ExceptionDO(ex));
+    }
+
+    /**
+     * Log an informative map as an error
+     * @param cls Class where it occurs
+     * @param label A label that unites this error message with potentially other error messages of same variety
+     * @param info A map containing informative keys and values for context
+     */
+    public static void errorMessage(String cls, String label, Object info) {
+        new MW_LogTriggerHelper().construct('Error Message', cls, label, 'Error', JSON.serialize(info));
     }
 
     /**

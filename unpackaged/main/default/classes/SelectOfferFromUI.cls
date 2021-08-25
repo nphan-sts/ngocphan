@@ -32,9 +32,23 @@ global class SelectOfferFromUI {
           update offerForDel;
         }catch(System.Exception ex){
           System.debug(ex.getStackTraceString());
-          loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
+
+            List<genesis__Applications__c> appFail =
+                [select id,
+                        Lead_ID__c
+                from genesis__Applications__c
+                where id=:applicationID];
+
+            String leadId = null;
+
+            if (appFail.size() > 0) {
+                leadId = appFail.get(0).Lead_ID__c;
+            }
+
+            loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
           bplog.loan__Origin__c = 'SelectOfferUI' ;
-          bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString();
+          bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString() + ' ' +
+                  'for App Id:' + applicationID + ' with Lead Id: ' + leadId;
           bplog.loan__Type__c = 'Exception';
           bplog.loan__Time__c = DateTime.now();
           insert bplog;
@@ -43,6 +57,7 @@ global class SelectOfferFromUI {
         Approved_Offer__c approve = new Approved_Offer__c();
         List<Approved_Offer__c> approve1;
         genesis__Applications__c app =[select id,
+                                       Lead_ID__c,
                                        genesis__Term__c,
                                        genesis__APR__c,
                                        Origination_fee__c,
@@ -52,22 +67,10 @@ global class SelectOfferFromUI {
                                        genesis__Financed_Amount__c,
                                        genesis__Status__c,
                                        Investor__c,
-                                       Investor__r.name,	//remove
-                                        (SELECT Num_Trades_Opened_Past_24mo__c,
-                                        Net_Disposable_Income_NDI_Num__c,
-                                        FICO__c,
-                                        Debt_to_Income_DTI__c
-                                        FROM   Credit_Policy__r) // LOP-217
+                                       Investor__r.name	//remove
                                        from genesis__Applications__c
                                        where id=:applicationID 
                                        limit 1];
-
-        // LOP-217 treat null as 0
-        for (Credit_Policy__c cp : app.Credit_Policy__r) {
-            if (cp.Num_Trades_Opened_Past_24mo__c == null) {
-                cp.Num_Trades_Opened_Past_24mo__c = 0;
-            }
-        }
 
        system.debug('app'+app);
         oldAppStatus = app.genesis__Status__c;	//CRM-1022 (pallavi)
@@ -184,7 +187,8 @@ global class SelectOfferFromUI {
                                         //CRM-1022 new
                                         loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
                                         bplog.loan__Origin__c = 'SelectOfferUI' ;
-                                        bplog.loan__Message__c = 'Error: ' + e.getLineNumber() + 'selectOffer' + ':: Desc. ' + e.getMessage()+' :: Stack: '+e.getStackTraceString();
+                                        bplog.loan__Message__c = 'Error: ' + e.getLineNumber() + 'selectOffer' + ':: Desc. ' + e.getMessage()+' :: Stack: '+e.getStackTraceString() + ' ' +
+                                                'for App Id: ' + app.Id + ' with Lead Id: ' + app.Lead_ID__c;
                                         bplog.loan__Type__c = 'Exception';
                                         bplog.loan__Time__c = DateTime.now();
                                         insert bplog;
@@ -196,7 +200,8 @@ global class SelectOfferFromUI {
                                 if(i == 11){
                                      loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
                                         bplog.loan__Origin__c = 'SelectOfferUI' ;
-                                        bplog.loan__Message__c = 'Error: ' + 'UNABLE_TO_LOCK_ROW for investor : '+app.Investor__r.name;
+                                        bplog.loan__Message__c = 'Error: ' + 'UNABLE_TO_LOCK_ROW for investor : '+app.Investor__r.name + ' ' +
+                                                'for App Id: ' + app.Id + ' with Lead Id: ' + app.Lead_ID__c;
                                         bplog.loan__Type__c = 'Exception';
                                         bplog.loan__Time__c = DateTime.now();
                                         insert bplog;
@@ -238,7 +243,8 @@ global class SelectOfferFromUI {
                     System.debug(err.getStackTraceString());
                     loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
                     bplog.loan__Origin__c = 'SelectOfferUI' ;
-                    bplog.loan__Message__c = 'Error: ' + err.getLineNumber() + 'RunInvestorAllocationBasedOnWeightingValue' + ':: Desc. ' + err.getMessage()+' :: Stack: '+err.getStackTraceString();
+                    bplog.loan__Message__c = 'Error: ' + err.getLineNumber() + 'RunInvestorAllocationBasedOnWeightingValue' + ':: Desc. ' + err.getMessage()+' :: Stack: '+err.getStackTraceString() + ' ' +
+                            'for App Id: ' + app.Id + ' with Lead Id: ' + app.Lead_ID__c;
                     bplog.loan__Type__c = 'Exception';
                     bplog.loan__Time__c = DateTime.now();
                     insert bplog;
@@ -293,7 +299,12 @@ global class SelectOfferFromUI {
             if(!listCheck.isEmpty()){
                 
                 for(genesis__checklist__c chList : listCheck){
-                    
+
+                    MW_LogUtility.sendAllocationRulesetErrors('SelectOfferFromUI',
+                            app.Id,
+                            app.Lead_ID__c,
+                            chList);
+
                     if(chList.genesis__Message__c.containsIgnoreCase('Fail')){
                         setruleIDs.add(chList.genesis__Rule__c);
                         System.Debug('****Not Passed*****' + chList.genesis__Rule__c + chList.genesis__Message__c);
@@ -479,7 +490,8 @@ global class SelectOfferFromUI {
         }catch(Exception ex){
             loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
             bplog.loan__Origin__c = 'Business Rule Engine' ;
-            bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString();
+            bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString() + ' ' +
+                    'for App Id: ' + app.Id + ' with Lead Id: ' + app.Lead_ID__c;
             bplog.loan__Type__c = 'Exception';
             bplog.loan__Time__c = DateTime.now();
             insert bplog;
@@ -505,7 +517,8 @@ global class SelectOfferFromUI {
                         else{
                             loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
                             bplog.loan__Origin__c = 'SelectOfferUI' ;
-                            bplog.loan__Message__c = 'Error: ' + e.getLineNumber() + 'selectOffer' + ':: Desc. ' + e.getMessage()+' :: Stack: '+e.getStackTraceString();
+                            bplog.loan__Message__c = 'Error: ' + e.getLineNumber() + 'selectOffer' + ':: Desc. ' + e.getMessage()+' :: Stack: '+e.getStackTraceString() + ' ' +
+                                    'for App Id: ' + app.Id + ' with Lead Id: ' + app.Lead_ID__c;
                             bplog.loan__Type__c = 'Exception';
                             bplog.loan__Time__c = DateTime.now();
                             insert bplog;
@@ -516,7 +529,8 @@ global class SelectOfferFromUI {
                 if(i == 11){
                     loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
                     bplog.loan__Origin__c = 'SelectOfferUI' ;
-                    bplog.loan__Message__c = 'Error: ' + 'UNABLE_TO_LOCK_ROW for investor : '+oldInvestor.name;
+                    bplog.loan__Message__c = 'Error: ' + 'UNABLE_TO_LOCK_ROW for investor : '+oldInvestor.name + ' ' +
+                            'for App Id: ' + app.Id + ' with Lead Id: ' + app.Lead_ID__c;
                     bplog.loan__Type__c = 'Exception';
                     bplog.loan__Time__c = DateTime.now();
                     insert bplog;
