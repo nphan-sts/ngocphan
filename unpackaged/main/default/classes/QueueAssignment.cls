@@ -7,10 +7,10 @@ Pallavi			LOS-207			2019-11-21
 public class QueueAssignment{
     Private Static boolean KBAFraudT = false,
                            verificationF = false;
-    //Code Start added as part of ticket #https://happymoneyinc.atlassian.net/browse/LSP-344
+    //LSP-344
     Private Static Set<String> UTM_SOCIAL_MEDIUM = new Set<String>{'OrganicSocial','psocial-cq','psocial-dm','psocial-rm'};
     Private Static Set<String> UTM_CREDIT_KARMA_NON_PRIORITY = new Set<String>{'p1','p2','p3'};
-    //Code addition end as part of https://happymoneyinc.atlassian.net/browse/LSP-344
+    //LSP-344
     
     @invocablemethod()
     Public static void appToQueueAssignment(List<ID> apps){
@@ -53,17 +53,7 @@ public class QueueAssignment{
         
         if(appList != null && appList.size() > 0){                                          
             for(genesis__Applications__c app : appList){ 
-                //Code Start added as part of ticket #https://happymoneyinc.atlassian.net/browse/LSP-344
-                // -- Fraud Tag 08.10.2021
-                if(app.KBA_Details__r != null && app.KBA_Details__r.size() > 0) {
-                    
-                    if((app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) && (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 725)) {
-                        KBAFraudT = true;
-                    }else if((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) && (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800)) {
-                        KBAFraudT = true;
-                    }
-                }  
-                //Code addition end as part of ticket #https://happymoneyinc.atlassian.net/browse/LSP-344
+               
                        
 
                 //--- Fraud Tag 30.01.2018
@@ -82,9 +72,13 @@ public class QueueAssignment{
                   (app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c != null && app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c.equalsIgnoreCase('F05')) ||
                   (app.KBA_Details__r[0].Paste_Count__c != null && app.KBA_Details__r[0].Paste_Count__c >= 2) ||
                   (app.KBA_Details__r[0].Id_Analytics_Score__c != null && app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 750) ||
-                  (app.KBA_Details__r[0].Id_Analytics_Score__c != null && !app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700)))){
-                    
+                  (app.KBA_Details__r[0].Id_Analytics_Score__c != null && !app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700) ||
+                  //LSP-344
+                  (app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) && (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 725)) 
+                  ||  
+                  ((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) && (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800)))) {
                     KBAFraudT = true;
+                   
                 } 
                //--- Set Fraud Reason for valid Fraud Tags
                if (KBAFraudT){
