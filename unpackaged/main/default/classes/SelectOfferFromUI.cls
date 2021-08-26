@@ -31,27 +31,7 @@ global class SelectOfferFromUI {
         try{
           update offerForDel;
         }catch(System.Exception ex){
-          System.debug(ex.getStackTraceString());
-
-            List<genesis__Applications__c> appFail =
-                [select id,
-                        Lead_ID__c
-                from genesis__Applications__c
-                where id=:applicationID];
-
-            String leadId = null;
-
-            if (appFail.size() > 0) {
-                leadId = appFail.get(0).Lead_ID__c;
-            }
-
-            loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
-          bplog.loan__Origin__c = 'SelectOfferUI' ;
-          bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString() + ' ' +
-                  'for App Id:' + applicationID + ' with Lead Id: ' + leadId;
-          bplog.loan__Type__c = 'Exception';
-          bplog.loan__Time__c = DateTime.now();
-          insert bplog;
+            insertBatchLogFromException(ex, applicationID);
         }
                     
         Approved_Offer__c approve = new Approved_Offer__c();
@@ -269,6 +249,35 @@ global class SelectOfferFromUI {
             
         }                                  
                                           
+    }
+
+    /**
+     * Only public for test and test coverage purposes
+     * @param ex An exception to persist
+     * @param applicationID An application id
+     */
+    public static void insertBatchLogFromException(System.Exception ex, String applicationID) {
+        System.debug(ex.getStackTraceString());
+
+        List<genesis__Applications__c> appFail =
+            [SELECT Id,
+                    Lead_ID__c
+            FROM    genesis__Applications__c
+            WHERE   Id=:applicationID];
+
+        String leadId = null;
+
+        if (appFail.size() > 0) {
+            leadId = appFail.get(0).Lead_ID__c;
+        }
+
+        loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
+        bplog.loan__Origin__c = 'SelectOfferUI' ;
+        bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString() + ' ' +
+                'for App Id:' + applicationID + ' with Lead Id: ' + leadId;
+        bplog.loan__Type__c = 'Exception';
+        bplog.loan__Time__c = Datetime.now();
+        insert bplog;
     }
     
     public static String runInvestorAllocationBasedOnWeighting (genesis__Applications__c app) {	//CRM-1022(pallavi) changed parameter
@@ -488,10 +497,15 @@ global class SelectOfferFromUI {
             }
             
         }catch(Exception ex){
+
+            String additionalInfo = '';
+            if (app != null) {
+                additionalInfo = ' for App Id: ' + app.Id + ' with Lead Id: ' + app.Lead_ID__c;
+            }
+
             loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
             bplog.loan__Origin__c = 'Business Rule Engine' ;
-            bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString() + ' ' +
-                    'for App Id: ' + app.Id + ' with Lead Id: ' + app.Lead_ID__c;
+            bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString() + additionalInfo;
             bplog.loan__Type__c = 'Exception';
             bplog.loan__Time__c = DateTime.now();
             insert bplog;
