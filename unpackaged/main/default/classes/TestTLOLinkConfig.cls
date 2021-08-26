@@ -1,6 +1,5 @@
 @isTest
 public class TestTLOLinkConfig{
-   
    @testSetup
        static void setupTestData(){
        

@@ -1,12 +1,22 @@
 @isTest
 private class MW_DealRoomCleanUpTest {
-
+    
+    private static genesis__Org_Parameters__c cso;
+    
 	@isTest static void DeleteADCTest() {
+        
+        cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
+        insert cso;
+        
 		//Data Setup
-		String leadId = '9ffffff9-9fff-f999-ff99-9f9f9f9f9f9f';
-		String boxUrl = 'https://test.app.box.com/file/00000000000';
-		Account acct = TestDataFactory.createTestAccount();
-		insert acct;
+        String leadId = '9ffffff9-9fff-f999-ff99-9f9f9f9f9f9f';
+        String boxUrl = 'https://test.app.box.com/file/00000000000';
+        Account acct = TestDataFactory.createTestAccount();
+        acct.peer__First_Name__c = 'FirstName';
+        acct.peer__Last_Name__c = 'LastName';
+        acct.loan__Investor__c = true;
+        acct.loan__SOCIAL_SECURITY_NUMBER__c = '987654345';
+        insert acct;
 
 		Account inv = TestDataFactory.createTestInvestor();
 		inv.Investor_Code__c = 'TEST';
@@ -65,6 +75,9 @@ private class MW_DealRoomCleanUpTest {
 		genesis__Application_Document_Category__c appDocChild = TestDataFactory.createTestApplicationDocumentCategory('PayStub', application.Id, docCat.Id, boxUrl, 'OPEN');
 		appDocChild.genesis__Parent_Application_Document_Category__c = appDocCat.id;
 		insert appDocChild;
+        
+        cso.genesis__Disable_Triggers__c = false;
+        update cso;
 
 		Test.startTest();
 
