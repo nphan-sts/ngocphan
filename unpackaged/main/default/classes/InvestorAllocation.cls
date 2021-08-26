@@ -30,27 +30,137 @@ public with sharing class InvestorAllocation{
             //isInvAllocExecuting = runInvestorAllocationFieldsUpdate(appId);
         }
         return isInvAllocExecuting;
-    }      
-    
+    }
+
+    /**
+     * Public for test coverage
+     * @param appIds App ids to send message on
+     */
+    public static void sendMissingCreditPolicyLog(List<Id> appIds) {
+
+        String id = 'missing';
+        String lead = 'missing';
+        String status = 'missing';
+
+        if (appIds != null && !appIds.isEmpty()) {
+            List<genesis__Applications__c> logApps =
+                [SELECT Id, Lead_ID__c, genesis__Status__c
+                FROM    genesis__Applications__c
+                WHERE   Id =: appIds[0]];
+
+            if (!logApps.isEmpty()) {
+                genesis__Applications__c logApp = logApps.get(0);
+                id = String.valueOf(logApp.Id);
+                lead = logApp.Lead_ID__c;
+                status = logApp.genesis__Status__c;
+            }
+        }
+
+        Map<String, Object> msg = new Map<String, Object>();
+        msg.put('app.Id', id);
+        msg.put('app.Lead_ID__c', lead);
+        msg.put('app.genesis__Status__c.', status);
+        msg.put('app.msg', 'No application credit policy record found.  Ignoring allocation request in InvestorAllocation.allocateInvestor');
+
+        MW_LogUtility.errorMessage('InvestorAllocation', 'Ignore Investor Allocation', msg);
+    }
+
+    /**
+     * Public for test coverage
+     */
+    public static void insertBatchLogsForAppException(Exception e, Account investor, genesis__Applications__c app) {
+
+        String appId = 'missing';
+        String appLead = 'missing';
+        String investorName = 'missing';
+        String exceptionMessage = 'missing';
+
+        if (e != null) {
+            exceptionMessage = e.getMessage();
+        }
+
+        if (app != null) {
+            appId = String.valueOf(app.Id);
+            appLead = app.Lead_ID__c;
+        }
+
+        if (investor != null) {
+            investorName = investor.Name;
+        }
+
+        clcommon__Batch_Process_Log__c bpl = new clcommon__Batch_Process_Log__c();
+        bpl.clcommon__Type__c = 'Exception';
+        bpl.clcommon__Batch_Id__c = appId;
+        bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorName+' ' +
+                'for Lead Id: ' + appLead + ' ' +
+                'because of error updating investor account. Exception : '+exceptionMessage;
+        insert bpl;
+    }
+
+    /**
+     * Public for test coverage
+     */
+    public static void insertLoanBatchLogsForGenericException(Exception ex) {
+
+        String lineNumber = 'missing';
+        String message = 'missing';
+        String stackTraceString = 'missing';
+
+        if (ex != null) {
+            lineNumber = String.valueOf(ex.getLineNumber());
+            message = ex.getMessage();
+            stackTraceString = ex.getStackTraceString();
+        }
+
+        loan__Batch_Process_Log__c bpl = new loan__Batch_Process_Log__c();
+        bpl.loan__Origin__c = 'Business Rule Engine' ;
+        bpl.loan__Message__c = 'Error: ' + lineNumber + ' Desc. ' + message+' Stack: '+stackTraceString;
+        bpl.loan__Type__c = 'Exception';
+        bpl.loan__Time__c = Datetime.now();
+        insert bpl;
+    }
+
+    /**
+     * Public for test coverage
+     */
+    public static void addBatchLogsToList(List<clcommon__Batch_Process_Log__c> logs, Account investor, genesis__Applications__c app) {
+
+        if (logs == null) {
+            throw new IllegalArgumentException('Null batch process logs');
+        }
+
+        String appId = 'missing';
+        String appLead = 'missing';
+        String investorName = 'missing';
+
+        if (investor != null) {
+            investorName = investor.Name;
+        }
+
+        if (app != null) {
+            appId = String.valueOf(app.Id);
+            appLead = app.Lead_ID__c;
+        }
+
+        clcommon__Batch_Process_Log__c bpl = new clcommon__Batch_Process_Log__c();
+        bpl.clcommon__Log_Level__c = 'INFO';
+        bpl.clcommon__Type__c = 'Info';
+        bpl.clcommon__Batch_Id__c = appId;
+        bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorName+' ' +
+                'for Lead Id: ' + appLead + ' ' +
+                'because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
+
+        logs.add(bpl);
+    }
+
     @InvocableMethod
-    public static void allocateInvestor(list<id> appId){
+    public static void allocateInvestor(List<Id> appId){
         if(appId !=null && appId.size()>0) {
-            List<Credit_Policy__c> creditPolicies = [select Id from Credit_Policy__c  where Application__c =: appId[0]];
+            List<Credit_Policy__c> creditPolicies = [SELECT Id FROM Credit_Policy__c WHERE Application__c =: appId[0]];
             if (creditPolicies.size() > 0) {
                 runInvestorAllocationBasedOnWeighting(appId[0]);
             } else {
-                genesis__Applications__c failApp =
-                    [SELECT Id, Lead_ID__c, genesis__Status__c
-                    FROM    genesis__Applications__c
-                    WHERE   Id =: appId[0]];
-
-                Map<String, Object> msg = new Map<String, Object>();
-                msg.put('app.Id', failApp.Id);
-                msg.put('app.Lead_ID__c', failApp.Lead_ID__c);
-                msg.put('app.genesis__Status__c.', failApp.genesis__Status__c);
-                msg.put('app.msg', 'No application credit policy record found.  Ignoring allocation request in InvestorAllocation.allocateInvestor');
-
-                MW_LogUtility.errorMessage('InvestorAllocation', 'Ignore Investor Allocation', msg);
+                sendMissingCreditPolicyLog(appId);
             }
         }
     }
@@ -245,14 +355,16 @@ public with sharing class InvestorAllocation{
                 
             }
             //IDs of Rules which are failed
-            Set<ID> setruleIDs = new Set<ID>();
+            Set<Id> setruleIDs = new Set<Id>();
             //hitting the product API for execution of rules.                                            
-            List<genesis__checklist__c> listCheck = genesis.RulesAPI.evaluateRules(app,null,true,false);
-            
+            List<genesis__Checklist__c> listCheck = genesis.RulesAPI.evaluateRules(app,null,true,false);
+
+            System.debug('listCheck objects' + listCheck);
             if(!listCheck.isEmpty()){
                 
-                for(genesis__checklist__c chList : listCheck){
+                for(genesis__Checklist__c chList : listCheck){
 
+                    System.debug('listCheck any errors');
                     MW_LogUtility.sendAllocationRulesetErrors('InvestorAllocation',
                             app.Id,
                             app.Lead_ID__c,
@@ -260,7 +372,7 @@ public with sharing class InvestorAllocation{
 
                     if(chList.genesis__Message__c.containsIgnoreCase('Fail')){
                         setruleIDs.add(chList.genesis__Rule__c);
-                        System.Debug('****Not Passed*****' + chList.genesis__Rule__c + chList.genesis__Message__c);
+                        System.debug('****Not Passed*****' + chList.genesis__Rule__c + chList.genesis__Message__c);
                     }
                     
                 }
@@ -367,25 +479,13 @@ public with sharing class InvestorAllocation{
                                     if(e.getMessage().contains('UNABLE_TO_LOCK_ROW')){
                                         i = i+1;
                                         if(i>10){
-                                            clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
-                                            bpl.clcommon__Type__c = 'Exception';
-                                            bpl.clcommon__Batch_Id__c = app.id;
-                                            bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' ' +
-                                                    'for Lead Id: ' + app.Lead_ID__c + ' ' +
-                                                    'because of error updating investor account. Exception : '+e.getMessage();
-                                            insert bpl;
+                                            insertBatchLogsForAppException(e, acc, app);
                                             return false;
                                         }
                                     }
                                     else{
                                         // i = 11; //LOP-72 (Removed i=11 and added return at the end)
-                                        clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
-                                        bpl.clcommon__Type__c = 'Exception';
-                                        bpl.clcommon__Batch_Id__c = app.id;
-                                        bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' ' +
-                                                'for Lead Id: ' + app.Lead_ID__c + ' ' +
-                                                'because of error updating investor account. Exception : '+e.getMessage();
-                                        insert bpl;
+                                        insertBatchLogsForAppException(e, acc, app);
                                         return false;
                                     }
                                 }
@@ -422,14 +522,7 @@ public with sharing class InvestorAllocation{
                                 investorWithLargestWeight = acc.Investor_Alloted_Weight__c;
                                 investorAccountWithLargestWeight = acc;
                            }else {
-                                clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
-                                bpl.clcommon__Log_Level__c = 'INFO';
-                                bpl.clcommon__Type__c = 'Info';
-                                bpl.clcommon__Batch_Id__c = app.id;
-                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' ' +
-                                        'for Lead Id: ' + app.Lead_ID__c + ' ' +
-                                        'because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
-                                lstBpl.add(bpl);
+                                addBatchLogsToList(lstBpl, acc, app);
                             }
                             
                         }
@@ -471,14 +564,7 @@ public with sharing class InvestorAllocation{
                                 investorAccountWithLargestWeight.Last_Application_assigned_on__c = System.now();
                                 break;
                             } else {
-                                clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
-                                bpl.clcommon__Log_Level__c = 'INFO';
-                                bpl.clcommon__Type__c = 'Info';
-                                bpl.clcommon__Batch_Id__c = app.id;
-                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' ' +
-                                        'for Lead Id: ' + app.Lead_ID__c + ' ' +
-                                        'because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
-                                lstBpl.add(bpl);
+                                addBatchLogsToList(lstBpl, acc, app);
                             }
                             
                         }
@@ -513,25 +599,13 @@ public with sharing class InvestorAllocation{
                             if(e.getMessage().contains('UNABLE_TO_LOCK_ROW')){
                                 i = i+1;
                                 if(i>10){
-                                    clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
-                                    bpl.clcommon__Type__c = 'Exception';
-                                    bpl.clcommon__Batch_Id__c = app.id;
-                                    bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAccountWithLargestWeight.name+' ' +
-                                            'for Lead Id: ' + app.Lead_ID__c + ' ' +
-                                            'because of error updating investor account. Exception : '+e.getMessage();
-                                    insert bpl;
+                                    insertBatchLogsForAppException(e, investorAccountWithLargestWeight, app);
                                     return false;
                                 }
                             }
                             else{
                                 //i = 11; //LOP-72 (Removed i=11 and added return at the end)
-                                clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c(); //LOP-72
-                                bpl.clcommon__Type__c = 'Exception';
-                                bpl.clcommon__Batch_Id__c = app.id;
-                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAccountWithLargestWeight.name+' ' +
-                                        'for Lead Id: ' + app.Lead_ID__c + ' ' +
-                                        'because of error updating investor account. Exception : '+e.getMessage();
-                                insert bpl;
+                                insertBatchLogsForAppException(e, investorAccountWithLargestWeight, app);
                                 return false;
                             }
                         }
@@ -657,25 +731,13 @@ public with sharing class InvestorAllocation{
                         if(e.getMessage().contains('UNABLE_TO_LOCK_ROW')){
                             i = i+1;
                             if(i>10){
-                                clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
-                                bpl.clcommon__Type__c = 'Exception';
-                                bpl.clcommon__Batch_Id__c = app.id;
-                                bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAcc.name+' ' +
-                                        'for Lead Id: ' + app.Lead_ID__c + ' ' +
-                                        'because of error updating investor account. Exception : '+e.getMessage();
-                                insert bpl;
+                                insertBatchLogsForAppException(e, investorAcc, app);
                                 return false;
                             }
                         }
                         else{
                             //i = 11; //LOP-72 (Removed i=11 and added return at the end)
-                            clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c(); //LOP-72
-                            bpl.clcommon__Type__c = 'Exception';
-                            bpl.clcommon__Batch_Id__c = app.id;
-                            bpl.clcommon__Message__c = 'Can not allocate to the investor '+investorAcc.name+' ' +
-                                    'for Lead Id: ' + app.Lead_ID__c + ' ' +
-                                    'because of error updating investor account. Exception : '+e.getMessage();
-                            insert bpl;
+                            insertBatchLogsForAppException(e, investorAcc, app);
                             return false;
                         }
                     }
@@ -684,13 +746,7 @@ public with sharing class InvestorAllocation{
             /*CRM-928*/
         }
         catch(Exception ex){
-            loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
-            bplog.loan__Origin__c = 'Business Rule Engine' ;
-            bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString();
-            bplog.loan__Type__c = 'Exception';
-            bplog.loan__Time__c = DateTime.now();
-            insert bplog;
-            //throw ex;
+            insertLoanBatchLogsForGenericException(ex);
         }  
         
         return retValue;
