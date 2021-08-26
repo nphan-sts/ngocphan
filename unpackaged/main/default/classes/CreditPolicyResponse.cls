@@ -744,9 +744,16 @@ global class CreditPolicyResponse {
             obj.Active__c = TRUE;
             if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.raw_bureau_data != null){
                 obj.Raw_XML__c = String.valueOF(CPResponse.credit_policy_decision.raw_bureau_data);
+                obj.Consumer_status_Indicator__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<consumerStatementIndicator>', '</consumerStatementIndicator>');
+                if(obj.Consumer_status_Indicator__c == 'true'){
+                obj.Consumer_Statement_Type__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<consumerFileData><consumerStatement><type>', '</type>');
+                obj.Consumer_Statement_Text__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<text>', '</text></consumerStatement>');
+
+            } 
             }
             else{
                 obj.Raw_XML__c = 'No Data found in raw_bureau_data';
+                
             }
             
             if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.bureau_subset != null){
