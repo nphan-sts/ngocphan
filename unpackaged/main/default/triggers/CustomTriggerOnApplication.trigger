@@ -152,7 +152,9 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                             mail.setSubject( app.name + ' Credit Summary tab is empty.');
                             mail.setHtmlBody(app.Lead_ID__c + ', ' + app.Name + ', Credit Summary tab is empty.');
                             mails.add(mail);
-                            Messaging.sendEmail(mails);
+                            if (!Test.isRunningTest()) {
+                                Messaging.sendEmail(mails);
+                            }
                         }
                     }
                     }

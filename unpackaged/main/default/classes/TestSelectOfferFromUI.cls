@@ -387,7 +387,122 @@ public class TestSelectOfferFromUI{
         acc3.loan__active__c = 'Yes';
         update acc3;
     }
-    
+
+    @IsTest static void testMultipleInvestorsWithRuleset() {
+
+
+        genesis__Rule__c rule = new genesis__Rule__c();
+        rule.Name                       = 'Simple rule';
+        rule.genesis__Enabled__c        = true;
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Message_failure__c = 'FAIL cannot allocate to Simple Rule';
+        rule.genesis__Message_success__c = 'Successful allocation to Simple Rule';
+        rule.genesis__Evaluation_Expression__c = '1';
+        insert rule;
+
+        genesis__RuleCriteria__c criteria = new genesis__RuleCriteria__c();
+        criteria.genesis__Criteria_Sequence__c = 1.0;
+        criteria.genesis__Field_Type__c        = 'DOUBLE';
+        criteria.genesis__Maximum_Value__c     = '';
+        criteria.genesis__Minimum_Value__c     = '';
+        criteria.genesis__Related_Object__c    = 'Credit_Policy__c';
+        criteria.genesis__Rule_Object_Reference__c = 'Application__r';
+        criteria.genesis__Rule__c = rule.Id;
+        criteria.genesis__Stipulation_Type__c = 'FUNDING';
+        insert criteria;
+
+        Account applicantAccount =[SELECT Id, Name FROM Account WHERE Name='TestF1Name TestL1Name' LIMIT 1];
+        Account investor1 =[SELECT Id, Name FROM Account WHERE Name='TestF3Name TestL3Name' LIMIT 1];
+        Account investor2 =[SELECT Id, Name FROM Account WHERE Name='TestF4Name TestL4Name' LIMIT 1];
+        investor2.Loan__Active__c = 'No';
+        update investor2;
+
+        investor1.Investment_Rules__c = rule.Id;
+        update investor1;
+
+        /* create application */
+        genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
+        app.genesis__Due_Day__c = 20;
+        app.genesis__Funding_in_Tranches__c = true;
+        app.Borrower_s_Email__c = null;
+        app.genesis__Account__c = applicantAccount.Id;
+        app.DocuSignFlag__c=true;
+        app.genesis__Status__c = 'offer_accepted';
+        app.Invested_Amount__c = 200;
+        app.Investor__c = investor1.Id;
+        insert app;
+
+        System.assertEquals(null,app.Borrower_s_Email__c,'Borrower Email is not null');
+
+        Pricing_Offer__c  pOfferTrue = new Pricing_Offer__c();
+        pOfferTrue.Above_prime_max__c= 'false';
+        pOfferTrue.Amount__c = 8000;
+        pOfferTrue.Application__c =app.Id;
+        pOfferTrue.APR__c = 11.997986061655;
+        pOfferTrue.Interest_Rate__c =9.97;
+        pOfferTrue.Is_Offer_Selected__c = true;
+        pOfferTrue.Key__c = 6;
+        pOfferTrue.Monthly_Payment__c = 215.489647581694;
+        pOfferTrue.Origination_fee__c = 160;
+        pOfferTrue.Origination_fee_rate__c = 2;
+        pOfferTrue.Pricing_Tier__c = 't2';
+        pOfferTrue.Segment__c = 'prime';
+        pOfferTrue.Term__c = 24;
+        pOfferTrue.Type__c = 'ABC';
+        pOfferTrue.EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout';
+        pOfferTrue.EBP_Parent_Offer_Key__c = '';
+        insert pOfferTrue;
+        Approved_Offer__c appOffer = new Approved_Offer__c(
+                Above_prime_max__c = 'false',
+                Amount__c = 1200.00,
+                Application__c=app.id,
+                APR__c ='11.99',
+                Interest_Rate__c = '9.97',
+                Key__c = '5',
+                Monthly_Payment__c = 200,
+                Origination_fee__c = '150.00',
+                Origination_fee_rate__c = '2.00',
+                Pricing_Tier__c = 't2',
+                Segment__c = 'prime',
+                Term__c = 24,
+                Type__c ='test',
+                EBP_Offer_Code__c = '2021Feb_ebp_DCP_optout',
+                EBP_Parent_Offer_Key__c = ''
+        );
+        insert appOffer;
+
+        Test.startTest();
+        app.genesis__Financed_Amount__c = 1050.00;
+        String result = SelectOfferFromUI.selectOffer(app.id,pOfferTrue.id);
+        System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
+        app.Investor__c = investor2.Id;
+        update app;
+        String result2 = SelectOfferFromUI.runInvestorAllocationBasedOnWeighting(app);
+        System.assertEquals('No such investors available', result2, 'No available investors');
+        Test.stopTest();
+        investor2.Loan__Active__c = 'Yes';
+        update investor2;
+    }
+
+    @IsTest static void testBatchProcessInsertion() {
+        genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
+        insert app;
+        String applicationId = String.valueOf(app.Id);
+        try {
+            throw new IllegalArgumentException('exception for test coverage purposes');
+        } catch (Exception ex) {
+            SelectOfferFromUI.insertBatchLogFromException(ex, applicationId);
+        }
+
+        List <loan__Batch_Process_Log__c> logs =
+        [SELECT loan__Message__c
+         FROM    loan__Batch_Process_Log__c
+         WHERE   loan__Origin__c = 'SelectOfferUI'];
+
+        System.assert(logs.size() == 1);
+        System.assert(logs.get(0).loan__Message__c.containsIgnoreCase(app.Lead_ID__c));
+    }
+
     @isTest static void method5InvestorCurrentWeightNotZero(){
         Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
         Account acc1 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
