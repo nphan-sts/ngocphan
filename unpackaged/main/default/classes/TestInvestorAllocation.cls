@@ -1,12 +1,20 @@
 @isTest
 
 private class TestInvestorAllocation{
+
+    @TestSetup static void setup() {
+        MW_Settings__c mwSetting = new MW_Settings__c();
+        mwSetting.FE_User_Filter__c = 'serviceapi@happymoney.com.cliqa';
+        insert mwSetting;
+    }
+
     @isTest static Void InvestorAllocation_Usecase1(){
         test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
         rule.genesis__Enabled__c        = true;
-        rule.genesis__Object_Type__c    = 'genesis__Object_Type__c';
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Evaluation_Expression__c = '1';
         insert rule;
          
          CL_Document__c document = new CL_Document__c();
@@ -119,7 +127,8 @@ private class TestInvestorAllocation{
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
         rule.genesis__Enabled__c        = true;
-        rule.genesis__Object_Type__c    = 'genesis__Object_Type__c';
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Evaluation_Expression__c = '1';
         insert rule;
         
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
@@ -374,13 +383,203 @@ private class TestInvestorAllocation{
         Test.stopTest();
     }
 
+
+    /**
+     * Demonstrate that RulesAPI will return the exception message in the checklist.description if an exception occurs.
+     * For every field access attempt on the null object, a checklist will be produced.  A final checklist
+     * will contain the summary of the rule execution.
+     */
+    @IsTest static void testExceptionChecklistsInCaseOfMissingCreditPolicy() {
+
+        Test.startTest();
+
+        CL_Document__c docs = MW_GlobalTestUtility.getCLDocumentRecord();
+        insert docs;
+
+        genesis__Rule__c rule = GetRule('Test FICO Only Rule', '1');
+        insert rule;
+
+        genesis__RuleCriteria__c ficoCriteria = GetCreditPolicyCriteria(1, rule);
+        ficoCriteria.genesis__Field_API_Name__c    = 'FICO__c';
+        ficoCriteria.genesis__Field_Name__c        = 'FICO';
+        ficoCriteria.genesis__Matching_Type__c     = '>=';
+        ficoCriteria.genesis__Matching_Value__c    = '640';
+        insert ficoCriteria;
+
+        Account investor = GetInvestorWithRuleset(rule);
+        insert investor;
+
+        Account applicantAccount = GetApplicantAccount();
+        insert applicantAccount;
+
+        genesis__Applications__c appInsert = GetADVPApplication(investor, applicantAccount);
+        insert appInsert;
+
+        /* using identical query to InvestorAllocation */
+        genesis__Applications__c appTest =
+            [SELECT Id,
+                    Name,
+                    Investor__c,
+                    DCP_Investor_Eligibility__c,
+                    genesis__Status__c,
+                    genesis__Loan_Amount__c,
+                    Invested_Amount__c,
+                    genesis__Lending_Product__c,
+                    Last_Investor_Assigned_On__c,
+                    Total_Arcus_Transactions__c
+             FROM   genesis__Applications__c
+             WHERE  Id =: appInsert.Id
+             LIMIT 1];
+
+        new InvestorAllocation(true);
+        InvestorAllocation.runInvestorRule(appTest.Id);
+        List<genesis__Checklist__c> checklists = genesis.RulesAPI.evaluateRules(appTest, null, true, false);
+
+        System.assertEquals(2, checklists.size());
+
+        genesis__Checklist__c exceptionChecklist = checklists.get(0);
+        genesis__Checklist__c summaryChecklist = checklists.get(1);
+
+        System.debug('Fail exception checklist description: ' + exceptionChecklist.genesis__Description__c);
+        System.debug('Fail exception checklist message: ' + exceptionChecklist.genesis__Message__c);
+        System.assert(exceptionChecklist.genesis__Description__c.containsIgnoreCase('exception'), 'First checklist.description will contain the exception text');
+        System.assert(exceptionChecklist.genesis__Message__c.containsIgnoreCase('fail') , 'First checklist.message will contain the exception rule specifics');
+
+        System.debug('Fail summary checklist description: ' + summaryChecklist.genesis__Description__c);
+        System.assertEquals('FAIL cannot allocate to Test FICO Only Rule', summaryChecklist.genesis__Message__c);
+
+        Test.stopTest();
+    }
+
+    /**
+     * Demonstrate three things
+     *
+     * 1. We can remove the credit policy subquery from the application selection since it does nothing.
+     * The RulesAPI class will query credit policy on its own, regardless if we pass in the data with a value or try to update it.
+     * The top level Application field values are still required.
+     *
+     *      Per cls internal logging, the RulesAPI query appears like:
+     * SELECT Name,Id,(SELECT fico__c,num_trades_opened_past_24mo__c FROM Credit_Policy__r ORDER BY ID DESC) FROM genesis__applications__c WHERE Id IN:parentIds
+     *
+     * 2. When the credit policy is present, but only a field is null, RulesAPI will not produce an exception message in the description field,
+     * but will show up as a null result.  The checklist.message field result will produce the failure message.
+     * In this scenario, only 1 checklist will be produced.
+     *
+     * 3. When we update the credit policy object record, the rule evaluation produces one successful, valid checklist.
+     */
+    @IsTest static void testNullFieldProducesNullResult() {
+
+        Test.startTest();
+
+        CL_Document__c docs = MW_GlobalTestUtility.getCLDocumentRecord();
+        insert docs;
+
+        genesis__Rule__c rule = GetRule('Test Deref Rule', '(1 AND 2)');
+        insert rule;
+
+        genesis__RuleCriteria__c ficoCriteria = GetCreditPolicyCriteria(1, rule);
+        ficoCriteria.genesis__Field_API_Name__c    = 'FICO__c';
+        ficoCriteria.genesis__Field_Name__c        = 'FICO';
+        ficoCriteria.genesis__Matching_Type__c     = '>=';
+        ficoCriteria.genesis__Matching_Value__c    = '620';
+        insert ficoCriteria;
+
+        genesis__RuleCriteria__c tradeCriteria = GetCreditPolicyCriteria(2, rule);
+        tradeCriteria.genesis__Field_API_Name__c    = 'Num_Trades_Opened_Past_24mo__c';
+        tradeCriteria.genesis__Field_Name__c        = 'Num Trades Opened Past 24mo';
+        tradeCriteria.genesis__Matching_Type__c     = '<';
+        tradeCriteria.genesis__Matching_Value__c    = '10';
+        insert tradeCriteria;
+
+        Account investor = GetInvestorWithRuleset(rule);
+        insert investor;
+
+        Account applicantAccount = GetApplicantAccount();
+        insert applicantAccount;
+
+        genesis__Applications__c appInsert = GetADVPApplication(investor, applicantAccount);
+        insert appInsert;
+
+        Credit_Policy__c creditPolicy = new Credit_Policy__c();
+        creditPolicy.FICO__c = 650;
+        creditPolicy.Num_Trades_Opened_Past_24mo__c = null;
+        creditPolicy.Application__c = appInsert.Id;
+        insert creditPolicy;
+
+        /* used identical query to InvestorAllocation */
+        genesis__Applications__c appTest =
+        [SELECT Id,
+                Name,
+                Investor__c,
+                DCP_Investor_Eligibility__c,
+                genesis__Status__c,
+                genesis__Loan_Amount__c,
+                Invested_Amount__c,
+                genesis__Lending_Product__c,
+                Last_Investor_Assigned_On__c,
+                Total_Arcus_Transactions__c,
+                (SELECT FICO__c,
+                        Num_Trades_Opened_Past_24mo__c
+                 FROM   Credit_Policy__r)
+        FROM   genesis__Applications__c
+        WHERE  Id =: appInsert.Id
+        LIMIT 1];
+
+        /* attempt to set a default value for null 24 mo fields */
+        for (Credit_Policy__c cpTest : appTest.Credit_Policy__r) {
+            cpTest.Num_Trades_Opened_Past_24mo__c = 1;
+        }
+
+        /*
+        Produce the expected null value in the description json string.
+         */
+        new InvestorAllocation(true);
+        InvestorAllocation.runInvestorRule(appTest.Id);
+        List<genesis__Checklist__c> checklistsFail = genesis.RulesAPI.evaluateRules(appTest, null, true, false);
+
+        System.assertEquals(1, checklistsFail.size());
+        genesis__Checklist__c failChecklist = checklistsFail.get(0);
+
+        System.assert(failChecklist.genesis__Description__c != null);
+        System.assert(failChecklist.genesis__Description__c.containsIgnoreCase('"ActualResult" : null'));
+        System.assertEquals('FAIL cannot allocate to Test Deref Rule', failChecklist.genesis__Message__c);
+        System.assert(failChecklist.genesis__Result__c == false);
+
+        System.debug('Fail checklist description: ' + failChecklist.genesis__Description__c);
+        System.debug('Fail checklist message: ' + failChecklist.genesis__Message__c);
+
+        /*
+        Update the credit policy object and produce one valid checklist message.
+         */
+        creditPolicy.Num_Trades_Opened_Past_24mo__c = 9;
+        update creditPolicy;
+
+        new InvestorAllocation(true);
+        InvestorAllocation.runInvestorRule(appTest.Id);
+        List<genesis__Checklist__c> checklistsPass = genesis.RulesAPI.evaluateRules(appTest, null, true, false);
+
+        System.assertEquals(1, checklistsPass.size());
+        genesis__Checklist__c passChecklist = checklistsPass.get(0);
+
+        System.assert(passChecklist.genesis__Description__c != null);
+        System.assert(!passChecklist.genesis__Description__c.containsIgnoreCase('"ActualResult" : null'));
+        System.assertEquals('Successful allocation to Test Deref Rule', passChecklist.genesis__Message__c);
+        System.assert(passChecklist.genesis__Result__c == true);
+
+        System.debug('Success checklist description: ' + passChecklist.genesis__Description__c);
+        System.debug('Success checklist message: ' + passChecklist.genesis__Message__c);
+
+        Test.stopTest();
+    }
+
     @isTest static Void InvestorAllocation_UsecaseWeightAllocation(){
         test.startTest();
         
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
         rule.genesis__Enabled__c        = true;
-        rule.genesis__Object_Type__c    = 'genesis__Object_Type__c';
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Evaluation_Expression__c = '1';
         insert rule;
         
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
@@ -529,7 +728,8 @@ private class TestInvestorAllocation{
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
         rule.genesis__Enabled__c        = true;
-        rule.genesis__Object_Type__c    = 'genesis__Object_Type__c';
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Evaluation_Expression__c = '1';
         insert rule;
         
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
@@ -703,7 +903,8 @@ private class TestInvestorAllocation{
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
         rule.genesis__Enabled__c        = true;
-        rule.genesis__Object_Type__c    = 'genesis__Object_Type__c';
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Evaluation_Expression__c = '1';
         insert rule;
         
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
@@ -904,19 +1105,24 @@ private class TestInvestorAllocation{
         Test.stopTest();
           
     }
-     @isTest static Void InvestorAllocation_UsecaseWeightAllocationDCP(){
-        test.startTest();
+
+    @IsTest static Void InvestorAllocation_UsecaseWeightAllocationDCP(){
+
+        Test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
-        rule.name                       = 'TCU ruleset';
+        rule.name                       = 'Test TCU ruleset';
         rule.genesis__Enabled__c        = true;
-        rule.genesis__Object_Type__c    = 'genesis__Object_Type__c';
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Message_failure__c = 'FAIL cannot allocate to to Test TCU ruleset';
+        rule.genesis__Message_success__c = 'Successful allocation to Test TCU ruleset';
+        rule.genesis__Evaluation_Expression__c = '1';
         insert rule;
-         
-         CL_Document__c document = new CL_Document__c();
-         document.Doc1__c = 'Credit Score Notice';
-         document.Doc2__c = 'TIL Document';
-         document.Doc3__c = 'Adverse Action Notice';
-         insert document;
+
+        CL_Document__c document = new CL_Document__c();
+        document.Doc1__c = 'Credit Score Notice';
+        document.Doc2__c = 'TIL Document';
+        document.Doc3__c = 'Adverse Action Notice';
+        insert document;
         
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
             genesis__Criteria_Sequence__c = 1.0,
@@ -927,7 +1133,7 @@ private class TestInvestorAllocation{
             genesis__Matching_Value__c    = 'AA,AE,AL,AK,AP,AZ,AR,CA,CO,CT,FL,GA,HI,ID,IL,IN,KS,KY,ME,MO,MT,NJ,NM,NY,ND,OR,PA,RI,SC,SD,TN,UT,WY,TS',
             genesis__Related_Object__c    = 'genesis__Applications__c',
             genesis__Rule_Object_Reference__c = 'genesis__Applications__c',
-            genesis__Rule__c = rule.id,
+            genesis__Rule__c = rule.Id,
             genesis__Stipulation_Type__c = 'FUNDING'
         );
         insert rul; 
@@ -1008,6 +1214,12 @@ private class TestInvestorAllocation{
             DCP_Investor_Eligibility__c = false
         );      
         Insert app1;
+
+         Credit_Policy__c creditPolicy = new Credit_Policy__c();
+         creditPolicy.FICO__c = 750.0;
+         creditPolicy.Net_Disposable_Income_NDI__c = '2400';
+         creditPolicy.Application__c = app1.Id;
+         insert creditPolicy;
         
         DCp_Arcus_Transactions__c DCP_obj = new DCp_Arcus_Transactions__c();
         DCP_obj.Application__c = app1.Id;
@@ -1020,6 +1232,9 @@ private class TestInvestorAllocation{
         
         List<id> appId = new List<id>();
         appId.add(app1.id);
+        InvestorAllocation.allocateInvestor(appId);
+
+        /* retrigger again for re-allocation coverage */
         InvestorAllocation.allocateInvestor(appId);
         
         genesis__Applications__c app2 = new genesis__Applications__c(
@@ -1087,7 +1302,8 @@ private class TestInvestorAllocation{
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
         rule.genesis__Enabled__c        = true;
-        rule.genesis__Object_Type__c    = 'genesis__Object_Type__c';
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Evaluation_Expression__c = '1';
         insert rule;
          
          CL_Document__c document = new CL_Document__c();
@@ -1095,7 +1311,7 @@ private class TestInvestorAllocation{
          document.Doc2__c = 'TIL Document';
          document.Doc3__c = 'Adverse Action Notice';
          insert document;
-        
+
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
             genesis__Criteria_Sequence__c = 1.0,
             genesis__Field_API_Name__c    = 'genesis__Account__r.State__c',
@@ -1204,7 +1420,8 @@ private class TestInvestorAllocation{
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
         rule.genesis__Enabled__c        = true;
-        rule.genesis__Object_Type__c    = 'genesis__Object_Type__c';
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Evaluation_Expression__c = '1';
         insert rule;
          
          CL_Document__c document = new CL_Document__c();
@@ -1321,7 +1538,8 @@ private class TestInvestorAllocation{
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
         rule.genesis__Enabled__c        = true;
-        rule.genesis__Object_Type__c    = 'genesis__Object_Type__c';
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Evaluation_Expression__c = '1';
         insert rule;
          
          CL_Document__c document = new CL_Document__c();
@@ -1432,5 +1650,215 @@ private class TestInvestorAllocation{
                  
         test.stopTest();
      }
-    
+
+    @IsTest static void testSendMissingCreditPolicyLog() {
+
+        Account applicantAccount = GetApplicantAccount();
+        insert applicantAccount;
+
+        Account investor = MW_GlobalTestUtility.GetAccount('Investor');
+        insert investor;
+
+        genesis__Applications__c application = GetADVPApplication(investor, applicantAccount);
+        insert application;
+
+        List<Id> appIds = new List<Id>();
+        appIds.add(application.Id);
+
+        InvestorAllocation.sendMissingCreditPolicyLog(appIds);
+
+        InvestorAllocation.sendMissingCreditPolicyLog(null);
+    }
+
+    @IsTest static void testInsertBatchLogsForAppException() {
+
+        Account applicantAccount = GetApplicantAccount();
+        insert applicantAccount;
+
+        Account investor = MW_GlobalTestUtility.GetAccount('Investor');
+        insert investor;
+
+        genesis__Applications__c application = GetADVPApplication(investor, applicantAccount);
+        insert application;
+
+        /* test missing exception */
+        InvestorAllocation.insertBatchLogsForAppException(null, investor, application);
+
+        try {
+            throw new IllegalArgumentException('exception for test coverage');
+        } catch (Exception e) {
+
+            /* test missing investor */
+            InvestorAllocation.insertBatchLogsForAppException(e, null, application);
+
+            /* test missing application */
+            InvestorAllocation.insertBatchLogsForAppException(e, investor, null);
+
+            /* test current usage */
+            InvestorAllocation.insertBatchLogsForAppException(e, investor, application);
+
+            List<clcommon__Batch_Process_Log__c> logs =
+                [SELECT Id,
+                        clcommon__Batch_Id__c,
+                        clcommon__Message__c,
+                        clcommon__Type__c
+                 FROM   clcommon__Batch_Process_Log__c
+                 WHERE  clcommon__Batch_Id__c =: application.Id];
+
+            System.assertEquals(3, logs.size());
+
+            clcommon__Batch_Process_Log__c nullExceptionBl = logs.get(0);
+            System.assertEquals(String.valueOf(application.Id), nullExceptionBl.clcommon__Batch_Id__c);
+
+            clcommon__Batch_Process_Log__c missingAppBl = logs.get(1);
+            System.assertEquals(String.valueOf(application.Id), missingAppBl.clcommon__Batch_Id__c);
+            System.assert(missingAppBl.clcommon__Message__c.contains('missing'));
+
+            clcommon__Batch_Process_Log__c appBl = logs.get(2);
+            System.assertEquals(String.valueOf(application.Id), appBl.clcommon__Batch_Id__c);
+            System.assert(appBl.clcommon__Message__c.contains(application.Lead_ID__c));
+        }
+    }
+
+    @IsTest static void testInsertLoanBatchLogsForGenericException() {
+
+        InvestorAllocation.insertLoanBatchLogsForGenericException(null);
+
+        try {
+            throw new IllegalArgumentException('exception for test coverage');
+        } catch (Exception e) {
+            InvestorAllocation.insertLoanBatchLogsForGenericException(e);
+
+            List<loan__Batch_Process_Log__c> logs =
+                [SELECT loan__Origin__c,
+                        loan__Message__c,
+                        loan__Type__c
+                 FROM   loan__Batch_Process_Log__c];
+
+            System.assertEquals(2, logs.size());
+
+            loan__Batch_Process_Log__c nullExceptionLog = logs.get(0);
+            System.assertEquals('Business Rule Engine', nullExceptionLog.loan__Origin__c);
+
+            loan__Batch_Process_Log__c testExceptionLog = logs.get(1);
+            System.assertEquals('Business Rule Engine', testExceptionLog.loan__Origin__c);
+            System.assert(testExceptionLog.loan__Message__c.contains('exception for test coverage'));
+        }
+    }
+
+    @IsTest static void testAddBatchLogsToList() {
+
+        Account investor = MW_GlobalTestUtility.GetAccount('Investor');
+        investor.Name = 'BatchLogInvestor';
+        insert investor;
+
+        Account applicantAccount = GetApplicantAccount();
+        insert applicantAccount;
+
+        genesis__Applications__c application = GetADVPApplication(investor, applicantAccount);
+        insert application;
+
+        try {
+            InvestorAllocation.addBatchLogsToList(null, investor, application);
+        } catch (Exception e) {
+            System.assertEquals('Null batch process logs', e.getMessage());
+        }
+
+        List<clcommon__Batch_Process_Log__c> logs = new List<clcommon__Batch_Process_Log__c>();
+
+        InvestorAllocation.addBatchLogsToList(logs, investor, null);
+        InvestorAllocation.addBatchLogsToList(logs, null, application);
+
+        System.assertEquals(2, logs.size());
+
+        clcommon__Batch_Process_Log__c nullAppLog = logs.get(0);
+        System.assertEquals('missing', nullAppLog.clcommon__Batch_Id__c);
+        System.assert(nullAppLog.clcommon__Message__c.startsWith('Can not allocate'));
+
+        clcommon__Batch_Process_Log__c nullInvestorLog = logs.get(1);
+        System.assertEquals(String.valueOf(application.Id), nullInvestorLog.clcommon__Batch_Id__c);
+        System.assert(nullInvestorLog.clcommon__Message__c.startsWith('Can not allocate'));
+        System.assert(nullInvestorLog.clcommon__Message__c.contains(application.Lead_ID__c));
+    }
+
+    private static Account GetInvestorWithRuleset(genesis__Rule__c rule) {
+        Account acc1 = new Account(
+                Name = 'Test1',
+                loan__Investor__c = true,
+                Amount_Invested__c = 1000,
+                Investment_Rules__c = rule.Id,
+                Number_Of_Applications_Invested__c = 3,
+                Total_No_of_Application_Limit__c = 30,
+                Last_Application_assigned_on__c = System.now()-7,
+                Total_Investment_Limit__c = 1000000,
+                loan__Undeployed_Funds__c = 500000,
+                cnotify__Email__c = 'no-reply@testorganization.com',
+                peer__First_Name__c = 'TestFName1',
+                peer__Last_Name__c='TestLName2',
+                loan__Active__c = 'YES',
+                City__c='CANADA',
+                State__c='CA',
+                ZIP_Code__c='123456'
+        );
+        return acc1;
+    }
+
+    private static Account GetApplicantAccount() {
+        Account acco = new Account(
+                Name = 'Test',
+                loan__Investor__c= false,
+                cnotify__Email__c = 'no-reply@testorganization.com',
+                peer__First_Name__c = 'TestFName2',
+                peer__Last_Name__c='TestLName2',
+                City__c='CANADA',
+                State__c='CA',
+                ZIP_Code__c='123456'
+        );
+        return acco;
+    }
+
+    private static genesis__Applications__c GetADVPApplication(Account investor, Account applicant) {
+        genesis__Applications__c app1 = new genesis__Applications__c(
+                Lead_ID__c = 'c9149473-e69f-ee12-38a7-d18b0cba847d',
+                genesis__Due_Day__c = 20,
+                genesis__Expected_First_Payment_Date__c = System.today(),
+                genesis__Expected_Start_Date__c = System.today(),
+                genesis__Funding_in_Tranches__c = false,
+                genesis__Account__c = applicant.Id,
+                Investor__c  = investor.Id,
+                Invested_Amount__c  = 1000,
+                Application_Start_DateV2__c = System.today(),
+                genesis__Status__c = 'agent_document_verification_pending',
+                genesis__Draw_Period_End_Date__c = System.today(),
+                Employment_Status__c    = 'Full Time',
+                genesis__Loan_Amount__c = 1000
+        );
+        return app1;
+    }
+
+    private static genesis__Rule__c GetRule(String name, String expression) {
+        genesis__Rule__c rule = new genesis__Rule__c();
+        rule.Name                       = name;
+        rule.genesis__Enabled__c        = true;
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Message_failure__c = 'FAIL cannot allocate to ' + name;
+        rule.genesis__Message_success__c = 'Successful allocation to ' + name;
+        rule.genesis__Evaluation_Expression__c = expression;
+        return rule;
+    }
+
+    private static genesis__RuleCriteria__c GetCreditPolicyCriteria(Decimal sequenceNum, genesis__Rule__c rule) {
+        genesis__RuleCriteria__c criteria = new genesis__RuleCriteria__c(
+                genesis__Criteria_Sequence__c = sequenceNum,
+                genesis__Field_Type__c        = 'DOUBLE',
+                genesis__Maximum_Value__c     = '',
+                genesis__Minimum_Value__c     = '',
+                genesis__Related_Object__c    = 'Credit_Policy__c',
+                genesis__Rule_Object_Reference__c = 'Application__r',
+                genesis__Rule__c = rule.Id,
+                genesis__Stipulation_Type__c = 'FUNDING'
+        );
+        return criteria;
+    }
+
 }

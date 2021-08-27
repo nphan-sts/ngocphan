@@ -1,13 +1,14 @@
 @isTest
 public class TestCustomTriggerOnApplication {
     //Before update
-    public static void mwSettingSetup(){
+    @TestSetup  static void mwSettingSetup(){
         MW_Settings__c mwSetting = new MW_Settings__c();
         mwSetting.API_User_Filter__c = 'test@example.com';
+        mwSetting.FE_User_Filter__c = 'serviceapi@happymoney.com.cliqa';
         insert mwSetting;
     }
 
-    testmethod static void method1(){
+    @IsTest static void method1(){
         //mwSettingSetup();
 
         CL_Document__c doc = new CL_Document__c();
@@ -113,8 +114,8 @@ public class TestCustomTriggerOnApplication {
 
     }
     //After update
-    testmethod static void method2(){
-        mwSettingSetup();
+    @IsTest static void method2(){
+        //mwSettingSetup();
 
         loan.TestHelper.createSeedDataForTesting();
         loan__Currency__c curr = loan.TestHelper.createCurrency();
@@ -352,8 +353,8 @@ public class TestCustomTriggerOnApplication {
 
     //}
     //Investor Account of application is null
-    testmethod static void method3(){
-        mwSettingSetup();
+    @IsTest static void method3(){
+        //mwSettingSetup();
 
         //pallavi
          genesis__Rule__c rule = new genesis__Rule__c();
@@ -572,7 +573,7 @@ public class TestCustomTriggerOnApplication {
         cta.runInvestorAllocationFieldsUpdate(list1,list2,oldMap);
 
     }
-    @isTest static Void method5(){
+    @IsTest static Void method5(){
         test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
@@ -726,7 +727,7 @@ public class TestCustomTriggerOnApplication {
         test.stopTest();
         //pallavi
      }
-    @isTest static Void method6(){
+    @IsTest static Void method6(){
         test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
@@ -846,7 +847,7 @@ public class TestCustomTriggerOnApplication {
         test.stopTest();
         //pallavi
      }
-    @isTest static Void method7(){
+    @IsTest static Void method7(){
         test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
@@ -973,7 +974,7 @@ public class TestCustomTriggerOnApplication {
         test.stopTest();
         //pallavi
      }
-    @isTest static Void method8(){
+    @IsTest static Void method8(){
         test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
@@ -1141,7 +1142,7 @@ public class TestCustomTriggerOnApplication {
         //pallavi
      }
 
-     @isTest static void method9() {
+    @IsTest static void method9() {
         Account acct = TestDataFactory.createTestAccount();
         insert acct;
 
