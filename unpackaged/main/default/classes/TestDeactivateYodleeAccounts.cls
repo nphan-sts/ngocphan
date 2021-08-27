@@ -10,10 +10,13 @@
 public class TestDeactivateYodleeAccounts {
     
     @isTest static Void deactivateBankAccount(){
-       loan.TestHelper.createSeedDataForTesting();
-       loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
-       
-       ints__Yodlee_Cobrand_Credentials__c ycc = new ints__Yodlee_Cobrand_Credentials__c();
+        loan.TestHelper.createSeedDataForTesting();
+        loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
+        
+        genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
+        insert cso;
+        
+        ints__Yodlee_Cobrand_Credentials__c ycc = new ints__Yodlee_Cobrand_Credentials__c();
         ycc.ints__APP_ID__c = '10003600';
         //ycc.ints__Application_Key__c = 
         //ycc.ints__APP_Secret__c =
@@ -48,7 +51,6 @@ public class TestDeactivateYodleeAccounts {
         userCred.ints__Yodlee_Password__c = 'testpassword';
         userCred.yodlee_Account_count__c  =1;
         insert userCred;
-
         
         loan__bank_account__c bank = new loan__bank_account__c();
         bank.Account_Number__c = '123456800';
@@ -58,6 +60,7 @@ public class TestDeactivateYodleeAccounts {
         bank.loan__Bank_Name__c='ABc';
         bank.Unmasked_Bank_Account_Number__c='123456800';
         bank.loan__Account_Usage__c = 'Borrower/Investor Account';  //LOS-156
+        bank.loan__Bank_Account_Number__c = acc.Id;
         insert bank;
         
          genesis__Applications__c app = new genesis__Applications__c(
@@ -149,6 +152,10 @@ public class TestDeactivateYodleeAccounts {
         /*LOP-4 update*/
         
         Test.stopTest();
+        
+        cso.genesis__Disable_Triggers__c = false;
+        //update cso;
+
     }
 
 }

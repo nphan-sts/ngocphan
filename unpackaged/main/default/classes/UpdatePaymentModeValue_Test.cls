@@ -3,6 +3,9 @@ public class UpdatePaymentModeValue_Test {
     
     static testMethod void UpdatePaymentModeValue()
     {   
+        loan__Org_Parameters__c cso = new loan__Org_Parameters__c(loan__Disable_Triggers__c = true);
+        insert cso;
+        
         loan__Payment_Mode__c lp=new loan__Payment_Mode__c();
         lp.Name='Waived';
         lp.loan__Summary__c=False;
@@ -151,10 +154,12 @@ public class UpdatePaymentModeValue_Test {
         String Id=lpt.Id;
         string Id1=dummyPmt2.Id;
         
+        //cso.loan__Disable_Triggers__c = true;
+        //update cso;
+
+        
         List<string> testdata=new List<string>();
         testdata.add(Id);
         UpdatePaymentModeValue.PaymentModeVal(testdata);
-        
-        
     }
 }

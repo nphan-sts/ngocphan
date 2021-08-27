@@ -2,18 +2,30 @@
 private class WSDeliveryDocumentsTest {
 
     @isTest static void testGetDocuments() {
+        
+        genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
+        insert cso;
+        
         String leadId = '9ffffff9-9fff-f999-ff99-9f9f9f9f9f9f';
     	String boxUrl = 'https://test.app.box.com/file/00000000000';
 
         Account acct = TestDataFactory.createTestAccount();
+        acct.peer__First_Name__c = 'FirstName';
+        acct.peer__Last_Name__c = 'LastName';
         insert acct;
 
         Account inv = TestDataFactory.createTestInvestor();
         insert inv;
+        
+        cso.genesis__Disable_Triggers__c = false;
+        update cso;
 
         genesis__Applications__c application = TestDataFactory.createTestApplication(acct.Id, inv.Id, leadId,
         	Date.today().addDays(2), 'Approved for funding');
         insert application;
+        
+        cso.genesis__Disable_Triggers__c = true;
+        update cso;
 
         clcommon__Party_Type__c partyType = TestDataFactory.createTestPartyType('BORROWER');
         insert partyType;
@@ -71,9 +83,15 @@ private class WSDeliveryDocumentsTest {
         System.assertEquals(boxUrl, jsonRes.get('credit_authorization').get(0));
         System.assertEquals(boxUrl, jsonRes.get('privacy_notice').get(0));
         System.assertEquals(jsonRes.get('bank_statement').size(), 3);
+        
+        cso.genesis__Disable_Triggers__c = false;
+        //update cso;
     }
 
     @isTest static void testGetDocumentsNoLeadId() {
+        genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
+        insert cso;
+        
         RestRequest req = new RestRequest();
         RestResponse res = new RestResponse();
 
@@ -89,5 +107,8 @@ private class WSDeliveryDocumentsTest {
 
         System.assertEquals(400, res.statusCode);
         System.assertEquals('lead_id is required', res.responseBody.toString());
+        
+        cso.genesis__Disable_Triggers__c = false;
+        update cso;
     }
 }
