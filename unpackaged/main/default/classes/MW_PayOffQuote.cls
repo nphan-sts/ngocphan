@@ -17,6 +17,9 @@ public with sharing class MW_PayOffQuote {
         
         PayoffQuoteWrapper quoteRecord =  MW_PayOffQuote.Get(pLoanName,pPayOffDate);
         
+        //To is to assign System Date when quote record is created.
+        loan.GlobalLoanUtilFacade util = new loan.GlobalLoanUtilFacade();
+        Date systemdate = util.getcurrentsystemdate();
         
         if(quoteRecord != null && quoteRecord.status == 'Success' && quoteRecord.payoffQuote != null){
           
@@ -25,6 +28,8 @@ public with sharing class MW_PayOffQuote {
                 
                 //Quote record is inserted in salesforce here.
 				quoteRecord.payoffQuote.Name = 'MPR' + ' - ' + quoteRecord.payOffQuote.loan__Loan_Account__c + ' - '+pPayOffDate;
+               // Assigning system date to the newly created quote record's transaction date field.
+                quoteRecord.payoffQuote.loan__Poq_Transaction_Date__c = systemdate;
                 insert quoteRecord.payoffQuote;
                 
             }
