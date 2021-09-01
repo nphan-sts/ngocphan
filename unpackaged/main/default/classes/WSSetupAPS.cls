@@ -4,7 +4,11 @@
  *    Pallavi       2020/01/27    LOS-28(Remove references to InvestorAccount field on CL contract)
  *    Neha          2020/11/18    CRM-845
  * 	  Anusha		2021/03/3	  LSP-186 LAI-00076377 - error message from CLS lately for payments posted via the API CLS case #02613860
+ * 	  Anusha		2021/05/11	  LSP-97  Support Manual Payers (+auto payers) Making Principal Only Payments
+ * 	  Anusha		2021/05/11	  LSP-224 Revisit installment flag logic - Payoff payment goes to excess or P/I instead closing the loan Case#: 02701590
+ * 	  Anusha		2021/05/13    LSP-223 Charged Off loans - Submit recover payment from Member Portal
  ******************Modification History*****************************************************************/
+
 @RestResource(urlMapping='/OTPOMBPEndpoint/*')
 global class WSSetupAPS {
     
@@ -72,6 +76,7 @@ global class WSSetupAPS {
         String paymentModeName;
         String type;
         String manualSpreadName;
+        String chargeoffspreadname = 'Default Write Off Recovery Spread';//LSP-223
         
         Date debitDate;
         Date recurringACHEndDate;
@@ -79,7 +84,7 @@ global class WSSetupAPS {
         Date setupDate;
         Boolean installmentPayment;
         
-        List<loan__Loan_Account__c> loanAccountsList = [Select Id, Name, loan__Maturity_Date_Current__c, 
+        List<loan__Loan_Account__c> loanAccountsList = [Select Id, Name,loan__Loan_Status__c,loan__Maturity_Date_Current__c, //LSP-223 (added loan__Loan_Status__c)
                                                         loan__Contact__c, loan__Account__c, loan__Last_Accrual_Date__c, 
                                                         loan__Product_Type__c
                                                         from loan__loan_account__c
@@ -191,9 +196,14 @@ global class WSSetupAPS {
                 automatedPaymentSetup.loan__Debit_Date__c = debitDate;
                 automatedPaymentSetup.loan__Recurring_ACH_Start_Date__c = recurringACHStartDate;
                 automatedPaymentSetup.loan__Recurring_ACH_End_Date__c = recurringACHEndDate;
-                automatedPaymentSetup.loan__Setup_Date__c = setupDate;                
-                automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId( manualSpreadName);
-                
+                automatedPaymentSetup.loan__Setup_Date__c = setupDate;   
+                //LSP-223 (added a condition for charge off loans)
+                if(loanAccount.loan__Loan_Status__c.equalsIgnoreCase(loan.LoanConstants.LOAN_STATUS_CLOSED_WRITTEN_OFF)){
+                 	automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId(chargeoffspreadname); 
+                }else{
+                	automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId( manualSpreadName);
+                } System.debug('automatedPaymentSetup.loan__Loan_Payment_Spread__c: '+automatedPaymentSetup.loan__Loan_Payment_Spread__c);
+                 
                 if(manualSpreadName != NULL){
                     System.debug(logginglevel.error,'In IF :: manualSpreadName != NULL ');
                     automatedPaymentSetup.loan__Installment_Payment__c = installmentPayment;
@@ -254,11 +264,11 @@ global class WSSetupAPS {
         
     }
     
-    public static Id getPaymentSpreadId(String manualSpreadName) {
-        if(String.isNotBlank(manualSpreadName)) {
-            List<loan__Loan_Payment_Spread__c> pmtSpreads = [SELECT Id,Name,loan__Order_Of_Payment__c FROM loan__Loan_Payment_Spread__c WHERE Name = :manualSpreadName];
+    public static Id getPaymentSpreadId(String paymentSpreadName) {//LSP-223 (generalized the parameter name)
+        if(String.isNotBlank(paymentSpreadName)) {
+            List<loan__Loan_Payment_Spread__c> pmtSpreads = [SELECT Id,Name,loan__Order_Of_Payment__c FROM loan__Loan_Payment_Spread__c WHERE Name = :paymentSpreadName];
             if(pmtSpreads == null || pmtSpreads.size() == 0) {
-                throw new APSException('Invalid Spread provided: ' + manualSpreadName);
+                throw new APSException('Invalid Spread provided: ' + paymentSpreadName);
             }
             return pmtSpreads.get(0).Id;
         }
@@ -314,7 +324,7 @@ global class WSSetupAPS {
         loan__Loan_Account__c loanAccount = getloanAccountDetails(LeadId);
         
         /*LOS-28*/
-        loan__Investor_Loan__c investor = [select id,name,loan__Account__c from loan__Investor_Loan__c where loan__Loan__c =: loanAccount.id and loan__Status__c = 'Active' limit 1];
+        loan__Investor_Loan__c investor = [select id,name,loan__Account__c from loan__Investor_Loan__c where loan__Loan__c =: loanAccount.id and (loan__Status__c IN ('Active','Closed - Written Off')) limit 1];//LSP-223
         /*LOS-28*/
         
         try{
@@ -348,6 +358,7 @@ global class WSSetupAPS {
                                     loan__Loan_Status__c,
                                     loan__Next_Due_Generation_Date__c,
                                     loan__Next_Installment_Date__c, 
+                                    loan__Last_Accrual_Date__c,//LSP-223 added LAD
                                     (select id,name,
                                     loan__Due_Date__c,loan__Transaction_Date__c 
                                     from loan__Dues_Details__r
@@ -365,19 +376,32 @@ global class WSSetupAPS {
             futureBill = LA.loan__Dues_Details__r[0];
             System.debug(logginglevel.error,'futureBill ::' +futureBill);
         }
-                                    
+                
+        /*Installment payment logic:
+         		* Any additional payment done, should go towards principal component and not to excess
+        	 	* When borrower does payoff payment, the loan should get closed, it should not create excess transaction
+         		* To support auto/manual payers to make principal only payments 
+				* When one time APS is created with debit date < LAD(when LAD > system date), then the installment flag should be true 
+				*/
+        
         if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Good Standing')
            && futureBill != NULL ){        
             installmentFlagValue = true;
             System.debug(logginglevel.error,'In IF ::' +installmentFlagValue);
         
-        }else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Good Standing')
+        }
+        //LSP-97 and LSP-224 - start
+        else if((LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Good Standing') && LA.loan__Last_Accrual_Date__c > systemdate)){
+           installmentFlagValue = true;
+           System.debug(logginglevel.error,'IF Future LAD  ::' +installmentFlagValue);            
+        }//LSP-97 and LSP-224 - end
+        else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Good Standing')
            && futureBill == NULL && LA.loan__Next_Due_Generation_Date__c <= txnDate
            && LA.loan__Next_Installment_Date__c > txnDate){
            installmentFlagValue = true;
             System.debug(logginglevel.error,'IN 1st ELSE IF ::' +installmentFlagValue);            
-        
-        }else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Bad Standing')
+        }
+        else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Bad Standing')
         && futureBill != NULL && txnAmount > LA.loan__Delinquent_Amount__c ){
             installmentFlagValue = true;
             System.debug(logginglevel.error,'IN 2nd ELSE IF ::' +installmentFlagValue);
