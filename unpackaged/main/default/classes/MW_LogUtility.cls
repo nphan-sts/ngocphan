@@ -118,6 +118,16 @@ public class MW_LogUtility {
     }
 
     /**
+     * A trigger safe implementation of info logging
+     * @param cls The class where it occurs
+     * @param label A label to unite this log messages with others of same variety
+     * @param info A map containing useful information for context
+     */
+    public static void infoMessage(String cls, String label, Object info) {
+        new MW_LogTriggerHelper().construct('Info Message', cls, label, 'Info', JSON.serialize(info));
+    }
+
+    /**
      * Log out a *warning* with generic Data. Anything can be passed into data so that
      *  the structure can be defined by the developer.
      */
@@ -219,5 +229,49 @@ public class MW_LogUtility {
      */
     public static Boolean isStatusCodeError(Integer statusCode) {
         return statusCode >= 500;
+    }
+
+    /**
+     * Returns a log safe version of an application list
+     * @param apps The list of applications pref with id, lead id and status
+     * @return A list containing data from getLogInfo
+     */
+    public static List<Map<String, Object>> toLoggableApps(List<genesis__Applications__c> apps) {
+        List<Map<String, Object>> logs = new List<Map<String, Object>>();
+        if (apps == null) {
+            return logs;
+        }
+        for (genesis__Applications__c app : apps) {
+            logs.add(toLoggableApp(app));
+        }
+        return logs;
+    }
+
+    /**
+     * Returns a log safe version of an application
+     * @param app Application object pref with id, lead id and status
+     * @return returns a map containing app id, lead id and status only.
+     */
+    public static Map<String, Object> toLoggableApp(genesis__Applications__c app) {
+
+        String appId;
+        String leadId;
+        String status;
+
+        if (app == null) {
+            appId = 'Null app, no id';
+            leadId = 'Null app, no lead id';
+            status = 'Null app, no status';
+        } else {
+            appId = app.Id;
+            leadId = app.Lead_ID__c;
+            status = app.genesis__Status__c;
+        }
+
+        Map<String, Object> msg = new Map<String, Object>();
+        msg.put('Id', appId);
+        msg.put('Lead_ID__c', leadId);
+        msg.put('genesis__Status__c', status);
+        return msg;
     }
 }

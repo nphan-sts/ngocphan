@@ -1,6 +1,12 @@
 @isTest
 public with sharing class MW_WebhookControlHandlerTest  {
 
+    @TestSetup static void setup(){
+        MW_Settings__c mwSetting = new MW_Settings__c();
+        mwSetting.FE_User_Filter__c = 'serviceapi@happymoney.com.cliqa';
+        insert mwSetting;
+    }
+
     static testMethod void TestTilRequest()
     {
         Test.startTest();
