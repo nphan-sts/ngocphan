@@ -124,10 +124,18 @@ private class MW_LogUtilityTest {
 		genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
 		app.Lead_ID__c = 'aaaa-bbbb-cccc-dddd';
 		app.genesis__Status__c = 'advp';
-		app.Investor__c = investor.Id;
 		insert app;
 
+		MW_LogUtility.infoMessage('classInfo', 'no investor or date scenario', app);
+
+		app.Investor__c = investor.Id;
+		app.Last_Investor_Assigned_On__c = Datetime.newInstance(2021, 5, 28, 1, 6, 8);
+		update app;
+
 		List<genesis__Applications__c> apps = new List<genesis__Applications__c>();
+		List<Map<String, Object>> emptyListLog = MW_LogUtility.toLoggableApps(apps);
+		MW_LogUtility.infoMessage('classInfo', 'empty apps scenario', emptyListLog);
+
 		apps.add(app);
 
 		List<Map<String, Object>> appInfos = MW_LogUtility.toLoggableApps(apps);
