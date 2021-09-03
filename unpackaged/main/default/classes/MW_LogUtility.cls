@@ -290,17 +290,23 @@ public class MW_LogUtility {
         String leadId;
         String status;
         String investor;
+        String lastAssignedOn;
 
         if (app == null) {
             appId = 'Null app, no id';
             leadId = 'Null app, no lead id';
             status = 'Null app, no status';
             investor = 'Null app no investor';
+            lastAssignedOn = 'Null app no investor last assigned date';
         } else {
             appId = app.Id;
             leadId = app.Lead_ID__c;
             status = app.genesis__Status__c;
             investor = app.Investor__c;
+
+            if (app.Last_Investor_Assigned_On__c != null) {
+                lastAssignedOn = app.Last_Investor_Assigned_On__c.formatGmt('EEE, MMM d yyyy HH:mm:ss');
+            }
         }
 
         Map<String, Object> msg = new Map<String, Object>();
@@ -308,6 +314,7 @@ public class MW_LogUtility {
         msg.put('Lead_ID__c', leadId);
         msg.put('genesis__Status__c', status);
         msg.put('Investor__c', investor);
+        msg.put('Last_Investor_Assigned_On__c', lastAssignedOn);
         return msg;
     }
 }

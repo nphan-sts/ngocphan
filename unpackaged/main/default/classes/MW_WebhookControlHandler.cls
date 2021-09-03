@@ -210,6 +210,8 @@ global with sharing class MW_WebhookControlHandler {
         }
         catch (Exception e)
         {
+            MW_LogUtility.error('MW_WebhookControlHandler', '', '', 'ServiceHelper', e);
+
             //ApexPages.addMessages(e);
             Messaging.SingleEmailMessage mail=new Messaging.SingleEmailMessage();
             String[] toAddresses = new String[] {'cpalapala@happymoney.com'};
