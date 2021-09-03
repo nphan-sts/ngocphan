@@ -19,6 +19,17 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
         public Boolean isDcpEligibleFieldUpdated = false;
         System.debug('CustomTriggerOnApplication');
 
+        Map<String, Object> logs = new Map<String, Object>();
+        logs.put('isUpdate', Trigger.isUpdate);
+        logs.put('isInsert', Trigger.isInsert);
+        logs.put('isAfter', Trigger.isAfter);
+        logs.put('isBefore', Trigger.isBefore);
+        logs.put('isExecuting', Trigger.isExecuting);
+        logs.put('isUndelete', Trigger.isUndelete);
+        logs.put('trigger.new', MW_LogUtility.toLoggableApps(Trigger.new));
+        logs.put('trigger.old', MW_LogUtility.toLoggableApps(Trigger.old));
+        MW_LogUtility.infoMessage('CustomTriggerOnApplication', 'Invocation Entry', logs);
+
         if (!genesis.CustomSettingsUtil.getOrgParameters().genesis__Disable_Triggers__c ) {
             MW_Settings__c mwsetting = MW_Settings__c.getOrgDefaults();
 
