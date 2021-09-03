@@ -280,7 +280,8 @@ public class MW_LogUtility {
     }
 
     /**
-     * Returns a log safe version of an application
+     * Returns a log safe version of an application (avoid PII)
+     * Checks before outputting, so developer friendly if not in SOQL query
      * @param app Application object pref with id, lead id and status
      * @return returns a map containing app id, lead id and status only.
      */
@@ -299,12 +300,22 @@ public class MW_LogUtility {
             investor = 'Null app no investor';
             lastAssignedOn = 'Null app no investor last assigned date';
         } else {
-            appId = app.Id;
-            leadId = app.Lead_ID__c;
-            status = app.genesis__Status__c;
-            investor = app.Investor__c;
 
-            if (app.Last_Investor_Assigned_On__c != null) {
+            Map<String, Object> fieldValues = app.getPopulatedFieldsAsMap();
+
+            if (fieldValues.get('Id') != null) {
+                appId = app.Id;
+            }
+            if (fieldValues.get('Lead_ID__c') != null) {
+                leadId = app.Lead_ID__c;
+            }
+            if (fieldValues.get('genesis__Status__c') != null) {
+                status = app.genesis__Status__c;
+            }
+            if (fieldValues.get('Investor__c') != null) {
+                investor = app.Investor__c;
+            }
+            if (fieldValues.get('Last_Investor_Assigned_On__c') != null) {
                 lastAssignedOn = app.Last_Investor_Assigned_On__c.formatGmt('EEE, MMM d yyyy HH:mm:ss');
             }
         }
@@ -315,6 +326,7 @@ public class MW_LogUtility {
         msg.put('genesis__Status__c', status);
         msg.put('Investor__c', investor);
         msg.put('Last_Investor_Assigned_On__c', lastAssignedOn);
+
         return msg;
     }
 }

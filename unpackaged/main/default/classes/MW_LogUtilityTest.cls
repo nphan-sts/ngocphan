@@ -126,7 +126,14 @@ private class MW_LogUtilityTest {
 		app.genesis__Status__c = 'advp';
 		insert app;
 
-		MW_LogUtility.infoMessage('classInfo', 'no investor or date scenario', app);
+		genesis__Applications__c noInvestorOrDateApp = [SELECT Lead_ID__c,
+																genesis__Status__c
+														FROM   genesis__Applications__c
+														WHERE Id = : app.Id
+														LIMIT 1];
+
+		Map<String, Object> logNoInvestorOrApp = MW_LogUtility.toLoggableApp(noInvestorOrDateApp);
+		MW_LogUtility.infoMessage('classInfo', 'no investor or date scenario', logNoInvestorOrApp);
 
 		app.Investor__c = investor.Id;
 		app.Last_Investor_Assigned_On__c = Datetime.newInstance(2021, 5, 28, 1, 6, 8);
