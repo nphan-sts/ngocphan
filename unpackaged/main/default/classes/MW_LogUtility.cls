@@ -232,6 +232,38 @@ public class MW_LogUtility {
     }
 
     /**
+     * So long as you execute within a Trigger, this method works.
+     * @param trigger trigger to get context from
+     * @return Map containing only those which are true
+     */
+    public static List<String> toLoggableTrigger() {
+        List<String> context = new List<String>();
+
+        if (Trigger.isAfter) {
+            context.add('isAfter');
+        }
+        if (Trigger.isBefore) {
+            context.add('isBefore');
+        }
+        if (Trigger.isInsert) {
+            context.add('isInsert');
+        }
+        if (Trigger.isUpdate) {
+            context.add('isUpdate');
+        }
+        if (Trigger.isDelete) {
+            context.add('isDelete');
+        }
+        if (Trigger.isUndelete) {
+            context.add('isUndelete');
+        }
+        if (Trigger.isExecuting) {
+            context.add('isExecuting');
+        }
+        return context;
+    }
+
+    /**
      * Returns a log safe version of an application list
      * @param apps The list of applications pref with id, lead id and status
      * @return A list containing data from getLogInfo
@@ -257,21 +289,25 @@ public class MW_LogUtility {
         String appId;
         String leadId;
         String status;
+        String investor;
 
         if (app == null) {
             appId = 'Null app, no id';
             leadId = 'Null app, no lead id';
             status = 'Null app, no status';
+            investor = 'Null app no investor';
         } else {
             appId = app.Id;
             leadId = app.Lead_ID__c;
             status = app.genesis__Status__c;
+            investor = app.Investor__c;
         }
 
         Map<String, Object> msg = new Map<String, Object>();
         msg.put('Id', appId);
         msg.put('Lead_ID__c', leadId);
         msg.put('genesis__Status__c', status);
+        msg.put('Investor__c', investor);
         return msg;
     }
 }

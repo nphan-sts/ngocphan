@@ -118,9 +118,13 @@ private class MW_LogUtilityTest {
 
 		Test.startTest();
 
+		Account investor = MW_GlobalTestUtility.GetAccount('Investor');
+		insert investor;
+
 		genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
 		app.Lead_ID__c = 'aaaa-bbbb-cccc-dddd';
 		app.genesis__Status__c = 'advp';
+		app.Investor__c = investor.Id;
 		insert app;
 
 		List<genesis__Applications__c> apps = new List<genesis__Applications__c>();
