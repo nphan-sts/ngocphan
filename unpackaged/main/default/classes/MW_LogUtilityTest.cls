@@ -113,6 +113,39 @@ private class MW_LogUtilityTest {
 		Test.stopTest();
 	}
 
+	@IsTest
+	static void testAppLoggablesAndInfo() {
+
+		Test.startTest();
+
+		genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
+		app.Lead_ID__c = 'aaaa-bbbb-cccc-dddd';
+		app.genesis__Status__c = 'advp';
+		insert app;
+
+		List<genesis__Applications__c> apps = new List<genesis__Applications__c>();
+		apps.add(app);
+
+		List<Map<String, Object>> appInfos = MW_LogUtility.toLoggableApps(apps);
+
+		System.assert(appInfos != null);
+		System.assertEquals(1, appInfos.size());
+		Map<String, Object> appInfo = appInfos.get(0);
+
+		System.assertEquals(app.Id, appInfo.get('Id'));
+		System.assertEquals('aaaa-bbbb-cccc-dddd', appInfo.get('Lead_ID__c'));
+		System.assertEquals('advp', appInfo.get('genesis__Status__c'));
+		MW_LogUtility.infoMessage('classInfo', 'label', appInfos);
+
+		Map<String, Object> nullAppInfo = MW_LogUtility.toLoggableApp(null);
+		MW_LogUtility.infoMessage('classInfo', 'null object scenario', nullAppInfo);
+
+		List<Map<String, Object>> nullAppInfos = MW_LogUtility.toLoggableApps(null);
+		MW_LogUtility.infoMessage('classInfo', 'null objects scenario', nullAppInfos);
+
+		Test.stopTest();
+	}
+
 	@isTest
 	static void testBatchLogs() {
 		Test.startTest();

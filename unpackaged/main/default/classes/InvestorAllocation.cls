@@ -327,6 +327,10 @@ public with sharing class InvestorAllocation{
                                             FROM genesis__Applications__c
                                             WHERE id =: appId];
 
+           Map<String, Object> log = new Map<String, Object>();
+           log.put('app', MW_LogUtility.toLoggableApp(app));
+           MW_LogUtility.infoMessage('InvestorAllocation', 'Invocation Entry', log);
+
             List<DCP_arcus_transactions__c> txns = new List<DCP_arcus_transactions__c>();
             txns = [select id from DCP_arcus_transactions__c where application__c =: appId];
             system.debug('Txns: .. '+ txns.size());
@@ -539,12 +543,7 @@ public with sharing class InvestorAllocation{
                         }
                         
                          else {
-                            clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
-                            bpl.clcommon__Log_Level__c = 'INFO';
-                            bpl.clcommon__Type__c = 'Info';
-                            bpl.clcommon__Batch_Id__c = app.id;
-                            bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
-                            lstBpl.add(bpl);
+                           addBatchLogsToList(lstBpl, acc, app);
                         }
                         
                     }
