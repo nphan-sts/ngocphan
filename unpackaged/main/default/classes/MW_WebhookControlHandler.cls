@@ -92,7 +92,7 @@ global with sharing class MW_WebhookControlHandler {
 
                 Map<String, Object> log = new Map<String, Object>();
                 log.put('RequestType', params.get('RequestType'));
-                log.put('apps', MW_LogUtility.toLoggableApps(app));
+                log.put('message', MW_LogUtility.toLoggableApps(app));
                 MW_LogUtility.infoMessage('MW_WebhookControlHandler', 'Invocation Entry', log);
 
                 if(app.size() > 0)

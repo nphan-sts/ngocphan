@@ -328,7 +328,7 @@ public with sharing class InvestorAllocation{
                                             WHERE id =: appId];
 
            Map<String, Object> log = new Map<String, Object>();
-           log.put('app', MW_LogUtility.toLoggableApp(app));
+           log.put('message', MW_LogUtility.toLoggableApp(app));
            MW_LogUtility.infoMessage('InvestorAllocation', 'Invocation Entry', log);
 
             List<DCP_arcus_transactions__c> txns = new List<DCP_arcus_transactions__c>();
