@@ -1,3 +1,9 @@
+/* ****************Modification History*****************************************************************
+ * Modified by      Date         JIRA number  Description
+ * Mohan Kiran   2021/08/11       LSP-327 	  Used the endpoint CL_WebhookControlHandler to get Payoff parameters and pass the payoff quote back and save it in salesforce
+ 
+ *******************Modification History*****************************************************************/
+
 @RestResource(urlMapping='/CL_MiddleWare/*')
 global with sharing class MW_WebhookControlHandler {
 
@@ -5,6 +11,7 @@ global with sharing class MW_WebhookControlHandler {
     global static String handleRequest(){
         RestRequest req = RestContext.request;
         RestResponse res = RestContext.response;
+        
         return ServiceHelper(req, res);
     }
 
@@ -12,6 +19,7 @@ global with sharing class MW_WebhookControlHandler {
     global static String handleGetRequest(){
         RestRequest req = RestContext.request;
         RestResponse res = RestContext.response;
+		
         return ServiceGetHelper(req, res);
     }
 
@@ -22,7 +30,7 @@ global with sharing class MW_WebhookControlHandler {
 
             if(params.size()>0)
             {
-
+               
                 if(params.get('RequestType')=='ECA') {
                     List<Document> ecaAttachment = new List<Document>([select Id, Body, Name from Document where name ='eca' order by CreatedDate desc limit 1]);
                     if(ecaAttachment.size()>0)
@@ -51,6 +59,8 @@ global with sharing class MW_WebhookControlHandler {
                         if(csnAttachment.size()>0)
                             return EncodingUtil.base64Encode(csnAttachment[0].Body);
                     }
+                    
+                    
                 }
 
                 else{
@@ -61,11 +71,12 @@ global with sharing class MW_WebhookControlHandler {
         }
         catch (Exception e)
         {
+            system.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>Entering exception'+e);
             ApexPages.addMessages(e);
             Messaging.SingleEmailMessage mail=new Messaging.SingleEmailMessage();
-            String[] toAddresses = new String[] {'cpalapala@happymoney.com'};
+            String[] toAddresses = new String[] {'salesforceapi@happymoney.com'};
             mail.setToAddresses(toAddresses);
-            mail.setReplyTo('stiwari@happymoney.com');
+            mail.setReplyTo('salesforceapi@happymoney.com');
             mail.setSenderDisplayName('MW: Apex error message');
             mail.setSubject('Error from Org : ' + UserInfo.getOrganizationName());
             mail.setPlainTextBody('TIL Document Exception' +e.getMessage());
@@ -79,19 +90,31 @@ global with sharing class MW_WebhookControlHandler {
 
 
     global static String ServiceHelper(RestRequest req, RestResponse res){
+        
         try
         {
             Map <String, String> params      = req.params;
             String requestBody = req.requestBody.toString();
-
-
+			
             if(params.size()>0 && params.get('Lead_ID')!=null)
             {
+                
                 String Lead_Id                         = params.get('Lead_ID');
                 List<genesis__Applications__c> app     = new List<genesis__Applications__c>([select Id, genesis__Account__c, genesis__Status__c, owner.name from genesis__Applications__c where Lead_ID__c=: Lead_Id limit 1]);
 
                 if(app.size() > 0)
                 {
+                    /*START - Mohan Kiran Added the code block to generate payoff quote - LSP-327*/
+                    // Pass the parameters to the MW_PayoffQuote if the request type is payoff_quote. 
+                    
+                    if(params.get('RequestType')=='payoff_quote') {
+                    String loanId = params.get('LoanId');
+                    String payOffDate = params.get('PayOffDate');
+                        
+                    return MW_PayOffQuote.Save(loanId, payOffDate);
+                }
+					/*END- Code change LSP-327*/
+                    
                     /* credit_optic */
                     if(params.get('RequestType')=='credit_optic'){
                         MW_CreditOptic.CreditOptic co =  MW_CreditOptic.ParseCreditOptic(requestBody);
@@ -196,6 +219,8 @@ global with sharing class MW_WebhookControlHandler {
                     if(params.get('RequestType') == 'dcp_transactions') {
                         MW_DCPTransactions.storeDCPTransactions(app, requestBody);
                     }
+                    
+                    
 
                 }else{
                     res.statusCode = 500;
@@ -207,9 +232,9 @@ global with sharing class MW_WebhookControlHandler {
         {
             //ApexPages.addMessages(e);
             Messaging.SingleEmailMessage mail=new Messaging.SingleEmailMessage();
-            String[] toAddresses = new String[] {'cpalapala@happymoney.com'};
+            String[] toAddresses = new String[] {'salesforceapi@happymoney.com'};
             mail.setToAddresses(toAddresses);
-            mail.setReplyTo('stiwari@happymoney.com');
+            mail.setReplyTo('salesforceapi@happymoney.com');
             mail.setSenderDisplayName('MW: Apex error message');
             mail.setSubject('Error from Org : ' + UserInfo.getOrganizationName());
             mail.setPlainTextBody(e.getMessage());
