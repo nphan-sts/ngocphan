@@ -100,6 +100,27 @@ public class MW_LogUtility {
         }
     }
 
+    /*
+     For using in both application triggers.
+     */
+    public static Map<String, Object> applicationTriggerEntryLog() {
+        Map<String, Object> logs = new Map<String, Object>();
+        logs.put('trigger.context', MW_LogUtility.toLoggableTrigger());
+        if (Trigger.isInsert) {
+            logs.put('trigger.new', MW_LogUtility.toLoggableApps(Trigger.new));
+        } else if (Trigger.isUpdate) {
+            logs.put('trigger.on', MW_LogUtility.toLoggableObjs(Trigger.old,
+                    new List<String> {'Id', 'Lead_ID__c'}));
+            logs.put('trigger.diffs',
+                    MW_LogUtility.toTriggerUpdateDiffs(
+                            new List<String> {'genesis__Status__c',
+                                            'Investor__c',
+                                            'Last_Investor_Assigned_On__c'}));
+        }
+        logs.put('InvestorAllocation.allocationForADVPcalled', InvestorAllocation.allocationForADVPcalled);
+        return logs;
+    }
+
     /**
      * Log out an exception object.
      */
