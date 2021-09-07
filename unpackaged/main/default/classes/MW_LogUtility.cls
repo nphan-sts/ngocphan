@@ -106,17 +106,19 @@ public class MW_LogUtility {
     public static Map<String, Object> applicationTriggerEntryLog() {
         Map<String, Object> logs = new Map<String, Object>();
         logs.put('trigger.context', MW_LogUtility.toLoggableTrigger());
+        Map<String, Object> message = new Map<String, Object>();
         if (Trigger.isInsert) {
-            logs.put('trigger.new', MW_LogUtility.toLoggableApps(Trigger.new));
+            message.put('new', MW_LogUtility.toLoggableApps(Trigger.new));
         } else if (Trigger.isUpdate) {
-            logs.put('trigger.on', MW_LogUtility.toLoggableObjs(Trigger.old,
+            message.put('on', MW_LogUtility.toLoggableObjs(Trigger.old,
                     new List<String> {'Id', 'Lead_ID__c'}));
-            logs.put('trigger.diffs',
+            message.put('diffs',
                     MW_LogUtility.toTriggerUpdateDiffs(
                             new List<String> {'genesis__Status__c',
                                             'Investor__c',
                                             'Last_Investor_Assigned_On__c'}));
         }
+        logs.put('message', message);
         logs.put('InvestorAllocation.allocationForADVPcalled', InvestorAllocation.allocationForADVPcalled);
         return logs;
     }
