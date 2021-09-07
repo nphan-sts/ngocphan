@@ -24,9 +24,7 @@ public class TestCustomAutoWriteOff {
         cso.WriteOffSuggestion__c = 90;
         insert cso;
         
-        Account acc = new Account();
-        acc.Name = 'Test Account';
-        acc.Account_External_ID__c = 'Test';
+        Account acc = new Account( Name = 'Test Account', Account_External_ID__c = 'Test');
         insert acc;
        
         loan.TestHelper.createSeedDataForTesting();

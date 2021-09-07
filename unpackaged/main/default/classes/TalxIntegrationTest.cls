@@ -55,13 +55,11 @@ private class TalxIntegrationTest {
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
             insert cso;
             
-            Account acc = new Account(
-                Name = 'Test',
-                loan__Investor__c=False,
-                cnotify__Email__c = 'abc@test.com',
-                loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-            insert acc;
+            Account acc = MW_GlobalTestUtility.GetAccount('Member');
+            acc.peer__First_Name__c = 'FirstName';
+            acc.peer__Last_Name__c = 'LastName';
+            Insert acc; 
+            
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
             
@@ -262,13 +260,10 @@ private class TalxIntegrationTest {
         insert taxInt;
         
         //Creating Account
-        Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
-        );
-        insert acc;
+        Account acc = MW_GlobalTestUtility.GetAccount('Member');
+        acc.peer__First_Name__c = 'FirstName';
+        acc.peer__Last_Name__c = 'LastName';
+        Insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
         
         genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
@@ -318,13 +313,10 @@ private class TalxIntegrationTest {
             insert taxInt;
             
             //Creating Account
-            Account acc = new Account(
-                Name = 'Test',
-                loan__Investor__c=False,
-                cnotify__Email__c = 'abc@test.com',
-                loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-            insert acc;
+            Account acc = MW_GlobalTestUtility.GetAccount('Member');
+            acc.peer__First_Name__c = 'FirstName';
+            acc.peer__Last_Name__c = 'LastName';
+            Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
@@ -377,13 +369,10 @@ private class TalxIntegrationTest {
             insert taxInt;
             
             //Creating Account
-            Account acc = new Account(
-                Name = 'Test',
-                loan__Investor__c=False,
-                cnotify__Email__c = 'abc@test.com',
-                loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-            insert acc;
+            Account acc = MW_GlobalTestUtility.GetAccount('Member');
+            acc.peer__First_Name__c = 'FirstName';
+            acc.peer__Last_Name__c = 'LastName';
+            Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
@@ -435,13 +424,10 @@ private class TalxIntegrationTest {
             insert taxInt;
             
             //Creating Account
-            Account acc = new Account(
-                Name = 'Test',
-                loan__Investor__c=False,
-                cnotify__Email__c = 'abc@test.com',
-                loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-            insert acc;
+            Account acc = MW_GlobalTestUtility.GetAccount('Member');
+            acc.peer__First_Name__c = 'FirstName';
+            acc.peer__Last_Name__c = 'LastName';
+            Insert acc;
             
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
             insert cso;
@@ -502,13 +488,10 @@ private class TalxIntegrationTest {
             insert taxInt;
             
             //Creating Account
-            Account acc = new Account(
-                Name = 'Test',
-                loan__Investor__c=False,
-                cnotify__Email__c = 'abc@test.com',
-                loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-            insert acc;
+            Account acc = MW_GlobalTestUtility.GetAccount('Member');
+            acc.peer__First_Name__c = 'FirstName';
+            acc.peer__Last_Name__c = 'LastName';
+            Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
@@ -545,13 +528,10 @@ private class TalxIntegrationTest {
     
     static testMethod void testParseTalxResponseInvalidResponseWithTalxVerfication() {
         try{
-            Account acc = new Account(
-                Name = 'Test',
-                loan__Investor__c=False,
-                cnotify__Email__c = 'abc@test.com',
-                loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-            insert acc;
+            Account acc = MW_GlobalTestUtility.GetAccount('Member');
+            acc.peer__First_Name__c = 'FirstName';
+            acc.peer__Last_Name__c = 'LastName';
+            Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
@@ -592,13 +572,10 @@ private class TalxIntegrationTest {
     
     static testMethod void testParseTalxResponseInvalidResponseWithCallTalx() {
         try{
-            Account acc = new Account(
-                Name = 'Test',
-                loan__Investor__c=False,
-                cnotify__Email__c = 'abc@test.com',
-                loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-            insert acc;
+            Account acc = MW_GlobalTestUtility.GetAccount('Member');
+            acc.peer__First_Name__c = 'FirstName';
+            acc.peer__Last_Name__c = 'LastName';
+            Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
@@ -654,13 +631,11 @@ private class TalxIntegrationTest {
             taxInt.SetupOwnerId = UserInfo.getUserId();
             taxInt.TalxCertificateName__c = 'talx';  //LOS-168
             insert taxInt;
-            Account acc = new Account(
-                Name = 'Test',
-                loan__Investor__c=False,
-                cnotify__Email__c = 'abc@test.com',
-                loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-            insert acc;
+            
+            Account acc = MW_GlobalTestUtility.GetAccount('Member');
+            acc.peer__First_Name__c = 'FirstName';
+            acc.peer__Last_Name__c = 'LastName';
+            Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
@@ -760,13 +735,10 @@ private class TalxIntegrationTest {
             insert taxInt;
             
             //Creating Account
-            Account acc = new Account(
-                Name = 'Test',
-                loan__Investor__c=False,
-                cnotify__Email__c = 'abc@test.com',
-                loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-            insert acc;
+            Account acc = MW_GlobalTestUtility.GetAccount('Member');
+            acc.peer__First_Name__c = 'FirstName';
+            acc.peer__Last_Name__c = 'LastName';
+            Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
@@ -818,15 +790,10 @@ private class TalxIntegrationTest {
             insert taxInt;
             
             //Creating Account
-            Account acc = new Account(
-                Name = 'Test',
-                loan__Investor__c=False,
-                cnotify__Email__c = 'abc@test.com',
-                peer__First_Name__c = 'FirstName1',
-                peer__Last_Name__c = 'LastName1',
-                loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-            insert acc;
+           Account acc = MW_GlobalTestUtility.GetAccount('Member');
+            acc.peer__First_Name__c = 'FirstName';
+            acc.peer__Last_Name__c = 'LastName';
+            Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);

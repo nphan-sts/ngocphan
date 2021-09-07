@@ -33,16 +33,9 @@ public class TestDeactivateYodleeAccounts {
         insert  ycc;
         
         
-        Account acc = new Account(
-            Name = 'Test1',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'no-reply@testorganization.com',
-            peer__First_Name__c = 'TestFName1',
-            peer__Last_Name__c='TestLName1', 
-            City__c='TestCity',
-            State__c='TestState',
-            ZIP_Code__c='123456'
-        );
+        Account acc = MW_GlobalTestUtility.GetAccount('Member');
+        acc.peer__First_Name__c = 'FirstName';
+        acc.peer__Last_Name__c = 'LastName';
         Insert acc;
         
         ints__Yodlee_User_Credentials__c userCred = new ints__Yodlee_User_Credentials__c();
