@@ -21,8 +21,18 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
 
         Map<String, Object> logs = new Map<String, Object>();
         logs.put('trigger.context', MW_LogUtility.toLoggableTrigger());
-        logs.put('trigger.new', MW_LogUtility.toLoggableApps(Trigger.new));
-        logs.put('trigger.old', MW_LogUtility.toLoggableApps(Trigger.old));
+        if (Trigger.isInsert) {
+            logs.put('trigger.new', MW_LogUtility.toLoggableApps(Trigger.new));
+        } else if (Trigger.isUpdate) {
+            logs.put('trigger.old', MW_LogUtility.toLoggableObjs(Trigger.old,
+                    new List<String> {'Id', 'Lead_ID__c'}));
+            logs.put('trigger.diffs',
+                MW_LogUtility.toTriggerUpdateDiffs(
+                    new List<String> {'genesis__Status__c',
+                                      'Investor__c',
+                                      'Last_Investor_Assigned_On__c'}));
+        }
+        logs.put('InvestorAllocation.allocationForADVPcalled', InvestorAllocation.allocationForADVPcalled);
         MW_LogUtility.infoMessage('CustomTriggerOnApplication', 'Invocation Entry', logs);
 
         if (!genesis.CustomSettingsUtil.getOrgParameters().genesis__Disable_Triggers__c ) {
