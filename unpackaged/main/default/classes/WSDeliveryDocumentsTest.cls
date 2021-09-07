@@ -108,7 +108,6 @@ private class WSDeliveryDocumentsTest {
         System.assertEquals(400, res.statusCode);
         System.assertEquals('lead_id is required', res.responseBody.toString());
         
-        cso.genesis__Disable_Triggers__c = false;
-        update cso;
+        
     }
 }
