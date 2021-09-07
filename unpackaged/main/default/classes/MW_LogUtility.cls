@@ -236,7 +236,7 @@ public class MW_LogUtility {
      * @param trigger trigger to get context from
      * @return Map containing only those which are true
      */
-    public static List<String> toLoggableTrigger() {
+    public static String toLoggableTrigger() {
         List<String> context = new List<String>();
 
         if (Trigger.isAfter) {
@@ -260,7 +260,7 @@ public class MW_LogUtility {
         if (Trigger.isExecuting) {
             context.add('isExecuting');
         }
-        return context;
+        return String.join(context, ', ');
     }
 
     /**
@@ -280,7 +280,7 @@ public class MW_LogUtility {
     }
 
     /**
-     * Returns a log safe version of an application (avoid PII)
+     * Returns a log safe version of an application no PII
      * Checks before outputting, so developer friendly if not in SOQL query
      * @param app Application object pref with id, lead id and status
      * @return returns a map containing app id, lead id and status only.
@@ -328,5 +328,174 @@ public class MW_LogUtility {
         msg.put('Last_Investor_Assigned_On__c', lastAssignedOn);
 
         return msg;
+    }
+
+    /**
+     * Log any field requested
+     * @param sobjs The list of objs with fields for logging
+     * @param fieldKeys The list of fields
+     * @return A list containing data from getLogInfo
+     */
+    public static List<Map<String, Object>> toLoggableObjs(List<SObject> sobjs, List<String> fieldKeys) {
+        List<Map<String, Object>> logs = new List<Map<String, Object>>();
+        if (sobjs == null || sobjs.isEmpty()) {
+            return logs;
+        }
+        for (SObject obj : sobjs) {
+            logs.add(toLoggableObj(obj, fieldKeys));
+        }
+        return logs;
+    }
+
+    /**
+     * Not log safe
+     * Checks before outputting, so developer friendly if not in SOQL query
+     * @param sobj An SObject with fields queried
+     * @param fieldKeys The list of fields
+     * @return returns a map containing requested fields, if available
+     */
+    public static Map<String, Object> toLoggableObj(SObject sobj, List<String> fieldKeys) {
+
+        Map<String, Object> msg = new Map<String, Object>();
+        if (sobj == null) {
+            return msg;
+        }
+
+        Map<String, Object> values = sobj.getPopulatedFieldsAsMap();
+        if (fieldKeys == null || fieldKeys.isEmpty()) {
+            return msg;
+        }
+
+        for (String key : fieldKeys) {
+            Object obj = values.get(key);
+            msg.put(key, toLogValue(obj));
+        }
+
+        return msg;
+    }
+
+    public static List<Map<String, Object>> toTriggerUpdateDiffs() {
+        return toTriggerUpdateDiffs(new List<String>());
+    }
+
+    /**
+     * Generate a list of update diffs in the current executing Trigger
+     * Behaves by rules according toSObjectKeyDiff
+     * @param revealKeys These keys are revealed to the logs in addition to name only in the 'diff'
+     * @return A list of diffs
+     */
+    public static List<Map<String, Object>> toTriggerUpdateDiffs(List<String> revealKeys) {
+        List<Map<String, Object>> diffs = new List<Map<String, Object>>();
+        if (Trigger.isUpdate == null || !Trigger.isUpdate) {
+            return diffs;
+        }
+
+        if (Trigger.newMap == null || Trigger.newMap.isEmpty()) {
+            return diffs;
+        }
+
+        if (Trigger.oldMap == null || Trigger.oldMap.isEmpty()) {
+            return diffs;
+        }
+
+        for (Id id : Trigger.newMap.keySet()) {
+            Map<String, Object> diff = toSObjectKeyDiff(Trigger.newMap.get(id), Trigger.oldMap.get(id), revealKeys);
+            diffs.add(diff);
+        }
+
+        return diffs;
+    }
+
+    public static Map<String, Object> toSObjectKeyDiff(SObject newObject, SObject oldObject) {
+        return toSObjectKeyDiff(newObject, oldObject, new List<String>());
+    }
+
+    /**
+     * A non PII spilling diff.  Outputs Lead ID and App id if Applications
+     * @param newObject The new version
+     * @param oldObject The old version
+     * @param revealKeys Keys to always show in the new object
+     *
+     * @return A map with keys explained insertions, deletions, and updates
+     */
+    public static Map<String, Object> toSObjectKeyDiff(SObject newObject, SObject oldObject, List<String> revealKeys) {
+
+        Map<String, Object> diff = new Map<String, Object>();
+        if (newObject == null) {
+            diff.put('Invalid Diff', 'New object is empty');
+            return diff;
+        } else if (oldObject == null) {
+            diff.put('Invalid Diff', 'Old object is empty');
+            return diff;
+        }
+
+        Map<String, Object> oldm = oldObject.getPopulatedFieldsAsMap();
+        Map<String, Object> newm = newObject.getPopulatedFieldsAsMap();
+        List<String> keys = new List<String>();
+        keys.addAll(newm.keySet());
+        keys.sort();
+
+        List<String> addedList = new List<String>();
+        List<String> removedList = new List<String>();
+        List<String> updateList = new List<String>();
+
+        /*
+        For the reveal keys, output based on new.
+        Otherwise, just report the key that changed.
+         */
+        for (String key : keys) {
+            Boolean isReveal = revealKeys.contains(key);
+            Object oldVal = oldm.get(key);
+            Object newVal = newm.get(key);
+
+            if (oldVal == null && newVal != null) {
+                if (isReveal) {
+                    addedList.add(key + ': [null => ' + toLogValue(newVal) + ']');
+                } else {
+                    addedList.add(key);
+                }
+            } else if (oldVal != null && newVal == null) {
+                if (isReveal) {
+                    removedList.add(key + ': [' + toLogValue(oldVal) + ' => null]');
+                } else {
+                    removedList.add(key);
+                }
+            } else if (oldVal != newVal) {
+                if (isReveal) {
+                    updateList.add(key + ': [' + toLogValue(oldVal) + ' => ' + toLogValue(newVal) + ']');
+                } else {
+                    updateList.add(key);
+                }
+            }
+        }
+
+        if (!addedList.isEmpty()) {
+            diff.put('added', String.join(addedList, ', '));
+        }
+        if (!removedList.isEmpty()) {
+            diff.put('removed', String.join(removedList, ', '));
+        }
+        if (!updateList.isEmpty()) {
+            diff.put('updated', String.join(updateList, ', '));
+        }
+
+        return diff;
+    }
+
+    /**
+     * @param obj Return something loggable.
+     *
+     * @return If null, null, else if date, to string format in gmt.
+     */
+    private static Object toLogValue(Object obj) {
+        if (obj == null) {
+            return 'null';
+        }
+        if (obj instanceof Datetime) {
+            Datetime dt = (Datetime) obj;
+            return dt.formatGmt('EEE, MMM d yyyy HH:mm:ss');
+        } else {
+            return obj;
+        }
     }
 }
