@@ -2,10 +2,7 @@ trigger MW_CustomTriggerOnApplication1 on genesis__Applications__c (after insert
 {
     if(!genesis.CustomSettingsUtil.getOrgParameters().genesis__Disable_Triggers__c) {
 
-		Map<String, Object> logs = new Map<String, Object>();
-		logs.put('trigger.context', MW_LogUtility.toLoggableTrigger());
-		logs.put('trigger.new', MW_LogUtility.toLoggableApps(Trigger.new));
-		logs.put('trigger.old', MW_LogUtility.toLoggableApps(Trigger.old));
+		Map<String, Object> logs = MW_LogUtility.applicationTriggerEntryLog();
 		MW_LogUtility.infoMessage('MW_CustomTriggerOnApplication1', 'Invocation Entry', logs);
 
     	MW_ApplicationTriggerHandler handle = new MW_ApplicationTriggerHandler(trigger.new, trigger.newMap, trigger.oldMap);
