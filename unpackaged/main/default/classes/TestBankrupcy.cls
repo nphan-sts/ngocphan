@@ -7,7 +7,9 @@
 public class TestBankrupcy {
     
     public static testMethod void TestBankrupt(){
-        
+        loan__Org_Parameters__c cso = new loan__Org_Parameters__c(loan__Disable_Triggers__c = true);
+        cso.WriteOffSuggestion__c = 90;
+        insert cso;
         
         Account acc = new Account();
         acc.Name = 'Test Account';
@@ -53,8 +55,6 @@ public class TestBankrupcy {
         dummyLoanPurpose.loan__Loan_Purpose_Code__c = 'Refinance';
         account dummyClient = new account(); 
         dummyClient.Name = 'Payoff';
-        dummyClient.peer__Last_Name__c = 'Account';
-        dummyClient.peer__First_Name__c = 'Test';
         insert dummyClient;
         
         Account invacc = new Account();
@@ -133,6 +133,9 @@ public class TestBankrupcy {
     }
     
     public static Loan__loan_account__c CreateLoanContract(id accId){
+       /* loan__Org_Parameters__c cso = new loan__Org_Parameters__c(loan__Disable_Triggers__c = true);
+        cso.WriteOffSuggestion__c = 90;
+        insert cso;*/
         
         loan.TestHelper.createSeedDataForTesting();
         //Create Currency...

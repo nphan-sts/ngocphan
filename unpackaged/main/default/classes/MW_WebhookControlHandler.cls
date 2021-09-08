@@ -100,7 +100,12 @@ global with sharing class MW_WebhookControlHandler {
             {
                 
                 String Lead_Id                         = params.get('Lead_ID');
-                List<genesis__Applications__c> app     = new List<genesis__Applications__c>([select Id, genesis__Account__c, genesis__Status__c, owner.name from genesis__Applications__c where Lead_ID__c=: Lead_Id limit 1]);
+                List<genesis__Applications__c> app     = new List<genesis__Applications__c>([select Id, genesis__Account__c, Lead_ID__c, genesis__Status__c, owner.name from genesis__Applications__c where Lead_ID__c=: Lead_Id limit 1]);
+
+                Map<String, Object> log = new Map<String, Object>();
+                log.put('RequestType', params.get('RequestType'));
+                log.put('message', MW_LogUtility.toLoggableApps(app));
+                MW_LogUtility.infoMessage('MW_WebhookControlHandler', 'Invocation Entry', log);
 
                 if(app.size() > 0)
                 {
@@ -230,6 +235,8 @@ global with sharing class MW_WebhookControlHandler {
         }
         catch (Exception e)
         {
+            MW_LogUtility.error('MW_WebhookControlHandler', '', '', 'ServiceHelper', e);
+
             //ApexPages.addMessages(e);
             Messaging.SingleEmailMessage mail=new Messaging.SingleEmailMessage();
             String[] toAddresses = new String[] {'salesforceapi@happymoney.com'};

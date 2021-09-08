@@ -52,6 +52,11 @@ global class SelectOfferFromUI {
                                        where id=:applicationID 
                                        limit 1];
 
+       Map<String, Object> log = new Map<String, Object>();
+       log.put('offerID', offerID);
+       log.put('message', MW_LogUtility.toLoggableApp(app));
+       MW_LogUtility.infoMessage('SelectOfferFromUI', 'Invocation Entry', log);
+
        system.debug('app'+app);
         oldAppStatus = app.genesis__Status__c;	//CRM-1022 (pallavi)
         oldLoanAmount = app.genesis__Loan_Amount__c;	//CRM-1022 (pallavi)
