@@ -10,8 +10,6 @@ private class WSDeliveryDocumentsTest {
     	String boxUrl = 'https://test.app.box.com/file/00000000000';
 
         Account acct = TestDataFactory.createTestAccount();
-        acct.peer__First_Name__c = 'FirstName';
-        acct.peer__Last_Name__c = 'LastName';
         insert acct;
 
         Account inv = TestDataFactory.createTestInvestor();

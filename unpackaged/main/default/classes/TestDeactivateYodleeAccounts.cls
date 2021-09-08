@@ -34,8 +34,6 @@ public class TestDeactivateYodleeAccounts {
         
         
         Account acc = MW_GlobalTestUtility.GetAccount('Member');
-        acc.peer__First_Name__c = 'FirstName';
-        acc.peer__Last_Name__c = 'LastName';
         Insert acc;
         
         ints__Yodlee_User_Credentials__c userCred = new ints__Yodlee_User_Credentials__c();

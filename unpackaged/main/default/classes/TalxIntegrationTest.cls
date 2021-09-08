@@ -56,8 +56,6 @@ private class TalxIntegrationTest {
             insert cso;
             
             Account acc = MW_GlobalTestUtility.GetAccount('Member');
-            acc.peer__First_Name__c = 'FirstName';
-            acc.peer__Last_Name__c = 'LastName';
             Insert acc; 
             
             System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -261,8 +259,6 @@ private class TalxIntegrationTest {
         
         //Creating Account
         Account acc = MW_GlobalTestUtility.GetAccount('Member');
-        acc.peer__First_Name__c = 'FirstName';
-        acc.peer__Last_Name__c = 'LastName';
         Insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
         
@@ -313,9 +309,7 @@ private class TalxIntegrationTest {
             insert taxInt;
             
             //Creating Account
-            Account acc = MW_GlobalTestUtility.GetAccount('Member');
-            acc.peer__First_Name__c = 'FirstName';
-            acc.peer__Last_Name__c = 'LastName';
+            Account acc = MW_GlobalTestUtility.GetAccount('Member');            
             Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
@@ -370,8 +364,6 @@ private class TalxIntegrationTest {
             
             //Creating Account
             Account acc = MW_GlobalTestUtility.GetAccount('Member');
-            acc.peer__First_Name__c = 'FirstName';
-            acc.peer__Last_Name__c = 'LastName';
             Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
@@ -425,8 +417,7 @@ private class TalxIntegrationTest {
             
             //Creating Account
             Account acc = MW_GlobalTestUtility.GetAccount('Member');
-            acc.peer__First_Name__c = 'FirstName';
-            acc.peer__Last_Name__c = 'LastName';
+            
             Insert acc;
             
             genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
@@ -489,8 +480,6 @@ private class TalxIntegrationTest {
             
             //Creating Account
             Account acc = MW_GlobalTestUtility.GetAccount('Member');
-            acc.peer__First_Name__c = 'FirstName';
-            acc.peer__Last_Name__c = 'LastName';
             Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
@@ -529,8 +518,6 @@ private class TalxIntegrationTest {
     static testMethod void testParseTalxResponseInvalidResponseWithTalxVerfication() {
         try{
             Account acc = MW_GlobalTestUtility.GetAccount('Member');
-            acc.peer__First_Name__c = 'FirstName';
-            acc.peer__Last_Name__c = 'LastName';
             Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
@@ -573,8 +560,6 @@ private class TalxIntegrationTest {
     static testMethod void testParseTalxResponseInvalidResponseWithCallTalx() {
         try{
             Account acc = MW_GlobalTestUtility.GetAccount('Member');
-            acc.peer__First_Name__c = 'FirstName';
-            acc.peer__Last_Name__c = 'LastName';
             Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
@@ -633,8 +618,6 @@ private class TalxIntegrationTest {
             insert taxInt;
             
             Account acc = MW_GlobalTestUtility.GetAccount('Member');
-            acc.peer__First_Name__c = 'FirstName';
-            acc.peer__Last_Name__c = 'LastName';
             Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
@@ -736,8 +719,6 @@ private class TalxIntegrationTest {
             
             //Creating Account
             Account acc = MW_GlobalTestUtility.GetAccount('Member');
-            acc.peer__First_Name__c = 'FirstName';
-            acc.peer__Last_Name__c = 'LastName';
             Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             
@@ -791,8 +772,6 @@ private class TalxIntegrationTest {
             
             //Creating Account
            Account acc = MW_GlobalTestUtility.GetAccount('Member');
-            acc.peer__First_Name__c = 'FirstName';
-            acc.peer__Last_Name__c = 'LastName';
             Insert acc;
             System.assertEquals('Test',acc.Name,'Wrong Account');
             

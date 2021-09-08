@@ -7,13 +7,9 @@ public class TestRegenerateTIL {
         insert cso;
         
         Account account_Obj = MW_GlobalTestUtility.GetAccount('Member');
-        account_Obj.peer__First_Name__c = 'FirstName';
-        account_Obj.peer__Last_Name__c = 'LastName';
         Insert account_Obj; 
         
         Account investor_Obj = MW_GlobalTestUtility.GetAccount('Investor');
-        investor_Obj.peer__First_Name__c = 'FirstName';
-        investor_Obj.peer__Last_Name__c = 'LastName';
         Insert investor_Obj; 
         
         CL_Document__c cs = new CL_Document__c();

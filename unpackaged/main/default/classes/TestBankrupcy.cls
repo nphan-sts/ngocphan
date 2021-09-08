@@ -55,8 +55,6 @@ public class TestBankrupcy {
         dummyLoanPurpose.loan__Loan_Purpose_Code__c = 'Refinance';
         account dummyClient = new account(); 
         dummyClient.Name = 'Payoff';
-        dummyClient.peer__Last_Name__c = 'Account';
-        dummyClient.peer__First_Name__c = 'Test';
         insert dummyClient;
         
         Account invacc = new Account();

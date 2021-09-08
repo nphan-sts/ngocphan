@@ -18,9 +18,7 @@ public class UpdatePaymentModeValue_Test {
         loan__Payment_Mode__c  lpm=[Select Id,Name from loan__Payment_Mode__c where Id =:lp.Id];
         
         
-        Account acc = new Account();
-        acc.Name = 'Test Account';
-        acc.Account_External_ID__c = 'Test';
+        Account acc = new Account( Name = 'Test Account', Account_External_ID__c = 'Test');
         insert acc;
         
         loan.TestHelper.systemDate = Date.today();

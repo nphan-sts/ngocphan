@@ -6,8 +6,6 @@ private class WSDeliveryStatusTest {
         insert cso;
         
         Account acct = TestDataFactory.createTestAccount();
-        acct.peer__First_Name__c = 'FirstName';
-        acct.peer__Last_Name__c = 'LastName';
         insert acct;
         
         Account inv = TestDataFactory.createTestInvestor();
