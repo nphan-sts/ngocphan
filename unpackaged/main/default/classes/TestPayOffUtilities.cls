@@ -12,8 +12,6 @@ public class TestPayOffUtilities {
         
         //Creating Account
         Account acc = MW_GlobalTestUtility.GetAccount('Member');
-        acc.peer__First_Name__c = 'FirstName1';
-        acc.peer__Last_Name__c = 'LastName1';
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
         
