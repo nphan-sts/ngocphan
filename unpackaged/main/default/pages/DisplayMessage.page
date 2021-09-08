@@ -1,0 +1,5 @@
+<apex:page lightningStylesheets="true" standardController="loan__Automated_Payment_Setup__c" showHeader="false" sidebar="false" extensions="ShowToastMessageExtension">
+    <div class="slds-text-heading_large slds-text-align_center">
+        <span style="margin-left:50px;align:center; color:Orange"><strong>{!ErrorMessage}</strong></span>
+    </div>
+</apex:page>
