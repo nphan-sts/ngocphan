@@ -206,6 +206,8 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                            //ApplicationAttachmentHandler.attachmentHandler(app.Id, app.Investor__r.Name, 'TILDocument_forDCP');  //commented for LOS-135
                            //ApplicationAttachmentHandler.attachmentHandler(app.Id, app.Investor__r.Name, 'TIL');  //commented for LOS-135
                            result = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
+                           MW_LogUtility.logAllocation('CustomTriggerOnApplication', app, result);
+
                        } else {
 
                            Map<String, Object> msg = new Map<String, Object>();

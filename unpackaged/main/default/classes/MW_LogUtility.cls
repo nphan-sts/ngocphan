@@ -118,9 +118,80 @@ public class MW_LogUtility {
                                             'Investor__c',
                                             'Last_Investor_Assigned_On__c'}));
         }
-        logs.put('message', message);
+
+        logs.put('message', convertToMessage(message));
         logs.put('InvestorAllocation.allocationForADVPcalled', InvestorAllocation.allocationForADVPcalled);
         return logs;
+    }
+
+    /**
+     * Generate the allocation log message
+     * @param app The application being allocated
+     * @param result The result of the allocation
+     *
+     * @return A string for the message of the allocation
+     */
+    public static String allocationLogEntry(genesis__Applications__c app, Boolean result) {
+
+        String message;
+        String appId = 'missing';
+        String leadId = 'missing';
+        String status = 'missing';
+        String investorId = 'missing';
+        String investorName = 'missing';
+        String lastInvestorDatetime = 'missing';
+
+        if (app != null) {
+            List<genesis__Applications__c> logApps = [SELECT Id,
+                    Lead_ID__c,
+                    Investor__c,
+                    genesis__Status__c,
+                    Last_Investor_Assigned_On__c
+            FROM   genesis__Applications__c
+            WHERE  Id = :app.Id];
+            if (!logApps.isEmpty()) {
+                genesis__Applications__c logApp = logApps.get(0);
+                appId = logApp.Id;
+                leadId = logApp.Lead_ID__c;
+                status = logApp.genesis__Status__c;
+                if (null != logApp.Last_Investor_Assigned_On__c) {
+                    lastInvestorDatetime = logApp.Last_Investor_Assigned_On__c.formatGmt('yyyy-MM-dd HH:mm:ss.SSS');
+                }
+            }
+        }
+
+        if (result) {
+
+            if (app != null && app.Investor__c != null) {
+                investorId = app.Investor__c;
+                List<Account> investors = [SELECT Name FROM Account WHERE Id = : app.Investor__c];
+                if (!investors.isEmpty()) {
+                    investorName = investors.get(0).Name;
+                }
+            }
+
+            message = 'Successful allocation for Lead ID: ' + leadId + ' (' + appId + '), ' +
+                    'investor:' + investorName + ' (' + investorId + '), ' +
+                    'status: ' + status + ', ' +
+                    'at: ' + lastInvestorDatetime;
+        } else {
+            message = 'Failed allocation for Lead ID: ' + leadId + ' (' + appId + '), ' +
+                    'status: ' + status;
+        }
+
+        return message;
+    }
+
+    /**
+     * Generate and log result of an investor allocation run.
+     *
+     * @param apexClass The class that executed the allocation attempt
+     * @param app The application that was updated
+     * @param result The result of the allocation attempt, true for success, false for failure
+     */
+    public static void logAllocation(String apexClass, genesis__Applications__c app, Boolean result) {
+        String message = allocationLogEntry(app, result);
+        infoMessage(apexClass, 'Investor Allocation', convertToMessage(message));
     }
 
     /**
@@ -520,5 +591,16 @@ public class MW_LogUtility {
         } else {
             return obj;
         }
+    }
+
+    /**
+     * Serializing current datetime helps prevent messages being converted to datadog event attribute,
+     * and is helpful for debugging what time SF thought it executed.
+     * @param message Some sort of object that can be serialized to json
+     *
+     * @return A string value to use in the message value.
+     */
+    private static String convertToMessage(Object message) {
+        return System.now().formatGmt('yyyy-MM-dd HH:mm:ss.SSS') + ' ' + JSON.serialize(message);
     }
 }
