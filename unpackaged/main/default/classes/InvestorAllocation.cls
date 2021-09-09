@@ -327,6 +327,10 @@ public with sharing class InvestorAllocation{
                                             FROM genesis__Applications__c
                                             WHERE id =: appId];
 
+           Map<String, Object> log = new Map<String, Object>();
+           log.put('message', MW_LogUtility.toLoggableApp(app));
+           MW_LogUtility.infoMessage('InvestorAllocation', 'Invocation Entry', log);
+
             List<DCP_arcus_transactions__c> txns = new List<DCP_arcus_transactions__c>();
             txns = [select id from DCP_arcus_transactions__c where application__c =: appId];
             system.debug('Txns: .. '+ txns.size());

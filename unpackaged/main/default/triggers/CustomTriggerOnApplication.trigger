@@ -19,6 +19,9 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
         public Boolean isDcpEligibleFieldUpdated = false;
         System.debug('CustomTriggerOnApplication');
 
+        Map<String, Object> logs = MW_LogUtility.applicationTriggerEntryLog();
+        MW_LogUtility.infoMessage('CustomTriggerOnApplication', 'Invocation Entry', logs);
+
         if (!genesis.CustomSettingsUtil.getOrgParameters().genesis__Disable_Triggers__c ) {
             MW_Settings__c mwsetting = MW_Settings__c.getOrgDefaults();
 
@@ -191,7 +194,8 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                        //PayOffUtilities.AssignToDeclinedQueue(app.id)
                        DeactivateBankAccountsforApplications.deactivateBankAccount(app.id);
                    }
-                   else if(app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c
+                   else if(app.genesis__Status__c == 'agent_document_verification_pending'
+                           && app.genesis__Status__c != oldApp.genesis__Status__c
                            && !InvestorAllocation.allocationForADVPcalled ) {   //CLS-1121,1216,1095
 
                        List<Credit_Policy__c> creditPolicies = [select Id from Credit_Policy__c  where Application__c= : app.Id];
