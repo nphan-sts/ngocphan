@@ -26,6 +26,10 @@ private class MW_LogUtilityTest {
 		MW_LogUtility.info('classInfo', 'appId info', 'leadId', 'info method', 'bad message', response);
 
 		MW_LogUtility.errorMessage('classInfo', 'label', new Map<String, String>());
+
+		MW_LogUtility.errorMessage('classInfo', 'label', null);
+
+		MW_LogUtility.infoMessage('classInfo', 'label', null);
 		Test.stopTest();
 	}
 
@@ -114,6 +118,42 @@ private class MW_LogUtilityTest {
 	}
 
 	@IsTest
+	static void testLogAllocation() {
+
+		Account investor = MW_GlobalTestUtility.GetAccount('Investor');
+		insert investor;
+
+		genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
+		app.Investor__c = investor.Id;
+		app.Last_Investor_Assigned_On__c = System.now();
+		insert app;
+
+		String message = MW_LogUtility.allocationLogEntry(app, true);
+		System.assert(message.contains('Successful allocation for Lead ID: c9149473-e69f-ee12-38a7-d18b0cba847d'));
+		System.assert(message.contains('investor:Account Test'));
+		System.assert(message.contains('status: kba_fail'));
+		System.assert(message.contains('at: '));
+
+		message = MW_LogUtility.allocationLogEntry(app, false);
+		System.assert(message.contains('Failed allocation for Lead ID: c9149473-e69f-ee12-38a7-d18b0cba847d'));
+		System.assert(message.contains('status: kba_fail'));
+
+		/* verify a few unexpected scenarios don't cause exceptions */
+		app.Investor__c = null;
+		update app;
+		MW_LogUtility.logAllocation('classInfo', app, true);
+
+		app.Last_Investor_Assigned_On__c = null;
+		app.genesis__Status__c = null;
+		update app;
+
+		MW_LogUtility.logAllocation('classInfo', app, true);
+		MW_LogUtility.logAllocation('classInfo', null, true);
+		MW_LogUtility.logAllocation('classInfo', null, false);
+		MW_LogUtility.logAllocation(null, null, false);
+	}
+
+	@IsTest
 	static void testAppLoggablesAndInfo() {
 
 		Test.startTest();
@@ -136,7 +176,7 @@ private class MW_LogUtilityTest {
 		MW_LogUtility.infoMessage('classInfo', 'no investor or date scenario', logNoInvestorOrApp);
 
 		app.Investor__c = investor.Id;
-		app.Last_Investor_Assigned_On__c = Datetime.newInstance(2021, 5, 28, 1, 6, 8);
+		app.Last_Investor_Assigned_On__c = System.now();
 		update app;
 
 		List<genesis__Applications__c> apps = new List<genesis__Applications__c>();
@@ -194,7 +234,7 @@ private class MW_LogUtilityTest {
 		app2.genesis__Loan_Amount__c = null;
 		app2.genesis__Interest_Calculation_Method__c = null;
 		app2.Annual_Individual_Income_App__c = 1000000;
-		app2.Last_Investor_Assigned_On__c = Datetime.newInstance(2021, 5, 28, 1, 6, 8);
+		app2.Last_Investor_Assigned_On__c = System.now();
 		update app2;
 
 		/*
@@ -213,7 +253,7 @@ private class MW_LogUtilityTest {
 		System.assert(removed.contains('genesis__Interest_Calculation_Method__c'));
 
 		String added = (String) objDiff.get('added');
-		System.assertEquals('Annual_Individual_Income_App__c, Last_Investor_Assigned_On__c: [null => Fri, May 28 2021 08:06:08]', added);
+		System.assert(added.contains('Annual_Individual_Income_App__c, Last_Investor_Assigned_On__c: [null => '));
 
 		objDiff = MW_LogUtility.toSObjectKeyDiff(null, app2);
 		MW_LogUtility.infoMessage('classInfo', 'null first scenario', objDiff);
