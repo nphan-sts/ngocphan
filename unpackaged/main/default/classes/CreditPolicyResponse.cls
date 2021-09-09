@@ -752,7 +752,10 @@ global class CreditPolicyResponse {
                 obj.Consumer_Statement_Type__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<consumerFileData><consumerStatement><type>', '</type>');
                 obj.Consumer_Statement_Text__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<text>', '</text></consumerStatement>');
                 }
-                 obj.Logistic_Prediction_Of_Default__c = CPResponse.credit_policy_decision.risk_models.V6.logistic_prediction_of_default;
+                 
+                if(CPResponse.credit_policy_decision.risk_models.V6.logistic_prediction_of_default  != null){
+                obj.Logistic_Prediction_Of_Default__c = CPResponse.credit_policy_decision.risk_models.V6.logistic_prediction_of_default;
+                  }
             
             }
             else{
