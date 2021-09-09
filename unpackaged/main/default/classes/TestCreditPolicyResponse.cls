@@ -645,5 +645,78 @@ private class TestCreditPolicyResponse {
      
         Test.stopTest(); 
     }
+   
+    static testMethod void wrapperTest(){
+        CreditPolicyResponse obj01 = new CreditPolicyResponse();
+        CreditPolicyResponse.Prebureau_knockout_codes obj11 = new CreditPolicyResponse.Prebureau_knockout_codes();
+        obj11.rank = 3;
+        obj11.code = 'test';
+        obj11.description = 'test';
+        
+        CreditPolicyResponse.TradelineAnalysis obj21 = new CreditPolicyResponse.TradelineAnalysis();
+        obj21.credit_card_count= 5;
+        obj21.credit_card_balance= 5;
+        obj21.credit_card_limit= 5;
+        obj21.credit_card_utilization= 5.0;
+        obj21.credit_card_monthly_payments= 5;
+        obj21.credit_card_closed_with_balance_count= 5;
+        obj21.unsecured_installment_loan_count= 5;
+        obj21.unsecured_installment_loan_balance= 5;
+        obj21.unsecured_installment_loan_opened_last_12_mo= 5;
+        obj21.unsecured_installment_loan_monthly_payment= 5;
+        obj21.student_loan_count= 5;
+        obj21.student_loan_balance= 5;
+        obj21.student_loan_monthly_payment= 5;
+        obj21.student_loan_deferred_count= 5;
+        obj21.auto_loan_count= 5;
+        obj21.auto_loan_balance= 5;
+        obj21.auto_loan_monthly_payment= 5;
+        obj21.mortgage_count= 5;
+        obj21.mortgage_balance= 5;
+        obj21.mortgage_monthly_payment= 5;
+        obj21.heloc_count= 5;
+        obj21.heloc_balances= 5;
+        obj21.heloc_monthly_payment= 5;
+        
+        CreditPolicyResponse.Payment_pattern pP = new CreditPolicyResponse.Payment_pattern();
+        pP.start_date = '01012020';
+        pP.text = 'test';
+        
+        CreditPolicyResponse.Requestor req = new CreditPolicyResponse.Requestor();
+        req.text = 'test';
+        CreditPolicyResponse.Historical_counters hC = new CreditPolicyResponse.Historical_counters();
+        hC.months_reviewed_count = 'test'; 
+        hC.late_30_days_total = 'test'; 
+        hC.late_60_days_total = 'test'; 
+        hC.late_90_days_total = 'test';
+        CreditPolicyResponse.Most_recent_payment mRC = new CreditPolicyResponse.Most_recent_payment();
+        mRC.RecentDate = '01012020';
+        CreditPolicyResponse.Applicant aPP = new CreditPolicyResponse.Applicant();
+        aPP.id = 123; 
+            aPP.person_uid = 'test'; 
+            aPP.payoff_uid = 'test'; 
+            aPP.income_annual = 'test'; 
+            aPP.requested_loan_amount = 'test'; 
+            aPP.housing_payment = 'test'; 
+            aPP.date_of_birth = 'test';            
+            aPP.bureau_report_subset = 'test'; 
+            aPP.created_at = 'test'; 
+            aPP.updated_at = 'test'; 
+            aPP.first_name = 'test'; 
+            aPP.middle_name = 'test'; 
+            aPP.last_name = 'test'; 
+            aPP.street1 = 'test'; 
+            aPP.street2 = 'test'; 
+            aPP.city = 'test'; 
+            aPP.state = 'test'; 
+            aPP.postal_code = 'test'; 
+            aPP.ssn = 'test'; 
+            aPP.request_context = 'test'; 
+            aPP.credit_policy_version = 'test'; 
+            aPP.suffix_name = 'test'; 
+            aPP.bureau_request_uid = 'test'; 
+            aPP.partner_applicant = 'test'; 
+            aPP.selected_vendor_amount = 'test'; 
+    }
     
 }
