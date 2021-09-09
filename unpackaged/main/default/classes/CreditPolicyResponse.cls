@@ -263,9 +263,9 @@ global class CreditPolicyResponse {
             
         }
         global class Prebureau_knockout_codes {
-            global Integer rank;
-            global String code;
-            global String description;
+            global Integer rank {get;set;}
+            global String code {get;set;}
+            global String description {get;set;}
         }
 
         /*
@@ -288,29 +288,29 @@ global class CreditPolicyResponse {
         
         /* Trade Line Analysis Details */  
         global class TradelineAnalysis {
-            global Integer credit_card_count;
-            global Integer credit_card_balance;
-            global Integer credit_card_limit;
-            global Double credit_card_utilization;
-            global Integer credit_card_monthly_payments;
-            global Integer credit_card_closed_with_balance_count;
-            global Integer unsecured_installment_loan_count;
-            global Integer unsecured_installment_loan_balance;
-            global Integer unsecured_installment_loan_opened_last_12_mo;
-            global Integer unsecured_installment_loan_monthly_payment;
-            global Integer student_loan_count;
-            global Integer student_loan_balance;
-            global Integer student_loan_monthly_payment;
-            global Integer student_loan_deferred_count;
-            global Integer auto_loan_count;
-            global Integer auto_loan_balance;
-            global Integer auto_loan_monthly_payment;
-            global Integer mortgage_count;
-            global Integer mortgage_balance;
-            global Integer mortgage_monthly_payment;
-            global Integer heloc_count;
-            global Integer heloc_balances;
-            global Integer heloc_monthly_payment;
+            global Integer credit_card_count {get;set;}
+            global Integer credit_card_balance {get;set;}
+            global Integer credit_card_limit {get;set;}
+            global Double credit_card_utilization {get;set;}
+            global Integer credit_card_monthly_payments {get;set;}
+            global Integer credit_card_closed_with_balance_count {get;set;}
+            global Integer unsecured_installment_loan_count {get;set;}
+            global Integer unsecured_installment_loan_balance {get;set;}
+            global Integer unsecured_installment_loan_opened_last_12_mo {get;set;}
+            global Integer unsecured_installment_loan_monthly_payment {get;set;}
+            global Integer student_loan_count {get;set;}
+            global Integer student_loan_balance {get;set;}
+            global Integer student_loan_monthly_payment {get;set;}
+            global Integer student_loan_deferred_count {get;set;}
+            global Integer auto_loan_count {get;set;}
+            global Integer auto_loan_balance {get;set;}
+            global Integer auto_loan_monthly_payment {get;set;}
+            global Integer mortgage_count {get;set;}
+            global Integer mortgage_balance {get;set;}
+            global Integer mortgage_monthly_payment {get;set;}
+            global Integer heloc_count {get;set;}
+            global Integer heloc_balances {get;set;}
+            global Integer heloc_monthly_payment {get;set;}
         }
         
         global TradelineAnalysis parse(String json) {
@@ -324,9 +324,9 @@ global class CreditPolicyResponse {
          * @param CPResponse The response collecting parsed data
          */
         global void parseV6RiskModel(String unescapedString, CreditPolicyResponse CPResponse) {
-            if (CPResponse.credit_policy_decision.credit_policy_version != '6.0') {
+           /** if (CPResponse.credit_policy_decision.credit_policy_version != '6.0') {
                 return;
-            }
+            }**/
 
             Map<String, Object> untypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(unescapedString);
             if (untypedResponse == null) {
@@ -343,7 +343,8 @@ global class CreditPolicyResponse {
                 return;
             }
 
-            Map<String, Object> untypedV6 = (Map<String, Object>) untypedRiskModels.get('6.0');
+            //Map<String, Object> untypedV6 = (Map<String, Object>) untypedRiskModels.get('6.0');
+            Map<String, Object> untypedV6 = (Map<String, Object>) untypedRiskModels.get(CPResponse.credit_policy_decision.credit_policy_version);
             if (untypedV6 == null) {
                 return;
             }
@@ -351,8 +352,9 @@ global class CreditPolicyResponse {
             CreditPolicyResponse.V6 v6 = new CreditPolicyResponse.V6();
             v6.invalid_risk_model_variable_count = (Integer) untypedV6.get('invalid_risk_model_variable_count');
             v6.logistic_prediction_of_default = (Double) untypedV6.get('logistic_prediction_of_default');
+            system.debug('v6.logistic_prediction_of_default'+v6.logistic_prediction_of_default);
             v6.risk_model_decision = (String) untypedV6.get('risk_model_decision');
-            v6.risk_model_score = (Double) untypedV6.get('risk_model_score');
+            //v6.risk_model_score = (Double) untypedV6.get('risk_model_score');
 
             /* leaving this in for backwards compat, but data key removed in v6, create data key for risk models v6 only */
             if (CPResponse.credit_policy_decision.data != null) {
@@ -744,6 +746,14 @@ global class CreditPolicyResponse {
             obj.Active__c = TRUE;
             if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.raw_bureau_data != null){
                 obj.Raw_XML__c = String.valueOF(CPResponse.credit_policy_decision.raw_bureau_data);
+                
+                obj.Consumer_status_Indicator__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<consumerStatementIndicator>', '</consumerStatementIndicator>');
+                if(obj.Consumer_status_Indicator__c == 'true'){
+                obj.Consumer_Statement_Type__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<consumerFileData><consumerStatement><type>', '</type>');
+                obj.Consumer_Statement_Text__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<text>', '</text></consumerStatement>');
+                }
+                 obj.Logistic_Prediction_Of_Default__c = CPResponse.credit_policy_decision.risk_models.V6.logistic_prediction_of_default;
+            
             }
             else{
                 obj.Raw_XML__c = 'No Data found in raw_bureau_data';
