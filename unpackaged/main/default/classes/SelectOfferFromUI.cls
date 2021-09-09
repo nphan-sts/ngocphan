@@ -54,7 +54,7 @@ global class SelectOfferFromUI {
 
        Map<String, Object> log = new Map<String, Object>();
        log.put('offerID', offerID);
-       log.put('message', MW_LogUtility.toLoggableApp(app));
+       log.put('message', MW_LogUtility.convertToMessage(MW_LogUtility.toLoggableApp(app)));
        MW_LogUtility.infoMessage('SelectOfferFromUI', 'Invocation Entry', log);
 
        system.debug('app'+app);

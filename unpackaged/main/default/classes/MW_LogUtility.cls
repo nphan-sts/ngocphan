@@ -140,6 +140,7 @@ public class MW_LogUtility {
         String investorId = 'missing';
         String investorName = 'missing';
         String lastInvestorDatetime = 'missing';
+        genesis__Applications__c logApp;
 
         if (app != null) {
             List<genesis__Applications__c> logApps = [SELECT Id,
@@ -150,7 +151,7 @@ public class MW_LogUtility {
             FROM   genesis__Applications__c
             WHERE  Id = :app.Id];
             if (!logApps.isEmpty()) {
-                genesis__Applications__c logApp = logApps.get(0);
+                logApp = logApps.get(0);
                 appId = logApp.Id;
                 leadId = logApp.Lead_ID__c;
                 status = logApp.genesis__Status__c;
@@ -162,9 +163,9 @@ public class MW_LogUtility {
 
         if (result) {
 
-            if (app != null && app.Investor__c != null) {
-                investorId = app.Investor__c;
-                List<Account> investors = [SELECT Name FROM Account WHERE Id = : app.Investor__c];
+            if (logApp != null && logApp.Investor__c != null) {
+                investorId = logApp.Investor__c;
+                List<Account> investors = [SELECT Name FROM Account WHERE Id = : logApp.Investor__c];
                 if (!investors.isEmpty()) {
                     investorName = investors.get(0).Name;
                 }
@@ -594,13 +595,14 @@ public class MW_LogUtility {
     }
 
     /**
+     * Use this to have datadog logs surface the value in the message body.
      * Serializing current datetime helps prevent messages being converted to datadog event attribute,
      * and is helpful for debugging what time SF thought it executed.
      * @param message Some sort of object that can be serialized to json
      *
      * @return A string value to use in the message value.
      */
-    private static String convertToMessage(Object message) {
+    public static String convertToMessage(Object message) {
         return System.now().formatGmt('yyyy-MM-dd HH:mm:ss.SSS') + ' ' + JSON.serialize(message);
     }
 }
