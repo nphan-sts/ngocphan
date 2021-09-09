@@ -753,7 +753,8 @@ global class CreditPolicyResponse {
                 obj.Consumer_Statement_Text__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<text>', '</text></consumerStatement>');
                 }
                  
-                if(CPResponse.credit_policy_decision.risk_models.V6.logistic_prediction_of_default  != null){
+                
+                if(CPResponse.credit_policy_decision.risk_models != null && CPResponse.credit_policy_decision.risk_models.v6 != null && CPResponse.credit_policy_decision.risk_models.v6.logistic_prediction_of_default != null){
                 obj.Logistic_Prediction_Of_Default__c = CPResponse.credit_policy_decision.risk_models.V6.logistic_prediction_of_default;
                   }
             
