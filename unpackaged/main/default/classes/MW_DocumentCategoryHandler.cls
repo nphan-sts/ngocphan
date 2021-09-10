@@ -81,17 +81,13 @@ public with sharing class MW_DocumentCategoryHandler {
             accList.add(acc.genesis__Application__r.genesis__Account__c);
         }
 
-        //LOP-324, don't need this
-        //Map<Id, boolean> accMap                                   = MW_WebhookHelper.applicationHasYodleeDetails(accList);
+        Map<Id, boolean> accMap                                   = MW_WebhookHelper.applicationHasYodleeDetails(accList);
 
         for(genesis__Application_Document_Category__c docCatlist: appDclist)
         {
-            //LOP-324, don't need this
-            /*
             if((docCatlist.genesis__Application__r.is_Plaid_Asset_Available__c || (accMap.get(docCatlist.genesis__Application__r.genesis__Account__c) !=null & accMap.size()>0)) &&
                docCatlist.genesis__Parent_Application_Document_Category__r.name=='Bank Statements' && docCatlist.genesis__Status__c=='OPEN')
                 continue;
-            */
 
             DocumentInformation dci = new DocumentInformation();
             if(docCatlist.genesis__Parent_Application_Document_Category__r.name!='Verification Documents' /*CLS-892 --> */ && docCatlist.genesis__Parent_Application_Document_Category__r.name!='Root' && docCatlist.genesis__Parent_Application_Document_Category__r.name!='Self Employed Documents') {

@@ -282,7 +282,7 @@ Public class CustomTriggerOnApplicationHandler{
                          System.debug('txn.pay_at_funding__c: '+ txn.pay_at_funding__c);
                        }
             if (arcusTransactionsToUpdate.size() > 0)
-            update arcusTransactionsToUpdate;
+                update arcusTransactionsToUpdate;
             System.debug('Updated all DCP transactions..');
             return true;
       }catch(Exception e){
