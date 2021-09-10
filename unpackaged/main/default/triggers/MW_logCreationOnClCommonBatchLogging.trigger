@@ -19,8 +19,10 @@ trigger MW_logCreationOnClCommonBatchLogging on clcommon__Batch_Logging__c(
 			entry.clcommon__Status__c == 'Aborted'
 		) {
 			type = 'Error';
+		} else if (String.isBlank(entry.clcommon__Status__c) == true) {
+			type = 'Warning';
 		} else {
-			continue;
+			type = 'Info';
 		}
 
 		new MW_LogTriggerHelper().construct(entry.Name, apexClass, label, type, JSON.serialize(entry));

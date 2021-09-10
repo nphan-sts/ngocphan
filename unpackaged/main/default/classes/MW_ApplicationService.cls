@@ -198,7 +198,7 @@ public class MW_ApplicationService {
                         acctPost.LinkUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + currentAcct.Id;
                         
                         preExistAcctsPost.Add(acctPost);
-
+                    
                         If(existingClosedLoanAcct != null)
                         {
                             existingClosedLoanAcct.loan__Account__c = currentAcct.Id;

@@ -52,11 +52,6 @@ global class SelectOfferFromUI {
                                        where id=:applicationID 
                                        limit 1];
 
-       Map<String, Object> log = new Map<String, Object>();
-       log.put('offerID', offerID);
-       log.put('message', MW_LogUtility.convertToMessage(MW_LogUtility.toLoggableApp(app)));
-       MW_LogUtility.infoMessage('SelectOfferFromUI', 'Invocation Entry', log);
-
        system.debug('app'+app);
         oldAppStatus = app.genesis__Status__c;	//CRM-1022 (pallavi)
         oldLoanAmount = app.genesis__Loan_Amount__c;	//CRM-1022 (pallavi)
@@ -150,13 +145,7 @@ global class SelectOfferFromUI {
                 
                 try{
 
-                    /* LOP-337: allocation happens at advp, support advp as well as offer accepted.
-                                cannot remove offer_accepted from being assigned to offer_accepted,
-                                or else risk breaking existing workflows that depend on offer_accepted as interim status
-                     */
-                    if(app.Investor__c!=null && (
-                            oldAppStatus.equalsIgnoreCase('offer_accepted') ||
-                            oldAppStatus.endsWithIgnoreCase('agent_document_verification_pending'))) {	//CRM-1022 (pallavi) added status condition
+                    if(app.Investor__c!=null && oldAppStatus.equalsIgnoreCase('offer_accepted')) {	//CRM-1022 (pallavi) added status condition
                         
                         //update app; //CRM-1022 (pallavi) (moving inside if block)                      
                         String res = runInvestorAllocationBasedOnWeighting(app); //CRM-1022 (pallavi) changed app.id to app
