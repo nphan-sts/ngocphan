@@ -195,6 +195,45 @@ public class TestQueueAssignment{
       QueueAssignment.appToQueueAssignment(appIdlist);
       Test.stopTest();
    }
-    
+   
+   Testmethod static void KBAFraudBasedonUTMMediumDM(){
+       Account acc1 = [select id from Account Limit 1];
+       genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c, utm_medium__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
+       app1.utm_medium__c = 'DM';
+       app1.Affiliate_Partner__c = false;
+       update app1;
+       List<Id> appIdlist = new List<Id>();
+       appIdlist.add(app1.id);
+       KBA_Details__c kba1 = new KBA_Details__c();
+       kba1.Application__c = app1.id;
+       kba1.Id_Analytics_Score__c =760;
+       kba1.Precise_ID_General_Fraud_Shield_Indicat__c = 'F05';
+       insert kba1;
+      
+      Test.startTest();
+         QueueAssignment.appToQueueAssignment(appIdlist);
+      Test.stopTest();
+   } 
+   
+     Testmethod static void KBAFraudBasedonUTMMediumPartner(){
+       Account acc1 = [select id from Account Limit 1];
+       genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c, utm_medium__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
+       app1.utm_medium__c = 'partner';
+       app1.Sift_Status__c = 96;
+       app1.Affiliate_Partner__c = false;
+       update app1;
+       List<Id> appIdlist = new List<Id>();
+       appIdlist.add(app1.id);
+       KBA_Details__c kba1 = new KBA_Details__c();
+       kba1.Application__c = app1.id;
+       kba1.Id_Analytics_Score__c =800;
+       kba1.Paste_Count__c = 3;
+       kba1.Precise_ID_General_Fraud_Shield_Indicat__c = 'F05';
+       insert kba1;
+        
+      Test.startTest();
+         QueueAssignment.appToQueueAssignment(appIdlist);
+      Test.stopTest();
+   } 
     
 }

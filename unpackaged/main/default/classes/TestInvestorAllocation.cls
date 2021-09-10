@@ -399,7 +399,7 @@ private class TestInvestorAllocation{
         genesis__Rule__c rule = GetRule('Test FICO Only Rule', '1');
         insert rule;
 
-        genesis__RuleCriteria__c ficoCriteria = GetCreditPolicyCriteria(1, rule);
+        genesis__RuleCriteria__c ficoCriteria = GetCreditPolicyCriteria(1, rule, false);
         ficoCriteria.genesis__Field_API_Name__c    = 'FICO__c';
         ficoCriteria.genesis__Field_Name__c        = 'FICO';
         ficoCriteria.genesis__Matching_Type__c     = '>=';
@@ -452,6 +452,145 @@ private class TestInvestorAllocation{
     }
 
     /**
+     *  The Rules API does not correctly evaluate when multiple records are found.
+     *  set useLastCreditPolicy to false to demonstrate this.
+     *
+     *  Setting useLastCreditPolicy flag fixes this issue by only giving one secondary object to the RulesAPI to use.
+     *  This custom object is Last_Credit_Policy__c and copies over just the fields it needs via a Trigger invocation.
+     */
+    @IsTest static void testShouldPassFirstFailSecond() {
+
+        Test.startTest();
+        boolean useLastCreditPolicy = true;
+
+        genesis__Applications__c application = setupDebugRulesetWithFICOAndNDI(640, 1000, useLastCreditPolicy);
+
+        Credit_Policy__c cp1 = GetCreditPolicy(application, 640.0, 1200);
+        insert cp1;
+        assertSingleChecklistAndExpectation(application, true);
+
+        Credit_Policy__c cp2 = GetCreditPolicy(application, 640.0, 900);
+        insert cp2;
+        assertSingleChecklistAndExpectation(application, false);
+
+        Test.stopTest();
+    }
+
+    /**
+     * See notes for: testShouldPassFirstFailSecond() (1 method above)
+     *
+     * This scenario will pass either useLastCreditPolicy true or false because the last inserted object is a pass.
+     */
+    @IsTest static void testShouldFailFirstPassSecond() {
+
+        Test.startTest();
+        boolean useLastCreditPolicy = true;
+
+        genesis__Applications__c application = setupDebugRulesetWithFICOAndNDI(640, 1000, useLastCreditPolicy);
+
+        Credit_Policy__c cp1 = GetCreditPolicy(application, 640.0, 901);
+        insert cp1;
+        assertSingleChecklistAndExpectation(application, false);
+
+        Credit_Policy__c cp2 = GetCreditPolicy(application, 640.0, 1201);
+        insert cp2;
+        assertSingleChecklistAndExpectation(application, true);
+
+        Test.stopTest();
+    }
+
+    /**
+     * See notes for: testShouldPassFirstFailSecond() (2 method above)
+     *
+     * Looks like what ultimately is happening is the RulesAPI combines all passes in field "columns" as ORs.
+     * So:
+     *                    Cri1 , Cri2
+     *  policy record A : PASS1, FAIL2
+     *  policy record B : FAIL1, PASS2
+     *  policy record C : FAIL1, FAIL2
+     *                  = PASS1, PASS2 = PASS X.
+     *
+     * To demonstrate this, comment out all assertSingleChecklistAndExpectation except the last one and
+     * set useLastCreditPolicy to false;  The final assertion will pass despite
+     * the last credit policy recording ending with a would be FAIL1, FAIL2.
+     *
+     *  Setting useLastCreditPolicy flag true fixes it by using Last_Credit_Policy instead of Credit_Policy
+     */
+    @IsTest static void testShouldNotCombineAllPassCriteria() {
+
+        Test.startTest();
+        boolean useLastCreditPolicy = true;
+
+        genesis__Applications__c application = setupDebugRulesetWithFICOAndNDI(640, 1000, useLastCreditPolicy);
+
+        Credit_Policy__c cp1 = GetCreditPolicy(application, 640.0, 902);
+        insert cp1;
+        assertSingleChecklistAndExpectation(application, false);
+
+        Credit_Policy__c cp2 = GetCreditPolicy(application, 501.0, 1200);
+        insert cp2;
+        assertSingleChecklistAndExpectation(application, false);
+
+        Credit_Policy__c cp3 = GetCreditPolicy(application, 502.0, 980);
+        insert cp3;
+        assertSingleChecklistAndExpectation(application, false);
+
+        Credit_Policy__c cp4 = GetCreditPolicy(application, 641.0, 1001);
+        insert cp4;
+        assertSingleChecklistAndExpectation(application, true);
+
+        Credit_Policy__c cp5 = GetCreditPolicy(application, null, null);
+        insert cp5;
+        assertSingleChecklistAndExpectation(application, false);
+
+        Test.stopTest();
+    }
+
+    /**
+     * Setup a debug ruleset with fico >= 640 and ndi >= 1000 on an advp app
+     * @return Application
+     */
+    private static genesis__Applications__c setupDebugRulesetWithFICOAndNDI(Integer fico, Integer ndi, Boolean useLastCreditPolicy) {
+        CL_Document__c clDocument = GetDocument();
+        insert clDocument;
+
+        /* insert rules */
+        genesis__Rule__c rule = GetRule('Debug Rule Set', '(1 AND 2)');
+        insert rule;
+
+        genesis__RuleCriteria__c ficoCriteria = GetFICOCriteria(1, rule, fico, useLastCreditPolicy);
+        insert ficoCriteria;
+
+        genesis__RuleCriteria__c ndiCriteria = GetNDICriteria(2, rule, ndi, useLastCreditPolicy);
+        insert ndiCriteria;
+
+        /* create our applicant */
+        Account applicantAccount = GetApplicantAccount();
+        insert applicantAccount;
+
+        Account investor = MW_GlobalTestUtility.GetAccount('Investor');
+        insert investor;
+
+        genesis__Applications__c application = GetADVPApplication(investor, applicantAccount);
+        insert application;
+
+        genesis__Applications__c testApp = selectApplicationForRuleset(application.Id);
+
+        return testApp;
+    }
+
+    private static void assertSingleChecklistAndExpectation(genesis__Applications__c application, Boolean expectation) {
+        new InvestorAllocation(true);
+        InvestorAllocation.runInvestorRule(application.Id);
+        List<genesis__Checklist__c> checklists1 = genesis.RulesAPI.evaluateRules(application, null, true, false);
+
+        System.assertEquals(1, checklists1.size());
+        genesis__Checklist__c checklist = checklists1.get(0);
+        System.debug(checklist);
+        System.assertEquals(expectation, checklist.genesis__Result__c);
+    }
+
+    /**
      * Demonstrate three things
      *
      * 1. We can remove the credit policy subquery from the application selection since it does nothing.
@@ -477,14 +616,14 @@ private class TestInvestorAllocation{
         genesis__Rule__c rule = GetRule('Test Deref Rule', '(1 AND 2)');
         insert rule;
 
-        genesis__RuleCriteria__c ficoCriteria = GetCreditPolicyCriteria(1, rule);
+        genesis__RuleCriteria__c ficoCriteria = GetCreditPolicyCriteria(1, rule, false);
         ficoCriteria.genesis__Field_API_Name__c    = 'FICO__c';
         ficoCriteria.genesis__Field_Name__c        = 'FICO';
         ficoCriteria.genesis__Matching_Type__c     = '>=';
         ficoCriteria.genesis__Matching_Value__c    = '620';
         insert ficoCriteria;
 
-        genesis__RuleCriteria__c tradeCriteria = GetCreditPolicyCriteria(2, rule);
+        genesis__RuleCriteria__c tradeCriteria = GetCreditPolicyCriteria(2, rule, false);
         tradeCriteria.genesis__Field_API_Name__c    = 'Num_Trades_Opened_Past_24mo__c';
         tradeCriteria.genesis__Field_Name__c        = 'Num Trades Opened Past 24mo';
         tradeCriteria.genesis__Matching_Type__c     = '<';
@@ -1911,13 +2050,19 @@ private class TestInvestorAllocation{
         return rule;
     }
 
-    private static genesis__RuleCriteria__c GetCreditPolicyCriteria(Decimal sequenceNum, genesis__Rule__c rule) {
+    private static genesis__RuleCriteria__c GetCreditPolicyCriteria(Decimal sequenceNum, genesis__Rule__c rule, Boolean useLastCreditPolicy) {
+
+        String relatedObj = 'Credit_Policy__c';
+        if (useLastCreditPolicy) {
+            relatedObj = 'Last_Credit_Policy__c';
+        }
+
         genesis__RuleCriteria__c criteria = new genesis__RuleCriteria__c(
                 genesis__Criteria_Sequence__c = sequenceNum,
                 genesis__Field_Type__c        = 'DOUBLE',
                 genesis__Maximum_Value__c     = '',
                 genesis__Minimum_Value__c     = '',
-                genesis__Related_Object__c    = 'Credit_Policy__c',
+                genesis__Related_Object__c    = relatedObj,
                 genesis__Rule_Object_Reference__c = 'Application__r',
                 genesis__Rule__c = rule.Id,
                 genesis__Stipulation_Type__c = 'FUNDING'
@@ -1925,4 +2070,62 @@ private class TestInvestorAllocation{
         return criteria;
     }
 
+    private static CL_Document__c GetDocument() {
+        CL_Document__c document = new CL_Document__c();
+        document.Doc1__c = 'Credit Score Notice';
+        document.Doc2__c = 'TIL Document';
+        document.Doc3__c = 'Adverse Action Notice';
+        return document;
+    }
+
+    private static Credit_Policy__c GetCreditPolicy(genesis__Applications__c application, Decimal fico, Decimal ndi) {
+        Credit_Policy__c creditPolicy = new Credit_Policy__c();
+        creditPolicy.request_intent__c = 'application';
+        creditPolicy.FICO__c = fico;
+        creditPolicy.Net_Disposable_Income_NDI__c = ndi == null ? null : String.valueOf(ndi);
+        creditPolicy.Application__c = application.Id;
+        return creditPolicy;
+    }
+
+    private static genesis__RuleCriteria__c GetFICOCriteria(Decimal sequenceNum, genesis__Rule__c rule, Integer matchingValue, Boolean useLastCreditPolicy) {
+        genesis__RuleCriteria__c fico = GetCreditPolicyCriteria(sequenceNum, rule, useLastCreditPolicy);
+        fico.genesis__Field_API_Name__c = 'FICO__c';
+        fico.genesis__Field_Name__c = 'FICO';
+        fico.genesis__Matching_Type__c = '>=';
+        fico.genesis__Matching_Value__c = String.valueOf(matchingValue);
+        return fico;
+    }
+
+    private static genesis__RuleCriteria__c GetNDICriteria(Decimal sequenceNum, genesis__Rule__c rule, Integer matchingValue, Boolean useLastCreditPolicy) {
+        genesis__RuleCriteria__c ndi = GetCreditPolicyCriteria(sequenceNum, rule, useLastCreditPolicy);
+        ndi.genesis__Field_API_Name__c = 'Net_Disposable_Income_NDI_Num__c';
+        ndi.genesis__Field_Name__c = 'Net Disposable Income NDI Num';
+        ndi.genesis__Matching_Type__c = '>=';
+        ndi.genesis__Matching_Value__c = String.valueOf(matchingValue);
+        return ndi;
+    }
+
+    /**
+     * @param id Id of a valid applicatoin
+     * @return An application with columns identical to RulesApi columns used in IA.
+     */
+    private static genesis__Applications__c selectApplicationForRuleset(Id id) {
+
+        genesis__Applications__c appTest =
+        [SELECT Id,
+                Name,
+                Investor__c,
+                DCP_Investor_Eligibility__c,
+                genesis__Status__c,
+                genesis__Loan_Amount__c,
+                Invested_Amount__c,
+                genesis__Lending_Product__c,
+                Last_Investor_Assigned_On__c,
+                Total_Arcus_Transactions__c
+        FROM   genesis__Applications__c
+        WHERE  Id =: id
+        LIMIT 1];
+
+        return appTest;
+    }
 }

@@ -1,6 +1,13 @@
 @isTest
 public with sharing class MW_WebhookControlHandlerTest  {
-    
+
+
+    @TestSetup static void setup(){
+        MW_Settings__c mwSetting = new MW_Settings__c();
+        mwSetting.FE_User_Filter__c = 'serviceapi@happymoney.com.cliqa';
+        insert mwSetting;
+    }
+
     static testMethod void TestTilRequest()
     {
         Test.startTest();
@@ -555,7 +562,7 @@ public with sharing class MW_WebhookControlHandlerTest  {
         Test.stopTest();
     }
 
-    
+
     static testMethod void TestPayOffQuote(){
         Test.startTest();
 
@@ -651,7 +658,7 @@ public with sharing class MW_WebhookControlHandlerTest  {
         RestContext.request = req;
         RestContext.response = res;
 
-      
+
         //Valid data
         MW_WebhookControlHandler.handleGetRequest();
 
@@ -669,7 +676,7 @@ public with sharing class MW_WebhookControlHandlerTest  {
 
         Test.stopTest();
     }
-   
+
     static testMethod void TestPayOffQuotePost(){
         Test.startTest();
 
@@ -742,20 +749,22 @@ public with sharing class MW_WebhookControlHandlerTest  {
         objApp.genesis__Company__c = comp.id;
         objApp.genesis__CL_Product__c = pr.id;
         insert objApp;
- 
+
         loan__Loan_Account__c lacc = MW_GlobalTestUtility.GetCLContract();
         lacc.loan__Account__c= acc.Id;
         lacc.loan__Contact__c= a1.ID;
         lacc.loan__Loan_Product_Name__c=loanProdObj.Id;
         lacc.application__c = objApp.id;
         insert lacc;
-      
+
+
 		list<account> accList                              = MW_DataFactoryTest.createAccounts(1);
         insert accList;
-        
+
          list<genesis__Applications__c> appList1 = MW_DataFactoryTest.createApplication(1, accList[0].Id);
         insert appList1;
-        
+
+
         loan__Loan_Account__c laccWithName1 = [SELECT id, Name FROM loan__Loan_Account__c WHERE Id =: lacc.Id];
 
         System.debug('laccWithName.Name = ' + laccWithName1.Name);
@@ -770,6 +779,7 @@ public with sharing class MW_WebhookControlHandlerTest  {
 
         RestContext.request = req;
         RestContext.response = res;
+
 	
         String str = '{"PayOffDate": "2019-08-01","RequestType": "payoff_quote"}';
 		req.requestBody = Blob.valueof(str);    
@@ -778,6 +788,7 @@ public with sharing class MW_WebhookControlHandlerTest  {
         res.statusCode = 200;
         res.responseBody = Blob.valueOf('From CL_MiddleWare');
         
+
         //Inserting valid data
         MW_WebhookControlHandler.handleRequest();
 
@@ -786,32 +797,35 @@ public with sharing class MW_WebhookControlHandlerTest  {
 		req.requestURI     = '/services/apexrest/CL_MiddleWare';
         req.addParameter('RequestType', 'payoff_quote');
         req.addParameter('Lead_ID', appList1[0].LEAD_ID__C);
-		
+
+
         loan__Payoff_Quote__c createdQuote = [SELECT id,
                                               name,
-                                              loan__Poq_valid_till_Dt__c, 
+                                              loan__Poq_valid_till_Dt__c,
                                               loan__Loan_Account__r.id ,
                                               loan__Loan_Account__r.name FROM
-                                              loan__Payoff_Quote__c 
+                                              loan__Payoff_Quote__c
                                               limit 1];
-        
-      
+
+
+
         System.assertEquals(laccWithName1.Name, createdQuote.loan__Loan_Account__r.name);
 		system.assertEquals(1, appList1.size());
         string expectedQuoteName = 'MPR' + ' - ' + laccWithName1.id + ' - '+'2020-09-14';
         string actualQuoteName = createdQuote.Name;
         system.assertEquals(expectedQuoteName,actualQuoteName );
-		
+
         //Wrong Loan id
          MW_WebhookControlHandler.handleRequest();
 
         req.addParameter('LoanId', 'LAI_NotExist');
         req.addParameter('PayOffDate', '2020-09-14');
-        
-  
+
+
         //Passing null data
         MW_WebhookControlHandler.handleRequest();
-        
+
+
         Test.stopTest();
     }
 }
