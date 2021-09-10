@@ -7,8 +7,10 @@ public class TestInvestorReallocation{
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
+            peer__First_Name__c = 'TestFName1',
+            peer__Last_Name__c='TestLName1',
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
