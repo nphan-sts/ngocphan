@@ -150,7 +150,13 @@ global class SelectOfferFromUI {
                 
                 try{
 
-                    if(app.Investor__c!=null && oldAppStatus.equalsIgnoreCase('offer_accepted')) {	//CRM-1022 (pallavi) added status condition
+                    /* LOP-337: allocation happens at advp, support advp as well as offer accepted.
+                                cannot remove offer_accepted from being assigned to offer_accepted,
+                                or else risk breaking existing workflows that depend on offer_accepted as interim status
+                     */
+                    if(app.Investor__c!=null && (
+                            oldAppStatus.equalsIgnoreCase('offer_accepted') ||
+                            oldAppStatus.endsWithIgnoreCase('agent_document_verification_pending'))) {	//CRM-1022 (pallavi) added status condition
                         
                         //update app; //CRM-1022 (pallavi) (moving inside if block)                      
                         String res = runInvestorAllocationBasedOnWeighting(app); //CRM-1022 (pallavi) changed app.id to app
