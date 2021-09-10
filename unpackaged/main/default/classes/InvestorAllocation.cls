@@ -539,12 +539,9 @@ public with sharing class InvestorAllocation{
                         }
                         
                          else {
-                            clcommon__batch_process_log__c bpl = new clcommon__batch_process_log__c();
-                            bpl.clcommon__Log_Level__c = 'INFO';
-                            bpl.clcommon__Type__c = 'Info';
-                            bpl.clcommon__Batch_Id__c = app.id;
-                            bpl.clcommon__Message__c = 'Can not allocate to the investor '+acc.name+' because of one of the following reason \n 1.Weights\n2.Current Month Available balance\n3.Current Month Available Allocation';
-                            lstBpl.add(bpl);
+
+                           addBatchLogsToList(lstBpl, acc, app);
+
                         }
                         
                     }

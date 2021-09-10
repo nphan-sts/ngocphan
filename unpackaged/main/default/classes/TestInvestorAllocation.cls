@@ -1442,7 +1442,20 @@ private class TestInvestorAllocation{
             genesis__Rule__c = rule.id,
             genesis__Stipulation_Type__c = 'FUNDING'
         );
+        
         insert rul; 
+                //genesis__RuleCriteria__c rul =[select id,name,genesis__Rule__r.name from genesis__RuleCriteria__c where genesis__Rule__r.name = 'TCU ruleset'];
+        Account acco = new Account(
+            Name = 'Test',
+            loan__Investor__c=False,
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'TestFName2',
+            peer__Last_Name__c='TestLName2', 
+            City__c='CANADA',
+            State__c='CA',
+            ZIP_Code__c='123456'
+        );
+        Insert acco;
         Decimal investorWithLargestWeight = 0;
         Account acc1 = new Account(
             Name = 'Test1',
@@ -1460,12 +1473,14 @@ private class TestInvestorAllocation{
             City__c='CANADA',
             State__c='CA',
             ZIP_Code__c='123456',
-            //Investor_Alloted_Weight__c = 4,
+            Investor_Alloted_Weight__c = 0,
             Investor_Current_Weight__c = 0,
             Monthly_Funded_Cap__c = 10000,
             Total_Funded_MTD__c = 500,
             Monthly_Allocation_Cap__c = 10,
-            Total_Allocations_MTD__c = 1
+            // Total_Allocations_MTD__c =1,
+             Total_Allocations_MTD__c =0
+            
         );
         Insert acc1;
         Account acc2 = new Account(
@@ -1484,7 +1499,7 @@ private class TestInvestorAllocation{
             City__c='CANADA',
             State__c='CA',
             ZIP_Code__c='123456',
-            //Investor_Alloted_Weight__c = 4,
+            Investor_Alloted_Weight__c = 0,
             Investor_Current_Weight__c = 0,
             Monthly_Funded_Cap__c = 10000,
             Total_Funded_MTD__c = 500,
@@ -1494,6 +1509,32 @@ private class TestInvestorAllocation{
         );
         Insert acc2;
         
+         Account acc3 = new Account(
+            Name = 'Test1',
+            loan__Investor__c = true,
+            Amount_Invested__c = 1000,
+            Investment_Rules__c = rule.id,
+            Number_Of_Applications_Invested__c = 3, 
+            Total_No_of_Application_Limit__c = 30,
+            Total_Investment_Limit__c = 1000000,
+            loan__Undeployed_Funds__c = 500000,
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'TestFName1',
+            peer__Last_Name__c='TestLName2',
+            loan__Active__c = 'YES', 
+            City__c='CANADA',
+            State__c='CA',
+            ZIP_Code__c='123456',
+            Investor_Alloted_Weight__c = 0,
+            Investor_Current_Weight__c = 0,
+            Monthly_Funded_Cap__c = 10000,
+            Total_Funded_MTD__c = 500,
+            Monthly_Allocation_Cap__c = 10,
+            Total_Allocations_MTD__c =0
+        );
+        Insert acc3;
+         
+        
         genesis__Applications__c app1 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
             genesis__Expected_First_Payment_Date__c = system.Today(),
@@ -1502,13 +1543,36 @@ private class TestInvestorAllocation{
             genesis__Account__c = acc1.Id,
             Invested_Amount__c  = 1000,       
             Application_Start_DateV2__c = system.Today(),
-            genesis__Status__c = 'offer_shown',
+            //genesis__Status__c = 'offer_shown',
+            genesis__Status__c = 'Offer_accepted',
             genesis__Draw_Period_End_Date__c = system.Today(),
             Employment_Status__c    = 'Full Time',
             genesis__Loan_Amount__c = 1000,
             DCP_Investor_Eligibility__c = false
         );      
         Insert app1;
+        List<Account> listInvestor = [Select id,name,
+                                      Investment_Rules__c,
+                                      loan__Investor__c,
+                                      Last_Application_assigned_on__c,
+                                      Amount_Invested__c,
+                                      Number_Of_Applications_Invested__c
+                                      FROM Account
+                                      WHERE loan__Investor__c = true
+                                      AND Remaining_Amount__c >=: app1.genesis__loan_amount__c
+                                      AND Remaining_Applications__c >=: 1
+                                      AND loan__Active__c = 'Yes'
+                                      AND Name = 'Test1'
+                                      order by Last_Application_assigned_on__c
+                                     ];
+        
+        System.debug('****System.debug in Test Class*******'+listInvestor.size());
+        InvestorAllocation inv = new InvestorAllocation(true);
+        InvestorAllocation.runInvestorAllocationBasedOnWeighting(app1.id);
+        genesis__applications__c apps = [select id,name,investor__c from genesis__applications__c where id =: app1.id];
+        System.assertEquals(apps.investor__c,null );
+        genesis.RulesAPI.evaluateRules(app1,null,true,false);                 
+        
          
         genesis__Applications__c app2 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
