@@ -543,7 +543,9 @@ public with sharing class InvestorAllocation{
                         }
                         
                          else {
+
                            addBatchLogsToList(lstBpl, acc, app);
+
                         }
                         
                     }
