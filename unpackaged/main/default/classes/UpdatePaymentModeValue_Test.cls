@@ -3,6 +3,9 @@ public class UpdatePaymentModeValue_Test {
     
     static testMethod void UpdatePaymentModeValue()
     {   
+        loan__Org_Parameters__c cso = new loan__Org_Parameters__c(loan__Disable_Triggers__c = true);
+        insert cso;
+        
         loan__Payment_Mode__c lp=new loan__Payment_Mode__c();
         lp.Name='Waived';
         lp.loan__Summary__c=False;
@@ -15,9 +18,7 @@ public class UpdatePaymentModeValue_Test {
         loan__Payment_Mode__c  lpm=[Select Id,Name from loan__Payment_Mode__c where Id =:lp.Id];
         
         
-        Account acc = new Account();
-        acc.Name = 'Test Account';
-        acc.Account_External_ID__c = 'Test';
+        Account acc = new Account( Name = 'Test Account', Account_External_ID__c = 'Test');
         insert acc;
         
         loan.TestHelper.systemDate = Date.today();
@@ -151,10 +152,12 @@ public class UpdatePaymentModeValue_Test {
         String Id=lpt.Id;
         string Id1=dummyPmt2.Id;
         
+        //cso.loan__Disable_Triggers__c = true;
+        //update cso;
+
+        
         List<string> testdata=new List<string>();
         testdata.add(Id);
         UpdatePaymentModeValue.PaymentModeVal(testdata);
-        
-        
     }
 }

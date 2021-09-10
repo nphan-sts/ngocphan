@@ -8,7 +8,7 @@
  * Modified by      Date            JIRA number
  *    Pallavi       2020/01/14    CRM-952 (Completely automate the SAP processing for LoanOps/Produce errors/logs for failures.)
  * 	  Anusha		2021/02/17	  LSP-3 (Completely automate the SAP processing for LoanOps)
-   
+ *    Mohan Kiran   2021/08/02    LSP-292 - SAP changes  
  ******************Modification History*****************************************************************
  *****************************************************************************/
 global class ForBearanceLoanHelper {
@@ -49,6 +49,12 @@ global class ForBearanceLoanHelper {
         Decimal interestRate;
         String frequencyOfPayment;
         Boolean maintainDelinquency = true;
+        /*START
+         MKT Added the below code for LSP-292 */
+        if(lAtobeUpdated.loan__Loan_Status__c == 'Active - Bad Standing'){
+            maintainDelinquency = false;
+        }
+        /**END */
         Boolean actualInterestOnlyPayments = False;
         Integer amortizationTerm;
         Integer dueDay;
@@ -221,7 +227,14 @@ global class ForBearanceLoanHelper {
             System.debug('Call to rescheduleALoan of loanAction ends..');
             lAtobeUpdated.loan__Next_Installment_Date__c = repaymentStartDate;
             lAtobeUpdated.loan__Maturity_Date_Current__c = lastPaymentDate;
-            if((lAtobeUpdated.loan__Loan_Status__c).equals('Active - Good Standing')){
+            
+            /*
+             *  START - LSP-292 -Commented as part of LSP-292
+				*/
+         //   if((lAtobeUpdated.loan__Loan_Status__c).equals('Active - Good Standing')){ 
+           
+         //END- LSP-292
+         
                 /*LSP-3 start */
                 if(lAtobeUpdated.U_LoanModForbearance__c == null) lAtobeUpdated.U_LoanModForbearance__c = 0;
                 /************************************************************
@@ -247,7 +260,7 @@ global class ForBearanceLoanHelper {
                	lAtobeUpdated.loan__Oldest_Due_Date__c = repaymentStartDate;
                 lAtobeUpdated.Skipped_a_Pay__c = true;
                 System.debug('loan__Oldest_Due_Date__c is updated to: '+lAtobeUpdated.loan__Oldest_Due_Date__c);
-            }
+       //     }
             
             lAtobeUpdated.Skipped_a_pay_Date__c = systemDate;//updating date on which skip-a-pay is performed
             /* LSP-3 start */
@@ -341,7 +354,8 @@ global class ForBearanceLoanHelper {
     public void checkIfLoanisEligibleForReschedule(loan__Loan_Payment_Transaction__c lpt){
         Date paymentTxnDate = lpt.loan__Transaction_Date__c;
         System.debug('paymentTxnDate: ' + paymentTxnDate +' and systemDate: '+systemDate);
-        if(paymentTxnDate >= systemDate){//reject the loan and then reschedule
+        /*START- LSP-292 Added OR condition to include bad standing loans to be included in skip a pay.*/
+        if((paymentTxnDate >= systemDate) || ((paymentTxnDate < systemDate) && (lAtobeUpdated.loan__Loan_Status__c == 'Active - Bad Standing'))){//reject the loan and then reschedule
            System.debug('isEligibleForReschedule is true'); //pallavi
            lpt.loan__Rejected__c = true;
            lpt.loan__Sent_to_ACH__c = true;
@@ -349,7 +363,7 @@ global class ForBearanceLoanHelper {
            lpt.loan__ACH_Filename__c = 'SkipAPayjobFileDiscard';
            update lpt;
            isEligibleForReschedule = true;
-        }else{//if(paymentTxnDate < systemDate){
+        }else{//if(paymentTxnDate < systemDate){  //is this commented as part of LSP-292?
             batch.loan__Log_Level__c = 'ERROR';
             batch.loan__Message__c = 'There is an unprocessed payment on this contract, hence the loan cannot be rescheduled ::'+ lAtobeUpdated.Name;                
             batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
