@@ -33,14 +33,14 @@ public with sharing class ActivityOnOtherAccountsController {
             Map<Id, genesis__Applications__c> mapCurrentApps = new Map<Id, genesis__Applications__c>();
             List<AcctActivity> tempAcctActivities = new List<AcctActivity>();
 
-            Account currentAcct = [SELECT Id, Name, social_security_number_uniqueness_field__c,
+            Account currentAcct = [SELECT Id, Name, social_security_number_uniqueness_field__c, 
             loan__SOCIAL_SECURITY_NUMBER__c, cnotify__Email__c, peer__Date_of_Birth__c
             FROM Account WHERE Id = :AcctId];
 
             If  (currentAcct == null){
                 return;
-            }
-
+            } 
+            
             if(string.isEmpty(currentAcct.social_security_number_uniqueness_field__c) == false ){
                 setDuplicateSsn.Add(currentAcct.social_security_number_uniqueness_field__c);
             }else if(string.isEmpty(currentAcct.loan__SOCIAL_SECURITY_NUMBER__c) == false){
@@ -57,12 +57,12 @@ public with sharing class ActivityOnOtherAccountsController {
 
             For(genesis__Applications__c app : listApps) {
                         mapCurrentApps.put(app.genesis__Account__c, app);
-
+                        
                         if(string.isEmpty(app.Bureau_SSN__c) == false){
                             setDuplicateSsn.Add(app.Bureau_SSN__c);
                         }
             }
-
+            
             if(setDuplicateSsn.size() == 0)
             {
                 IsSsnExist = false;
