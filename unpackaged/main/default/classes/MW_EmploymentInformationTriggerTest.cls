@@ -9,7 +9,7 @@ private class MW_EmploymentInformationTriggerTest {
             //Test Verification_Complexity__c = Hard
             //-----------------------------------------
             Account act = MW_GlobalTestUtility.GetAccount('Member');
-            //act.Annual_Individual_Income__c = 100;	//CRM-1025
+            act.Annual_Individual_Income__c = 100;
             insert act;
 
             genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
@@ -51,7 +51,7 @@ private class MW_EmploymentInformationTriggerTest {
             //---------------------------------------------
             //Test Verification_Complexity__c = Easy
             //---------------------------------------------
-            //act.Monthly_Housing_Payment__c = 400;	//CRM-1025
+            act.Monthly_Housing_Payment__c = 400;
             update act;
 
             KBA_Details__c kbaEasy = MW_GlobalTestUtility.GetKbaDetails();
@@ -101,7 +101,7 @@ private class MW_EmploymentInformationTriggerTest {
 
         Test.stopTest();
     }
-
+    
     @isTest
     static void testSendVerificationWorkEmail() {
         genesis__Applications__c application = MW_GlobalTestUtility.GetApplication();
@@ -127,5 +127,4 @@ private class MW_EmploymentInformationTriggerTest {
 
 
     }
-
 }
