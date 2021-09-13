@@ -1,5 +1,5 @@
 @isTest
-private class TestShowToastMessageExtension {
+private class APSWarningMSGExtensionTest {
     
     @testSetup 
     static void setup(){
@@ -99,7 +99,7 @@ private class TestShowToastMessageExtension {
                                                   loan__Type__c, loan__Bank_Account__c, loan__Debit_Date__c
                                                   FROM loan__Automated_Payment_Setup__c WHERE External_Id__c='testlauto01234'];
         ApexPages.StandardController autoPage = new ApexPages.StandardController(lauto);
-        ShowToastMessageExtension toastExt = new ShowToastMessageExtension(autoPage);
+        APSWarningMSGExtension toastExt = new APSWarningMSGExtension(autoPage);
         PageReference pageRef = Page.DisplayMessage;
         pageRef.getParameters().put('id', String.valueOf(lauto.Id));
        
@@ -128,7 +128,7 @@ private class TestShowToastMessageExtension {
             update lauto;
         Test.stopTest();
         ApexPages.StandardController autoPage = new ApexPages.StandardController(lauto);
-        ShowToastMessageExtension toastExt = new ShowToastMessageExtension(autoPage);
+        APSWarningMSGExtension toastExt = new APSWarningMSGExtension(autoPage);
         PageReference pageRef = Page.DisplayMessage;
         pageRef.getParameters().put('id', String.valueOf(lauto.Id));
        
@@ -157,7 +157,7 @@ private class TestShowToastMessageExtension {
             update lauto;
         Test.stopTest();
         ApexPages.StandardController autoPage = new ApexPages.StandardController(lauto);
-        ShowToastMessageExtension toastExt = new ShowToastMessageExtension(autoPage);
+        APSWarningMSGExtension toastExt = new APSWarningMSGExtension(autoPage);
         PageReference pageRef = Page.DisplayMessage;
         pageRef.getParameters().put('id', String.valueOf(lauto.Id));
        
@@ -166,20 +166,4 @@ private class TestShowToastMessageExtension {
         System.assertEquals(message, '','No Warning message displayed');
     }
     
-    static testmethod void updateLoanAcc() {
-        test.startTest();
-        loan__loan_account__c LoanAcc = [Select id,name,
-                                         loan__Loan_Status__c
-                                         from loan__loan_account__c where lead_guid__C = 'TestClassGuid0'];
-        
-        try{
-            LoanAcc.loan__Loan_Status__c = 'Closed - obligations met';
-            update LoanAcc;
-        }
-        catch(exception e) {
-            System.debug('****** Exception Caught :   '+e.getMessage()); 
-        }
-        
-        Test.stopTest();
-    }
 }
