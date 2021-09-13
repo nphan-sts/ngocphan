@@ -36,6 +36,8 @@ public class Test_CLS_ProcessCPDJob {
 
 
         Account acc = new Account(Name = 'SF');
+        acc.peer__First_Name__c = 'First Name';
+        acc.peer__Last_Name__c = 'Last Name';
         insert acc;
         
 
