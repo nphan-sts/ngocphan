@@ -158,7 +158,7 @@ global class SelectOfferFromUI {
 
                         if(res.equalsIgnoreCase('Success')) {
 
-                          integer i = 1;
+                            integer i = 1;
                             if(sameInvestor != null){
                             while(i<=10){
                                 try{
