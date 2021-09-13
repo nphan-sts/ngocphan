@@ -4,44 +4,33 @@ private class MW_EmploymentInformationTriggerTest {
     static testMethod void TestUpdateApplications() {
         Test.startTest();
         try {
- 
+
             //-----------------------------------------
             //Test Verification_Complexity__c = Hard
             //-----------------------------------------
             Account act = MW_GlobalTestUtility.GetAccount('Member');
-            act.Annual_Individual_Income__c = 100;
+            //act.Annual_Individual_Income__c = 100;	//CRM-1025
             insert act;
-            
-            genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
-            insert cso;
 
             genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
             app.genesis__Account__c = act.Id;
             insert app;
-            
-            // Enable Genesis Triggers
-            cso.genesis__Disable_Triggers__c = false;
-            update cso;
 
             genesis__Employment_Information__c empInfo = MW_GlobalTestUtility.GetEmploymentInformation();
             empInfo.genesis__Application__c = app.Id;
             insert empInfo;
-            
-            cso.genesis__Disable_Triggers__c = true;
-            update cso;
 
-            /*Talx__c talx = MW_GlobalTestUtility.GetTalx();
+            Talx__c talx = MW_GlobalTestUtility.GetTalx();
             talx.Application__c = app.Id;
             insert talx;
-            
+
             KBA_Details__c kbaHard = MW_GlobalTestUtility.GetKbaDetails();
             kbaHard.Application__c = app.Id;
             insert kbaHard;
 
-            //System.assertEquals('Hard', [SELECT Id, Verification_Complexity__c FROM genesis__Applications__c WHERE Id=: app.Id].Verification_Complexity__c);
+            System.assertEquals('Hard', [SELECT Id, Verification_Complexity__c FROM genesis__Applications__c WHERE Id=: app.Id].Verification_Complexity__c);
 
             delete kbaHard;
-         
 
             //---------------------------------------------
             //Test Verification_Complexity__c = Very Easy
@@ -62,7 +51,7 @@ private class MW_EmploymentInformationTriggerTest {
             //---------------------------------------------
             //Test Verification_Complexity__c = Easy
             //---------------------------------------------
-            act.Monthly_Housing_Payment__c = 400;
+            //act.Monthly_Housing_Payment__c = 400;	//CRM-1025
             update act;
 
             KBA_Details__c kbaEasy = MW_GlobalTestUtility.GetKbaDetails();
@@ -77,14 +66,8 @@ private class MW_EmploymentInformationTriggerTest {
             //---------------------------------------------
             //Test Verification_Complexity__c = Regular
             //---------------------------------------------
-            cso.genesis__Disable_Triggers__c = false;
-            update cso;
-            
             empInfo.Income_Include_Bonuses_or_Commissions__c = true;
             update empInfo;
-            
-            cso.genesis__Disable_Triggers__c = true;
-            update cso;
 
             KBA_Details__c kbaReg = MW_GlobalTestUtility.GetKbaDetails();
             kbaReg.Application__c = app.Id;
@@ -118,4 +101,31 @@ private class MW_EmploymentInformationTriggerTest {
 
         Test.stopTest();
     }
+
+    @isTest
+    static void testSendVerificationWorkEmail() {
+        genesis__Applications__c application = MW_GlobalTestUtility.GetApplication();
+        insert application;
+
+        genesis__Employment_Information__c employment = MW_GlobalTestUtility.getEmploymentInformation();
+        employment.genesis__Application__c = application.id;
+
+        Test.startTest();
+
+        insert employment;
+        System.assertEquals(employment.Send_work_email_verification_Email__c, false);
+
+        employment.Work_Email__c = 'qa+somethingelse@happymoney.com';
+        update employment;
+        System.assertEquals(employment.Send_work_email_verification_Email__c, false);
+
+        employment.Work_Email__c = '';
+        update employment;
+        System.assertEquals(employment.Send_work_email_verification_Email__c, false);
+        
+        Test.stopTest();
+
+
+    }
+
 }
