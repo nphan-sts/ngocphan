@@ -3,7 +3,7 @@
     <apiVersion>52.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
-    <label>DisplayMessage</label>
+    <label>APSWarningMSG</label>
     <packageVersions>
         <majorNumber>2</majorNumber>
         <minorNumber>7016</minorNumber>
