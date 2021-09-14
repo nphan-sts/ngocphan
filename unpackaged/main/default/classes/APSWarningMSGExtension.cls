@@ -26,7 +26,7 @@ public class APSWarningMSGExtension {
         if(weekStart.daysBetween(dtCreateDate) == 0 
            || weekStart.daysBetween(dtCreateDate) == 6
            || weekStartDebit.daysBetween(paymentSetUp.loan__Debit_Date__c) == 0 
-           || weekStartDebit.daysBetween(paymentSetUp.loan__Debit_Date__c) == 6 || weekStart.daysBetween(dtCreateDate) == 5 && (timeavailable > 0)) {
+           || weekStartDebit.daysBetween(paymentSetUp.loan__Debit_Date__c) == 6 || (weekStart.daysBetween(dtCreateDate) == 5 && timeavailable > 0)) {
                return WARNING_MESSAGE;
            } 
         return '';
