@@ -104,7 +104,7 @@ global with sharing class MW_SkipAPayController {
         } catch (Exception e) { //add batch log records here
             	    batchLogRes.loan__Log_Level__c = 'ERROR';
                     batchLogRes.loan__Message__c = 'Error Message'+res.responseBody;                
-                    batchLogRes.loan__Batch_Id__c = 'MW_SkipAPayController';
+            		batchLogRes.loan__Origin__c = 'MW_SkipAPayController';
                     insert batchLogRes;
             
             System.debug(logginglevel.error, 'line number' + e.getLineNumber());
