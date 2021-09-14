@@ -43,7 +43,8 @@ global with sharing class MW_SkipAPayController {
             
              		batchLogReq.loan__Log_Level__c = 'INFO';
                     batchLogReq.loan__Message__c = 'The Parameters passed for Skip a Pay from member portal'+reqParams;                
-                    batchLogReq.loan__Batch_Id__c = 'MW_SkipAPayController';
+                    batchLogReq.loan__Batch_Id__c = loanId;
+            		batchLogRes.loan__Origin__c = 'MW_SkipAPayController';
                     insert batchLogReq;
             
             loan__Loan_Account__c loan = [
