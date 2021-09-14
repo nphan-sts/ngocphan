@@ -100,7 +100,7 @@ private class APSWarningMSGExtensionTest {
                                                   FROM loan__Automated_Payment_Setup__c WHERE External_Id__c='testlauto01234'];
         ApexPages.StandardController autoPage = new ApexPages.StandardController(lauto);
         APSWarningMSGExtension toastExt = new APSWarningMSGExtension(autoPage);
-        PageReference pageRef = Page.DisplayMessage;
+        PageReference pageRef = Page.APSWarningMSG;
         pageRef.getParameters().put('id', String.valueOf(lauto.Id));
        
         Test.setCurrentPage(pageRef);
@@ -129,7 +129,7 @@ private class APSWarningMSGExtensionTest {
         Test.stopTest();
         ApexPages.StandardController autoPage = new ApexPages.StandardController(lauto);
         APSWarningMSGExtension toastExt = new APSWarningMSGExtension(autoPage);
-        PageReference pageRef = Page.DisplayMessage;
+        PageReference pageRef = Page.APSWarningMSG;
         pageRef.getParameters().put('id', String.valueOf(lauto.Id));
        
         Test.setCurrentPage(pageRef);
@@ -158,7 +158,7 @@ private class APSWarningMSGExtensionTest {
         Test.stopTest();
         ApexPages.StandardController autoPage = new ApexPages.StandardController(lauto);
         APSWarningMSGExtension toastExt = new APSWarningMSGExtension(autoPage);
-        PageReference pageRef = Page.DisplayMessage;
+        PageReference pageRef = Page.APSWarningMSG;
         pageRef.getParameters().put('id', String.valueOf(lauto.Id));
        
         Test.setCurrentPage(pageRef);
