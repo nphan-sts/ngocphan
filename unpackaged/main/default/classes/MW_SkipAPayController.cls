@@ -14,6 +14,10 @@ global with sharing class MW_SkipAPayController {
     @HttpPost
     global static void SkipAPayController() {
         
+                loan__Batch_Process_Log__c batchLogReq = new loan__Batch_Process_Log__c();
+                loan__Batch_Process_Log__c batchLogRes = new loan__Batch_Process_Log__c();
+        
+
         boolean isFromApiCallout; // LSP-292 Added for Skip a pay enhancement. For bad standing loans. only when skip a pay is called from API the skip a pay should be processed.
         
         RestResponse res = RestContext.response;
@@ -23,7 +27,7 @@ global with sharing class MW_SkipAPayController {
             Id loanId;
             Integer numberOfSkips;
             Map<String, Object> reqParams = (Map<String, Object>) JSON.deserializeUntyped(
-                req.requestBody.toString()
+                req.requestBody.toString()  // insert batch record with request
             );
             if (
                 reqParams.get('loanId') == null ||
@@ -37,6 +41,10 @@ global with sharing class MW_SkipAPayController {
             loanId = (Id) reqParams.get('loanId');
             numberOfSkips = (Integer) reqParams.get('numberOfSkips');
             
+             		batchLogReq.loan__Log_Level__c = 'INFO';
+                    batchLogReq.loan__Message__c = 'The Parameters passed for Skip a Pay from member portal'+reqParams;                
+                    batchLogReq.loan__Batch_Id__c = 'MW_SkipAPayController';
+                    insert batchLogReq;
             
             loan__Loan_Account__c loan = [
                 SELECT
@@ -91,7 +99,13 @@ global with sharing class MW_SkipAPayController {
             res.statusCode = temp.statusCode;
             res.responseBody = temp.responseBody;
             
-        } catch (Exception e) {
+            
+        } catch (Exception e) { //add batch log records here
+            	    batchLogRes.loan__Log_Level__c = 'ERROR';
+                    batchLogRes.loan__Message__c = 'Error Message'+res.responseBody;                
+                    batchLogRes.loan__Batch_Id__c = 'MW_SkipAPayController';
+                    insert batchLogRes;
+            
             System.debug(logginglevel.error, 'line number' + e.getLineNumber());
             System.debug(
                 logginglevel.error,

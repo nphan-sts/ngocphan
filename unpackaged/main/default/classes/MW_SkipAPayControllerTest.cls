@@ -154,10 +154,13 @@ private class MW_SkipAPayControllerTest {
         loanRepaymentSchedule9.loan__Is_Billed__c = false;	
         insert loanRepaymentSchedule9;     	
     }	
-    //Method for constructor which takes system date
-    static testMethod void testPost() {	
+    //Valid loan id
+    static testMethod void testPostwithValidLoanId() {	
         List<loan__Loan_Account__c> count = [ SELECT Id FROM loan__Loan_Account__c ];	
-        loan__Loan_Account__c loan = [ SELECT Id, Name, Skipped_a_Pay__c FROM loan__Loan_Account__c LIMIT 1 ];	
+        loan__Loan_Account__c loan = [ SELECT Id, Name,
+                                      loan__Loan_Status__c,Skipped_a_Pay__c,
+                                      U_LoanModForbearance__c,U_LoanModForbearDt__c,U_LoanModTermExt__c
+                                      FROM loan__Loan_Account__c LIMIT 1 ];	
         RestRequest req = new RestRequest(); 	
         RestResponse res = new RestResponse();             	
         req.requestURI = '/services/apexrest/skipapay/';	
@@ -167,29 +170,22 @@ private class MW_SkipAPayControllerTest {
         RestContext.response= res;	
         MW_SkipAPayController.SkipAPayController();
         
-        ForBearanceLoanHelper helper = new ForBearanceLoanHelper( 'test', system.today() );
-        ForBearanceLoanHelper helper1 = new ForBearanceLoanHelper( loan, 1);
+      	ForBearanceLoanHelper helper = new ForBearanceLoanHelper( 'test', system.today() );
+      	ForBearanceLoanHelper helper1 = new ForBearanceLoanHelper( loan, 1);
         
+        
+        system.assertEquals(loan.loan__Loan_Status__c, 'Active - Good Standing');
+        system.assertEquals(loan.Skipped_a_Pay__c, False);
+        system.assertEquals(loan.U_LoanModForbearance__c , null);
+        system.assertEquals(loan.U_LoanModForbearDt__c, null);
+        system.assertEquals(loan.U_LoanModTermExt__c, null);
+        
+      
     }	
     
-    //method for constructor which takes parameters without isfromapi
-    static testMethod void testPost2() {
-        
-        
-        List<loan__Loan_Account__c> count = [ SELECT Id FROM loan__Loan_Account__c ];	
-        loan__Loan_Account__c loan = [ SELECT Id, Name, Skipped_a_Pay__c FROM loan__Loan_Account__c where lead_guid__C = 'TestClassGuid0' LIMIT 1 ];	
-        RestRequest req = new RestRequest(); 	
-        RestResponse res = new RestResponse();             	
-        req.requestURI = '/services/apexrest/skipapay/';	
-        req.httpMethod = 'POST';	
-        req.requestBody = Blob.valueOf('{ "loanId": "' + loan.id + '", "numberOfSkips": 2}');	
-        RestContext.request = req;	
-        RestContext.response= res;	
-        MW_SkipAPayController.SkipAPayController();
-        
-    }
+   
     //False scenario
-    static testMethod void testPost3() {
+    static testMethod void testPostCallApiFalse() {
         
         loan__Loan_Account__c loan = [ SELECT Id, Name,lead_guid__C,Skipped_a_pay_Date__c,loan__Maturity_Date_Current__c,loan__Interest_Rate__c,
                                       loan__Loan_Status__c, Skipped_a_Pay__c,loan__Pmt_Amt_Cur__c,Hardship_New_Maturity_Date__c,loan__First_Installment_Date__c,loan__Frequency_of_Loan_Payment__c,
@@ -200,10 +196,15 @@ private class MW_SkipAPayControllerTest {
         
         ForBearanceLoanHelper helper2 = new ForBearanceLoanHelper(loan,1,false);
         helper2.rescheduleLoan(new Map<String, String>());
+       
         
+        system.assertEquals(loan.loan__Loan_Status__c, 'Active - Good Standing');
+        system.assertEquals(loan.Skipped_a_Pay__c, True);
+        system.assertEquals(loan.U_LoanModForbearance__c , 1);
+        system.assertEquals(loan.U_LoanModTermExt__c , 1);
     }
     //For bad standing loan
-    static testMethod void testPost4() {
+    static testMethod void testPostBadStandingLoan() {
         
         
         loan.GlobalLoanUtilFacade util = new loan.GlobalLoanUtilFacade();	
@@ -272,10 +273,89 @@ private class MW_SkipAPayControllerTest {
         
         helper2.checkIfLoanisEligibleForReschedule(lpt);
         
-        
+         
+        system.assertEquals(loan.loan__Loan_Status__c, 'Active - Bad Standing');
+        system.assertEquals(loan.Skipped_a_Pay__c, False);
+        system.assertEquals(loan.U_LoanModForbearance__c , null);
+        system.assertEquals(loan.U_LoanModForbearDt__c, null);
+        system.assertEquals(loan.U_LoanModTermExt__c, null);
         
     }
     
-    
+    static testMethod void testSkippedaPayTrue() {
+        
+        
+        loan.GlobalLoanUtilFacade util = new loan.GlobalLoanUtilFacade();	
+        Date systemDate = util.getCurrentSystemDate();
+        
+        loan__Loan_Account__c loan = [ SELECT Id, Name,lead_guid__C,Skipped_a_pay_Date__c,loan__Maturity_Date_Current__c,loan__Interest_Rate__c,
+                                      loan__Loan_Status__c, Skipped_a_Pay__c,loan__Pmt_Amt_Cur__c,Hardship_New_Maturity_Date__c,loan__First_Installment_Date__c,loan__Frequency_of_Loan_Payment__c,
+                                      loan__Next_Installment_Date__c ,
+                                      loan__Oldest_Due_Date__c,U_LoanModForbearDt__c,U_LoanModForbearance__c,
+                                      Hardship_Request_Date__c ,U_LoanModTermExt__c FROM
+                                      loan__Loan_Account__c where lead_guid__C = 'TestClassGuid0' ];
+       
+        loan.loan__Loan_Status__c = 'Active - Bad Standing';
+        loan.Skipped_a_Pay__c = true;
+        loan.Skipped_a_pay_Date__c = system.today();
+        update loan;
+        
+        loan__Payment_Mode__c paymentmode = new loan__Payment_Mode__c();
+        paymentmode.name = 'Cash';
+        insert paymentmode;
+        
+        list<loan__Loan_Payment_Transaction__c> lptlist = new list<loan__Loan_Payment_Transaction__c>();
+        
+        loan__Loan_Payment_Transaction__c lpt = new loan__Loan_Payment_Transaction__c();
+        
+        
+        lpt.loan__Loan_Account__c = loan.id;
+        
+        lpt.loan__Cleared__c = false;
+        lpt.loan__Rejected__c = false;
+        lpt.loan__Reversed__c = false;
+        lpt.loan__Sent_to_ACH__c = false;
+        lpt.loan__Loan_Snapshot__c = '';
+        
+        lpt.loan__Transaction_Amount__c = 2000;
+        lpt.loan__Payment_Mode__c = paymentmode.id;
+        lpt.loan__Transaction_Date__c = system.today();
+        lpt.loan__Receipt_Date__c = Date.newInstance(2021, 06, 25);
+        insert lpt;
+        lptlist.add(lpt);
+        update lptlist;
+        
+        
+        
+        
+        loan__Repayment_Schedule_Summary__c repaymentScheduleSummarySap = new loan__Repayment_Schedule_Summary__c();	
+        repaymentScheduleSummarySap.loan__RSS_No_Of_Pmts__c = 12;	
+        repaymentScheduleSummarySap.loan__Archived__c = false;	
+        repaymentScheduleSummarySap.loan__RSS_Loan_Account__c = loan.Id;	
+        insert repaymentScheduleSummarySap;	
+        
+        
+        loan__Repayment_Schedule__c loanRepaymentScheduleSap = new loan__Repayment_Schedule__c();
+        
+        loanRepaymentScheduleSap.loan__Due_Date__c = systemDate.addMonths(1);	
+        loanRepaymentScheduleSap.loan__Loan_Account__c = loan.Id;	
+        loanRepaymentScheduleSap.loan__Is_Archived__c = false;	
+        loanRepaymentScheduleSap.loan__Balance__c = 2188.70;	
+        loanRepaymentScheduleSap.loan__Due_Amount__c = 2188.70;	
+        loanRepaymentScheduleSap.loan__isPaid__c = false;	
+        loanRepaymentScheduleSap.loan__Is_Billed__c = false;	
+        insert loanRepaymentScheduleSap;
+        
+        ForBearanceLoanHelper helper2 = new ForBearanceLoanHelper(loan,2,true);
+        
+        helper2.rescheduleLoan(new Map<String, String>());
+        
+        system.assertEquals(loan.loan__Loan_Status__c, 'Active - Bad Standing');
+        system.assertEquals(loan.Skipped_a_Pay__c, True);
+        system.assertEquals(loan.U_LoanModForbearance__c , null);
+        system.assertEquals(loan.U_LoanModForbearDt__c, null);
+        system.assertEquals(loan.U_LoanModTermExt__c, null);
+        
+    }
     
 }

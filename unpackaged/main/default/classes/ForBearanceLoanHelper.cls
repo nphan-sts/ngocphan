@@ -34,7 +34,6 @@
         global ForBearanceLoanHelper(loan__loan_Account__c loanAccount, Integer numberOfSkipsSent){  
             lAtobeUpdated = loanAccount;
             numberOfSkips = numberOfSkipsSent;
-            //System.debug('Loan to process: '+loanAccount.Name +' with numberOfSkips as '+numberOfSkips);
         }
        
         /* START-LSP-292 Block1 SAP for badloans 
@@ -126,7 +125,8 @@
                 }
                
                 System.debug('leadId..: '+leadId);          
-               
+            /*   
+             * Removed as part of LSP-292 - Reason: This condition is not required to be checeked.
                 if (lAtobeUpdated == null ) {
                     batch.loan__Log_Level__c = 'ERROR';
                     batch.loan__Message__c = 'Please check the Lead Id as there are no contracts for the provided leadId ::'+ lAtobeUpdated.Name;                
@@ -137,7 +137,7 @@
                     res.responseBody = Blob.valueOf('{"message": "' + batch.loan__Message__c + '"}');
                     return res;
                 }
-               
+               */
                 system.debug('Skipped_a_Pay__c: '+lAtobeUpdated.Skipped_a_Pay__c+' and Skipped_a_pay_Date__c: '+lAtobeUpdated.Skipped_a_pay_Date__c);
                 //Before processing the loan, check if skip-a-pay action is already peformed for the loan, if yes log an exception and dont process that loan
                 if(lAtobeUpdated.Skipped_a_Pay__c != null && lAtobeUpdated.Skipped_a_Pay__c == true){
@@ -159,6 +159,12 @@
                     //to check if payment for next month has to be skipped                
                     System.Debug('Nacha is already sent');
                     res.statusCode = 405;
+                    
+                    	batch.loan__Log_Level__c = 'ERROR';
+                        batch.loan__Message__c = 'Nacha is Already sent for this Loan Account : '+lAtobeUpdated.Name;                
+                        batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
+                        insert batch;
+                    
                     res.responseBody = Blob.valueOf('{"message": "' + 'Nacha is already sent::'+ lAtobeUpdated.Name + '"}');
                     return res;
                 }// if NACHA is not sent, loan is rescheduled as it is done for any other loan
@@ -168,7 +174,13 @@
                 if(isEligibleForReschedule == false){
                     res.statusCode = 405;
                     res.responseBody = Blob.valueOf('{"message": "' + 'Loan is not eligible for reschedule ::'+ lAtobeUpdated.Name + '"}');
+                    	
+                    	batch.loan__Log_Level__c = 'ERROR';
+                        batch.loan__Message__c = 'This loan is not eligible for rescudeule. The Loan name is : '+lAtobeUpdated.Name;                
+                        batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
+                        insert batch;
                     return res; //don't process the loan if it is not eligible for rescheduling
+                    
                 }
                
                 //set repayment date
@@ -345,9 +357,7 @@
                 remainingTerm = (Integer)(loan.DateUtil.cyclesBetween(lAtobeUpdated.loan__Next_Installment_Date__c,
                                                                       lAtobeUpdated.loan__Maturity_Date_Current__c,
                                                                       lAtobeUpdated.loan__Frequency_of_Loan_Payment__c));
-                System.debug(logginglevel.error,'remainingTerm in IF'+remainingTerm);
             }
-            System.debug(logginglevel.error,'remainingTerm'+remainingTerm);
             return remainingTerm;
         }
        
@@ -358,7 +368,6 @@
     */
         public boolean checkIfNachaisSent(){
             System.debug('Checking if Nacha is sent..');
-            system.debug('++++++++++++++++++++++++++'+lAtobeUpdated.Id);
             boolean isSentToNacha = false;
             List<loan__Loan_Payment_Transaction__c> lpt = [Select Id,Name,
                                                            loan__Loan_Account__c,
@@ -375,7 +384,6 @@
                                                            AND loan__Reversed__c = false
                                                            order by loan__Transaction_Date__c desc  //pallavi(added order by)
                                                           ];
-            system.debug('++++++++from controller'+lpt);
             if(lpt.size() > 0){
                
                 if(lpt.get(0).loan__Sent_to_ACH__c == true){//skip the loan
