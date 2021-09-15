@@ -12,7 +12,7 @@
    	*  Mohan Kiran 	 2021/09/09	   LSP-292-Processing skip a pay for bad standing loans coming from callouts.
 
     ******************Modification History*****************************************************************
-    *****************************************************************************/
+    ******************************************************************************/
     global class ForBearanceLoanHelper {
        
         public loan__Loan_Account__c lAtobeUpdated;
