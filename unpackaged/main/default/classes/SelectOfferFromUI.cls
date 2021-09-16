@@ -145,14 +145,20 @@ global class SelectOfferFromUI {
                 
                 try{
 
-                    if(app.Investor__c!=null && oldAppStatus.equalsIgnoreCase('offer_accepted')) {	//CRM-1022 (pallavi) added status condition
-                        
-                        //update app; //CRM-1022 (pallavi) (moving inside if block)                      
+                    /* LOP-337: allocation happens at advp, support advp as well as offer accepted.
+                                cannot remove offer_accepted from being assigned to offer_accepted,
+                                or else risk breaking existing workflows that depend on offer_accepted as interim status
+                     */
+                    if(app.Investor__c!=null && (
+                            oldAppStatus.equalsIgnoreCase('offer_accepted') ||
+                            oldAppStatus.endsWithIgnoreCase('agent_document_verification_pending'))) {	//CRM-1022 (pallavi) added status condition
+
+                        update app; //CRM-1022 (pallavi) (moving inside if block) LOP-337 restoring update so APR is available
                         String res = runInvestorAllocationBasedOnWeighting(app); //CRM-1022 (pallavi) changed app.id to app
-                        
+
                         if(res.equalsIgnoreCase('Success')) {
-                          
-                          integer i = 1;
+
+                            integer i = 1;
                             if(sameInvestor != null){
                             while(i<=10){
                                 try{
@@ -187,14 +193,14 @@ global class SelectOfferFromUI {
                                         insert bplog;
                                     return 'Error updating investor';
                                 }
-                                        
-                          }      
-                          
+
+                          }
+
                           update app;
-                            
+
                           system.debug('appupdated'+app);
-                          p.Is_Offer_Selected__c=true;                          
-                          update p;   
+                          p.Is_Offer_Selected__c=true;
+                          update p;
 
                           system.debug('offerupdated'+p);
                           if(!test.isRunningTest())//CRM-1022 - added this condition only to handle test case
@@ -203,7 +209,7 @@ global class SelectOfferFromUI {
                           return 'Offer is been successfully approved/selected';
 
                         } else {
-                            
+
                             Database.rollback(sp);
                             return res;
                         }
@@ -213,11 +219,11 @@ global class SelectOfferFromUI {
                         update app;
                         system.debug('appupdated'+app);
                         p.Is_Offer_Selected__c=true;
-                        update p; 
+                        update p;
 
                     }
                     MW_Utilities.clearDCPForEBP(approve);
-                    
+
                 } catch(System.Exception err){
                     Database.rollback(sp);
                     System.debug(err.getStackTraceString());
@@ -231,7 +237,7 @@ global class SelectOfferFromUI {
                     System.debug(err.getStackTraceString());
                     return err.getMessage();
                 }
-                
+
             }
         }
        return 'Offer is been successfully approved/selected';
@@ -378,8 +384,14 @@ global class SelectOfferFromUI {
                                           
                                          ];
             }
-            
-            if(listInvestor != null && listInvestor.size() > 0 ){
+
+            System.debug('listInvestor for reallocation: ' + listInvestor.size());
+            System.debug('setruleIDs: ' + setruleIDs);
+            for(Account acc : listInvestor) {
+                System.debug('investor name: ' + acc.Name + ' ruleid: ' + acc.Investment_Rules__c);
+            }
+
+          if(listInvestor != null && listInvestor.size() > 0 ){
                 
                 // Logic to asign based on the partner weighting
                 Integer totalInvestor = listInvestor.size();
