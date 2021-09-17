@@ -9,12 +9,12 @@
     * Modified by      Date            JIRA number
     *  Pallavi       2020/01/14    CRM-952 (Completely automate the SAP processing for LoanOps/Produce errors/logs for failures.)
     *  Anusha 		 2021/02/17    LSP-3 (Completely automate the SAP processing for LoanOps)
-   	*  Mohan Kiran 	 2021/09/09	   LSP-292-Processing skip a pay for bad standing loans coming from callouts.
-
+    *  Mohan Kiran 	 2021/09/09	   LSP-292-Processing skip a pay for bad standing loans coming from callouts.
+    
     ******************Modification History*****************************************************************
     ******************************************************************************/
     global class ForBearanceLoanHelper {
-       
+        
         public loan__Loan_Account__c lAtobeUpdated;
         public Integer numberOfSkips = 1;
         public boolean isFromAPI ;//This is to identify if the class is called from Endpoint. Only calls coming from endpoint process bad standing loans
@@ -25,36 +25,38 @@
         loan__Batch_Process_Log__c batch = new loan__Batch_Process_Log__c();
         boolean isEligibleForReschedule = false;
         Map<String,String> contractSAPerror; //CRM-952
-       
+        
         global ForBearanceLoanHelper(String leadGuid,Date repaymentDate){  
             leadId = leadGuid;
             repaymentStartDate = repaymentDate;
+            isFromAPI = false;
         }
-       
+        
         global ForBearanceLoanHelper(loan__loan_Account__c loanAccount, Integer numberOfSkipsSent){  
             lAtobeUpdated = loanAccount;
             numberOfSkips = numberOfSkipsSent;
+            isFromAPI = false;
         }
-       
+        
         /* START-LSP-292 Block1 SAP for badloans 
-			* This constructor gets called when the Skip a pay end point is called.*/
-       
+    * This constructor gets called when the Skip a pay end point is called.*/
+        
         global ForBearanceLoanHelper(loan__loan_Account__c loanAccount, Integer numberOfSkipsSent, boolean isFromApiCallout){  
             lAtobeUpdated = loanAccount;
             numberOfSkips = numberOfSkipsSent;
             isFromAPI = isFromApiCallout;
             
         }
-       /*END-LSP-292-Block1*/
-       
+        /*END-LSP-292-Block1*/
+        
         global RestResponse rescheduleLoan(Map<String,String> contractSAPerror) { //CRM-952
             RestResponse res = new RestResponse();
             Date CPDExpireDate;
             String CPDReason;
             this.contractSAPerror = contractSAPerror;
-           
+            
             Date transactionDate = systemDate; //reschedule transaction date
-           
+            
             Date secondPaymentDate = null;
             Date lastPaymentDate;
             Integer noOfInstallments = null;
@@ -62,15 +64,15 @@
             Decimal interestRate;
             String frequencyOfPayment;
             Boolean maintainDelinquency = true;
-           /* START-LSP-292 Block2 
-				*Maintain Delinquency flag should be set to false when the active bad standing loan comes from processing
-			*/
+            /* START-LSP-292 Block2 
+    *Maintain Delinquency flag should be set to false when the active bad standing loan comes from processing
+    */
             
             if(lAtobeUpdated!= null && isFromAPI && lAtobeUpdated.loan__Loan_Status__c == 'Active - Bad Standing'){
-               
+                
                 maintainDelinquency = false;
-           
-                    }
+                
+            }
             
             /*END-LSP-292 Block2*/
             
@@ -80,12 +82,12 @@
             String stepUpOption = null;
             Decimal interestOnlyPaymentAmt = 0;
             Boolean regenerateInvAmzSchedule = True;
-           
+            
             try {      
                 if(leadId == null){              
                     leadId = lAtobeUpdated.lead_Guid__c;
                 }
-               
+                
                 if(lAtobeUpdated == null){
                     lAtobeUpdated = [Select id,name,lead_Guid__c,loan__First_Installment_Date__c,
                                      Application__r.genesis__Monthly_Debt_Payments__c,
@@ -121,23 +123,23 @@
                                      /* LSP-3 end */
                                      from loan__Loan_Account__c
                                      where lead_guid__c =: leadId limit 1];
-                   
+                    
                 }
-               
+                
                 System.debug('leadId..: '+leadId);          
-            /*   
-             * Removed as part of LSP-292 - Reason: This condition is not required to be checeked.
-                if (lAtobeUpdated == null ) {
-                    batch.loan__Log_Level__c = 'ERROR';
-                    batch.loan__Message__c = 'Please check the Lead Id as there are no contracts for the provided leadId ::'+ lAtobeUpdated.Name;                
-                    batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
-                    insert batch;
-                    contractSAPerror.put(lAtobeUpdated.Name,batch.loan__Message__c); //CRM-952
-                    res.statusCode = 404;
-                    res.responseBody = Blob.valueOf('{"message": "' + batch.loan__Message__c + '"}');
-                    return res;
-                }
-               */
+                /*   
+    * Removed as part of LSP-292 - Reason: This condition is not required to be checeked.
+    if (lAtobeUpdated == null ) {
+    batch.loan__Log_Level__c = 'ERROR';
+    batch.loan__Message__c = 'Please check the Lead Id as there are no contracts for the provided leadId ::'+ lAtobeUpdated.Name;                
+    batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
+    insert batch;
+    contractSAPerror.put(lAtobeUpdated.Name,batch.loan__Message__c); //CRM-952
+    res.statusCode = 404;
+    res.responseBody = Blob.valueOf('{"message": "' + batch.loan__Message__c + '"}');
+    return res;
+    }
+    */
                 system.debug('Skipped_a_Pay__c: '+lAtobeUpdated.Skipped_a_Pay__c+' and Skipped_a_pay_Date__c: '+lAtobeUpdated.Skipped_a_pay_Date__c);
                 //Before processing the loan, check if skip-a-pay action is already peformed for the loan, if yes log an exception and dont process that loan
                 if(lAtobeUpdated.Skipped_a_Pay__c != null && lAtobeUpdated.Skipped_a_Pay__c == true){
@@ -152,96 +154,97 @@
                         return res;
                     }
                 }
-               
-               
+                
+                
                 //check if NACHA file s already sent. if yes, dont skip the payment, reschedule is not needed.. break and return            
                 if(checkIfNachaisSent()){
                     //to check if payment for next month has to be skipped                
                     System.Debug('Nacha is already sent');
                     res.statusCode = 405;
                     
-                    	batch.loan__Log_Level__c = 'ERROR';
-                        batch.loan__Message__c = 'Nacha is Already sent for this Loan Account : '+lAtobeUpdated.Name;                
-                        batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
-                        insert batch;
+                    batch.loan__Log_Level__c = 'ERROR';
+                    batch.loan__Message__c = 'Nacha is Already sent for this Loan Account : '+lAtobeUpdated.Name;                
+                    batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
+                    insert batch;
                     
                     res.responseBody = Blob.valueOf('{"message": "' + 'Nacha is already sent::'+ lAtobeUpdated.Name + '"}');
                     return res;
                 }// if NACHA is not sent, loan is rescheduled as it is done for any other loan
-               
+                
                 System.debug('isEligibleForReschedule----' + isEligibleForReschedule);  //pallavi
-               
+                
                 if(isEligibleForReschedule == false){
                     res.statusCode = 405;
                     res.responseBody = Blob.valueOf('{"message": "' + 'Loan is not eligible for reschedule ::'+ lAtobeUpdated.Name + '"}');
-                    	
-                    	batch.loan__Log_Level__c = 'ERROR';
-                        batch.loan__Message__c = 'This loan is not eligible for rescudeule. The Loan name is : '+lAtobeUpdated.Name;                
-                        batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
-                        insert batch;
+                    
+                    loan__Batch_Process_Log__c rescheduleBatch = new loan__Batch_Process_Log__c(); 
+                    rescheduleBatch.loan__Log_Level__c = 'ERROR';
+                    rescheduleBatch.loan__Message__c = 'This loan is not eligible for rescudeule. The Loan name is : '+lAtobeUpdated.Name;                
+                    rescheduleBatch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
+                    insert rescheduleBatch;
                     return res; //don't process the loan if it is not eligible for rescheduling
                     
                 }
-               
+                
                 //set repayment date
                 Integer limitNumber = Integer.valueOf(numberOfSkips)+1;
-               // Integer dueDateNumber =  Integer.valueOf(numberOfSkips)-1;
-                System.debug('numberOfSkips.. '+numberOfSkips + ' limit:'+limitNumber + ' lAtobeUpdated.Id: '+lAtobeUpdated.Id +' systemDate: '+systemDate);  
+                // Integer dueDateNumber =  Integer.valueOf(numberOfSkips)-1;
+                System.debug('/ '+numberOfSkips + ' limit:'+limitNumber + ' lAtobeUpdated.Id: '+lAtobeUpdated.Id +' systemDate: '+systemDate);  
                 if(lAtobeUpdated!= null && lAtobeUpdated.loan__Loan_Status__c == 'Active - Good Standing'){
-                List<loan__Repayment_Schedule__c> amortSchedule = [select id, name,
-                                                                   loan__Due_Date__c,
-                                                                   loan__is_Archived__c,
-                                                                   loan__isPaid__c,
-                                                                   loan__Is_Billed__c
-                                                                   from loan__Repayment_Schedule__c
-                                                                   where loan__Loan_Account__r.Id = :lAtobeUpdated.Id
-                                                                   AND loan__is_Archived__c = false
-                                                                   AND loan__isPaid__c = false
-                                                                   AND loan__due_date__c >= :systemDate
-                                                                   order by loan__Due_Date__c asc limit :limitNumber];
-                if(amortSchedule.size()>0){                                                
-                    repaymentStartDate = amortSchedule.get(Integer.valueOf(numberOfSkips)).loan__due_date__c;
-                }
-                system.debug('repaymentStartDate is: '+repaymentStartDate);
+                    List<loan__Repayment_Schedule__c> amortSchedule = [select id, name,
+                                                                       loan__Due_Date__c,
+                                                                       loan__is_Archived__c,
+                                                                       loan__isPaid__c,
+                                                                       loan__Is_Billed__c
+                                                                       from loan__Repayment_Schedule__c
+                                                                       where loan__Loan_Account__r.Id = :lAtobeUpdated.Id
+                                                                       AND loan__is_Archived__c = false
+                                                                       AND loan__isPaid__c = false
+                                                                       AND loan__due_date__c >= :systemDate
+                                                                       order by loan__Due_Date__c asc limit :limitNumber];
+                    if(amortSchedule.size()>0){                                                
+                        repaymentStartDate = amortSchedule.get(Integer.valueOf(numberOfSkips)).loan__due_date__c;
+                    }
+                    system.debug('repaymentStartDate is: '+repaymentStartDate);
                 }
                 
-               /* START-LSP-292 Block3 
-				* Setting the repaymentStartDate for bad standing loans. 
-				* Check the repayment schedules for the last unpaid schedule, and fetch the date and add the number of skips
-				*/
-                 if(lAtobeUpdated!= null && lAtobeUpdated.loan__Loan_Status__c == 'Active - Bad Standing' && isFromAPI){
-                List<loan__Repayment_Schedule__c> amortSchedule = [select id, name,
-                                                                   loan__Due_Date__c,
-                                                                   loan__is_Archived__c,
-                                                                   loan__isPaid__c,
-                                                                   loan__Is_Billed__c
-                                                                   from loan__Repayment_Schedule__c
-                                                                   where loan__Loan_Account__r.Id = :lAtobeUpdated.Id
-                                                                   AND loan__is_Archived__c = false
-                                                                   AND loan__isPaid__c = false
-                                                                   AND loan__due_date__c <= :systemDate
-                                                                   order by loan__Due_Date__c asc];
-                if(amortSchedule.size()>0){                                                
-                    repaymentStartDate = (amortSchedule.get(0).loan__due_date__c).addMonths(numberOfSkips);
+                /* START-LSP-292 Block3 
+    * Setting the repaymentStartDate for bad standing loans. 
+    * Check the repayment schedules for the last unpaid schedule, and fetch the date and add the number of skips
+    */
+                if(lAtobeUpdated!= null && lAtobeUpdated.loan__Loan_Status__c == 'Active - Bad Standing' && isFromAPI){
+                    List<loan__Repayment_Schedule__c> amortSchedule = [select id, name,
+                                                                       loan__Due_Date__c,
+                                                                       loan__is_Archived__c,
+                                                                       loan__isPaid__c,
+                                                                       loan__Is_Billed__c
+                                                                       from loan__Repayment_Schedule__c
+                                                                       where loan__Loan_Account__r.Id = :lAtobeUpdated.Id
+                                                                       AND loan__is_Archived__c = false
+                                                                       AND loan__isPaid__c = false
+                                                                       AND loan__due_date__c <= :systemDate
+                                                                       order by loan__Due_Date__c asc];
+                    if(amortSchedule.size()>0){                                                
+                        repaymentStartDate = (amortSchedule.get(0).loan__due_date__c).addMonths(numberOfSkips);
+                    }
                 }
-                 }
                 system.debug('repaymentStartDate is: '+repaymentStartDate);
                 /*END-LSP-292 Block3*/
-               
+                
                 lastPaymentDate = (lAtobeUpdated.loan__Maturity_Date_Current__c).addMonths(numberOfSkips);//loan__Last_Installment_Date__c
                 interestRate = lAtobeUpdated.loan__Interest_Rate__c;
                 frequencyOfPayment = lAtobeUpdated.loan__Frequency_of_Loan_Payment__c;
                 if(repaymentStartDate != null)
                     dueDay = repaymentStartDate.day();
-               
+                
                 System.debug(logginglevel.DEBUG,'lastPaymentDate: '+lastPaymentDate +' DUEDAY: '+dueDay);
-               
+                
                 Integer terms = getRemainingTerm();
-               
+                
                 if(lAtobeUpdated.loan__Repayment_Plan__r != null && lAtobeUpdated.loan__Repayment_Plan__r.size() != 0) {
                     delete lAtobeUpdated.loan__Repayment_Plan__r;
                 }
-               
+                
                 List<clcommon__Repayment_Plan__c> repaymentPlan = new List<clcommon__Repayment_Plan__c>();
                 repaymentPlan.add(new clcommon__Repayment_Plan__c(clcommon__Sequence_Number__c = 1,
                                                                   clcommon__Payment_Type__c = 'Equal Monthly Installments',
@@ -253,7 +256,7 @@
                                                                   clcommon__Effective_Date__c = systemDate,
                                                                   loan__Loan_Account__c = lAtobeUpdated.id));
                 insert repaymentPlan;
-               
+                
                 loan.LoanRescheduleParameters rescheduleParams = new loan.LoanRescheduleParameters(lAtobeUpdated.id,
                                                                                                    transactionDate,
                                                                                                    repaymentStartDate,
@@ -270,25 +273,25 @@
                                                                                                    stepUpOption,
                                                                                                    interestOnlyPaymentAmt,
                                                                                                    regenerateInvAmzSchedule);
-               
+                
                 List<loan.LoanRescheduleParameters.ProposedRepaymentPlan> repaymentPlanList = rescheduleParams.getRepaymentPlan();
                 System.debug(logginglevel.DEBUG,'repaymentPlanList.. : '+repaymentPlanList);
                 rescheduleParams.setRepaymentPlan(repaymentPlanList);
-               
+                
                 loan.LoanActionFactory factory = new loan.LoanActionFactory();
                 loan.LoanAction7 loanAction = factory.getLoanAction7API();
                 System.debug(logginglevel.DEBUG,'rescheduleParams.. : '+rescheduleParams);
                 loanAction.rescheduleALoan(rescheduleParams);            
-               
+                
                 //check if reschedule is successful. If reschedule is a failure, then control will goto catch block and code after this doesn't get executed
-               
+                
                 System.debug('Call to rescheduleALoan of loanAction ends..');
                 lAtobeUpdated.loan__Next_Installment_Date__c = repaymentStartDate;
                 lAtobeUpdated.loan__Maturity_Date_Current__c = lastPaymentDate;
                 if(((lAtobeUpdated.loan__Loan_Status__c).equals('Active - Good Standing')) || 
-                  isFromAPI && (((lAtobeUpdated.loan__Loan_Status__c).equals('Active - Bad Standing'))) ){ //LSP-292 - Update Mod fields for badstanding loans
-                      
-                
+                   isFromAPI && (((lAtobeUpdated.loan__Loan_Status__c).equals('Active - Bad Standing'))) ){ //LSP-292 - Update Mod fields for badstanding loans
+                       
+                       
                        /*LSP-3 start */
                        if(lAtobeUpdated.U_LoanModForbearance__c == null) lAtobeUpdated.U_LoanModForbearance__c = 0;
                        
@@ -309,25 +312,25 @@
                               lAtobeUpdated.U_LoanModForbearance__c = lAtobeUpdated.U_LoanModForbearance__c + numberOfSkips;
                           }else{
                               lAtobeUpdated.U_LoanModForbearDt__c = lAtobeUpdated.loan__Oldest_Due_Date__c != null ? lAtobeUpdated.loan__Oldest_Due_Date__c:lAtobeUpdated.loan__First_Installment_Date__c;//if loan__Oldest_Due_Date__c is null, it means there are no repayments done yet on the contract
-                                lAtobeUpdated.U_LoanModForbearance__c = numberOfSkips;
+                              lAtobeUpdated.U_LoanModForbearance__c = numberOfSkips;
                           }
                        /*LSP-3 end */
                        lAtobeUpdated.loan__Oldest_Due_Date__c = repaymentStartDate;
                        lAtobeUpdated.Skipped_a_Pay__c = true;
                        System.debug('loan__Oldest_Due_Date__c is updated to: '+lAtobeUpdated.loan__Oldest_Due_Date__c);
                    }
- 
+                
                 lAtobeUpdated.Skipped_a_pay_Date__c = systemDate;//updating date on which skip-a-pay is performed
                 /* LSP-3 start */
                 lAtobeUpdated.Hardship_Request_Date__c = systemDate;
                 lAtobeUpdated.Hardship_New_Maturity_Date__c = lAtobeUpdated.Hardship_New_Maturity_Date__c != null ? (lAtobeUpdated.Hardship_New_Maturity_Date__c).addMonths(Integer.valueOf(numberOfSkips)) : lastPaymentDate; //lastPaymentDate = (lAtobeUpdated.loan__Maturity_Date_Current__c).addMonths(numberOfSkips);
                 lAtobeUpdated.U_LoanModTermExt__c = lAtobeUpdated.U_LoanModTermExt__c != null ? lAtobeUpdated.U_LoanModTermExt__c + Integer.valueOf(numberOfSkips):Integer.valueOf(numberOfSkips);
                 /* LSP-3 end */
-               
+                
                 update lAtobeUpdated;
                 res.statusCode = 204;
                 return res;
-               
+                
             } catch (Exception e) {          
                 batch.loan__Log_Level__c = 'ERROR';
                 batch.loan__Message__c = ' Reschedule Failed for ::'+ lAtobeUpdated.Name + '. :: ERROR :: '+e.getMessage() + ' :: StackTrace ::' +e.getStackTraceString() ;
@@ -337,21 +340,21 @@
                 System.debug(logginglevel.error,'line number'+e.getLineNumber());
                 System.debug(logginglevel.error,'error stackTrace'+e.getStackTraceString());
                 System.debug(logginglevel.error,'error message'+e.getMessage());
-               
+                
                 res.statusCode = 500;
                 res.responseBody = Blob.valueOf('{"message": "' + batch.loan__Message__c + '"}');
                 return res;
             }
-           
+            
         }
-       
+        
         /*
     *  Calculates remaining number of payments to be done
     *  returns integer
     *
     */
         public Integer getRemainingTerm() {
-           
+            
             Integer remainingTerm;
             if (lAtobeUpdated.loan__Next_Installment_Date__c != null && lAtobeUpdated.loan__Maturity_Date_Current__c != null) {
                 remainingTerm = (Integer)(loan.DateUtil.cyclesBetween(lAtobeUpdated.loan__Next_Installment_Date__c,
@@ -360,7 +363,7 @@
             }
             return remainingTerm;
         }
-       
+        
         /*
     *  Checks if NACHA is already sent for payment
     *  returns: boolean
@@ -385,7 +388,7 @@
                                                            order by loan__Transaction_Date__c desc  //pallavi(added order by)
                                                           ];
             if(lpt.size() > 0){
-               
+                
                 if(lpt.get(0).loan__Sent_to_ACH__c == true){//skip the loan
                     isSentToNacha = true;
                     System.Debug('isSentToNacha: ' + isSentToNacha);
@@ -400,7 +403,7 @@
                 isEligibleForReschedule = true; //if there are no payments created, do reshedule the loan
             return false;
         }
-       
+        
         /*
     *
     * Method to check whether the loan is eligible for reschedule
@@ -412,8 +415,8 @@
             // if(paymentTxnDate >= systemDate){//reject the loan and then reschedule
             if((paymentTxnDate >= systemDate) ||
                ((paymentTxnDate < systemDate) && isFromAPI  && (lAtobeUpdated.loan__Loan_Status__c == 'Active - Bad Standing'))){ // reject the loan and then reschedule
-                  //LSP-292 - Bad standing loans can have payment transaction date less than system date.
-                  System.debug('isEligibleForReschedule is true'); //pallavi
+                   //LSP-292 - Bad standing loans can have payment transaction date less than system date.
+                   System.debug('isEligibleForReschedule is true'); //pallavi
                    lpt.loan__Rejected__c = true;
                    lpt.loan__Sent_to_ACH__c = true;
                    lpt.loan__Sent_To_ACH_On__c = systemDate;
@@ -421,11 +424,13 @@
                    update lpt;
                    isEligibleForReschedule = true;
                }else{//if(paymentTxnDate < systemDate){
-                   batch.loan__Log_Level__c = 'ERROR';
-                   batch.loan__Message__c = 'There is an unprocessed payment on this contract, hence the loan cannot be rescheduled ::'+ lAtobeUpdated.Name;                
-                   batch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
-                   insert batch;
-                   contractSAPerror.put(lAtobeUpdated.Name,batch.loan__Message__c); //CRM-952
+					loan__Batch_Process_Log__c rescheduleFailBatch = new loan__Batch_Process_Log__c(); 
+
+                   rescheduleFailBatch.loan__Log_Level__c = 'ERROR';
+                   rescheduleFailBatch.loan__Message__c = 'There is an unprocessed payment on this contract, hence the loan cannot be rescheduled ::'+ lAtobeUpdated.Name;                
+                   rescheduleFailBatch.loan__Batch_Id__c = 'ForBearanceLoanHelper';
+                   insert rescheduleFailBatch;
+                   contractSAPerror.put(lAtobeUpdated.Name,rescheduleFailBatch.loan__Message__c); //CRM-952
                    isEligibleForReschedule = false;    
                }
         }
