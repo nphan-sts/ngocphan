@@ -5,7 +5,7 @@
  * Modified By        Date          JIRA number
  *      1. Pallavi       2021/05/21        LSP-219
  *      2. Pallavi       2021/07/09        LSP-261    
- *      
+ *      3. Pallavi		 2021/09/18		   LSP-375
  ******************Modification History******************/
 Public class MigratedPaymentReversalController{
     
@@ -148,7 +148,8 @@ Public class MigratedPaymentReversalController{
         //LSP-219
         List<loan__Repayment_Schedule__c> AMZsToBeUpdated = [select id,loan__isPaid__c  
                                                             from loan__Repayment_Schedule__c
-                                                            where loan__Due_Date__c in : dueDate and loan__isPaid__c = true];
+                                                            where loan__Due_Date__c in : dueDate and loan__isPaid__c = true
+                                                            and loan__Loan_Account__c =: currentRecordId];	//LSP-375
         for(loan__Repayment_Schedule__c amz : AMZsToBeUpdated){
                 amz.loan__isPaid__c = false;               
             }
