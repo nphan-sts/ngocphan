@@ -896,5 +896,230 @@ public class TestSelectOfferFromUI{
         System.assertEquals('Success', result, 'Success');
         Test.stopTest();
     }
-    //CRM-1022 - end   
+    //CRM-1022 - end
+
+    /*
+     * Assign an investor to an application.
+     * Run a select operation on a higher apr offer,
+     * Verify that the application is re-allocated to the higher apr investor.
+     */
+    @IsTest
+    static void testReallocateToAppropriateInvestorByAPR() {
+
+        /*
+        Disable other test investors
+         */
+        Account acc2 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
+        Account acc3 =[Select id, name from Account where name='TestF3Name TestL3Name' limit 1];
+        Account acc4 =[Select id, name from Account where name='TestF4Name TestL4Name' limit 1];
+        acc2.loan__Active__c = 'false';
+        acc3.loan__Active__c = 'false';
+        acc4.loan__Active__c = 'false';
+        List<Account> disable = new List<Account>();
+        disable.add(acc2);
+        disable.add(acc3);
+        disable.add(acc4);
+        update disable;
+
+        List<genesis__Rule__c> rules = new List<genesis__Rule__c>();
+        genesis__Rule__c rule = getRule('Low APR Rule', '1');
+        genesis__Rule__c rule2 = getRule('High APR Rule', '1');
+        rules.add(rule);
+        rules.add(rule2);
+        insert rules;
+
+        List<genesis__RuleCriteria__c> criteria = new List<genesis__RuleCriteria__c>();
+        genesis__RuleCriteria__c aprCriteria = getAPRRuleCriteria(1, rule, 7.99);
+        genesis__RuleCriteria__c aprCriteria2 = getAPRRuleCriteria(1, rule2, 19.99);
+        criteria.add(aprCriteria);
+        criteria.add(aprCriteria2);
+        insert criteria;
+
+        List<Account> accounts = new List<Account>();
+        Account investor = getInvestor('Low APR', 'Credit Union', '999999999');
+        investor.Investment_Rules__c = rule.Id;
+        Account investor2 = getInvestor('High APR', 'Credit Union', '999999998');
+        investor2.Investment_Rules__c = rule2.Id;
+        Account memberAccount = getMemberAccount('111111111');
+        accounts.add(investor);
+        accounts.add(investor2);
+        accounts.add(memberAccount);
+        insert accounts;
+
+        genesis__Applications__c app = getApplication(memberAccount, investor);
+        app.genesis__Status__c = 'agent_document_verification_pending';
+        insert app;
+
+        List<Pricing_Offer__c> pricingOffers = new List<Pricing_Offer__c>();
+        Pricing_Offer__c pricingOffer1 = getPricingOffer(app, 6.99);
+        Pricing_Offer__c pricingOffer2 = getPricingOffer(app, 7.99);
+        Pricing_Offer__c pricingOffer3 = getPricingOffer(app, 12.99);
+        pricingOffers.add(pricingOffer1);
+        pricingOffers.add(pricingOffer2);
+        pricingOffers.add(pricingOffer3);
+        insert pricingOffers;
+
+        Approved_Offer__c approvedOffer = getApprovedOffer(app, 6.99);
+        insert approvedOffer;
+
+        System.debug('count SOQL queries from here');
+
+        String result = SelectOfferFromUI.selectOffer(app.Id, pricingOffer3.Id);
+        System.debug('selectOffer result: ' + result);
+
+        /* start assertions, beginning with expect offer states after selecting */
+        genesis__Applications__c actual = [SELECT Id, Investor__c, genesis__APR__c FROM genesis__Applications__c LIMIT 1 ];
+
+        List<Approved_Offer__c> actualApprovedOffers = [SELECT Id, APR__c FROM Approved_Offer__c WHERE Application__c = :app.Id];
+
+        System.assertEquals(1, actualApprovedOffers.size());
+        Approved_Offer__c actualApprovedOffer = actualApprovedOffers.get(0);
+
+        System.assertEquals(String.valueOf(pricingOffer3.APR__c), actualApprovedOffer.APR__c);
+        System.assertEquals(pricingOffer3.APR__c, actual.genesis__APR__c);
+
+        /* assert the rulesapi uses the correct value in the criteria evaluation */
+        List<genesis__Checklist__c> checklists = [
+                SELECT Id,
+                        CreatedDate,
+                        LastModifiedDate,
+                        genesis__Result__c,
+                        genesis__Description__c,
+                        genesis__Message__c
+                FROM genesis__Checklist__c
+                ORDER BY Id DESC
+        ];
+        for(genesis__Checklist__c checklist : checklists) {
+            System.assert(checklist.genesis__Description__c.contains('"ActualResult" : "12.99"'));
+        }
+
+        /* Assert that we switch from current investor to the high APR investor*/
+        System.debug('investor2.Id: ' + investor2.Id);
+        System.debug('actual.Investor__c: ' + actual.Investor__c);
+        System.assertEquals(investor2.Id, actual.Investor__c);
+    }
+
+    private static genesis__Rule__c getRule(String name, String expression) {
+        genesis__Rule__c rule = new genesis__Rule__c();
+        rule.Name                       = name;
+        rule.genesis__Enabled__c        = true;
+        rule.genesis__Object_Type__c    = 'genesis__applications__c';
+        rule.genesis__Message_failure__c = 'FAIL cannot allocate to ' + name;
+        rule.genesis__Message_success__c = 'Successful allocation to ' + name;
+        rule.genesis__Evaluation_Expression__c = expression;
+        return rule;
+    }
+
+    /*
+    {
+        "attributes": {
+            "type": "genesis__RuleCriteria__c",
+            "url": "/services/data/v52.0/sobjects/genesis__RuleCriteria__c/a7p54000000ClQsAAK"
+        },
+        "genesis__Rule__c": "a7q54000000DBNXAA4",
+        "Id": "a7p54000000ClQsAAK",
+        "Name": "Criteria #1736",
+        "genesis__Field_API_Name__c": "genesis__APR__c",
+        "genesis__Field_Name__c": "APR",
+        "genesis__Field_Type__c": "PERCENT",
+        "genesis__Matching_Type__c": "<=",
+        "genesis__Matching_Value__c": "18",
+        "genesis__Related_Object__c": "genesis__Applications__c",
+        "genesis__Rule_Object_Reference__c": "genesis__Applications__c",
+        "genesis__RuleObjectType__c": "genesis__applications__c",
+        "genesis__Stipulation_Type__c": "FUNDING",
+        "genesis__Criteria_Sequence__c": 4
+    }
+     */
+
+    private static genesis__RuleCriteria__c getAPRRuleCriteria(Decimal sequenceNum, genesis__Rule__c rule, Decimal apr) {
+
+        /* rule object type is not a writable field */
+        genesis__RuleCriteria__c criteria = new genesis__RuleCriteria__c(
+                genesis__Field_API_Name__c    = 'genesis__APR__c',
+                genesis__Field_Name__c        = 'APR',
+                genesis__Field_Type__c        = 'PERCENT',
+                genesis__Matching_Type__c     = '<=',
+                genesis__Matching_Value__c    = String.valueOf(apr),
+                genesis__Related_Object__c    = 'genesis__Applications__c',
+                genesis__Rule_Object_Reference__c = 'genesis__Applications__c',
+                // genesis__RuleObjectType__c    = 'genesis__applications__c',
+                genesis__Stipulation_Type__c  = 'FUNDING',
+                genesis__Criteria_Sequence__c = sequenceNum,
+                genesis__Rule__c = rule.Id
+
+        );
+        return criteria;
+    }
+
+    private static Pricing_Offer__c getPricingOffer(genesis__Applications__c app, Decimal apr) {
+        Pricing_Offer__c pricingOffer = MW_GlobalTestUtility.getPricingOffer('t3');
+        pricingOffer.Application__c = app.Id;
+        pricingOffer.APR__c = apr;
+        return pricingOffer;
+    }
+
+    private static Approved_Offer__c getApprovedOffer(genesis__Applications__c app, Decimal apr) {
+        Approved_Offer__c approvedOffer = MW_GlobalTestUtility.getApprovedOffer();
+        approvedOffer.Application__c = app.Id;
+        approvedOffer.APR__c = String.valueOf(apr);
+        approvedOffer.Interest_Rate__c = String.valueOf(apr);
+        return approvedOffer;
+    }
+
+    private static Account getInvestor(String firstName, String lastName, String ssn) {
+        Account acc1 = new Account(
+                Name = 'Debug Credit Union',
+                loan__Investor__c=true,
+                loan__Active__c = 'Yes',
+                Investor_Alloted_Weight__c = 1,
+                Investor_Current_Weight__c = 1,
+                Monthly_Funded_Cap__c = 100000,
+                Total_Funded_MTD__c = 500,
+                Monthly_Allocation_Cap__c = 10,
+                Total_Allocations_MTD__c =0,
+                cnotify__Email__c = 'debug@creditunion.com',
+                loan__SOCIAL_SECURITY_NUMBER__c = ssn,
+                peer__First_Name__c = firstName,
+                peer__Last_Name__c= lastName,
+                City__c='TestCity',
+                State__c='TestState',
+                ZIP_Code__c='12345'
+        );
+        return acc1;
+    }
+
+    private static Account getMemberAccount(String ssn) {
+        Account acc = new Account(
+                Name = 'TestF1Name TestL1Name',
+                loan__Investor__c= false,
+                cnotify__Email__c = 'abc1@test.com',
+                loan__SOCIAL_SECURITY_NUMBER__c = ssn,
+                peer__First_Name__c = 'TestF1Name',
+                peer__Last_Name__c='TestL1Name',
+                City__c='TestCity',
+                State__c='TestState',
+                ZIP_Code__c='12345'
+        );
+        return acc;
+    }
+
+    private static genesis__Applications__c getApplication(Account memberAccount, Account selectedInvestor) {
+        genesis__Applications__c app= new genesis__Applications__c(
+                genesis__Due_Day__c = 20,
+                genesis__Expected_First_Payment_Date__c = System.today(),
+                genesis__Expected_Start_Date__c = System.today(),
+                genesis__Funding_in_Tranches__c = true,
+                Borrower_s_Email__c = null,
+                genesis__Account__c = memberAccount.Id,
+                Application_Start_DateV2__c = System.today(),
+                DocuSignFlag__c=true,
+                genesis__Status__c = 'offer_accepted',
+                genesis__Draw_Period_End_Date__c = System.today(),
+                Investor__c = selectedInvestor.Id,
+                Invested_Amount__c = 200,
+                genesis__Loan_Amount__c = 5000
+        );
+        return app;
+    }
 }
