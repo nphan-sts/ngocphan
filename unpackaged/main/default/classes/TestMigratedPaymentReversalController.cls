@@ -1,6 +1,6 @@
 /* ****************Modification History******************
  *      1. Pallavi       2021/07/09        LSP-261    
- *      
+ *      2. Pallavi       2021/09/18        LSP-375
  ******************Modification History******************/
 @isTest
 public class TestMigratedPaymentReversalController{
@@ -80,6 +80,7 @@ public class TestMigratedPaymentReversalController{
         test_bill1.loan__Due_Type__c = 1;
         test_bill1.loan__Due_Type_Description__c = 'BILL / DUE DATE';
         test_bill1.loan__Loan_Account__c = lacc.Id;
+        test_bill1.loan__Due_Date__c = Date.Today().addDays(-30);   //LSP-375
         insert test_bill1;
         
         loan__Loan_account_Due_Details__c test_bill2 = new loan__Loan_account_Due_Details__c();
@@ -106,6 +107,18 @@ public class TestMigratedPaymentReversalController{
                                                          );
                                                          
         insert due;
+        
+        //LSP-375 create AMZ
+        loan__Repayment_Schedule__c repaySch = new loan__Repayment_Schedule__c();
+        repaySch.loan__Loan_Account__c = lacc.Id;
+        repaySch.loan__Due_Date__c = Date.Today().addDays(-30);
+        repaySch.loan__Due_Interest__c = 40.00 ;
+        repaySch.loan__Balance__c = 800;
+        repaySch.loan__Paid_Principal__c=100;  
+        repaySch.External_Id__C = '123';  
+        repaySch.loan__Due_Principal__c = null;
+        repaySch.loan__isPaid__c = true;
+        insert repaySch;
     }
     
     
@@ -141,14 +154,13 @@ public class TestMigratedPaymentReversalController{
                                           loan__Account__r.Borrower_s_Last_Name__c,
                                           loan__Loan_Product_Name__c 
                                           from loan__Loan_Account__c];
-        
      Decimal initialPayoff = LAList[0].loan__Pay_Off_Amount_As_Of_Today__c; //LSP-261
     
      loan__Loan_Account__c loanAccount = LAList[0];
      payments = [select id,name,loan_Is_Migrated__c,
                                           loan__Transaction_Date__c, 
                                           loan__Transaction_Time__c,
-                                          loan__Principal__c,loan__Interest__c,
+                                          loan__Principal__c,loan__Interest__c, 
                                           (select id,name,
                                             loan__Due__c  
                                             from loan__Due_Payments__r)
@@ -169,7 +181,7 @@ public class TestMigratedPaymentReversalController{
      ctl.migratedLoan = loanAccount;
      ctl.getPayments();
      
-     ctl.paymentsToBeReversed = payments;
+     ctl.paymentsToBeReversed = payments;    
      Test.startTest();  //LSP-261
      ctl.reversePayments();
      /*LSP-261*/   
@@ -216,11 +228,9 @@ public class TestMigratedPaymentReversalController{
     
      loan__Loan_Account__c loanAccount = LAList[0];
      payments = LAList[0].loan__Loan_Payment_Transactions__r;
-        
      Decimal initialPayoff = LAList[0].loan__Pay_Off_Amount_As_Of_Today__c; //LSP-261   
                                           
      System.debug(logginglevel.error, 'loanAccount ::'+loanAccount + 'payments ::'+payments);
-        
      /*LSP-261*/   
      Decimal totalAmountReversed = 0.0;
         for(loan__Loan_Payment_Transaction__c pay : payments){
@@ -233,7 +243,7 @@ public class TestMigratedPaymentReversalController{
      ctl.NumOfPayments = String.valueof(1);
      ctl.migratedLoan = loanAccount;     
      ctl.getPayments();
-     ctl.paymentsToBeReversed = payments;
+     ctl.paymentsToBeReversed = payments;     
      Test.startTest();  //LSP-261   
      ctl.reversePayments();
      /*LSP-261*/   
