@@ -231,4 +231,29 @@ public class MW_ApplicationService {
         } //If(mapCurrentApps.size() > 0)
     }
 
+    //LOP-356
+    public static void updateAppAndOtherValues(List< genesis__Applications__c > apps, Map<Id, genesis__Applications__c> newMap, Map<Id, genesis__Applications__c> oldMap){
+        //Call process builder LoanPremiumPrice to recalculate Loan_Premium_Price
+        Set<Id> setAppIds = new Set<Id>();
+ 
+        For(genesis__Applications__c app : apps) {
+            If(app.genesis__Status__c != oldMap.get(app.Id).genesis__Status__c && app.genesis__Status__c == 'agent_verified'){
+                    setAppIds.add(app.Id);
+            }
+        }
+
+        If(setAppIds.size() > 0)
+        {            
+            List<Pricing_Offer__c> listPricingOffers = [
+                SELECT Id FROM Pricing_Offer__c 
+                WHERE Application__c IN :setAppIds AND Is_Offer_Selected__c = true
+            ];
+            
+            If(listPricingOffers.size() > 0)
+            {
+                Update listPricingOffers;
+            }
+        } //If(setAppIds.size() > 0)
+    }
+
 }
