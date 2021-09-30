@@ -251,7 +251,18 @@ public class MW_ApplicationService {
             
             If(listPricingOffers.size() > 0)
             {
-                Update listPricingOffers;
+                try{
+                    Update listPricingOffers;
+                }
+                catch(Exception e){
+                    System.debug(e.getMessage() + ' ' + e.getStackTraceString());
+                    Map<String, Object> msg = new Map<String, Object>();
+                    msg.put('app.Id', apps[0].Id);
+                    msg.put('leadId', apps[0].Lead_ID__c);
+                    msg.put('Class', 'MW_ApplicationService->updateAppAndOtherValues');
+                    msg.put('exception:', e.getMessage() + ' ' + e.getStackTraceString());
+                    MW_LogUtility.errorMessage('MW_ApplicationService', 'updateAppAndOtherValues', msg);
+                }
             }
         } //If(setAppIds.size() > 0)
     }

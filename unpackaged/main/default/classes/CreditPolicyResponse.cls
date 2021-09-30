@@ -377,9 +377,6 @@ global class CreditPolicyResponse {
         /* query for credit policy since ndi num is a formula field */
         Credit_Policy__c cp = [SELECT Id,
                                         FICO__c,
-                                        //Net_Disposable_Income_NDI_Num__c,
-                                        //Num_Trades_Opened_Past_24mo__c,
-                                        //Monthly_DTI__c,
                                         request_intent__c,
                                         Credit_Policy_Approval_Models__c
                                 FROM   Credit_Policy__c
@@ -395,11 +392,7 @@ global class CreditPolicyResponse {
                                         FROM   genesis__Applications__c
                                         WHERE  Id =: appId
                                         LIMIT  1];
-
-        //app.FICO__c = cp.FICO__c;
-        //app.Monthly_DTI__c = cp.Monthly_DTI__c;
-        //app.Net_Disposable_Income_NDI_Num__c = cp.Net_Disposable_Income_NDI_Num__c;
-        //app.Num_Trades_Opened_Past_24mo__c = cp.Num_Trades_Opened_Past_24mo__c;
+                                        
         app.Credit_Policy_Approval_Models__c = cp.Credit_Policy_Approval_Models__c;
         update app;
     }
