@@ -231,4 +231,40 @@ public class MW_ApplicationService {
         } //If(mapCurrentApps.size() > 0)
     }
 
+    //LOP-356
+    public static void updateAppAndOtherValues(List< genesis__Applications__c > apps, Map<Id, genesis__Applications__c> newMap, Map<Id, genesis__Applications__c> oldMap){
+        //Call process builder LoanPremiumPrice to recalculate Loan_Premium_Price
+        Set<Id> setAppIds = new Set<Id>();
+ 
+        For(genesis__Applications__c app : apps) {
+            If(app.genesis__Status__c != oldMap.get(app.Id).genesis__Status__c && app.genesis__Status__c == 'agent_verified'){
+                    setAppIds.add(app.Id);
+            }
+        }
+
+        If(setAppIds.size() > 0)
+        {            
+            List<Pricing_Offer__c> listPricingOffers = [
+                SELECT Id FROM Pricing_Offer__c 
+                WHERE Application__c IN :setAppIds AND Is_Offer_Selected__c = true
+            ];
+            
+            If(listPricingOffers.size() > 0)
+            {
+                try{
+                    Update listPricingOffers;
+                }
+                catch(Exception e){
+                    System.debug(e.getMessage() + ' ' + e.getStackTraceString());
+                    Map<String, Object> msg = new Map<String, Object>();
+                    msg.put('app.Id', apps[0].Id);
+                    msg.put('leadId', apps[0].Lead_ID__c);
+                    msg.put('Class', 'MW_ApplicationService->updateAppAndOtherValues');
+                    msg.put('exception:', e.getMessage() + ' ' + e.getStackTraceString());
+                    MW_LogUtility.errorMessage('MW_ApplicationService', 'updateAppAndOtherValues', msg);
+                }
+            }
+        } //If(setAppIds.size() > 0)
+    }
+
 }
