@@ -7,6 +7,7 @@
  * 	  Anusha		2021/05/11	  LSP-97  Support Manual Payers (+auto payers) Making Principal Only Payments
  * 	  Anusha		2021/05/11	  LSP-224 Revisit installment flag logic - Payoff payment goes to excess or P/I instead closing the loan Case#: 02701590
  * 	  Anusha		2021/05/13    LSP-223 Charged Off loans - Submit recover payment from Member Portal
+ * 	  Anusha		2021/08/23	  LSP-328 Changes to create payoff payments thorugh webservice
  ******************Modification History*****************************************************************/
 
 @RestResource(urlMapping='/OTPOMBPEndpoint/*')
@@ -83,10 +84,11 @@ global class WSSetupAPS {
         Date recurringACHStartDate;
         Date setupDate;
         Boolean installmentPayment;
+        Boolean payoffPayment = false;//LSP-328
         
         List<loan__Loan_Account__c> loanAccountsList = [Select Id, Name,loan__Loan_Status__c,loan__Maturity_Date_Current__c, //LSP-223 (added loan__Loan_Status__c)
                                                         loan__Contact__c, loan__Account__c, loan__Last_Accrual_Date__c, 
-                                                        loan__Product_Type__c
+                                                        loan__Product_Type__c,loan__Pay_Off_Amount_As_Of_Today__c,loan__Write_off_Tolerance_Amount__c //LSP-328 (added loan__Pay_Off_Amount_As_Of_Today__c,loan__Write_off_Tolerance_Amount__c)
                                                         from loan__loan_account__c
                                                         where lead_Guid__c =: leadId];
         if (loanAccountsList.size() == 0) {
@@ -141,7 +143,7 @@ global class WSSetupAPS {
             installmentPayment = params.get('installmentOmbp') != null ? (Boolean) params.get('installmentOmbp') : false;
             
             debitDate = Date.valueOf((String) params.get('debitDate'));
-            
+            payoffPayment = params.get('payoffPayment') != null ? (Boolean)params.get('payoffPayment'): false; //LSP-328
             
             System.debug(LoggingLevel.ERROR, 'about to check debit date validation');
             
@@ -174,6 +176,34 @@ global class WSSetupAPS {
         
         try {
             if(isMultiplePaymentMethodEnabled) {
+                //LSP-328 - start
+                if(payoffPayment == true){
+                   //create payoff payment instead of APS if the request has payoffPyament flag true
+                    if(loanAccount.loan__Pay_Off_Amount_As_Of_Today__c != null && loanAccount.loan__Write_off_Tolerance_Amount__c != null){
+                        if(transactionAmount >= (loanAccount.loan__Pay_Off_Amount_As_Of_Today__c - loanAccount.loan__Write_off_Tolerance_Amount__c)){
+                            loan__loan_payment_transaction__c payoffLpt = new loan__loan_payment_transaction__c();
+                            payoffLpt.loan__loan_Account__c = loanAccount.Id;
+                            payoffLpt.loan__Transaction_Date__c = debitDate;
+                            payoffLpt.loan__Early_Total_Repayment_of_the_Loan__c = true;
+                            payoffLpt.loan__Transaction_Amount__c = transactionAmount;
+                            payoffLpt.loan__payment_Mode__c = getPaymentModeId(paymentModeName);
+                            payoffLpt.loan__Installment_Payment__c = false;
+                            insert payoffLpt;
+                            
+                            res = new Response(peer.Constants.SUCCESS, '', '');
+                            res.contents.add(payoffLpt);
+                            restRes.statuscode = peer.Constants.HTTP_OK;
+                            return res;
+                        }else{
+                            res = new Response(peer.Constants.ERROR, '', 'Transaction amount is not sufficient to payoff the loan');
+                            return res;
+                    	}
+                    }
+                    res = new Response(peer.Constants.ERROR, '', 'Check if loan account has required information');
+                    return res;
+                }
+                //LSP-328 - end
+                
                 // Second param paymentModeId is passed null. Because we are setting paymentModeName in setter method
                 // from where Payment Mode Id will be fetched.
                 /*PS-4350/LOS-192*/
@@ -183,7 +213,7 @@ global class WSSetupAPS {
                                      AND loan__Active__c = true and loan__Type__c = 'RECURRING'];
                 loan__Automated_Payment_Setup__c automatedPaymentSetup = new loan__Automated_Payment_Setup__c();
                 
-                if(count == 0){
+                if(count == 0){                    
                 /*PS-4350/LOS-192*/
                 automatedPaymentSetup.loan__CL_Contract__c = loanAccount.id;
                 automatedPaymentSetup.loan__Active__c = isActive;
