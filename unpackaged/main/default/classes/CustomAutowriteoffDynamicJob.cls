@@ -71,10 +71,56 @@ global class CustomAutowriteoffDynamicJob extends clcommon.DynamicJob {
          * @param  jobId         Database.BatchableContext 
          * @param  recordList    List<sObject> 
      */
-    global override void doexecute(SchedulableContext sc) {
+    global override void doExecute(SchedulableContext sc) {
         
-        CustomAutowriteoffDynamicJob job = new CustomAutowriteoffDynamicJob();
-             Database.executebatch(job,1);
+       /*CustomAutowriteoffDynamicJob job = new CustomAutowriteoffDynamicJob();
+       Database.executebatch(job,1);*/
+        
+
+             
+        // Get Org Params
+        loan__Org_Parameters__c orgPAram = loan.CustomSettingsUtil.getOrgParameters();
+        
+        
+        List<String> allowableLoanStatuses = new List<String>();
+        allowableLoanStatuses.add('\'' + 'Active - Good Standing' + '\'');
+        allowableLoanStatuses.add('\'' + 'Active - Bad Standing' + '\'');
+        allowableLoanStatuses.add('\'' + 'Active - Matured' + '\'');
+
+        //get custom query
+        String query = 'SELECT Id, ' +
+                                'Name, ' +
+                                'Interest_Remaining__c, ' +
+                                'Principal_Remaining__c, ' +
+                                'Loan_Balance__c, ' +
+                                'Fees_Remaining__c, ' +
+                                'Capitalized_Interest__c, ' +
+                                'Capitalized_Fee__c, ' +
+                                'Interest_Posted__c, ' +
+                                'Loan_Status__c, ' +
+                                'Total_Overdue_Fees__c, ' +
+                                'Total_Amount_Overdue__c, ' +
+                                'Loan_Product_Name__c, ' +
+                                'Delinquent_Amount__c, ' +
+                                'Branch__c, ' +
+                                'Uncleared_Written_Off_Amount__c, ' +
+                                'ACH_On__c, ' +
+                                'OT_ACH_Payment_Amount__c, ' +
+                                'OT_ACH_Fee_Amount__c, ' +
+                                'Number_of_Days_Overdue__c ' +
+                            'FROM Loan_Account__c ' +    
+                            'WHERE Number_of_Days_Overdue__c  >= ' + orgPAram.WriteOffSuggestion__c +
+                            ' AND Number_of_Days_Overdue__c != null ' +
+                            ' AND Loan_Status__c in ' + allowableLoanStatuses +
+                            ' AND Invalid_Data__c = false' +
+                            ' AND Skip_AutoWriteOff__c = false';
+        
+              loan.AutoWriteOffJob a = new loan.AutoWriteOffJob(query);
+              if(!test.isRunningTest()){  
+               Database.executeBatch(a,1);
+                }
+         
+    
                  
          } 
     
@@ -94,7 +140,7 @@ global class CustomAutowriteoffDynamicJob extends clcommon.DynamicJob {
      global override void doFinish(Database.BatchableContext bc) {
          
          
-         /* try{
+       try{
              
         // Get Org Params
         loan__Org_Parameters__c orgPAram = loan.CustomSettingsUtil.getOrgParameters();
@@ -137,7 +183,7 @@ global class CustomAutowriteoffDynamicJob extends clcommon.DynamicJob {
         
                //CustomAutoWriteOff j = new CustomAutoWriteOff();
                if(!test.isRunningTest()){  
-               Database.executeBatch(a,50);
+               Database.executeBatch(a,1);
                 }
                 if(test.isRunningTest()){  //to increase test coverage
                     integer x = 2;
@@ -152,8 +198,7 @@ global class CustomAutowriteoffDynamicJob extends clcommon.DynamicJob {
                 batch.loan__Message__c = 'ERROR :: '+e.getMessage() + ' :: StackTrace ::' +e.getStackTraceString() ;
                 batch.loan__Batch_Id__c = 'CustomAutowriteoffDynamicJob';
                 insert batch;
-            }*/
+            }
            
      }
-   
 }
