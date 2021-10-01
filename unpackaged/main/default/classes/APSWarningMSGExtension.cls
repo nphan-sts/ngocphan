@@ -8,7 +8,7 @@ public class APSWarningMSGExtension {
         this.autoPayment = (loan__Automated_Payment_Setup__c)stdController.getRecord();
     }
     public String getErrorMessage() {
-        loan__Automated_Payment_Setup__c paymentSetUp = [SELECT CreatedDate, loan__Debit_Date__c, Next_Business_Debit_Date__c FROM loan__Automated_Payment_Setup__c WHERE Id=:this.autoPayment.Id];
+        loan__Automated_Payment_Setup__c paymentSetUp = [SELECT CreatedDate, loan__Debit_Date__c FROM loan__Automated_Payment_Setup__c WHERE Id=:this.autoPayment.Id];
         Date dtCreateDate = Date.newInstance(paymentSetUp.CreatedDate.year(), paymentSetUp.CreatedDate.month(), paymentSetUp.CreatedDate.day());
         Date weekStart = dtCreateDate.toStartOfWeek();
         Date weekStartDebit = paymentSetUp.loan__Debit_Date__c.toStartOfWeek();
