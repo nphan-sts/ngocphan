@@ -48,7 +48,7 @@ public class TestWSSetupAPS {
                                                                           null);
         
         loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();
-
+        
         Account acc = new Account(Name = 'SF',peer__Last_Name__c = 'Test');//LSP-328
         insert acc;
         
@@ -76,7 +76,6 @@ public class TestWSSetupAPS {
         
         loan.GlobalProcessFacade.moveSystemToDate(loan.TestHelper.systemDate.addDays(10), false);
         
-
         lAcct.loan__Loan_Status__c = loan.LoanConstants.LOAN_STATUS_ACTIVE_GOOD_STANDING;
         lAcct.loan__Account__c = acc.id;
         lAcct.loan__Contact__c = null;
@@ -210,7 +209,7 @@ public class TestWSSetupAPS {
     static void testAPSSuccessCase(){       
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
-
+        
         Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000,peer__Last_Name__c = 'test');//LSP-328
         insert acc;
         
@@ -324,7 +323,7 @@ public class TestWSSetupAPS {
     static void testAPSwithLADgreaterthanSystemDate(){  
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
-
+        
         Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000,peer__Last_Name__c = 'test');//LSP-328
         insert acc;
         
@@ -434,7 +433,7 @@ public class TestWSSetupAPS {
     static void testAPSSuccessCase1BadStandingLoan(){       
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
-
+        
         Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000,peer__Last_Name__c = 'test');//LSP-328
         insert acc;
         
@@ -548,7 +547,7 @@ public class TestWSSetupAPS {
     static void testAPSSuccessCase2ForBadStandingLoan(){       
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
-
+        
         Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000,peer__Last_Name__c = 'test');//LSP-328
         insert acc;
         
@@ -658,7 +657,6 @@ public class TestWSSetupAPS {
     static void testAPSSuccessCaseForGoodStandingLoan(){       
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
-
         
         Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000,peer__Last_Name__c = 'test');//LSP-328
         insert acc;
@@ -860,7 +858,6 @@ public class TestWSSetupAPS {
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
         
-
         Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000,peer__Last_Name__c = 'test');//LSP-328
         insert acc;
         
@@ -950,7 +947,7 @@ public class TestWSSetupAPS {
     static void testAPSwithAmountTypeNull(){
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
-
+        
         Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000,peer__Last_Name__c = 'test');//LSP-328
         insert acc;
         
@@ -996,7 +993,7 @@ public class TestWSSetupAPS {
     static void testAPSwithRequestNull(){
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
-
+        
         Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000, peer__Last_Name__c = 'test');//LSP-328
         insert acc;
         
@@ -1035,11 +1032,6 @@ public class TestWSSetupAPS {
     static void testAPSwithPaymentModeNull(){
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
-
-
-        Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000, peer__Last_Name__c = 'test');//LSP-328
-        insert acc;
-
         
         Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000, peer__Last_Name__c = 'test');//LSP-328
         insert acc;        
@@ -1107,10 +1099,8 @@ public class TestWSSetupAPS {
         org.loan__Disable_Triggers__c = true;
         org.loan__Enable_New_Spread_Option__c = true;
         upsert org;
-
         
         Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000,peer__Last_Name__c = 'test');//LSP-328
-
         insert acc;
         lAcct.loan__Loan_Status__c = loan.LoanConstants.LOAN_STATUS_CLOSED_WRITTEN_OFF;
         lAcct.loan__Account__c = acc.id;
@@ -1209,7 +1199,6 @@ public class TestWSSetupAPS {
         Test.startTest();
         Response results = WSSetupAPS.createAPSSetup();
         System.assert(results.status.equalsIgnoreCase(peer.Constants.SUCCESS));
-
         loan__Automated_Payment_Setup__c automatedPaymentSetup = [select id,name,loan__installment_payment__c,
                                                                   loan__Loan_Payment_Spread__r.name
                                                                   from loan__Automated_Payment_Setup__c 
@@ -1320,7 +1309,6 @@ public class TestWSSetupAPS {
             + ', "feeAmount" : ' + 100 + ',"payoffPayment":'+true+
             '}';
         req.requestBody = Blob.valueOf(jsonStr);
-
         
         RestContext.request = req;
         RestContext.response = res;
