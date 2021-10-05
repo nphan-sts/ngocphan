@@ -1,7 +1,6 @@
 public class APSWarningMSGExtension {
     private final loan__Automated_Payment_Setup__c autoPayment;
-    private final String WEEK_SATURDAY = 'SAT';
-    private final String WEEK_SUNDAY = 'SUN';
+    
     @TestVisible
     private final String WARNING_MESSAGE = 'WARNING: APS debit date must be on the NEXT ELIGIBLE BUSINESS Day.';
     public APSWarningMSGExtension(ApexPages.StandardController stdController) {
@@ -18,7 +17,10 @@ public class APSWarningMSGExtension {
         if(blnFlag) {
             return WARNING_MESSAGE;
         }
-        Time timeExpected = Time.newInstance(16,0,0,0);
+        MW_Settings__c payOffSettings = MW_Settings__c.getOrgDefaults();
+        String cutOffTime = payOffSettings?.APS_Cutofftime__c;   
+        String[] timeSplit = cutOffTime.split(':');
+        Time timeExpected = Time.newInstance(Integer.valueOf(timeSplit[0]),Integer.valueOf(timeSplit[1]),Integer.valueOf(timeSplit[2]),0);
         DateTime expectedDateTime = DateTime.newInstance(dtCreateDate, timeExpected);
         Long expected = expectedDateTime.getTime();
         Long actual = paymentSetUp.CreatedDate.getTime();
@@ -40,25 +42,15 @@ public class APSWarningMSGExtension {
         Boolean isHoliday = false;
         List<Holiday> holidayList = [SELECT Name, ActivityDate FROM Holiday WHERE ActivityDate =:dtDate];
          if(holidayList != null && holidayList.size() > 0) {
-            for(Holiday hDay : holidayList) {
-                if(dtDate.daysBetween(hday.ActivityDate) == 0) {
+            
                     isHoliday = true;
                 }
-            }  
-        }
+             
+        
         return isHoliday;
     }
     
-    public String WeekendName(Date dtWeekStartDate, Date dtDebitDate) {
-        String weekName = '';
-        if(dtWeekStartDate.daysBetween(dtDebitDate) == 6) {
-            weekName = WEEK_SATURDAY;
-        }
-        if(dtWeekStartDate.daysBetween(dtDebitDate) == 0) {
-            weekName = WEEK_SUNDAY;
-        }
-        return weekName;
-    }
+    
     
     public Boolean IsWeekend(Date dtWeekStartDate, Date dtDebitDate) {
        Boolean blnFlag = false;
