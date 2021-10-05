@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+
     <fieldUpdates>
         <fullName>Update_Email_Field_With_Contact_Email</fullName>
         <description>Update the email field with the value of contract contact email address</description>
@@ -10,16 +11,19 @@
         <protected>false</protected>
         <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
+
     <rules>
         <fullName>SendPayoffEmailAlert</fullName>
         <actions>
             <name>Payoff_Payment_Alert_Notification_Template</name>
             <type>Alert</type>
         </actions>
+1
         <actions>
             <name>Update_Email_Field_With_Contact_Email</name>
             <type>FieldUpdate</type>
         </actions>
+
         <active>true</active>
         <criteriaItems>
             <field>loan__Automated_Payment_Setup__c.loan__Type__c</field>

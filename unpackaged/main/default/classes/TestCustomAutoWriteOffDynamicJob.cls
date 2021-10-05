@@ -6,8 +6,10 @@ public class TestCustomAutoWriteOffDynamicJob{
       
        Account acc = new Account();
         acc.Name = 'Test Account';
+        acc.peer__Last_Name__c = 'test last name';
         acc.Account_External_ID__c = 'Test';
         insert acc;
+        System.assertEquals('Test',acc.Name,'Wrong Account');
         
         loan__loan_account__c loanAccount = CreateLoanContract(acc.id);
         
@@ -15,6 +17,8 @@ public class TestCustomAutoWriteOffDynamicJob{
         loanAccount.loan__Account__c = acc.Id;
         loanAccount.loan__Loan_Status__c = 'Active - Good Standing';
         update loanAccount;
+      
+        system.assertNotEquals(loanAccount.id,null,'LoanAccount not inserted');
         System.debug('Loan Account 2--' + loanAccount);
   }
     
@@ -26,9 +30,20 @@ public class TestCustomAutoWriteOffDynamicJob{
         
         CustomAutowriteoffDynamicJob job = new CustomAutowriteoffDynamicJob();
         Database.executebatch(job,1);
+        //job.initialize();
         job.execute(null,acc1);
         job.finish(null);
        Test.stopTest();
+       loan__loan_account__c loan =  [select id,loan__Loan_Status__c,name,loan__Interest_Remaining__c,Skip_AutoWriteOff__c,loan__Principal_Remaining__c,loan__Invalid_Data__c,loan__Loan_Balance__c,loan__Number_of_Days_Overdue__c from loan__Loan_Account__c where loan__Number_of_Days_Overdue__c != null AND loan__Invalid_Data__c=false AND Skip_AutoWriteOff__c=false];
+           //System.assertEquals(true, loan.Skipped_a_Pay__c);
+            System.assertEquals('Testloan', loan.name);
+            System.assertEquals(2, loan.loan__Interest_Remaining__c);
+            System.assertEquals(False,loan.Skip_AutoWriteOff__c);
+            System.assertEquals(2000, loan.loan__Principal_Remaining__c);
+            System.assertEquals(False, loan.loan__Invalid_Data__c);
+            //System.assert(1000.00,loan.loan__Loan_Balance__c);
+            System.assertEquals(2, loan.loan__Number_of_Days_Overdue__c);
+            System.assertEquals('Active - Bad Standing',loan.loan__Loan_Status__c);
         
        
     }
@@ -37,20 +52,51 @@ public class TestCustomAutoWriteOffDynamicJob{
     
      public static testmethod void test2(){
          
-       
         test.startTest();
            
-           string  query = 'id,name,loan__Interest_Remaining__c,Skip_AutoWriteOff__c,loan__Principal_Remaining__c,loan__Invalid_Data__c,loan__Loan_Balance__c,loan__Number_of_Days_Overdue__c from loan__Loan_Account__c where loan__Number_of_Days_Overdue__c != null AND loan__Invalid_Data__c=false AND Skip_AutoWriteOff__c=false';
+           string  query = 'select id,name,loan__Interest_Remaining__c,Skip_AutoWriteOff__c,loan__Principal_Remaining__c,loan__Invalid_Data__c,loan__Loan_Balance__c,loan__Number_of_Days_Overdue__c from loan__Loan_Account__c where loan__Number_of_Days_Overdue__c != null AND loan__Invalid_Data__c=false AND Skip_AutoWriteOff__c=false';
               CustomAutowriteoffDynamicJob  dm = new CustomAutowriteoffDynamicJob(query);
               Database.executeBatch(dm);
-              //dm.execute(null,acc1);
+              dm.execute(null);
+              dm.finish(null);
               test.StopTest();
+           loan__loan_account__c loan =  [select id,loan__Loan_Status__c,name,loan__Interest_Remaining__c,Skip_AutoWriteOff__c,loan__Principal_Remaining__c,loan__Invalid_Data__c,loan__Loan_Balance__c,loan__Number_of_Days_Overdue__c from loan__Loan_Account__c where loan__Number_of_Days_Overdue__c != null AND loan__Invalid_Data__c=false AND Skip_AutoWriteOff__c=false];
+           //System.assertEquals(true, loan.Skipped_a_Pay__c);
+            System.assertEquals('Testloan', loan.name);
+            System.assertEquals(2, loan.loan__Interest_Remaining__c);
+            System.assertEquals(False,loan.Skip_AutoWriteOff__c);
+            System.assertEquals(2000, loan.loan__Principal_Remaining__c);
+            System.assertEquals(False, loan.loan__Invalid_Data__c);
+            //System.assert(1000.00,loan.loan__Loan_Balance__c);
+            System.assertEquals(2, loan.loan__Number_of_Days_Overdue__c);
+            System.assertEquals('Active - Good Standing',loan.loan__Loan_Status__c);
+           
     }
     
     
     public static Loan__loan_account__c CreateLoanContract(id accId){
         
         loan.TestHelper.createSeedDataForTesting();
+       
+        Loan.TestHelper.systemDate = Date.today();
+        //List<filegen__File_Metadata__c> metadata = Test.loadData(filegen__File_Metadata__c.sObjectType,'TestMetaData');
+        loan.TestHelper.setupMultiplePaymentModeACH();
+        loan.TestHelper2.createFileGenMetaData();        
+        loan__Org_Parameters__c orgParams = loan.CustomSettingsUtil.getOrgParameters();
+        orgParams.loan__Enable_New_Spread_Option__c = true;
+        orgParams.loan__Draw_Amortization_Schedule__c = true;
+        //orgParams.loan__Rounding_Mode__c ='ROUNDING MODE NEAREST';
+        orgParams.loan__Concurrent_BatchJobs__c = 8;
+        //orgParams.Payment_Job_Days__c = 20;
+        update(orgParams);
+        loan__Transaction_Approval_Config__c txnApprovalParams = loan.CustomSettingsUtil.getApprovalConfig();
+        txnApprovalParams.loan__Payment__c = true; 
+        txnApprovalParams.loan__Write_Off__c = false;
+        upsert(txnApprovalParams);
+        loan__ACH_Parameters__c achParams = loan.CustomSettingsUtil.getACHParameters();
+        achParams.loan__Multiple_Payment_Method_Support__c = true;
+        upsert(achParams);
+       
         //Create Currency...
         loan__Currency__c curr = loan.TestHelper.createCurrency();
         
@@ -89,6 +135,7 @@ public class TestCustomAutoWriteOffDynamicJob{
                                                                               dummyFeeSet);
         dummyLoanLP.Name = 'Regular Loan';
         dummyLoanLP.loan__Minimum_Amount_Due_Type__c = 'Percent';
+        system.assertEquals(dummyLoanLP.Name, 'Regular Loan','Dummy loan created');
         update dummyLoanLP;
         
         //Company Product Assignment...
@@ -146,6 +193,7 @@ public class TestCustomAutoWriteOffDynamicJob{
         loanContract.loan__Loan_Status__c='Active - Good Standing';
         
         insert loanContract;
+        System.assertEquals(loanContract.loan__Loan_Status__c,'Active - Good Standing');
         return loanContract;
     }
 }
