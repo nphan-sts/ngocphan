@@ -1209,7 +1209,7 @@ public class TestWSSetupAPS {
     }
     //LSP-223 - end
     //LSP-328 - start
-    /*@isTest
+    @isTest
     static void testPayoffPaymentSuccess(){
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
@@ -1549,5 +1549,5 @@ public class TestWSSetupAPS {
         Response results = WSSetupAPS.createAPSSetup();
         System.assert(results.status.equalsIgnoreCase(peer.Constants.ERROR));
         Test.stopTest();
-    }*///LSP - 328 end
+    }//LSP - 328 end
 }
