@@ -73,4 +73,23 @@ private class MW_ApplicationServiceTest {
     //Old Account's SSN has been set to NULL
     System.AssertEquals(true, String.isEmpty(PreExistAct.loan__SOCIAL_SECURITY_NUMBER__c));
   }
+  
+  @isTest static void TestUpdateAppAndOtherValues(){
+    genesis__Applications__c appForDuplicateAct = [SELECT Id, Name, Bureau_SSN__c, genesis__Status__c, genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__r.Name = 'ActWithDuplicate Ssn' LIMIT 1];
+    
+    Pricing_Offer__c po = MW_GlobalTestUtility.getPricingOffer('');
+    po.Application__c = appForDuplicateAct.Id;
+    Insert po;
+    
+    System.debug('appForDuplicateAct=' + appForDuplicateAct);
+    appForDuplicateAct.genesis__Status__c = 'agent_verified';
+    Update appForDuplicateAct;
+
+    po = [SELECT Id, LoanPremiumPrice__c FROM Pricing_Offer__c WHERE Is_Offer_Selected__c = true AND Application__c =: appForDuplicateAct.Id LIMIT 1];
+
+    //LoanPremiumPrice has some value
+    System.debug('po.LoanPremiumPrice__c=' + po.LoanPremiumPrice__c);
+    System.AssertEquals(true,  po.LoanPremiumPrice__c != null);
+  }
+  
 }
