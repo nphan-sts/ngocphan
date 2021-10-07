@@ -18,7 +18,7 @@ public class APSWarningMSGExtension {
             return WARNING_MESSAGE;
         }
         MW_Settings__c payOffSettings = MW_Settings__c.getOrgDefaults();
-        String cutOffTime = payOffSettings?.APS_Cutofftime__c;   
+        String cutOffTime = payOffSettings.APS_Cutofftime__c;   
         String[] timeSplit = cutOffTime.split(':');
         Time timeExpected = Time.newInstance(Integer.valueOf(timeSplit[0]),Integer.valueOf(timeSplit[1]),Integer.valueOf(timeSplit[2]),0);
         DateTime expectedDateTime = DateTime.newInstance(dtCreateDate, timeExpected);
