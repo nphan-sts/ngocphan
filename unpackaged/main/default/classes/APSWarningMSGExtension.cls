@@ -5,7 +5,7 @@ public class APSWarningMSGExtension {
     private final String WARNING_MESSAGE = 'WARNING: APS debit date must be on the NEXT ELIGIBLE BUSINESS Day.';
     public APSWarningMSGExtension(ApexPages.StandardController stdController) {
         this.autoPayment = (loan__Automated_Payment_Setup__c)stdController.getRecord();
-    } //abc
+    } 
     public String getErrorMessage() {
         loan__Automated_Payment_Setup__c paymentSetUp = [SELECT CreatedDate, loan__Debit_Date__c FROM loan__Automated_Payment_Setup__c WHERE Id=:this.autoPayment.Id];
         Date dtCreateDate = Date.newInstance(paymentSetUp.CreatedDate.year(), paymentSetUp.CreatedDate.month(), paymentSetUp.CreatedDate.day());
