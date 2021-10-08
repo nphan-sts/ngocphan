@@ -91,6 +91,9 @@ private class APSWarningMSGExtensionTest {
         lautopay.loan__Type__c = 'ONE TIME';
         lautopay.Email__c = 'abc@gmail.com';
         insert lautopay;
+	MW_Settings__c payOffSettings = new MW_Settings__c();
+        payOffSettings.APS_Cutofftime__c = '16:00:00';
+        insert payOffSettings;
     }
 
     @isTest
