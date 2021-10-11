@@ -25,8 +25,8 @@ public class APSWarningMSGExtension {
         Long expected = expectedDateTime.getTime();
         Long actual = paymentSetUp.CreatedDate.getTime();
         Long timeavailable = (actual - expected);
-        if((IsWeekEnd(weekStart,dtCreateDate)
-           || IsWeekEnd(weekStartDebit, paymentSetUp.loan__Debit_Date__c))  
+        
+           if (IsWeekEnd(weekStartDebit, paymentSetUp.loan__Debit_Date__c) 
            || (weekStart.daysBetween(dtCreateDate) == 5 && timeavailable > 0         
            && (isWeekEnd(weekStartDebit, paymentSetUp.loan__Debit_Date__c) 
                || (IsHoliday(paymentSetUp.loan__Debit_Date__c) || IsHoliday(paymentSetUp.loan__Debit_Date__c.addDays(-1)))))    
