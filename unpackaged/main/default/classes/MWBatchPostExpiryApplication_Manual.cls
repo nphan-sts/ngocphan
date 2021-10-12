@@ -56,6 +56,14 @@ global class MWBatchPostExpiryApplication_Manual implements Database.batchable<s
 					appinfo.is_expired = true;
 					listAppInfo.add(appinfo);
 				}
+                if (app.genesis__Status__c == 'Expired-Withdrawn') {
+					appinfo.lead_guid = app.Lead_ID__c;
+					appinfo.lead_id = app.LEAD_ID_ExtKey__c;
+					appinfo.member_id = app.Member_ID__c;
+
+					appinfo.is_expired = true;
+					listAppInfo.add(appinfo);
+				}  
 
 				//if((app.genesis__Status__c=='Declined' || app.genesis__Status__c=='Decline_Manual_Review') && app.owner.Name=='Declined' && app.Expiry_Date__c == currentSystemDate) {
 				if ((app.genesis__Status__c == 'Declined' || app.genesis__Status__c == 'Decline_Manual_Review')) {
