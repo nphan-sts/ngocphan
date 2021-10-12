@@ -295,6 +295,13 @@ global with sharing class MW_SynchronizeHandler {
             /*
                CLS- 690
              */
+            
+            /*LOP-342 - Expired-Withdrawn */
+            if(applist.genesis__Status__c=='Expired-Withdrawn') {
+                appinfo.is_expired                         = true;
+            }
+            
+            
             if(applist.genesis__Status__c=='Declined' && applist.owner.Name=='Declined') {
                 Map<Id,Credit_Policy__c>  cpMap = MW_WebhookHelper.selectedCreditPolicyDetails(new Set<String>{applist.id});
                 if(cpMap.size()>0 && cpMap.get(applist.id)!=null && cpMap.get(applist.id).Loan_amount_counteroffer__c!=null) {
