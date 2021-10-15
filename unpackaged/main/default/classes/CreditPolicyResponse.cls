@@ -784,7 +784,8 @@ global class CreditPolicyResponse {
         if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.raw_bureau_data != null){
             obj.Raw_XML__c = String.valueOF(CPResponse.credit_policy_decision.raw_bureau_data);
            
-                if( CPResponse.credit_policy_decision.risk_models.V6.happy_score != null){
+        if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.risk_models != null
+          && CPResponse.credit_policy_decision.risk_models.V6 !=null && CPResponse.credit_policy_decision.risk_models.V6.happy_score != null){
             obj.happy_score__c = CPResponse.credit_policy_decision.risk_models.V6.happy_score;
                 }
         }
