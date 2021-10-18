@@ -184,7 +184,6 @@
           <li>Requests received after 2:30 PM PT will be processed on the following business day.</li>
           <li>For payments drawn through ACH, please allow  2 business days for processing.</li>
           <li>It may take up to 5 days for this transaction to be reflected on your Payoff account.</li>
-        <!--  <li>Full payoffs cannot be made through our website at this time.</li> --> <!-- Removed as part of LSP-358 -->
           <li>All amounts provided are subject to final validation of payments received.</li>
       </ul>
       
