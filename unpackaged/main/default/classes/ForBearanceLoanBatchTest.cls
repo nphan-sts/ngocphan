@@ -853,17 +853,6 @@ public class ForBearanceLoanBatchTest {
     }
     
     @isTest
-    public static void forBearanceHelperLAisNull(){
-        Boolean exceptionThrown = false;
-        try{
-            ForBearanceLoanHelper helper = new ForBearanceLoanHelper(null,2);
-        }catch(Exception e){
-            exceptionThrown = true;
-        }
-        System.assert(exceptionThrown);
-    }
-    
-    @isTest
     public static void skipAPaysecondTime(){//system doesn't process SAP if SAP is already done on the same day
         List<loan__Loan_Account__c> lAList = [Select id,name,lead_Guid__c,loan__First_Installment_Date__c, 
                                               Application__r.genesis__Monthly_Debt_Payments__c,
