@@ -24,8 +24,6 @@ private class MW_LogUtilityTest {
 
 		response.setStatusCode(400);
 		MW_LogUtility.info('classInfo', 'appId info', 'leadId', 'info method', 'bad message', response);
-
-		MW_LogUtility.errorMessage('classInfo', 'label', new Map<String, String>());
 		Test.stopTest();
 	}
 
@@ -81,35 +79,6 @@ private class MW_LogUtilityTest {
 		MW_DataDogCallOut.send('message');
 		mock.setExpected(log);
 		MW_DataDogCallOut.send(log);
-		Test.stopTest();
-	}
-
-	@IsTest
-	static void testSendAllocationRulesetErrorsTest() {
-
-		Test.startTest();
-		Test.setMock(HttpCalloutMock.class, new BasicCalloutMock());
-
-		genesis__Checklist__c checkListWithDesc = new genesis__Checklist__c(
-				genesis__Description__c = 'Exception, unable to do foo',
-				genesis__Message__c = 'error123'
-		);
-
-		MW_LogUtility.sendAllocationRulesetErrors('myClass', 'appid123', 'leadid123', checkListWithDesc);
-
-		List<clcommon__Batch_Process_Log__c> logs =
-			[SELECT clcommon__Type__c,
-					clcommon__Batch_Id__c,
-					clcommon__Message__c
-			FROM clcommon__Batch_Process_Log__c];
-
-		System.assertEquals(1, logs.size());
-
-		clcommon__Batch_Process_Log__c batchProcessLog = logs.get(0);
-		System.assertEquals('Exception', batchProcessLog.clcommon__Type__c);
-		System.assertEquals('appid123', batchProcessLog.clcommon__Batch_Id__c);
-		System.assert(batchProcessLog.clcommon__Message__c.contains(checkListWithDesc.genesis__Message__c));
-
 		Test.stopTest();
 	}
 
