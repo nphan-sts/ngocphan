@@ -122,7 +122,7 @@ global class CreditPolicyResponse {
     global class Risk_models {
         global V3 v3 {get;set;}
         global V6 v6 {get;set;}
-    }
+        }
     
     global class credit_policy_decision {
         global Decision_codes decision_codes {get;set;}
@@ -262,9 +262,9 @@ global class CreditPolicyResponse {
         
     }
     global class Prebureau_knockout_codes {
-        global Integer rank;
-        global String code;
-        global String description;
+        global Integer rank {get;set;}
+        global String code {get;set;}
+        global String description {get;set;}
     }
 
     /*
@@ -275,6 +275,7 @@ global class CreditPolicyResponse {
         global Double risk_model_score {get;set;}
         global Double logistic_prediction_of_default {get;set;}
         global Integer invalid_risk_model_variable_count {get;set;}
+        global Integer happy_score {get;set;}
     }
 
     global class V3 {
@@ -282,34 +283,35 @@ global class CreditPolicyResponse {
         global String risk_model_score {get;set;} 
         global Double logistic_prediction_of_default {get;set;} 
         global Regression_scores regression_scores {get;set;} 
-        global Probability_differences probability_differences {get;set;} 
+        global Probability_differences probability_differences {get;set;}
+        global Integer happy_score {get;set;}
     }
     
     /* Trade Line Analysis Details */  
     global class TradelineAnalysis {
-        global Integer credit_card_count;
-        global Integer credit_card_balance;
-        global Integer credit_card_limit;
-        global Double credit_card_utilization;
-        global Integer credit_card_monthly_payments;
-        global Integer credit_card_closed_with_balance_count;
-        global Integer unsecured_installment_loan_count;
-        global Integer unsecured_installment_loan_balance;
-        global Integer unsecured_installment_loan_opened_last_12_mo;
-        global Integer unsecured_installment_loan_monthly_payment;
-        global Integer student_loan_count;
-        global Integer student_loan_balance;
-        global Integer student_loan_monthly_payment;
-        global Integer student_loan_deferred_count;
-        global Integer auto_loan_count;
-        global Integer auto_loan_balance;
-        global Integer auto_loan_monthly_payment;
-        global Integer mortgage_count;
-        global Integer mortgage_balance;
-        global Integer mortgage_monthly_payment;
-        global Integer heloc_count;
-        global Integer heloc_balances;
-        global Integer heloc_monthly_payment;
+        global Integer credit_card_count {get;set;}
+        global Integer credit_card_balance {get;set;}
+        global Integer credit_card_limit{get;set;}
+        global Double credit_card_utilization{get;set;}
+        global Integer credit_card_monthly_payments {get;set;}
+        global Integer credit_card_closed_with_balance_count {get;set;}
+        global Integer unsecured_installment_loan_count {get;set;}
+        global Integer unsecured_installment_loan_balance {get;set;}
+        global Integer unsecured_installment_loan_opened_last_12_mo {get;set;}
+        global Integer unsecured_installment_loan_monthly_payment {get;set;}
+        global Integer student_loan_count {get;set;}
+        global Integer student_loan_balance {get;set;}
+        global Integer student_loan_monthly_payment {get;set;}
+        global Integer student_loan_deferred_count {get;set;}
+        global Integer auto_loan_count {get;set;}
+        global Integer auto_loan_balance {get;set;}
+        global Integer auto_loan_monthly_payment {get;set;}
+        global Integer mortgage_count {get;set;}
+        global Integer mortgage_balance {get;set;}
+        global Integer mortgage_monthly_payment {get;set;}
+        global Integer heloc_count {get;set;}
+        global Integer heloc_balances {get;set;}
+        global Integer heloc_monthly_payment {get;set;}
     }
     
     global TradelineAnalysis parse(String json) {
@@ -323,35 +325,38 @@ global class CreditPolicyResponse {
      * @param CPResponse The response collecting parsed data
      */
     global void parseV6RiskModel(String unescapedString, CreditPolicyResponse CPResponse) {
-        if (CPResponse.credit_policy_decision.credit_policy_version != '6.0') {
-            return;
-        }
+         /** if (CPResponse.credit_policy_decision.credit_policy_version != '6.0') {
+                return;
+            }**/
 
-        Map<String, Object> untypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(unescapedString);
-        if (untypedResponse == null) {
-            throw new IllegalArgumentException('invalid string to parse as json');
-        }
+            Map<String, Object> untypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(unescapedString);
+            if (untypedResponse == null) {
+                throw new IllegalArgumentException('invalid string to parse as json');
+            }
 
-        Map<String, Object> untypedCreditPolicyDecision = (Map<String, Object>) untypedResponse.get('credit_policy_decision');
-        if (untypedCreditPolicyDecision == null) {
-            throw new IllegalArgumentException('JSON document does not contain credit_policy_decision');
-        }
+            Map<String, Object> untypedCreditPolicyDecision = (Map<String, Object>) untypedResponse.get('credit_policy_decision');
+            if (untypedCreditPolicyDecision == null) {
+                throw new IllegalArgumentException('JSON document does not contain credit_policy_decision');
+            }
 
-        Map<String, Object> untypedRiskModels = (Map<String, Object>) untypedCreditPolicyDecision.get('risk_models');
-        if (untypedRiskModels == null) {
-            return;
-        }
+            Map<String, Object> untypedRiskModels = (Map<String, Object>) untypedCreditPolicyDecision.get('risk_models');
+            if (untypedRiskModels == null) {
+                return;
+            }
 
-        Map<String, Object> untypedV6 = (Map<String, Object>) untypedRiskModels.get('6.0');
-        if (untypedV6 == null) {
-            return;
-        }
+            //Map<String, Object> untypedV6 = (Map<String, Object>) untypedRiskModels.get('6.0');
+            Map<String, Object> untypedV6 = (Map<String, Object>) untypedRiskModels.get(CPResponse.credit_policy_decision.credit_policy_version);
+            if (untypedV6 == null) {
+                return;
+            }
 
-        CreditPolicyResponse.V6 v6 = new CreditPolicyResponse.V6();
-        v6.invalid_risk_model_variable_count = (Integer) untypedV6.get('invalid_risk_model_variable_count');
-        v6.logistic_prediction_of_default = (Double) untypedV6.get('logistic_prediction_of_default');
-        v6.risk_model_decision = (String) untypedV6.get('risk_model_decision');
-        v6.risk_model_score = (Double) untypedV6.get('risk_model_score');
+            CreditPolicyResponse.V6 v6 = new CreditPolicyResponse.V6();
+            v6.invalid_risk_model_variable_count = (Integer) untypedV6.get('invalid_risk_model_variable_count');
+            v6.logistic_prediction_of_default = (Double) untypedV6.get('logistic_prediction_of_default');
+            v6.risk_model_decision = (String) untypedV6.get('risk_model_decision');    
+            v6.happy_score = (Integer) untypedV6.get('happy_score');
+             system.debug('v6.happy_score'+v6.happy_score);
+            //v6.risk_model_score = (Double) untypedV6.get('risk_model_score');
 
         /* leaving this in for backwards compat, but data key removed in v6, create data key for risk models v6 only */
         if (CPResponse.credit_policy_decision.data != null) {
@@ -778,6 +783,11 @@ global class CreditPolicyResponse {
         obj.Active__c = TRUE;
         if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.raw_bureau_data != null){
             obj.Raw_XML__c = String.valueOF(CPResponse.credit_policy_decision.raw_bureau_data);
+           
+        if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.risk_models != null
+          && CPResponse.credit_policy_decision.risk_models.V6 !=null && CPResponse.credit_policy_decision.risk_models.V6.happy_score != null){
+            obj.happy_score__c = CPResponse.credit_policy_decision.risk_models.V6.happy_score;
+                }
         }
         else{
             obj.Raw_XML__c = 'No Data found in raw_bureau_data';
