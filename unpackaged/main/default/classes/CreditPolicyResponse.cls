@@ -396,11 +396,8 @@ global class CreditPolicyResponse {
             return;
         }
 
-        genesis__Applications__c app = [SELECT Id
-                                        FROM   genesis__Applications__c
-                                        WHERE  Id =: appId
-                                        LIMIT  1];
-                                        
+        genesis__Applications__c app = new genesis__Applications__c();
+        app.Id = appId;
         app.FICO__c = cp.FICO__c;
         app.Monthly_DTI__c = cp.Monthly_DTI__c;
         app.Net_Disposable_Income_NDI_Num__c = cp.Net_Disposable_Income_NDI_Num__c;
