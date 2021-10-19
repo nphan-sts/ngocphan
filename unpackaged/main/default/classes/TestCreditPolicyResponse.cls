@@ -541,6 +541,91 @@ private class TestCreditPolicyResponse {
         Test.stopTest();
     }
     
+    @IsTest static void testCopyCreditPolicyFieldsToApplication() {
+
+        Credit_Policy__c creditPolicy = new Credit_Policy__c();
+        creditPolicy.FICO__c = 780;
+        creditPolicy.Monthly_DTI__c = 40;
+        creditPolicy.Net_Disposable_Income_NDI__c = '1200.0';
+        creditPolicy.Num_Trades_Opened_Past_24mo__c = 4;
+        creditPolicy.request_intent__c = 'application';
+        insert creditPolicy;
+
+        genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
+        insert app;
+
+        String appId = String.valueOf(app.Id);
+
+        CreditPolicyResponse.updateAppRulesetCreditPolicyFields(appId, creditPolicy.Id);
+
+        genesis__Applications__c actual = selectCreditPolicyFields(appId);
+
+        System.assertEquals(780, actual.FICO__c);
+        System.assertEquals(40, actual.Monthly_DTI__c);
+        System.assertEquals(1200.0, actual.Net_Disposable_Income_NDI_Num__c);
+        System.assertEquals(4, actual.Num_Trades_Opened_Past_24mo__c);
+
+        Credit_Policy__c creditPolicyVerification = new Credit_Policy__c();
+        creditPolicyVerification.FICO__c = 600;
+        creditPolicyVerification.Monthly_DTI__c = 90;
+        creditPolicyVerification.Net_Disposable_Income_NDI__c = '700.0';
+        creditPolicyVerification.Num_Trades_Opened_Past_24mo__c = 20;
+        creditPolicyVerification.request_intent__c = 'verification';
+        insert creditPolicyVerification;
+
+        /* Assert the fields do not change after another type of credit policy entry is added */
+        CreditPolicyResponse.updateAppRulesetCreditPolicyFields(appId, creditPolicy.Id);
+
+        actual = selectCreditPolicyFields(appId);
+
+        System.assertEquals(780, actual.FICO__c);
+        System.assertEquals(40, actual.Monthly_DTI__c);
+        System.assertEquals(1200.0, actual.Net_Disposable_Income_NDI_Num__c);
+        System.assertEquals(4, actual.Num_Trades_Opened_Past_24mo__c);
+    }
+
+    /**
+     * The copy method itself is tested independently, confirm it works within the parsing operation.
+     */
+    @IsTest static void testCopyCreditPolicyFieldsToApplicationDuringParse() {
+
+        Account acc1 = [SELECT Id,Name FROM Account WHERE Name ='Testfname Testlname' LIMIT 1];
+
+        genesis__Applications__c app1 = [SELECT Id,genesis__Status__c,Lead_ID__c FROM genesis__Applications__c WHERE genesis__Status__c='Offer shown' LIMIT 1];
+
+        StaticResource sr = [SELECT Id,Name,Body FROM StaticResource WHERE Name='CreditPolicyTestParserV6QARemoveDataKey'];
+        String json = sr.Body.toString();
+
+        Test.startTest();
+        CreditPolicyResponse obj = new CreditPolicyResponse();
+        obj = obj.parse(json,acc1.Id,app1.Id, app1.Lead_ID__c);
+
+        genesis__Applications__c actual = selectCreditPolicyFields(String.valueOf(app1.Id));
+
+        System.assertEquals(792, actual.FICO__c);
+        System.assertEquals(26.59, actual.Monthly_DTI__c);
+        System.assertEquals(3624.88, actual.Net_Disposable_Income_NDI_Num__c);
+        System.assertEquals(5, actual.Num_Trades_Opened_Past_24mo__c);
+
+        Test.stopTest();
+    }
+
+    /**
+     * @param appId app to select with only credit policy fields
+     * @return A minimal application instance
+     */
+    private static genesis__Applications__c selectCreditPolicyFields(String appId) {
+        genesis__Applications__c app = [SELECT Id,
+                FICO__c,
+                Monthly_DTI__c,
+                Net_Disposable_Income_NDI_Num__c,
+                Num_Trades_Opened_Past_24mo__c
+        FROM   genesis__Applications__c
+        WHERE  Id =: appId
+        LIMIT  1];
+        return app;
+    }
+
     Testmethod static void method4(){
         
         Manual_Adverse_Action_Decline__c mda = new 	Manual_Adverse_Action_Decline__c();
