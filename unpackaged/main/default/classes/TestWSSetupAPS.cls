@@ -2,7 +2,8 @@
 * Modified by      Date            JIRA number
 *    Pallavi      2020/12/15      CRM-845
 *    Anusha		2020/06/04      LSP-223
-*    Anusha		2021/08/26		LSP-328
+*    Anusha		2021/08/26		LSP-328.1
+*	 Anusha		2021/10/21		LSP-328.2
 ******************Modification History*****************************************************************/
 @isTest(SeeAllData = false)
 public class TestWSSetupAPS {
@@ -1315,13 +1316,14 @@ public class TestWSSetupAPS {
         
         Test.startTest();
         Response results = WSSetupAPS.createAPSSetup();
-        //Test.stopTest();
         System.assert(results.status.equalsIgnoreCase(peer.Constants.SUCCESS));
-        loan__loan_Payment_transaction__c payofflpt = [select id,name,loan__installment_payment__c,loan__Early_Total_Repayment_of_the_Loan__c,loan__payment_Mode__c
+        loan__loan_Payment_transaction__c payofflpt = [select id,name,loan__installment_payment__c,loan__Early_Total_Repayment_of_the_Loan__c,loan__payment_Mode__c,loan__Automated_Payment_Setup__c,loan__Automated_Payment_Setup__r.loan__Active__c  
                                                        from loan__loan_Payment_transaction__c 
                                                        where loan__loan_Account__c=:lAcct.id];
         System.assertEquals(payofflpt.loan__installment_payment__c,false);
         System.assertEquals(payofflpt.loan__Early_Total_Repayment_of_the_Loan__c,true);
+        System.assert(payofflpt.loan__Automated_Payment_Setup__c != null);//LSP-328.2 When payoff LPT gets created, APS is mapped to it for NACHA mapping
+        System.assert(!payofflpt.loan__Automated_Payment_Setup__r.loan__Active__c);//LSP-328.2 APS status should be inactive
         Test.stopTest();
     }
     
