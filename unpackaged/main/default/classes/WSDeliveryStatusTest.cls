@@ -1,13 +1,17 @@
 @isTest
 private class WSDeliveryStatusTest {
     @isTest static void testUpdateStatus() {
+        genesis__Org_Parameters__c cso = new
+            genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
+        insert cso;
+        
         Account acct = TestDataFactory.createTestAccount();
         insert acct;
-
+        
         Account inv = TestDataFactory.createTestInvestor();
         inv.Investor_Code__c = 'TEST';
         insert inv;
-
+        
         genesis__Applications__c app = TestDataFactory.createTestApplication(acct.Id, inv.Id, '9ffffff9-9fff-f999-ff99-9f9f9f9f9f9f',
             Date.today().addDays(2), 'agent_document_verification_pending');
 

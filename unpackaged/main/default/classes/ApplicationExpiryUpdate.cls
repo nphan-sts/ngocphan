@@ -132,13 +132,19 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
                 }
             }
             else{
+                if(app.Credit_Policy__r.size()>0 && app.Expiry_Date__c != null && app.Expiry_Date__c == currentSystemDate){  
+                    app.genesis__Status__c = 'Expired-Withdrawn';
+                    app.OwnerId = expiredQue.Queue.Id;                          
+                    }
+        /**    else{
                 if((app.Expiry_Date__c != null && app.Expiry_Date__c == currentSystemDate)){
                     app.genesis__Status__c = 'Declined';
                     app.OwnerId = declinedQue.Queue.Id;
                     app.Manual_Adverse_Action_Decline__c = actionDecline.id;
                     //app.OwnerId = app.CreatedById;
                     AttachPDFtoApplication.attachPDF(app.id,true,false);
-                }
+                } 
+            } **/
             }
             
             listOfAppTobeUpdated.add(app);
