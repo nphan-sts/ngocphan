@@ -43,8 +43,7 @@ private class APSWarningMSGExtensionTest {
         Account account_Obj = new Account(
             Name = 'Test',
             loan__Investor__c=False,
-            cnotify__Email__c = 'no-reply@testorganization.com',
-            peer__Last_Name__c = 'abc'
+            cnotify__Email__c = 'no-reply@testorganization.com'
         );
         Insert account_Obj;
 
@@ -92,7 +91,7 @@ private class APSWarningMSGExtensionTest {
         lautopay.loan__Type__c = 'ONE TIME';
         lautopay.Email__c = 'abc@gmail.com';
         insert lautopay;
-	    MW_Settings__c payOffSettings = new MW_Settings__c();
+	MW_Settings__c payOffSettings = new MW_Settings__c();
         payOffSettings.APS_Cutofftime__c = '16:00:00';
         insert payOffSettings;
     }
