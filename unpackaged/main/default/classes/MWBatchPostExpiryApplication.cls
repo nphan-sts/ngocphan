@@ -1,7 +1,7 @@
 global class MWBatchPostExpiryApplication implements Database.batchable<sObject>, Schedulable, Database.AllowsCallouts {
 
     String query;
-    Set<String> applicationStatus = new Set<String>{'Expired','Declined','Decline_Manual_Review'};
+    Set<String> applicationStatus = new Set<String>{'Expired','Declined','Decline_Manual_Review','Expired-Withdrawn'};
     Set<String> applicationStatusDec = new Set<String>{'Declined'};
 
     String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
@@ -38,6 +38,13 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
                 appinfo.lead_id                              = app.LEAD_ID_ExtKey__c;
                 appinfo.member_id                            = app.Member_ID__c;
 
+                appinfo.is_expired                           = true;
+                listAppInfo.add(appinfo);
+            }
+            else if(app.genesis__Status__c=='Expired-Withdrawn') {
+                appinfo.lead_guid                            = app.Lead_ID__c;
+                appinfo.lead_id                              = app.LEAD_ID_ExtKey__c;
+                appinfo.member_id                            = app.Member_ID__c;
                 appinfo.is_expired                           = true;
                 listAppInfo.add(appinfo);
             }
