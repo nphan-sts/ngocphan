@@ -13,9 +13,10 @@ private class MWBatchPostExpiryApplicationTest {
         List<account> accList = MW_DataFactoryTest.createAccounts(1);
         insert accList;
 
-        List<genesis__Applications__c> appList = MW_DataFactoryTest.createApplication(3, accList[0].Id);
+        List<genesis__Applications__c> appList = MW_DataFactoryTest.createApplication(4, accList[0].Id);
         appList[0].genesis__Status__c = 'Expired';
         appList[1].genesis__Status__c = 'Declined';
+        appList[3].genesis__Status__c = 'Expired-Withdrawn';
         appList[1].Application_Start_DateV2__c = currentSystemDate;
         appList[2].genesis__Status__c = 'Declined';
         appList[2].Last_Investor_Assigned_On__c = DateTime.newInstance(currentSystemDate.year(), currentSystemDate.month(), currentSystemDate.day());
