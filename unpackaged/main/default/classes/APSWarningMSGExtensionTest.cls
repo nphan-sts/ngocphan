@@ -98,7 +98,7 @@ private class APSWarningMSGExtensionTest {
 
     @isTest
     static void testErrorMessage() {
-        loan__Automated_Payment_Setup__c lauto = [SELECT External_Id__c, CreatedDate, loan__Active__c,Email__c,
+        loan__Automated_Payment_Setup__c lauto = [SELECT External_Id__c, CreatedDate, loan__Active__c,
                                                   loan__CL_Contract__c, loan__Transaction_Amount__c,
                                                   loan__Type__c, loan__Bank_Account__c, loan__Debit_Date__c
                                                   FROM loan__Automated_Payment_Setup__c WHERE External_Id__c='testlauto01234'];
@@ -114,7 +114,7 @@ private class APSWarningMSGExtensionTest {
 
     @isTest
     static void testHolidayErrorMessage() {
-        loan__Automated_Payment_Setup__c lauto = [SELECT External_Id__c, CreatedDate, loan__Active__c,Email__c,
+        loan__Automated_Payment_Setup__c lauto = [SELECT External_Id__c, CreatedDate, loan__Active__c,
                                                   loan__CL_Contract__c, loan__Transaction_Amount__c,
                                                   loan__Type__c, loan__Bank_Account__c, loan__Debit_Date__c
                                                   FROM loan__Automated_Payment_Setup__c WHERE External_Id__c='testlauto01234'];
@@ -143,7 +143,7 @@ private class APSWarningMSGExtensionTest {
 
     @isTest
     static void testNoErrorMessage() {
-        loan__Automated_Payment_Setup__c lauto = [SELECT External_Id__c, CreatedDate, loan__Active__c,Email__c,
+        loan__Automated_Payment_Setup__c lauto = [SELECT External_Id__c, CreatedDate, loan__Active__c,
                                                   loan__CL_Contract__c, loan__Transaction_Amount__c,
                                                   loan__Type__c, loan__Bank_Account__c, loan__Debit_Date__c
                                                   FROM loan__Automated_Payment_Setup__c WHERE External_Id__c='testlauto01234'];
