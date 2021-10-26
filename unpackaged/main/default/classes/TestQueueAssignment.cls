@@ -24,8 +24,7 @@ public class TestQueueAssignment{
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
-            cnotify__Email__c = 'abc@test.com',
-            peer__Last_Name__c = 'abc'
+            cnotify__Email__c = 'abc@test.com'
             //loan__SOCIAL_SECURITY_NUMBER__c = '123'
             );
         insert acc;
