@@ -1,13 +1,15 @@
 /* ****************Modification History*****************************************************************
- * Modified by      Date            JIRA number
- *    Pallavi       2020/01/14    LOS-225 Add installment payment flag check logic to webservice in CLS
- *    Pallavi       2020/01/27    LOS-28(Remove references to InvestorAccount field on CL contract)
- *    Neha          2020/11/18    CRM-845
- * 	  Anusha		2021/03/3	  LSP-186 LAI-00076377 - error message from CLS lately for payments posted via the API CLS case #02613860
- * 	  Anusha		2021/05/11	  LSP-97  Support Manual Payers (+auto payers) Making Principal Only Payments
- * 	  Anusha		2021/05/11	  LSP-224 Revisit installment flag logic - Payoff payment goes to excess or P/I instead closing the loan Case#: 02701590
- * 	  Anusha		2021/05/13    LSP-223 Charged Off loans - Submit recover payment from Member Portal
- ******************Modification History*****************************************************************/
+* Modified by      Date            JIRA number
+*    Pallavi       2020/01/14    LOS-225 Add installment payment flag check logic to webservice in CLS
+*    Pallavi       2020/01/27    LOS-28(Remove references to InvestorAccount field on CL contract)
+*    Neha          2020/11/18    CRM-845
+* 	  Anusha		2021/03/3	  LSP-186 LAI-00076377 - error message from CLS lately for payments posted via the API CLS case #02613860
+* 	  Anusha		2021/05/11	  LSP-97  Support Manual Payers (+auto payers) Making Principal Only Payments
+* 	  Anusha		2021/05/11	  LSP-224 Revisit installment flag logic - Payoff payment goes to excess or P/I instead closing the loan Case#: 02701590
+* 	  Anusha		2021/05/13    LSP-223 Charged Off loans - Submit recover payment from Member Portal
+* 	  Anusha		2021/08/23	  LSP-328.1 Changes to create payoff payments through webservice
+*	  Anusha		2021/10/21	  LSP-328.2 Changes to map payoffLPT to NACHA
+******************Modification History*****************************************************************/
 
 @RestResource(urlMapping='/OTPOMBPEndpoint/*')
 global class WSSetupAPS {
@@ -39,14 +41,14 @@ global class WSSetupAPS {
         
         //Decide if Loan Account is to be picked directly from Loan Account's ID or using Name.
         /*String fieldName = peer__CustomSettingsUtil.getAPIConfig().loan__Loan_Id_Field__c;
-        if(fieldName == null){
-            fieldName = Constants.DEFAULT_ID;
-        }*/
+if(fieldName == null){
+fieldName = Constants.DEFAULT_ID;
+}*/
         
         /*String leadId = req.requestURI.substring(req.requestURI.lastIndexOf('/')+1,req.requestURI.length());
-        // Loan Account validation check.
-        System.debug(leadId+'  '+req.requestURI);
-        */
+// Loan Account validation check.
+System.debug(leadId+'  '+req.requestURI);
+*/
         
         RequestBodyParser.RequestBodyParams reqParams = RequestBodyParser.getJsonParamsFromRequest(req);
         if(reqParams == null) {
@@ -83,10 +85,11 @@ global class WSSetupAPS {
         Date recurringACHStartDate;
         Date setupDate;
         Boolean installmentPayment;
+        Boolean payoffPayment = false;//LSP-328.1
         
         List<loan__Loan_Account__c> loanAccountsList = [Select Id, Name,loan__Loan_Status__c,loan__Maturity_Date_Current__c, //LSP-223 (added loan__Loan_Status__c)
                                                         loan__Contact__c, loan__Account__c, loan__Last_Accrual_Date__c, 
-                                                        loan__Product_Type__c
+                                                        loan__Product_Type__c,loan__Pay_Off_Amount_As_Of_Today__c,loan__Write_off_Tolerance_Amount__c //LSP-328.1 (added loan__Pay_Off_Amount_As_Of_Today__c,loan__Write_off_Tolerance_Amount__c)
                                                         from loan__loan_account__c
                                                         where lead_Guid__c =: leadId];
         if (loanAccountsList.size() == 0) {
@@ -141,23 +144,23 @@ global class WSSetupAPS {
             installmentPayment = params.get('installmentOmbp') != null ? (Boolean) params.get('installmentOmbp') : false;
             
             debitDate = Date.valueOf((String) params.get('debitDate'));
-            
+            payoffPayment = params.get('payoffPayment') != null ? (Boolean)params.get('payoffPayment'): false; //LSP-328.1
             
             System.debug(LoggingLevel.ERROR, 'about to check debit date validation');
             
             //LSP-186 - start
             //Would like to explicitly check for LOAN, LOC and FLEXIBLE_AMZ. But the Loan package is not upgraded yet
             /*if(!loanAccount.loan__Product_Type__c.equalsIgnoreCase(loan.LoanConstants.AMZ)
-               && (type != null && type.equalsIgnoreCase(loan.LoanConstants.ONE_TIME))
-               && debitDate  < loanAccount.loan__Last_Accrual_Date__c) { 
-                   
-                   String message = 'Debit Date for One Time ACH is before Last  Accrual Date';
-                   res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
-                   restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
-                   return res;
-               }
-            
-            System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
+&& (type != null && type.equalsIgnoreCase(loan.LoanConstants.ONE_TIME))
+&& debitDate  < loanAccount.loan__Last_Accrual_Date__c) { 
+
+String message = 'Debit Date for One Time ACH is before Last  Accrual Date';
+res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
+restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
+return res;
+}
+
+System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
             //LSP-186 - end
             
             recurringACHStartDate = params.get('recurringACHStartDate') != null ? Date.valueOf((String) params.get('recurringACHStartDate')) : debitDate;
@@ -174,72 +177,126 @@ global class WSSetupAPS {
         
         try {
             if(isMultiplePaymentMethodEnabled) {
+                //LSP-328.1 - start
+                if(payoffPayment == true){//Create payoff payment and inactive one time APS if the request has payoffPyament flag true
+                    if(loanAccount.loan__Pay_Off_Amount_As_Of_Today__c != null && loanAccount.loan__Write_off_Tolerance_Amount__c != null){
+                        if(transactionAmount >= (loanAccount.loan__Pay_Off_Amount_As_Of_Today__c - loanAccount.loan__Write_off_Tolerance_Amount__c)){
+                            //LSP-328.2 Changes to map payoffLPT to NACHA - start
+                            loan__Automated_Payment_Setup__c automatedPaymentSetup = new loan__Automated_Payment_Setup__c();
+                            automatedPaymentSetup.loan__CL_Contract__c = loanAccount.id;
+                            automatedPaymentSetup.loan__Active__c = false;
+                            automatedPaymentSetup.loan__Type__c = 'ONE TIME';
+                            automatedPaymentSetup.loan__Bank_Account__c = getBankAccountId(bankAccountId,loanAccount);
+                            automatedPaymentSetup.loan__Frequency__c = frequency;
+                            automatedPaymentSetup.loan__Payment_Mode__c = getPaymentModeId(paymentModeName);
+                            automatedPaymentSetup.loan__Amount_Type__c = amountType;
+                            automatedPaymentSetup.loan__Transaction_Amount__c = transactionAmount;
+                            automatedPaymentSetup.loan__Debit_Date__c = debitDate;
+                            automatedPaymentSetup.loan__Recurring_ACH_Start_Date__c = recurringACHStartDate;
+                            automatedPaymentSetup.loan__Recurring_ACH_End_Date__c = recurringACHEndDate;
+                            automatedPaymentSetup.loan__Setup_Date__c = setupDate; 
+                            automatedPaymentSetup.loan__Installment_Payment__c = false;
+                            automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId( manualSpreadName);
+                            insert automatedPaymentSetup;
+                            
+                            loan__Automated_Payment_Setup__c payoffAPS = [select id, name from loan__Automated_Payment_Setup__c
+                                                                          where loan__CL_Contract__c =: loanAccount.Id
+                                                                          and loan__Type__c = 'ONE TIME' 
+                                                                          and loan__Active__c = false 
+                                                                          and loan__Debit_Date__c =:debitDate
+                                                                          order by createdDate desc limit 1];
+                            //LSP-328.2 Changes to map payoffLPT to NACHA - end                            
+                            
+                            loan__loan_payment_transaction__c payoffLpt = new loan__loan_payment_transaction__c();
+                            payoffLpt.loan__loan_Account__c = loanAccount.Id;
+                            payoffLpt.loan__Transaction_Date__c = debitDate;
+                            payoffLpt.loan__Early_Total_Repayment_of_the_Loan__c = true;
+                            payoffLpt.loan__Transaction_Amount__c = transactionAmount;
+                            payoffLpt.loan__payment_Mode__c = getPaymentModeId(paymentModeName);
+                            payoffLpt.loan__Installment_Payment__c = false;
+                            payoffLPT.loan__Automated_Payment_Setup__c = payoffAPS.Id;//LSP-328.2 attaching newly created inactive APS to payoff LPT
+                            insert payoffLpt;
+                            
+                            res = new Response(peer.Constants.SUCCESS, '', '');
+                            res.contents.add(payoffLpt);
+                            restRes.statuscode = peer.Constants.HTTP_OK;
+                            return res;
+                        }else{
+                            res = new Response(peer.Constants.ERROR, '', 'Transaction amount is not sufficient to payoff the loan');
+                            return res;
+                        }
+                    }
+                    res = new Response(peer.Constants.ERROR, '', 'Check if loan account has required information');
+                    return res;
+                }
+                //LSP-328.1 - end
+                
                 // Second param paymentModeId is passed null. Because we are setting paymentModeName in setter method
                 // from where Payment Mode Id will be fetched.
                 /*PS-4350/LOS-192*/
                 Integer count = 0;
                 if(type.equalsIgnoreCase('RECURRING'))
                     count = [Select count() from loan__Automated_Payment_Setup__c where loan__CL_Contract__c =: loanAccount.id
-                                     AND loan__Active__c = true and loan__Type__c = 'RECURRING'];
+                             AND loan__Active__c = true and loan__Type__c = 'RECURRING'];
                 loan__Automated_Payment_Setup__c automatedPaymentSetup = new loan__Automated_Payment_Setup__c();
                 
-                if(count == 0){
-                /*PS-4350/LOS-192*/
-                automatedPaymentSetup.loan__CL_Contract__c = loanAccount.id;
-                automatedPaymentSetup.loan__Active__c = isActive;
-                automatedPaymentSetup.loan__Type__c = type;
-                automatedPaymentSetup.loan__Bank_Account__c = getBankAccountId(bankAccountId,loanAccount);
-                automatedPaymentSetup.loan__Frequency__c = frequency;
-                automatedPaymentSetup.loan__Payment_Mode__c = getPaymentModeId(paymentModeName);
-                automatedPaymentSetup.loan__Amount_Type__c = amountType;
-                automatedPaymentSetup.loan__Transaction_Amount__c = transactionAmount;
-                automatedPaymentSetup.loan__Debit_Date__c = debitDate;
-                automatedPaymentSetup.loan__Recurring_ACH_Start_Date__c = recurringACHStartDate;
-                automatedPaymentSetup.loan__Recurring_ACH_End_Date__c = recurringACHEndDate;
-                automatedPaymentSetup.loan__Setup_Date__c = setupDate;   
-                //LSP-223 (added a condition for charge off loans)
-                if(loanAccount.loan__Loan_Status__c.equalsIgnoreCase(loan.LoanConstants.LOAN_STATUS_CLOSED_WRITTEN_OFF)){
-                 	automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId(chargeoffspreadname); 
-                }else{
-                	automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId( manualSpreadName);
-                } System.debug('automatedPaymentSetup.loan__Loan_Payment_Spread__c: '+automatedPaymentSetup.loan__Loan_Payment_Spread__c);
-                 
-                if(manualSpreadName != NULL){
-                    System.debug(logginglevel.error,'In IF :: manualSpreadName != NULL ');
-                    automatedPaymentSetup.loan__Installment_Payment__c = installmentPayment;
-                
-                }else{
-                    System.debug(logginglevel.error,'In ELSE :: manualSpreadName == NULL ');
-                    automatedPaymentSetup.loan__Installment_Payment__c = updateInstallmentFlag(loanAccount.id, debitDate, transactionAmount);
+                if(count == 0){                    
+                    /*PS-4350/LOS-192*/
+                    automatedPaymentSetup.loan__CL_Contract__c = loanAccount.id;
+                    automatedPaymentSetup.loan__Active__c = isActive;
+                    automatedPaymentSetup.loan__Type__c = type;
+                    automatedPaymentSetup.loan__Bank_Account__c = getBankAccountId(bankAccountId,loanAccount);
+                    automatedPaymentSetup.loan__Frequency__c = frequency;
+                    automatedPaymentSetup.loan__Payment_Mode__c = getPaymentModeId(paymentModeName);
+                    automatedPaymentSetup.loan__Amount_Type__c = amountType;
+                    automatedPaymentSetup.loan__Transaction_Amount__c = transactionAmount;
+                    automatedPaymentSetup.loan__Debit_Date__c = debitDate;
+                    automatedPaymentSetup.loan__Recurring_ACH_Start_Date__c = recurringACHStartDate;
+                    automatedPaymentSetup.loan__Recurring_ACH_End_Date__c = recurringACHEndDate;
+                    automatedPaymentSetup.loan__Setup_Date__c = setupDate;   
+                    //LSP-223 (added a condition for charge off loans)
+                    if(loanAccount.loan__Loan_Status__c.equalsIgnoreCase(loan.LoanConstants.LOAN_STATUS_CLOSED_WRITTEN_OFF)){
+                        automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId(chargeoffspreadname); 
+                    }else{
+                        automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId( manualSpreadName);
+                    } System.debug('automatedPaymentSetup.loan__Loan_Payment_Spread__c: '+automatedPaymentSetup.loan__Loan_Payment_Spread__c);
                     
-                }
-                               
-                /*                
-                //LOS-225
-                if(type.equalsIgnoreCase('ONE TIME') && (automatedPaymentSetup.loan__Loan_Payment_Spread__r.loan__Order_Of_Payment__c != 'Principal')
-                  &&(automatedPaymentSetup.loan__Loan_Payment_Spread__r.loan__Order_Of_Payment__c != 'Interest'))  
-                    automatedPaymentSetup.loan__Installment_Payment__c= true;
+                    if(manualSpreadName != NULL){
+                        System.debug(logginglevel.error,'In IF :: manualSpreadName != NULL ');
+                        automatedPaymentSetup.loan__Installment_Payment__c = installmentPayment;
+                        
+                    }else{
+                        System.debug(logginglevel.error,'In ELSE :: manualSpreadName == NULL ');
+                        automatedPaymentSetup.loan__Installment_Payment__c = updateInstallmentFlag(loanAccount.id, debitDate, transactionAmount);
+                        
+                    }
+                    
+                    /*                
+//LOS-225
+if(type.equalsIgnoreCase('ONE TIME') && (automatedPaymentSetup.loan__Loan_Payment_Spread__r.loan__Order_Of_Payment__c != 'Principal')
+&&(automatedPaymentSetup.loan__Loan_Payment_Spread__r.loan__Order_Of_Payment__c != 'Interest'))  
+automatedPaymentSetup.loan__Installment_Payment__c= true;
+else
+automatedPaymentSetup.loan__Installment_Payment__c = installmentPayment;
+//LOS-225
+*/
+                    
+                    //set Dates.
+                    
+                    insert automatedPaymentSetup;
+                    if(automatedPaymentSetup == null) {
+                        System.debug(LoggingLevel.DEBUG, '-----Create Automated Payment Setup Error-----');
+                        res = new Response(peer.Constants.ERROR, peer.Constants.UNKNOWN_EXCEPTION, '');
+                        restRes.statusCode = peer.Constants.HTTP_INTERNAL_ERROR;
+                        return res;
+                    }
+                } //PS-4350/LOS-192
+                /*PS-4350/LOS-192*/
+                if(count==0)
+                    res = new Response(peer.Constants.SUCCESS, '', '');
                 else
-                    automatedPaymentSetup.loan__Installment_Payment__c = installmentPayment;
-                //LOS-225
-                */
-                
-                //set Dates.
-                                
-                insert automatedPaymentSetup;
-                if(automatedPaymentSetup == null) {
-                    System.debug(LoggingLevel.DEBUG, '-----Create Automated Payment Setup Error-----');
-                    res = new Response(peer.Constants.ERROR, peer.Constants.UNKNOWN_EXCEPTION, '');
-                    restRes.statusCode = peer.Constants.HTTP_INTERNAL_ERROR;
-                    return res;
-                }
-               } //PS-4350/LOS-192
-               /*PS-4350/LOS-192*/
-               if(count==0)
-                res = new Response(peer.Constants.SUCCESS, '', '');
-               else
-                 res = new Response(peer.Constants.ERROR, '', 'The contract already has an active APS'); 
-               /*PS-4350/LOS-192*/
+                    res = new Response(peer.Constants.ERROR, '', 'The contract already has an active APS'); 
+                /*PS-4350/LOS-192*/
                 res.contents.add(automatedPaymentSetup);
                 restRes.statuscode = peer.Constants.HTTP_OK;
             }
@@ -328,19 +385,19 @@ global class WSSetupAPS {
         /*LOS-28*/
         
         try{
-          apc = [Select id,name, loan__Payment_Mode__r.Name From loan__Automated_Payment_Configuration__c Where loan__Bank_Account__r.loan__Account__c =:investor.loan__Account__c limit 1];  //LOS-28
+            apc = [Select id,name, loan__Payment_Mode__r.Name From loan__Automated_Payment_Configuration__c Where loan__Bank_Account__r.loan__Account__c =:investor.loan__Account__c limit 1];  //LOS-28
         }
         catch(exception ex) {    
-           loan__batch_process_log__c logs = new loan__batch_process_log__c(loan__Message__c='Error in assignToUnderwriterQueue:  '+ex.getlinenumber()+'Error: '+ex.getMessage() + loanAccount.name);             
-           insert logs;             
-           throw new ints.IntegrationException('NO APC FOUND FOR THIS INVESTOR');         
+            loan__batch_process_log__c logs = new loan__batch_process_log__c(loan__Message__c='Error in assignToUnderwriterQueue:  '+ex.getlinenumber()+'Error: '+ex.getMessage() + loanAccount.name);             
+            insert logs;             
+            throw new ints.IntegrationException('NO APC FOUND FOR THIS INVESTOR');         
         }
         return apc.loan__Payment_Mode__r.Name;
     }
     
     public static loan__Loan_Account__c getloanAccountDetails(String LeadId) {
         loan__Loan_Account__c loanAcc = [select id, name, lead_Guid__c                      //Investor_Account__c  LOS-28
-                                                from loan__Loan_Account__c where lead_Guid__c=:LeadId];
+                                         from loan__Loan_Account__c where lead_Guid__c=:LeadId];
         
         
         return loanAcc;
@@ -360,15 +417,15 @@ global class WSSetupAPS {
                                     loan__Next_Installment_Date__c, 
                                     loan__Last_Accrual_Date__c,//LSP-223 added LAD
                                     (select id,name,
-                                    loan__Due_Date__c,loan__Transaction_Date__c 
-                                    from loan__Dues_Details__r
-                                    where loan__Due_Date__c >: systemdate
-                                    and loan__Due_Date__c >: txnDate
-                                    and loan__Payment_Satisfied__c = False
-                                    and loan__DD_Primary_Flag__c = true) 
+                                     loan__Due_Date__c,loan__Transaction_Date__c 
+                                     from loan__Dues_Details__r
+                                     where loan__Due_Date__c >: systemdate
+                                     and loan__Due_Date__c >: txnDate
+                                     and loan__Payment_Satisfied__c = False
+                                     and loan__DD_Primary_Flag__c = true) 
                                     from loan__Loan_Account__c
                                     where id =: contractID];
-                                    
+        
         system.debug(logginglevel.error,' Loan Account :: '+LA);
         
         if (LA.loan__Dues_Details__r != NULL && LA.loan__Dues_Details__r.size() > 0){
@@ -376,50 +433,50 @@ global class WSSetupAPS {
             futureBill = LA.loan__Dues_Details__r[0];
             System.debug(logginglevel.error,'futureBill ::' +futureBill);
         }
-                
+        
         /*Installment payment logic:
-         		* Any additional payment done, should go towards principal component and not to excess
-        	 	* When borrower does payoff payment, the loan should get closed, it should not create excess transaction
-         		* To support auto/manual payers to make principal only payments 
-				* When one time APS is created with debit date < LAD(when LAD > system date), then the installment flag should be true 
-				*/
+* Any additional payment done, should go towards principal component and not to excess
+* When borrower does payoff payment, the loan should get closed, it should not create excess transaction
+* To support auto/manual payers to make principal only payments 
+* When one time APS is created with debit date < LAD(when LAD > system date), then the installment flag should be true 
+*/
         
         if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Good Standing')
            && futureBill != NULL ){        
-            installmentFlagValue = true;
-            System.debug(logginglevel.error,'In IF ::' +installmentFlagValue);
-        
-        }
+               installmentFlagValue = true;
+               System.debug(logginglevel.error,'In IF ::' +installmentFlagValue);
+               
+           }
         //LSP-97 and LSP-224 - start
         else if((LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Good Standing') && LA.loan__Last_Accrual_Date__c > systemdate)){
-           installmentFlagValue = true;
-           System.debug(logginglevel.error,'IF Future LAD  ::' +installmentFlagValue);            
+            installmentFlagValue = true;
+            System.debug(logginglevel.error,'IF Future LAD  ::' +installmentFlagValue);            
         }//LSP-97 and LSP-224 - end
         else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Good Standing')
-           && futureBill == NULL && LA.loan__Next_Due_Generation_Date__c <= txnDate
-           && LA.loan__Next_Installment_Date__c > txnDate){
-           installmentFlagValue = true;
-            System.debug(logginglevel.error,'IN 1st ELSE IF ::' +installmentFlagValue);            
-        }
+                && futureBill == NULL && LA.loan__Next_Due_Generation_Date__c <= txnDate
+                && LA.loan__Next_Installment_Date__c > txnDate){
+                    installmentFlagValue = true;
+                    System.debug(logginglevel.error,'IN 1st ELSE IF ::' +installmentFlagValue);            
+                }
         else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Bad Standing')
-        && futureBill != NULL && txnAmount > LA.loan__Delinquent_Amount__c ){
-            installmentFlagValue = true;
-            System.debug(logginglevel.error,'IN 2nd ELSE IF ::' +installmentFlagValue);
-            
-        }else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Bad Standing')
-        && futureBill == NULL && txnAmount > LA.loan__Delinquent_Amount__c 
-        && LA.loan__Next_Due_Generation_Date__c <= txnDate
-        && LA.loan__Next_Installment_Date__c > txnDate){
-            installmentFlagValue = true;
-            System.debug(logginglevel.error,'IN 3rd ELSE IF ::' +installmentFlagValue);
-            
-        }else{        
-            installmentFlagValue = false;
-            System.debug(logginglevel.error,'In ELSE ::' +installmentFlagValue);
-        }
-                                    
+                && futureBill != NULL && txnAmount > LA.loan__Delinquent_Amount__c ){
+                    installmentFlagValue = true;
+                    System.debug(logginglevel.error,'IN 2nd ELSE IF ::' +installmentFlagValue);
+                    
+                }else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Bad Standing')
+                         && futureBill == NULL && txnAmount > LA.loan__Delinquent_Amount__c 
+                         && LA.loan__Next_Due_Generation_Date__c <= txnDate
+                         && LA.loan__Next_Installment_Date__c > txnDate){
+                             installmentFlagValue = true;
+                             System.debug(logginglevel.error,'IN 3rd ELSE IF ::' +installmentFlagValue);
+                             
+                         }else{        
+                             installmentFlagValue = false;
+                             System.debug(logginglevel.error,'In ELSE ::' +installmentFlagValue);
+                         }
+        
         System.debug(logginglevel.error,'installmentFlagValue :: '+installmentFlagValue);        
         return installmentFlagValue;                            
     }
-       
+    
 }
