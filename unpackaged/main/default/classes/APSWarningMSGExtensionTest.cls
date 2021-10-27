@@ -43,7 +43,8 @@ private class APSWarningMSGExtensionTest {
         Account account_Obj = new Account(
             Name = 'Test',
             loan__Investor__c=False,
-            cnotify__Email__c = 'no-reply@testorganization.com'
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__Last_Name__c = 'abc'
         );
         Insert account_Obj;
 
