@@ -68,7 +68,7 @@ public class QueueAssignment{
 					app.utm_source__c =='creditkarma_lightbox') 
                        && (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800))
                    || 
-                  ((app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c < 0) ||
+                  ((app.KBA_Details__r != null && app.KBA_Details__r.size()>0) && ((app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c < 0) ||
                   (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9001 || app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9013)) ||
                   (app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && (app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9001 || app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9013)) ||
                   (app.KBA_Details__r[0].Precise_ID_Validation__c != null && (app.KBA_Details__r[0].Precise_ID_Validation__c == 9001 || app.KBA_Details__r[0].Precise_ID_Validation__c == 9013)) ||
@@ -81,7 +81,7 @@ public class QueueAssignment{
                   (app.KBA_Details__r[0].Id_Analytics_Score__c != null && app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 750 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
                     && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox') ||
                   (app.KBA_Details__r[0].Id_Analytics_Score__c != null && !app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox')))){
+                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox'))))){
                     
                     KBAFraudT = true;
                 } 
