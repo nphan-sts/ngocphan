@@ -44,9 +44,7 @@ private class APSWarningMSGExtensionTest {
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'no-reply@testorganization.com',
-
-	    peer__Last_Name__c = 'abc'  	
-
+            peer__Last_Name__c = 'abc'
         );
         Insert account_Obj;
 
@@ -92,9 +90,9 @@ private class APSWarningMSGExtensionTest {
         lautopay.External_Id__c = 'testlauto01234';
         lautopay.loan__Transaction_Amount__c = 12345;
         lautopay.loan__Type__c = 'ONE TIME';
-        lautopay.Email__c = 'abc@gmail.com';
         insert lautopay;
-	MW_Settings__c payOffSettings = new MW_Settings__c();
+        
+        MW_Settings__c payOffSettings = new MW_Settings__c();
         payOffSettings.APS_Cutofftime__c = '16:00:00';
         insert payOffSettings;
     }
@@ -117,7 +115,7 @@ private class APSWarningMSGExtensionTest {
 
     @isTest
     static void testHolidayErrorMessage() {
-        loan__Automated_Payment_Setup__c lauto = [SELECT External_Id__c, CreatedDate, loan__Active__c,
+        loan__Automated_Payment_Setup__c lauto = [SELECT External_Id__c, CreatedDate, loan__Active__c, 
                                                   loan__CL_Contract__c, loan__Transaction_Amount__c,
                                                   loan__Type__c, loan__Bank_Account__c, loan__Debit_Date__c
                                                   FROM loan__Automated_Payment_Setup__c WHERE External_Id__c='testlauto01234'];
@@ -153,7 +151,7 @@ private class APSWarningMSGExtensionTest {
         User u = [SELECT Id FROM User WHERE Id=: UserInfo.getUserId()]; //Profile.Name = 'System Administrator'
         System.runAs(u) {
           	Holiday hDay = new Holiday();
-            hDay.ActivityDate = Date.newInstance(2001, 09, 21);
+            hDay.ActivityDate = Date.newInstance(2021, 09, 06);
             hDay.Name = 'Green Day';
             hDay.Description = 'Green environment day';
             insert hDay;  
@@ -176,5 +174,5 @@ private class APSWarningMSGExtensionTest {
         System.assertEquals('', message, 'No Warning message displayed');
         
     }
-
+    
 }
