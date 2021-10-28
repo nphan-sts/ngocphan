@@ -33,11 +33,13 @@ global with sharing class WSSelectedOffer{
         ApprovePricingOffer approvedOffers;
         
         try{
+            MW_LogUtility.info('WSSelectedOffer', 'SelectedOfferRequestBody', null, 'markTentativeOfferSelected',jsondata);
             approvedOffers = (ApprovePricingOffer)JSON.deserialize(jsondata, ApprovePricingOffer.class);
         }catch(Exception e){
             res.status = e.getMessage();
             res.errorCode = PayoffConstants.INVALID_INPUT_FORMAT;
             res.httpStatusCode = PayoffConstants.ERROR_HTTP_CODE;
+            MW_LogUtility.error('WSSelectedOffer', res.errorCode, res.httpStatusCode, 'markTentativeOfferSelected',e);
             return res;            
         }
         
@@ -45,6 +47,7 @@ global with sharing class WSSelectedOffer{
             res.errorCode = PayoffConstants.SYSTEM_ERROR;
             res.status = PayoffConstants.ERROR;
             res.errorMessage = PayoffConstants.APP_ID_CANNOT_BE_NULL;
+            MW_LogUtility.warn('WSSelectedOffer', approvedOffers.applicationID, null, 'markTentativeOfferSelected',res.errorMessage);
             return res;
         }
         
@@ -52,6 +55,7 @@ global with sharing class WSSelectedOffer{
             res.errorCode = PayoffConstants.SYSTEM_ERROR;
             res.status = PayoffConstants.ERROR;
             res.errorMessage = PayoffConstants.KEY_CANNOT_BE_NULL;
+            MW_LogUtility.warn('WSSelectedOffer', approvedOffers.applicationID, null, 'markTentativeOfferSelected',res.errorMessage);
             return res;
         }
         
@@ -61,9 +65,10 @@ global with sharing class WSSelectedOffer{
             res.errorCode = PayoffConstants.INVALID_INPUT_FORMAT;
             res.status = PayoffConstants.ERROR;
             res.errorMessage = PayoffConstants.APP_ID_INCORRECT_FORMAT;
+            MW_LogUtility.warn('WSSelectedOffer', approvedOffers.applicationID, null, 'markTentativeOfferSelected',res.errorMessage);
             return res;
         }
-        genesis__Applications__c app =[select id,
+        genesis__Applications__c app =[select id,Lead_ID__c,
                                        genesis__Term__c,
                                        genesis__APR__c,
                                        Origination_fee__c,
@@ -86,6 +91,8 @@ global with sharing class WSSelectedOffer{
                     res.errorCode = PayoffConstants.ERROR;
                     res.status = PayoffConstants.FAIL;
                     res.errorMessage = 'One loan offer is already selected . Contact the support team for any queries';
+                    String infoStr = res.errorMessage + '--Pricing Offer Record = '+ JSON.serialize(p);
+                    MW_LogUtility.warn('WSSelectedOffer', approvedOffers.applicationID, app.Lead_Id__c, 'markTentativeOfferSelected',infoStr);
                     return res;
                 }
             }
@@ -173,15 +180,29 @@ global with sharing class WSSelectedOffer{
                         update updateOffer;
                     system.debug('updated offer'+updateOffer);
                 } 
-            } catch(exception e){
-                System.debug('Error -> ' + e.getMessage());
-                loan__batch_process_log__c bpl = new loan__batch_process_log__c();
-                bpl.loan__message__c = 'Error in Offer Selected Class ' + e.getStackTraceString();
+            } catch(exception ex){
+                MW_LogUtility.ExceptionDO expRex = new MW_LogUtility.ExceptionDO(ex);
+                MW_DataDogCallOut.futureSend(JSON.serialize(getLogRecord('WSSelectedOffer', approvedOffers.applicationID, app.Lead_Id__c, 'markTentativeOfferSelected',JSON.serialize(expRex),'Error',null)), new List<String>());
+        		res.errorCode = PayoffConstants.ERROR;
+                res.status = PayoffConstants.FAIL;
+                res.errorMessage = 'Error in CLS : '+JSON.serialize(expRex);
+                return res;
             }
         }
         res.errorCode = PayoffConstants.NO_ERROR;
-        res.status = PayoffConstants.SUCCESS;                           
-        
+        res.status = PayoffConstants.SUCCESS; 
+        MW_DataDogCallOut.futureSend(JSON.serialize(getLogRecord('WSSelectedOffer', approvedOffers.applicationID, app.Lead_Id__c, 'markTentativeOfferSelected',res.status,'info',null)), new List<String>());
         return res;
     }    
+    public static MW_LogUtility.Log getLogRecord(String cls,String appId,String leadId,String method,Object data,String type,Integer code){
+        MW_LogUtility.Log log = new MW_LogUtility.Log();
+        log.apexClass = cls;
+        log.applicationId = appId;
+        log.leadId = leadId;
+        log.method = method;
+        log.data = data;
+        log.type = type;
+        log.statusCode = code;
+        return log; 
+    }
 }
