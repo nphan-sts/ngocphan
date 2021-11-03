@@ -201,13 +201,15 @@ public class MW_LogUtility {
 		try {
 			// Use a try/catch so that if `data` can't be cast to string, or isn't JSON,
 			//  it doesn't fail execution altogether.
+            if(log.data != null){
 			log.data = JSON.deserializeUntyped((String) data);
+                }
 		} catch (Exception e) {
 		}
 
 		// Send the log out to the appropriate service
 		if (isBatch) {
-            if(log.data != null){
+            {
 			batchLogs.add(log);
             }
 		} else {
