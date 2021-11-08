@@ -9,7 +9,7 @@ public class QueueAssignment{
                        verificationF = false;
     Private Static Set<String> UTM_SOCIAL_MEDIUM = new Set<String>{'OrganicSocial','psocial-cq','psocial-dm','psocial-rm'}; //LSP-344
     Private Static Set<String> UTM_CREDIT_KARMA_NON_PRIORITY = new Set<String>{'p1','p2','p3'}; //LSP-344
-    //private final Decimal mwsetting = MW_Settings__c.getInstance().Sift_score__c;
+    Public Static final Decimal Siftscore = MW_Settings__c.getInstance().Sift_score__c;
     
     @invocablemethod()
     Public static void appToQueueAssignment(List<ID> apps){
@@ -17,7 +17,7 @@ public class QueueAssignment{
         String reason = '' ;
         String temp;
         Id appID = apps[0];
-        Decimal mwsetting = MW_Settings__c.getInstance().Sift_score__c;
+        //Decimal mwsetting = MW_Settings__c.getInstance().Sift_score__c;
              
         List<QueueSobject> FundingQueue = [SELECT Queue.Id,queue.Name, QueueId FROM QueueSobject 
                                             WHERE SobjectType = 'genesis__Applications__c' 
@@ -55,18 +55,18 @@ public class QueueAssignment{
             for(genesis__Applications__c app : appList){ 
                  //--- Fraud Tag 30.01.2018 //LSP-344
                 // -- added this condition - app.KBA_Details__r != null && app.KBA_Details__r.size()>0 because Process builder was failing.
-                if((app.Sift_Status__c != null && app.Sift_Status__c > mwsetting && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
+                if((app.Sift_Status__c != null && app.Sift_Status__c > Siftscore && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
                     && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox') ||
                 ((app.KBA_Details__r != null && app.KBA_Details__r.size()>0) &&
                  ((app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || 
                   UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) 
-                  && (app.Sift_Status__c > mwsetting || app.KBA_Details__r[0].Id_Analytics_Score__c >= 725)) ||
+                  && (app.Sift_Status__c > Siftscore || app.KBA_Details__r[0].Id_Analytics_Score__c >= 725)) ||
                  (((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) && (app.utm_source__c =='creditkarma' || 
           app.utm_source__c =='creditkarma_lightbox') && 
-                   (app.Sift_Status__c > mwsetting || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800)))
+                   (app.Sift_Status__c > Siftscore || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800)))
                    || (String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || 
           app.utm_source__c =='creditkarma_lightbox') 
-                       && (app.Sift_Status__c > mwsetting || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800))
+                       && (app.Sift_Status__c > Siftscore || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800))
                    || 
                   ((app.KBA_Details__r != null && app.KBA_Details__r.size()>0) && ((app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c < 0) ||
                   (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9001 || app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9013)) ||
@@ -87,23 +87,23 @@ public class QueueAssignment{
                 } 
                //--- Set Fraud Reason for valid Fraud Tags
                if (KBAFraudT){
-                   if(app.Sift_Status__c != null && app.Sift_Status__c > mwsetting && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
+                   if(app.Sift_Status__c != null && app.Sift_Status__c > Siftscore && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox'){                        
-                            reason += 'Sift score '+ '> ' + mwsetting +'.';}
+                            reason += 'Sift score '+ '> ' + Siftscore +'.';}
                    
                         if(app.KBA_Details__r != null && app.KBA_Details__r.size()>0){   //pallavi(desk id 18882/LOS-207)
-                        if(app.Sift_Status__c >= mwsetting && (app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' ||
+                        if(app.Sift_Status__c >= Siftscore && (app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' ||
                           UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c))){ 
                           
-                             reason += 'utm_medium '+ app.utm_medium__c + ' Sift score '+ '> ' + mwsetting +'.';}
+                             reason += 'utm_medium '+ app.utm_medium__c + ' Sift score '+ '> ' + Siftscore +'.';}
                          
-                        if(app.Sift_Status__c > mwsetting && (app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox'))){
+                        if(app.Sift_Status__c > Siftscore && (app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox'))){
                                 
-                            reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_sousce ' + app.utm_source__c + ' Sift score '+ '> ' + mwsetting +'.';}
-                            if(app.Sift_Status__c > mwsetting && (String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || 
+                            reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_sousce ' + app.utm_source__c + ' Sift score '+ '> ' + Siftscore +'.';}
+                            if(app.Sift_Status__c > Siftscore && (String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || 
           app.utm_source__c =='creditkarma_lightbox'))){
                                
-                                reason += 'utm_medium ' + app.utm_medium__c + ' utm_source '+ app.utm_source__c + ' Sift score '+ '> ' + mwsetting +'.';}
+                                reason += 'utm_medium ' + app.utm_medium__c + ' utm_source '+ app.utm_source__c + ' Sift score '+ '> ' + Siftscore +'.';}
                                
                           
                         if(app.KBA_Details__r[0].Id_Analytics_Score__c >=725 && (app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || 
