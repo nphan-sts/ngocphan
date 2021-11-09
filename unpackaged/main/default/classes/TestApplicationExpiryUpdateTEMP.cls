@@ -76,6 +76,36 @@ public class TestApplicationExpiryUpdateTEMP {
         application.genesis__CL_Product__c = pr.id;
         application.Application_Start_DateV2__c = currentSystemDate.adddays(-30);
         insert application; 
+         
+          genesis__applications__c application2 = new genesis__applications__c();
+        application2.genesis__Product_Type__c = 'LOAN';
+        application2.genesis__Loan_Amount__c = 6700;
+        application2.genesis__status__c = 'NEW - ENTERED';
+        application2.genesis__Term__c = 12;
+        application2.genesis__Payment_Frequency__c = 'MONTHLY';
+        application2.genesis__Interest_Rate__c = 10;
+        application2.genesis__Days_Convention__c = 'ACTUAL/ACTUAL';
+        application2.genesis__Expected_Start_Date__c = system.today();
+        application2.genesis__Expected_First_Payment_Date__c = system.today().addDays(60);
+        application2.genesis__Expected_Close_Date__c = system.today().addDays(30);
+        application2.genesis__Interest_Calculation_Method__c = 'Declining Balance';
+        application2.genesis__Interest_Only_Period__c = 0;
+        application2.genesis__Interest_Rate__c = 100;
+        application2.genesis__Account__c = acc.Id;
+        application2.genesis__Total_Estimated_Interest__c=500;
+        application2.genesis__Valid_Pricing_Flag__c=false;
+        application2.genesis__Probability__c=100.00;
+        application2.genesis__Payment_Amount__c=523.80;
+        application2.genesis__Company__c = comp.id;
+        application2.genesis__CL_Product__c = pr.id;
+        application2.application_Start_DateV2__c = currentSystemDate.adddays(-30);
+        insert application2;
+         
+        Credit_Policy__c responseCP = new Credit_Policy__c	();
+        responseCP.Loan_amount_counteroffer__c = 150.00;         
+        responseCP.Application__c = application2.id;
+        insert responseCP;
+         
         Manual_Adverse_Action_Decline__c mda = new   Manual_Adverse_Action_Decline__c();
          mda.Decline_Name__c = 'insufficient tradeline balance';
          mda.Description__c = 'So we are unable to proceed with your loan application.';
@@ -90,7 +120,7 @@ public class TestApplicationExpiryUpdateTEMP {
         
         ApplicationExpiryUpdateTEMP obj = new ApplicationExpiryUpdateTEMP(); 
         Database.executeBatch(obj,1);
-         Set<String> skipLoanStatus = new Set<String>{'Funded','Expired'};
+         Set<String> skipLoanStatus = new Set<String>{'Funded','Expired','Expired-Withdrawn'};
         String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
         string query = 'select id, Expiry_Date__c, genesis__Status__c, CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c from genesis__Applications__c where Expiry_Date__c =' + CSD +' and genesis__Status__c not in : skipLoanStatus';
         obj.start(null);
@@ -99,6 +129,8 @@ public class TestApplicationExpiryUpdateTEMP {
         obj.execute(null);
         List <genesis__Applications__c> genApp = [select id, Expiry_Date__c, CreatedById, genesis__Status__c, DocuSign_EnvelopeId__c, Expiration_Tag__c from genesis__Applications__c];
         obj.execute(null,genApp);
+         List <genesis__Applications__c> genApp2 = [select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c!=null limit 1 ) from genesis__Applications__c ];
+        obj.execute(null,genApp2);
         
         //obj.
         
