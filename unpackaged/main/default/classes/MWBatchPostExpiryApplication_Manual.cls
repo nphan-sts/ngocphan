@@ -22,7 +22,7 @@ global class MWBatchPostExpiryApplication_Manual implements Database.batchable<s
         //SELECT Id, Expiry_Date__c, genesis__Status__c,CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c FROM genesis__Applications__c WHERE Expiry_Date__c <= '2020-05-21' AND genesis__Status__c IN ('Decline_Manual_Review')
         expiryDate = pExpiryDate;
         appStatus = pAppStatus;
-        query = 'SELECT Id, Expiry_Date__c, genesis__Status__c, CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c FROM genesis__Applications__c WHERE Expiry_Date__c <=' + expiryDate + ' AND genesis__Status__c IN : appStatus';
+        query = 'SELECT Id, Expiry_Date__c, genesis__Status__c, CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c FROM genesis__Applications__c WHERE Expiry_Date__c =' + expiryDate + ' AND genesis__Status__c IN : appStatus';
 
         System.debug('query=' + query);
     }
@@ -48,7 +48,7 @@ global class MWBatchPostExpiryApplication_Manual implements Database.batchable<s
 
 				appinfo.expiry_date = app.Expiry_Date__c;
 
-				if (app.genesis__Status__c == 'Expired') {
+				if (app.genesis__Status__c == 'Expired'|| app.genesis__Status__c == 'Expired-Withdrawn') {
 					appinfo.lead_guid = app.Lead_ID__c;
 					appinfo.lead_id = app.LEAD_ID_ExtKey__c;
 					appinfo.member_id = app.Member_ID__c;
@@ -56,15 +56,7 @@ global class MWBatchPostExpiryApplication_Manual implements Database.batchable<s
 					appinfo.is_expired = true;
 					listAppInfo.add(appinfo);
 				}
-                if (app.genesis__Status__c == 'Expired-Withdrawn') {
-					appinfo.lead_guid = app.Lead_ID__c;
-					appinfo.lead_id = app.LEAD_ID_ExtKey__c;
-					appinfo.member_id = app.Member_ID__c;
-
-					appinfo.is_expired = true;
-					listAppInfo.add(appinfo);
-				}  
-
+                
 				//if((app.genesis__Status__c=='Declined' || app.genesis__Status__c=='Decline_Manual_Review') && app.owner.Name=='Declined' && app.Expiry_Date__c == currentSystemDate) {
 				if ((app.genesis__Status__c == 'Declined' || app.genesis__Status__c == 'Decline_Manual_Review')) {
 					appinfo.lead_guid = app.Lead_ID__c;
@@ -73,13 +65,7 @@ global class MWBatchPostExpiryApplication_Manual implements Database.batchable<s
 
 					appinfo.is_expired = true;
 					listAppInfo.add(appinfo);
-				} /*else if (app.genesis__Status__c == 'Declined' && app.owner.Name == 'Declined') {
-                    appinfo.lead_guid = app.Lead_ID__c;
-                    appinfo.lead_id = app.LEAD_ID_ExtKey__c;
-                    appinfo.member_id = app.Member_ID__c;
-                    appinfo.is_expired = false;
-                    listAppInfo.add(appinfo);
-                }*/
+				} 
 			}
 
 			syncApp = new sync_application('sync_application', listAppInfo);
@@ -116,13 +102,7 @@ global class MWBatchPostExpiryApplication_Manual implements Database.batchable<s
 
     }
 
-    /*
-    global void execute(SchedulableContext sc) {
-        MWBatchPostExpiryApplication_Manual b = new MWBatchPostExpiryApplication_Manual();
-        Database.executeBatch(b,1);
-    }
-    */
-
+   
     class ApplicationInformation {
         public string lead_guid;
         public string lead_id;

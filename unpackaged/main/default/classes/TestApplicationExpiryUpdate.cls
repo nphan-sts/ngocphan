@@ -44,15 +44,15 @@ public class TestApplicationExpiryUpdate {
         Date currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
         
          Account account_Obj = new Account(
-            Name = 'Test',
+            Name='Testfname Testlname',
             loan__Investor__c=False,
+            peer__First_Name__c= 'Testfname',
+            peer__Last_Name__c= 'Testlname',
             cnotify__Email__c = 'no-reply@testorganization.com'
         );
         Insert account_Obj;
-         
         
-        
-         Account acc = [select Id, Annual_Individual_Income__c from Account  where Name = 'Test' LIMIT 1];
+         Account acc = [select Id, Annual_Individual_Income__c from Account  where Name='Testfname Testlname' LIMIT 1];
          
         //Create Application
         genesis__applications__c application = new genesis__applications__c();
@@ -77,8 +77,7 @@ public class TestApplicationExpiryUpdate {
         application.genesis__Company__c = comp.id;
         application.genesis__CL_Product__c = pr.id;
         application.Application_Start_DateV2__c = currentSystemDate.adddays(-30);
-        insert application;
-         
+        insert application; 
         genesis__applications__c application2 = new genesis__applications__c();
         application2.genesis__Product_Type__c = 'LOAN';
         application2.genesis__Loan_Amount__c = 6700;
@@ -100,14 +99,12 @@ public class TestApplicationExpiryUpdate {
         application2.genesis__Payment_Amount__c=523.80;
         application2.genesis__Company__c = comp.id;
         application2.genesis__CL_Product__c = pr.id;
-        application2.application_Start_DateV2__c = currentSystemDate.adddays(-30);
-        insert application2;
-         
+        application2.application_Start_DateV2__c = currentSystemDate.adddays(-30);        
+        insert application2; 
         Credit_Policy__c responseCP = new Credit_Policy__c	();
         responseCP.Loan_amount_counteroffer__c = 150.00;         
         responseCP.Application__c = application2.id;
-        insert responseCP;
-         
+        insert responseCP; 
         Manual_Adverse_Action_Decline__c mda = new 	Manual_Adverse_Action_Decline__c();
          mda.Decline_Name__c = 'insufficient tradeline balance';
          mda.Description__c = 'So we are unable to proceed with your loan application.';
@@ -129,12 +126,13 @@ public class TestApplicationExpiryUpdate {
         obj = new ApplicationExpiryUpdate(query);
         Database.executeBatch(obj,1);
         obj.execute(null);
-        List <genesis__Applications__c> genApp = [select id, Expiry_Date__c, CreatedById, genesis__Status__c, DocuSign_EnvelopeId__c, Expiration_Tag__c from genesis__Applications__c];
+        List <genesis__Applications__c> genApp = [select id, Expiry_Date__c, CreatedById, genesis__Status__c, DocuSign_EnvelopeId__c, Expiration_Tag__c from genesis__Applications__c where id =:application.id];
         obj.execute(null,genApp);
-         List <genesis__Applications__c> genApp2 = [select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c!=null limit 1 ) from genesis__Applications__c ];
-        obj.execute(null,genApp2);
+         List <genesis__Applications__c> genApp2 = [select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c!=null limit 1 ) from genesis__Applications__c where id =:application2.id];
+        obj.execute(null,genApp2);  
         
-        //obj.
+        
+        
         
         Test.stopTest();
     }
