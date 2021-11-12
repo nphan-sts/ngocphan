@@ -99,7 +99,7 @@ public class QueueAssignment{
                          
                         if(app.Sift_Status__c > Siftscore && (app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox'))){
                                 
-                            reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_sousce ' + app.utm_source__c + ' Sift score '+ '> ' + Siftscore +'.';}
+                            reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' Sift score '+ '> ' + Siftscore +'.';}
                             if(app.Sift_Status__c > Siftscore && (String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || 
           app.utm_source__c =='creditkarma_lightbox'))){
                                
