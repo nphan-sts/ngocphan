@@ -188,7 +188,7 @@ global class CreditPolicyResponse {
         global List<String> credit_policy_approval_models {get;set;}
 
         global String risk_model_source {get; set;}
-        global Double risk_model_version {get; set;}
+        global String risk_model_version {get; set;}
         global Boolean is_offer_presented {get; set;}
     }
     
