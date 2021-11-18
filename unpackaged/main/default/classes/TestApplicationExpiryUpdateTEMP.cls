@@ -44,14 +44,15 @@ public class TestApplicationExpiryUpdateTEMP {
         Date currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
         
          Account account_Obj = new Account(
-            Name = 'Test',
+            Name='Testfname Testlname',
             loan__Investor__c=False,
+            peer__First_Name__c= 'Testfname',
+            peer__Last_Name__c= 'Testlname',
             cnotify__Email__c = 'no-reply@testorganization.com'
         );
         Insert account_Obj;
         
-         Account acc = [select Id, Annual_Individual_Income__c from Account  where Name = 'Test' LIMIT 1];
-         
+         Account acc = [select Id, Annual_Individual_Income__c from Account  where Name='Testfname Testlname' LIMIT 1];
         //Create Application
         genesis__applications__c application = new genesis__applications__c();
         application.genesis__Product_Type__c = 'LOAN';
