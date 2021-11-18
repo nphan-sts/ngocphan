@@ -12,7 +12,7 @@ Database.executeBatch(new MWBatchPostExpiryApplicationTEMP(qry,dt),1);
 global class MWBatchPostExpiryApplicationTEMP implements Database.batchable<sObject>, Schedulable, Database.AllowsCallouts {
 
     String query;
-    Set<String> applicationStatus = new Set<String>{'Expired','Declined','Decline_Manual_Review'};
+    Set<String> applicationStatus = new Set<String>{'Expired','Declined','Decline_Manual_Review','Expired-Withdrawn'};
     Set<String> applicationStatusDec = new Set<String>{'Declined'};
 
     String CSD;
@@ -60,20 +60,19 @@ global class MWBatchPostExpiryApplicationTEMP implements Database.batchable<sObj
 
             appinfo.expiry_date                        = app.Expiry_Date__c;
 
-            if(app.genesis__Status__c=='Expired') {
+            if(app.genesis__Status__c=='Expired' || app.genesis__Status__c=='Expired-Withdrawn') {
                 appinfo.lead_guid                            = app.Lead_ID__c;
                 appinfo.lead_id                              = app.LEAD_ID_ExtKey__c;
                 appinfo.member_id                            = app.Member_ID__c;
-
                 appinfo.is_expired                           = true;
                 listAppInfo.add(appinfo);
             }
+            
 
             if((app.genesis__Status__c=='Declined' || app.genesis__Status__c=='Decline_Manual_Review') && app.owner.Name=='Declined' && app.Expiry_Date__c == currentSystemDate) {
                 appinfo.lead_guid                            = app.Lead_ID__c;
                 appinfo.lead_id                              = app.LEAD_ID_ExtKey__c;
                 appinfo.member_id                            = app.Member_ID__c;
-
                 appinfo.is_expired                           = true;
                 listAppInfo.add(appinfo);
             }

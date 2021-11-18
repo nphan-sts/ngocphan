@@ -5,7 +5,7 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
     Set<String> applicationStatusDec = new Set<String>{'Declined'};
 
     String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
-    Date currentSystemDate = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();
+    Date currentSystemDate = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();    
     Datetime currentSystemDateTime = DateTime.newInstance(currentSystemDate.year(), currentSystemDate.month(), currentSystemDate.day());
     String previousDate = currentSystemDateTime.addDays(-1).format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
 
@@ -33,29 +33,23 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
 
             appinfo.expiry_date                        = app.Expiry_Date__c;
 
-            if(app.genesis__Status__c=='Expired') {
+            if(app.genesis__Status__c=='Expired'|| app.genesis__Status__c=='Expired-Withdrawn') {
                 appinfo.lead_guid                            = app.Lead_ID__c;
                 appinfo.lead_id                              = app.LEAD_ID_ExtKey__c;
                 appinfo.member_id                            = app.Member_ID__c;
-
-                appinfo.is_expired                           = true;
+                appinfo.is_expired = true;
                 listAppInfo.add(appinfo);
+                
             }
-            else if(app.genesis__Status__c=='Expired-Withdrawn') {
-                appinfo.lead_guid                            = app.Lead_ID__c;
-                appinfo.lead_id                              = app.LEAD_ID_ExtKey__c;
-                appinfo.member_id                            = app.Member_ID__c;
-                appinfo.is_expired                           = true;
-                listAppInfo.add(appinfo);
-            }
+            
 
             if((app.genesis__Status__c=='Declined' || app.genesis__Status__c=='Decline_Manual_Review') && app.owner.Name=='Declined' && app.Expiry_Date__c == currentSystemDate) {
                 appinfo.lead_guid                            = app.Lead_ID__c;
                 appinfo.lead_id                              = app.LEAD_ID_ExtKey__c;
-                appinfo.member_id                            = app.Member_ID__c;
-
-                appinfo.is_expired                           = true;
+                appinfo.member_id                            = app.Member_ID__c;  
+                appinfo.is_expired = true;
                 listAppInfo.add(appinfo);
+                
             }
             else if(app.genesis__Status__c=='Declined' && app.owner.Name=='Declined') {
                 appinfo.lead_guid = app.Lead_ID__c;
@@ -63,12 +57,15 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
                 appinfo.member_id = app.Member_ID__c;
                 appinfo.is_expired = false;
                 listAppInfo.add(appinfo);
+                
             }
         }
-
+        
+        system.debug('listappinfo---->>>'+listAppInfo);
         syncApp = new sync_application('sync_application', listAppInfo);
         String str = JSON.serialize(syncApp, true);
         MW_WebhookHandler.CallWebHookIntegration(str, appIdList, leadIdList);
+    
     }
 
     global void finish(Database.BatchableContext BC) {

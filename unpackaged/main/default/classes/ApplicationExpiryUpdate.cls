@@ -1,16 +1,14 @@
 global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Schedulable, Database.AllowsCallouts {
             
     String query;
-    //Set<String> skipLoanStatus = new Set<String>{'Funded','Expired','Approved for funding','pre_funding'};
+    //Set<String> skipLoanStatus = new Set<String>{'Funded','Expired','Approved for funding','pre_funding','Expired-Withdrawn'};
     List<String> skipLoanStatus = System.Label.Application_Expired_Status.split(',');
     String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
-    
-
     Date currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
+        
        
     global ApplicationExpiryUpdate(){
-        
-        
+           
     query = 'select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c!=null limit 1 ) from genesis__Applications__c where Expiry_Date__c =' + CSD +' and genesis__Status__c not in : skipLoanStatus';
         
         System.debug(logginglevel.error,'query+++'+query); 
@@ -78,45 +76,32 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         List<genesis__Applications__c > listOfApp = (List<genesis__Applications__c >)scope;
         List<genesis__Applications__c > listOfAppTobeUpdated = new List<genesis__Applications__c> ();
         Set<String> appEnvelope = new Set<String>();
+        
+        Set<String> pre_qual_status = new Set<String>{'pre_qual_collected','partner_pre_qual_shown','partner_offer_estimates',
+                                                      'offer_shown','offer_accepted'};
+        
+        
+        Set<String> verification_status = new Set<String>{'loan_details_shown','credit_score_notice_shown','ach_accepted','kba_disclosure_accepted',
+                                                           'kba_success','dcp_accepted','til_accepted','agent_verification_pending',
+                                                           'agent_document_verification_pending','agent_verified'};
+        
+        Set<String> docs_status = new Set<String>{'hard_inquiry_disclosure_accepted','docusign_loan_docs_sent','docusign_loan_docs_complete',
+                                                   'pre_funding','funded'};
                 
         for(genesis__Applications__c  app : listOfApp){
             if(app.Credit_Policy__r.size()==0){
                 
                 if((app.Expiry_Date__c != null && app.Expiry_Date__c == currentSystemDate) && (app.genesis__Status__c != null && app.genesis__Status__c != 'funded')){
                
-                    if(app.genesis__Status__c =='pre_qual_collected' ||
-                       app.genesis__Status__c =='partner_pre_qual_shown' ||
-                       app.genesis__Status__c =='partner_offer_estimates' ||
-                       app.genesis__Status__c =='offer_shown' ||
-                       app.genesis__Status__c == 'offer_accepted'){
+                    if(pre_qual_status.contains(app.genesis__Status__c)){
                   
                         app.Expiration_Tag__c = 'expired_pre_qual';
                   
-                    }else if(app.genesis__Status__c =='loan_details_shown' ||
-                    app.genesis__Status__c =='credit_score_notice_shown' ||
-                    app.genesis__Status__c =='ach_accepted' ||
-                    app.genesis__Status__c =='kba_disclosure_accepted' ||
-                    app.genesis__Status__c == 'kba_success' ||
-                    app.genesis__Status__c =='dcp_accepted' ||
-                    app.genesis__Status__c =='til_accepted' ||
-                    app.genesis__Status__c =='agent_verification_pending' ||
-                    app.genesis__Status__c == 'agent_document_verification_pending' ||
-                    app.genesis__Status__c == 'agent_verified'){
+                    }else if(verification_status.contains(app.genesis__Status__c)){
                                   
                       app.Expiration_Tag__c = 'expired_verification'; 
-                      /*Application_DSEnvelope__c dsAppEnv = [select DocuSign_EnvelopeId__c from Application_DSEnvelope__c where Application__C =: app.id LIMIT 1];
                       
-                      if(app.DocuSign_EnvelopeId__c != null){
-                          System.debug('app.DocuSign_EnvelopeId__c...'+ app.DocuSign_EnvelopeId__c);
-                          //appEnvelope.add(app.DocuSign_EnvelopeId__c);
-                          SendEnvDocuSignAPI.voidDocuSignEnvelope(app.DocuSign_EnvelopeId__c);
-                      }*/
-                  
-                      }else if(app.genesis__Status__c =='hard_inquiry_disclosure_accepted' ||
-                      app.genesis__Status__c =='docusign_loan_docs_sent' ||
-                      app.genesis__Status__c =='docusign_loan_docs_complete' ||
-                      app.genesis__Status__c =='pre_funding' ||
-                      app.genesis__Status__c == 'funded' ){
+                      }else if(docs_status.contains(app.genesis__Status__c) ){
                                        
                           app.Expiration_Tag__c = 'expired_docs';
                       
@@ -133,27 +118,37 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
             }
             else{
                 if(app.Credit_Policy__r.size()>0 && app.Expiry_Date__c != null && app.Expiry_Date__c == currentSystemDate){  
+                   
+                    if(pre_qual_status.contains(app.genesis__Status__c)){
+                  
+                        app.Expiration_Tag__c = 'expired_pre_qual';
+                  
+                    }else if(verification_status.contains(app.genesis__Status__c)){
+                                  
+                      app.Expiration_Tag__c = 'expired_verification'; 
+                      
+                  
+                      }else if(docs_status.contains(app.genesis__Status__c)){
+                                       
+                          app.Expiration_Tag__c = 'expired_docs';
+                      
+                      }
+                   if(app.DocuSign_EnvelopeId__c != null){
+                      System.debug('app.DocuSign_EnvelopeId__c...'+ app.DocuSign_EnvelopeId__c);
+                      
+                      SendEnvDocuSignAPI.voidDocuSignEnvelope(app.DocuSign_EnvelopeId__c);
+                   }                
+                    
                     app.genesis__Status__c = 'Expired-Withdrawn';
                     app.OwnerId = expiredQue.Queue.Id;                          
                     }
-        /**    else{
-                if((app.Expiry_Date__c != null && app.Expiry_Date__c == currentSystemDate)){
-                    app.genesis__Status__c = 'Declined';
-                    app.OwnerId = declinedQue.Queue.Id;
-                    app.Manual_Adverse_Action_Decline__c = actionDecline.id;
-                    //app.OwnerId = app.CreatedById;
-                    AttachPDFtoApplication.attachPDF(app.id,true,false);
-                } 
-            } **/
+        
             }
             
             listOfAppTobeUpdated.add(app);
             
         }
-        /*if(appEnvelope != null){
-            for(String envelopeId : appEnvelope)
-                SendEnvDocuSignAPI.voidDocuSignEnvelope(envelopeId);
-        }*/
+        
         update listOfAppTobeUpdated ;
     } 
     
