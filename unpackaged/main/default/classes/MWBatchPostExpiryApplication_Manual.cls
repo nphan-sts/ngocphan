@@ -4,7 +4,7 @@ This class is replica of 'MWBatchPostExpiryApplication' and modified for this ti
 How to call this batch?
 For CRM-535, we would pass appStatus = 'Decline_Manual_Review' and expiryDate = current date(yyyy-mm-dd). But same can be use again in future by passing different status and expiry date.
 Example:
-Set<String> appStatus = new Set<String>{'Decline_Manual_Review'}; //{'Expired','Declined','Decline_Manual_Review'};
+Set<String> appStatus = new Set<String>{'Decline_Manual_Review'}; //{'Expired','Declined','Decline_Manual_Review','Expired-Withdrawn'};
 String expiryDate = '2020-05-21';
 MWBatchPostExpiryApplication_Manual b = new MWBatchPostExpiryApplication_Manual(expiryDate, appStatus);
 Database.executeBatch(b,1);
