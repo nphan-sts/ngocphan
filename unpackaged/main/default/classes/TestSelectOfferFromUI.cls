@@ -6,7 +6,9 @@
 @isTest
 public class TestSelectOfferFromUI{
     @testSetup static void methodName() {
-        // retriggering update
+
+        List<Account> accounts = new List<Account>();
+
         Account acc = new Account(
             Name = 'TestF1Name TestL1Name',
             loan__Investor__c=False,
@@ -18,8 +20,6 @@ public class TestSelectOfferFromUI{
             State__c='TestState',
             ZIP_Code__c='12345'
             );
-        insert acc;
-       
 
         Account acc1 = new Account(
             Name = 'TestF2Name TestL2Name',
@@ -39,8 +39,6 @@ public class TestSelectOfferFromUI{
             State__c='TestState',
             ZIP_Code__c='12345'
             );
-            
-            insert acc1;
 
         Account acc2 = new Account(
             Name = 'TestF3Name TestL3Name',
@@ -63,7 +61,6 @@ public class TestSelectOfferFromUI{
             State__c='TestState',
             ZIP_Code__c='12345'
             );
-            insert acc2;
 
         Account acc3 = new Account(
             Name = 'TestF4Name TestL4Name',
@@ -86,7 +83,12 @@ public class TestSelectOfferFromUI{
             State__c='TestState',
             ZIP_Code__c='12345'
             );
-            insert acc3;
+
+        accounts.add(acc);
+        accounts.add(acc1);
+        accounts.add(acc2);
+        accounts.add(acc3);
+        insert accounts;
     }
 
     @isTest static void method1(){
