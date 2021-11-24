@@ -4,7 +4,7 @@ This class is replica of 'MWBatchPostExpiryApplication' and modified for this ti
 How to call this batch?
 For CRM-535, we would pass appStatus = 'Decline_Manual_Review' and expiryDate = current date(yyyy-mm-dd). But same can be use again in future by passing different status and expiry date.
 Example:
-Set<String> appStatus = new Set<String>{'Decline_Manual_Review'}; //{'Expired','Declined','Decline_Manual_Review'};
+Set<String> appStatus = new Set<String>{'Decline_Manual_Review'}; //{'Expired','Declined','Decline_Manual_Review','Expired-Withdrawn'};
 String expiryDate = '2020-05-21';
 MWBatchPostExpiryApplication_Manual b = new MWBatchPostExpiryApplication_Manual(expiryDate, appStatus);
 Database.executeBatch(b,1);
@@ -22,7 +22,7 @@ global class MWBatchPostExpiryApplication_Manual implements Database.batchable<s
         //SELECT Id, Expiry_Date__c, genesis__Status__c,CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c FROM genesis__Applications__c WHERE Expiry_Date__c <= '2020-05-21' AND genesis__Status__c IN ('Decline_Manual_Review')
         expiryDate = pExpiryDate;
         appStatus = pAppStatus;
-        query = 'SELECT Id, Expiry_Date__c, genesis__Status__c, CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c FROM genesis__Applications__c WHERE Expiry_Date__c =' + expiryDate + ' AND genesis__Status__c IN : appStatus';
+        query = 'SELECT Id, Expiry_Date__c, genesis__Status__c, CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c FROM genesis__Applications__c WHERE Expiry_Date__c <=' + expiryDate + ' AND genesis__Status__c IN : appStatus';
 
         System.debug('query=' + query);
     }
