@@ -2,8 +2,12 @@
     <rules>
         <fullName>SendPayoffEmailAlert</fullName>
         <actions>
-            <name>Payoff_Payment_Alert_Notification_Template</name>
+            <name>Payoff_Payment_Alert_Notification_Template1</name>
             <type>Alert</type>
+        </actions>
+        <actions>
+            <name>Update_Email_Field_With_Contact_Email1</name>
+            <type>FieldUpdate</type>
         </actions>
         <active>true</active>
         <criteriaItems>
@@ -12,9 +16,9 @@
             <value>ONE TIME</value>
         </criteriaItems>
         <criteriaItems>
-            <field>loan__Automated_Payment_Setup__c.Is_Created_By_Portal_User__c</field>
-            <operation>equals</operation>
-            <value>False</value>
+            <field>loan__Automated_Payment_Setup__c.CreatedById</field>
+            <operation>notEqual</operation>
+            <value>Member User</value>
         </criteriaItems>
         <description>Sends Pay off email alert when automated payment set up record is created</description>
         <triggerType>onCreateOnly</triggerType>
