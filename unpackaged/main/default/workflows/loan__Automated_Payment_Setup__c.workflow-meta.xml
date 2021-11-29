@@ -2,11 +2,11 @@
     <rules>
         <fullName>SendPayoffEmailAlert</fullName>
         <actions>
-            <name>Payoff_Payment_Alert_Notification_Template1</name>
+            <name>Payoff_Payment_Alert_Notification_Template</name>
             <type>Alert</type>
         </actions>
         <actions>
-            <name>Update_Email_Field_With_Contact_Email1</name>
+            <name>Update_Email_Field_With_Contact_Email</name>
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
