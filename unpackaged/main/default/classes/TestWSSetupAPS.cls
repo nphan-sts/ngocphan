@@ -1326,6 +1326,9 @@ public class TestWSSetupAPS {
         System.assert(payofflpt.loan__Automated_Payment_Setup__c != null);//LSP-328.2 When payoff LPT gets created, APS is mapped to it for NACHA mapping
         System.assert(!payofflpt.loan__Automated_Payment_Setup__r.loan__Active__c);//LSP-328.2 APS status should be inactive
         Test.stopTest();
+        List<loan__batch_process_log__c> successLog = [select id, name,loan__Log_Level__c from loan__batch_process_log__c where loan__Origin__c = 'WSSetupAPS'];
+        System.assert(successLog.size()>0);
+        System.assertEquals('INFO', successLog.get(0).loan__Log_Level__c);
     }
     @isTest
     static void testFutureDatedPaymentCreation(){
@@ -1442,6 +1445,9 @@ public class TestWSSetupAPS {
         System.assert(payofflpt.loan__Automated_Payment_Setup__c != null);//LSP-328.2 When payoff LPT gets created, APS is mapped to it for NACHA mapping
         System.assert(!payofflpt.loan__Automated_Payment_Setup__r.loan__Active__c);//LSP-328.2 APS status should be inactive
         Test.stopTest();
+        List<loan__batch_process_log__c> successLog = [select id, name,loan__Log_Level__c from loan__batch_process_log__c where loan__Origin__c = 'WSSetupAPS'];
+        System.assert(successLog.size()>0);
+        System.assertEquals('INFO', successLog.get(0).loan__Log_Level__c);
     }
     //LSP-328.4 - start
     @isTest
@@ -1562,6 +1568,9 @@ public class TestWSSetupAPS {
         System.assertEquals(payofflpt.Payoff_Rejection_Reason__c, 'Transaction amount: 300 is not sufficient to payoff the loan');
         System.assert(!payofflpt.loan__Automated_Payment_Setup__r.loan__Active__c);
         Test.stopTest();
+        List<loan__batch_process_log__c> successLog = [select id, name,loan__Log_Level__c from loan__batch_process_log__c where loan__Origin__c = 'WSSetupAPS'];
+        System.assert(successLog.size()>0);
+        System.assertEquals('INFO', successLog.get(0).loan__Log_Level__c);
     }//LSP-328.4 - end
     
     @isTest
@@ -1675,5 +1684,8 @@ public class TestWSSetupAPS {
         Response results = WSSetupAPS.createAPSSetup();
         System.assert(results.status.equalsIgnoreCase(peer.Constants.ERROR));
         Test.stopTest();
+        List<loan__batch_process_log__c> successLog = [select id, name,loan__Log_Level__c from loan__batch_process_log__c where loan__Origin__c = 'WSSetupAPS'];
+        System.assert(successLog.size()>0);
+        System.assertEquals('ERROR', successLog.get(0).loan__Log_Level__c);
     }//LSP - 328 end
 }

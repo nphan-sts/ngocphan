@@ -200,12 +200,6 @@ System.debug(leadId+'  '+req.requestURI);
                         automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId( manualSpreadName);
                         insert automatedPaymentSetup;
                         
-                        loan__Automated_Payment_Setup__c payoffAPS = [select id, name from loan__Automated_Payment_Setup__c
-                                                                      where loan__CL_Contract__c =: loanAccount.Id
-                                                                      and loan__Type__c = 'ONE TIME' 
-                                                                      and loan__Active__c = false 
-                                                                      and loan__Debit_Date__c =:debitDate
-                                                                      order by createdDate desc limit 1];
                         //LSP-328.2 Changes to map payoffLPT to NACHA - end                            
                         loan__loan_payment_transaction__c payoffLpt = new loan__loan_payment_transaction__c();
                         payoffLpt.loan__loan_Account__c = loanAccount.Id;
@@ -213,7 +207,7 @@ System.debug(leadId+'  '+req.requestURI);
                         payoffLpt.loan__Transaction_Amount__c = transactionAmount;
                         payoffLpt.loan__payment_Mode__c = getPaymentModeId(paymentModeName);
                         payoffLpt.loan__Installment_Payment__c = false;
-                        payoffLPT.loan__Automated_Payment_Setup__c = payoffAPS.Id;//LSP-328.2 attaching newly created inactive APS to payoff LPT
+                        payoffLPT.loan__Automated_Payment_Setup__c = automatedPaymentSetup.id;//LSP-328.2 attaching newly created inactive APS to payoff LPT
                         payoffLPT.loan__Skip_Validation__c = true;//LSP-328.3 skipping transaction date validation on LPT object
                             
                         if(transactionAmount >= (loanAccount.loan__Pay_Off_Amount_As_Of_Today__c - loanAccount.loan__Write_off_Tolerance_Amount__c)){    
@@ -230,9 +224,23 @@ System.debug(leadId+'  '+req.requestURI);
                         res = new Response(peer.Constants.SUCCESS, '', '');
                         res.contents.add(payoffLpt);
                         restRes.statuscode = peer.Constants.HTTP_OK;
+                        //Whenever a request or response is made ,or an exception is caught in try catch block, HM has started following a routine to insert (request, response success details or exception details) in Batch Processing Log
+                        loan__Batch_Process_Log__c batchLogMPOutput = new loan__Batch_Process_Log__c();
+						batchLogMPOutput.loan__Log_Level__c = 'INFO';
+						batchLogMPOutput.loan__Message__c = 'The Success Response sent back to Member portal'+ res;
+                        batchLogMPOutput.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+						batchLogMPOutput.loan__Origin__c = 'WSSetupAPS';
+						insert batchLogMPOutput;
                         return res;
                     }
                     res = new Response(peer.Constants.ERROR, '', 'Check if loan account has required information');
+                    //Whenever a request or response is made ,or an exception is caught in try catch block, HM has started following a routine to insert (request, response success details or exception details) in Batch Processing Log
+                    loan__Batch_Process_Log__c batchLogError = new loan__Batch_Process_Log__c();
+                    batchLogError.loan__Log_Level__c = 'Error';
+                    batchLogError.loan__Message__c = 'Response :'+res ;
+                    batchLogError.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+                    batchLogError.loan__Origin__c = 'WSSetupAPS';
+                    insert batchLogError;
                     return res;
                 }
                 //LSP-328.1 - end
