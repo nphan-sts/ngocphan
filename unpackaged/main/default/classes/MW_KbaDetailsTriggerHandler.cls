@@ -15,7 +15,6 @@ public class MW_KbaDetailsTriggerHandler {
     /*
     public void beforeInsert() {
     }
-
     public void beforeUpdate() {
     }
     */
@@ -69,10 +68,10 @@ public class MW_KbaDetailsTriggerHandler {
             }
         } Else {
             List<KBA_Details__c> listKba = [
-                    SELECT Id, Name, CreatedDate, Account__c, Account__r.Monthly_Housing_Payment__c, Application__c, Id_Analytics_Score__c, IsKBA_06__c,
+                    SELECT Id, Name, CreatedDate, Account__c, Application__c, Id_Analytics_Score__c, IsKBA_06__c,
                             IsKBA_18__c, Precise_ID_Decision_KIQ__c, Precise_ID_Decision__c, Precise_ID_Overall_SCore__c,
                             Precise_ID_Validation__c, Precise_ID_First_Payment_Default__c, Application__r.TalxSalary__c,
-                            Application__r.Fraud_Tag_Count__c, Application__r.genesis__Account__r.Monthly_Housing_Payment__c
+                            Application__r.Fraud_Tag_Count__c, Application__r.Monthly_Housing_Payment_App__c
                     FROM KBA_Details__c
                     WHERE Application__c IN :setAppIds
             ];
@@ -84,7 +83,7 @@ public class MW_KbaDetailsTriggerHandler {
 
         List<genesis__Applications__c> apps = [
                 SELECT Id, Verification_Complexity__c, Employment_Status__c, Pricing_Tier__c, TalxSalary__c,
-                        genesis__Account__r.Annual_Individual_Income__c, Fraud_Tag_Count__c, genesis__Account__r.Monthly_Housing_Payment__c
+                        Annual_Individual_Income_App__c, Monthly_Housing_Payment_App__c, Fraud_Tag_Count__c
                 FROM genesis__Applications__c
                 WHERE Id IN :setAppIds
         ];
@@ -111,18 +110,15 @@ public class MW_KbaDetailsTriggerHandler {
             /*
             Hard: if Precise ID score is 9012 or 9013 OR Precise ID FPD score <= 10 OR Employment Status is not Full-Time
             OR KIQ result is not "pass"
-            (OR Employer is categorized as "high risk" industry - future)
-
+            (OR Employer is categorized as "high risk" industry - future)
             Very Easy: Pricing Tier is T1/T2/T3 AND TALX salary >= 0.85 * stated income AND Income does not include bonus or commission
             AND Stated housing payment >= $500 AND No automated fraud tag AND Employment status is Full Time
-            AND Tenure >= 1 year AND Precise ID score is not 9012 or 9013 AND KIQ result is "pass"
-            (AND Employer is not categorized as "high risk" industry - future)
-
+            AND Tenure >= 1 year AND Precise ID score is not 9012 or 9013 AND KIQ result is "pass"
+            (AND Employer is not categorized as "high risk" industry - future)
             Easy: Pricing Tier is T1/T2/T3 AND Income does not include bonus or commission
             AND No automated fraud tag AND Employment status is Full Time AND
             Tenure >= 1 year AND Precise ID score is not 9012 or 9013 AND KIQ result is "pass"
             (AND Employer is not categorized as "high risk" industry - future)
-
             Regular: Any applications not categorized as "very easy", "easy" or "hard"
             */
 
@@ -153,9 +149,9 @@ public class MW_KbaDetailsTriggerHandler {
 
                 } Else If (
                         (app.Pricing_Tier__c == 't1' || app.Pricing_Tier__c == 't2' || app.Pricing_Tier__c == 't3')
-                                && app.TalxSalary__c >= (0.85 * app.genesis__Account__r.Annual_Individual_Income__c)
+                                && app.TalxSalary__c >= (0.85 * app.Annual_Individual_Income_App__c)
                                 && incomeIncludeBnsOrComsn == false
-                                && app.genesis__Account__r.Monthly_Housing_Payment__c >= 500
+                                && app.Monthly_Housing_Payment_App__c >= 500
                                 && app.Fraud_Tag_Count__c == 0
                                 && app.Employment_Status__c == 'Full Time'
                                 && tenure >= 1 //Tenure
