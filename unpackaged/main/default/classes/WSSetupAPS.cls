@@ -225,22 +225,22 @@ System.debug(leadId+'  '+req.requestURI);
                         res.contents.add(payoffLpt);
                         restRes.statuscode = peer.Constants.HTTP_OK;
                         //Whenever a request or response is made ,or an exception is caught in try catch block, HM has started following a routine to insert (request, response success details or exception details) in Batch Processing Log
-                        loan__Batch_Process_Log__c batchLogMPOutput = new loan__Batch_Process_Log__c();
-						batchLogMPOutput.loan__Log_Level__c = 'INFO';
-						batchLogMPOutput.loan__Message__c = 'The Success Response sent back to Member portal'+ res;
-                        batchLogMPOutput.loan__Batch_Id__c = 'LeadGuid : '+leadId;
-						batchLogMPOutput.loan__Origin__c = 'WSSetupAPS';
-						insert batchLogMPOutput;
+                        loan__Batch_Process_Log__c bplSuccess = new loan__Batch_Process_Log__c();
+						bplSuccess.loan__Log_Level__c = 'INFO';
+						bplSuccess.loan__Message__c = 'PayoffPayment Creation Success Response sent back to Member portal'+ res;
+                        bplSuccess.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+						bplSuccess.loan__Origin__c = 'WSSetupAPS';
+						insert bplSuccess;
                         return res;
                     }
                     res = new Response(peer.Constants.ERROR, '', 'Check if loan account has required information');
                     //Whenever a request or response is made ,or an exception is caught in try catch block, HM has started following a routine to insert (request, response success details or exception details) in Batch Processing Log
-                    loan__Batch_Process_Log__c batchLogError = new loan__Batch_Process_Log__c();
-                    batchLogError.loan__Log_Level__c = 'Error';
-                    batchLogError.loan__Message__c = 'Response :'+res ;
-                    batchLogError.loan__Batch_Id__c = 'LeadGuid : '+leadId;
-                    batchLogError.loan__Origin__c = 'WSSetupAPS';
-                    insert batchLogError;
+                    loan__Batch_Process_Log__c bplError = new loan__Batch_Process_Log__c();
+                    bplError.loan__Log_Level__c = 'Error';
+                    bplError.loan__Message__c = 'PayoffPayment Creation Response :'+res ;
+                    bplError.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+                    bplError.loan__Origin__c = 'WSSetupAPS';
+                    insert bplError;
                     return res;
                 }
                 //LSP-328.1 - end
@@ -283,20 +283,9 @@ System.debug(leadId+'  '+req.requestURI);
                         System.debug(logginglevel.error,'In ELSE :: manualSpreadName == NULL ');
                         automatedPaymentSetup.loan__Installment_Payment__c = updateInstallmentFlag(loanAccount.id, debitDate, transactionAmount);
                         
-                    }
-                    
-                    /*                
-					//LOS-225
-					if(type.equalsIgnoreCase('ONE TIME') && (automatedPaymentSetup.loan__Loan_Payment_Spread__r.loan__Order_Of_Payment__c != 'Principal')
-					&&(automatedPaymentSetup.loan__Loan_Payment_Spread__r.loan__Order_Of_Payment__c != 'Interest'))  
-						automatedPaymentSetup.loan__Installment_Payment__c= true;
-					else
-						automatedPaymentSetup.loan__Installment_Payment__c = installmentPayment;
-					//LOS-225
-					*/
+                    }                   
                     
                     //set Dates.
-                    
                     insert automatedPaymentSetup;
                     if(automatedPaymentSetup == null) {
                         System.debug(LoggingLevel.DEBUG, '-----Create Automated Payment Setup Error-----');
