@@ -84,7 +84,7 @@ global class RedecisionCntrl{
             if(app.genesis__account__r.loan__SOCIAL_SECURITY_NUMBER__c != null && app.Bureau_SSN__c != null && app.genesis__account__r.loan__SOCIAL_SECURITY_NUMBER__c != app.Bureau_SSN__c){
                 SSNmatch = false;
             }
-            if(/*(accOld.loan__SOCIAL_SECURITY_NUMBER__c != null && accOld.loan__SOCIAL_SECURITY_NUMBER__c != accNew.loan__SOCIAL_SECURITY_NUMBER__c) ||*/ accNew.manualredecision__c==true){   //CRM-272
+            if(accNew.manualredecision__c==true){   //CRM-272
                 System.debug('fields changed' +fieldsChanged+ ' and manualredecision' +accNew.manualredecision__c);    
                     if(fieldsChanged == null && accNew.manualredecision__c==True){
                     system.debug('in manual redecision');
@@ -96,9 +96,6 @@ global class RedecisionCntrl{
                 if(fieldsChanged == null){
                     fieldsChanged = 'loan__SOCIAL_SECURITY_NUMBER__c'; //(body__c should not be null)
                 }
-                /*else{ //CRM-272(not needed. fieldsChanged here is always null)
-                    fieldsChanged = fieldsChanged + ',loan__SOCIAL_SECURITY_NUMBER__c';
-                }*/
                 redecisionRequired = true;             
             }
             if(accOld.peer__Date_of_Birth__c != null && accOld.peer__Date_of_Birth__c != accNew.peer__Date_of_Birth__c){
@@ -128,7 +125,7 @@ global class RedecisionCntrl{
                 }     
                 redecisionRequired = true;           
             }
-            if(/*accOld.Suffix__c!= null &&*/ accOld.Suffix__c!= accNew.Suffix__c && SSNmatch == false){
+            if(accOld.Suffix__c!= accNew.Suffix__c && SSNmatch == false){
                 if(fieldsChanged == null){
                     fieldsChanged = 'Suffix__c';
                 }
@@ -181,25 +178,7 @@ global class RedecisionCntrl{
                     fieldsChanged = fieldsChanged + ',ZIP_Code__c';
                 }    
                 redecisionRequired = true;            
-            }
-            if(accOld.Annual_Individual_Income__c != null && accOld.Annual_Individual_Income__c != accNew.Annual_Individual_Income__c){
-                if(fieldsChanged == null){
-                    fieldsChanged = 'Annual_Individual_Income__c';
-                }
-                else{
-                    fieldsChanged = fieldsChanged + ',Annual_Individual_Income__c';
-                }  
-                redecisionRequired = true;            
-            }
-            if(accOld.Monthly_Housing_Payment__c != null && accOld.Monthly_Housing_Payment__c != accNew.Monthly_Housing_Payment__c){
-                if(fieldsChanged == null){
-                    fieldsChanged = 'Monthly_Housing_Payment__c';
-                }
-                else{
-                    fieldsChanged = fieldsChanged + ',Monthly_Housing_Payment__c';
-                }
-                redecisionRequired = true;               
-            } 
+            }            
             //pallavi
             if(profileName[0].profile.name != null){
                 String profName = String.valueOf(profileName[0].profile.name);
@@ -259,6 +238,7 @@ global class RedecisionCntrl{
                     }
                 Redecision_Request__c rr = new Redecision_Request__c();
                 rr.Application__c = app.id;
+                rr.Account_Id__c = accNew.Id;
                 rr.Body__c = fieldsChanged;
                 rr.Triggered_From__c = 'Account';
                 rrToBeInseted.add(rr);
@@ -270,56 +250,6 @@ global class RedecisionCntrl{
         if(allOffersTobeDel != null && allOffersTobeDel.size() > 0){
             Delete allOffersTobeDel;
         }
-        /*
-        if(allIVToBeDel != null && allIVToBeDel.size() > 0){
-            Delete allIVToBeDel;
-        }
-        */
-        /*
-        if(allKbaToBeDel != null && allKbaToBeDel.size() > 0){
-            Delete allKbaToBeDel;
-        }
-        */
-        /*
-        if(allICToBeDel != null && allICToBeDel.size() > 0){
-            Delete allICToBeDel;
-        }
-        */
-        /*
-        if(allNICToBeDel != null && allNICToBeDel.size() > 0){
-            Delete allNICToBeDel;
-        }
-        */
-        /*
-        if(allNeoVerToBeDel != null && allNeoVerToBeDel.size() > 0){
-            Delete allNeoVerToBeDel;
-        }
-        */
-        /*
-        if(allCPToBeDel != null && allCPToBeDel.size() > 0){
-            Delete allCPToBeDel;
-        }
-        */
-        /*
-        if(allHCPToBeDel != null && allHCPToBeDel.size() > 0){
-            Delete allHCPToBeDel;
-        }
-        */
-        /*
-        if(allCBToBeDel != null && allCBToBeDel.size() > 0){
-            Delete allCBToBeDel;
-        }
-        */
-        /*
-        if(allHPDToBeDel != null && allHPDToBeDel.size() > 0){
-            Delete allHPDToBeDel;
-        }
-        */
-        /*
-        if(allHIMDToBeDel != null && allHIMDToBeDel.size() > 0){
-            Delete allHIMDToBeDel;
-        }
-        */
         if(allAppOfferToBeDel != null && allAppOfferToBeDel.size() > 0){
             Delete allAppOfferToBeDel;
         }
@@ -399,130 +329,83 @@ global class RedecisionCntrl{
             genesis__applications__c oldApp = oldAppMap.get(app.id);
             genesis__applications__c newApp = newAppMap.get(app.id);
             List<Pricing_Offer__c> appOffers = app.Pricing_Offer__r;
-            Boolean redecisionRequired = true;
-            String fieldsChanged;
-            if((oldApp.Requested_loan_amount__c != null && oldApp.Requested_loan_amount__c != newApp.Requested_loan_amount__c) ){
+            Boolean redecisionRequired;
+            String fieldsChanged = '';
+            if(oldApp.Requested_loan_amount__c != null && oldApp.Requested_loan_amount__c != newApp.Requested_loan_amount__c){
+                redecisionRequired = true;
                 for(Pricing_Offer__c po : appOffers){
                     if(po.Amount__c == newApp.Requested_loan_amount__c){
                         redecisionRequired = false;
                         break;
                     }                   
                 }
-                if(redecisionRequired == true){ 
-                    if(app.Pricing_Offer__r != null){
-                        allOffersTobeDel.addall(app.Pricing_Offer__r);
-                        }
-                    if(app.Identity_verifications__r != null){
-                        allIVToBeDel.addall(app.Identity_verifications__r);
-                        }
-                    if(app.KBA_Details__r != null){
-                        allKbaToBeDel.addall(app.KBA_Details__r);
-                        }
-                    if(app.Income_Calculators__r != null){
-                        allICToBeDel.addall(app.Income_Calculators__r );                                        
-                        }
-                    if(app.Net_Income_Calculators__r != null){
-                        allNICToBeDel.addall(app.Net_Income_Calculators__r);
-                        }
-                    if(app.Neo_Verify__r != null){
-                        allNeoVerToBeDel.addall(app.Neo_Verify__r);
-                        }
-                    if(app.Credit_Policy__r != null){
-                        allCPToBeDel.addall(app.Credit_Policy__r);
-                        }
-                    if(app.Hard_Credit_Pulls__r != null){
-                        allHCPToBeDel.addall(app.Hard_Credit_Pulls__r);
-                        }
-                    if(app.Credit_Bureau__r != null){
-                        allCBToBeDel.addall(app.Credit_Bureau__r);                                
-                        }
-                    if(app.Hard_Pull_Data__r != null){
-                        allHPDToBeDel.addall(app.Hard_Pull_Data__r);
-                        }
-                    if(app.Hard_Inquiry_Meta_Data__r != null){
-                        allHIMDToBeDel.addall(app.Hard_Inquiry_Meta_Data__r);
-                        }
-                    if(app.Approved_Offer__r != null){
-                        allAppOfferToBeDel.addall(app.Approved_Offer__r);
-                        }
-                    if(app.genesis__Application_Document_Category__r != null){
-                            for(genesis__Application_Document_Category__c adc : app.genesis__Application_Document_Category__r){
-                                adc.Box_URl__c = null;
-                                allADCToBeupdated.add(adc);
-                            }
-                        }
-                        
-                    if(fieldsChanged == null){
-                        fieldsChanged = 'Requested_loan_amount__c';
+                if(redecisionRequired)
+                    fieldsChanged += ',Requested_loan_amount__c';
+            }    
+            if(oldApp.Annual_Individual_Income_App__c != null && oldApp.Annual_Individual_Income_App__c != newApp.Annual_Individual_Income_App__c){
+                redecisionRequired = true;
+                fieldsChanged += ',Annual_Individual_Income_App__c';
+            }    
+            if(oldApp.Monthly_Housing_Payment_App__c != null && oldApp.Monthly_Housing_Payment_App__c != newApp.Monthly_Housing_Payment_App__c){
+                redecisionRequired = true;
+                fieldsChanged += ',Monthly_Housing_Payment_App__c';
+            }    
+            if(redecisionRequired == true){ 
+                if(app.Pricing_Offer__r != null){
+                    allOffersTobeDel.addall(app.Pricing_Offer__r);
                     }
-                    else{
-                        fieldsChanged += ',Requested_loan_amount__c';
+                if(app.Identity_verifications__r != null){
+                    allIVToBeDel.addall(app.Identity_verifications__r);
                     }
-                    Redecision_Request__c rr = new Redecision_Request__c();
-                    rr.Application__c = app.id;
-                    rr.Body__c = fieldsChanged;
-                    rr.Triggered_From__c = 'Application';
-                    rrToBeInseted.add(rr);
-                    app.genesis__Status__c = 'Redecision_Required';
-                    appToBeUpdated.add(app);
-
-                }
+                if(app.KBA_Details__r != null){
+                    allKbaToBeDel.addall(app.KBA_Details__r);
+                    }
+                if(app.Income_Calculators__r != null){
+                    allICToBeDel.addall(app.Income_Calculators__r );                                        
+                    }
+                if(app.Net_Income_Calculators__r != null){
+                    allNICToBeDel.addall(app.Net_Income_Calculators__r);
+                    }
+                if(app.Neo_Verify__r != null){
+                    allNeoVerToBeDel.addall(app.Neo_Verify__r);
+                    }
+                if(app.Credit_Policy__r != null){
+                    allCPToBeDel.addall(app.Credit_Policy__r);
+                    }
+                if(app.Hard_Credit_Pulls__r != null){
+                    allHCPToBeDel.addall(app.Hard_Credit_Pulls__r);
+                    }
+                if(app.Credit_Bureau__r != null){
+                    allCBToBeDel.addall(app.Credit_Bureau__r);                                
+                    }
+                if(app.Hard_Pull_Data__r != null){
+                    allHPDToBeDel.addall(app.Hard_Pull_Data__r);
+                    }
+                if(app.Hard_Inquiry_Meta_Data__r != null){
+                    allHIMDToBeDel.addall(app.Hard_Inquiry_Meta_Data__r);
+                    }
+                if(app.Approved_Offer__r != null){
+                    allAppOfferToBeDel.addall(app.Approved_Offer__r);
+                    }
+                if(app.genesis__Application_Document_Category__r != null){
+                        for(genesis__Application_Document_Category__c adc : app.genesis__Application_Document_Category__r){
+                            adc.Box_URl__c = null;
+                            allADCToBeupdated.add(adc);
+                        }
+                    }
+                Redecision_Request__c rr = new Redecision_Request__c();
+                rr.Application__c = app.id;
+                rr.Account_Id__c = app.genesis__account__c;
+                rr.Body__c = fieldsChanged;
+                rr.Triggered_From__c = 'Application';
+                rrToBeInseted.add(rr);
+                app.genesis__Status__c = 'Redecision_Required';
+                appToBeUpdated.add(app);
             }
-            
         }
         if(allOffersTobeDel != null && allOffersTobeDel.size() > 0){
             Delete allOffersTobeDel;
         }
-        /*
-        if(allIVToBeDel != null && allIVToBeDel.size() > 0){
-            Delete allIVToBeDel;
-        }
-        */
-        /*
-        if(allKbaToBeDel != null && allKbaToBeDel.size() > 0){
-            Delete allKbaToBeDel;
-        }
-        */
-        /*
-        if(allICToBeDel != null && allICToBeDel.size() > 0){
-            Delete allICToBeDel;
-        }
-        */
-        /*
-        if(allNICToBeDel != null && allNICToBeDel.size() > 0){
-            Delete allNICToBeDel;
-        }
-        */
-        /*
-        if(allNeoVerToBeDel != null && allNeoVerToBeDel.size() > 0){
-            Delete allNeoVerToBeDel;
-        }
-        */
-        /*
-        if(allCPToBeDel != null && allCPToBeDel.size() > 0){
-            Delete allCPToBeDel;
-        }
-        */
-        /*
-        if(allHCPToBeDel != null && allHCPToBeDel.size() > 0){
-            Delete allHCPToBeDel;
-        }
-        */
-        /*
-        if(allCBToBeDel != null && allCBToBeDel.size() > 0){
-            Delete allCBToBeDel;
-        }
-        */
-        /*
-        if(allHPDToBeDel != null && allHPDToBeDel.size() > 0){
-            Delete allHPDToBeDel;
-        }
-        */
-        /*
-        if(allHIMDToBeDel != null && allHIMDToBeDel.size() > 0){
-            Delete allHIMDToBeDel;
-        }
-        */
         if(allAppOfferToBeDel != null && allAppOfferToBeDel.size() > 0){
             Delete allAppOfferToBeDel;
         }

@@ -81,7 +81,9 @@ public class TestRedecisionCntrl {
             DCP_Investor_Eligibility__c = false,
             Investor__c = acc1.id,
             Bureau_SSN__c = '123',
-            Requested_loan_amount__c = 1000 
+            Requested_loan_amount__c = 1000,
+            Annual_Individual_Income_App__c = 1000,
+            Monthly_Housing_Payment_App__c = 100
         );      
         Insert app;
         Map<id,Account> oldAccMap = new Map<id,Account>();
@@ -156,7 +158,9 @@ public class TestRedecisionCntrl {
             genesis__term__c = 36,
             genesis__payment_frequency__c = 'Monthly',
             genesis__Draw_Period_End_Date__c = system.Today(),
-            Requested_loan_amount__c = 1000
+            Requested_loan_amount__c = 1000,
+            Annual_Individual_Income_App__c = 1000,
+            Monthly_Housing_Payment_App__c = 100
             );
         insert app;
         genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
