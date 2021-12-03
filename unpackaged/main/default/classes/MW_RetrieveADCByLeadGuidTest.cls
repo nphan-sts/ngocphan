@@ -13,7 +13,7 @@ private class MW_RetrieveADCByLeadGuidTest {
         RestContext.request = req;  
         RestContext.response= res;  
         Test.startTest();
-        MW_RetrieveADCByLeadGuid.MW_RetrieveApplicationDocumentCategoryByLeadGuid();
+        MW_RetrieveADCByLeadGuid.MW_RetrieveADCByLeadGuid();
         Test.stopTest();
         
         system.assertNotEquals(null, res.responseBody, 'response is not null');
@@ -31,7 +31,7 @@ private class MW_RetrieveADCByLeadGuidTest {
         RestContext.request = req;  
         RestContext.response= res;  
         Test.startTest();
-        MW_RetrieveADCByLeadGuid.MW_RetrieveApplicationDocumentCategoryByLeadGuid();
+        MW_RetrieveADCByLeadGuid.MW_RetrieveADCByLeadGuid();
         Test.stopTest(); 
         
         
