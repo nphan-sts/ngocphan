@@ -1,7 +1,8 @@
 @RestResource(urlMapping='/application-document-category/lead-guid/*')
-global with sharing class MW_RetrieveApplicationDocumentCategoryByLeadGuid {
+//MW_RetrieveApplicationDocumentCategoryByLeadGuid
+global with sharing class MW_RetrieveADCByLeadGuid {
     @HttpGet
-    global static void MW_RetrieveApplicationDocumentCategoryByLeadGuid() {
+    global static void MW_RetrieveADCByLeadGuid() {
         RestRequest req = RestContext.request;
         RestResponse res = RestContext.response;
         try {
@@ -11,7 +12,7 @@ global with sharing class MW_RetrieveApplicationDocumentCategoryByLeadGuid {
                 res.responseBody = Blob.valueOf('guid is required');
                 return;
             }
-            List<genesis__Application_Document_Category__c> apps = [
+            List<genesis__Application_Document_Category__c> docs = [
                 SELECT    
                 Id,
                 OwnerId,
@@ -59,6 +60,9 @@ global with sharing class MW_RetrieveApplicationDocumentCategoryByLeadGuid {
                 FROM genesis__Application_Document_Category__c
                 WHERE Lead_Id__c = :leadGuid
             ];
+
+            res.statusCode = 200;
+            res.responseBody = Blob.valueOf(JSON.serialize(docs));
         }
         catch (Exception e) {
             res.statusCode = 500;
