@@ -155,8 +155,7 @@ public class QueueAssignment{
                    
                        if(app.Identity_Verifications__r[0].IDMV_Status__c != null &&    //pallavi(desk id 18882)
                           app.Identity_Verifications__r[0].IDMV_Status__c == 'Initial Fraud Alert'){                       
-                           reason += 'IDMV Status = Initial Fraud Alert. ';
-                           System.debug(logginglevel.error,'REASON : '+reason );
+                           reason += 'IDMV Status = Initial Fraud Alert. ';                
                            verificationF = true;
                            
                        }
@@ -164,7 +163,6 @@ public class QueueAssignment{
                        if (app.Identity_Verifications__r[0].IDMV_Status__c != null &&   //pallavi(desk id 18882/LOS-207)
                            app.Identity_Verifications__r[0].IDMV_Status__c == 'Consumer Statement Bureau'){                       
                            reason +=  'IDMV Status = Consumer Statement Bureau. ';
-                           System.debug(logginglevel.error,'REASON : '+reason );
                            verificationF = true;
                                               
                        }
@@ -172,15 +170,13 @@ public class QueueAssignment{
                        if (app.Identity_Verifications__r[0].IDMA_Status__c != null &&   //pallavi(desk id 18882/LOS-207)
                            app.Identity_Verifications__r[0].IDMA_Status__c == 'Initial Fraud Alert'){                       
                            reason +=  'IDMA Status = Initial Fraud Alert. ';
-                           System.debug(logginglevel.error,'REASON : '+reason );
                            verificationF = true;
                                               
                        }
                        
                        if (app.Identity_Verifications__r[0].IDMA_Status__c != null &&   //pallavi(desk id 18882/LOS-207)
                            app.Identity_Verifications__r[0].IDMA_Status__c == 'Consumer Statement Bureau'){                       
-                           reason +=  'IDMA Status = Consumer Statement Bureau. ';
-                           System.debug(logginglevel.error,'REASON : '+reason );
+                           reason +=  'IDMA Status = Consumer Statement Bureau. ';                   
                            verificationF = true;
                                                                            
                        }
