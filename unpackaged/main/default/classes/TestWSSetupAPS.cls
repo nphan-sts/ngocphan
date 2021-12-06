@@ -4,6 +4,8 @@
 *    Anusha		2020/06/04      LSP-223
 *    Anusha		2021/08/26		LSP-328.1
 *	 Anusha		2021/10/21		LSP-328.2
+* 	 Anusha		2021/11/09		LSP-328.3
+*	 Anusha		2021/11/26		LSP-328.4
 ******************Modification History*****************************************************************/
 @isTest(SeeAllData = false)
 public class TestWSSetupAPS {
@@ -63,7 +65,6 @@ public class TestWSSetupAPS {
                                                                                            dummyOffice);
         return loanAccount;
     }
-    
     @isTest
     static void testAPSWithDebitDateLessthanLAD(){ //LSP-328 -- prior to LSP-186, if debit date for one time ACH was before LAD, webservice was not creating APS. After LSP-186, it creates APS       
         loan.TestHelper.systemDate = Date.newInstance(2016, 1, 15);
@@ -1208,7 +1209,7 @@ public class TestWSSetupAPS {
         System.assertEquals('Default Write Off Recovery Spread', automatedPaymentSetup.loan__Loan_Payment_Spread__r.name);
         Test.stopTest();
     }
-    //LSP-223 - end
+    //LSP-223 - end    
     //LSP-328 - start
     @isTest
     static void testPayoffPaymentSuccess(){
@@ -1325,10 +1326,132 @@ public class TestWSSetupAPS {
         System.assert(payofflpt.loan__Automated_Payment_Setup__c != null);//LSP-328.2 When payoff LPT gets created, APS is mapped to it for NACHA mapping
         System.assert(!payofflpt.loan__Automated_Payment_Setup__r.loan__Active__c);//LSP-328.2 APS status should be inactive
         Test.stopTest();
+        List<loan__batch_process_log__c> successLog = [select id, name,loan__Log_Level__c from loan__batch_process_log__c where loan__Origin__c = 'WSSetupAPS'];
+        System.assert(successLog.size()>0);
+        System.assertEquals('INFO', successLog.get(0).loan__Log_Level__c);
     }
-    
     @isTest
-    static void testPayoffPaymentException(){
+    static void testFutureDatedPaymentCreation(){
+        loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
+        loan__Loan_Account__c lAcct = createLoanAccount();
+        
+        loan__Org_Parameters__c org = loan.CustomSettingsUtil.getOrgParameters();
+        org.loan__Disable_Triggers__c = true;
+        org.loan__Enable_New_Spread_Option__c = true;
+        upsert org;
+        
+        Account acc = new Account(Name = 'Test Account', loan__Undeployed_Funds__c = 10000,peer__Last_Name__c = 'test');//LSP-328
+        insert acc;
+        lAcct.loan__Loan_Status__c = loan.LoanConstants.LOAN_STATUS_ACTIVE_GOOD_STANDING;
+        lAcct.loan__Account__c = acc.id;
+        lAcct.loan__Contact__c = null;
+        lAcct.lead_Guid__c = 'qwertt';
+        lAcct.loan__Write_off_Tolerance_Amount__c = 10;
+        lAcct.loan__Pay_Off_Amount_As_Of_Today__c = 400;
+        update(lAcct);
+        
+        Account invacc = new Account(
+            Name = 'Investor',
+            loan__Investor__c = true,
+            Amount_Invested__c = 1000,
+            Number_Of_Applications_Invested__c = 3, 
+            Total_No_of_Application_Limit__c = 30,
+            Last_Application_assigned_on__c = system.now()-7,
+            Total_Investment_Limit__c = 1000000,
+            loan__Undeployed_Funds__c = 500000,
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'TestFName1',
+            peer__Last_Name__c='TestLName2',
+            no_of_shares_to_be_Sold__c = 1,
+            Number_of_Days__c = 0,
+            loan__Active__c = 'YES', 
+            City__c='CANADA',
+            State__c='CA',
+            ZIP_Code__c='123456'
+        );
+        Insert invacc;
+        
+        loan__Bank_Account__c bankAcc = new loan__Bank_Account__c(loan__Account__c = invacc.id,
+                                                                  loan__Active__c = true,
+                                                                  loan__Bank_Account_Number__c = '12345',
+                                                                  loan__Bank_Name__c = 'Test Bank',
+                                                                  loan__Routing_Number__c = '999999999',
+                                                                  Unmasked_Bank_Account_Number__c = '12345',
+                                                                  loan__Account_Type__c = 'Checking'  );
+        loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
+                                                                            loan__Bank_Name__c = 'Some Bank',
+                                                                            Unmasked_Bank_Account_Number__c = '123234324',
+                                                                            loan__Routing_Number__c = '999999999',
+                                                                            loan__Account_Type__c = 'Checking',
+                                                                            loan__Account_Usage__c = 'Collections Trust Account',
+                                                                            loan__Account__c = acc.id,
+                                                                            loan__Active__c = True);
+        insert bankAcc ;
+        
+        loan__Payment_Mode__c paymentMode = [select id,name from loan__Payment_Mode__c where name='ACH' limit 1];
+        loan__Automated_Payment_Configuration__c apc = loan.TestHelper2.createAutomatedPaymentConfiguration('LOAN PAYMENT',
+                                                                                                            paymentMode,
+                                                                                                            collectionTrustBA,
+                                                                                                            'loan.LoanPaymentTxnNACHAGen');
+        
+        
+        apc.loan__Bank_Account__c = bankAcc.id;
+        update apc;        
+        
+        list<loan__Investor_Loan__c> ioList = new list<loan__Investor_Loan__c>();
+        
+        loan__Investor_Loan__c lo = new loan__Investor_Loan__c();
+        lo.loan__Certificate_Rate__c                   = 1.0;
+        lo.Buyer__c                                    = invacc.id;
+        lo.loan__Service_Rate__c                       = 10.0;
+        lo.loan__Account__c                            = invacc.id;
+        lo.loan__Loan__c                               = lAcct.id;
+        lo.loan__Share__c                              = 100;
+        lo.loan__Status__c                             = 'Active';
+        lo.loan__Enabled_Flag__c                       =  true;
+        lo.loan__Inv_Accrued_Interest_Amt__c           =  0;
+        lo.loan__Investment_Amount__c                  = 1000;
+        lo.loan__Principal_Amount_Paid__c              = 2;
+        lo.loan__Loan_Principal_Remaining__c           =1000;
+        lo.loan__Investor_Start_Date__c                = System.today();        
+        insert lo;
+        
+        lAcct.loan__Account__c = invacc.id;
+        update lAcct;
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        
+        req.requestURI =  '/services/apexrest/OTPOMBPEndpoint';
+        req.httpMethod = 'POST';
+        String jsonStr = '{"leadGuid" :"'+lAcct.lead_Guid__c+'",  "bankAccountId" : "' + bankAcc.id + '", "transactionAmount" : ' + 390
+            + ', "debitDate" : "' + String.valueOf(Date.today().addDays(2)) +
+            + '", "type" : "ONE TIME", "paymentModeName":"ACH", "amountType":"FIXED AMOUNT","installmentOmbp": '+true+
+            + ', "feeAmount" : ' + 100 + ',"payoffPayment":'+true+
+            '}';
+        req.requestBody = Blob.valueOf(jsonStr);
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        Response results = WSSetupAPS.createAPSSetup();
+        System.assert(results.status.equalsIgnoreCase(peer.Constants.SUCCESS));
+        loan__loan_Payment_transaction__c payofflpt = [select id,name,loan__installment_payment__c,loan__Early_Total_Repayment_of_the_Loan__c,loan__payment_Mode__c,loan__Automated_Payment_Setup__c,loan__Automated_Payment_Setup__r.loan__Active__c  
+                                                       from loan__loan_Payment_transaction__c 
+                                                       where loan__loan_Account__c=:lAcct.id];
+        System.assertEquals(payofflpt.loan__installment_payment__c,false);
+        System.assertEquals(payofflpt.loan__Early_Total_Repayment_of_the_Loan__c,true);
+        System.assert(payofflpt.loan__Automated_Payment_Setup__c != null);//LSP-328.2 When payoff LPT gets created, APS is mapped to it for NACHA mapping
+        System.assert(!payofflpt.loan__Automated_Payment_Setup__r.loan__Active__c);//LSP-328.2 APS status should be inactive
+        Test.stopTest();
+        List<loan__batch_process_log__c> successLog = [select id, name,loan__Log_Level__c from loan__batch_process_log__c where loan__Origin__c = 'WSSetupAPS'];
+        System.assert(successLog.size()>0);
+        System.assertEquals('INFO', successLog.get(0).loan__Log_Level__c);
+    }
+    //LSP-328.4 - start
+    @isTest
+    static void testPayoffPaymentWhenTransactionAmountisLess(){
         
         loan__ACH_Parameters__c achParameters = createACHParameters(true, true);
         loan__Loan_Account__c lAcct = createLoanAccount();
@@ -1436,9 +1559,19 @@ public class TestWSSetupAPS {
         
         Test.startTest();
         Response results = WSSetupAPS.createAPSSetup();
-        System.assert(results.status.equalsIgnoreCase(peer.Constants.ERROR));
+        System.assert(results.status.equalsIgnoreCase(peer.Constants.SUCCESS));
+        loan__loan_Payment_transaction__c payofflpt = [select id,name,loan__installment_payment__c,loan__Early_Total_Repayment_of_the_Loan__c,loan__payment_Mode__c,loan__Automated_Payment_Setup__c,loan__Automated_Payment_Setup__r.loan__Active__c,Payoff_Rejection_Reason__c   
+                                                       from loan__loan_Payment_transaction__c 
+                                                       where loan__loan_Account__c=:lAcct.id];
+        System.assertEquals(payofflpt.loan__Early_Total_Repayment_of_the_Loan__c,false);//LSP-328.4 Normal LPT should get created if transaction amount is less than todays payoff amount
+        System.assert(payofflpt.loan__Automated_Payment_Setup__c != null);
+        System.assertEquals(payofflpt.Payoff_Rejection_Reason__c, 'Transaction amount: 300 is not sufficient to payoff the loan');
+        System.assert(!payofflpt.loan__Automated_Payment_Setup__r.loan__Active__c);
         Test.stopTest();
-    }
+        List<loan__batch_process_log__c> successLog = [select id, name,loan__Log_Level__c from loan__batch_process_log__c where loan__Origin__c = 'WSSetupAPS'];
+        System.assert(successLog.size()>0);
+        System.assertEquals('INFO', successLog.get(0).loan__Log_Level__c);
+    }//LSP-328.4 - end
     
     @isTest
     static void testPayoffPaymentWithIncorrectData(){
@@ -1551,5 +1684,8 @@ public class TestWSSetupAPS {
         Response results = WSSetupAPS.createAPSSetup();
         System.assert(results.status.equalsIgnoreCase(peer.Constants.ERROR));
         Test.stopTest();
+        List<loan__batch_process_log__c> successLog = [select id, name,loan__Log_Level__c from loan__batch_process_log__c where loan__Origin__c = 'WSSetupAPS'];
+        System.assert(successLog.size()>0);
+        System.assertEquals('ERROR', successLog.get(0).loan__Log_Level__c);
     }//LSP - 328 end
 }
