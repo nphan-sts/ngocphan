@@ -5,19 +5,20 @@ Pallavi         LOS-207         2019-11-21
 /********************************************/
 
 public class QueueAssignment{
+    @TestVisible
     Private Static boolean KBAFraudT = false,
-                           verificationF = false;
-    //Code Start added as part of ticket #https://happymoneyinc.atlassian.net/browse/LSP-344
-    Private Static Set<String> UTM_SOCIAL_MEDIUM = new Set<String>{'OrganicSocial','psocial-cq','psocial-dm','psocial-rm'};
-    Private Static Set<String> UTM_CREDIT_KARMA_NON_PRIORITY = new Set<String>{'p1','p2','p3'};
-    //Code addition end as part of https://happymoneyinc.atlassian.net/browse/LSP-344
+                       verificationF = false;
+    Private Static Set<String> UTM_SOCIAL_MEDIUM = new Set<String>{'OrganicSocial','psocial-cq','psocial-dm','psocial-rm'}; //LSP-344
+    Private Static Set<String> UTM_CREDIT_KARMA_NON_PRIORITY = new Set<String>{'p1','p2','p3'}; //LSP-344
+    Public Static final Decimal Siftscore = MW_Settings__c.getInstance().Sift_score__c;
     
     @invocablemethod()
     Public static void appToQueueAssignment(List<ID> apps){
         List<Application_Tags__c> lstApplicationTags = new List<Application_Tags__c>();
         String reason = '' ;
         String temp;
-        Id appID = apps[0];  
+        Id appID = apps[0];
+        //Decimal mwsetting = MW_Settings__c.getInstance().Sift_score__c;
              
         List<QueueSobject> FundingQueue = [SELECT Queue.Id,queue.Name, QueueId FROM QueueSobject 
                                             WHERE SobjectType = 'genesis__Applications__c' 
@@ -53,107 +54,98 @@ public class QueueAssignment{
         
         if(appList != null && appList.size() > 0){                                          
             for(genesis__Applications__c app : appList){ 
-                 //--- Fraud Tag 30.01.2018 //LSP-344
-                // -- added this condition - app.KBA_Details__r != null && app.KBA_Details__r.size()>0 because Process builder was failing.
-                if((app.Sift_Status__c != null && app.Sift_Status__c > 80 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox') ||
-                ((app.KBA_Details__r != null && app.KBA_Details__r.size()>0) &&
-                 ((app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || 
-                  UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) 
-                  && (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 725)) ||
-                 (((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) && (app.utm_source__c =='creditkarma' || 
-					app.utm_source__c =='creditkarma_lightbox') && 
-                   (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800)))
-                   || (String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || 
-					app.utm_source__c =='creditkarma_lightbox') 
-                       && (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800))
-                   || 
-                  ((app.KBA_Details__r != null && app.KBA_Details__r.size()>0) && ((app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c < 0) ||
-                  (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9001 || app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9013)) ||
-                  (app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && (app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9001 || app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9013)) ||
-                  (app.KBA_Details__r[0].Precise_ID_Validation__c != null && (app.KBA_Details__r[0].Precise_ID_Validation__c == 9001 || app.KBA_Details__r[0].Precise_ID_Validation__c == 9013)) ||
-                  (app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && (app.KBA_Details__r[0].Precise_ID_Overall_SCore__c == 9001 || app.KBA_Details__r[0].Precise_ID_Overall_SCore__c == 9013)) || 
-                  (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c < 0) || 
-                  (app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && app.KBA_Details__r[0].Precise_ID_ID_Theft__c < 0) || 
-                  (app.KBA_Details__r[0].Precise_ID_Validation__c != null && app.KBA_Details__r[0].Precise_ID_Validation__c < 0) || 
-                  (app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c != null && app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c.equalsIgnoreCase('F05')) ||
-                  (app.KBA_Details__r[0].Paste_Count__c != null && app.KBA_Details__r[0].Paste_Count__c >= 2) ||
-                  (app.KBA_Details__r[0].Id_Analytics_Score__c != null && app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 750 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox') ||
-                  (app.KBA_Details__r[0].Id_Analytics_Score__c != null && !app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox'))))){
-                    
+                //--- Fraud Tag 30.01.2018 //LSP-344
+                //--- Added this condition - app.KBA_Details__r != null && app.KBA_Details__r.size()>0 because Process builder was failing.
+                
+                //--- Fraud will be True where Sift Score > 98.
+                if(app.Sift_Status__c != null && app.Sift_Status__c > Siftscore) {
                     KBAFraudT = true;
+                    reason += 'Sift score '+ '> ' + Siftscore +'.';
+                }
+                //--- Fraud will be True for utm_medium = DM or Email where ID Analytic Score >= 725
+                if(app.KBA_Details__r != null && app.KBA_Details__r.size()>0) {
+                if((app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) 
+                     && app.KBA_Details__r[0].Id_Analytics_Score__c >= 725) {
+                     KBAFraudT = true;
+                     reason += 'utm_medium '+ app.utm_medium__c + ' IDA Score '+ '>= 725 .';
+                }
+                //--- Fraud will be true for utm_medium = partner or p1,p2,p3 and utm_source = creditkarma or creditkarma lightbox where ID analytic score is >= 800     
+                if(((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) 
+                     && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox')) && 
+                        (app.KBA_Details__r[0].Id_Analytics_Score__c >= 800)){
+                     KBAFraudT = true;
+                     reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score '+ '>= 800 .'; 
+                }
+                //--- Fraud will be true for utm_medium = null and utm source = creditkarma or creditkarma lightbox where ID Analytics score is >= 800  
+                if((String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox') 
+                     && (app.KBA_Details__r[0].Id_Analytics_Score__c >= 800))) {
+                     KBAFraudT = true;
+                     reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score '+ '>= 800 .'; 
+                }
+                //--- Fraud will be true for Precise ID Overall score where score is = 9001     
+                if(app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c == 9001){                        
+                     KBAFraudT = true;
+                     reason += 'Deceased ' + 'Precise ID Overall Score = 9001. ';
+                }
+                //--- Fraud will be true for Precise ID First Payment Default where score is = 9001    
+                if(app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9001){                        
+                     KBAFraudT = true;
+                     reason += 'Deceased ' + 'Precise ID First Payment Default = 9001. ';
+                }
+                //--- Fraud will be true for Precise ID ID Theft where score is = 9001   
+                if(app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9001){                        
+                     KBAFraudT = true;
+                     reason += 'Deceased ' + 'Precise ID theft = 9001. ';
                 } 
-               //--- Set Fraud Reason for valid Fraud Tags
-               if (KBAFraudT){
-                   if(app.Sift_Status__c != null && app.Sift_Status__c > 80 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                   && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox'){                        
-                            reason += 'Sift score > 80. ';}
-                   
-                        if(app.KBA_Details__r != null && app.KBA_Details__r.size()>0){   //pallavi(desk id 18882/LOS-207)
-                        if(app.Sift_Status__c >= 95 && (app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' ||
-                          UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c))){ 
-                          
-                             reason += 'utm_medium '+ app.utm_medium__c + ' Sift score >= 95.';}
-                         
-                        if(app.Sift_Status__c >= 95 && (app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox'))){
-                                
-                            reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_sousce ' + app.utm_source__c + ' Sift score >= 95.';}
-                            if(app.Sift_Status__c >= 95 && (String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || 
-					app.utm_source__c =='creditkarma_lightbox'))){
-                               
-                                reason += 'utm_medium ' + app.utm_medium__c + ' utm_source '+ app.utm_source__c + ' Sift score >= 95.';}
-                               
-                          
-                        if(app.KBA_Details__r[0].Id_Analytics_Score__c >=725 && (app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || 
-                           UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c))){
-                                reason += 'utm_medium '+ app.utm_medium__c + ' IDA Score >= 725.';}
-                         
-                      
-                       if (app.KBA_Details__r[0].Id_Analytics_Score__c >= 800 && (app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox'))){
-                           reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score >= 800.';}
-                       if(app.KBA_Details__r[0].Id_Analytics_Score__c >=800 && (String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || 
-                                                                                                                      app.utm_source__c =='creditkarma_lightbox'))){
-                                                reason += 'utm_medium ' + app.utm_medium__c + ' utm_source '+ app.utm_source__c + ' IDA Score>= 800.';}                                                                           
-                  
-                       if(app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c == 9013){                        
-                                reason += 'Blocked/frozen ' + 'Precise ID Overall Score = 9013. ';}                        
-                       if (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9013){                        
-                                reason += 'Blocked/frozen '+ 'Precise ID First Payment Default = 9013. ';}                        
-                       if (app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9013){                        
-                                reason += 'Blocked/frozen ' + 'Precise ID theft = 9013. ';}                        
-                       if(app.KBA_Details__r[0].Precise_ID_Validation__c != null && app.KBA_Details__r[0].Precise_ID_Validation__c == 9013){                        
-                                reason += 'Blocked/frozen ' + 'Precise ID Validation = 9013. ';}                        
-                       if(app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c == 9001){                        
-                                reason += 'Deceased ' + 'Precise ID Overall Score = 9001. ';}                        
-                       if(app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9001){                        
-                                reason += 'Deceased ' + 'Precise ID First Payment Default = 9001. ';}                        
-                       if(app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9001){                        
-                                reason += 'Deceased ' + 'Precise ID theft = 9001. ';}                        
-                       if(app.KBA_Details__r[0].Precise_ID_Validation__c != null && app.KBA_Details__r[0].Precise_ID_Validation__c == 9001){                        
-                                reason += 'Deceased ' + 'Precise ID Validation = 9001. ';}         
-                       if(app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c < 0){                        
-                                reason += 'Precise ID Overall Score < 0. ';}
-                       if(app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c < 0){                        
-                                reason += 'Precise ID First Payment Default < 0. ';}
-                       if(app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && app.KBA_Details__r[0].Precise_ID_ID_Theft__c < 0){                        
-                                reason += 'Precise ID ID Theft < 0. ';}
-                       if(app.KBA_Details__r[0].Precise_ID_Validation__c != null && app.KBA_Details__r[0].Precise_ID_Validation__c < 0){                        
-                                reason += 'Precise ID Validation < 0. ';}
-                       if(app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c != null && app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c.equalsIgnoreCase('F05')){                        
-                                reason += 'Precise ID Fraud Shield = F05. ';}
-                       if(app.KBA_Details__r[0].Paste_Count__c >= 2){                        
-                                reason += 'Paste Count >= 2. ';}
-                       if(app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 750 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox') {                        
-                                reason += 'IDA Score >= 750. ';}
-                       if(!app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox') {                        
-                                reason += 'IDA Score >= 700. ';}
-                   }    //pallavi(desk id 18882/LOS-127)
-                   
-               } 
+                //--- Fraud will be true for Precise ID Validation where score is = 9001    
+                if(app.KBA_Details__r[0].Precise_ID_Validation__c != null && app.KBA_Details__r[0].Precise_ID_Validation__c == 9001){                        
+                     KBAFraudT = true;
+                     reason += 'Deceased ' + 'Precise ID Validation = 9001. ';
+                }
+                //--- Fraud will be teur for Precise ID Overall score where score is less than 0   
+                if(app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c < 0){                        
+                     KBAFraudT = true; 
+                     reason += 'Precise ID Overall Score < 0. ';
+                }
+                //--- Fraud will be true for Precise ID First Payment Default where score is less than or equal to 10   
+                if(app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c <=10){                        
+                     KBAFraudT = true;
+                     reason += 'Precise ID First Payment Default <= 10. ';
+                }
+                //--- Fraud will be true for Precise ID ID Theft where score is less than 0    
+                if(app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && app.KBA_Details__r[0].Precise_ID_ID_Theft__c < 0){                        
+                     KBAFraudT = true;
+                     reason += 'Precise ID ID Theft < 0. ';
+                }
+                //--- Fraud will be true for Precise ID Validation where score is less than 0     
+                if(app.KBA_Details__r[0].Precise_ID_Validation__c != null && app.KBA_Details__r[0].Precise_ID_Validation__c < 0){                        
+                     KBAFraudT = true;
+                     reason += 'Precise ID Validation < 0. ';
+                }
+                //--- Fraud will be true for Precise Id General Fraud Shield Indicat where score is = F05 (equalsIgnoreCase)    
+                if(app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c != null && app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c.equalsIgnoreCase('F05')){                        
+                     KBAFraudT = true;
+                     reason += 'Precise ID Fraud Shield = F05. ';
+                }
+                //--- Fraud will be true for Paste Count where score is equql to or greater than 2  
+                if(app.KBA_Details__r[0].Paste_Count__c >= 2){                        
+                     KBAFraudT = true;
+                     reason += 'Paste Count >= 2. ';
+                }
+                //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 750 (For Affiliate Partner)   
+                if(app.KBA_Details__r[0].Id_Analytics_Score__c != null && app.Affiliate_Partner__c 
+                     && app.KBA_Details__r[0].Id_Analytics_Score__c >= 750) {
+                     KBAFraudT = true;
+                     reason += 'IDA Score >= 750. ';
+                }
+                //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 700 (For Non-Affiliate Partner)    
+                if(app.KBA_Details__r[0].Id_Analytics_Score__c != null && !app.Affiliate_Partner__c 
+                     && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700) {
+                     KBAFraudT = true;
+                     reason += 'IDA Score >= 700. ';
+                }
+                }
+                
                 
                 //--   
                if(app.Identity_Verifications__r != null && app.Identity_Verifications__r.size()>0){   
