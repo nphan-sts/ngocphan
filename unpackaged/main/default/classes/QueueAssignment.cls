@@ -63,84 +63,80 @@ public class QueueAssignment{
                     reason += 'Sift score '+ '> ' + Siftscore +'.';
                 }
                 //--- Fraud will be True for utm_medium = DM or Email where ID Analytic Score >= 725
-                if(app.KBA_Details__r != null && app.KBA_Details__r.size()>0) {
+                if(app.KBA_Details__r != null && app.KBA_Details__r.size()>0){
+                KBA_Details__c KBAd = app.KBA_Details__r[0];  
                 if((app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) 
-                     && app.KBA_Details__r[0].Id_Analytics_Score__c >= 725) {
+                     && KBAd.Id_Analytics_Score__c >= 725) {
                      KBAFraudT = true;
                      reason += 'utm_medium '+ app.utm_medium__c + ' IDA Score '+ '>= 725 .';
                 }
                 //--- Fraud will be true for utm_medium = partner or p1,p2,p3 and utm_source = creditkarma or creditkarma lightbox where ID analytic score is >= 800     
                 if(((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) 
                      && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox')) && 
-                        (app.KBA_Details__r[0].Id_Analytics_Score__c >= 800)){
+                        (KBAd.Id_Analytics_Score__c >= 800)){
                      KBAFraudT = true;
                      reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score '+ '>= 800 .'; 
                 }
                 //--- Fraud will be true for utm_medium = null and utm source = creditkarma or creditkarma lightbox where ID Analytics score is >= 800  
                 if((String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox') 
-                     && (app.KBA_Details__r[0].Id_Analytics_Score__c >= 800))) {
+                     && (KBAd.Id_Analytics_Score__c >= 800))) {
                      KBAFraudT = true;
                      reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score '+ '>= 800 .'; 
                 }
                 //--- Fraud will be true for Precise ID Overall score where score is = 9001     
-                if(app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c == 9001){                        
+                if(KBAd.Precise_ID_Overall_SCore__c != null && KBAd.Precise_ID_Overall_SCore__c == 9001){                        
                      KBAFraudT = true;
                      reason += 'Deceased ' + 'Precise ID Overall Score = 9001. ';
                 }
                 //--- Fraud will be true for Precise ID First Payment Default where score is = 9001    
-                if(app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9001){                        
+                if(KBAd.Precise_ID_First_Payment_Default__c != null && KBAd.Precise_ID_First_Payment_Default__c == 9001){                        
                      KBAFraudT = true;
                      reason += 'Deceased ' + 'Precise ID First Payment Default = 9001. ';
                 }
-                //--- Fraud will be true for Precise ID ID Theft where score is = 9001   
-                if(app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9001){                        
-                     KBAFraudT = true;
-                     reason += 'Deceased ' + 'Precise ID theft = 9001. ';
-                } 
                 //--- Fraud will be true for Precise ID Validation where score is = 9001    
-                if(app.KBA_Details__r[0].Precise_ID_Validation__c != null && app.KBA_Details__r[0].Precise_ID_Validation__c == 9001){                        
+                if(KBAd.Precise_ID_Validation__c != null && KBAd.Precise_ID_Validation__c == 9001){                        
                      KBAFraudT = true;
                      reason += 'Deceased ' + 'Precise ID Validation = 9001. ';
                 }
                 //--- Fraud will be teur for Precise ID Overall score where score is less than 0   
-                if(app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c < 0){                        
+                if(KBAd.Precise_ID_Overall_SCore__c != null && KBAd.Precise_ID_Overall_SCore__c < 0){                        
                      KBAFraudT = true; 
                      reason += 'Precise ID Overall Score < 0. ';
                 }
                 //--- Fraud will be true for Precise ID First Payment Default where score is less than or equal to 10   
-                if(app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c <=10){                        
+                if(KBAd.Precise_ID_First_Payment_Default__c != null && KBAd.Precise_ID_First_Payment_Default__c <=10){                        
                      KBAFraudT = true;
                      reason += 'Precise ID First Payment Default <= 10. ';
                 }
                 //--- Fraud will be true for Precise ID ID Theft where score is less than 0    
-                if(app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && app.KBA_Details__r[0].Precise_ID_ID_Theft__c < 0){                        
+                if(KBAd.Precise_ID_ID_Theft__c != null && KBAd.Precise_ID_ID_Theft__c < 0){                        
                      KBAFraudT = true;
                      reason += 'Precise ID ID Theft < 0. ';
                 }
                 //--- Fraud will be true for Precise ID Validation where score is less than 0     
-                if(app.KBA_Details__r[0].Precise_ID_Validation__c != null && app.KBA_Details__r[0].Precise_ID_Validation__c < 0){                        
+                if(KBAd.Precise_ID_Validation__c != null && KBAd.Precise_ID_Validation__c < 0){                        
                      KBAFraudT = true;
                      reason += 'Precise ID Validation < 0. ';
                 }
                 //--- Fraud will be true for Precise Id General Fraud Shield Indicat where score is = F05 (equalsIgnoreCase)    
-                if(app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c != null && app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c.equalsIgnoreCase('F05')){                        
+                if(KBAd.Precise_ID_General_Fraud_Shield_Indicat__c != null && KBAd.Precise_ID_General_Fraud_Shield_Indicat__c.equalsIgnoreCase('F05')){                        
                      KBAFraudT = true;
                      reason += 'Precise ID Fraud Shield = F05. ';
                 }
                 //--- Fraud will be true for Paste Count where score is equql to or greater than 2  
-                if(app.KBA_Details__r[0].Paste_Count__c >= 2){                        
+                if(KBAd.Paste_Count__c >= 2){                        
                      KBAFraudT = true;
                      reason += 'Paste Count >= 2. ';
                 }
                 //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 750 (For Affiliate Partner)   
-                if(app.KBA_Details__r[0].Id_Analytics_Score__c != null && app.Affiliate_Partner__c 
-                     && app.KBA_Details__r[0].Id_Analytics_Score__c >= 750) {
+                if(KBAd.Id_Analytics_Score__c != null && app.Affiliate_Partner__c 
+                     && KBAd.Id_Analytics_Score__c >= 750) {
                      KBAFraudT = true;
                      reason += 'IDA Score >= 750. ';
                 }
                 //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 700 (For Non-Affiliate Partner)    
-                if(app.KBA_Details__r[0].Id_Analytics_Score__c != null && !app.Affiliate_Partner__c 
-                     && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700) {
+                if(KBAd.Id_Analytics_Score__c != null && !app.Affiliate_Partner__c 
+                     && KBAd.Id_Analytics_Score__c >= 700) {
                      KBAFraudT = true;
                      reason += 'IDA Score >= 700. ';
                 }
