@@ -139,7 +139,8 @@ private class MW_LogUtilityTest {
     @isTest
     static void testgetLogRecord() {
         Test.startTest();
-        MW_LogUtility.getLogRecord('MW_LogUtility','TestAppId','TestLeadId','getLogRecord','TestDagData','Log',null);       
+        MW_LogUtility.Log log = MW_LogUtility.getLogRecord('MW_LogUtility','TestAppId','TestLeadId','getLogRecord','TestDagData','Log',null);   
+		System.assertEquals('TestAppId',log.applicationId);   
         Test.stopTest();
     }
     
