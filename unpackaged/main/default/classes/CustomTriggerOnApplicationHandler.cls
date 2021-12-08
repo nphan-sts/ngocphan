@@ -290,22 +290,7 @@ Public class CustomTriggerOnApplicationHandler{
             return false;
         }
     }//CRM-531 - end
-    /*public static void updateGIACTLink(List<genesis__Applications__c> newAppList,set<Id> accIdSet){
-        MW_Settings__c mwsc = MW_Settings__c.getOrgDefaults();
-        map<Id,String> accMemIdMap = new map<Id,String>();
-        for(Account acc : [Select Id, Member_ID__c from Account where Id IN : accIdSet]){
-            accMemIdMap.put(acc.Id,acc.Member_ID__c);
-        }
-        for(genesis__Applications__c app: newAppList){
-            if(mwsc.GIACT_Host_Name__c != null && mwsc.GIACT_App_Name__c != null && app.Lead_ID__c != null &&
-               app.genesis__Account__c != null && accMemIdMap.get(app.genesis__Account__c) !=null){
-               app.GIACT_Link__c =  'https://' + mwsc.GIACT_Host_Name__c + '/' + mwsc.GIACT_App_Name__c
-                                    +'/giact?lead_id=' + app.Lead_ID__c +'&member_id='+accMemIdMap.get(app.genesis__Account__c)
-                                    +'&user_id='+Userinfo.getUserId();
-            }
-            system.debug('GIACT Link =====>'+app.GIACT_Link__c);
-        }
-    }*/
+    
     //CRM-762
     public static void updateBankAccountTab(Id appId){
         try{
@@ -355,6 +340,17 @@ Public class CustomTriggerOnApplicationHandler{
             if (toBeUpdated.size() > 0) {
     	        update toBeUpdated;
     	    }
+        }
+    }
+
+    /** If Requested Loan amount OR Annual Individual Income OR Monthly Housing Payment is changed on Application, call the redecision logic */
+    public static void callRedecisionLogic(genesis__Applications__c app, genesis__Applications__c oldApp,Map<Id,genesis__applications__c> oldAppMap,Map<Id,genesis__applications__c> newAppMap){
+
+        if((app.Requested_loan_amount__c != null && oldApp.Requested_loan_amount__c != null && app.Requested_loan_amount__c != oldApp.Requested_loan_amount__c) || 
+            (app.Annual_Individual_Income_App__c != null && oldApp.Annual_Individual_Income_App__c != null && oldApp.Annual_Individual_Income_App__c != app.Annual_Individual_Income_App__c) || 
+            (app.Monthly_Housing_Payment_App__c != null && oldApp.Monthly_Housing_Payment_App__c != null && oldApp.Monthly_Housing_Payment_App__c != app.Monthly_Housing_Payment_App__c))
+        {
+                RedecisionCntrl.appRedecisionTrigger(oldAppMap,newAppMap);
         }
     }
 }
