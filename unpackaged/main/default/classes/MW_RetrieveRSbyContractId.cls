@@ -15,7 +15,6 @@ global with sharing class MW_RetrieveRSbyContractId {
             List<Loan__Repayment_Schedule__c> repaymentSchedules = [
                 SELECT
                 Id,
-                ReplayId,
                 Name,
                 CreatedDate,
                 CreatedById,
