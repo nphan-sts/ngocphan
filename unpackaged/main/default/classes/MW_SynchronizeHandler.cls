@@ -134,7 +134,7 @@ global with sharing class MW_SynchronizeHandler {
                CLS-690  , LOP-342 - Expired-Withdrawn
              */
 
-            if(applist.genesis__Status__c=='Expired') {
+            if(applist.genesis__Status__c=='Expired' || applist.genesis__Status__c=='Expired-Withdrawn') {
                 appinfo.is_expired                         = true;
             }
 
