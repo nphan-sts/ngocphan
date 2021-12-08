@@ -44,13 +44,10 @@ public with sharing class MW_GlobalTestUtility {
             objAccount.peer__Last_Name__c = 'Test';
             objAccount.Annual_Funded_Cap__c = 100;
             objAccount.Total_Funded_YTD__c = 81;
-            //Annual_Available_Balance__c = 19;
             objAccount.Monthly_Allocation_Cap__c = 100;
             objAccount.Total_Allocations_MTD__c = 81;
-            //Current_Month_s_Available_Allocation__c = 19;
             objAccount.Monthly_Funded_Cap__c = 100;
             objAccount.Total_Funded_MTD__c = 81;
-            //Current_Month_s_Available_Funded_Balance__c = 19;
             objAccount.loan__Investor__c = true;
             objAccount.loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9);
 
@@ -105,7 +102,6 @@ public with sharing class MW_GlobalTestUtility {
                 genesis__Status__c = 'kba_fail',
                 Investor__c = null,
                 genesis__Days_Convention__c = 'ACTUAL/ACTUAL',
-                //genesis__Account__c=acct,
                 genesis__Interest_Calculation_Method__c = 'Declining Balance',
                 genesis__Interest_Rate__c = 10.0000,
                 Estimated_Amount_needed__c = 2000.00,
@@ -119,6 +115,8 @@ public with sharing class MW_GlobalTestUtility {
                 genesis__Draw_Period_End_Date__c = system.Today(),
                 genesis__Expected_First_Payment_Date__c = system.Today(),
                 genesis__Expected_Start_Date__c = system.Today(),
+                Annual_Individual_Income_App__c = 100000,
+                Monthly_Housing_Payment_App__c = 1200,
                 LEAD_ID__C = 'c9149473-e69f-ee12-38a7-d18b0cba847d');
         return objApp;
     }
@@ -128,8 +126,6 @@ public with sharing class MW_GlobalTestUtility {
         genesis__Application_Document_Category__c objAdc = new genesis__Application_Document_Category__c(
                 name = 'CU Membership',
                 genesis__Active__c = true,
-                //genesis__Document_Category__c =  dc.id,
-                //genesis__Application__c = genesis_applications_Obj.id;
                 Box_URl__c = ''
         );
 
@@ -144,10 +140,7 @@ public with sharing class MW_GlobalTestUtility {
                 loan__Bank_Name__c = 'Some Bank',
                 loan__Routing_Number__c = '999999999',
                 loan__Account_Type__c = 'Checking',
-                // Unmasked_Bank_Account_Number__c = accid,
                 loan__Account_Usage__c = 'Borrower/Investor Account',
-                //loan__Contact__c = conid,
-                //loan__Account__c = accid,
                 loan__Active__c = True);
 
         return ba;
@@ -185,15 +178,11 @@ public with sharing class MW_GlobalTestUtility {
 
     Public static loan__Loan_Account__c GetCLContract() {
         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
-                //loan__Account__c= acc.Id,
-                //loan__Contact__c= a1.ID,
                 loan__Product_Type__c = 'Flexible Amz Loan',
                 loan__Loan_Amount__c = 5000,
-                //loan__Loan_Product_Name__c=loanProdObj.Id,
                 loan__Payment_Amount__c = 439.70,
                 loan__Principal_Remaining__c = 4243.60,
                 loan__Previous_Installment_Date__c = system.today(),
-                //application__c = application.id,
                 loan__First_Installment_Date__c = Date.newInstance(2020, 03, 01),
                 loan__Next_Installment_Date__c = Date.newInstance(2020, 05, 01),
                 loan__Maturity_Date_Current__c = Date.newInstance(2021, 02, 01),
@@ -214,7 +203,6 @@ public with sharing class MW_GlobalTestUtility {
         Pricing_Offer__c pOfferTrue = new Pricing_Offer__c();
         pOfferTrue.Above_prime_max__c = 'false';
         pOfferTrue.Amount__c = 8000;
-        //pOfferTrue.Application__c =app.id;
         pOfferTrue.APR__c = 11.997986061655;
         pOfferTrue.Interest_Rate__c = 9.97;
         pOfferTrue.Is_Offer_Selected__c = true;
@@ -233,7 +221,6 @@ public with sharing class MW_GlobalTestUtility {
         Approved_Offer__c appOffer = new Approved_Offer__c();
         appOffer.Above_prime_max__c = 'false';
         appOffer.Amount__c = 1200.00;
-        //Application__c=app.id;
         appOffer.APR__c = '11.99';
         appOffer.Interest_Rate__c = '9.97';
         appOffer.Key__c = '5';
@@ -250,7 +237,6 @@ public with sharing class MW_GlobalTestUtility {
 
     Public static genesis__Employment_Information__c GetEmploymentInformation() {
         genesis__Employment_Information__c sobj = new genesis__Employment_Information__c(
-                //Name = 'a7641000000fxTT',                       // Employment Information Name
                 genesis__Name_of_employer__c = 'Payoff',          // Name of employer
                 genesis__Position__c = 'Principal SDET',          // Position
                 genesis__Number_of_years_on_job__c = 6,           // Number of years on job
@@ -265,9 +251,6 @@ public with sharing class MW_GlobalTestUtility {
 
     Public static KBA_Details__c GetKbaDetails() {
         KBA_Details__c sobj = new KBA_Details__c(
-                //Name = 'aC12M00000004SH',        // KBA Details Name
-                //Account__c = '0012M00002K0tjr',    // Account
-                //Application__c = 'a6h2M000000H02M',// Application
                 Precise_ID_Decision__c = 'Accept', // Precise ID Decision
                 Precise_ID_Overall_SCore__c = 9012, // Precise ID Overall Score
                 Precise_ID_OFAC__c = '1',          // Precise ID OFAC
@@ -306,8 +289,6 @@ public with sharing class MW_GlobalTestUtility {
 
     Public static Talx__c GetTalx() {
         Talx__c sobj = new Talx__c(
-                //Application__c = 'a6h410000004OV8',         // Application
-                //Account__c = '0014100001zMZlu'             // Account
                 Employeer__c = 'Test Employer',             // Employeer
                 Salary__c = 100000,                         // Salary
                 Length_of_Employement__c = '143',           // Length of Employement
