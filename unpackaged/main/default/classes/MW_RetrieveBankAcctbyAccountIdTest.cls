@@ -1,6 +1,6 @@
 @isTest
-public with sharing class MW_RetrieveBankAcctbyContractIdTest {
-    static testMethod void MW_RetrieveBAbyContractIdWithInvalidId() {
+public with sharing class MW_RetrieveBankAcctbyAccountIdTest {
+    static testMethod void MW_RetrieveBAbyAccountIdWithInvalidId() {
 
         RestRequest req = new RestRequest();
         RestResponse res = new RestResponse();
@@ -18,7 +18,7 @@ public with sharing class MW_RetrieveBankAcctbyContractIdTest {
     }
 
 
-    static testMethod void MW_RetrieveBAbyContractIdWithValidId() {
+    static testMethod void MW_RetrieveBAbyAccountIdWithValidId() {
         RestRequest req = new RestRequest();
         RestResponse res = new RestResponse();
         req.addParameter('contract-id', 'test-id');
