@@ -10,7 +10,7 @@ public with sharing class MW_RetrieveBankAcctbyAccountIdTest {
         RestContext.request = req;  
         RestContext.response= res;  
         Test.startTest();
-        MW_RetrieveBankAcctbyContractId.MW_RetrieveBankAcctbyContractId();
+        MW_RetrieveBankAcctbyAccountId.MW_RetrieveBankAcctbyAccountId();
         Test.stopTest();
         
         system.assertNotEquals(null, res.responseBody, 'response is not null');
@@ -27,7 +27,7 @@ public with sharing class MW_RetrieveBankAcctbyAccountIdTest {
         RestContext.request = req;  
         RestContext.response= res;  
         Test.startTest();
-        MW_RetrieveBankAcctbyContractId.MW_RetrieveBankAcctbyContractId();
+        MW_RetrieveBankAcctbyAccountId.MW_RetrieveBankAcctbyAccountId();
         Test.stopTest();
         
         system.assertNotEquals(null, res.responseBody, 'response is not null');
