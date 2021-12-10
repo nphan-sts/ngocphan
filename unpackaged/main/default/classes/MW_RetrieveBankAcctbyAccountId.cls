@@ -6,7 +6,7 @@ global with sharing class MW_RetrieveBankAcctbyAccountId {
         RestResponse res = RestContext.response;
         try {
             String accountId = req.params.get('account-id');
-            if (String.isBlank(contractId)) {
+            if (String.isBlank(accountId)) {
                 res.statusCode = 400;
                 res.responseBody = Blob.valueOf('account id is required');
                 return;
