@@ -59,10 +59,10 @@ global with sharing class MW_RetrieveBankAcctbyContractId {
                 YodleeBank_Accounts__c,
                 BankACctMatch__c
                 FROM loan__Bank_Account__c
-                WHERE loan__Loan_Account__c = :contractId 
+                WHERE loan__Account__c = :contractId 
             ];
             res.statusCode = 200;
-            res.responseBody = Blob.valueOf(JSON.serialize(bills));
+            res.responseBody = Blob.valueOf(JSON.serialize(bankAccounts));
         }
         catch (Exception e) {
             res.statusCode = 500;
