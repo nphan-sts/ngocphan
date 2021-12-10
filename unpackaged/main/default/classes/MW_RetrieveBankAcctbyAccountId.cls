@@ -1,14 +1,14 @@
-@RestResource(urlMapping='/bank-account/contract-id/*')
+@RestResource(urlMapping='/bank-account/account-id/*')
 global with sharing class MW_RetrieveBankAcctbyAccountId {
     @HttpGet
     global static void MW_RetrieveBankAcctbyAccountId() {
         RestRequest req = RestContext.request;
         RestResponse res = RestContext.response;
         try {
-            String contractId = req.params.get('contract-id');
+            String accountId = req.params.get('account-id');
             if (String.isBlank(contractId)) {
                 res.statusCode = 400;
-                res.responseBody = Blob.valueOf('contract id is required');
+                res.responseBody = Blob.valueOf('account id is required');
                 return;
             }
             List<loan__Bank_Account__c> bankAccounts = [
@@ -59,7 +59,7 @@ global with sharing class MW_RetrieveBankAcctbyAccountId {
                 YodleeBank_Accounts__c,
                 BankACctMatch__c
                 FROM loan__Bank_Account__c
-                WHERE loan__Account__c = :contractId 
+                WHERE loan__Account__c = :accountId 
             ];
             res.statusCode = 200;
             res.responseBody = Blob.valueOf(JSON.serialize(bankAccounts));

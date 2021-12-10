@@ -5,7 +5,7 @@ public with sharing class MW_RetrieveBankAcctbyAccountIdTest {
         RestRequest req = new RestRequest();
         RestResponse res = new RestResponse();
         req.addParameter('invalid-param', 'test-id');
-        req.requestURI = '/services/apexrest/bank-account/contract-id/?invalid-param=test-id';    
+        req.requestURI = '/services/apexrest/bank-account/account-id/?invalid-param=test-id';    
         req.httpMethod = 'GET'; 
         RestContext.request = req;  
         RestContext.response= res;  
@@ -21,8 +21,8 @@ public with sharing class MW_RetrieveBankAcctbyAccountIdTest {
     static testMethod void MW_RetrieveBAbyAccountIdWithValidId() {
         RestRequest req = new RestRequest();
         RestResponse res = new RestResponse();
-        req.addParameter('contract-id', 'test-id');
-        req.requestURI = '/services/apexrest/bank-account/contract-id/?contract-id=test-id';    
+        req.addParameter('account-id', 'test-id');
+        req.requestURI = '/services/apexrest/bank-account/account-id/?account-id=test-id';    
         req.httpMethod = 'GET'; 
         RestContext.request = req;  
         RestContext.response= res;  
