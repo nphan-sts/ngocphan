@@ -1,7 +1,7 @@
 @RestResource(urlMapping='/bank-account/contract-id/*')
-global with sharing class MW_RetrieveBankAcctbyContractId {
+global with sharing class MW_RetrieveBankAcctbyAccountId {
     @HttpGet
-    global static void MW_RetrieveBankAcctbyContractId() {
+    global static void MW_RetrieveBankAcctbyAccountId() {
         RestRequest req = RestContext.request;
         RestResponse res = RestContext.response;
         try {
