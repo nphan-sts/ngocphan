@@ -3,10 +3,10 @@ public with sharing class CreditPolicyController {
     public List<Credit_Policy__c> creditPolicyRec { get; set; }
     public Decimal fico {get;set;}
     public CreditPolicyController(){   
-        Id appId = ApexPages.currentPage().getParameters().get('Id');
+        Id appId = ApexPages.currentPage().getParameters().get('Id'); 
         if(appId != null){  
             creditPolicyRec = [select FICO__C from Credit_Policy__c  where Application__c= : appId 
-                and final_decision__c = 'Approve' and pricing_test_bucket__c != NULL and request_intent__c = 'application' 
+                and request_intent__c = 'application' 
                 order by lastmodifieddate desc Limit 1];      
             
             if(creditPolicyRec!=null && !creditPolicyRec.isEmpty() && creditPolicyRec[0].FICO__C!=null) {               
