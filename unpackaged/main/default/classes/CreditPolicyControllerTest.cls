@@ -63,7 +63,7 @@ private class CreditPolicyControllerTest {
         test.stopTest();
     }
     @isTest
-    static void CreditPolicyControllerTest_UseCase1(){
+    static void CreditPolicyControllerTest_Ficscorevaluetest(){
         Account acc = [select Id from Account  where Name = 'Test' LIMIT 1];
         System.assertEquals(true, acc!=Null); 
         genesis__Applications__c app = [SELECT Id from genesis__Applications__c WHERE genesis__Account__c =: acc.Id LIMIT 1];
@@ -76,12 +76,12 @@ private class CreditPolicyControllerTest {
         
         pageRef.getParameters().put('Id', String.valueOf(app.Id));
         CreditPolicyController cpCtrl = new CreditPolicyController();
-        //Decimal ficoVal = cpCtrl.creditPolicyRec[0].FICO__C;
-        //System.assertEquals(true, ficoVal==10);
+        Decimal ficoVal = cpCtrl.creditPolicyRec[0].FICO__C;
+        System.assertEquals(true, ficoVal==10);
     }
     
      @isTest
-    static void CreditPolicyControllerTest_UseCase2(){
+    static void CreditPolicyControllerTest_Ficscorenullvaluetest(){
         Account acc2 = [select Id from Account  where Name = 'Test2' LIMIT 1];
         System.assertEquals(true, acc2!=Null); 
         genesis__Applications__c app2 = [SELECT Id from genesis__Applications__c WHERE genesis__Account__c =: acc2.Id LIMIT 1];
@@ -94,7 +94,7 @@ private class CreditPolicyControllerTest {
         
         pageRef.getParameters().put('Id', String.valueOf(app2.Id));
         CreditPolicyController cpCtrl = new CreditPolicyController();
-        //Decimal ficoVal = cpCtrl.creditPolicyRec[0].FICO__C;
-        //System.assertEquals(true, ficoVal==10);
+        Decimal ficoVal = cpCtrl.fico;
+        System.assertEquals(true, ficoVal==null);
     }
 }
