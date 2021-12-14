@@ -32,7 +32,7 @@ private class CreditPolicyControllerTest {
             Name = 'Test2',
             loan__Investor__c=False,
             peer__First_Name__c= 'Testfname',
-            peer__Last_Name__c= 'Testlname',
+            peer__Last_Name__c= 'Testlname1',
             cnotify__Email__c = 'no-reply@testorganization.com',
             Annual_Individual_Income__c = 10000, 
             Income_Include_Bonuses_or_Commissions__c = false
@@ -64,7 +64,7 @@ private class CreditPolicyControllerTest {
     }
     @isTest
     static void CreditPolicyControllerTest_Ficscorevaluetest(){
-        Account acc = [select Id from Account  where Name = 'Test' LIMIT 1];
+        Account acc = [select Id from Account  where peer__Last_Name__c= 'Testlname' LIMIT 1];
         System.assertEquals(true, acc!=Null); 
         genesis__Applications__c app = [SELECT Id from genesis__Applications__c WHERE genesis__Account__c =: acc.Id LIMIT 1];
         
@@ -82,7 +82,7 @@ private class CreditPolicyControllerTest {
     
      @isTest
     static void CreditPolicyControllerTest_Ficscorenullvaluetest(){
-        Account acc2 = [select Id from Account  where Name = 'Test2' LIMIT 1];
+        Account acc2 = [select Id from Account  where peer__Last_Name__c= 'Testlname1' LIMIT 1];
         System.assertEquals(true, acc2!=Null); 
         genesis__Applications__c app2 = [SELECT Id from genesis__Applications__c WHERE genesis__Account__c =: acc2.Id LIMIT 1];
         
