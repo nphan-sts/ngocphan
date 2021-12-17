@@ -1,16 +1,17 @@
 @isTest
-
 private class TestWSGetPricingOffer{
-    @testSetup static void methodName() {
+    @testSetup static void setup() {
         //Creating Account
         Account accTest = new Account(
-                                Name = 'Test',
-                                loan__Investor__c=False,
-                                cnotify__Email__c = 'abc@test.com',
-                                loan__SOCIAL_SECURITY_NUMBER__c = '123123123',
-                                peer__Last_Name__c = 'Test'
-
-                                );
+            Name = 'Test',
+            loan__Investor__c=False,
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'TestFName',
+            peer__Last_Name__c='TestLName', 
+            City__c='TestCity',
+            State__c='TestState',
+            ZIP_Code__c='123456'
+        );
         insert accTest;
         System.assertEquals('Test',accTest.Name,'Wrong Account');
         
@@ -34,7 +35,7 @@ private class TestWSGetPricingOffer{
 
     Testmethod static void method1(){
         
-        Account acc =[Select id, name from Account where name='Test' limit 1];
+        Account acc =[Select id, name from Account where name='TestFName TestLName' limit 1];
         genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
       
         String jsonStr = '{"offers":[{"type1":"1","term_months":3,"amount":"1200","Is_Offer_Selected":true,"monthly_payment":"1100","origination_fee_rate":"2","interest_rate":"3","apr":"10.30%","above_prime_max":"3","segment":"2","pricing_tier":"3","origination_fee":"150","key":"Test","ebp_offer_code":"2021Feb_ebp_DCP_optout","ebp_parent_offer_key":""}],"applicationId":app.id}';
@@ -56,7 +57,7 @@ private class TestWSGetPricingOffer{
     
     Testmethod static void method2(){
         
-        Account acc =[Select id, name from Account where name='Test' limit 1];
+        Account acc =[Select id, name from Account where name='TestFName TestLName' limit 1];
         genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
         
         Map<String,String> reqMap = new Map<String,String>(); 
@@ -80,7 +81,7 @@ private class TestWSGetPricingOffer{
     
     Testmethod static void method3(){
         
-        Account acc =[Select id, name from Account where name='Test' limit 1];
+        Account acc =[Select id, name from Account where name='TestFName TestLName' limit 1];
         genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
         
         String jsonStr = '{"Test":"abc"}';
@@ -102,10 +103,31 @@ private class TestWSGetPricingOffer{
     
     Testmethod static void method4(){
         
-        Account acc =[Select id, name from Account where name='Test' limit 1];
+        Account acc =[Select id, name from Account where name='TestFName TestLName' limit 1];
         genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
       
         String jsonStr = '{"offers":[{"Is_Offer_Selected":true,"above_prime_max":"3","segment":"2","pricing_tier":"3","origination_fee":"150","key":"Test","ebp_offer_code":"2021Feb_ebp_DCP_optout","ebp_parent_offer_key":""}],"applicationId":app.id}';
+        RestRequest req = new RestRequest(); 
+        RestResponse res = new RestResponse();
+        
+        req.requestURI = '/services/apexrest/offers';
+        req.requestBody = Blob.valueOf(jsonStr);
+        req.httpMethod = 'POST';
+                
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        WSGetPricingOffer.Response response = WSGetPricingOffer.parse();
+        System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
+        Test.stopTest();
+    }
+
+    @isTest static void method5(){
+        Account acc = [Select id, name from Account where name='TestFName TestLName' limit 1];
+        genesis__Applications__c app = [select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
+      
+        String jsonStr = '{"offers":[{"Is_Offer_Selected":true,"above_prime_max":"3","segment":"2","pricing_tier":"3","origination_fee":"150","key":"Test","ebp_offer_code":"2021Feb_ebp_DCP_optout","ebp_parent_offer_key":"","score":"780"}],"applicationId":app.id}';
         RestRequest req = new RestRequest(); 
         RestResponse res = new RestResponse();
         
