@@ -123,7 +123,7 @@ private class TestWSGetPricingOffer{
         Test.stopTest();
     }
 
-    @isTest static void method5(){
+    @isTest static void testPricingOfferWithScore(){
         Account acc = [Select id, name from Account where name='TestFName TestLName' limit 1];
         genesis__Applications__c app = [select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
       
