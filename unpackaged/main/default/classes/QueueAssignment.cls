@@ -55,34 +55,15 @@ public class QueueAssignment{
         if(appList != null && appList.size() > 0){                                          
             for(genesis__Applications__c app : appList){ 
                 //--- Fraud Tag 30.01.2018 //LSP-344
-                //--- Added this condition - app.KBA_Details__r != null && app.KBA_Details__r.size()>0 because Process builder was failing.
-                
                 //--- Fraud will be True where Sift Score > 98.
                 if(app.Sift_Status__c != null && app.Sift_Status__c > Siftscore) {
                     KBAFraudT = true;
                     reason += 'Sift score '+ '> ' + Siftscore +'.';
                 }
-                //--- Fraud will be True for utm_medium = DM or Email where ID Analytic Score >= 725
+                //--- Added this condition - app.KBA_Details__r != null && app.KBA_Details__r.size()>0 because Process builder was failing.
                 if(app.KBA_Details__r != null && app.KBA_Details__r.size()>0){
                 KBA_Details__c KBAd = app.KBA_Details__r[0];  
-                if((app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) 
-                     && KBAd.Id_Analytics_Score__c >= 725) {
-                     KBAFraudT = true;
-                     reason += 'utm_medium '+ app.utm_medium__c + ' IDA Score '+ '>= 725 .';
-                }
-                //--- Fraud will be true for utm_medium = partner or p1,p2,p3 and utm_source = creditkarma or creditkarma lightbox where ID analytic score is >= 800     
-                if(((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) 
-                     && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox')) && 
-                        (KBAd.Id_Analytics_Score__c >= 800)){
-                     KBAFraudT = true;
-                     reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score '+ '>= 800 .'; 
-                }
-                //--- Fraud will be true for utm_medium = null and utm source = creditkarma or creditkarma lightbox where ID Analytics score is >= 800  
-                if((String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox') 
-                     && (KBAd.Id_Analytics_Score__c >= 800))) {
-                     KBAFraudT = true;
-                     reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score '+ '>= 800 .'; 
-                }
+                
                 //--- Fraud will be true for Precise ID Overall score where score is = 9001     
                 if(KBAd.Precise_ID_Overall_SCore__c != null && KBAd.Precise_ID_Overall_SCore__c == 9001){                        
                      KBAFraudT = true;
@@ -128,18 +109,37 @@ public class QueueAssignment{
                      KBAFraudT = true;
                      reason += 'Paste Count >= 2. ';
                 }
+                //--- Fraud will be True for utm_medium = DM or Email or OrganicSocial, psocial-cq, psocial-dm, psocial-rm where ID Analytic Score >= 725    
+                if((app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) 
+                     && KBAd.Id_Analytics_Score__c >= 725) {
+                     KBAFraudT = true;
+                     reason += 'utm_medium '+ app.utm_medium__c + ' IDA Score '+ '>= 725 .';
+                }
+                //--- Fraud will be true for utm_medium = partner or p1,p2,p3 and utm_source = creditkarma or creditkarma lightbox where ID analytic score is >= 800     
+                else if(((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) 
+                     && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox')) && 
+                        (KBAd.Id_Analytics_Score__c >= 800)){
+                     KBAFraudT = true;
+                     reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score '+ '>= 800 .'; 
+                }
+                //--- Fraud will be true for utm_medium = null and utm source = creditkarma or creditkarma lightbox where ID Analytics score is >= 800  
+                else if((String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox') 
+                     && (KBAd.Id_Analytics_Score__c >= 800))) {
+                     KBAFraudT = true;
+                     reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score '+ '>= 800 .'; 
+                }
                 //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 750 (For Affiliate Partner)   
-                if(KBAd.Id_Analytics_Score__c != null && app.Affiliate_Partner__c 
+                else if(KBAd.Id_Analytics_Score__c != null && app.Affiliate_Partner__c 
                      && KBAd.Id_Analytics_Score__c >= 750) {
                      KBAFraudT = true;
                      reason += 'IDA Score >= 750. ';
                 }
                 //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 700 (For Non-Affiliate Partner)    
-                if(KBAd.Id_Analytics_Score__c != null && !app.Affiliate_Partner__c 
+                else if(KBAd.Id_Analytics_Score__c != null && !app.Affiliate_Partner__c 
                      && KBAd.Id_Analytics_Score__c >= 700) {
                      KBAFraudT = true;
                      reason += 'IDA Score >= 700. ';
-                }
+                }        
                 }
                 
                 
