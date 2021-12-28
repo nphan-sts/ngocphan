@@ -9,6 +9,8 @@
 * 	  Anusha		2021/05/13    LSP-223 Charged Off loans - Submit recover payment from Member Portal
 * 	  Anusha		2021/08/23	  LSP-328.1 Changes to create payoff payments through webservice
 *	  Anusha		2021/10/21	  LSP-328.2 Changes to map payoffLPT to NACHA
+*	  Anusha		2021/11/09	  LSP-328.3 skipping transaction date validation on LPT object to allow future payoffpayment creation
+*	  Anusha		2021/11/25	  LSP-328.4 Normal LPT should get created when transaction amount is less than todays payoff amount
 ******************Modification History*****************************************************************/
 
 @RestResource(urlMapping='/OTPOMBPEndpoint/*')
@@ -151,16 +153,16 @@ System.debug(leadId+'  '+req.requestURI);
             //LSP-186 - start
             //Would like to explicitly check for LOAN, LOC and FLEXIBLE_AMZ. But the Loan package is not upgraded yet
             /*if(!loanAccount.loan__Product_Type__c.equalsIgnoreCase(loan.LoanConstants.AMZ)
-&& (type != null && type.equalsIgnoreCase(loan.LoanConstants.ONE_TIME))
-&& debitDate  < loanAccount.loan__Last_Accrual_Date__c) { 
+				&& (type != null && type.equalsIgnoreCase(loan.LoanConstants.ONE_TIME))
+				&& debitDate  < loanAccount.loan__Last_Accrual_Date__c) { 
 
-String message = 'Debit Date for One Time ACH is before Last  Accrual Date';
-res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
-restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
-return res;
-}
+				String message = 'Debit Date for One Time ACH is before Last  Accrual Date';
+				res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
+				restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
+				return res;
+			}
 
-System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
+			System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
             //LSP-186 - end
             
             recurringACHStartDate = params.get('recurringACHStartDate') != null ? Date.valueOf((String) params.get('recurringACHStartDate')) : debitDate;
@@ -178,55 +180,67 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
         try {
             if(isMultiplePaymentMethodEnabled) {
                 //LSP-328.1 - start
-                if(payoffPayment == true){//Create payoff payment and inactive one time APS if the request has payoffPyament flag true
+                if(payoffPayment == true){//Create payoff payment and inactive one time APS if the request has payoffPayment flag true                    
                     if(loanAccount.loan__Pay_Off_Amount_As_Of_Today__c != null && loanAccount.loan__Write_off_Tolerance_Amount__c != null){
-                        if(transactionAmount >= (loanAccount.loan__Pay_Off_Amount_As_Of_Today__c - loanAccount.loan__Write_off_Tolerance_Amount__c)){
-                            //LSP-328.2 Changes to map payoffLPT to NACHA - start
-                            loan__Automated_Payment_Setup__c automatedPaymentSetup = new loan__Automated_Payment_Setup__c();
-                            automatedPaymentSetup.loan__CL_Contract__c = loanAccount.id;
-                            automatedPaymentSetup.loan__Active__c = false;
-                            automatedPaymentSetup.loan__Type__c = 'ONE TIME';
-                            automatedPaymentSetup.loan__Bank_Account__c = getBankAccountId(bankAccountId,loanAccount);
-                            automatedPaymentSetup.loan__Frequency__c = frequency;
-                            automatedPaymentSetup.loan__Payment_Mode__c = getPaymentModeId(paymentModeName);
-                            automatedPaymentSetup.loan__Amount_Type__c = amountType;
-                            automatedPaymentSetup.loan__Transaction_Amount__c = transactionAmount;
-                            automatedPaymentSetup.loan__Debit_Date__c = debitDate;
-                            automatedPaymentSetup.loan__Recurring_ACH_Start_Date__c = recurringACHStartDate;
-                            automatedPaymentSetup.loan__Recurring_ACH_End_Date__c = recurringACHEndDate;
-                            automatedPaymentSetup.loan__Setup_Date__c = setupDate; 
-                            automatedPaymentSetup.loan__Installment_Payment__c = false;
-                            automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId( manualSpreadName);
-                            insert automatedPaymentSetup;
+                        //LSP-328.2 Changes to map payoffLPT to NACHA - start
+                        loan__Automated_Payment_Setup__c automatedPaymentSetup = new loan__Automated_Payment_Setup__c();
+                        automatedPaymentSetup.loan__CL_Contract__c = loanAccount.id;
+                        automatedPaymentSetup.loan__Active__c = false;
+                        automatedPaymentSetup.loan__Type__c = 'ONE TIME';
+                        automatedPaymentSetup.loan__Bank_Account__c = getBankAccountId(bankAccountId,loanAccount);
+                        automatedPaymentSetup.loan__Frequency__c = frequency;
+                        automatedPaymentSetup.loan__Payment_Mode__c = getPaymentModeId(paymentModeName);
+                        automatedPaymentSetup.loan__Amount_Type__c = amountType;
+                        automatedPaymentSetup.loan__Transaction_Amount__c = transactionAmount;
+                        automatedPaymentSetup.loan__Debit_Date__c = debitDate;
+                        automatedPaymentSetup.loan__Recurring_ACH_Start_Date__c = recurringACHStartDate;
+                        automatedPaymentSetup.loan__Recurring_ACH_End_Date__c = recurringACHEndDate;
+                        automatedPaymentSetup.loan__Setup_Date__c = setupDate; 
+                        automatedPaymentSetup.loan__Installment_Payment__c = false;
+                        automatedPaymentSetup.loan__Loan_Payment_Spread__c = getPaymentSpreadId( manualSpreadName);
+                        insert automatedPaymentSetup;
+                        
+                        //LSP-328.2 Changes to map payoffLPT to NACHA - end                            
+                        loan__loan_payment_transaction__c payoffLpt = new loan__loan_payment_transaction__c();
+                        payoffLpt.loan__loan_Account__c = loanAccount.Id;
+                        payoffLpt.loan__Transaction_Date__c = debitDate;                            
+                        payoffLpt.loan__Transaction_Amount__c = transactionAmount;
+                        payoffLpt.loan__payment_Mode__c = getPaymentModeId(paymentModeName);
+                        payoffLpt.loan__Installment_Payment__c = false;
+                        payoffLPT.loan__Automated_Payment_Setup__c = automatedPaymentSetup.id;//LSP-328.2 attaching newly created inactive APS to payoff LPT
+                        payoffLPT.loan__Skip_Validation__c = true;//LSP-328.3 skipping transaction date validation on LPT object
                             
-                            loan__Automated_Payment_Setup__c payoffAPS = [select id, name from loan__Automated_Payment_Setup__c
-                                                                          where loan__CL_Contract__c =: loanAccount.Id
-                                                                          and loan__Type__c = 'ONE TIME' 
-                                                                          and loan__Active__c = false 
-                                                                          and loan__Debit_Date__c =:debitDate
-                                                                          order by createdDate desc limit 1];
-                            //LSP-328.2 Changes to map payoffLPT to NACHA - end                            
-                            
-                            loan__loan_payment_transaction__c payoffLpt = new loan__loan_payment_transaction__c();
-                            payoffLpt.loan__loan_Account__c = loanAccount.Id;
-                            payoffLpt.loan__Transaction_Date__c = debitDate;
+                        if(transactionAmount >= (loanAccount.loan__Pay_Off_Amount_As_Of_Today__c - loanAccount.loan__Write_off_Tolerance_Amount__c)){    
                             payoffLpt.loan__Early_Total_Repayment_of_the_Loan__c = true;
-                            payoffLpt.loan__Transaction_Amount__c = transactionAmount;
-                            payoffLpt.loan__payment_Mode__c = getPaymentModeId(paymentModeName);
-                            payoffLpt.loan__Installment_Payment__c = false;
-                            payoffLPT.loan__Automated_Payment_Setup__c = payoffAPS.Id;//LSP-328.2 attaching newly created inactive APS to payoff LPT
-                            insert payoffLpt;
-                            
-                            res = new Response(peer.Constants.SUCCESS, '', '');
-                            res.contents.add(payoffLpt);
-                            restRes.statuscode = peer.Constants.HTTP_OK;
-                            return res;
                         }else{
-                            res = new Response(peer.Constants.ERROR, '', 'Transaction amount is not sufficient to payoff the loan');
-                            return res;
+                            //LSP-328.4 - start
+                            payoffLpt.loan__Early_Total_Repayment_of_the_Loan__c = false;
+                            payoffLpt.loan__Loan_Payment_Spread__c = getPaymentSpreadId(manualSpreadName);
+                            payoffLpt.loan__Installment_Payment__c = updateInstallmentFlag(loanAccount.id, debitDate,transactionAmount);
+                            payoffLPT.Payoff_Rejection_Reason__c = 'Transaction amount: '+transactionAmount +' is not sufficient to payoff the loan';
+                            //LSP-328.4 - end
                         }
+                        insert payoffLpt;
+                        res = new Response(peer.Constants.SUCCESS, '', '');
+                        res.contents.add(payoffLpt);
+                        restRes.statuscode = peer.Constants.HTTP_OK;
+                        //Whenever a request or response is made ,or an exception is caught in try catch block, HM has started following a routine to insert (request, response success details or exception details) in Batch Processing Log
+                        loan__Batch_Process_Log__c bplSuccess = new loan__Batch_Process_Log__c();
+						bplSuccess.loan__Log_Level__c = 'INFO';
+						bplSuccess.loan__Message__c = 'PayoffPayment Creation Success Response sent back to Member portal'+ res;
+                        bplSuccess.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+						bplSuccess.loan__Origin__c = 'WSSetupAPS';
+						insert bplSuccess;
+                        return res;
                     }
                     res = new Response(peer.Constants.ERROR, '', 'Check if loan account has required information');
+                    //Whenever a request or response is made ,or an exception is caught in try catch block, HM has started following a routine to insert (request, response success details or exception details) in Batch Processing Log
+                    loan__Batch_Process_Log__c bplError = new loan__Batch_Process_Log__c();
+                    bplError.loan__Log_Level__c = 'Error';
+                    bplError.loan__Message__c = 'PayoffPayment Creation Response :'+res ;
+                    bplError.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+                    bplError.loan__Origin__c = 'WSSetupAPS';
+                    insert bplError;
                     return res;
                 }
                 //LSP-328.1 - end
@@ -269,20 +283,9 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
                         System.debug(logginglevel.error,'In ELSE :: manualSpreadName == NULL ');
                         automatedPaymentSetup.loan__Installment_Payment__c = updateInstallmentFlag(loanAccount.id, debitDate, transactionAmount);
                         
-                    }
-                    
-                    /*                
-//LOS-225
-if(type.equalsIgnoreCase('ONE TIME') && (automatedPaymentSetup.loan__Loan_Payment_Spread__r.loan__Order_Of_Payment__c != 'Principal')
-&&(automatedPaymentSetup.loan__Loan_Payment_Spread__r.loan__Order_Of_Payment__c != 'Interest'))  
-automatedPaymentSetup.loan__Installment_Payment__c= true;
-else
-automatedPaymentSetup.loan__Installment_Payment__c = installmentPayment;
-//LOS-225
-*/
+                    }                   
                     
                     //set Dates.
-                    
                     insert automatedPaymentSetup;
                     if(automatedPaymentSetup == null) {
                         System.debug(LoggingLevel.DEBUG, '-----Create Automated Payment Setup Error-----');
