@@ -129,7 +129,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                    if(app.dcp_eligible__c == 'No - Application Changed'){
                        Boolean isUpdated = CustomTriggerOnApplicationHandler.payAtFundingForUpdate(app.Id);
                    }
-                   //CRM-531 - end
+                   //CRM-531 - end                   
                    //CRM-815
                 if(app.OwnerId != oldApp.OwnerId){
                     QueueSobject Queues = [SELECT Queue.Id,queue.Name, QueueId FROM QueueSobject
@@ -214,6 +214,13 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                            MW_LogUtility.errorMessage('CustomTriggerOnApplication', 'Ignore Investor Allocation', msg);
                        }
                    }
+     //LOP-391 - start
+ 		if(app.pricing_tier__C != oldApp.pricing_tier__C && app.pricing_tier__C != null){
+		        boolean result = true;
+                result =  InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
+                system.debug(result);
+				}
+     //LOP-391 - End
                 /*(LOS-135)*/
                 else if(app.genesis__status__c == 'docusign_loan_docs_sent' && app.genesis__status__c != oldapp.genesis__Status__c){
                     if(app.Investor__c!=null){
