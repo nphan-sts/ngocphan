@@ -24,6 +24,12 @@ global class MW_WStoCallTAGSAPI {
 
 	@future(callout=true)
 	public Static void jsonGenearteTags(String objJSONStr){
+		String tagsAPIEndPoint = MW_Settings__c.getInstance().TagsAPI_URL__c;
+
+		if(String.isBlank(tagsAPIEndPoint)) {
+			return;
+		}
+
 		loan__Loan_Account__c loanID = (loan__Loan_Account__c) Json.deserialize(objJSONStr, System.Type.forName('loan__Loan_Account__c'));
 		JSONGenerator jsonBody = JSON.createGenerator(true);
 		List< loan__Repayment_Schedule_Summary__c> repaymentSch = [Select id, loan__RSS_Repayment_Dt__c, loan__RSS_Loan_Account__c from loan__Repayment_Schedule_Summary__c where loan__RSS_Loan_Account__c =: loanID.id order by CreatedDate desc limit 1];
@@ -37,7 +43,6 @@ global class MW_WStoCallTAGSAPI {
 			jsonBody.writeEndObject();
 			reqBody = jsonBody.getAsString();
 
-			String tagsAPIEndPoint = MW_Settings__c.getInstance().TagsAPI_URL__c;
 			String certName = MW_Settings__c.getInstance().CertificateNameForLEADS__c;
 
 			HttpRequest req = new HttpRequest();
@@ -71,6 +76,13 @@ global class MW_WStoCallTAGSAPI {
 
 	@future(callout=true)
 	public Static void removeCPDTags(String objJSONStr){
+
+		String tagsAPIEndPoint = MW_Settings__c.getInstance().RemoveTagsAPI_URL__c;
+
+		if(String.isBlank(tagsAPIEndPoint)) {
+			return;
+		}
+
 		loan__Loan_Account__c obj = (loan__Loan_Account__c) Json.deserialize(objJSONStr, System.Type.forName('loan__Loan_Account__c'));
 		JSONGenerator jsonBody = JSON.createGenerator(true);
 		String reqBody = '';
@@ -80,7 +92,6 @@ global class MW_WStoCallTAGSAPI {
 			jsonBody.writeEndObject();
 			reqBody = jsonBody.getAsString();
 
-			String tagsAPIEndPoint = MW_Settings__c.getInstance().RemoveTagsAPI_URL__c;
 			String certName = MW_Settings__c.getInstance().CertificateNameForLEADS__c;
 
 			HttpRequest req = new HttpRequest();
