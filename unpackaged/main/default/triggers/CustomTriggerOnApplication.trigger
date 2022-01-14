@@ -191,8 +191,9 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                        //PayOffUtilities.AssignToDeclinedQueue(app.id)
                        DeactivateBankAccountsforApplications.deactivateBankAccount(app.id);
                    }
-                   else if(app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c
-                           && !InvestorAllocation.allocationForADVPcalled ) {   //CLS-1121,1216,1095
+                   else 
+                       if(((app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c) || (app.pricing_tier__C != oldApp.pricing_tier__C && app.pricing_tier__C != null))
+                        && (!InvestorAllocation.allocationForADVPcalled )) {   //CLS-1121,1216,1095
 
                        List<Credit_Policy__c> creditPolicies = [select Id from Credit_Policy__c  where Application__c= : app.Id];
                        System.debug('creditPolicies size check: ' + creditPolicies.size());
@@ -214,13 +215,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                            MW_LogUtility.errorMessage('CustomTriggerOnApplication', 'Ignore Investor Allocation', msg);
                        }
                    }
-     //LOP-391 - start
- 		if(app.pricing_tier__C != oldApp.pricing_tier__C && app.pricing_tier__C != null){
-		        boolean result = true;
-                result =  InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
-                system.debug(result);
-				}
-     //LOP-391 - End
+     
                 /*(LOS-135)*/
                 else if(app.genesis__status__c == 'docusign_loan_docs_sent' && app.genesis__status__c != oldapp.genesis__Status__c){
                     if(app.Investor__c!=null){
