@@ -20,7 +20,6 @@ public class MW_ApplicationService {
 
             if(currentCallout == null && currentCallout.size()<=0) {
                 ID jobID = System.enqueueJob(new MWQueuebleJob(appList));
-                System.debug('>>> 1'+jobID);
                 calloutsScheduled.add(new MCCallout__c(Job_ID__c = jobID, Application__c=app, Status__c = 'Queued', Send_on__c=System.now()));
             }
 
@@ -36,7 +35,7 @@ public class MW_ApplicationService {
     public static void UpdateApplicationFlags(List<genesis__Applications__c> appslist, Map<Id, genesis__Applications__c> oldMap)
     {
         for(genesis__Applications__c app : appslist) {
-            
+           
             if(app.genesis__Status__c == 'Redecision_Required' && app.genesis__Status__c!=oldMap.get(app.Id).genesis__Status__c) {
                 app.agentVerificationPendingFlag__c = false;
             }
@@ -96,6 +95,7 @@ public class MW_ApplicationService {
         Set<String> setDuplicateSsn = new Set<String>();
         List<Account> updateCurrentAccts = new List<Account>();
         List<Account> updatePreExistAccts = new List<Account>();
+        List<Account> listDuplicateAccts ;
         List<loan__Loan_Account__c> updateExistingLoanAccts = new List<loan__Loan_Account__c>();
 
         For(genesis__Applications__c app : apps) {
@@ -107,10 +107,11 @@ public class MW_ApplicationService {
             {
                     mapCurrentApps.put(app.genesis__Account__c, app);
                     setCurrentAcctIds.add(app.genesis__Account__c);
-                    setDuplicateSsn.Add(app.Bureau_SSN__c);
+                    if(app.Bureau_SSN__c != null && app.Bureau_SSN__c != ''){
+                        setDuplicateSsn.Add(app.Bureau_SSN__c);
+                    }
             }
         }
-
         If(mapCurrentApps.size() > 0)
         {
             List<Account> listCurrentAccts = [
@@ -118,7 +119,6 @@ public class MW_ApplicationService {
                         FROM Account 
                         WHERE Id IN :setCurrentAcctIds AND social_security_number_uniqueness_field__c = NULL
                 ];
-
                 For (Account acct : listCurrentAccts) {
                     mapCurrentAccts.put(acct.Id, acct);
                 }
@@ -127,19 +127,16 @@ public class MW_ApplicationService {
             {
                 Map<String, Account> mapExistingDuplicateAccts = new Map<String, Account>();
                 List<FeedItem> preExistAcctsPost = new List<FeedItem>();
-
-                List<Account> listDuplicateAccts = [
+                if (setDuplicateSsn !=null && setDuplicateSsn.size() > 0){
+                   listDuplicateAccts = [
                     SELECT Id, Name, social_security_number_uniqueness_field__c
                     FROM Account 
-                    WHERE social_security_number_uniqueness_field__c IN :setDuplicateSsn
-                ];
-                
+                    WHERE social_security_number_uniqueness_field__c IN :setDuplicateSsn ]; 
+                }
                 For (Account acct : listDuplicateAccts) {
                         mapExistingDuplicateAccts.put(acct.social_security_number_uniqueness_field__c, acct);
                         setPreExistAcctIds.Add(acct.Id);
-                }
-
-                //
+                }  
                 List<loan__Loan_Account__c> listExistingLoanAcct = [
                     SELECT Id, loan__Account__c, loan__Loan_Status__c
                     FROM loan__Loan_Account__c 
@@ -167,38 +164,38 @@ public class MW_ApplicationService {
                 {
                     mapPreExistAcctsActiveApps.put(app.genesis__Account__c, app);
                 }
-
                 For (Id acctId : mapCurrentAccts.keySet()) {
                     genesis__Applications__c app = mapCurrentApps.get(acctId);
                     Account currentAcct = mapCurrentAccts.get(acctId);
                     Account existingDuplAcct = mapExistingDuplicateAccts.get(app.Bureau_SSN__c);
-                    loan__Loan_Account__c existingClosedLoanAcct = mapExistingLoanAccts.get(existingDuplAcct.Id);
-                    Boolean IsPreExistClosedLoanThere = existingClosedLoanAcct != null? true: false;
-                    Boolean IsPreExistAcctActiveAppThere = mapPreExistAcctsActiveApps.get(existingDuplAcct.Id) != null? true: false;
-
-                    If( IsPreExistAcctActiveAppThere == false && IsPreExistClosedLoanThere == true)
-                    {
-                        existingDuplAcct.loan__SOCIAL_SECURITY_NUMBER__c = NULL; //by workflow, it would update to social_security_number_uniqueness_field__c
-                        existingDuplAcct.Encrypted_SSN__c = NULL;
-                        existingDuplAcct.ints__SSN__c = NULL;
-                        currentAcct.loan__SOCIAL_SECURITY_NUMBER__c = app.Bureau_SSN__c;
-                        updatePreExistAccts.Add(existingDuplAcct);
-                        updateCurrentAccts.Add(currentAcct);
-
-                        //Adding account post
-                        FeedItem acctPost = new FeedItem();
-                        acctPost.ParentId = existingDuplAcct.Id;
-                        acctPost.Body = 'SSN was moved to ';
-                        acctPost.Title = currentAcct.Id;
-                        acctPost.LinkUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + currentAcct.Id;
-                        
-                        preExistAcctsPost.Add(acctPost);
+                    loan__Loan_Account__c existingClosedLoanAcct;
+                    Boolean IsPreExistAcctActiveAppThere;
+                    Boolean IsPreExistClosedLoanThere;
+                    if(existingDuplAcct!=null){
+                        existingClosedLoanAcct = mapExistingLoanAccts.get(existingDuplAcct.Id);
+                        IsPreExistAcctActiveAppThere = mapPreExistAcctsActiveApps.get(existingDuplAcct.Id) != null? true: false;
+                        IsPreExistClosedLoanThere = existingClosedLoanAcct != null? true: false;
+                        If( IsPreExistAcctActiveAppThere == false && IsPreExistClosedLoanThere == true){
+                            existingDuplAcct.loan__SOCIAL_SECURITY_NUMBER__c = NULL; //by workflow, it would update to social_security_number_uniqueness_field__c
+                            existingDuplAcct.Encrypted_SSN__c = NULL;
+                            existingDuplAcct.ints__SSN__c = NULL;
+                            currentAcct.loan__SOCIAL_SECURITY_NUMBER__c = app.Bureau_SSN__c;
+                            updatePreExistAccts.Add(existingDuplAcct);
+                            updateCurrentAccts.Add(currentAcct);
+                            //Adding account post
+                            FeedItem acctPost = new FeedItem();
+                            acctPost.ParentId = existingDuplAcct.Id;
+                            acctPost.Body = 'SSN was moved to ';
+                            acctPost.Title = currentAcct.Id;
+                            acctPost.LinkUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + currentAcct.Id;
+                            preExistAcctsPost.Add(acctPost);
                     
-                        If(existingClosedLoanAcct != null)
-                        {
-                            existingClosedLoanAcct.loan__Account__c = currentAcct.Id;
-                            updateExistingLoanAccts.Add(existingClosedLoanAcct);
-                        }
+                            If(existingClosedLoanAcct != null)
+                            {
+                                existingClosedLoanAcct.loan__Account__c = currentAcct.Id;
+                                updateExistingLoanAccts.Add(existingClosedLoanAcct);
+                            }
+                        } 
                     }
                 }
 
@@ -220,10 +217,9 @@ public class MW_ApplicationService {
                 If(preExistAcctsPost.Size() > 0)
                 {
                     Insert preExistAcctsPost;
-                }
-                
-            } 
-        } 
+                }                
+            }
+        }
     }
     /** Update the accounts with latest Income and housing values from Application */
     public static void UpdateAccount(List<genesis__Applications__c> newApps, Map<Id, genesis__Applications__c> oldMap, String triggerEvent) {
