@@ -164,8 +164,13 @@ global class MW_DocumentCategoryHandlerTEMP implements Database.AllowsCallouts, 
 			
 		try {
 
+            String leadsEndPoint = MW_Settings__c.getInstance().LEADS_FE_EndpointURL__c;
+
+			if(String.isBlank(leadsEndPoint)) {
+				return logList;
+			}
 			String certName = MW_Settings__c.getInstance().CertificateNameForLEADS__c;
-			String leadsEndPoint = MW_Settings__c.getInstance().LEADS_FE_EndpointURL__c;
+			
 			HttpRequest req = new HttpRequest();
 			req.setMethod('POST');
 			req.setHeader('Content-Type', 'application/json');

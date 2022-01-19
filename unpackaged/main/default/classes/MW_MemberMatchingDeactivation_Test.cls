@@ -12,7 +12,8 @@ public class MW_MemberMatchingDeactivation_Test {
 
         Test.setMock(HttpCalloutMock.class, new MW_MemberMatchingDeactivation_HttpMock());
         Test.startTest();
-        	MW_MemberMatchingDeactivation.makeCallout(testLead.id);
+        Boolean res = MW_MemberMatchingDeactivation.makeCallout(testLead.id);    
+		System.assertEquals(true, res, 'success');
         Test.stopTest();
             
         }
@@ -28,7 +29,8 @@ public class MW_MemberMatchingDeactivation_Test {
 
         Test.setMock(HttpCalloutMock.class, new MW_MemberMatchingDeactivation_HttpMock());
         Test.startTest();
-        	MW_MemberMatchingDeactivation.makeCallout('234242');
+        Boolean res = MW_MemberMatchingDeactivation.makeCallout('234242');    
+		System.assertEquals(false, res, 'success');
         Test.stopTest();
             
         }
