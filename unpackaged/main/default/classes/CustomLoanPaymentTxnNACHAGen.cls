@@ -4,6 +4,7 @@
 *
 *
 * Anusha    2020/11/05  Desc: 'LatinConversion' method is modified for 'CRM-986 - Add special character for NACHA for "€", "™".'
+* Shakul 2021/12/02 LSP-374
 */
 global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
 
@@ -184,7 +185,13 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
 
         for(loan__Loan_Payment_Transaction__c pmt : pmts) {
             if(loan.CustomSettingsUtil.getACHParameters().loan__Multiple_Payment_Method_Support__c == true) {
-                if(pmt.loan__Automated_Payment_Setup__c==null
+                //START: Added below condition (LSP-374)
+                if(pmt.loan__Automated_Payment_Setup__c != null
+                   && pmt.loan__Automated_payment_Setup__r.loan__Bank_Account__c == null){
+                       addToInvalidScope(pmtsMap.get(pmt.id),System.Label.Loan_BankAccountMissing);
+                    }
+                    //END: Added below condition (LSP-374)
+                else if(pmt.loan__Automated_Payment_Setup__c==null
                     || pmt.loan__Automated_payment_Setup__r.loan__Bank_Account__r.loan__Routing_Number__c == null
                     || pmt.loan__Automated_Payment_Setup__r.loan__Bank_Account__r.Unmasked_Bank_Account_Number__c == null) {
 

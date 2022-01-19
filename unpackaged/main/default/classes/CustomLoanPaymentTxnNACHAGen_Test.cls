@@ -6,6 +6,8 @@
 
 	Anusha 		2020/11/05 CRM -986   New test method is added - 'testLatinConversionWithSpace'
 
+    Shakul      2021/12/02  LSP-374   New Test method for missing bank account
+
  ******************Modification History******************/
 @IsTest
 public class CustomLoanPaymentTxnNACHAGen_Test {
@@ -24,6 +26,7 @@ public class CustomLoanPaymentTxnNACHAGen_Test {
         Account acc = new Account();
         acc.Name = 'Test Account';
         acc.Account_External_ID__c = 'Test';
+        acc.peer__Last_Name__c = 'Account';	//LSP-16
         insert acc;
         
         Contact a1 = new Contact(LastName='TestACH');
@@ -335,19 +338,21 @@ system.debug('##frr'+frr);
         insert lpt;
         
         CustomLoanPaymentTxnNACHAGen cus=new CustomLoanPaymentTxnNACHAGen();
-        cus.requeryScope(lpt);
+        List<loan__Loan_Payment_Transaction__c> lptList = cus.requeryScope(lpt);
+        System.assertEquals(2, lptList.size());
         cus.getSimpleFileName();
         cus.getEntries(state,lpt);
         cus.getHeader(state,fhrlist);
         cus.getTrailer(state,lpt);
         cus.generateFileHeaderRecord(state); 
-        cus.generateBatchHeaderRecord();
+        filegen__Batch_Header_Record__c fbhr = cus.generateBatchHeaderRecord();
+        System.assertEquals('PPD', fbhr.filegen__SEC_Code__c);
         cus.generateBatchControlRecord(fbrlist);
         cus.generateFileControlRecord(frr);
         cus.LatinConversion('ÀÁÂÃĀĂȦÄẢÅǍȀȂĄÇĆ');    
         cus.generateEntryDetailRecord(LLA,lptValue); 
         cus.rightPadString('',10,'');
-        
+        Test.stopTest();
         
     }
     //CRM - 986 - start
@@ -359,4 +364,139 @@ system.debug('##frr'+frr);
     }
     //CRM - 986 - end
   
+    //START: Added test method to cover missing bank account logic (LSP-374)
+    public static testmethod void testMissingBankAccount(){
+        loan__Org_Parameters__c orgParam = new loan__Org_Parameters__c();
+        orgParam.loan__Disable_Triggers__c=true;
+        orgParam.loan__Digits_After_Decimals__c=2;
+        orgParam.loan__Rounding_Mode__c='Nearest';
+        insert orgParam;
+        
+        loan.TransactionSweepToACHState state=new loan.TransactionSweepToACHState();
+        map<string,integer> countMap=new map<string,integer>();
+        countMap.put('test',1);
+        state.o2=countMap;
+            
+        Account acc = new Account();
+        acc.Name = 'Test Account';
+        acc.Account_External_ID__c = 'Test';
+        acc.peer__Last_Name__c = 'Account';
+        insert acc;
+        
+        Contact a1 = new Contact(LastName='TestACH');
+        insert a1;
+        
+        loan.TestHelper.systemDate = Date.today();
+        loan.TestHelper.createSeedDataForTesting();
+        loan.TestHelper.setupApprovalProcessForTxn();
+        
+        loan.TestHelper.setupACHParameters();
+        loan.TestHelper2.createFileGenMetaData();
+        
+        loan__Transaction_Approval_Config__c c = loan.CustomSettingsUtil.getApprovalConfig();
+        c.loan__Payment__c = false;
+        upsert c;
+        
+        loan__ACH_Parameters__c ach = loan.CustomSettingsUtil.getACHParameters();
+        ach.loan__Days_In_Advance_To_Create_File__c = 0;
+        ach.loan__Multiple_Payment_Method_Support__c =true;
+        upsert ach;
+        
+        loan__Currency__c curr = loan.TestHelper.createCurrency();
+        //Create a dummy MF_Account
+        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest', '10000 - ASSETS');
+        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest', '30000 - INCOME');
+        
+        loan__Payment_Mode__c pMode = [select id from loan__Payment_Mode__c where Name= 'ACH'];
+
+        loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
+                                                                            loan__Bank_Name__c = 'Some Bank',
+                                                                            loan__Routing_Number__c = '999999999',
+                                                                            loan__Account_Type__c = 'Checking',
+                                                                            loan__Account_Usage__c = 'Collections Trust Account',
+                                                                            loan__Contact__c = a1.id,
+                                                                            Unmasked_Bank_Account_Number__c = '123234324',
+                                                                            loan__Active__c = True,
+                                                                            loan__Account__c = acc.id
+                                                                           );
+        insert collectionTrustBA ;
+        
+        loan__Bank_Account__c bank = [select id from loan__Bank_Account__c where loan__Account_usage__c=:loan.FractionalizationConstants.COLLECTIONS_TRUST_ACCOUNT limit 1];
+        
+        loan.TestHelper2.createAutomatedPaymentConfiguration(loan.LoanConstants.LOAN_PAYMENT,pMode,bank,'CustomLoanPaymentTxnNACHAGen');
+        
+        //Create a Fee Set
+        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr, dummyIncAccount, dummyAccount);
+        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
+        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
+        loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
+        
+        //Create a dummy Loan Product
+        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice,
+                                                                          dummyAccount, 
+                                                                          curr, 
+                                                                          dummyFeeSet);
+        
+        loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();
+        
+      
+        // Updated loan Account value and loan Routing Number with 9 digits to loan Bank Account
+        loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
+                                                             loan__Bank_Name__c = 'Some Bank',
+                                                             loan__Routing_Number__c = '999999999',
+                                                             loan__Account_Type__c = 'Checking',
+                                                             loan__Account_Usage__c = 'Collections Trust Account',
+                                                             Unmasked_Bank_Account_Number__c = '123234324',
+                                                             loan__Contact__c = a1.id,
+                                                             loan__Account__c = acc.id);
+        insert ba;
+        
+        //Updated loan Loan Account
+        loan__Loan_Account__c dummylaMonthly = loan.TestHelper.createLoanAccountForContactObj(dummyLP,
+                                                                                              a1,
+                                                                                              dummyFeeSet,
+                                                                                              dummyLoanPurpose,
+                                                                                              dummyOffice);
+        
+        
+        dummylaMonthly.loan__Account__c = acc.Id;
+        dummylaMonthly.loan__Loan_Status__c = 'Active - Good Standing';
+        dummylaMonthly.loan__ACH_On__c=True;
+        
+        update dummylaMonthly;
+        
+        loan__Loan_Disbursal_Transaction__c disbTxn = new loan__Loan_Disbursal_Transaction__c();
+        disbTxn.loan__Disbursal_Date__c = loan.TestHelper.systemDate;
+        disbTxn.loan__Disbursed_Amt__c = dummylaMonthly.loan__Loan_Amount__c;
+        disbTxn.loan__Loan_Account__c = dummylaMonthly.id;
+        disbTxn.loan__Mode_of_Payment__c =  pMode.id;
+        
+        insert disbTxn;
+        disbTxn.loan__Cleared__c =true;
+        update disbTxn;
+        
+        loan__Automated_Payment_Setup__c aPS = loan.TestHelper2.createAutomatedPaymentSetup(loan.LoanConstants.RECURRING,loan.LoanConstants.FIXED_AMOUNT,ba,dummylaMonthly,'Monthly',pMode);
+        aPS.loan__Bank_Account__c = null;
+        aPS.loan__CL_Contract__c = null;
+        update aPS;
+        
+        loan__Loan_Payment_Transaction__c payment = new loan__Loan_Payment_Transaction__c();
+        payment.loan__Cleared__c = false;
+        payment.loan__Payment_Mode__c = pMode.id;
+        payment.loan__Transaction_Amount__c  = 100;
+        payment.loan__Transaction_Date__c = loan.TestHelper.systemDate.addDays(-1);
+        payment.loan__Loan_Account__c  = dummylaMonthly.id;
+        payment.loan__Automated_Payment_Setup__c = aPS.id;
+        
+        insert payment;
+        
+        Test.startTest();
+        loan.LoanPaymentFilegenJob lp = new loan.LoanPaymentFilegenJob();
+        Database.executeBatch(lp, 1);
+        Test.stopTest();
+
+        loan__Data_Migration_Error__c Dme =  [select id, loan__Error_Message__c from loan__Data_Migration_Error__c LIMIT 1];
+        System.assertEquals(System.Label.Loan_BankAccountMissing, Dme.loan__Error_Message__c.substringAfterLast(':').trim());
+    }
+    //END: Added test method to cover missing bank account logic (LSP-374)
 }
