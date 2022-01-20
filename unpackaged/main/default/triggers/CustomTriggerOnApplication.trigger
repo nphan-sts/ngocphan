@@ -155,8 +155,9 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 else if(deactivateStatus.contains(app.genesis__Status__c) && app.genesis__Status__c != oldApp.genesis__Status__c ) {
                     DeactivateBankAccountsforApplications.deactivateBankAccount(app.id);
                 }
-                else if(app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c
-                        && !InvestorAllocation.allocationForADVPcalled ) {   //CLS-1121,1216,1095
+                else if (!InvestorAllocation.allocationForADVPcalled &&
+                           ((app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c) ||
+                              (app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c == oldApp.genesis__Status__c && app.pricing_tier__C != oldApp.pricing_tier__C))){  //CLS-1121,1216,1095
                             
                             List<Credit_Policy__c> creditPolicies = [select Id from Credit_Policy__c  where Application__c= : app.Id];
                             System.debug('creditPolicies size check: ' + creditPolicies.size());
