@@ -75,12 +75,13 @@ global class MW_WebhookHandler {
 			member_id  = applist[0].Member_ID__c;
 			lead_guid  = applist[0].Lead_ID__c;
 		}
-
 		List<DocuSignEnv> listDocSign = new List<DocuSignEnv>();
 		listDocSign.add(new DocuSignEnv(EnvelopeID,lead_guid,lead_ID, member_id, status));
 		sync_DocuSignEnv synDocuSign = new sync_DocuSignEnv(RequestType, listDocSign);
 		String gen = JSON.serialize(synDocuSign, true);
-		CallWebHookIntegration(gen, String.valueOf(applist[0].id), LeadId);
+		if(applist!=null &&  applist.size()>0) {
+			CallWebHookIntegration(gen, String.valueOf(applist[0].id), LeadId);
+		}
 		return gen;
 	}
 	/* Send soft pull response request to LEADS FE*/
@@ -100,9 +101,8 @@ global class MW_WebhookHandler {
 		String lead_id;
 	}
 
-	public static void generateSoftPullJson(String appId)
+	public static Boolean generateSoftPullJson(String appId)
 	{
-		// System.debug('****INGENSP');
 		List< genesis__Applications__c> applist = [Select id, Lead_ID__c, LEAD_ID_ExtKey__c, Member_ID__c from genesis__Applications__c where id=:appId LIMIT 1];
 		List<softPullLeads> sfLeads = new List<softPullLeads>();
 		softPullLeads sfobj = new softPullLeads();
@@ -116,14 +116,19 @@ global class MW_WebhookHandler {
 			softPullReq softPullReq = new softPullReq(sfLeads, 'soft_pull');
 			MW_WebhookHandler.CallWebHookIntegration(JSON.serialize(softPullReq, true), appId, applist[0].Lead_ID__c);
 		}
+		return true;
 	}
 
 	webservice Static String CallWebHookIntegration(String reqbody, String appId, String leadId)
 	{
 		try {
-
-			String certName = MW_Settings__c.getInstance().CertificateNameForLEADS__c;
 			String leadsEndPoint = MW_Settings__c.getInstance().LEADS_FE_EndpointURL__c;
+
+			if(String.isBlank(leadsEndPoint)) {
+				return 'Success';
+			}
+			String certName = MW_Settings__c.getInstance().CertificateNameForLEADS__c;
+			
 			HttpRequest req = new HttpRequest();
 			req.setMethod('POST');
 			req.setHeader('Content-Type', 'application/json');

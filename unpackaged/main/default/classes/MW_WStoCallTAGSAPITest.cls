@@ -20,8 +20,30 @@ private class MW_WStoCallTAGSAPITest {
 		loadId.add(loanAccountObj);
 		System.debug('>>>' +loadId);
 		MW_WStoCallTAGSAPI.invokeCheckBoxFolder(loadId);
-		//HTTPResponse resultResponse = MW_WStoCallTAGSAPI.res;
-		//System.assertEquals(null, resultResponse);
+		HTTPResponse resultResponse = MW_WStoCallTAGSAPI.res;
+		System.assertEquals(null, resultResponse, 'success');
+	}
+
+	@isTest
+	static void testTagsAPIWithoutUrl() {
+
+		//load custom setting data.
+		MW_Settings__c customSetting = new MW_Settings__c();
+		customSetting.TagsAPI_URL__c = null;
+		customSetting.CertificateNameForLEADS__c = 'sfapi_staging';
+		insert customSetting;
+
+		Test.startTest();
+
+		Test.setMock(HttpCalloutMock.class, new TestTagsAPIMock());
+		loan__Loan_Account__c loanAccountObj = getLoanAccountObj(false);
+		Test.stopTest();
+		List<loan__Loan_Account__c> loadId = new List<loan__Loan_Account__c>();
+		loadId.add(loanAccountObj);
+		System.debug('>>>' +loadId);
+		MW_WStoCallTAGSAPI.invokeCheckBoxFolder(loadId);
+		HTTPResponse resultResponse = MW_WStoCallTAGSAPI.res;
+		System.assertEquals(null, resultResponse, 'success');
 	}
 
 	@isTest
@@ -38,6 +60,26 @@ private class MW_WStoCallTAGSAPITest {
 		List<loan__Loan_Account__c> loadId = new List<loan__Loan_Account__c>();
 		loadId.add(loanAccountObj);
 		MW_WStoCallTAGSAPI.invokeCheckBoxFolder(loadId);
+		HTTPResponse resultResponse = MW_WStoCallTAGSAPI.res;
+		System.assertEquals(null, resultResponse, 'success');
+	}
+
+	@isTest
+	static void testRemoveTagsAPIWithoutUrl(){
+		MW_Settings__c customSetting = new MW_Settings__c();
+		customSetting.RemoveTagsAPI_URL__c = '';
+		customSetting.CertificateNameForLEADS__c = 'sfapi_staging';
+		insert customSetting;
+
+		Test.startTest();
+		Test.setMock(HttpCalloutMock.class, new TestRemoveTagsAPIMock());
+		loan__Loan_Account__c loanAccountObj = getLoanAccountObj(true);
+		Test.stopTest();
+		List<loan__Loan_Account__c> loadId = new List<loan__Loan_Account__c>();
+		loadId.add(loanAccountObj);
+		MW_WStoCallTAGSAPI.invokeCheckBoxFolder(loadId);
+		HTTPResponse resultResponse = MW_WStoCallTAGSAPI.res;
+		System.assertEquals(null, resultResponse, 'success');
 	}
 
 	public class TestTagsAPIMock implements HTTPCalloutMock {
@@ -75,7 +117,7 @@ private class MW_WStoCallTAGSAPITest {
 		//loan.TestHelper2.createOrgBankAccounts();
 		loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
 		                                                                    loan__Bank_Name__c = 'Some Bank',
-		                                                                    loan__Routing_Number__c = '99999999',
+		                                                                    loan__Routing_Number__c = '999999999',
 		                                                                    loan__Account_Type__c = 'Checking',
 		                                                                    loan__Account_Usage__c = 'Collections Trust Account',
 		                                                                    //loan__Contact__c = con.id,
@@ -124,7 +166,7 @@ private class MW_WStoCallTAGSAPITest {
 
 		loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
 		                                                     loan__Bank_Name__c = 'Some Bank',
-		                                                     loan__Routing_Number__c = '99999999',
+		                                                     loan__Routing_Number__c = '999999999',
 		                                                     loan__Account_Type__c = 'Checking',
 		                                                     Unmasked_Bank_Account_Number__c = '123234324',
 		                                                     loan__Contact__c = a1.id);

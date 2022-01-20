@@ -96,6 +96,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
             Map<id,genesis__Applications__c> oldAppMap = trigger.oldMap;
             for(genesis__Applications__c app : trigger.new){
                 genesis__Applications__c oldApp = oldAppMap.get(app.id);
+
                 /** Call to redecision logic */
                 CustomTriggerOnApplicationHandler.callRedecisionLogic(app, oldApp,trigger.oldMap,trigger.newMap);
                 
@@ -119,6 +120,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 }
                 //CRM-531 - end
                 //CRM-815
+
                 if(app.OwnerId != oldApp.OwnerId){
                     QueueSobject Queues = [SELECT Queue.Id,queue.Name, QueueId FROM QueueSobject
                                            WHERE SobjectType = 'genesis__Applications__c'
@@ -147,6 +149,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                         }
                     }
                 }
+
                 //CRM-815
                 if(app.genesis__Status__c == 'Default Documents' && app.genesis__Status__c != oldApp.genesis__Status__c){
                     TalxIntegration.CallTalxResponse(app.Id, app.genesis__account__c);
@@ -177,6 +180,8 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                                 MW_LogUtility.errorMessage('CustomTriggerOnApplication', 'Ignore Investor Allocation', msg);
                             }
                         }
+
+
                 /*(LOS-135)*/
                 else if(app.genesis__status__c == 'docusign_loan_docs_sent' && app.genesis__status__c != oldapp.genesis__Status__c){
                     if(app.Investor__c!=null){

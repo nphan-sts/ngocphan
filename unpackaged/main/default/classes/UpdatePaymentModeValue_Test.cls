@@ -1,23 +1,27 @@
+/* ****************Modification History******************
+ * Modified By        Date          JIRA number
+ *	1. Galla        2020/04/21     CRM-467
+ *	Inserted Account
+ *	Updated loan Account value and loan Routing Number with 9 digits to loan Bank Account
+ *	2. Anusha			2021/10/22		LSP-379-Closure tolerance LPT's  payment mode set to ACH - CLS case #02892604
+ ******************Modification History******************/
 @IsTest
 public class UpdatePaymentModeValue_Test {
-    
-    static testMethod void UpdatePaymentModeValue()
-    {   
+    @testSetup
+    public static void testSetup(){
         loan__Payment_Mode__c lp=new loan__Payment_Mode__c();
         lp.Name='Waived';
         lp.loan__Summary__c=False;
         lp.loan__Master_Archive_Object__c=False;
         lp.loan__Summary_Record_Id__c='TestRec';
         lp.loan__Archived__c=False;
+        Insert lp;        
         
-        Insert lp;
-        
-        loan__Payment_Mode__c  lpm=[Select Id,Name from loan__Payment_Mode__c where Id =:lp.Id];
-        
-        
+        //Create a Account
         Account acc = new Account();
         acc.Name = 'Test Account';
         acc.Account_External_ID__c = 'Test';
+        acc.peer__Last_Name__c = 'Tester';//LSP-379
         insert acc;
         
         loan.TestHelper.systemDate = Date.today();
@@ -27,13 +31,11 @@ public class UpdatePaymentModeValue_Test {
         List<filegen__File_Metadata__c> metadata = Test.loadData(filegen__File_Metadata__c.sObjectType,'CustomTestMetaData');
         loan.TestHelper.setupACHParameters();
         loan.TestHelper2.createFileGenMetaData();
-        //loan.TestHelper2.createOrgBankAccounts();
         loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
                                                                             loan__Bank_Name__c = 'Some Bank',
                                                                             loan__Routing_Number__c = '999999999',
                                                                             loan__Account_Type__c = 'Checking',
                                                                             loan__Account_Usage__c = 'Collections Trust Account',
-                                                                            //loan__Contact__c = con.id,
                                                                             Unmasked_Bank_Account_Number__c = '123234324',
                                                                             loan__Active__c = True,
                                                                             loan__Account__c = acc.id);
@@ -55,11 +57,6 @@ public class UpdatePaymentModeValue_Test {
         
         loan__Payment_Mode__c pMode = [select id from loan__Payment_Mode__c where Name= 'ACH'];
         loan__Payment_Mode__c pMode1 = [select id from loan__Payment_Mode__c where Name = 'Cash'];
-        
-        // loan__Bank_Account__c bank = [select id from loan__Bank_Account__c where loan__Account_usage__c=:loan.FractionalizationConstants.BORROWER_INVESTOR_ACCOUNT limit 1];
-        
-        // loan.TestHelper2.createAutomatedPaymentConfiguration(loan.LoanConstants.LOAN_PAYMENT,pMode,bank,'CustomLoanPaymentTxnNACHAGen');
-        // loan.TestHelper2.createAutomatedPaymentConfiguration(loan.LoanConstants.LOAN_PAYMENT,pMode1,bank,'CustomLoanPaymentTxnNACHAGen');
         
         //Create a Fee Set
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr, dummyIncAccount, dummyAccount);
@@ -87,7 +84,6 @@ public class UpdatePaymentModeValue_Test {
                                                              loan__Account__c = acc.id);
         insert ba;
         
-        Test.startTest();
         loan__Loan_Account__c dummylaMonthly = loan.TestHelper.createLoanAccountForContactObj(dummyLP,
                                                                                               a1,
                                                                                               dummyFeeSet,
@@ -106,14 +102,12 @@ public class UpdatePaymentModeValue_Test {
         disbTxn.loan__Disbursed_Amt__c = dummylaMonthly.loan__Loan_Amount__c;
         disbTxn.loan__Loan_Account__c = dummylaMonthly.id;
         disbTxn.loan__Mode_of_Payment__c =  pMode.id;
-        
-        insert disbTxn;
+       	insert disbTxn;
         disbTxn.loan__Cleared__c =true;
         update disbTxn;
         
         loan__Automated_Payment_Setup__c aPS = loan.TestHelper2.createAutomatedPaymentSetup(loan.LoanConstants.RECURRING,loan.LoanConstants.FIXED_AMOUNT,ba,dummylaMonthly,'Monthly',pMode);
         loan__Automated_Payment_Setup__c aPS1 = loan.TestHelper2.createAutomatedPaymentSetup(loan.LoanConstants.ONE_TIME,loan.LoanConstants.FIXED_AMOUNT,ba,dummylaMonthly,'Monthly',pMode1);
-        
         
         loan__Automated_Payment_Configuration__c lap=new loan__Automated_Payment_Configuration__c();
         lap.loan__Trace_Number_Prefix__c='testteasdf';
@@ -124,37 +118,48 @@ public class UpdatePaymentModeValue_Test {
         lap.loan__Immediate_Origin_Name__c='Test';
         lap.loan__Reference_Code__c='test';
         lap.loan__Company_Identification__c='Test';
-        lap.loan__Originating_DFI_Identification__c='Test';
-        
-        
+        lap.loan__Originating_DFI_Identification__c='Test';       
         Insert lap;
         
-        loan__Loan_Payment_Transaction__c dummyPmt2 = new loan__Loan_Payment_Transaction__c();
-        dummyPmt2.loan__Cleared__c = false;
-        dummyPmt2.loan__Payment_Mode__c = pMode.id;
-        dummyPmt2.loan__Transaction_Amount__c  = 100;
-        dummyPmt2.loan__Transaction_Date__c = loan.TestHelper.systemDate;
-        dummyPmt2.loan__Loan_Account__c  = dummylaMonthly.id;
-        //dummyPmt2.loan__Trace_Number_Prefix__c=123456;
-        dummyPmt2.loan__Automated_Payment_Setup__c = aPS.id;
+        loan__Loan_Payment_Transaction__c payment = new loan__Loan_Payment_Transaction__c();
+        payment.loan__Cleared__c = true;
+        payment.loan__Payment_Mode__c = pMode.id;
+        payment.loan__Transaction_Amount__c  = 100;
+        payment.loan__Transaction_Date__c = loan.TestHelper.systemDate;
+        payment.loan__Loan_Account__c  = dummylaMonthly.id;
+        payment.loan__Automated_Payment_Setup__c = aPS.id;
+        payment.loan__Closure_Tolerance_Payment__c = false;
+        Insert payment;
+	}
+    
+    @isTest
+    public static void UpdatePaymentModeValueSuccess(){   
+        loan__Payment_Mode__c lpm = [Select Id,Name from loan__Payment_Mode__c where name ='Waived' limit 1];
+        loan__Loan_Payment_Transaction__c lpt = [Select Id,loan__Payment_Mode__c from loan__Loan_Payment_Transaction__c limit 1];
+        System.assert(lpt.loan__Payment_Mode__c != lpm.Id);
         
+        lpt.loan__Closure_Tolerance_Payment__c = true;//LSP-379
+        update lpt;
         
-        Insert dummyPmt2;
+        loan__Loan_Payment_Transaction__c lptUpdated = [Select Id,loan__Payment_Mode__c from loan__Loan_Payment_Transaction__c where Id =:lpt.Id];
+        System.assertEquals(lpm.Id, lptUpdated.loan__Payment_Mode__c);//LSP-379
+    }
+    
+    @isTest
+    public static void UpdatePaymentModeValueException(){   
+        loan__Payment_Mode__c lpm = [Select Id,Name from loan__Payment_Mode__c where name ='Waived' limit 1];
+        loan__Loan_Payment_Transaction__c lpt = [Select Id,loan__Payment_Mode__c from loan__Loan_Payment_Transaction__c limit 1];    
         
-        loan__Payment_Mode__c  lpm1=[Select Id,Name from loan__Payment_Mode__c where Id =:lp.Id];
+        Test.startTest();
+        UpdatePaymentModeValue.usedOnlyForTest = true;
+        lpt.loan__Closure_Tolerance_Payment__c = true;//LSP-379
+        update lpt;
+        Test.stopTest();
         
-        
-        loan__Loan_Payment_Transaction__c lpt=[Select Id,loan__Payment_Mode__r.Id from loan__Loan_Payment_Transaction__c where Id =:dummyPmt2.Id];
-        lpt.loan__Payment_Mode__c=lpm1.Id;
-        Update lpt;
-        
-        String Id=lpt.Id;
-        string Id1=dummyPmt2.Id;
-        
-        List<string> testdata=new List<string>();
-        testdata.add(Id);
-        UpdatePaymentModeValue.PaymentModeVal(testdata);
-        
-        
+        loan__Loan_Payment_Transaction__c lptUpdated = [Select Id,loan__Payment_Mode__c from loan__Loan_Payment_Transaction__c where Id =:lpt.Id];
+        System.assert(!(lptUpdated.loan__Payment_Mode__c == lpm.Id));        
+        Loan__batch_process_log__c bpl = [select id, name, loan__message__c, loan__Log_Level__c,loan__Origin__c from Loan__batch_process_log__c limit 1];
+        System.assertEquals('ERROR', bpl.loan__Log_Level__c);
+        System.assertEquals('UpdatePaymentModeValue', bpl.loan__Origin__c);
     }
 }
