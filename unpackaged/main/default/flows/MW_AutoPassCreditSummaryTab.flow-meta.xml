@@ -134,7 +134,7 @@
                 </rightValue>
             </conditions>
             <conditions>
-                <leftValueReference>Get_Account_Record.Monthly_Housing_Payment__c</leftValueReference>
+                <leftValueReference>$Record.Monthly_Housing_Payment_App__c</leftValueReference>
                 <operator>GreaterThan</operator>
                 <rightValue>
                     <elementReference>greaterthan500</elementReference>
