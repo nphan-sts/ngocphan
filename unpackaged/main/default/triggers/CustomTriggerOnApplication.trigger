@@ -119,6 +119,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 }
                 //CRM-531 - end
                 //CRM-815
+
                 if(app.OwnerId != oldApp.OwnerId){
                     QueueSobject Queues = [SELECT Queue.Id,queue.Name, QueueId FROM QueueSobject
                                            WHERE SobjectType = 'genesis__Applications__c'
@@ -155,8 +156,10 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 else if(deactivateStatus.contains(app.genesis__Status__c) && app.genesis__Status__c != oldApp.genesis__Status__c ) {
                     DeactivateBankAccountsforApplications.deactivateBankAccount(app.id);
                 }
-                else if(app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c
-                        && !InvestorAllocation.allocationForADVPcalled ) {   //CLS-1121,1216,1095
+                else
+                      if (!InvestorAllocation.allocationForADVPcalled &&
+                           ((app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c) ||
+                              (app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c == oldApp.genesis__Status__c && app.pricing_tier__C != oldApp.pricing_tier__C))){  //CLS-1121,1216,1095
                             
                             List<Credit_Policy__c> creditPolicies = [select Id from Credit_Policy__c  where Application__c= : app.Id];
                             System.debug('creditPolicies size check: ' + creditPolicies.size());
@@ -176,6 +179,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                                 MW_LogUtility.errorMessage('CustomTriggerOnApplication', 'Ignore Investor Allocation', msg);
                             }
                         }
+
                 /*(LOS-135)*/
                 else if(app.genesis__status__c == 'docusign_loan_docs_sent' && app.genesis__status__c != oldapp.genesis__Status__c){
                     if(app.Investor__c!=null){

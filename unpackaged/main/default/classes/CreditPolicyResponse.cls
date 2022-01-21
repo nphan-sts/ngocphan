@@ -178,14 +178,18 @@ global class CreditPolicyResponse {
         global Double max_unsecured_installment_loan_utilization  {get;set;}
         global Double age_flag {get;set;} 
         global Double student_loan_flag {get;set;} 
-        global String funding_model {get;set;} 
-  global String pricing_test_bucket {get;set;}   //pallavi LOS-197
+        global String funding_model {get;set;}
+        global String pricing_test_bucket {get;set;}   //pallavi LOS-197
         /** 
         * Fix for CLS-145
         **/
         global String raw_bureau_data {get;set;}
         global String bureau_subset {get;set;}
         global List<String> credit_policy_approval_models {get;set;}
+
+        global String risk_model_source {get; set;}
+        global String risk_model_version {get; set;}
+        global Boolean is_offer_presented {get; set;}
     }
     
     global class Invalid_input_knockout_codes {
@@ -386,7 +390,10 @@ global class CreditPolicyResponse {
                                         Num_Trades_Opened_Past_24mo__c,
                                         Monthly_DTI__c,
                                         request_intent__c,
-                                        Credit_Policy_Approval_Models__c
+                                        Credit_Policy_Approval_Models__c,
+                                        Risk_Model_Source__c,
+                                        Risk_Model_Version__c,
+                                        Is_Offer_Presented__c
                                 FROM   Credit_Policy__c
                                 WHERE  Id =: creditPolicyId
                                 LIMIT  1];
@@ -403,6 +410,9 @@ global class CreditPolicyResponse {
         app.Net_Disposable_Income_NDI_Num__c = cp.Net_Disposable_Income_NDI_Num__c;
         app.Num_Trades_Opened_Past_24mo__c = cp.Num_Trades_Opened_Past_24mo__c;
         app.Credit_Policy_Approval_Models__c = cp.Credit_Policy_Approval_Models__c;
+        app.Risk_Model_Source__c = cp.Risk_Model_Source__c;
+        app.Risk_Model_Version__c = cp.Risk_Model_Version__c;
+        app.Is_Offer_Presented__c = cp.Is_Offer_Presented__c;
         update app;
     }
 
@@ -849,6 +859,20 @@ global class CreditPolicyResponse {
         if(CPResponse!=null && CPResponse.credit_policy_decision.credit_policy_approval_models != null && CPResponse.credit_policy_decision.credit_policy_approval_models.size() > 0)
         {
             obj.Credit_Policy_Approval_Models__c = CPResponse.credit_policy_decision.credit_policy_approval_models[0];
+        }
+
+        if(CPResponse!=null && CPResponse.credit_policy_decision != null){
+            if(CPResponse.credit_policy_decision.risk_model_source != null){
+                obj.Risk_Model_Source__c = CPResponse.credit_policy_decision.risk_model_source;
+            }
+            
+            if(CPResponse.credit_policy_decision.risk_model_version != null){
+                obj.Risk_Model_Version__c = CPResponse.credit_policy_decision.risk_model_version;
+            }
+
+            if(CPResponse.credit_policy_decision.is_offer_presented != null){
+                obj.Is_Offer_Presented__c = CPResponse.credit_policy_decision.is_offer_presented;
+            }
         }
         
         //************
