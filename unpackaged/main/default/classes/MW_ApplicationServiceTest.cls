@@ -72,5 +72,26 @@ private class MW_ApplicationServiceTest {
 
     //Old Account's SSN has been set to NULL
     System.AssertEquals(true, String.isEmpty(PreExistAct.loan__SOCIAL_SECURITY_NUMBER__c));
-  }  
+  }
+
+  @isTest static void TestUpdateAccounts(){
+    genesis__Applications__c app = [SELECT Id, Annual_Individual_Income_App__c, Monthly_Housing_Payment_App__c, genesis__Status__c, genesis__Account__c, 
+                                    genesis__Account__r.Annual_Individual_Income__c,genesis__Account__r.Monthly_Housing_Payment__c FROM genesis__Applications__c 
+                                                   WHERE genesis__Account__r.peer__First_Name__c ='PreExist' LIMIT 1];
+    
+    System.AssertEquals(app.Annual_Individual_Income_App__c, app.genesis__Account__r.Annual_Individual_Income__c,'Income on Account updated after app insert');
+    System.AssertEquals(app.Monthly_Housing_Payment_App__c, app.genesis__Account__r.Monthly_Housing_Payment__c,'Housing payment on Account updated after app insert');
+
+    app.Annual_Individual_Income_App__c = 110000;
+    app.Monthly_Housing_Payment_App__c = 750;
+    update app;
+
+    app = [SELECT Id, Annual_Individual_Income_App__c, Monthly_Housing_Payment_App__c, genesis__Status__c, genesis__Account__c, 
+                                    genesis__Account__r.Annual_Individual_Income__c,genesis__Account__r.Monthly_Housing_Payment__c FROM genesis__Applications__c 
+                                     WHERE Id =: app.Id LIMIT 1];
+
+    System.assertEquals(110000, app.genesis__Account__r.Annual_Individual_Income__c,'Income on Account updated after app update');
+    System.assertEquals(750, app.genesis__Account__r.Monthly_Housing_Payment__c,'Housing payment on Account updated after app update');
+    
+  }
 }

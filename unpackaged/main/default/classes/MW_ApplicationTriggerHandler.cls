@@ -31,11 +31,12 @@ public class MW_ApplicationTriggerHandler {
 			MW_SynchronizeHandler.preventIsAfterRecursionOnApplication = true;
 			MW_SynchronizeHandler.createOrgniationRecords(newRecords);
 			MW_ApplicationService.pifLoanUpdates(newRecords, newMap, oldMap);
+			MW_ApplicationService.UpdateAccount(newRecords, oldMap, 'afterUpate');
 		}
 	}
 
 	public void afterInsert()
 	{
-
+		MW_ApplicationService.UpdateAccount(newRecords, oldMap, 'afterInsert');
 	}
 }

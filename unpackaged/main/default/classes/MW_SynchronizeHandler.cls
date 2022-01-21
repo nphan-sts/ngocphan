@@ -15,7 +15,6 @@ global with sharing class MW_SynchronizeHandler {
 
         Map<Id,Pricing_Offer__c> selectedOfferMap   = selectedOfferQuery(apList);
 
-        // Map<Id,Adverse_Actions__c> adverseFactorMap = adverseActionResults(apList);
         for(genesis__Applications__c applist: Database.query(applicationQuery(apList))) {
             applicationinformation appinfo             = new ApplicationInformation();
             appinfo.member_id                          = applist.Member_ID__c;
@@ -92,9 +91,10 @@ global with sharing class MW_SynchronizeHandler {
             appinfo.owner_name                         = applist.owner.Name;
             appinfo.esign_consent_withdrawn            = applist.Esign_consent_withdrawn__c;
             appinfo.dcp_investor_available             = applist.DCP_Investor_Eligibility__c;
-            appinfo.kba_manual_passed                  = applist.Manual_KBA__c;
-           
+            appinfo.kba_manual_passed                  = applist.Manual_KBA__c;            
             appinfo.expiration_date                    = applist.Expiration_Date__c;
+            appinfo.annual_individual_income_app       = applist.Annual_Individual_Income_App__c;
+            appinfo.monthly_housing_payment_app        = applist.Monthly_Housing_Payment_App__c;
 
             /*
                   CLS-738
@@ -133,11 +133,11 @@ global with sharing class MW_SynchronizeHandler {
             /*
                CLS-690  , LOP-342 - Expired-Withdrawn
              */
-             
+
             if(applist.genesis__Status__c=='Expired' || applist.genesis__Status__c=='Expired-Withdrawn') {
                 appinfo.is_expired                         = true;
             }
-            
+
             
             if(applist.genesis__Status__c=='Declined' && applist.owner.Name=='Declined') {
                 Map<Id,Credit_Policy__c>  cpMap = MW_WebhookHelper.selectedCreditPolicyDetails(new Set<String>{applist.id});
@@ -203,7 +203,6 @@ global with sharing class MW_SynchronizeHandler {
             accInfo.Address_2                      = acclist.Address_2__c;
             accInfo.cnotify_Email                  = acclist.cnotify__Email__c;
             accInfo.loan_SOCIAL_SECURITY_NUMBER    = acclist.loan__SOCIAL_SECURITY_NUMBER__c;
-           
             listaccInfo.add(accInfo);
         }
 
@@ -551,6 +550,9 @@ global with sharing class MW_SynchronizeHandler {
         //CRM-843 kba_manual_passed
         public boolean kba_manual_passed;
 
+        public decimal annual_individual_income_app;
+        public decimal monthly_housing_payment_app;
+
         ApplicationInformation(){
             this.adverse_actions = new List<adverse_actions>();
         }
@@ -672,13 +674,6 @@ global with sharing class MW_SynchronizeHandler {
                            'genesis__Gross_Annual_Income__c,'+
                            'genesis__Healthcare_Procedure__c,'+
                            'Identity_Counter__c,'+
-                           //'Identity_Verification_Flag__c,'+
-                           //'IDMA_Date__c,'+
-                           //'IDMA_Performed_By__c,'+
-                           //'IDMA_Status__c,'+
-                           //'IDMV_Date__c,'+
-                           //'IDMV_Performed_By__c,'+
-                           //'IDMV_Status__c,'+
                            'genesis__ID_Number__c,'+
                            'genesis__ID_State__c,'+
                            'genesis__ID_Type__c,'+
@@ -738,9 +733,6 @@ global with sharing class MW_SynchronizeHandler {
                            'Neustart__c,'+
                            'NotifyCheck__c,'+
                            'genesis__Number_of_Pieces_of_Equipment__c,'+
-                           //'OFAC_Date__c,'+
-                           //'OFAC_Performed_By__c,'+
-                           //'OFAC_Status__c,'+
                            'Open__c,'+
                            'Estimated_origination_fee__c,'+
                            'Origination_fee__c,'+
@@ -757,12 +749,6 @@ global with sharing class MW_SynchronizeHandler {
                            'Payment_Mode__c,'+
                            'Payoff_UID__c,'+
                            'genesis__Portfolio__c,'+
-                           //'Precise_Account_Opening_Date__c,'+
-                           //'Precise_Account_Opening_PerformedBy__c,'+
-                           //'Precise_Account_Opening_Status__c,'+
-                           //'Precise_Identity_Screening_Date__c,'+
-                           //'Precise_Identity_Screening_PerformedBy__c,'+
-                           //'Precise_Identity_Screening_Status__c,'+
                            'genesis__Prepaid_Interest_Option__c,'+
                            'genesis__Prepayment_Penalty__c,'+
                            'genesis__Prepayment_Penalty_Description__c,'+
@@ -826,7 +812,11 @@ global with sharing class MW_SynchronizeHandler {
                            'Manual_Adverse_Action_Decline__r.Reason__c,'+
                            'owner.Name,'+
                            'DCP_Investor_Eligibility__c,'+
-                           'Yodlee_Transaction__c, Manual_KBA__c FROM genesis__Applications__c where Id =\'' + firstelement + '\' limit 1';
+                           'Yodlee_Transaction__c,'+
+                           'Manual_KBA__c,'+
+                           'Annual_Individual_Income_App__c,'+
+                           'Monthly_Housing_Payment_App__c '+
+                           'FROM genesis__Applications__c where Id =\'' + firstelement + '\' limit 1';
 
         System.debug('Query ' + soqlQuery);
         return soqlQuery;
@@ -856,16 +846,12 @@ global with sharing class MW_SynchronizeHandler {
                                                 'loan__SOCIAL_SECURITY_NUMBER__c,'+
                                                 'Member_ID__c FROM Account Where Id =\'' + firstelement + '\' limit 1');
 
-
         return sobjList;
     }
 
-    
     public static Boolean isAppDocCatFirstTime = true;
 
-    
-
-//Filter out FE user changes
+    //Filter out FE user changes
     public static Boolean userFilterFE(){
         //Skip this chechking when running the test.
         if(Test.isRunningTest()) {

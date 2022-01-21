@@ -148,6 +148,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                         }
                     }
                 }
+
                 //CRM-815
                 if(app.genesis__Status__c == 'Default Documents' && app.genesis__Status__c != oldApp.genesis__Status__c){
                     TalxIntegration.CallTalxResponse(app.Id, app.genesis__account__c);
@@ -156,8 +157,8 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 else if(deactivateStatus.contains(app.genesis__Status__c) && app.genesis__Status__c != oldApp.genesis__Status__c ) {
                     DeactivateBankAccountsforApplications.deactivateBankAccount(app.id);
                 }
-                else
-                      if (!InvestorAllocation.allocationForADVPcalled &&
+
+                else if (!InvestorAllocation.allocationForADVPcalled &&
                            ((app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c) ||
                               (app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c == oldApp.genesis__Status__c && app.pricing_tier__C != oldApp.pricing_tier__C))){  //CLS-1121,1216,1095
                             
