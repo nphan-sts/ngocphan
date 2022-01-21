@@ -96,7 +96,6 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
             Map<id,genesis__Applications__c> oldAppMap = trigger.oldMap;
             for(genesis__Applications__c app : trigger.new){
                 genesis__Applications__c oldApp = oldAppMap.get(app.id);
-
                 /** Call to redecision logic */
                 CustomTriggerOnApplicationHandler.callRedecisionLogic(app, oldApp,trigger.oldMap,trigger.newMap);
                 
@@ -158,6 +157,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 else if(deactivateStatus.contains(app.genesis__Status__c) && app.genesis__Status__c != oldApp.genesis__Status__c ) {
                     DeactivateBankAccountsforApplications.deactivateBankAccount(app.id);
                 }
+
                 else if (!InvestorAllocation.allocationForADVPcalled &&
                            ((app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c) ||
                               (app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c == oldApp.genesis__Status__c && app.pricing_tier__C != oldApp.pricing_tier__C))){  //CLS-1121,1216,1095
@@ -180,7 +180,6 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                                 MW_LogUtility.errorMessage('CustomTriggerOnApplication', 'Ignore Investor Allocation', msg);
                             }
                         }
-
 
                 /*(LOS-135)*/
                 else if(app.genesis__status__c == 'docusign_loan_docs_sent' && app.genesis__status__c != oldapp.genesis__Status__c){
