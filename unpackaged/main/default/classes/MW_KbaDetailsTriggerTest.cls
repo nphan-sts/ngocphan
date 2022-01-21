@@ -11,7 +11,6 @@ private class MW_KbaDetailsTriggerTest {
         List<Account> accountList = new List<Account>();
         Account act = MW_GlobalTestUtility.GetAccount('Member');
         act.Name = 'Common Account';
-        act.Annual_Individual_Income__c = 100;
         act.peer__First_Name__c = 'FirstName';
         act.peer__Last_Name__c = 'LastName';
         act.loan__Investor__c = true;
@@ -20,8 +19,6 @@ private class MW_KbaDetailsTriggerTest {
         
         Account act1 = MW_GlobalTestUtility.GetAccount('Member');
         act1.Name = 'Monthly Housing Account';
-        act1.Annual_Individual_Income__c = 100;
-        act1.Monthly_Housing_Payment__c = 600;
         act1.peer__First_Name__c = 'FirstName1';
         act1.peer__Last_Name__c = 'LastName1';
         act1.loan__Investor__c = true;
@@ -40,18 +37,24 @@ private class MW_KbaDetailsTriggerTest {
         app1.genesis__Account__c = act1.Id;
         app1.Pricing_Tier__c = 't1';
         app1.Employment_Status__c = 'Full Time';
+        app1.Annual_Individual_Income_App__c = 100;
+        app1.Monthly_Housing_Payment_App__c = 600;
         genApplicationList.add( app1 );
         
         genesis__Applications__c app2 = MW_GlobalTestUtility.GetApplication();
         app2.genesis__Account__c = act.Id;
         app2.Pricing_Tier__c = 't1';
         app2.Employment_Status__c = 'Full Time';
+        app2.Annual_Individual_Income_App__c = 100;
+        app2.Monthly_Housing_Payment_App__c = 600;
         genApplicationList.add( app2 );
         
          genesis__Applications__c app3 = MW_GlobalTestUtility.GetApplication();
         app3.genesis__Account__c = act.Id;
         app3.Pricing_Tier__c = 't4';
         app3.Employment_Status__c = 'Full Time';
+        app3.Annual_Individual_Income_App__c = 100;
+        app3.Monthly_Housing_Payment_App__c = 600;
         genApplicationList.add( app3 );
         
         insert genApplicationList;
