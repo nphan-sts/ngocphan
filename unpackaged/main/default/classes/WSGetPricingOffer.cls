@@ -88,6 +88,7 @@ global with sharing class WSGetPricingOffer {
         public Boolean Is_Offer_Selected {get;set;}
         public String ebp_offer_code {get;set;}
         public String ebp_parent_offer_key {get;set;}
+        public String score {get;set;}
 
         public Offers(JSONParser parser,String applicationId) {
             
@@ -164,6 +165,10 @@ global with sharing class WSGetPricingOffer {
                             ebp_parent_offer_key = parser.getText();
                             pOffer.EBP_Parent_Offer_Key__c = ebp_parent_offer_key;
                         }
+                        else if (text == 'score'){
+                            score = parser.getText();
+                            pOffer.Score__c = Decimal.valueOf(score);
+                        }
                         else {
                             System.debug(LoggingLevel.WARN, 'Offers consuming unrecognized property: '+text);
                             consumeObject(parser);
@@ -185,15 +190,10 @@ global with sharing class WSGetPricingOffer {
     
     @HttpPost
     global static Response parse(){
-        system.debug('hello');
         RestResponse restRes = Restcontext.response;
         RestRequest req = Restcontext.request;
         Response res = new Response();
-        
-        system.debug('hello');
-        
         String jsondata = req.requestBody.toString();
-        system.debug('hello1');
         try{
             system.debug('postmethod');
             WSGetPricingOffer wsoffer=new WSGetPricingOffer();

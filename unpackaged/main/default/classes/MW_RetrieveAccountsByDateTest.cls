@@ -1,19 +1,5 @@
 @isTest 
 private class MW_RetrieveAccountsByDateTest {
-    @testSetup static void setup(){	
-        list<account> accList = MW_DataFactoryTest.createAccounts(1);
-        insert accList;
-
-        contact newContact = new contact();
-        newContact.lastName = 'test';
-        newContact.AccountID = accList[0].id;
-        newContact.Application__c = null;
-        newContact.Application_Status_New__c = null;
-        insert newContact;
-
-        list<genesis__Applications__c> appList = MW_DataFactoryTest.createApplication(1, accList[0].Id);
-        insert appList;
-    }
     //test get account endpoint
     static testMethod void MW_RetrieveAccountsByDateTestWithInvalidDate() {
 
@@ -24,10 +10,11 @@ private class MW_RetrieveAccountsByDateTest {
         req.httpMethod = 'GET'; 
         RestContext.request = req;  
         RestContext.response= res;  
+        Test.startTest();
         MW_RetrieveAccountsByDate.MW_RetrieveAccountsByDate();
+        Test.stopTest();
         
-        
-        system.assertNotEquals(null, res.responseBody, 'request is not null');
+        system.assertNotEquals(null, res.responseBody, 'response is not null');
     }
 
     //test get account endpoint
@@ -47,6 +34,6 @@ private class MW_RetrieveAccountsByDateTest {
         
         
         
-        system.assertNotEquals(null, res.responseBody, 'request is not null');
+        system.assertNotEquals(null, res.responseBody, 'response is not null');
     }
 }

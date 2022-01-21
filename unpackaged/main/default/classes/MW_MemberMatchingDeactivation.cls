@@ -3,9 +3,15 @@ global with sharing class MW_MemberMatchingDeactivation {
         Lead ld = new Lead();
         Boolean isSuccess = false;
         try{
+            String leadsEndPoint = MW_Settings__c.getInstance().MemberMatchingDeactivationTool__c;
+
+			if(String.isBlank(leadsEndPoint)) {
+				return true;
+			}
+
             ld = [SELECT id, Member_Matching_Deactivation_Response__c,lead_guid__c FROM LEad where id=:leadId LIMIT 1];
             String certName = MW_Settings__c.getInstance().CertificateNameForLEADS__c;
-            String leadsEndPoint = MW_Settings__c.getInstance().MemberMatchingDeactivationTool__c;
+
 
             
             system.debug('leadsEndPoint -->'+leadsEndPoint);

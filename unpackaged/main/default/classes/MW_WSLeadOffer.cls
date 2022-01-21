@@ -21,6 +21,7 @@ global with sharing class MW_WSLeadOffer  {
         public String segment;
         public Integer term_months;
         public String type;
+        public String score;
     }
 
     @HttpPost
@@ -50,6 +51,9 @@ global with sharing class MW_WSLeadOffer  {
                     offerObj.Segment__c = offer.segment;
                     offerObj.Term__c = offer.term_months;
                     offerObj.Type__c = offer.type;
+                    if(offer.score != null){
+                        offerObj.Score__c = decimal.valueOf(offer.score);
+                    }
                     newOffers.add(offerObj);
                 }
             }

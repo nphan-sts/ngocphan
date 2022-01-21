@@ -137,6 +137,7 @@ public class MW_ApplicationService {
                         mapExistingDuplicateAccts.put(acct.social_security_number_uniqueness_field__c, acct);
                         setPreExistAcctIds.Add(acct.Id);
                 }  
+
                 List<loan__Loan_Account__c> listExistingLoanAcct = [
                     SELECT Id, loan__Account__c, loan__Loan_Status__c
                     FROM loan__Loan_Account__c 
@@ -144,6 +145,7 @@ public class MW_ApplicationService {
                 ];
                 For (loan__Loan_Account__c loanAcct : listExistingLoanAcct) {
                     mapExistingLoanAccts.put(loanAcct.loan__Account__c, loanAcct);
+                    system.debug('Inside For Loop- mapExistingLoanAccts==>'+mapExistingLoanAccts);
                 }
 
                 //if any existing active application
