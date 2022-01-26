@@ -21,35 +21,16 @@ public with Sharing class DocumentReductionRules{
         List<genesis__Application_Document_Category__c> lstUpdateCat = new List<genesis__Application_Document_Category__c>();
         try{
             //----PayStub Reduction
-            genesis__Applications__c app = [SELECT  Total_Stated_Income__c, 
-                                            genesis__Loan_Amount__c, 
-                                            Employment_Status__c, 
-                                            genesis__Account__c, 
-                                            Payment_Mode__c, 
-                                            Sift_Status__c,
-                                            genesis__status__c,  //CRM-966
-                                            Manual_KBA__c,  //CRM-966
-                                            
+            genesis__Applications__c app = [SELECT  Total_Stated_Income__c,genesis__Loan_Amount__c,Employment_Status__c,genesis__Account__c, 
+                                            Payment_Mode__c,Sift_Status__c,genesis__status__c, Manual_KBA__c,                                            
                                             (select id,name,Income_Include_Bonuses_or_Commissions__c from genesis__Employment_Information__r order by createddate limit 1),
-                                            (Select Net_Disposable_Income_NDI__c, 
-                                             Unsecured_Installment_Loans_Count__c from Credit_Policy__r Order By createddate LIMIT 1),
-                                            (SELECT Precise_ID_Overall_SCore__c, 
-                                             Precise_ID_First_Payment_Default__c, 
-                                             Precise_ID_ID_Theft__c,  
-                                             Precise_ID_Validation__c, 
-                                             Phone_Verification_Result__c, 
-                                             Precise_ID_Adverse_Action_Code__c, 
-                                             Precise_ID_Decision__c,
-                                             Precise_ID_Decision_KIQ__c, 
-                                             Precise_ID_General_Fraud_Shield_Indicat__c, 
-                                             Id_Analytics_Score__c, 
-                                             Consistency_Snapd_score__c, 
-                                             Paste_Count__c, 
-                                             Accept_Refer_Code__c,
-                                             Public_Records__c FROM KBA_Details__r Order By createddate desc Limit 1)  //added desc 
-                                            FROM genesis__Applications__c where Id=:applicationId];
-            
-            
+                                            (Select Net_Disposable_Income_NDI__c,Unsecured_Installment_Loans_Count__c from Credit_Policy__r Order By createddate LIMIT 1),
+                                            (SELECT Precise_ID_Overall_SCore__c, Precise_ID_First_Payment_Default__c,Precise_ID_ID_Theft__c,  
+                                             Precise_ID_Validation__c,Phone_Verification_Result__c, Precise_ID_Adverse_Action_Code__c, 
+                                             Precise_ID_Decision__c,Precise_ID_Decision_KIQ__c, Precise_ID_General_Fraud_Shield_Indicat__c, 
+                                             Id_Analytics_Score__c,Consistency_Snapd_score__c,Paste_Count__c,Accept_Refer_Code__c,
+                                             Public_Records__c FROM KBA_Details__r Order By createddate desc Limit 1),Annual_Individual_Income_App__c  
+                                             FROM genesis__Applications__c where Id=:applicationId];
             if(null != app){
                 
                 if(app.Credit_Policy__r!= null && app.Credit_Policy__r.size() > 0 && app.Credit_Policy__r[0].Net_Disposable_Income_NDI__c != null){
@@ -58,24 +39,17 @@ public with Sharing class DocumentReductionRules{
                         creditTradeFlag = true;
                 }
                 
-                if(app.genesis__Account__c != null){
-                    Account acc = [SELECT Annual_Individual_Income__c 
-                                   FROM Account where Id =: app.genesis__Account__c LIMIT 1];
-                    if(acc != null){
-                        System.debug('.. Account.. '+ acc);
-                        if(acc.Annual_Individual_Income__c != null){
+                if(app.Annual_Individual_Income_App__c != null){
                     List<Talx__c> talxInfo = [SELECT Salary__c, Employeer__c from Talx__c 
-                                                where Application__c =: applicationId and (NOT Employeer__c LIKE '%No Hit%') /*and Account__c =: app.genesis__Account__c */ LIMIT 1];
+                                                where Application__c =: applicationId and (NOT Employeer__c LIKE '%No Hit%') LIMIT 1];
                     if(! talxInfo.isEmpty() && talxInfo[0].Salary__c != null){
                         List<AggregateResult> groupedResults = [SELECT SUM(Salary__c)SumSal from Talx__c where Application__c =: applicationId];
                         Decimal talxSal = 0 ;
                         String str = '' + groupedResults[0].get('SumSal') ;
                         talxSal = Decimal.ValueOf(str) ;
-                        //Decimal talxSal = talxInfo[0].Salary__c, indvIncome = acc.Annual_Individual_Income__c;
-                                Decimal indvIncome = acc.Annual_Individual_Income__c;
+                        Decimal indvIncome = app.Annual_Individual_Income_App__c;
                         System.debug('.. talxSal.. '+ talxSal );
                         System.debug('.. indvIncome .. '+ indvIncome );
-                                //Decimal deviationIncome = ((talxSal - indvIncome) / indvIncome) * 100;
                         Decimal deviationIncome = (talxSal / indvIncome) * 100;
                         System.debug('.. deviationIncome .. '+ deviationIncome );
                         if(deviationIncome >= 85)
@@ -84,29 +58,26 @@ public with Sharing class DocumentReductionRules{
                     }
                     System.debug('.. talxInfo.. '+ talxInfo);
                     System.debug('.. talxInfo.isEmpty().. '+ talxInfo.isEmpty());
-                            if(talxInfo.isEmpty()) {
-                            System.debug(logginglevel.error,'app.genesis__Employment_Information__r SIZE ::'+app.genesis__Employment_Information__r.size());   
-                                            Boolean IncomeIncludeBonusesOrCommissions;
-                                            if(app.genesis__Employment_Information__r.size() == 0){
-                                                System.debug(logginglevel.error,'no emp info');
-                                                IncomeIncludeBonusesOrCommissions = False;                               
-                                            }else if (app.genesis__Employment_Information__r.size() > 0){
-                                                List<genesis__Employment_Information__c> BonusCheck = [select Income_Include_Bonuses_or_Commissions__c from genesis__Employment_Information__c
-                                                                                                       where genesis__Application__c=:applicationID Order By createddate DESC LIMIT 1];
-                                                IncomeIncludeBonusesOrCommissions = BonusCheck[0].Income_Include_Bonuses_or_Commissions__c;
-                                                System.debug('..  App IncomeIncludeBonusesOrCommissions.. '+ BonusCheck[0].Income_Include_Bonuses_or_Commissions__c);
-                                            }
-                                            //System.debug('.. Income_Include_Bonuses_or_Commissions__c.. '+ app.genesis__Employment_Information__r[0].Income_Include_Bonuses_or_Commissions__c);
-                                            if((app.Employment_Status__c != null && (app.Employment_Status__c == 'Full Time' || app.Employment_Status__c == 'Part Time')) && !(IncomeIncludeBonusesOrCommissions))
-                                                bonusFlag = true;
-                                            System.debug('.. IncomeIncludeBonusesOrCommissions.. '+ IncomeIncludeBonusesOrCommissions);
-                                            System.debug('.. bonusFlag.. '+ bonusFlag);
-                                           }
+                    if(talxInfo.isEmpty()) {
+                        System.debug(logginglevel.error,'app.genesis__Employment_Information__r SIZE ::'+app.genesis__Employment_Information__r.size());   
+                        Boolean IncomeIncludeBonusesOrCommissions;
+                        if(app.genesis__Employment_Information__r.size() == 0){
+                            System.debug(logginglevel.error,'no emp info');
+                            IncomeIncludeBonusesOrCommissions = False;                               
+                        }else if (app.genesis__Employment_Information__r.size() > 0){
+                            List<genesis__Employment_Information__c> BonusCheck = [select Income_Include_Bonuses_or_Commissions__c from genesis__Employment_Information__c
+                                                                                    where genesis__Application__c=:applicationID Order By createddate DESC LIMIT 1];
+                            IncomeIncludeBonusesOrCommissions = BonusCheck[0].Income_Include_Bonuses_or_Commissions__c;
+                            System.debug('..  App IncomeIncludeBonusesOrCommissions.. '+ BonusCheck[0].Income_Include_Bonuses_or_Commissions__c);
+                        }
+                        if((app.Employment_Status__c != null && (app.Employment_Status__c == 'Full Time' || app.Employment_Status__c == 'Part Time')) && !(IncomeIncludeBonusesOrCommissions))
+                            bonusFlag = true;
+                        System.debug('.. IncomeIncludeBonusesOrCommissions.. '+ IncomeIncludeBonusesOrCommissions);
+                        System.debug('.. bonusFlag.. '+ bonusFlag);
+                    }
                     if(app.Employment_Status__c != null && app.Employment_Status__c == 'Self Employed') selfempFlag = true;
                     System.debug('.. selfempFlag .. '+ selfempFlag );
-                }                    
-                    }
-                }  
+                } 
                 //Modified by Pallavi on 2019/06/13 for CLS-1270 
                 if((app.Employment_Status__c != null && (app.Employment_Status__c == 'Retired' || app.Employment_Status__c == 'Investment' || app.Employment_Status__c == 'Other' || app.Employment_Status__c == 'Seasonal' || app.Employment_Status__c == 'Self Employed'))){
                     employmentflag = true;
@@ -116,60 +87,9 @@ public with Sharing class DocumentReductionRules{
                 // --- ID Reduction----
                 Boolean siftFlag= false, pRecordsFlag= false, pidScoreFlag= false, pidFPDFlag= false, pidValidationFlag= false, pidShieldFlag= false, pidAdvActionFlag= false, pidDecisionFlag= false, pidKIQDecisionFlag= false, pidVerificationFlag= false, pidAnalyticsFlag= false, pidConsistencyFlag= false, pidPCountFlag = false;
                 
-                //if(app.Sift_Status__c != null && app.Sift_Status__c < 40)
-                //    siftFlag = true;
-                
                 if(! app.KBA_Details__r.isEmpty()){
                     System.debug('KBA...' + app.KBA_Details__r);
-                    /*if(app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c > 400)
-pidScoreFlag = true;
-
-if(app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c > 400)
-pidFPDFlag = true;
-
-if(app.KBA_Details__r[0].Precise_ID_Validation__c != null && app.KBA_Details__r[0].Precise_ID_Validation__c > 400)
-pidValidationFlag = true;
-
-if(app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && app.KBA_Details__r[0].Precise_ID_ID_Theft__c > 400)
-pidVerificationFlag = true;             
-
-if(app.KBA_Details__r[0].Precise_ID_Adverse_Action_Code__c != null && (!app.KBA_Details__r[0].Precise_ID_Adverse_Action_Code__c.contains('I') || (!app.KBA_Details__r[0].Precise_ID_Adverse_Action_Code__c.contains('H'))))
-pidAdvActionFlag = true;
-
-if(app.KBA_Details__r[0].Precise_ID_Decision__c != null && (app.KBA_Details__r[0].Precise_ID_Decision__c.contains('Accept')))
-pidDecisionFlag = true;
-
-if(app.KBA_Details__r[0].Precise_ID_Decision_KIQ__c != null && (app.KBA_Details__r[0].Precise_ID_Decision_KIQ__c.contains('Accept')))
-pidKIQDecisionFlag = true;
-
-if(app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c != null && 
-(!(app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c == 'F04' || 
-app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c == 'F05' || 
-app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c == 'F06' || 
-app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c == 'F09' || 
-app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c == 'F10' || 
-app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c == 'F13' || 
-app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c == 'F14' || 
-app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c == 'F25' || 
-app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c == 'F27')))
-pidShieldFlag = true;           
-
-if(app.KBA_Details__r[0].Id_Analytics_Score__c != null){
-if(app.KBA_Details__r[0].Id_Analytics_Score__c < 700)
-pidAnalyticsFlag = true;
-}
-if(app.KBA_Details__r[0].Consistency_Snapd_score__c != null){
-if(app.KBA_Details__r[0].Consistency_Snapd_score__c > 15)
-pidConsistencyFlag = true;
-}
-if(app.KBA_Details__r[0].Paste_Count__c != null){
-if(app.KBA_Details__r[0].Paste_Count__c < 2)
-pidPCountFlag = true;
-}*/
-                    /*if(app.KBA_Details__r[0].Public_Records__c != null){
-if(app.KBA_Details__r[0].Public_Records__c == 0)
-pRecordsFlag = true;
-}*/
+                    
                     //changing ID Reduction rules per revised requirements on CLS-040  09/04/2018  
                     if((app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != 9012 && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null 
                         && app.KBA_Details__r[0].Accept_Refer_Code__c != null && app.KBA_Details__r[0].Accept_Refer_Code__c == 'ACC')
@@ -181,14 +101,7 @@ pRecordsFlag = true;
                            }
                     
                     System.debug('... pidScoreFlag...'+pidScoreFlag);
-                    /*     if(app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9012){                        
-pidFPDFlag = true;                        }
-
-if(app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9012){                        
-pidVerificationFlag = true;                        }
-
-if(app.KBA_Details__r[0].Precise_ID_Validation__c == 9012){                        
-pidValidationFlag = true;                        }*/
+                    
                 }
                 
                 //changing ID Reduction rules per revised requirements on CLS-040  09/04/2018
@@ -243,12 +156,7 @@ pidValidationFlag = true;                        }*/
                                 appDocCat.genesis__Required__c = false;
                             lstUpdateCat.add(appDocCat);           
                             i++;  //pallavi
-                        }
-                        //  genesis__Application_Document_Category__c appDocCat : BankdocCategory[0];
-                        /*BankdocCategory[0].genesis__Required__c = true;
-lstUpdateCat.add(BankdocCategory[0]);*/  //pallavi(commented because 2 rows with same id were getting added 
-                        //and this was thrwing exception)
-                        
+                        }                        
                     }
                 }
                 //CRM-881 - start
@@ -279,21 +187,23 @@ lstUpdateCat.add(BankdocCategory[0]);*/  //pallavi(commented because 2 rows with
                     }
                 }
                 //CRM-881 - end
-                
                 updateDocReduction(lstUpdateCat);
             }
         }
         catch(Exception ex){
-            loan__batch_process_log__c logs = new loan__batch_process_log__c(loan__Message__c='Error in DocumentReductionRules:  '+ex.getlinenumber()+'Error: '+ex.getMessage());
+            loan__batch_process_log__c logs = new loan__batch_process_log__c(loan__origin__c = 'DocumentReductionRules',loan__Type__c = 'Exception', loan__Batch_Id__c = applicationId, loan__Message__c = 'Error in DocumentReductionRules: '+ ex.getlinenumber() + 'Error: ' + ex.getMessage());
             insert logs;
-            System.debug('Exception: '+ex.getMessage()); 
         }
     }
     
     public static void updateDocReduction(List<genesis__Application_Document_Category__c> lstUpdateCat){        
-        if(!lstUpdateCat.isEmpty()){            
-            System.debug('lstUpdateCat.....'+ lstUpdateCat);  
-            update lstUpdateCat;
+        if(!lstUpdateCat.isEmpty()){  
+            try{           
+                update lstUpdateCat;
+            }catch(Exception ex){
+                MW_LogUtility.ExceptionDO expRex = new MW_LogUtility.ExceptionDO(ex);
+                MW_DataDogCallOut.futureSend(JSON.serialize(MW_LogUtility.getLogRecord('MW_ApplicationService', lstUpdateCat[0].Id, null, 'UpdateAccount',JSON.serialize(expRex),'Error',null)), new List<String>());
+            }
         }        
     }
 }

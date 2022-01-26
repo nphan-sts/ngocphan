@@ -11,9 +11,10 @@ Private Class DocumentReductionRulesTest{
        test.startTest();
         Account acc = new Account(
             Name = 'Test',
-            loan__Investor__c=False,
-            cnotify__Email__c = 'no-reply@testorganization.com',
-            Annual_Individual_Income__c = 10000 
+            peer__First_Name__c = 'TestFirstName',
+            peer__Last_Name__c = 'TestLastName',
+            loan__Investor__c = False,
+            cnotify__Email__c = 'no-reply@testorganization.com'
         );
         Insert acc;
         genesis__Applications__c app = new genesis__Applications__c(
@@ -26,7 +27,8 @@ Private Class DocumentReductionRulesTest{
             genesis__Status__c = 'agent_verified',
             genesis__Draw_Period_End_Date__c = system.Today(),
             Employment_Status__c = 'Full Time',
-            Sift_Status__c=30
+            Sift_Status__c=30,
+            Annual_Individual_Income_App__c = 10000 
         );      
         Insert app; 
         
@@ -41,7 +43,8 @@ Private Class DocumentReductionRulesTest{
             genesis__Status__c = 'agent_verified',
             genesis__Draw_Period_End_Date__c = system.Today(),
             Employment_Status__c = 'Full Time',
-            Sift_Status__c=30
+            Sift_Status__c=30,
+            Annual_Individual_Income_App__c = 10000
         );      
         Insert app1;
         genesis__Employment_Information__c empInfo = new genesis__Employment_Information__c(
@@ -114,7 +117,7 @@ Private Class DocumentReductionRulesTest{
     //PayStub Reduction
     Static testMethod Void payStubReduction_UseCase1(){
         
-        Account acc = [select Id, Annual_Individual_Income__c from Account  where Name = 'Test' LIMIT 1];
+        Account acc = [select Id, Annual_Individual_Income__c from Account  where peer__First_Name__c = 'TestFirstName' LIMIT 1];
         System.assertEquals(true, acc!=Null);        
         
         genesis__Applications__c app = [SELECT Id, Employment_Status__c from genesis__Applications__c WHERE genesis__Account__c =: acc.Id LIMIT 1];
@@ -122,17 +125,12 @@ Private Class DocumentReductionRulesTest{
         
         genesis__Employment_Information__c empInfo = [select id,Income_Include_Bonuses_or_Commissions__c from genesis__Employment_Information__c  WHERE genesis__Application__c =: app.Id LIMIT 1];
         System.assertEquals(true, empInfo!=Null);
-                
-       // Talx__c talx = [SELECT Id, Salary__c FROM Talx__c WHERE Application__c =: app.Id LIMIT 1];
-        //System.assertEquals(true, talx!=Null);  
         
         Id docCatID = [SELECT Id FROM genesis__Document_Category__c WHERE genesis__Category_Name__c LIKE '%PayStub%'].Id;
         System.assertEquals(true, docCatID!=Null);
                 
         genesis__Application_Document_Category__c appDocCatObj = [SELECT Id FROM genesis__Application_Document_Category__c WHERE Name Like '%Test%'];
         System.assertEquals(true, appDocCatObj!=Null);
-        //List<Id> appid = new List<Id>();
-        //appid.add(app.id);
         DocumentReductionRules.payStubReduction(app.id);
         List<genesis__Application_Document_Category__c> docCategory = [SELECT Id FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id and genesis__Required__c = false];
         System.assertEquals(true, docCategory.Size()>0);
@@ -141,15 +139,12 @@ Private Class DocumentReductionRulesTest{
         Decimal NDIncome = decimal.valueOf(cPolicy.Net_Disposable_Income_NDI__c);                  
         System.assertEquals(true, (NDIncome>1000 && NDIncome<8000));
         System.assertEquals(true, ((app.Employment_Status__c == 'Full Time' || app.Employment_Status__c == 'Part Time') && !(empInfo.Income_Include_Bonuses_or_Commissions__c)));
-        //System.assertEquals(true, (app.Employment_Status__c == 'Self Employed'));
-        //System.assertEquals(true, (((talx.Salary__c - acc.Annual_Individual_Income__c) / acc.Annual_Individual_Income__c) * 100)>=85);                            
-                
-    }
+   }
     
     //ID Reduction
     Static testMethod Void payStubReduction_UseCase2(){
         
-        Account acc = [select Id from Account  where Name = 'Test' LIMIT 1];
+        Account acc = [select Id from Account  where peer__First_Name__c = 'TestFirstName' LIMIT 1];
         System.assertEquals(true, acc!=Null);
         genesis__Applications__c app = [SELECT Id,Sift_Status__c from genesis__Applications__c WHERE genesis__Account__c =: acc.Id LIMIT 1];
         System.assertEquals(true, app!=Null);
@@ -188,7 +183,7 @@ Private Class DocumentReductionRulesTest{
     
      Static testMethod Void payStubReduction_UseCase3(){
         
-        Account acc = [select Id from Account  where Name = 'Test' LIMIT 1];
+        Account acc = [select Id from Account  where peer__First_Name__c = 'TestFirstName' LIMIT 1];
         System.assertEquals(true, acc!=Null);
         genesis__Applications__c app = [SELECT Id,Sift_Status__c from genesis__Applications__c WHERE genesis__Account__c =: acc.Id LIMIT 1];
         System.assertEquals(true, app!=Null);
@@ -216,7 +211,7 @@ Private Class DocumentReductionRulesTest{
     //CRM-881 - start
     Static testMethod Void reduce1040EnableRetirement(){
                 
-        Account acc = [select Id/*, Annual_Individual_Income__c*/ from Account  where Name = 'Test' LIMIT 1];  //CRM-1025
+        Account acc = [select Id from Account  where peer__First_Name__c = 'TestFirstName' LIMIT 1];  //CRM-1025
         System.assertEquals(true, acc!=Null);        
         genesis__Document_Category__c docCat = new genesis__Document_Category__c(
             genesis__Category_Name__c = '1040',
@@ -244,14 +239,14 @@ Private Class DocumentReductionRulesTest{
             genesis__Required__c = false
         );
         Insert appDocCat2;
+
         app.Employment_Status__c = 'Retired';
         update app;
     
-    genesis__Application_Document_Category__c idDocCatObj = [SELECT ID,name, genesis__Required__c FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id and name LIKE '%ID%' limit 1];
-    idDocCatObj.genesis__Application__c = null;
+        genesis__Application_Document_Category__c idDocCatObj = [SELECT ID,name, genesis__Required__c FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id and name LIKE '%ID%' limit 1];
+        idDocCatObj.genesis__Application__c = null;
         update idDocCatObj;
         
-        //List<genesis__Application_Document_Category__c> docCategoryy = [SELECT Id FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id and Name Like '%1040%'];
         DocumentReductionRules.payStubReduction(app.id);
         List<genesis__Application_Document_Category__c> docCategory = [SELECT Id FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id and Name Like '%1040%' and genesis__Required__c = false];
         System.assertEquals(true, docCategory.Size()>0);
@@ -261,7 +256,7 @@ Private Class DocumentReductionRulesTest{
     
     Static testMethod Void retirementDocReduction(){
                 
-        Account acc = [select Id/*, Annual_Individual_Income__c*/ from Account  where Name = 'Test' LIMIT 1];  //CRM-1025
+        Account acc = [select Id from Account  where peer__First_Name__c = 'TestFirstName' LIMIT 1];  //CRM-1025
         System.assertEquals(true, acc!=Null);        
         
         genesis__Document_Category__c docCat = new genesis__Document_Category__c(
