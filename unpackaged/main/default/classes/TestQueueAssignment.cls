@@ -247,7 +247,7 @@ public class TestQueueAssignment{
          kba1.Precise_ID_General_Fraud_Shield_Indicat__c = 'F05';
          insert kba1;    
       Test.startTest();
-      	QueueAssignment.appToQueueAssignment(appidlist); 
+        QueueAssignment.appToQueueAssignment(appidlist); 
       Test.stopTest();
       genesis__Applications__c resultApp = [SELECT Fraud_Assignment_Reason__c FROM genesis__Applications__c where Id =: app1.Id];
       System.assertNotEquals(resultApp.Fraud_Assignment_Reason__c, null, 'Fraud reason is being set as '+ resultApp.Fraud_Assignment_Reason__c);

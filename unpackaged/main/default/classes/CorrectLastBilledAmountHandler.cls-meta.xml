@@ -3,13 +3,8 @@
     <apiVersion>53.0</apiVersion>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>7015</minorNumber>
-        <namespace>clcommon</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>2</majorNumber>
-        <minorNumber>7011</minorNumber>
-        <namespace>genesis</namespace>
+        <minorNumber>7016</minorNumber>
+        <namespace>loan</namespace>
     </packageVersions>
     <status>Active</status>
 </ApexClass>

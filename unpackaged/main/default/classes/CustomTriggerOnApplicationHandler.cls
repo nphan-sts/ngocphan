@@ -350,6 +350,7 @@ Public class CustomTriggerOnApplicationHandler{
             (app.Monthly_Housing_Payment_App__c != null && oldApp.Monthly_Housing_Payment_App__c != null && oldApp.Monthly_Housing_Payment_App__c != app.Monthly_Housing_Payment_App__c))
         {
                 RedecisionCntrl.appRedecisionTrigger(oldAppMap,newAppMap);
+
         }
     }
 }
