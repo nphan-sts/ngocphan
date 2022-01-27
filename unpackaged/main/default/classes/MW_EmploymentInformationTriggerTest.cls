@@ -9,11 +9,11 @@ private class MW_EmploymentInformationTriggerTest {
             //Test Verification_Complexity__c = Hard
             //-----------------------------------------
             Account act = MW_GlobalTestUtility.GetAccount('Member');
-            act.Annual_Individual_Income__c = 100;
             insert act;
 
             genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
             app.genesis__Account__c = act.Id;
+            app.Annual_Individual_Income_App__c = 100;
             insert app;
 
             genesis__Employment_Information__c empInfo = MW_GlobalTestUtility.GetEmploymentInformation();
@@ -51,8 +51,8 @@ private class MW_EmploymentInformationTriggerTest {
             //---------------------------------------------
             //Test Verification_Complexity__c = Easy
             //---------------------------------------------
-            act.Monthly_Housing_Payment__c = 400;
-            update act;
+            app.Monthly_Housing_Payment_App__c = 400;
+            update app;
 
             KBA_Details__c kbaEasy = MW_GlobalTestUtility.GetKbaDetails();
             kbaEasy.Application__c = app.Id;
