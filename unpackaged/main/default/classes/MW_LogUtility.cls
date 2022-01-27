@@ -31,7 +31,7 @@ public class MW_LogUtility {
         
     }
     
-    /*MKT Added for LSP-306*/
+/*MKT Added for LSP-306*/
     public static void dagError(
         string jobName,
         string jobClass,
@@ -208,7 +208,6 @@ public class MW_LogUtility {
         try {
             // Use a try/catch so that if `data` can't be cast to string, or isn't JSON,
             //  it doesn't fail execution altogether.
-            
             if(log.data != null){
                 log.data = JSON.deserializeUntyped((String)data);
             }
@@ -234,5 +233,19 @@ public class MW_LogUtility {
 */
     public static Boolean isStatusCodeError(Integer statusCode) {
         return statusCode >= 500;
+    }
+/**
+* A method to create a MW_LogUtility.Log instance and return it
+*/
+    public static MW_LogUtility.Log getLogRecord(String cls,String appId,String leadId,String method,Object data,String type,Integer code){
+        MW_LogUtility.Log log = new MW_LogUtility.Log();
+        log.apexClass = cls;
+        log.applicationId = appId;
+        log.leadId = leadId;
+        log.method = method;
+        log.data = data;
+        log.type = type;
+        log.statusCode = code;
+        return log; 
     }
 }
