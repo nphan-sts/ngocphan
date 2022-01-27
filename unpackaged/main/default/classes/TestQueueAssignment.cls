@@ -101,6 +101,7 @@ public class TestQueueAssignment{
         System.assertEquals(appTags[0].Application_Tag__c, 'Fraud', 'Fraud tag been assigned');
     }
     
+
     Testmethod static void FraudbasedOnSiftStatus(){
         Account acc1 = [select id from Account Limit 1];
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
@@ -131,11 +132,13 @@ public class TestQueueAssignment{
         System.assertEquals(appTags[0].Application_Tag__c, 'Fraud', 'Fraud tag been assigned');
     }
     
+
     Testmethod static void FraudBasedOnPreciseIdScores(){
         Account acc1 = [select id from Account Limit 1];
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
         app1.Affiliate_Partner__c = true;
-        app1.Sift_Status__c = 10;
+        app1.Sift_Status__c = 100;
+
         update app1;
         List<Id> appIdlist = new List<Id>();
         appIdlist.add(app1.id);
@@ -164,6 +167,7 @@ public class TestQueueAssignment{
         Account acc1 = [select id from Account Limit 1];
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
         app1.Affiliate_Partner__c = true;
+
         app1.Sift_Status__c = 10;
         update app1;
         List<Id> appIdlist = new List<Id>();
@@ -187,8 +191,10 @@ public class TestQueueAssignment{
     Testmethod static void FraudBasedOnKBAAttempts(){
         Account acc1 = [select id from Account Limit 1];
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
+
         app1.Sift_Status__c = 10;
         update app1;
+
         List<Id> appIdlist = new List<Id>();
         appIdlist.add(app1.id);
         KBA_Details__c kba1 = [select id,
@@ -212,6 +218,7 @@ public class TestQueueAssignment{
         Account acc1 = [select id from Account Limit 1];
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
         app1.Sift_Status__c = 10;
+
         app1.Affiliate_Partner__c = true;
         update app1;
         List<Id> appIdlist = new List<Id>();
@@ -221,6 +228,7 @@ public class TestQueueAssignment{
         kba1.Id_Analytics_Score__c =760;
         kba1.Precise_ID_General_Fraud_Shield_Indicat__c = 'F05';
         kba1.Paste_Count__c = 2;
+
         insert kba1;
         
         Test.startTest();
@@ -230,14 +238,96 @@ public class TestQueueAssignment{
         System.assertNotEquals(resultApp.Fraud_Assignment_Reason__c, null, 'Fraud reason is being set as '+ resultApp.Fraud_Assignment_Reason__c);
     }
     
-    Testmethod static void FraudBasedonUTMMediumAndSource(){
+    Testmethod static void FraudBasedonUTMMediumAndSouce(){
         Account acc1 = [select id from Account Limit 1];
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c, utm_medium__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
         
-        app1.utm_medium__c = 'partner';
-        app1.utm_source__c = 'creditkarma';
-        app1.Sift_Status__c = 10;
+        app1.utm_medium__c = 'sem';
+        app1.utm_source__c = 'tu';
+        app1.Sift_Status__c = 100;
         app1.Affiliate_Partner__c = false;
+        update app1;
+        List<Id> appIdlist = new List<Id>();
+        appIdlist.add(app1.id);
+        KBA_Details__c kba1 = new KBA_Details__c();
+        kba1.Application__c = app1.id;
+        kba1.Id_Analytics_Score__c =800;
+        kba1.Paste_Count__c = 3;
+        kba1.Precise_ID_Overall_SCore__c = 0;
+        kba1.Precise_ID_ID_Theft__c = 0;
+        kba1.Precise_ID_Validation__c = 0;
+        kba1.Precise_ID_First_Payment_Default__c = 0;
+        kba1.Precise_ID_Overall_SCore__c = 9001;
+        kba1.Precise_ID_First_Payment_Default__c = 9001;
+        kba1.Precise_ID_ID_Theft__c = 9001;
+        kba1.Precise_ID_Validation__c = 9001;
+        kba1.Precise_ID_General_Fraud_Shield_Indicat__c = 'F05';
+        insert kba1;    
+        Test.startTest();
+        QueueAssignment.appToQueueAssignment(appidlist); 
+        Test.stopTest();
+        genesis__Applications__c resultApp = [SELECT Fraud_Assignment_Reason__c FROM genesis__Applications__c where Id =: app1.Id];
+        System.assertNotEquals(resultApp.Fraud_Assignment_Reason__c, null, 'Fraud reason is being set as '+ resultApp.Fraud_Assignment_Reason__c);
+    } 
+    
+    Testmethod static void FraudBasedonUTMMediumBlank(){
+        Account acc1 = [select id from Account Limit 1];
+        genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
+        app1.utm_medium__c = '';
+        app1.utm_source__c = 'creditkarma';
+        app1.Affiliate_Partner__c = false;
+        app1.Sift_Status__c = 100;
+        update app1;
+        List<Id> appIdlist = new List<Id>();
+        appIdlist.add(app1.id);
+        KBA_Details__c kba1 = new KBA_Details__c();
+        kba1.Application__c = app1.id;
+        kba1.Id_Analytics_Score__c = 900;
+        kba1.Precise_ID_General_Fraud_Shield_Indicat__c = 'F05';
+        kba1.paste_count__c = 3;
+        insert kba1;
+        
+        Test.startTest();
+        QueueAssignment.appToQueueAssignment(appIdlist);
+        Test.stopTest();
+        genesis__Applications__c resultApp = [SELECT Fraud_Assignment_Reason__c FROM genesis__Applications__c where Id =: app1.Id];
+        System.assertNotEquals(resultApp.Fraud_Assignment_Reason__c, null, 'Fraud reason is being set as '+ resultApp.Fraud_Assignment_Reason__c);
+    }
+    
+    Testmethod static void FraudBasedOnPreciseIdScoresInNegative(){
+        Account acc1 = [select id from Account Limit 1];
+        genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
+        app1.utm_medium__c = 'Partner';
+        app1.utm_source__c = 'creditkarma';
+        app1.Sift_Status__c = 100;
+        update app1;
+        List<Id> appIdlist = new List<Id>();
+        appIdlist.add(app1.id);
+        KBA_Details__c kba1 = new KBA_Details__c();
+        kba1.Application__c = app1.id;
+        kba1.Id_Analytics_Score__c = 800;
+        kba1.Precise_ID_General_Fraud_Shield_Indicat__c = 'F05';
+        kba1.Paste_Count__c = 3;
+        kba1.Precise_ID_Overall_SCore__c = -1;
+        kba1.Precise_ID_ID_Theft__c = -1;
+        kba1.Precise_ID_Validation__c = -1;
+        kba1.Precise_ID_First_Payment_Default__c = -1;
+        insert kba1;
+        
+        Test.startTest();
+        QueueAssignment.appToQueueAssignment(appIdlist);
+        Test.stopTest();
+        genesis__Applications__c resultApp = [SELECT Fraud_Assignment_Reason__c FROM genesis__Applications__c where Id =: app1.Id];
+        System.assertNotEquals(resultApp.Fraud_Assignment_Reason__c, null, 'Fraud reason is being set as '+ resultApp.Fraud_Assignment_Reason__c);
+    }
+    
+
+    Testmethod static void KBAFraudBasedonUTMMediumDM(){
+        Account acc1 = [select id from Account Limit 1];
+        genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c, utm_medium__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
+        app1.Sift_Status__c = 100;
+        app1.utm_medium__c = 'DM';
+        app1.Affiliate_Partner__c = true;
         update app1;
         List<Id> appIdlist = new List<Id>();
         appIdlist.add(app1.id);
@@ -341,7 +431,7 @@ public class TestQueueAssignment{
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c, utm_medium__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
         
         app1.utm_medium__c = 'partner';
-        app1.Sift_Status__c = 10;
+        app1.Sift_Status__c = 100;
         app1.Affiliate_Partner__c = true;
         update app1;
         List<Id> appIdlist = new List<Id>();
@@ -349,8 +439,10 @@ public class TestQueueAssignment{
         KBA_Details__c kba1 = new KBA_Details__c();
         kba1.Application__c = app1.id;
         kba1.Id_Analytics_Score__c =800;
-        kba1.Paste_Count__c = null;
-        kba1.Precise_ID_General_Fraud_Shield_Indicat__c = null;
+
+        kba1.Paste_Count__c = 3;
+        kba1.Precise_ID_General_Fraud_Shield_Indicat__c = 'F05';
+
         insert kba1;    
         Test.startTest();
         QueueAssignment.appToQueueAssignment(appidlist); 
@@ -358,6 +450,7 @@ public class TestQueueAssignment{
         genesis__Applications__c resultApp = [SELECT Fraud_Assignment_Reason__c FROM genesis__Applications__c where Id =: app1.Id];
         System.assertNotEquals(resultApp.Fraud_Assignment_Reason__c, null, 'Fraud reason is being set as '+ resultApp.Fraud_Assignment_Reason__c);
     } 
+
     
     Testmethod static void NonFraud(){
         Account acc1 = [select id from Account Limit 1];
@@ -396,4 +489,5 @@ public class TestQueueAssignment{
         System.assertEquals(QueueAssignment.KBAFraudT, false, 'No fraud tag being assigned');
     } 
     
+
 }
