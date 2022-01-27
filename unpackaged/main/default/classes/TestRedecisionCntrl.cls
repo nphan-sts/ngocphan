@@ -3,7 +3,7 @@
 public class TestRedecisionCntrl {
     
     @isTest
-    static void testRedecisionForAccountUpdates(){
+    static void method1(){
         test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
@@ -62,8 +62,7 @@ public class TestRedecisionCntrl {
             Monthly_Housing_Payment__c = 100,
             Address_1__c = 'AA',
             Address_2__c = 'BB',
-            peer__Date_of_Birth__c = Date.newInstance(1986, 06, 06),
-            loan__SOCIAL_SECURITY_NUMBER__c = '111222333'
+            peer__Date_of_Birth__c = Date.newInstance(1986, 06, 06)
         );
         Insert acc1;
        
@@ -81,13 +80,12 @@ public class TestRedecisionCntrl {
             genesis__Loan_Amount__c = 1000,
             DCP_Investor_Eligibility__c = false,
             Investor__c = acc1.id,
-            Bureau_SSN__c = '123123123',
-            Requested_loan_amount__c = 1000,
-            Annual_Individual_Income_App__c = 1000,
-            Monthly_Housing_Payment_App__c = 100
+            Bureau_SSN__c = '123',
+            Requested_loan_amount__c = 1000 
         );      
         Insert app;
         Map<id,Account> oldAccMap = new Map<id,Account>();
+        //oldAccMap.put(acco.id,acco);
         
         acc1.Annual_Individual_Income__c = 1500;
         acc1.peer__Date_of_Birth__c = Date.newInstance(1986, 06, 07);
@@ -100,18 +98,12 @@ public class TestRedecisionCntrl {
         acc1.City__c = 'NY';
         acc1.ZIP_Code__c='123457';
         acc1.Monthly_Housing_Payment__c = 200;
-        acc1.manualredecision__c = true;
         update acc1;
-        
-        Redecision_Request__c rr = [SELECT Id,Application__c,Triggered_From__c FROM Redecision_Request__c WHERE Account_Id__c =: acc1.Id LIMIT 1];
-        system.assertEquals('Account',rr.Triggered_From__c);
-        
-        genesis__Applications__c appRec = [SELECT Id, genesis__Status__c FROM genesis__Applications__c WHERE Id =: app.Id];
-        system.assertEquals('Redecision_Required',appRec.genesis__Status__c);
         
         test.stopTest();
     }
-    testmethod static void testRedecisionForApplicationUpdates(){
+    testmethod static void method2(){
+        //mwSettingSetup();
 
         CL_Document__c doc = new CL_Document__c();
         doc.Doc1__c = 'Credit File';
@@ -132,11 +124,8 @@ public class TestRedecisionCntrl {
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
 
         //Creating Account
-        
         Account acc = new Account(
-            Name = 'TestInv',
-            peer__First_Name__c = 'TestInvFirstName',
-            peer__Last_Name__c = 'TestInvLastName',
+            Name = 'Test',
             loan__Investor__c = True,
             Amount_Invested__c = 1200,
             Number_Of_Applications_Invested__c =3,
@@ -145,7 +134,7 @@ public class TestRedecisionCntrl {
             Investor_Code__c = 'TNA'
             );
         insert acc;
-        System.assertEquals('TestInv',acc.Name,'Wrong Account');
+        System.assertEquals('Test',acc.Name,'Wrong Account');
      
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -167,32 +156,25 @@ public class TestRedecisionCntrl {
             genesis__term__c = 36,
             genesis__payment_frequency__c = 'Monthly',
             genesis__Draw_Period_End_Date__c = system.Today(),
-            Requested_loan_amount__c = 1000,
-            Annual_Individual_Income_App__c = 1000,
-            Monthly_Housing_Payment_App__c = 100
+            Requested_loan_amount__c = 1000
             );
         insert app;
         genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
         adc.genesis__Application__c = app.Id;
         adc.Name = 'ESign Documents';
         insert adc;
-
-        Test.startTest();
         app.Anniversary_Date__c = system.today();
         app.Loan_Doc_Signed_On__c = Date.newInstance(2013,12,20);
+        //app.Investor__c = acc1.id;
         app.Invested_Amount__c =1000;
+        //app.Bureau_SSN__c ='216165345';
         app.genesis__Status__c = 'agent_verified';
         app.Last_Investor_Assigned_On__c = datetime.newInstance(2014, 9, 15, 13, 30, 0);
         app.Requested_loan_amount__c = 1001;
         update app;
+        //System.assertEquals(null,app.Borrower_s_Email__c,'Borrower Email is not null');
 
-        Redecision_Request__c rr = [SELECT Id,Application__c,Triggered_From__c FROM Redecision_Request__c WHERE Application__c =: app.Id LIMIT 1];
-        system.assertEquals('Application',rr.Triggered_From__c);
-        
-        genesis__Applications__c appRec = [SELECT Id, genesis__Status__c FROM genesis__Applications__c WHERE Id =: app.Id];
-        system.assertEquals('Redecision_Required',appRec.genesis__Status__c);
-        
-        Test.stopTest();
+
     }
 
 }
