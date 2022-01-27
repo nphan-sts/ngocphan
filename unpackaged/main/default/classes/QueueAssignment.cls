@@ -1,4 +1,12 @@
-        verificationF = false;
+/***********Modification History**************
+Pallavi      LOS-207      2019-11-21
+* Modified by   Date            JIRA number
+* Pallavi    2020/11/04    LOP-36/CRM-974(9013 Still flagging for fraud review)
+/********************************************/
+
+public class QueueAssignment{
+    Private Static boolean KBAFraudT = false,
+                           verificationF = false;
     
     @invocablemethod()
     Public static void appToQueueAssignment(List<ID> apps){
