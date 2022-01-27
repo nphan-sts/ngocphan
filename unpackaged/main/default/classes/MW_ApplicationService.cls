@@ -20,7 +20,6 @@ public class MW_ApplicationService {
 
             if(currentCallout == null && currentCallout.size()<=0) {
                 ID jobID = System.enqueueJob(new MWQueuebleJob(appList));
-                System.debug('>>> 1'+jobID);
                 calloutsScheduled.add(new MCCallout__c(Job_ID__c = jobID, Application__c=app, Status__c = 'Queued', Send_on__c=System.now()));
             }
 
@@ -36,12 +35,7 @@ public class MW_ApplicationService {
     public static void UpdateApplicationFlags(List<genesis__Applications__c> appslist, Map<Id, genesis__Applications__c> oldMap)
     {
         for(genesis__Applications__c app : appslist) {
-            /* CLS-676 -- Moved to process builder as a part of CLS-1302
-            if(app.Employment_Status__c!= null && oldMap.get(app.Id).genesis__Status__c!=app.Employment_Status__c  && app.Employment_Status__c =='Self Employed' && !app.isSelfEmployed__c) {
-                app.genesis__Status__c ='Self Employed Documents';
-                app.isSelfEmployed__c = true;
-            }*/
-
+           
             if(app.genesis__Status__c == 'Redecision_Required' && app.genesis__Status__c!=oldMap.get(app.Id).genesis__Status__c) {
                 app.agentVerificationPendingFlag__c = false;
             }
@@ -142,10 +136,8 @@ public class MW_ApplicationService {
                 For (Account acct : listDuplicateAccts) {
                         mapExistingDuplicateAccts.put(acct.social_security_number_uniqueness_field__c, acct);
                         setPreExistAcctIds.Add(acct.Id);
-                }
-      
+                }  
 
-                //
                 List<loan__Loan_Account__c> listExistingLoanAcct = [
                     SELECT Id, loan__Account__c, loan__Loan_Status__c
                     FROM loan__Loan_Account__c 
@@ -227,9 +219,39 @@ public class MW_ApplicationService {
                 If(preExistAcctsPost.Size() > 0)
                 {
                     Insert preExistAcctsPost;
+                }                
+            }
+        }
+    }
+    /** Update the accounts with latest Income and housing values from Application */
+    public static void UpdateAccount(List<genesis__Applications__c> newApps, Map<Id, genesis__Applications__c> oldMap, String triggerEvent) {
+        List<Account> updateAccountList = new List<Account>();
+        try{
+            for (genesis__Applications__c app : newApps) {
+                genesis__Applications__c oldApp = (oldMap != null && oldMap.size() > 0) ? oldMap.get(app.Id) : null;
+                Account acct = new Account();
+                /** Update Annual_Individual_Income__c on Account if a new application is inserted OR the field is updated on Application */
+                if (app.Annual_Individual_Income_App__c != null && app.Annual_Individual_Income_App__c > 0 && ((triggerEvent == 'afterUpate' && app.Annual_Individual_Income_App__c != oldApp.Annual_Individual_Income_App__c) || (triggerEvent == 'afterInsert'))) {
+                    acct.Annual_Individual_Income__c = app.Annual_Individual_Income_App__c;
+                    acct.Id = app.genesis__Account__c;
                 }
-                
-            } //If(mapCurrentAccts.size() > 0)
-        } //If(mapCurrentApps.size() > 0)
+                /** Update Monthly_Housing_Payment_App__c on Account if a new application is inserted OR the field is updated on Application */
+                if (app.Monthly_Housing_Payment_App__c != null && app.Monthly_Housing_Payment_App__c > 0 &&  ((triggerEvent == 'afterUpate' && app.Monthly_Housing_Payment_App__c != oldApp.Monthly_Housing_Payment_App__c) || (triggerEvent == 'afterInsert'))) {
+                    acct.Monthly_Housing_Payment__c = app.Monthly_Housing_Payment_App__c;
+                    acct.Id = app.genesis__Account__c;
+                } 
+                /** Add the account to update list if any one of the above 2 fields is updated */           
+                if(acct.Id == app.genesis__Account__c){
+                    updateAccountList.add(acct);
+                }
+            }
+            
+            if(updateAccountList.size() > 0) {            
+                update updateAccountList;
+            }
+        }catch(Exception ex){
+            MW_LogUtility.ExceptionDO expRex = new MW_LogUtility.ExceptionDO(ex);
+            MW_DataDogCallOut.futureSend(JSON.serialize(MW_LogUtility.getLogRecord('MW_ApplicationService', newApps[0].Id, newApps[0].Lead_Id__c, 'UpdateAccount',JSON.serialize(expRex),'Error',null)), new List<String>());
+        }
     }
 }

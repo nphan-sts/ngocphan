@@ -54,6 +54,8 @@ public abstract class MW_DataFactoryTest {
                                                    genesis__Draw_Period_End_Date__c = system.Today(),
                                                    genesis__Expected_First_Payment_Date__c = system.Today(),
                                                    genesis__Expected_Start_Date__c = system.Today(),
+                                                   Monthly_Housing_Payment_App__c = 900,
+                                                   Annual_Individual_Income_App__c = 90000,
                                                    LEAD_ID__C='c9149473-e69f-ee12-38a7-d18b0cba847d'
                                                 );
                 applicationList.add( app);
@@ -68,7 +70,6 @@ public abstract class MW_DataFactoryTest {
         
         for ( Integer i = 0 ; i < numberOfApp ; i++ ) {
             dsfs__DocuSign_Status__c sobj = new dsfs__DocuSign_Status__c();
-            //sobj.Application__c = accId;
             sobj.dsfs__Subject__c = 'Action Required - Please eSign your ESign Documents '+accId;
             sobj.dsfs__Sender_Email__c='cpalapala@happymoney.com';
             sobj.dsfs__DocuSign_Envelope_ID__c='50E4E71B-7CF8-43B5-8750-78D4DABB14F7';

@@ -235,4 +235,18 @@ public class MW_LogUtility {
     public static Boolean isStatusCodeError(Integer statusCode) {
         return statusCode >= 500;
     }
+/**
+* A method to create a MW_LogUtility.Log instance and return it
+*/
+    public static MW_LogUtility.Log getLogRecord(String cls,String appId,String leadId,String method,Object data,String type,Integer code){
+        MW_LogUtility.Log log = new MW_LogUtility.Log();
+        log.apexClass = cls;
+        log.applicationId = appId;
+        log.leadId = leadId;
+        log.method = method;
+        log.data = data;
+        log.type = type;
+        log.statusCode = code;
+        return log; 
+    }
 }

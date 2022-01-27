@@ -1,16 +1,12 @@
 /***********Modification History**************
-Pallavi         LOS-207         2019-11-21
+Pallavi      LOS-207      2019-11-21
 * Modified by   Date            JIRA number
-* Pallavi       2020/11/04      LOP-36/CRM-974(9013 Still flagging for fraud review)
+* Pallavi    2020/11/04    LOP-36/CRM-974(9013 Still flagging for fraud review)
 /********************************************/
 
 public class QueueAssignment{
     Private Static boolean KBAFraudT = false,
                            verificationF = false;
-    //Code Start added as part of ticket #https://happymoneyinc.atlassian.net/browse/LSP-344
-    Private Static Set<String> UTM_SOCIAL_MEDIUM = new Set<String>{'OrganicSocial','psocial-cq','psocial-dm','psocial-rm'};
-    Private Static Set<String> UTM_CREDIT_KARMA_NON_PRIORITY = new Set<String>{'p1','p2','p3'};
-    //Code addition end as part of https://happymoneyinc.atlassian.net/browse/LSP-344
     
     @invocablemethod()
     Public static void appToQueueAssignment(List<ID> apps){
@@ -27,7 +23,7 @@ public class QueueAssignment{
         List<genesis__Applications__c> appList = new List<genesis__Applications__c>();
         
         appList = [select id,name,Sift_Status__c,
-                            Affiliate_Partner__c, utm_medium__c, utm_source__c,                              
+                            Affiliate_Partner__c,                               
                          (select id,Application__c,Precise_ID_Overall_SCore__c,
                                  Precise_ID_First_Payment_Default__c,
                                  Precise_ID_ID_Theft__c,
@@ -53,22 +49,14 @@ public class QueueAssignment{
         
         if(appList != null && appList.size() > 0){                                          
             for(genesis__Applications__c app : appList){ 
-                 //--- Fraud Tag 30.01.2018 //LSP-344
+                       
+
+                //--- Fraud Tag 30.01.2018
                 // -- added this condition - app.KBA_Details__r != null && app.KBA_Details__r.size()>0 because Process builder was failing.
-                if((app.Sift_Status__c != null && app.Sift_Status__c > 80 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox') ||
-                ((app.KBA_Details__r != null && app.KBA_Details__r.size()>0) &&
-                 ((app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || 
-                  UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) 
-                  && (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 725)) ||
-                 (((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) && (app.utm_source__c =='creditkarma' || 
-					app.utm_source__c =='creditkarma_lightbox') && 
-                   (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800)))
-                   || (String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || 
-					app.utm_source__c =='creditkarma_lightbox') 
-                       && (app.Sift_Status__c >= 95 || app.KBA_Details__r[0].Id_Analytics_Score__c >= 800))
-                   || 
-                  ((app.KBA_Details__r != null && app.KBA_Details__r.size()>0) && ((app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c < 0) ||
+                if((app.Sift_Status__c != null && app.Sift_Status__c > 80) ||
+                 
+                ((app.KBA_Details__r != null && app.KBA_Details__r.size()>0) && 
+                  ((app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c < 0) ||
                   (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9001 || app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9013)) ||
                   (app.KBA_Details__r[0].Precise_ID_ID_Theft__c != null && (app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9001 || app.KBA_Details__r[0].Precise_ID_ID_Theft__c == 9013)) ||
                   (app.KBA_Details__r[0].Precise_ID_Validation__c != null && (app.KBA_Details__r[0].Precise_ID_Validation__c == 9001 || app.KBA_Details__r[0].Precise_ID_Validation__c == 9013)) ||
@@ -78,45 +66,16 @@ public class QueueAssignment{
                   (app.KBA_Details__r[0].Precise_ID_Validation__c != null && app.KBA_Details__r[0].Precise_ID_Validation__c < 0) || 
                   (app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c != null && app.KBA_Details__r[0].Precise_ID_General_Fraud_Shield_Indicat__c.equalsIgnoreCase('F05')) ||
                   (app.KBA_Details__r[0].Paste_Count__c != null && app.KBA_Details__r[0].Paste_Count__c >= 2) ||
-                  (app.KBA_Details__r[0].Id_Analytics_Score__c != null && app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 750 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox') ||
-                  (app.KBA_Details__r[0].Id_Analytics_Score__c != null && !app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox'))))){
+                  (app.KBA_Details__r[0].Id_Analytics_Score__c != null && app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 750) ||
+                  (app.KBA_Details__r[0].Id_Analytics_Score__c != null && !app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700)))){
                     
                     KBAFraudT = true;
                 } 
                //--- Set Fraud Reason for valid Fraud Tags
                if (KBAFraudT){
-                   if(app.Sift_Status__c != null && app.Sift_Status__c > 80 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                   && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox'){                        
+                   if(app.Sift_Status__c != null && app.Sift_Status__c > 80){                        
                             reason += 'Sift score > 80. ';}
-                   
-                        if(app.KBA_Details__r != null && app.KBA_Details__r.size()>0){   //pallavi(desk id 18882/LOS-207)
-                        if(app.Sift_Status__c >= 95 && (app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' ||
-                          UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c))){ 
-                          
-                             reason += 'utm_medium '+ app.utm_medium__c + ' Sift score >= 95.';}
-                         
-                        if(app.Sift_Status__c >= 95 && (app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox'))){
-                                
-                            reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_sousce ' + app.utm_source__c + ' Sift score >= 95.';}
-                            if(app.Sift_Status__c >= 95 && (String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || 
-					app.utm_source__c =='creditkarma_lightbox'))){
-                               
-                                reason += 'utm_medium ' + app.utm_medium__c + ' utm_source '+ app.utm_source__c + ' Sift score >= 95.';}
-                               
-                          
-                        if(app.KBA_Details__r[0].Id_Analytics_Score__c >=725 && (app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || 
-                           UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c))){
-                                reason += 'utm_medium '+ app.utm_medium__c + ' IDA Score >= 725.';}
-                         
-                      
-                       if (app.KBA_Details__r[0].Id_Analytics_Score__c >= 800 && (app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox'))){
-                           reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score >= 800.';}
-                       if(app.KBA_Details__r[0].Id_Analytics_Score__c >=800 && (String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || 
-                                                                                                                      app.utm_source__c =='creditkarma_lightbox'))){
-                                                reason += 'utm_medium ' + app.utm_medium__c + ' utm_source '+ app.utm_source__c + ' IDA Score>= 800.';}                                                                           
-                  
+                   if(app.KBA_Details__r != null && app.KBA_Details__r.size()>0){  //pallavi(desk id 18882/LOS-207)
                        if(app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c == 9013){                        
                                 reason += 'Blocked/frozen ' + 'Precise ID Overall Score = 9013. ';}                        
                        if (app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c != null && app.KBA_Details__r[0].Precise_ID_First_Payment_Default__c == 9013){                        
@@ -145,13 +104,11 @@ public class QueueAssignment{
                                 reason += 'Precise ID Fraud Shield = F05. ';}
                        if(app.KBA_Details__r[0].Paste_Count__c >= 2){                        
                                 reason += 'Paste Count >= 2. ';}
-                       if(app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 750 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox') {                        
+                       if(app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 750){                        
                                 reason += 'IDA Score >= 750. ';}
-                       if(!app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' 
-                    && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_medium__c != 'partner' && !UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma' && app.utm_source__c!='creditkarma_lightbox') {                        
+                       if(!app.Affiliate_Partner__c && app.KBA_Details__r[0].Id_Analytics_Score__c >= 700){                        
                                 reason += 'IDA Score >= 700. ';}
-                   }    //pallavi(desk id 18882/LOS-127)
+                   }  //pallavi(desk id 18882/LOS-127)
                    
                } 
                 
@@ -159,9 +116,9 @@ public class QueueAssignment{
                if(app.Identity_Verifications__r != null && app.Identity_Verifications__r.size()>0){   
                    
                    /*if(app.Identity_Verifications__r[0].IDMA_Status__c != null ||
-                   app.Identity_Verifications__r[0].IDMA_Status__c != null){*/      //pallavi(desk id 18882/LOS-207)(commented)
+                   app.Identity_Verifications__r[0].IDMA_Status__c != null){*/    //pallavi(desk id 18882/LOS-207)(commented)
                    
-                       if(app.Identity_Verifications__r[0].IDMV_Status__c != null &&    //pallavi(desk id 18882)
+                       if(app.Identity_Verifications__r[0].IDMV_Status__c != null &&  //pallavi(desk id 18882)
                           app.Identity_Verifications__r[0].IDMV_Status__c == 'Initial Fraud Alert'){                       
                            reason += 'IDMV Status = Initial Fraud Alert. ';
                            System.debug(logginglevel.error,'REASON : '+reason );
@@ -169,7 +126,7 @@ public class QueueAssignment{
                            
                        }
                        
-                       if (app.Identity_Verifications__r[0].IDMV_Status__c != null &&   //pallavi(desk id 18882/LOS-207)
+                       if (app.Identity_Verifications__r[0].IDMV_Status__c != null &&  //pallavi(desk id 18882/LOS-207)
                            app.Identity_Verifications__r[0].IDMV_Status__c == 'Consumer Statement Bureau'){                       
                            reason +=  'IDMV Status = Consumer Statement Bureau. ';
                            System.debug(logginglevel.error,'REASON : '+reason );
@@ -177,7 +134,7 @@ public class QueueAssignment{
                                               
                        }
                        
-                       if (app.Identity_Verifications__r[0].IDMA_Status__c != null &&   //pallavi(desk id 18882/LOS-207)
+                       if (app.Identity_Verifications__r[0].IDMA_Status__c != null &&  //pallavi(desk id 18882/LOS-207)
                            app.Identity_Verifications__r[0].IDMA_Status__c == 'Initial Fraud Alert'){                       
                            reason +=  'IDMA Status = Initial Fraud Alert. ';
                            System.debug(logginglevel.error,'REASON : '+reason );
@@ -185,7 +142,7 @@ public class QueueAssignment{
                                               
                        }
                        
-                       if (app.Identity_Verifications__r[0].IDMA_Status__c != null &&   //pallavi(desk id 18882/LOS-207)
+                       if (app.Identity_Verifications__r[0].IDMA_Status__c != null &&  //pallavi(desk id 18882/LOS-207)
                            app.Identity_Verifications__r[0].IDMA_Status__c == 'Consumer Statement Bureau'){                       
                            reason +=  'IDMA Status = Consumer Statement Bureau. ';
                            System.debug(logginglevel.error,'REASON : '+reason );
@@ -199,7 +156,7 @@ public class QueueAssignment{
             
                List<Application_Tags__c> lstAppTags = [SELECT id,Application_Tag__c,softDelete__c FROM Application_Tags__c where Application__c = :app.Id and Application_Tag__c = 'Fraud' and softDelete__c = false];  //CRM-974        
                if(KBAFraudT || verificationF){
-                   //List<Application_Tags__c> lstAppTags = [SELECT Application_Tag__c FROM Application_Tags__c where Application__c = :app.Id and Application_Tag__c LIKE '%Fraud%' and softDelete__c = false];    //pallavi LOS-212(added softDelete) //CRM-974(commented the query)
+                   //List<Application_Tags__c> lstAppTags = [SELECT Application_Tag__c FROM Application_Tags__c where Application__c = :app.Id and Application_Tag__c LIKE '%Fraud%' and softDelete__c = false];  //pallavi LOS-212(added softDelete) //CRM-974(commented the query)
                         if(lstAppTags.isEmpty()){                           
                             Application_Tags__c appTags = new Application_Tags__c();
                             appTags.Application__c = app.Id;
@@ -223,7 +180,7 @@ public class QueueAssignment{
         
       update appList;  
      //return 'Assigned to Queue';
-        if(!lstApplicationTags.isEmpty() && lstApplicationTags.size()>0){   //pallavi(desk id 18882/LOS-207)
+        if(!lstApplicationTags.isEmpty() && lstApplicationTags.size()>0){  //pallavi(desk id 18882/LOS-207)
         System.debug('not empty----' + lstApplicationTags.size());
         insert lstApplicationTags;
         }

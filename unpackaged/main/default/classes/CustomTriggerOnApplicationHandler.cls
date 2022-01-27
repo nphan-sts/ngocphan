@@ -1,7 +1,7 @@
 /* ****************Modification History******************
  * Created By        Date          JIRA number
  *1. Pallavi        2020/10/05     CRM-928(Previous Investor Current Weight number decreased when re-allocating applications)
- *2. Pallavi		2020/11/19 	   CRM-1022 Status 500 responses causing missing data in CLS - CLS Case #02456279
+ *2. Pallavi    2020/11/19      CRM-1022 Status 500 responses causing missing data in CLS - CLS Case #02456279
  ******************Modification History******************/
 
 Public class CustomTriggerOnApplicationHandler{
@@ -353,8 +353,8 @@ Public class CustomTriggerOnApplicationHandler{
             }
 
             if (toBeUpdated.size() > 0) {
-    	        update toBeUpdated;
-    	    }
+              update toBeUpdated;
+          }
         }
     }
 }
