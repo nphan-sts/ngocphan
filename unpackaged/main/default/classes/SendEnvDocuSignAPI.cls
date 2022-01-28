@@ -334,8 +334,7 @@ public with sharing class SendEnvDocuSignAPI {
                         Integer lstSize = lstAmortization.Size();
                         System.debug('Amortization List....' +lstSize);
                         if(lstAmortization[0].genesis__Due_Date__c != null) {
-                            Date dt = ctdh.addWorkingDaysTodate((system.today()-2),3).addMonths(1);
-                            system.debug('dt ---> '+ dt);
+                            Date dt = ctdh.addWorkingDaysTodate(system.today(),3).addMonths(1);
                             dt = dt.addDays(MW_DocuSignTriggerHandler.calcdate(dt));
                             system.debug('dt ---> '+ dt);
                             /*paymentStartDate = DateTime.newInstance(dt.year(),dt.month(),dt.day()).format('dd MMMMMMMM, yyyy');*/
