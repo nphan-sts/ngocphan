@@ -124,7 +124,7 @@ public with sharing class SendEnvDocuSignAPI {
             if(lstApp[0].genesis__Account__r.Address_2__c != null)
                 address2 = lstApp[0].genesis__Account__r.Address_2__c;
             
-            //pallavi
+            
             Decimal finance_charge = 0;
             Decimal amount_financed = 0;
             Decimal last_payment_amount = 0;
@@ -141,7 +141,7 @@ public with sharing class SendEnvDocuSignAPI {
             
             if(lstApp[0].DCP_total_amount__c != null)
                 ach_amount = lstApp[0].genesis__Loan_Amount__c - lstApp[0].Origination_fee__c - lstApp[0].DCP_total_amount__c;
-            //pallavi
+            
 
             String workPhone = '';
             String employerName = '';
@@ -336,8 +336,10 @@ public with sharing class SendEnvDocuSignAPI {
                         if(lstAmortization[0].genesis__Due_Date__c != null) {
                             Date dt = ctdh.addWorkingDaysTodate(system.today(),3).addMonths(1);
                             dt = dt.addDays(MW_DocuSignTriggerHandler.calcdate(dt));
+                            system.debug('dt ---> '+ dt);
                             /*paymentStartDate = DateTime.newInstance(dt.year(),dt.month(),dt.day()).format('dd MMMMMMMM, yyyy');*/
                             paymentStartDate = DateTime.newInstance(dt.year(),dt.month(),dt.day()).format('MMMMMMMM dd, yyyy');
+                            system.debug('paymentStartDate :' + paymentStartDate);
                             
                         }
                         if(lstAmortization[lstSize-1].genesis__Due_Date__c != null) {
