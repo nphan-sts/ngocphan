@@ -1,3 +1,9 @@
+/* ****************Modification History******************
+ * Class Name - TestYodleeWebServiceConstantsv1
+ * Purpose - Test Class for YodleeWebServiceConstantsv1
+ * Modified By        Date			Change
+ *1. Shakul        2022/01/12     Added Assert statements
+ ******************Modification History******************/
 @isTest
 public class TestYodleeWebServiceConstantsv1{
    testmethod static void method1(){
@@ -45,5 +51,7 @@ public class TestYodleeWebServiceConstantsv1{
         string str38 =YodleeWebServiceConstantsv1.paramNameignoreUserInput;
         string str39 =YodleeWebServiceConstantsv1.paramNameMemSiteAccId;
         test.stopTest();
+        System.assertEquals('cobrandLogin', str17);
+        System.assertEquals('statements', str10);
    }
 }
