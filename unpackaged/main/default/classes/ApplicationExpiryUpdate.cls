@@ -150,6 +150,10 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         }
         
         update listOfAppTobeUpdated ;
+
+        if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
+            MW_AllocationEngineHandler.handleCancelledSynchronous(listOfAppTobeUpdated);
+        }
     } 
     
     public void finish(Database.BatchableContext BC){

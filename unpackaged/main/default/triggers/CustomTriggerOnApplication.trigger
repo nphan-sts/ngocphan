@@ -163,8 +163,16 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                             System.debug('creditPolicies size check: ' + creditPolicies.size());
                             if (creditPolicies.size() > 0) {
                                 String res = genesis.ScorecardAPI.generateScorecard(app.id);
+
                                 boolean result = true;
-                                result = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
+                                if (MW_AllocationEngineHandler.isRulesApiEnabled()) {
+                                    result = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
+                                }
+
+                                if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
+                                    MW_AllocationEngineHandler.handleAdvp(new List<Id> {app.Id});
+                                }
+
                             } else {
                                 
                                 Map<String, Object> msg = new Map<String, Object>();
