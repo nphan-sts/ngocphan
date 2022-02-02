@@ -11,6 +11,7 @@
 *	  Anusha		2021/10/21	  LSP-328.2 Changes to map payoffLPT to NACHA
 *	  Anusha		2021/11/09	  LSP-328.3 skipping transaction date validation on LPT object to allow future payoffpayment creation
 *	  Anusha		2021/11/25	  LSP-328.4 Normal LPT should get created when transaction amount is less than todays payoff amount
+*    Mohan Kiran    2021/12/30    LSP-245 Added code to capture every request and responses made to this endpoint to batch process log object in salesforce.
 ******************Modification History*****************************************************************/
 
 @RestResource(urlMapping='/OTPOMBPEndpoint/*')
@@ -28,7 +29,15 @@ global class WSSetupAPS {
             String message = 'Either Lock Based ACH or Multiple Payment Method Support must be enabled to use this feature.';
             res = new Response(peer.Constants.ERROR, peer.Constants.INTERNAL_ERROR, message);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
+            /*LSP-245*/
+            loan__Batch_Process_Log__c logBadRequest = new loan__Batch_Process_Log__c();
+            
+            logBadRequest.loan__Log_Level__c = 'Error';
+            logBadRequest.loan__Message__c = 'Error Response : '+ res;
+            logBadRequest.loan__Origin__c = 'WSSetupAPS';
+            insert logBadRequest;
             return res;
+            
         } else if(achParameters.loan__Use_Lock_Based_ACH__c && achParameters.loan__Multiple_Payment_Method_Support__c
                   || !achParameters.loan__Use_Lock_Based_ACH__c && achParameters.loan__Multiple_Payment_Method_Support__c) {
                       isLockBasedACHEnabled = false;
@@ -56,6 +65,15 @@ System.debug(leadId+'  '+req.requestURI);
         if(reqParams == null) {
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, 'Unable to parse request Params');
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
+            
+            // LSP-245 - Bad Request
+            loan__Batch_Process_Log__c loginvalidRequest = new loan__Batch_Process_Log__c();
+            
+            loginvalidRequest.loan__Log_Level__c = 'Error';
+            loginvalidRequest.loan__Message__c = 'Response  :'+ res;
+            loginvalidRequest.loan__Origin__c = 'WSSetupAPS';
+            insert loginvalidRequest;
+            // END- LSP-245
             return res;
         }
         
@@ -69,6 +87,14 @@ System.debug(leadId+'  '+req.requestURI);
         if(leadId == null) {
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, 'Lead ID is null');
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
+            /*LSP-245 - Lead id null error*/
+            loan__Batch_Process_Log__c nullLeadIDError = new loan__Batch_Process_Log__c();
+            
+            nullLeadIDError.loan__Log_Level__c = 'Error';
+            nullLeadIDError.loan__Message__c = 'The Error Response sent back to Member portal  :'+ res;
+            nullLeadIDError.loan__Origin__c = 'WSSetupAPS';
+            insert nullLeadIDError;
+            /*END- LSP-245*/
             return res;
         }
         Boolean isActive;
@@ -89,6 +115,24 @@ System.debug(leadId+'  '+req.requestURI);
         Boolean installmentPayment;
         Boolean payoffPayment = false;//LSP-328.1
         
+        /*LSP-245*/
+        
+        loan__Batch_Process_Log__c batchLogError = new loan__Batch_Process_Log__c();
+        loan__Batch_Process_Log__c batchLogErrorMultiple = new loan__Batch_Process_Log__c();
+        loan__Batch_Process_Log__c batchLogErrorAWS = new loan__Batch_Process_Log__c();
+        loan__Batch_Process_Log__c badreqErrors = new loan__Batch_Process_Log__c();
+        
+        // Log to capture input from member portal
+        loan__Batch_Process_Log__c batchLogMPInput = new loan__Batch_Process_Log__c();
+        
+        batchLogMPInput.loan__Log_Level__c = 'INFO';
+        batchLogMPInput.loan__Message__c = 'MP Request :'+reqParams;                
+        batchLogMPInput.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+        batchLogMPInput.loan__Origin__c = 'WSSetupAPS';
+        insert batchLogMPInput;
+        /*END- LSP-245*/
+        
+        
         List<loan__Loan_Account__c> loanAccountsList = [Select Id, Name,loan__Loan_Status__c,loan__Maturity_Date_Current__c, //LSP-223 (added loan__Loan_Status__c)
                                                         loan__Contact__c, loan__Account__c, loan__Last_Accrual_Date__c, 
                                                         loan__Product_Type__c,loan__Pay_Off_Amount_As_Of_Today__c,loan__Write_off_Tolerance_Amount__c //LSP-328.1 (added loan__Pay_Off_Amount_As_Of_Today__c,loan__Write_off_Tolerance_Amount__c)
@@ -107,6 +151,14 @@ System.debug(leadId+'  '+req.requestURI);
         if(params.get('debitDate') == null) {
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT,'ACH Debit Date is Null');
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
+            
+            badreqErrors.loan__Log_Level__c = 'Error';
+            batchLogErrorMultiple.loan__Message__c = 'Response :'+res ;
+            badreqErrors.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+            badreqErrors.loan__Origin__c = 'WSSetupAPS';
+            insert badreqErrors;
+            /*END-LSP-245*/
+            
             return res;
         }
         
@@ -115,6 +167,13 @@ System.debug(leadId+'  '+req.requestURI);
             String message = 'Payment Mode Name is required.';
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
+            /*LSP-245*/
+            badreqErrors.loan__Log_Level__c = 'Error';
+            batchLogErrorMultiple.loan__Message__c = 'Response :'+res ;
+            badreqErrors.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+            badreqErrors.loan__Origin__c = 'WSSetupAPS';
+            insert badreqErrors;
+            /*END-LSP-245*/
             return res;
         }
         
@@ -123,6 +182,13 @@ System.debug(leadId+'  '+req.requestURI);
             String message = 'Amount Type is required.';
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
+            
+            badreqErrors.loan__Log_Level__c = 'Error';
+            batchLogErrorMultiple.loan__Message__c = 'Response : '+res ;
+            badreqErrors.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+            badreqErrors.loan__Origin__c = 'WSSetupAPS';
+            insert badreqErrors;
+            
             return res;
         }
         
@@ -153,16 +219,14 @@ System.debug(leadId+'  '+req.requestURI);
             //LSP-186 - start
             //Would like to explicitly check for LOAN, LOC and FLEXIBLE_AMZ. But the Loan package is not upgraded yet
             /*if(!loanAccount.loan__Product_Type__c.equalsIgnoreCase(loan.LoanConstants.AMZ)
-				&& (type != null && type.equalsIgnoreCase(loan.LoanConstants.ONE_TIME))
-				&& debitDate  < loanAccount.loan__Last_Accrual_Date__c) { 
-
-				String message = 'Debit Date for One Time ACH is before Last  Accrual Date';
-				res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
-				restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
-				return res;
-			}
-
-			System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
+&& (type != null && type.equalsIgnoreCase(loan.LoanConstants.ONE_TIME))
+&& debitDate  < loanAccount.loan__Last_Accrual_Date__c) { 
+String message = 'Debit Date for One Time ACH is before Last  Accrual Date';
+res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
+restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
+return res;
+}
+System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
             //LSP-186 - end
             
             recurringACHStartDate = params.get('recurringACHStartDate') != null ? Date.valueOf((String) params.get('recurringACHStartDate')) : debitDate;
@@ -170,6 +234,13 @@ System.debug(leadId+'  '+req.requestURI);
             setupDate = params.get('setupDate') != null ? Date.valueOf((String) params.get('setupDate')) : debitDate;
             
         } catch(Exception e) {
+            
+            batchLogError.loan__Log_Level__c = 'Error';
+            batchLogError.loan__Message__c = 'Response : '+ e.getMessage() + ' Exception caused at line number - '+e.getLineNumber() + ' at the apex class : '+e.getStackTraceString()   ;                
+            batchLogError.loan__Batch_Id__c = 'LeadGuid : '+leadId;
+            batchLogError.loan__Origin__c = 'WSSetupAPS';
+            insert batchLogError;
+            
             system.debug(LoggingLevel.Error, 'exception caught 1 : ' + e.getMessage() +e.getstacktraceString());
             String message = 'Unknown Exception : ' + e.getMessage();
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
@@ -209,7 +280,7 @@ System.debug(leadId+'  '+req.requestURI);
                         payoffLpt.loan__Installment_Payment__c = false;
                         payoffLPT.loan__Automated_Payment_Setup__c = automatedPaymentSetup.id;//LSP-328.2 attaching newly created inactive APS to payoff LPT
                         payoffLPT.loan__Skip_Validation__c = true;//LSP-328.3 skipping transaction date validation on LPT object
-                            
+                        
                         if(transactionAmount >= (loanAccount.loan__Pay_Off_Amount_As_Of_Today__c - loanAccount.loan__Write_off_Tolerance_Amount__c)){    
                             payoffLpt.loan__Early_Total_Repayment_of_the_Loan__c = true;
                         }else{
@@ -226,11 +297,11 @@ System.debug(leadId+'  '+req.requestURI);
                         restRes.statuscode = peer.Constants.HTTP_OK;
                         //Whenever a request or response is made ,or an exception is caught in try catch block, HM has started following a routine to insert (request, response success details or exception details) in Batch Processing Log
                         loan__Batch_Process_Log__c bplSuccess = new loan__Batch_Process_Log__c();
-						bplSuccess.loan__Log_Level__c = 'INFO';
-						bplSuccess.loan__Message__c = 'PayoffPayment Creation Success Response sent back to Member portal'+ res;
+                        bplSuccess.loan__Log_Level__c = 'INFO';
+                        bplSuccess.loan__Message__c = 'PayoffPayment Creation Success Response sent back to Member portal'+ res;
                         bplSuccess.loan__Batch_Id__c = 'LeadGuid : '+leadId;
-						bplSuccess.loan__Origin__c = 'WSSetupAPS';
-						insert bplSuccess;
+                        bplSuccess.loan__Origin__c = 'WSSetupAPS';
+                        insert bplSuccess;
                         return res;
                     }
                     res = new Response(peer.Constants.ERROR, '', 'Check if loan account has required information');
@@ -302,8 +373,26 @@ System.debug(leadId+'  '+req.requestURI);
                 /*PS-4350/LOS-192*/
                 res.contents.add(automatedPaymentSetup);
                 restRes.statuscode = peer.Constants.HTTP_OK;
+                
+                /*LSP-245 - Success response*/
+                loan__Batch_Process_Log__c batchLogMPOutput = new loan__Batch_Process_Log__c();
+                
+                batchLogMPOutput.loan__Log_Level__c = 'INFO';
+                batchLogMPOutput.loan__Message__c = 'The Success Response sent back to Member portal'+ res;
+                batchLogMPOutput.loan__Origin__c = 'WSSetupAPS';
+                insert batchLogMPOutput;
             }
-        } catch (Exception e) {
+            /*END- LSP-245*/
+        }
+        
+        
+        catch (Exception e) {
+            
+            batchLogErrorMultiple.loan__Log_Level__c = 'Error';
+            batchLogErrorMultiple.loan__Message__c = 'The Error Response sent back to Member portal'+ e.getMessage() + 'Exception caused at line number -'+e.getLineNumber() + 'at the apex class : '+e.getStackTraceString()   ;                
+            batchLogErrorMultiple.loan__Origin__c = 'WSSetupAPS';
+            insert batchLogErrorMultiple;
+            
             system.debug(LoggingLevel.Error, 'exception caught 2 : ' + e.getMessage());
             res = new Response(peer.Constants.ERROR, peer.Constants.UNKNOWN_EXCEPTION, e.getMessage()+' at line number'+e.getLineNumber());
             restRes.statuscode = peer.Constants.HTTP_INTERNAL_ERROR;
