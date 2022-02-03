@@ -797,6 +797,14 @@ global class CreditPolicyResponse {
         obj.Active__c = TRUE;
         if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.raw_bureau_data != null){
             obj.Raw_XML__c = String.valueOF(CPResponse.credit_policy_decision.raw_bureau_data);
+            //lop-289
+            if(CPResponse.credit_policy_decision.request_intent == 'application'){
+            obj.Consumer_status_Indicator__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<consumerStatementIndicator>', '</consumerStatementIndicator>');
+                if(obj.Consumer_status_Indicator__c == 'true'){
+                obj.Consumer_Statement_Type__c = 'TU - Initial Fraud Alert';
+                obj.Consumer_Statement_Text__c = CPResponse.credit_policy_decision.raw_bureau_data.substringBetween('<text>', '</text></consumerStatement>');
+system.debug('(CPResponse.cpData.request_intent__c'+CPResponse.credit_policy_decision.request_intent);
+                }} //lop289
            
         if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.risk_models != null
           && CPResponse.credit_policy_decision.risk_models.V6 !=null && CPResponse.credit_policy_decision.risk_models.V6.happy_score != null){
