@@ -1,23 +1,28 @@
 global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Schedulable, Database.AllowsCallouts {
             
     String query;
-    //Set<String> skipLoanStatus = new Set<String>{'Funded','Expired','Approved for funding','pre_funding','Expired-Withdrawn'};
+    //Set<String> skipLoanStatus = new Set<String>{'funded','Expired','Declined','Decline_Manual_Review','Approved for funding','pre_funding','Expired-Withdrawn'};
     List<String> skipLoanStatus = System.Label.Application_Expired_Status.split(',');
-    String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
-    Date currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
+    String CSD;
+    Date currentSystemDate;
         
        
     global ApplicationExpiryUpdate(){
-           
-    query = 'select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c!=null limit 1 ) from genesis__Applications__c where Expiry_Date__c =' + CSD +' and genesis__Status__c not in : skipLoanStatus';
-        
-        System.debug(logginglevel.error,'query+++'+query); 
+       CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
+        currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
+    
                 
     }
     
-    global ApplicationExpiryUpdate(String query){
+    global ApplicationExpiryUpdate(String query,Date currentSystemDate){
         
         this.query = query; 
+        if(currentSystemDate != null){
+            CSD = String.valueof(currentSystemDate);
+            this.currentSystemDate = currentSystemDate;
+        }else{
+            this.currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
+        }
     }
     
     global void execute(SchedulableContext sc) {
@@ -28,7 +33,9 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
     }
     
     global Database.QueryLocator start(Database.BatchableContext bc){
-                              
+        if(query == null){
+        query = 'select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where Expiry_Date__c <=' + CSD +' and genesis__Status__c not in : skipLoanStatus';
+        }                     
         System.debug('Query'+query);    
         return Database.getQueryLocator(query);
     
@@ -91,7 +98,7 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         for(genesis__Applications__c  app : listOfApp){
             if(app.Credit_Policy__r.size()==0){
                 
-                if((app.Expiry_Date__c != null && app.Expiry_Date__c == currentSystemDate) && (app.genesis__Status__c != null && app.genesis__Status__c != 'funded')){
+                if((app.Expiry_Date__c != null && app.Expiry_Date__c <= currentSystemDate) && (app.genesis__Status__c != null && app.genesis__Status__c != 'funded')){
                
                     if(pre_qual_status.contains(app.genesis__Status__c)){
                   
@@ -117,7 +124,7 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
                 }
             }
             else{
-                if(app.Credit_Policy__r.size()>0 && app.Expiry_Date__c != null && app.Expiry_Date__c == currentSystemDate){  
+                if(app.Credit_Policy__r.size()>0 && app.Expiry_Date__c != null && app.Expiry_Date__c <= currentSystemDate){  
                    
                     if(pre_qual_status.contains(app.genesis__Status__c)){
                   

@@ -99,8 +99,32 @@ public class TestApplicationExpiryUpdate {
         application2.genesis__Payment_Amount__c=523.80;
         application2.genesis__Company__c = comp.id;
         application2.genesis__CL_Product__c = pr.id;
-        application2.application_Start_DateV2__c = currentSystemDate.adddays(-30);        
-        insert application2; 
+        application2.application_Start_DateV2__c = currentSystemDate.adddays(-35);        
+        insert application2;
+         
+        genesis__applications__c application3 = new genesis__applications__c();
+        application3.genesis__Product_Type__c = 'LOAN';
+        application3.genesis__Loan_Amount__c = 6700;
+        application3.genesis__status__c = 'Declined';
+        application3.genesis__Term__c = 12;
+        application3.genesis__Payment_Frequency__c = 'MONTHLY';
+        application3.genesis__Interest_Rate__c = 10;
+        application3.genesis__Days_Convention__c = 'ACTUAL/ACTUAL';
+        application3.genesis__Expected_Start_Date__c = system.today();
+        application3.genesis__Expected_First_Payment_Date__c = system.today().addDays(60);
+        application3.genesis__Expected_Close_Date__c = system.today().addDays(30);
+        application3.genesis__Interest_Calculation_Method__c = 'Declining Balance';
+        application3.genesis__Interest_Only_Period__c = 0;
+        application3.genesis__Interest_Rate__c = 100;
+        application3.genesis__Account__c = acc.Id;
+        application3.genesis__Total_Estimated_Interest__c=500;
+        application3.genesis__Valid_Pricing_Flag__c=false;
+        application3.genesis__Probability__c=100.00;
+        application3.genesis__Payment_Amount__c=523.80;
+        application3.genesis__Company__c = comp.id;
+        application3.genesis__CL_Product__c = pr.id;
+        application3.application_Start_DateV2__c = currentSystemDate.adddays(-30);        
+        insert application3; 
         Credit_Policy__c responseCP = new Credit_Policy__c	();
         responseCP.Loan_amount_counteroffer__c = 150.00;         
         responseCP.Application__c = application2.id;
@@ -119,19 +143,19 @@ public class TestApplicationExpiryUpdate {
         
         ApplicationExpiryUpdate obj = new ApplicationExpiryUpdate(); 
         Database.executeBatch(obj,1);
-         Set<String> skipLoanStatus = new Set<String>{'Funded','Expired','Expired-Withdrawn'};
+        Set<String> skipLoanStatus = new Set<String>{'funded','Expired','Declined','Decline_Manual_Review','Approved for funding','pre_funding','Expired-Withdrawn'};
         String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
-        string query = 'select id, Expiry_Date__c, genesis__Status__c, CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c from genesis__Applications__c where Expiry_Date__c =' + CSD +' and genesis__Status__c not in : skipLoanStatus';
+        string query = 'select id, Expiry_Date__c, genesis__Status__c, CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c from genesis__Applications__c where Expiry_Date__c <=' + CSD +' and genesis__Status__c not in : skipLoanStatus';
         obj.start(null);
-        obj = new ApplicationExpiryUpdate(query);
+        obj = new ApplicationExpiryUpdate(query,currentSystemDate );
         Database.executeBatch(obj,1);
         obj.execute(null);
         List <genesis__Applications__c> genApp = [select id, Expiry_Date__c, CreatedById, genesis__Status__c, DocuSign_EnvelopeId__c, Expiration_Tag__c from genesis__Applications__c where id =:application.id];
         obj.execute(null,genApp);
-         List <genesis__Applications__c> genApp2 = [select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c!=null limit 1 ) from genesis__Applications__c where id =:application2.id];
+         List <genesis__Applications__c> genApp2 = [select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where id =:application2.id];
         obj.execute(null,genApp2);  
-        
-        
+        List <genesis__Applications__c> genApp3 = [select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where id =:application3.id and genesis__Status__c!='Declined' ];
+        system.assertEquals(0,genApp3.size());
         
         
         Test.stopTest();
