@@ -5,14 +5,15 @@ public class TestUpdatePromissoryFieldJob {
         TestTriggerParameter.disableTriggerHandler(true);
         System.assertEquals(true, TestTriggerParameter.disableTriggerTest);
         Test.startTest();
-        Account InvAcc = new Account(Name = 'TestInvestor',loan__Investor__c=True);
+        Account InvAcc = new Account(Name = 'TestInvestor', peer__First_Name__c='TestInv_PeerFName', 
+            peer__Last_Name__c='TestInv_PeerLName', loan__Investor__c=True);
         Insert InvAcc;  
         Account acc = new Account(
             Name = 'TestAcc',
             loan__Investor__c=false,
             peer__First_Name__c='Test_PeerFName', 
             peer__Last_Name__c='Test_PeerLName',
-            ints__SSN__c='12345678', 
+            ints__SSN__c='123456789', 
             peer__Date_of_Birth__c=System.today(),
             Address_1__c='TestAddr1', 
             Address_2__c='TestAddr2', 
@@ -100,9 +101,10 @@ public class TestUpdatePromissoryFieldJob {
             genesis__Application__c=app.Id
         );
         Insert amSchedle;
-        UpdatePromissoryFieldsDocusignJob j = new UpdatePromissoryFieldsDocusignJob();
-        database.executeBatch(j,1);
-        Test.stopTest();
-        
+
+		String chron = '0 0 23 * * ?';
+		Id scheduleId = System.schedule('Test UpdatePromissoryFieldsDocusignJob', chron, new UpdatePromissoryFieldsDocusignJob());
+		System.assertNotEquals(null, scheduleId);
+		Test.stopTest();        
     }
 }
