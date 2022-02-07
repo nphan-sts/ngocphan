@@ -78,6 +78,7 @@ public class TestApplicationExpiryUpdate {
         application.genesis__CL_Product__c = pr.id;
         application.Application_Start_DateV2__c = currentSystemDate.adddays(-30);
         insert application; 
+        //updated the application 2 test data with start date> 30 days
         genesis__applications__c application2 = new genesis__applications__c();
         application2.genesis__Product_Type__c = 'LOAN';
         application2.genesis__Loan_Amount__c = 6700;
@@ -101,7 +102,7 @@ public class TestApplicationExpiryUpdate {
         application2.genesis__CL_Product__c = pr.id;
         application2.application_Start_DateV2__c = currentSystemDate.adddays(-35);        
         insert application2;
-         
+         //LOP-270 added test data for a declined application
         genesis__applications__c application3 = new genesis__applications__c();
         application3.genesis__Product_Type__c = 'LOAN';
         application3.genesis__Loan_Amount__c = 6700;
@@ -154,6 +155,7 @@ public class TestApplicationExpiryUpdate {
         obj.execute(null,genApp);
          List <genesis__Applications__c> genApp2 = [select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where id =:application2.id];
         obj.execute(null,genApp2);  
+         //LOP-270
         List <genesis__Applications__c> genApp3 = [select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where id =:application3.id and genesis__Status__c!='Declined' ];
         system.assertEquals(0,genApp3.size());
         

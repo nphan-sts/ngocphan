@@ -34,6 +34,7 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
     
     global Database.QueryLocator start(Database.BatchableContext bc){
         if(query == null){
+            //LOP-270 changed condition to Expiry date <= CSD
         query = 'select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where Expiry_Date__c <=' + CSD +' and genesis__Status__c not in : skipLoanStatus';
         }                     
         System.debug('Query'+query);    

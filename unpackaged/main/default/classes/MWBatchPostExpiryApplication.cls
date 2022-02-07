@@ -3,7 +3,7 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
     String query;
     Set<String> applicationStatus = new Set<String>{'Expired','Declined','Decline_Manual_Review','Expired-Withdrawn'};
     Set<String> applicationStatusDec = new Set<String>{'Declined'};
-    boolean expiryFlag=false;
+    //LOP-270
 
     String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
     Date currentSystemDate = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();    
@@ -13,7 +13,8 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
     @TestVisible static SObjectField lastModifiedDateField = genesis__Applications__c.LastModifiedDate;
     @TestVisible static sync_application syncApp;
     global Database.QueryLocator start(Database.BatchableContext BC) {
-        query = 'select id, Expiry_Date__c, genesis__Status__c,CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c, '+ lastModifiedDateField +', (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where (Expiry_Date__c <=' + CSD +' and genesis__Status__c in: applicationStatus and ApplicationExpiryFlag__c=: expiryFlag) or ('+ lastModifiedDateField +'= ' + previousDate +' and genesis__Status__c in: applicationStatusDec and ApplicationExpiryFlag__c=: expiryFlag)';
+        //LOP-270 created a custom flag as is_ApplicationExpiryPosted__c whose default value is false 
+        query = 'select id, Expiry_Date__c, genesis__Status__c,CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c, '+ lastModifiedDateField +', (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where (Expiry_Date__c <=' + CSD +' and genesis__Status__c in: applicationStatus and is_ApplicationExpiryPosted__c=False) or ('+ lastModifiedDateField +'= ' + previousDate +' and genesis__Status__c in: applicationStatusDec and is_ApplicationExpiryPosted__c=False)';
         System.debug(query);
         return Database.getQueryLocator(query);
     }
@@ -60,14 +61,18 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
                 listAppInfo.add(appinfo);
                 
             }
-            app.ApplicationExpiryFlag__c = true;
+            // LOP-270 Set the custom flag as true, so previously processed expired Application doesn't get processed again
+            app.is_ApplicationExpiryPosted__c = true;
         }
         
         system.debug('listappinfo---->>>'+listAppInfo);
         syncApp = new sync_application('sync_application', listAppInfo);
         String str = JSON.serialize(syncApp, true);
-        MW_WebhookHandler.CallWebHookIntegration(str, appIdList, leadIdList);
+        // LOP-270 , checking callout is a success
+        String isSuccess = MW_WebhookHandler.CallWebHookIntegration(str, appIdList, leadIdList);
+        if(isSuccess == 'Success'){
         update listOfApp;
+        }
     
     }
 
