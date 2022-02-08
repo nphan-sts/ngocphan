@@ -5,16 +5,30 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
     Set<String> applicationStatusDec = new Set<String>{'Declined'};
     //LOP-270
 
-    String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
-    Date currentSystemDate = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();    
-    Datetime currentSystemDateTime = DateTime.newInstance(currentSystemDate.year(), currentSystemDate.month(), currentSystemDate.day());
-    String previousDate = currentSystemDateTime.addDays(-1).format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
-
+    
+    Date currentSystemDate;
+	String CSD;    
+    Datetime currentSystemDateTime;
+    String previousDate;
     @TestVisible static SObjectField lastModifiedDateField = genesis__Applications__c.LastModifiedDate;
     @TestVisible static sync_application syncApp;
+    global MWBatchPostExpiryApplication(){
+        currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
+    	CSD = String.valueof(currentSystemDate); 
+        currentSystemDateTime = DateTime.newInstance(currentSystemDate.year(), currentSystemDate.month(), currentSystemDate.day());
+    	previousDate = currentSystemDateTime.addDays(-1).format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
+    }
+    global MWBatchPostExpiryApplication(Date specificExpiryDate){
+        if(specificExpiryDate != null){
+            CSD = String.valueof(specificExpiryDate);   
+           query = 'SELECT id, Expiry_Date__c, genesis__Status__c,CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c, '+ lastModifiedDateField +', (SELECT id,name,Loan_amount_counteroffer__c FROM Credit_Policy__r WHERE Loan_amount_counteroffer__c>0 LIMIT 1 ) FROM genesis__Applications__c WHERE (Expiry_Date__c ='+ CSD +' AND genesis__Status__c in: applicationStatus)';
+        }
+    }
     global Database.QueryLocator start(Database.BatchableContext BC) {
+        if(query == null){
         //LOP-270 created a custom flag as is_ApplicationExpiryPosted__c whose default value is false 
-        query = 'select id, Expiry_Date__c, genesis__Status__c,CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c, '+ lastModifiedDateField +', (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where (Expiry_Date__c <=' + CSD +' and genesis__Status__c in: applicationStatus and is_ApplicationExpiryPosted__c=False) or ('+ lastModifiedDateField +'= ' + previousDate +' and genesis__Status__c in: applicationStatusDec and is_ApplicationExpiryPosted__c=False)';
+        query = 'SELECT id, Expiry_Date__c, genesis__Status__c,CreatedById, owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, DocuSign_EnvelopeId__c, Expiration_Tag__c, '+ lastModifiedDateField +', (SELECT id,name,Loan_amount_counteroffer__c FROM Credit_Policy__r WHERE Loan_amount_counteroffer__c>0 LIMIT 1 ) FROM genesis__Applications__c WHERE (Expiry_Date__c <='+ CSD +' AND genesis__Status__c in: applicationStatus AND is_ApplicationExpiryPosted__c=FALSE) OR ('+ lastModifiedDateField +'= '+ previousDate +' AND genesis__Status__c in: applicationStatusDec AND is_ApplicationExpiryPosted__c=FALSE)';      
+        }
         System.debug(query);
         return Database.getQueryLocator(query);
     }
@@ -31,14 +45,13 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
         for(genesis__Applications__c app : listOfApp) {
             appIdList = appIdList + String.valueOf(app.Id) + ' ';
             leadIdList = leadIdList + app.Lead_ID__c + ' ';
-            applicationinformation appinfo             = new ApplicationInformation();
-
-            appinfo.expiry_date                        = app.Expiry_Date__c;
+            applicationinformation appinfo= new ApplicationInformation();
+            appinfo.expiry_date= app.Expiry_Date__c;
 
             if(app.genesis__Status__c=='Expired'|| app.genesis__Status__c=='Expired-Withdrawn') {
-                appinfo.lead_guid                            = app.Lead_ID__c;
-                appinfo.lead_id                              = app.LEAD_ID_ExtKey__c;
-                appinfo.member_id                            = app.Member_ID__c;
+                appinfo.lead_guid = app.Lead_ID__c;
+                appinfo.lead_id  = app.LEAD_ID_ExtKey__c;
+                appinfo.member_id = app.Member_ID__c;
                 appinfo.is_expired = true;
                 listAppInfo.add(appinfo);
                 
@@ -70,8 +83,8 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
         String str = JSON.serialize(syncApp, true);
         // LOP-270 , checking callout is a success
         String isSuccess = MW_WebhookHandler.CallWebHookIntegration(str, appIdList, leadIdList);
-        if(isSuccess == 'Success'){
-        update listOfApp;
+        if (Successful(isSuccess)){
+        	update listOfApp;
         }
     
     }
@@ -83,6 +96,11 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
     global void execute(SchedulableContext sc) {
         MWBatchPostExpiryApplication b = new MWBatchPostExpiryApplication();
         Database.executeBatch(b,1);
+        /*  If you want to executee above batch class for specific expiry date then below is for reference
+           Date specificExpiryDate=String.valueof(date);
+           MWBatchPostExpiryApplication b = new MWBatchPostExpiryApplication(specificExpiryDate);
+           Database.executeBatch(b,1);
+         */
     }
 
     class ApplicationInformation
@@ -103,5 +121,9 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
             this.data = appInfo;
         }
     }
+	public boolean Successful(String isSuccess) {
+		return (isSuccess.equalsIgnoreCase('Success'));
+	}
 
+	
 }

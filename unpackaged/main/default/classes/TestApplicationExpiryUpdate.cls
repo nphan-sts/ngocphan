@@ -2,6 +2,7 @@
 public class TestApplicationExpiryUpdate {
      Static testMethod Void testone(){
          Test.startTest();
+         final String strDaysConvention = 'ACTUAL/ACTUAL';
         //Party Type insert
         clcommon__Party_Type__c pt = new clcommon__Party_Type__c();
         pt.name = 'Borrower';
@@ -52,7 +53,7 @@ public class TestApplicationExpiryUpdate {
         );
         Insert account_Obj;
         
-         Account acc = [select Id, Annual_Individual_Income__c from Account  where Name='Testfname Testlname' LIMIT 1];
+         Account acc = [SELECT Id, Annual_Individual_Income__c FROM Account  WHERE Name='Testfname Testlname' LIMIT 1];
          
         //Create Application
         genesis__applications__c application = new genesis__applications__c();
@@ -62,7 +63,7 @@ public class TestApplicationExpiryUpdate {
         application.genesis__Term__c = 12;
         application.genesis__Payment_Frequency__c = 'MONTHLY';
         application.genesis__Interest_Rate__c = 10;
-        application.genesis__Days_Convention__c = 'ACTUAL/ACTUAL';
+        application.genesis__Days_Convention__c = strDaysConvention;
         application.genesis__Expected_Start_Date__c = system.today();
         application.genesis__Expected_First_Payment_Date__c = system.today().addDays(60);
         application.genesis__Expected_Close_Date__c = system.today().addDays(30);
@@ -86,7 +87,7 @@ public class TestApplicationExpiryUpdate {
         application2.genesis__Term__c = 12;
         application2.genesis__Payment_Frequency__c = 'MONTHLY';
         application2.genesis__Interest_Rate__c = 10;
-        application2.genesis__Days_Convention__c = 'ACTUAL/ACTUAL';
+        application2.genesis__Days_Convention__c = strDaysConvention;
         application2.genesis__Expected_Start_Date__c = system.today();
         application2.genesis__Expected_First_Payment_Date__c = system.today().addDays(60);
         application2.genesis__Expected_Close_Date__c = system.today().addDays(30);
@@ -110,7 +111,7 @@ public class TestApplicationExpiryUpdate {
         application3.genesis__Term__c = 12;
         application3.genesis__Payment_Frequency__c = 'MONTHLY';
         application3.genesis__Interest_Rate__c = 10;
-        application3.genesis__Days_Convention__c = 'ACTUAL/ACTUAL';
+        application3.genesis__Days_Convention__c = strDaysConvention;
         application3.genesis__Expected_Start_Date__c = system.today();
         application3.genesis__Expected_First_Payment_Date__c = system.today().addDays(60);
         application3.genesis__Expected_Close_Date__c = system.today().addDays(30);
@@ -146,17 +147,17 @@ public class TestApplicationExpiryUpdate {
         Database.executeBatch(obj,1);
         Set<String> skipLoanStatus = new Set<String>{'funded','Expired','Declined','Decline_Manual_Review','Approved for funding','pre_funding','Expired-Withdrawn'};
         String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
-        string query = 'select id, Expiry_Date__c, genesis__Status__c, CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c from genesis__Applications__c where Expiry_Date__c <=' + CSD +' and genesis__Status__c not in : skipLoanStatus';
+        string query = 'SELECT id, Expiry_Date__c, genesis__Status__c, CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c FROM genesis__Applications__c WHERE Expiry_Date__c <=' + CSD +' AND genesis__Status__c NOT IN: skipLoanStatus';
         obj.start(null);
         obj = new ApplicationExpiryUpdate(query,currentSystemDate );
         Database.executeBatch(obj,1);
         obj.execute(null);
-        List <genesis__Applications__c> genApp = [select id, Expiry_Date__c, CreatedById, genesis__Status__c, DocuSign_EnvelopeId__c, Expiration_Tag__c from genesis__Applications__c where id =:application.id];
+        List <genesis__Applications__c> genApp = [SELECT id, Expiry_Date__c, CreatedById, genesis__Status__c, DocuSign_EnvelopeId__c, Expiration_Tag__c FROM genesis__Applications__c WHERE id =:application.id];
         obj.execute(null,genApp);
-         List <genesis__Applications__c> genApp2 = [select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where id =:application2.id];
+         List <genesis__Applications__c> genApp2 = [SELECT id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (SELECT id,name,Loan_amount_counteroffer__c FROM Credit_Policy__r WHERE Loan_amount_counteroffer__c>0 LIMIT 1 ) FROM genesis__Applications__c WHERE id =:application2.id];
         obj.execute(null,genApp2);  
          //LOP-270
-        List <genesis__Applications__c> genApp3 = [select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c>0 limit 1 ) from genesis__Applications__c where id =:application3.id and genesis__Status__c!='Declined' ];
+        List <genesis__Applications__c> genApp3 = [SELECT id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (SELECT id,name,Loan_amount_counteroffer__c FROM Credit_Policy__r WHERE Loan_amount_counteroffer__c>0 LIMIT 1 ) FROM genesis__Applications__c WHERE id =:application3.id AND genesis__Status__c!='Declined' ];
         system.assertEquals(0,genApp3.size());
         
         
