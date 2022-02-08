@@ -1,7 +1,7 @@
 global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Schedulable, Database.AllowsCallouts {
             
     String query;
-    //Set<String> skipLoanStatus = new Set<String>{'funded','Expired','Declined','Decline_Manual_Review','Approved for funding','pre_funding','Expired-Withdrawn'};
+    
     List<String> skipLoanStatus = System.Label.Application_Expired_Status.split(',');
     String CSD;
     Date currentSystemDate;

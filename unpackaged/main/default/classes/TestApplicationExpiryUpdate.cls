@@ -3,6 +3,7 @@ public class TestApplicationExpiryUpdate {
      Static testMethod Void testone(){
          Test.startTest();
          final String strDaysConvention = 'ACTUAL/ACTUAL';
+         final String strIntrCal = 'Declining Balance';
         //Party Type insert
         clcommon__Party_Type__c pt = new clcommon__Party_Type__c();
         pt.name = 'Borrower';
@@ -67,7 +68,7 @@ public class TestApplicationExpiryUpdate {
         application.genesis__Expected_Start_Date__c = system.today();
         application.genesis__Expected_First_Payment_Date__c = system.today().addDays(60);
         application.genesis__Expected_Close_Date__c = system.today().addDays(30);
-        application.genesis__Interest_Calculation_Method__c = 'Declining Balance';
+        application.genesis__Interest_Calculation_Method__c = strIntrCal;
         application.genesis__Interest_Only_Period__c = 0;
         application.genesis__Interest_Rate__c = 100;
         application.genesis__Account__c = acc.Id;
@@ -91,7 +92,7 @@ public class TestApplicationExpiryUpdate {
         application2.genesis__Expected_Start_Date__c = system.today();
         application2.genesis__Expected_First_Payment_Date__c = system.today().addDays(60);
         application2.genesis__Expected_Close_Date__c = system.today().addDays(30);
-        application2.genesis__Interest_Calculation_Method__c = 'Declining Balance';
+        application2.genesis__Interest_Calculation_Method__c =strIntrCal;
         application2.genesis__Interest_Only_Period__c = 0;
         application2.genesis__Interest_Rate__c = 100;
         application2.genesis__Account__c = acc.Id;
@@ -115,7 +116,7 @@ public class TestApplicationExpiryUpdate {
         application3.genesis__Expected_Start_Date__c = system.today();
         application3.genesis__Expected_First_Payment_Date__c = system.today().addDays(60);
         application3.genesis__Expected_Close_Date__c = system.today().addDays(30);
-        application3.genesis__Interest_Calculation_Method__c = 'Declining Balance';
+        application3.genesis__Interest_Calculation_Method__c =strIntrCal;
         application3.genesis__Interest_Only_Period__c = 0;
         application3.genesis__Interest_Rate__c = 100;
         application3.genesis__Account__c = acc.Id;
