@@ -13,6 +13,7 @@ public class QueueAssignment{
     Public Static final Decimal Siftscore = MW_Settings__c.getInstance().Sift_score__c;
     Public Static final integer PIS = 9001; 
     Public Static final string FRAUDSHEILD = 'F05';
+    Public Static final string UTM_MEDIUM = 'utm_medium';
     
     @invocablemethod()
     Public static void appToQueueAssignment(List<ID> apps){
@@ -114,20 +115,20 @@ public class QueueAssignment{
                 if((app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) 
                      && KBAd.Id_Analytics_Score__c >= 725) {
                      KBAFraudT = true;
-                     reason += 'utm_medium '+ app.utm_medium__c + ' IDA Score >= 725 .';
+                     reason += UTM_MEDIUM + ' '+ app.utm_medium__c + ' IDA Score >= 725 .';
                 }
                 //--- Fraud will be true for utm_medium = partner or p1,p2,p3 and utm_source = creditkarma or creditkarma lightbox where ID analytic score is >= 800     
                 else if(((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) 
                      && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox')) && 
                         (KBAd.Id_Analytics_Score__c >= 800)){
                      KBAFraudT = true;
-                     reason += 'utm_medium '+ app.utm_medium__c + ' And  utm_source ' + app.utm_source__c + ' IDA Score >= 800 .'; 
+                     reason += UTM_MEDIUM + ' '+ app.utm_medium__c + ' And  utm_source ' + app.utm_source__c + ' IDA Score >= 800 .'; 
                 }
                 //--- Fraud will be true for utm_medium = null and utm source = creditkarma or creditkarma lightbox where ID Analytics score is >= 800  
                 else if((String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox') 
                      && (KBAd.Id_Analytics_Score__c >= 800))) {
                      KBAFraudT = true;
-                     reason += 'utm_medium '+ app.utm_medium__c + ' And  utm_source ' + app.utm_source__c + ' IDA Score >= 800 .'; 
+                     reason += UTM_MEDIUM + ' '+ app.utm_medium__c + ' And  utm_source ' + app.utm_source__c + ' IDA Score >= 800 .'; 
                 }
                 //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 750 (For Affiliate Partner)   
                 else if(KBAd.Id_Analytics_Score__c != null && app.Affiliate_Partner__c 
