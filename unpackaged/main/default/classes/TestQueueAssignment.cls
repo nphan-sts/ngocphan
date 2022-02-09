@@ -395,7 +395,7 @@ public class TestQueueAssignment{
         System.assertEquals(QueueAssignment.KBAFraudT, false, 'No fraud tag being assigned');
     } 
     
-    Testmethod static void FraudbasedOnAffiliate(){
+    Testmethod static void fraudbasedOnAffiliate(){
         Account acc1 = [select id from Account Limit 1];
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c,Affiliate_Partner__c,utm_source__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
         app1.Sift_Status__c = 100;
@@ -422,7 +422,7 @@ public class TestQueueAssignment{
         System.assertEquals(appTags[0].Application_Tag__c, 'Fraud', 'Fraud tag been assigned');
     }
     
-    Testmethod static void FraudbasedOnBlankUtmMedium(){
+    Testmethod static void fraudbasedOnBlankUtmMedium(){
         Account acc1 = [select id from Account Limit 1];
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c,Affiliate_Partner__c,utm_medium__c,utm_source__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
         app1.Sift_Status__c = 100;
@@ -450,7 +450,7 @@ public class TestQueueAssignment{
         System.assertEquals(appTags[0].Application_Tag__c, 'Fraud', 'Fraud tag been assigned');
     }
     
-    Testmethod static void FraudbasedOnNonAffiliate(){
+    Testmethod static void fraudbasedOnNonAffiliate(){
         Account acc1 = [select id from Account Limit 1];
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c,Affiliate_Partner__c,utm_medium__c,utm_source__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
         app1.Sift_Status__c = 100;

@@ -12,7 +12,7 @@ public class QueueAssignment{
     Private Static Set<String> UTM_CREDIT_KARMA_NON_PRIORITY = new Set<String>{'p1','p2','p3'}; //LSP-344
     Public Static final Decimal Siftscore = MW_Settings__c.getInstance().Sift_score__c;
     Public Static final integer PIS = 9001; 
-    Public Static final string FraudSheild = 'F05';
+    Public Static final string FRAUDSHEILD = 'F05';
     
     @invocablemethod()
     Public static void appToQueueAssignment(List<ID> apps){
@@ -59,7 +59,7 @@ public class QueueAssignment{
                 //--- Fraud will be True where Sift Score > 98.
                 if(app.Sift_Status__c != null && app.Sift_Status__c > Siftscore) {
                     KBAFraudT = true;
-                    reason += 'Sift score '+ '> ' + Siftscore +'.';
+                    reason += 'Sift score > ' + Siftscore +'.';
                 }
                 //--- Added this condition - app.KBA_Details__r != null && app.KBA_Details__r.size()>0 because Process builder was failing.
                 if(app.KBA_Details__r != null && app.KBA_Details__r.size()>0){
@@ -68,17 +68,17 @@ public class QueueAssignment{
                 //--- Fraud will be true for Precise ID Overall score where score is = 9001     
                 if(KBAd.Precise_ID_Overall_SCore__c != null && KBAd.Precise_ID_Overall_SCore__c == PIS){                        
                      KBAFraudT = true;
-                     reason += 'Deceased ' + 'Precise ID Overall Score' + ' = ' + PIS +'. ';
+                     reason += 'Deceased Precise ID Overall Score = ' + PIS +'. ';
                 }
                 //--- Fraud will be true for Precise ID First Payment Default where score is = 9001    
                 if(KBAd.Precise_ID_First_Payment_Default__c != null && KBAd.Precise_ID_First_Payment_Default__c == PIS){                        
                      KBAFraudT = true;
-                     reason += 'Deceased ' + 'Precise ID First Payment Default' + ' = ' + PIS +'. ';
+                     reason += 'Deceased Precise ID First Payment Default ' + PIS +'. ';
                 }
                 //--- Fraud will be true for Precise ID Validation where score is = 9001    
                 if(KBAd.Precise_ID_Validation__c != null && KBAd.Precise_ID_Validation__c == PIS){                        
                      KBAFraudT = true;
-                     reason += 'Deceased ' + 'Precise ID Validation' + ' = ' + PIS +'. ';
+                     reason += 'Deceased Precise ID Validation = ' + PIS +'. ';
                 }
                 //--- Fraud will be teur for Precise ID Overall score where score is less than 0   
                 if(KBAd.Precise_ID_Overall_SCore__c != null && KBAd.Precise_ID_Overall_SCore__c < 0){                        
@@ -101,9 +101,9 @@ public class QueueAssignment{
                      reason += 'Precise ID Validation < 0. ';
                 }
                 //--- Fraud will be true for Precise Id General Fraud Shield Indicat where score is = F05 (equalsIgnoreCase)    
-                if(KBAd.Precise_ID_General_Fraud_Shield_Indicat__c != null && KBAd.Precise_ID_General_Fraud_Shield_Indicat__c.equalsIgnoreCase(FraudSheild)){                        
+                if(KBAd.Precise_ID_General_Fraud_Shield_Indicat__c != null && KBAd.Precise_ID_General_Fraud_Shield_Indicat__c.equalsIgnoreCase(FRAUDSHEILD)){                        
                      KBAFraudT = true;
-                     reason += 'Precise ID Fraud Shield' +' = ' + FraudSheild + '. ';
+                     reason += 'Precise ID Fraud Shield ' + FRAUDSHEILD + '. ';
                 }
                 //--- Fraud will be true for Paste Count where score is equql to or greater than 2  
                 if(KBAd.Paste_Count__c >= 2){                        
@@ -114,20 +114,20 @@ public class QueueAssignment{
                 if((app.utm_medium__c == 'DM' || app.utm_medium__c == 'Email' || UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c)) 
                      && KBAd.Id_Analytics_Score__c >= 725) {
                      KBAFraudT = true;
-                     reason += 'utm_medium '+ app.utm_medium__c + ' IDA Score '+ '>= 725 .';
+                     reason += 'utm_medium '+ app.utm_medium__c + ' IDA Score >= 725 .';
                 }
                 //--- Fraud will be true for utm_medium = partner or p1,p2,p3 and utm_source = creditkarma or creditkarma lightbox where ID analytic score is >= 800     
                 else if(((app.utm_medium__c == 'partner' || UTM_CREDIT_KARMA_NON_PRIORITY.contains(app.utm_medium__c)) 
                      && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox')) && 
                         (KBAd.Id_Analytics_Score__c >= 800)){
                      KBAFraudT = true;
-                     reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score '+ '>= 800 .'; 
+                     reason += 'utm_medium '+ app.utm_medium__c + ' And  utm_source ' + app.utm_source__c + ' IDA Score >= 800 .'; 
                 }
                 //--- Fraud will be true for utm_medium = null and utm source = creditkarma or creditkarma lightbox where ID Analytics score is >= 800  
                 else if((String.IsBlank(app.utm_medium__c) && (app.utm_source__c =='creditkarma' || app.utm_source__c =='creditkarma_lightbox') 
                      && (KBAd.Id_Analytics_Score__c >= 800))) {
                      KBAFraudT = true;
-                     reason += 'utm_medium '+ app.utm_medium__c + ' And ' + ' utm_source ' + app.utm_source__c + ' IDA Score '+ '>= 800 .'; 
+                     reason += 'utm_medium '+ app.utm_medium__c + ' And  utm_source ' + app.utm_source__c + ' IDA Score >= 800 .'; 
                 }
                 //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 750 (For Affiliate Partner)   
                 else if(KBAd.Id_Analytics_Score__c != null && app.Affiliate_Partner__c 
