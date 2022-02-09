@@ -31,7 +31,7 @@ global class WSSetupAPS {
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             /*LSP-245*/
             
-            createBatchProcessingLog('Error', Null, 'Error Response :'+res, Null);
+            createBatchProcessingLog('Error', Null, 'Error Response: '+res);
             return res;
             
         } else if(achParameters.loan__Use_Lock_Based_ACH__c && achParameters.loan__Multiple_Payment_Method_Support__c
@@ -64,7 +64,7 @@ System.debug(leadId+'  '+req.requestURI);
             
             // LSP-245 - Bad Request
             
-            createBatchProcessingLog('Error', Null , 'ErrorResponse'+res , null); 
+            createBatchProcessingLog('Error', Null , 'Error Response: '+res); 
             
             // END- LSP-245
             return res;
@@ -82,7 +82,7 @@ System.debug(leadId+'  '+req.requestURI);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             /*LSP-245 - Lead id null error*/
             
-            createBatchProcessingLog('Error',Null, 'ErrorResponse'+res, null); 
+            createBatchProcessingLog('Error',Null, 'Error Response: '+res); 
             
             /*END- LSP-245*/
             return res;
@@ -107,7 +107,7 @@ System.debug(leadId+'  '+req.requestURI);
         
         /*LSP-245 - Member portal input(Info)*/
         
-        createBatchProcessingLog('Info',leadId , 'requestInfo'+reqParams, Null);
+        createBatchProcessingLog('Info',leadId , 'Request Information: '+reqParams);
         
         /*END- LSP-245*/
         
@@ -121,7 +121,7 @@ System.debug(leadId+'  '+req.requestURI);
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, 'Loan Account Not found');
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             
-            createBatchProcessingLog('Error',leadId , 'ErrorResponse'+res, Null);
+            createBatchProcessingLog('Error',leadId , 'Error Response: '+res);
             
             return res;
         }
@@ -135,7 +135,7 @@ System.debug(leadId+'  '+req.requestURI);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             
             /*Start-LSP-245*/
-            createBatchProcessingLog('Error', leadId , 'ErrorResponse'+res, Null);
+            createBatchProcessingLog('Error', leadId , 'Error Response: '+res);
             /*END-LSP-245*/
             
             return res;
@@ -147,7 +147,7 @@ System.debug(leadId+'  '+req.requestURI);
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             /*LSP-245*/
-            createBatchProcessingLog('Error',leadId,'ErrorResponse'+res, Null);
+            createBatchProcessingLog('Error',leadId,'Error Response: '+res);
             /*END-LSP-245*/
             return res;
         }
@@ -158,7 +158,7 @@ System.debug(leadId+'  '+req.requestURI);
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             /*LSP-245*/
-            createBatchProcessingLog('Error',leadId , 'ErrorResponse'+res , Null);
+            createBatchProcessingLog('Error',leadId , 'Error Response: '+res);
             return res;
         }
         
@@ -205,7 +205,7 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
             
         } catch(Exception e) {
             
-            createBatchProcessingLog('Error',leadId,'ExceptionResponse', 'The Error Response sent back to Member portal'+ e.getMessage() + 'Exception caused at line number -'+e.getLineNumber() + 'at the apex class : '+e.getStackTraceString() );
+            createBatchProcessingLog('Error',leadId,'The Error Response: '+ e.getMessage() + 'Exception caused at line number -'+e.getLineNumber() + 'at the apex class : '+e.getStackTraceString());
             
             system.debug(LoggingLevel.Error, 'exception caught 1 : ' + e.getMessage() +e.getstacktraceString());
             String message = 'Unknown Exception : ' + e.getMessage();
@@ -263,13 +263,13 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
                         restRes.statuscode = peer.Constants.HTTP_OK;
                         //Whenever a request or response is made ,or an exception is caught in try catch block, HM has started following a routine to insert (request, response success details or exception details) in Batch Processing Log
                         
-                        createBatchProcessingLog('INFO', leadId, 'SuccessResponse'+res, Null);
+                        createBatchProcessingLog('INFO', leadId, 'Success Response: '+res);
                         return res;
                     }
                     res = new Response(peer.Constants.ERROR, '', 'Check if loan account has required information');
                     //Whenever a request or response is made ,or an exception is caught in try catch block, HM has started following a routine to insert (request, response success details or exception details) in Batch Processing Log
                     
-                    createBatchProcessingLog('Error',leadId , 'ErrorResponse'+res, Null);
+                    createBatchProcessingLog('Error',leadId , 'Error Response: '+res);
                     return res;
                 }
                 //LSP-328.1 - end
@@ -334,7 +334,7 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
                 
                 /*LSP-245 - Success response*/
                 
-                createBatchProcessingLog('INFO', leadId , 'SuccessResponse'+res, null);
+                createBatchProcessingLog('INFO', leadId , 'Success Response: '+res);
                 /*END- LSP-245*/
             }
             
@@ -343,7 +343,7 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
         
         catch (Exception e) {
             
-            createBatchProcessingLog('Error',leadId,'ExceptionResponse', 'The Error Response sent back to Member portal'+ e.getMessage() + 'Exception caused at line number -'+e.getLineNumber() + 'at the apex class : '+e.getStackTraceString() );
+            createBatchProcessingLog('Error',leadId,'The Error Response: '+ e.getMessage() + 'Exception caused at line number -'+e.getLineNumber() + 'at the apex class : '+e.getStackTraceString());
             
             
             system.debug(LoggingLevel.Error, 'exception caught 2 : ' + e.getMessage());
@@ -524,14 +524,15 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
         return installmentFlagValue;                            
     }
     
-    public static void createBatchProcessingLog(string logLevel,  string leadGuid, object messageDetails, string exceptionMessage){
+    public static void createBatchProcessingLog(string logLevel, string leadGuid, object messageDetails){
         
         loan__Batch_Process_Log__c batchLogMPInput = new loan__Batch_Process_Log__c();
         
-        batchLogMPInput.loan__Log_Level__c = logLevel;
-        batchLogMPInput.loan__Message__c = ''+messageDetails;
-        batchLogMPInput.loan__Batch_Id__c = 'LeadGuid : '+leadGuid;
         batchLogMPInput.loan__Origin__c = 'WSSetupAPS';
+        batchLogMPInput.loan__Log_Level__c = logLevel;
+        batchLogMPInput.loan__Batch_Id__c = 'LeadGuid : '+leadGuid;
+        batchLogMPInput.loan__Message__c = ''+messageDetails;
+        
         insert batchLogMPInput;
     }
     
