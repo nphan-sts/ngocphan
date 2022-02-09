@@ -17,6 +17,8 @@
 @RestResource(urlMapping='/OTPOMBPEndpoint/*')
 global class WSSetupAPS {
     
+    public static final String ERROR_RESPONSE = 'Error Response: ';
+    
     @HttpPost
     global static Response createAPSSetup() {
         Response res = null;
@@ -24,7 +26,6 @@ global class WSSetupAPS {
         RestResponse restRes = RestContext.response;
         Boolean isLockBasedACHEnabled = false;
         Boolean isMultiplePaymentMethodEnabled = false;
-        final String ERROR_RESPONSE = 'Error Response: ';
         
         loan__ACH_Parameters__c achParameters = loan.CustomSettingsUtil.getACHParameters();
         if(!achParameters.loan__Use_Lock_Based_ACH__c && !achParameters.loan__Multiple_Payment_Method_Support__c) {
@@ -107,7 +108,7 @@ System.debug(leadId+'  '+req.requestURI);
         Boolean installmentPayment;
         Boolean payoffPayment = false;//LSP-328.1
         
-
+        
         
         /*LSP-245 - Member portal input(Info)*/
         
