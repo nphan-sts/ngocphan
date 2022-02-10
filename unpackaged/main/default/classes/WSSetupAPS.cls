@@ -17,6 +17,8 @@
 @RestResource(urlMapping='/OTPOMBPEndpoint/*')
 global class WSSetupAPS {
     
+    public static final String ERROR_RESPONSE = 'Error Response: ';
+    
     @HttpPost
     global static Response createAPSSetup() {
         Response res = null;
@@ -24,6 +26,7 @@ global class WSSetupAPS {
         RestResponse restRes = RestContext.response;
         Boolean isLockBasedACHEnabled = false;
         Boolean isMultiplePaymentMethodEnabled = false;
+        
         loan__ACH_Parameters__c achParameters = loan.CustomSettingsUtil.getACHParameters();
         if(!achParameters.loan__Use_Lock_Based_ACH__c && !achParameters.loan__Multiple_Payment_Method_Support__c) {
             String message = 'Either Lock Based ACH or Multiple Payment Method Support must be enabled to use this feature.';
@@ -31,7 +34,7 @@ global class WSSetupAPS {
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             /*LSP-245*/
             
-            createBatchProcessingLog('Error', Null, 'Error Response: '+res);
+            createBatchProcessingLog('Error', Null, ERROR_RESPONSE+res);
             return res;
             
         } else if(achParameters.loan__Use_Lock_Based_ACH__c && achParameters.loan__Multiple_Payment_Method_Support__c
@@ -64,7 +67,7 @@ System.debug(leadId+'  '+req.requestURI);
             
             // LSP-245 - Bad Request
             
-            createBatchProcessingLog('Error', Null , 'Error Response: '+res); 
+            createBatchProcessingLog('Error', Null , ERROR_RESPONSE+res); 
             
             // END- LSP-245
             return res;
@@ -82,7 +85,7 @@ System.debug(leadId+'  '+req.requestURI);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             /*LSP-245 - Lead id null error*/
             
-            createBatchProcessingLog('Error',Null, 'Error Response: '+res); 
+            createBatchProcessingLog('Error',Null, ERROR_RESPONSE+res); 
             
             /*END- LSP-245*/
             return res;
@@ -105,6 +108,8 @@ System.debug(leadId+'  '+req.requestURI);
         Boolean installmentPayment;
         Boolean payoffPayment = false;//LSP-328.1
         
+        
+        
         /*LSP-245 - Member portal input(Info)*/
         
         createBatchProcessingLog('Info',leadId , 'Request Information: '+reqParams);
@@ -121,7 +126,7 @@ System.debug(leadId+'  '+req.requestURI);
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, 'Loan Account Not found');
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             
-            createBatchProcessingLog('Error',leadId , 'Error Response: '+res);
+            createBatchProcessingLog('Error',leadId , ERROR_RESPONSE+res);
             
             return res;
         }
@@ -135,7 +140,7 @@ System.debug(leadId+'  '+req.requestURI);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             
             /*Start-LSP-245*/
-            createBatchProcessingLog('Error', leadId , 'Error Response: '+res);
+            createBatchProcessingLog('Error', leadId , ERROR_RESPONSE+res);
             /*END-LSP-245*/
             
             return res;
@@ -147,7 +152,7 @@ System.debug(leadId+'  '+req.requestURI);
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             /*LSP-245*/
-            createBatchProcessingLog('Error',leadId,'Error Response: '+res);
+            createBatchProcessingLog('Error',leadId,ERROR_RESPONSE+res);
             /*END-LSP-245*/
             return res;
         }
@@ -158,7 +163,7 @@ System.debug(leadId+'  '+req.requestURI);
             res = new Response(peer.Constants.ERROR, peer.Constants.INVALID_INPUT, message);
             restRes.statusCode = peer.Constants.HTTP_BAD_REQUEST;
             /*LSP-245*/
-            createBatchProcessingLog('Error',leadId , 'Error Response: '+res);
+            createBatchProcessingLog('Error',leadId , ERROR_RESPONSE+res);
             return res;
         }
         
@@ -205,7 +210,7 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
             
         } catch(Exception e) {
             
-            createBatchProcessingLog('Error',leadId,'The Error Response: '+ e.getMessage() + 'Exception caused at line number -'+e.getLineNumber() + 'at the apex class : '+e.getStackTraceString());
+            createBatchProcessingLog('Error',leadId,ERROR_RESPONSE+ e.getMessage() + 'Exception caused at line number -'+e.getLineNumber() + 'at the apex class : '+e.getStackTraceString());
             
             system.debug(LoggingLevel.Error, 'exception caught 1 : ' + e.getMessage() +e.getstacktraceString());
             String message = 'Unknown Exception : ' + e.getMessage();
@@ -269,7 +274,7 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
                     res = new Response(peer.Constants.ERROR, '', 'Check if loan account has required information');
                     //Whenever a request or response is made ,or an exception is caught in try catch block, HM has started following a routine to insert (request, response success details or exception details) in Batch Processing Log
                     
-                    createBatchProcessingLog('Error',leadId , 'Error Response: '+res);
+                    createBatchProcessingLog('Error',leadId , ERROR_RESPONSE+res);
                     return res;
                 }
                 //LSP-328.1 - end
@@ -343,7 +348,7 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
         
         catch (Exception e) {
             
-            createBatchProcessingLog('Error',leadId,'The Error Response: '+ e.getMessage() + 'Exception caused at line number -'+e.getLineNumber() + 'at the apex class : '+e.getStackTraceString());
+            createBatchProcessingLog('Error',leadId,ERROR_RESPONSE+ e.getMessage() + 'Exception caused at line number -'+e.getLineNumber() + 'at the apex class : '+e.getStackTraceString());
             
             
             system.debug(LoggingLevel.Error, 'exception caught 2 : ' + e.getMessage());
