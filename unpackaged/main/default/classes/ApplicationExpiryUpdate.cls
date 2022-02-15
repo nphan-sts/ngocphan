@@ -1,25 +1,29 @@
+/* If you want to executee above batch class for specific expiry date then below is for reference
+           String query='SELECT Id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c,(SELECT id,name,Loan_amount_counteroffer__c FROM Credit_Policy__r WHERE Loan_amount_counteroffer__c>0 LIMIT 1 )FROM genesis__Applications__c WHERE Expiry_Date__c ='+ CSD +' AND genesis__Status__c NOT IN: skipLoanStatus';
+           Date specificdate=String.valueof(date);
+           ApplicationExpiryUpdate b = new ApplicationExpiryUpdate(query,specificdate);
+           Database.executeBatch(b,1);
+         */
+
 global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Schedulable, Database.AllowsCallouts {
             
     String query;
-    
     List<String> skipLoanStatus = System.Label.Application_Expired_Status.split(',');
     String CSD;
     Date currentSystemDate;
-        
-       
+           
     global ApplicationExpiryUpdate(){
        currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
-    	CSD = String.valueof(currentSystemDate);
-                
+        CSD = String.valueof(currentSystemDate);          
     }
     
     global ApplicationExpiryUpdate(String query,Date currentSystemDate){
-        
         this.query = query; 
         if(currentSystemDate != null){
             CSD = String.valueof(currentSystemDate);
             this.currentSystemDate = currentSystemDate;
-        }else{
+        }
+        else{
             this.currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
         }
     }
@@ -28,18 +32,22 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         
         ApplicationExpiryUpdate b = new ApplicationExpiryUpdate();
         Database.executeBatch(b,1);
-    	 /* If you want to executee above batch class for specific expiry date then below is for reference
-           String query='SELECT id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c,(SELECT id,name,Loan_amount_counteroffer__c FROM Credit_Policy__r WHERE Loan_amount_counteroffer__c>0 LIMIT 1 )FROM genesis__Applications__c WHERE Expiry_Date__c ='+ CSD +' AND genesis__Status__c NOT IN: skipLoanStatus'
-		   Date specificdate=String.valueof(date);
-           ApplicationExpiryUpdate b = new ApplicationExpiryUpdate(query,specificdate);
-           Database.executeBatch(b,1);
-         */
-    }
+            }
     
     global Database.QueryLocator start(Database.BatchableContext bc){
         if(query == null){
             //LOP-270 changed condition to Expiry date <= CSD
-        query = 'SELECT id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c,(SELECT id,name,Loan_amount_counteroffer__c FROM Credit_Policy__r WHERE Loan_amount_counteroffer__c>0 LIMIT 1 )FROM genesis__Applications__c WHERE Expiry_Date__c <='+ CSD +' AND genesis__Status__c NOT IN: skipLoanStatus';
+            query = 'SELECT '+
+                    'Id, Expiry_Date__c, genesis__Status__c, CreatedById,' +
+                    'DocuSign_EnvelopeId__c, Expiration_Tag__c, '+
+                    '(SELECT id,name, Loan_amount_counteroffer__c ' +
+                    'FROM '+
+                    'Credit_Policy__r '+
+                    'WHERE '+
+                    'Loan_amount_counteroffer__c> 0 LIMIT 1) '+
+                    'FROM genesis__Applications__c '+
+                    'WHERE Expiry_Date__c <='+ CSD +
+                    'AND genesis__Status__c NOT IN: skipLoanStatus';                                                                                                                                                                                       
         }                     
         System.debug('Query'+query);    
         return Database.getQueryLocator(query);
@@ -77,7 +85,7 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         }
         
         try{
-            actionDecline = [SELECT id,name 
+            actionDecline = [SELECT Id,name 
                              FROM Manual_Adverse_Action_Decline__c 
                              WHERE Decline_Name__c ='insufficient tradeline balance'  ];
         }
@@ -94,11 +102,11 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         
         
         Set<String> verification_status = new Set<String>{'loan_details_shown','credit_score_notice_shown','ach_accepted',
-            											'kba_disclosure_accepted','kba_success','dcp_accepted','til_accepted',
-            										'agent_verification_pending','agent_document_verification_pending','agent_verified'};
+                                                        'kba_disclosure_accepted','kba_success','dcp_accepted','til_accepted',
+                                                    'agent_verification_pending','agent_document_verification_pending','agent_verified'};
         
         Set<String> docs_status = new Set<String>{'hard_inquiry_disclosure_accepted','docusign_loan_docs_sent',
-                                     				'docusign_loan_docs_complete', 'pre_funding','funded'};
+                                                    'docusign_loan_docs_complete', 'pre_funding','funded'};
                 
         for(genesis__Applications__c  app : listOfApp){
             if(app.Credit_Policy__r.size()==0){
@@ -159,7 +167,7 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
             
             listOfAppTobeUpdated.add(app);
             
-        }
+        } 
         
         update listOfAppTobeUpdated ;
     } 
