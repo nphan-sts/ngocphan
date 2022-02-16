@@ -31,7 +31,7 @@ public class MW_LogUtility {
         
     }
     
-    /*MKT Added for LSP-306*/
+/*MKT Added for LSP-306*/
     public static void dagError(
         string jobName,
         string jobClass,
@@ -208,7 +208,6 @@ public class MW_LogUtility {
         try {
             // Use a try/catch so that if `data` can't be cast to string, or isn't JSON,
             //  it doesn't fail execution altogether.
-            
             if(log.data != null){
                 log.data = JSON.deserializeUntyped((String)data);
             }
