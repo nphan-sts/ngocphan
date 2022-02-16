@@ -43,8 +43,7 @@ public class IncomeCalculatorTriggerHandler {
                     inc.Pay_Period_End_Date__c = System.Today();
                 }
                 inc.Number_of_Pays__c = getNumberOfPays(inc);
-                integer days_elapsed = (inc.Pay_Period_Start_Date__c.daysbetween(system.today())+1);
-                inc.Annualized_Income__c = (inc.Amount__c / days_elapsed) * 365;
+                inc.Annualized_Income__c = (inc.Amount__c / inc.Number_of_Pays__c) * frequencyNumberMap.get(inc.Frequency_Type__c);
             }else{
                 inc.Annualized_Income__c = inc.Amount__c * frequencyNumberMap.get(inc.Frequency_Type__c);
             }
