@@ -15,6 +15,8 @@ public with sharing class MW_SynchronizeHandlerTest {
         list<genesis__Applications__c> appList = MW_DataFactoryTest.createApplication(1, accList[0].Id);
         insert appList;
         appList[0].genesis__Loan_Amount__c = 25000;
+        appList[0].genesis__Status__c = 'offer_shown';
+        appList[0].Annual_Individual_Income_App__c = 95000;
         update appList;
         System.assertEquals(25000, appList[0].genesis__Loan_Amount__c);
     }

@@ -358,6 +358,8 @@ private class TestCreditPolicyResponse {
         System.assert(cpd.frozen_report == false);
         System.assert(cpd.pricing_segment == null);
         System.assert(cpd.pricing_tier != null);
+        system.assert(cpd.raw_bureau_data != null);
+        system.assert(cpd.raw_bureau_data.substringBetween('<consumerStatementIndicator>', '</consumerStatementIndicator>') != null);
         
         for (CreditPolicyResponse.offers offer : cpd.offers) {
             System.assert(offer.key != null);
