@@ -131,23 +131,24 @@ public class QueueAssignment{
                      reason += UTM_MEDIUM + ' '+ app.utm_medium__c + ' And  utm_source ' + app.utm_source__c + ' IDA Score >= 800 .'; 
                 }
                 //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 750 (For Affiliate Partner)   
-                else if(KBAd.Id_Analytics_Score__c != null && app.Affiliate_Partner__c 
-                     && KBAd.Id_Analytics_Score__c >= 750 && app.utm_source__c !='creditkarma') {
+                else if((KBAd.Id_Analytics_Score__c != null && KBAd.Id_Analytics_Score__c >= 750 )
+                     && (app.Affiliate_Partner__c && app.utm_source__c !='creditkarma')|| (!app.Affiliate_Partner__c && app.utm_source__c !='creditkarma_lightbox')) {
                      KBAFraudT = true;
                      reason += 'IDA Score >= 750. ';
                 }
                 //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 700 (For Non-Affiliate Partner)    
                 else if(KBAd.Id_Analytics_Score__c != null && !app.Affiliate_Partner__c 
-                     && KBAd.Id_Analytics_Score__c >= 700 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) && app.utm_source__c !='creditkarma_lightbox')  {
+                     && KBAd.Id_Analytics_Score__c >= 700 && app.utm_medium__c != 'DM' && app.utm_medium__c != 'Email' && !UTM_SOCIAL_MEDIUM.contains(app.utm_medium__c) 
+                     && app.utm_source__c !='creditkarma_lightbox')  {
                      KBAFraudT = true;
                      reason += 'IDA Score >= 700. ';
                 }        
                     
-                else if(KBAd.Id_Analytics_Score__c != null && !app.Affiliate_Partner__c 
+               /* else if(KBAd.Id_Analytics_Score__c != null && !app.Affiliate_Partner__c 
                        && KBAd.Id_Analytics_Score__c >= 750 && app.utm_source__c !='creditkarma_lightbox'){
                      KBAFraudT = true;
                      reason += 'IDA Score >= 750. ';
-                }
+                }*/
              
                 }
                 
