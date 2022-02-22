@@ -426,9 +426,9 @@ public class TestQueueAssignment{
         Account acc1 = [select id from Account Limit 1];
         genesis__Applications__c app1 =[select id,genesis__Account__c,Sift_Status__c,Affiliate_Partner__c,utm_medium__c,utm_source__c from genesis__Applications__c where genesis__Account__c =: acc1.id Limit 1];
         app1.Sift_Status__c = 100;
-        app1.Affiliate_Partner__c = true;
+        app1.Affiliate_Partner__c = false;
         app1.utm_medium__c = '';
-        app1.utm_source__c = 'creditkarma_lightbox';
+        app1.utm_source__c = 'L1';
         update app1;
         
         KBA_Details__c kba1 = [select id,
@@ -438,7 +438,7 @@ public class TestQueueAssignment{
                                from KBA_Details__c
                                where Application__c =: app1.Id Limit 1];
         
-        kba1.Id_Analytics_Score__c=810;
+        kba1.Id_Analytics_Score__c=780;
         update kba1;
 
         List<Id> appIdlist = new List<Id>();
