@@ -1,3 +1,8 @@
+/* ****************Modification History******************
+*    Created By        	 Date			Version
+*1. Bhavya Maliwal        2022/02/16    LSP-546 Initial Version
+
+******************Modification History******************/
 @isTest
 private class TestActivateFractionalizationBatch{
 
@@ -31,9 +36,10 @@ private class TestActivateFractionalizationBatch{
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
+             peer__Last_Name__c='TestLName2',
             //Borrower_s_Last_Name__c='Testborrower',
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -62,7 +68,11 @@ private class TestActivateFractionalizationBatch{
         
         
    }
-   Testmethod static void method1(){
+     /*Created By : Bhavya Maliwal
+Method name : ActivateFractionalizationBatch_SetofLoanIds_Constructor
+Purpose : to cover code satisfying constructor where Set of loan Ids is passed and for Batch execution,  for ActivateFractionalizationBatch
+*/
+   Testmethod static void ActivateFractionalizationBatch_SetofLoanIds_Constructor(){
         List<loan__Loan_Account__c> lappList = [SELECT ID, 
                                                     loan__Previous_Installment_Date__c,
                                                     loan__Account__r.cnotify__Email__c,
@@ -85,10 +95,50 @@ private class TestActivateFractionalizationBatch{
         job.execute(null,lappList);
         ID batchprocessid = Database.executeBatch(job);
         job.finish(null);
-        //pallavi
-        ActivateFractionalizationBatch b = new ActivateFractionalizationBatch();
-        ActivateFractionalizationBatch b1 = new ActivateFractionalizationBatch(1);
-        //pallavi
+       
         test.stopTest();
     }
+     /*Created By : Bhavya Maliwal
+Method name : ActivateFractionalizationBatch_default_Constructor
+Purpose : to cover code satisfying default constructor and Batch execution for ActivateFractionalizationBatch
+*/
+     Testmethod static void ActivateFractionalizationBatch_default_Constructor(){
+        List<loan__Loan_Account__c> lappList = [SELECT ID, 
+                                                    loan__Previous_Installment_Date__c,
+                                                    loan__Account__r.cnotify__Email__c,
+                                                    loan__Loan_Product_Name__r.name, 
+                                                    loan__Payment_Amount__c, 
+                                                    loan__Next_Installment_Date__c, 
+                                                    loan__Account__r.ID,Borrowers_First_Name__c,
+                                                    loan__Account__r.Borrower_s_Last_Name__c,
+                                                    loan__Loan_Product_Name__c 
+                                                    from loan__Loan_Account__c];
+                                                    
+        System.debug('==============lapp=============='+lappList);
+        test.startTest();
+      ActivateFractionalizationBatch b = new ActivateFractionalizationBatch();
+        test.stopTest();
+    }
+     /*Created By : Bhavya Maliwal
+Method name : InvestorAllocation_runInvestorAllocationBasedOnWeighting
+Purpose : to cover code satisfying constructor where thread is passed and for Batch execution, for ActivateFractionalizationBatch
+*/
+     Testmethod static void ActivateFractionalizationBatch_thread_Constructor(){
+        List<loan__Loan_Account__c> lappList = [SELECT ID, 
+                                                    loan__Previous_Installment_Date__c,
+                                                    loan__Account__r.cnotify__Email__c,
+                                                    loan__Loan_Product_Name__r.name, 
+                                                    loan__Payment_Amount__c, 
+                                                    loan__Next_Installment_Date__c, 
+                                                    loan__Account__r.ID,Borrowers_First_Name__c,
+                                                    loan__Account__r.Borrower_s_Last_Name__c,
+                                                    loan__Loan_Product_Name__c 
+                                                    from loan__Loan_Account__c];
+                                                    
+        System.debug('==============lapp=============='+lappList);
+        test.startTest();
+        ActivateFractionalizationBatch b1 = new ActivateFractionalizationBatch(1);
+       test.stopTest();
+    }
+
 }
