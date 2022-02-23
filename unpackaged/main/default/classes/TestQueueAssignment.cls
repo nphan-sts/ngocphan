@@ -99,7 +99,7 @@ public class TestQueueAssignment{
         QueueAssignment.appToQueueAssignment(appIdlist);
         Test.stopTest();
         List<Application_Tags__c> appTags = [SELECT Application_Tag__c FROM Application_Tags__c where Application__c = :app1.Id];
-        System.assertEquals(appTags[0].Application_Tag__c, 'Fraud', 'Fraud tag been assigned');
+        System.assertEquals(appTags[0].Application_Tag__c, 'Fraud', 'REASON');
     }
     
     Testmethod static void FraudbasedOnSiftStatus(){
@@ -129,7 +129,7 @@ public class TestQueueAssignment{
         QueueAssignment.appToQueueAssignment(appIdlist);
         Test.stopTest();
         List<Application_Tags__c> appTags = [SELECT Application_Tag__c FROM Application_Tags__c where Application__c = :app1.Id];
-        System.assertEquals(appTags[0].Application_Tag__c, 'Fraud', 'Fraud tag been assigned');
+        System.assertEquals(appTags[0].Application_Tag__c, 'Fraud', 'REASON');
     }
     
     Testmethod static void FraudBasedOnPreciseIdScores(){
