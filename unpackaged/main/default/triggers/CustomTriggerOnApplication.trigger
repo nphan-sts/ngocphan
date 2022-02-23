@@ -155,17 +155,23 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 else if(deactivateStatus.contains(app.genesis__Status__c) && app.genesis__Status__c != oldApp.genesis__Status__c ) {
                     DeactivateBankAccountsforApplications.deactivateBankAccount(app.id);
                 }
-                else if (!InvestorAllocation.allocationForADVPcalled &&
-                           ((app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c) ||
-                              (app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c == oldApp.genesis__Status__c && app.pricing_tier__C != oldApp.pricing_tier__C))){  //CLS-1121,1216,1095
-                            
-                            List<Credit_Policy__c> creditPolicies = [select Id from Credit_Policy__c  where Application__c= : app.Id];
-                            System.debug('creditPolicies size check: ' + creditPolicies.size());
-                            if (creditPolicies.size() > 0) {
-                                String res = genesis.ScorecardAPI.generateScorecard(app.id);
-                                boolean result = true;
-                                result = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
-                            } else {
+                else if ((!InvestorAllocation.allocationForADVPcalled && app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c != oldApp.genesis__Status__c)|| 
+			(!InvestorAllocation.allocationForPricingTierCalled && app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c == oldApp.genesis__Status__c 
+		   && app.pricing_tier__C != oldApp.pricing_tier__C)
+		   ){  //CLS-1121,1216,1095,LOP-441
+
+			List<Credit_Policy__c> creditPolicies = [select Id from Credit_Policy__c  where Application__c= : app.Id];
+			System.debug('creditPolicies size check: ' + creditPolicies.size());
+			if (creditPolicies.size() > 0) {
+				String res = genesis.ScorecardAPI.generateScorecard(app.id);
+				boolean result = true;
+				result = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
+
+				if(app.genesis__Status__c == 'agent_document_verification_pending' && app.genesis__Status__c == oldApp.genesis__Status__c 
+		   			&& app.pricing_tier__C != oldApp.pricing_tier__C){ //LOP-441
+                        InvestorAllocation.allocationForPricingTierCalled = true;
+                    }
+				} else {
                                 
                                 Map<String, Object> msg = new Map<String, Object>();
                                 msg.put('app.Id', app.Id);
