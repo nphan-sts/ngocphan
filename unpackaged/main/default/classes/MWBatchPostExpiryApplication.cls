@@ -1,8 +1,8 @@
-/*  If you want to executee above batch class for specific expiry date then below is for reference
-           Date specificExpiryDate=String.valueof(date);
-           MWBatchPostExpiryApplication b = new MWBatchPostExpiryApplication(specificExpiryDate);
+/*  If you want to execute below batch class for a specific date(format YYYY-MM-DD) ,run the following script.
+           Date specificDate=date.valueOf('2015-03-08');
+           MWBatchPostExpiryApplication b = new MWBatchPostExpiryApplication(specificDate);
            Database.executeBatch(b,1);
-         */
+          */
 global class MWBatchPostExpiryApplication implements Database.batchable<sObject>, Schedulable, Database.AllowsCallouts {
 
     String query;
@@ -23,9 +23,9 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
         currentSystemDateTime = DateTime.newInstance(currentSystemDate.year(), currentSystemDate.month(), currentSystemDate.day());
     	previousDate = currentSystemDateTime.addDays(-1).format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
     }
-    global MWBatchPostExpiryApplication(Date specificExpiryDate){
-        if(specificExpiryDate != null){
-            CSD = String.valueof(specificExpiryDate);
+    global MWBatchPostExpiryApplication(Date specificDate){
+        if(specificDate != null){
+            CSD = String.valueof(specificDate);
             query = 'SELECT '+
                     'Id, Expiry_Date__c, genesis__Status__c, CreatedById,' +
                     'owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, '+
@@ -36,8 +36,11 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
                     'WHERE '+
                     'Loan_amount_counteroffer__c> 0 LIMIT 1) '+
                     'FROM genesis__Applications__c '+
-                    'WHERE Expiry_Date__c ='+ CSD +
-                    'AND genesis__Status__c IN: applicationStatus';        
+                    'WHERE '+
+                    '(Expiry_Date__c <='+ CSD + ' AND genesis__Status__c in: applicationStatus) ' +
+                    'OR '+
+                    '('+ lastModifiedDateField + '=' + previousDate + ' AND genesis__Status__c IN: applicationStatusDec ) ' ; 
+                            
         }
     }
     global Database.QueryLocator start(Database.BatchableContext BC) {
@@ -116,7 +119,7 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
         String str = JSON.serialize(syncApp, true);
         // LOP-270 , checking callout is a success
         String isSuccess = MW_WebhookHandler.CallWebHookIntegration(str, appIdList, leadIdList);
-        if (Successful(isSuccess)){
+        if (successful(isSuccess)){
         	update listOfApp;
         }
     

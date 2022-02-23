@@ -1,8 +1,7 @@
-/* If you want to executee above batch class for specific expiry date then below is for reference
-           String query='SELECT Id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c,(SELECT id,name,Loan_amount_counteroffer__c FROM Credit_Policy__r WHERE Loan_amount_counteroffer__c>0 LIMIT 1 )FROM genesis__Applications__c WHERE Expiry_Date__c ='+ CSD +' AND genesis__Status__c NOT IN: skipLoanStatus';
-           Date specificdate=String.valueof(date);
-           ApplicationExpiryUpdate b = new ApplicationExpiryUpdate(query,specificdate);
-           Database.executeBatch(b,1);
+/* If you want to execute below batch class for a specific date(format YYYY-MM-DD) ,run the following script.
+           Date specificDate=date.valueOf('2015-03-08');
+		   ApplicationExpiryUpdate b = new ApplicationExpiryUpdate(specificDate);
+		   Database.executeBatch(b,1);
          */
 
 global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Schedulable, Database.AllowsCallouts {
@@ -17,11 +16,11 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         CSD = String.valueof(currentSystemDate);          
     }
     
-    global ApplicationExpiryUpdate(String query,Date currentSystemDate){
-        this.query = query; 
-        if(currentSystemDate != null){
-            CSD = String.valueof(currentSystemDate);
-            this.currentSystemDate = currentSystemDate;
+    global ApplicationExpiryUpdate(Date specificDate){
+        
+        if(specificDate != null){
+            CSD = String.valueof(specificDate);
+            this.currentSystemDate = specificDate;
         }
         else{
             this.currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());

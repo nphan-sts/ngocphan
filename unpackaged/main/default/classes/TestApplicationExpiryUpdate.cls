@@ -149,20 +149,9 @@ public class TestApplicationExpiryUpdate {
         ApplicationExpiryUpdate obj = new ApplicationExpiryUpdate(); 
         Database.executeBatch(obj,1);
         Set<String> skipLoanStatus = new Set<String>{'funded','Expired','Declined','Decline_Manual_Review','Approved for funding','pre_funding','Expired-Withdrawn'};
-        String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
-        string query = 'SELECT '+
-                    'Id, Expiry_Date__c, genesis__Status__c, CreatedById,' +
-                    'DocuSign_EnvelopeId__c, Expiration_Tag__c, '+
-                    '(SELECT id,name, Loan_amount_counteroffer__c ' +
-                    'FROM '+
-                    'Credit_Policy__r '+
-                    'WHERE '+
-                    'Loan_amount_counteroffer__c> 0 LIMIT 1) '+
-                    'FROM genesis__Applications__c '+
-                    'WHERE Expiry_Date__c <='+ CSD +
-                    'AND genesis__Status__c NOT IN: skipLoanStatus';           
+        String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());         
         obj.start(null);
-        obj = new ApplicationExpiryUpdate(query,currentSystemDate );
+        obj = new ApplicationExpiryUpdate(currentSystemDate);
         Database.executeBatch(obj,1);
         obj.execute(null);
         List <genesis__Applications__c> genApp = [
