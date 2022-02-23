@@ -393,8 +393,7 @@ public class TestQueueAssignment{
         QueueAssignment.appToQueueAssignment(appidlist); 
         Test.stopTest();
         genesis__Applications__c resultApp = [SELECT Fraud_Assignment_Reason__c FROM genesis__Applications__c where Id =: app1.Id];
-        System.assertNotEquals(resultApp.Fraud_Assignment_Reason__c, null, 'Fraud reason is being set as '+ resultApp.Fraud_Assignment_Reason__c);
-        System.assertEquals(QueueAssignment.KBAFraudT, true, 'No fraud tag being assigned');
+        System.assertEquals(resultApp.Fraud_Assignment_Reason__c, null);
     } 
 
     
