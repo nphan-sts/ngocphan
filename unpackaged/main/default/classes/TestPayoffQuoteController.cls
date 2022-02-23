@@ -1,14 +1,17 @@
 /* ****************Modification History******************
  * Created By        Date          JIRA number
  *1. Pallavi        2020/01/29     LOS-242(Generate CL Loan Payoff Quote PDF Document)
- *      
+ *   Bhavya  		2022/2/15		LSP-545 test class been set as per standards and increased the coverage
  ******************Modification History******************/
 @isTest
 public class TestPayoffQuoteController {
-
+ /*Created By : Bhavya Maliwal
+Method name : PayoffQuoteController_PayoffQuote
+Purpose : to cover PayoffQuoteController
+*/
     @isTest
     
-    public static void testMethod1(){
+    public static void PayoffQuoteController_PayoffQuote (){
         loan__Org_Parameters__c orgParam = new loan__Org_Parameters__c();
         orgParam.loan__Disable_Triggers__c=true;
         orgParam.loan__Digits_After_Decimals__c=2;
@@ -22,15 +25,17 @@ public class TestPayoffQuoteController {
         Account acc1 = new Account(
             Name = 'TestAccount',
             loan__Investor__c=False,
+            peer__Last_Name__c='TestLName2',
             loan__Undeployed_Funds__c = 11000,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123'
             );
         insert acc1;
         
         Account acc2 = new Account(
             Name = 'TestInvestorAccount',
             loan__Investor__c = true,
+            peer__Last_Name__c='TestLName2',
             loan__Undeployed_Funds__c = 11000,
             cnotify__Email__c = 'abcd@test.com',
             loan__SOCIAL_SECURITY_NUMBER__c = '123456789'
@@ -115,9 +120,11 @@ public class TestPayoffQuoteController {
         investor.loan__Status__c = 'Active';
         insert investor;
         
+        test.startTest();
         PageReference pageRef = Page.GeneratePayoffQuote;
         Test.setCurrentPage(pageRef);
         pageRef.getParameters().put('Id', String.valueOf(payoff.Id));
         PayoffQuoteController quote = new PayoffQuoteController();
+        test.stopTest();
     }
 }
