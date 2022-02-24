@@ -132,7 +132,7 @@ public class QueueAssignment{
                 }
                 //--- Fraud will be true for ID Analytic Score where score is equal to or greater than 750 (For Affiliate/Non Affilate Partner)   
                 else if((KBAd.Id_Analytics_Score__c != null && KBAd.Id_Analytics_Score__c >= 750 )
-                     && (app.Affiliate_Partner__c && app.utm_source__c !='creditkarma')|| (!app.Affiliate_Partner__c && app.utm_source__c !='creditkarma_lightbox')) {
+                     && ((app.Affiliate_Partner__c && app.utm_source__c !='creditkarma')|| (!app.Affiliate_Partner__c && app.utm_source__c !='creditkarma_lightbox'))) {
                      KBAFraudT = true;
                      reason += 'IDA Score >= 750. ';
                 }
