@@ -37,7 +37,7 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
                     'Loan_amount_counteroffer__c> 0 LIMIT 1) '+
                     'FROM genesis__Applications__c '+
                     'WHERE '+
-                    '(Expiry_Date__c <='+ CSD + ' AND genesis__Status__c in: applicationStatus) ' +
+                    '(Expiry_Date__c ='+ CSD + ' AND genesis__Status__c in: applicationStatus) ' +
                     'OR '+
                     '('+ lastModifiedDateField + '=' + previousDate + ' AND genesis__Status__c IN: applicationStatusDec ) ' ; 
                             
