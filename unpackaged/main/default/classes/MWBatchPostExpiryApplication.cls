@@ -14,6 +14,7 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
     Date currentSystemDate;
 	String CSD;    
     Datetime currentSystemDateTime;
+    Datetime currentSpecificDateTime;
     String previousDate;
     @TestVisible static SObjectField lastModifiedDateField = genesis__Applications__c.LastModifiedDate;
     @TestVisible static sync_application syncApp;
@@ -26,6 +27,8 @@ global class MWBatchPostExpiryApplication implements Database.batchable<sObject>
     global MWBatchPostExpiryApplication(Date specificDate){
         if(specificDate != null){
             CSD = String.valueof(specificDate);
+            currentSpecificDateTime = DateTime.newInstance(specificDate.year(), specificDate.month(), specificDate.day());
+    		previousDate = currentSpecificDateTime.addDays(-1).format('yyyy-MM-dd\'T\'hh:mm:ss\'Z\'');
             query = 'SELECT '+
                     'Id, Expiry_Date__c, genesis__Status__c, CreatedById,' +
                     'owner.Name, LEAD_ID_ExtKey__c, Member_ID__c, Lead_ID__c, '+
