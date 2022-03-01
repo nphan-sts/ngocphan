@@ -1,8 +1,11 @@
-@isTest
+/* ****************Modification History******************
+*    Created By        	 Date			Version
+*1. Bhavya Maliwal        2022/02/28     LSP-575, Initial Version, updated code, added comments, removed unwanted code, increased coverage
+
+******************Modification History******************/@isTest
 public class CLS_TestIPTUpdate {
     
     @testSetup static void setup() {
-        
         loan.TestHelper.systemDate = Date.today();
         loan.TestHelper.createSeedDataForTesting();
         loan.TestHelper.setupApprovalProcessForTxn();
@@ -67,8 +70,14 @@ public class CLS_TestIPTUpdate {
         test_LPT2.loan__Cleared__c = true;
         insert test_LPT2;
     }
-    
-    Testmethod static void method1(){
+     /*Created By : Bhavya Maliwal
+Method name : IPTJob
+Purpose : to cover code satisfying below apex classes
+CLS_DiscardIPTJob
+CLS_IPTDiscardHandler
+CLS_GenerateIPTHandler
+*/
+    Testmethod static void IPTJob(){
         
         List<loan__Loan_Account__c> LAList = [SELECT ID,Name,
                                               loan__Previous_Installment_Date__c,
@@ -109,27 +118,6 @@ public class CLS_TestIPTUpdate {
         Database.executeBatch(job, 1);
         System.debug(Database.executeBatch(job, 1));
         test.stopTest();
-        
     }
     
-    Testmethod static void method2(){
-        
-        List<loan__Loan_Account__c> LAList = [SELECT ID,Name,
-                                              loan__Previous_Installment_Date__c,
-                                              loan__Account__r.cnotify__Email__c,
-                                              loan__Loan_Product_Name__r.name, 
-                                              loan__Payment_Amount__c, 
-                                              loan__Next_Installment_Date__c, 
-                                              loan__Account__r.ID,Borrowers_First_Name__c,
-                                              loan__Account__r.Borrower_s_Last_Name__c,
-                                              loan__Loan_Product_Name__c 
-                                              from loan__Loan_Account__c];
-        System.debug(LAList[0].Name);
-        test.startTest();
-        CLS_DiscardIPTJob job = new CLS_DiscardIPTJob(new List<String>{LAList[0].Name});
-        Database.executeBatch(job, 1);
-        System.debug(Database.executeBatch(job, 1));
-        test.stopTest();
-        
-    }
 }
