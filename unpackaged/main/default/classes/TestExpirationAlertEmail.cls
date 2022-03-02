@@ -1,13 +1,22 @@
+/* ****************Modification History******************
+*    Created By        	 Date			Version
+*1. Bhavya Maliwal        2022/03/01     LSP-615 Initial Version, added assert,renamed method, modified code for validation errors
+
+******************Modification History******************/
 @isTest
 public class TestExpirationAlertEmail{
-   testmethod static void method1(){
+  /*Created By : Bhavya Maliwal
+Method name : ExpirationAlertEmail_daysbeforeExpirationDate
+Purpose : to cover code satisfying days before Expiration Date
+*/
+    testmethod static void ExpirationAlertEmail_daysbeforeExpirationDate(){
        //Creating Account
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
-            //Borrower_s_Last_Name__c='Testborrower',
+            peer__Last_Name__c='TestLName2',
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -35,5 +44,7 @@ public class TestExpirationAlertEmail{
         test.startTest();
         ExpirationAlertEmail.daysbeforeExpirationDate();
         test.stopTest();
+        genesis__Applications__c ap=[Select id,Expiration_Date_for_Email_trigger__c from genesis__Applications__c LIMIT 1];
+        system.assert(ap.Expiration_Date_for_Email_trigger__c!=null);
    }
 }
