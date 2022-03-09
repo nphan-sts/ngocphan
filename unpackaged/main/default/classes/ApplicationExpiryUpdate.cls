@@ -1,34 +1,53 @@
+/* If you want to execute below batch class for a specific date(format YYYY-MM-DD) ,run the following script.
+           Date specificDate=date.valueOf('2015-03-08');
+		   ApplicationExpiryUpdate b = new ApplicationExpiryUpdate(specificDate);
+		   Database.executeBatch(b,1);
+         */
+
 global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Schedulable, Database.AllowsCallouts {
             
     String query;
-    //Set<String> skipLoanStatus = new Set<String>{'Funded','Expired','Approved for funding','pre_funding','Expired-Withdrawn'};
     List<String> skipLoanStatus = System.Label.Application_Expired_Status.split(',');
-    String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
-    Date currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
-        
-       
-    global ApplicationExpiryUpdate(){
+    String CSD;
+    Date currentSystemDate;
            
-    query = 'select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c!=null limit 1 ) from genesis__Applications__c where Expiry_Date__c =' + CSD +' and genesis__Status__c not in : skipLoanStatus';
-        
-        System.debug(logginglevel.error,'query+++'+query); 
-                
+    global ApplicationExpiryUpdate(){
+       currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
+        CSD = String.valueof(currentSystemDate);          
     }
     
-    global ApplicationExpiryUpdate(String query){
+    global ApplicationExpiryUpdate(Date specificDate){
         
-        this.query = query; 
+        if(specificDate != null){
+            CSD = String.valueof(specificDate);
+            this.currentSystemDate = specificDate;
+        }
+        else{
+            this.currentSystemDate = (new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
+        }
     }
     
     global void execute(SchedulableContext sc) {
         
         ApplicationExpiryUpdate b = new ApplicationExpiryUpdate();
         Database.executeBatch(b,1);
-    
-    }
+            }
     
     global Database.QueryLocator start(Database.BatchableContext bc){
-                              
+        if(query == null){
+            //LOP-270 changed condition to Expiry date <= CSD
+            query = 'SELECT '+
+                    'Id, Expiry_Date__c, genesis__Status__c, CreatedById,' +
+                    'DocuSign_EnvelopeId__c, Expiration_Tag__c, '+
+                    '(SELECT id,name, Loan_amount_counteroffer__c ' +
+                    'FROM '+
+                    'Credit_Policy__r '+
+                    'WHERE '+
+                    'Loan_amount_counteroffer__c> 0 LIMIT 1) '+
+                    'FROM genesis__Applications__c '+
+                    'WHERE Expiry_Date__c <='+ CSD +
+                    'AND genesis__Status__c NOT IN: skipLoanStatus';                                                                                                                                                                                       
+        }                     
         System.debug('Query'+query);    
         return Database.getQueryLocator(query);
     
@@ -43,9 +62,9 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         QueueSobject expiredQue;
         Manual_Adverse_Action_Decline__c actionDecline;
         try{
-            expiredQue = [Select queue.id,queue.name,QueueID 
-                                            from QueueSobject 
-                                            where SobjectType ='genesis__Applications__c'                                   
+            expiredQue = [SELECT queue.id,queue.name,QueueID 
+                                            FROM QueueSobject 
+                                            WHERE SobjectType ='genesis__Applications__c'                                   
                                             AND queue.Name =: 'Expired Queue'];
         }
         catch(Exception e){
@@ -54,9 +73,9 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         }
         
         try{
-            declinedQue = [Select queue.id,queue.name,QueueID 
-                                            from QueueSobject 
-                                            where SobjectType ='genesis__Applications__c'                                   
+            declinedQue = [SELECT queue.id,queue.name,QueueID 
+                                            FROM QueueSobject 
+                                            WHERE SobjectType ='genesis__Applications__c'                                   
                                             AND queue.Name =: 'Declined'];
         }
         catch(Exception e){
@@ -65,9 +84,9 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         }
         
         try{
-            actionDecline = [Select id,name 
-                             from Manual_Adverse_Action_Decline__c 
-                             where Decline_Name__c ='insufficient tradeline balance'  ];
+            actionDecline = [SELECT Id,name 
+                             FROM Manual_Adverse_Action_Decline__c 
+                             WHERE Decline_Name__c ='insufficient tradeline balance'  ];
         }
         catch(Exception e){
             System.debug('Exception'+ e);
@@ -81,17 +100,17 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
                                                       'offer_shown','offer_accepted'};
         
         
-        Set<String> verification_status = new Set<String>{'loan_details_shown','credit_score_notice_shown','ach_accepted','kba_disclosure_accepted',
-                                                           'kba_success','dcp_accepted','til_accepted','agent_verification_pending',
-                                                           'agent_document_verification_pending','agent_verified'};
+        Set<String> verification_status = new Set<String>{'loan_details_shown','credit_score_notice_shown','ach_accepted',
+                                                        'kba_disclosure_accepted','kba_success','dcp_accepted','til_accepted',
+                                                    'agent_verification_pending','agent_document_verification_pending','agent_verified'};
         
-        Set<String> docs_status = new Set<String>{'hard_inquiry_disclosure_accepted','docusign_loan_docs_sent','docusign_loan_docs_complete',
-                                                   'pre_funding','funded'};
+        Set<String> docs_status = new Set<String>{'hard_inquiry_disclosure_accepted','docusign_loan_docs_sent',
+                                                    'docusign_loan_docs_complete', 'pre_funding','funded'};
                 
         for(genesis__Applications__c  app : listOfApp){
             if(app.Credit_Policy__r.size()==0){
                 
-                if((app.Expiry_Date__c != null && app.Expiry_Date__c == currentSystemDate) && (app.genesis__Status__c != null && app.genesis__Status__c != 'funded')){
+                if((app.Expiry_Date__c != null && app.Expiry_Date__c <= currentSystemDate) && (app.genesis__Status__c != null && app.genesis__Status__c != 'funded')){
                
                     if(pre_qual_status.contains(app.genesis__Status__c)){
                   
@@ -117,7 +136,7 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
                 }
             }
             else{
-                if(app.Credit_Policy__r.size()>0 && app.Expiry_Date__c != null && app.Expiry_Date__c == currentSystemDate){  
+                if(app.Credit_Policy__r.size()>0 && app.Expiry_Date__c != null && app.Expiry_Date__c <= currentSystemDate){  
                    
                     if(pre_qual_status.contains(app.genesis__Status__c)){
                   
@@ -147,7 +166,7 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
             
             listOfAppTobeUpdated.add(app);
             
-        }
+        } 
         
         update listOfAppTobeUpdated ;
     } 
