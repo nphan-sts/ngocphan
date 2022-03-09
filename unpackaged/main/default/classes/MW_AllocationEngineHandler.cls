@@ -19,6 +19,13 @@ public with sharing class MW_AllocationEngineHandler {
 
     private static final Integer NO_RESPONSE = -1;
 
+    /**
+     * These constants:
+     * advp,reallocation,manual,final,cancel
+     * are decision levels, and used to control json generation behavior and queries.
+     * They are also used in the final url to callout.
+     */
+
     @TestVisible
     private static final String ADVP = 'advp';
 
@@ -32,7 +39,7 @@ public with sharing class MW_AllocationEngineHandler {
     private static final String FINALIZED = 'final';
 
     @TestVisible
-    private static final String CANCELLED = 'cancelled';
+    private static final String CANCELLED = 'cancel';
 
     private static final String LOG_NAME = 'MW_AllocationEngineHandler';
 
@@ -52,8 +59,8 @@ public with sharing class MW_AllocationEngineHandler {
      * @return Should the rules api be executed
      */
     public static Boolean isRulesApiEnabled() {
-        return MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'legacy-mode' ||
-                MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'dark-mode' ||
+        return MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'LEGACY_MODE' ||
+                MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'DARK_MODE' ||
                 String.isBlank(MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c);
     }
 
@@ -62,19 +69,37 @@ public with sharing class MW_AllocationEngineHandler {
      * @return Should the AES callout be executed
      */
     public static Boolean isAllocationEngineServiceEnabled() {
-        return MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'dark-mode' ||
-                MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'full-mode';
+        return MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'DARK_MODE' ||
+                MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'FULL_MODE';
     }
 
     public static void handleAdvp(List<Id> appIds) {
+        /* app somehow has is back at advp, reallocate */
+        List<Id> hasAllocationIds = filterByAllocationIds(appIds, true);
+        if (!hasAllocationIds.isEmpty()) {
+            handle(hasAllocationIds, null, REALLOCATION);
+        }
+
         handle(appIds, null, ADVP);
     }
 
     public static void handleReallocation(List<Id> appIds) {
+        /* app is asked to rellocate, but no allocation id is present */
+        List<Id> noAllocationIds = filterByAllocationIds(appIds, false);
+        if (!noAllocationIds.isEmpty()) {
+            handle(noAllocationIds, null, ADVP);
+        }
+
         handle(appIds, null, REALLOCATION);
     }
 
     public static void handleManual(List<Id> appIds, List<Id> manualPartnerIds) {
+        /* app is asked to rellocate, but no allocation id is present */
+        List<Id> noAllocationIds = filterByAllocationIds(appIds, false);
+        if (!noAllocationIds.isEmpty()) {
+            handle(noAllocationIds, null, ADVP);
+        }
+
         handle(appIds, manualPartnerIds, MANUAL);
     }
 
@@ -158,6 +183,47 @@ public with sharing class MW_AllocationEngineHandler {
 
     private static void handle(List<Id> appIds, List<Id> manualPartnerIds, String decisionLevel) {
         handle(appIds, manualPartnerIds, decisionLevel, true);
+    }
+
+    /**
+     * When a pre-existing application is sent to the allocation engine,
+     * we have to inform the model about it's existence if it wasn't allocated by it
+     * This method is used to map pre-allocation engine apps into allocations.
+     *
+     * Mutates source list.
+     *
+     * @param src Remove any id without a previous allocation id
+     * @param hasAllocationIds Filter with allocation ids
+     *
+     *
+     * @return tgt Receive any id without a previous allocation id
+     */
+    @TestVisible
+    private static List<Id> filterByAllocationIds(List<Id> src, Boolean hasAllocationIds) {
+
+        List<Id> res = new List<Id>();
+        if (src == null) {
+            return res;
+        }
+
+        List<genesis__Applications__c> apps = getApplicationsAllocationIds(src);
+
+        /* iterating twice to keep order non surprising.
+           There's no it.remove in Apex */
+
+        for (genesis__Applications__c app : apps) {
+            if ((app.Allocation_ID__c != null) == hasAllocationIds) {
+                res.add(app.Id);
+            }
+        }
+
+        for (Integer i = src.size() - 1; i > -1; i--) {
+            if (res.contains(src.get(i))) {
+                src.remove(i);
+            }
+        }
+
+        return res;
     }
 
     @TestVisible
@@ -253,7 +319,7 @@ public with sharing class MW_AllocationEngineHandler {
                     validateNotNull(app, messages, new List<String>{
                             'Allocation_ID__c',
                             'Expected_Yield__c',
-                            'Expected_Charge_Off__c',
+                            'Expected_Chargeoff__c',
                             'Allocation_Timestamp__c'
                     });
 
@@ -344,8 +410,9 @@ public with sharing class MW_AllocationEngineHandler {
 
         for (genesis__Applications__c app : getApplications(appIds, decisionLevel)) {
 
+            List<Allocation_Partner__c> appPartners = appIdPreviousPartners.get(app.Id);
+
             json.writeStartObject();
-            json.writeIdField('applicationId', app.Id);
             json.writeStringField('requestID', app.Lead_ID__c);
             json.writeStringField('leadGuid', app.Lead_ID__c);
             json.writeDateTimeField('timestamp', Datetime.now());
@@ -360,6 +427,7 @@ public with sharing class MW_AllocationEngineHandler {
                 json.writeNumberField('FICO', app.FICO__c);
                 json.writeNumberField('debtToIncome', app.Monthly_DTI__c);
                 json.writeNumberField('netDisposableIncome', app.Net_Disposable_Income_NDI_Num__c);
+                json.writeStringField('zipCode', app.genesis__Account__r.ZIP_Code__c);
 
                 writeNullableString(json, 'loanPurpose', app.genesis__CL_Purpose__r.Name);
 
@@ -377,11 +445,9 @@ public with sharing class MW_AllocationEngineHandler {
 
                 if (REALLOCATION == decisionLevel || MANUAL == decisionLevel) {
 
-                    List<Allocation_Partner__c> appPartners = appIdPreviousPartners.get(app.Id);
-
                     json.writeStringField('allocationId', app.Allocation_ID__c);
                     json.writeNumberField('expectedYield', app.Expected_Yield__c);
-                    json.writeNumberField('expectedChargeOff', app.Expected_Charge_Off__c);
+                    json.writeNumberField('expectedChargeoff', app.Expected_Chargeoff__c);
                     json.writeDateTimeField('previousTimestamp', app.Allocation_Timestamp__c);
 
                     writePartnerArray(json, 'previousInvestor', appPartners);
@@ -405,10 +471,15 @@ public with sharing class MW_AllocationEngineHandler {
                 json.writeNumberField('loanAmount', app.genesis__Loan_Amount__c);
 
             } else if (decisionLevel == CANCELLED) {
-                json.writeStringField('allocationId', app.Allocation_ID__c);
+
+                writeNullableString(json, 'allocationId', app.Allocation_ID__c);
+                writePartnerArrayWithInvestorFallback(json, 'previousInvestor', app, appPartners);
                 json.writeStringField('reason', app.genesis__Status__c);
+
             } else if (decisionLevel == FINALIZED) {
-                json.writeStringField('allocationId', app.Allocation_ID__c);
+
+                writeNullableString(json, 'allocationId', app.Allocation_ID__c);
+                writePartnerArrayWithInvestorFallback(json, 'previousInvestor', app, appPartners);
             }
             json.writeEndObject();
         }
@@ -434,6 +505,47 @@ public with sharing class MW_AllocationEngineHandler {
             writeNullableBoolean(json, 'leadPartner', partner.Lead_Partner__c);
             json.writeEndObject();
         }
+        json.writeEndArray();
+    }
+
+    /**
+     * For cancel and final applications, we might have submissions that were in-flight or rules-api allocated.
+     * Try to send allocated partners, or if not available, send just the previous allocated apps if any.
+     * @param json Json generator
+     * @param fieldName The field name
+     * @param app Application instance
+     * @param partners Model allocated partners
+     */
+    private static void writePartnerArrayWithInvestorFallback(
+            JSONGenerator json, String fieldName, genesis__Applications__c app, List<Allocation_Partner__c> partners) {
+
+        if (app.Allocation_ID__c != null) {
+            writePartnerArray(json, fieldName, partners);
+            return;
+        }
+        writeInvestorArray(json, fieldName, app);
+    }
+
+
+    /**
+     * Write the previous investor for final apps
+     * @param json Json writer
+     * @param fieldName The field name to write
+     * @param app The app with investor data
+     */
+    private static void writeInvestorArray(JSONGenerator json, String fieldName, genesis__Applications__c app) {
+
+        if (app.Investor__r == null) {
+            json.writeNullField(fieldName);
+            return;
+        }
+
+        json.writeFieldName(fieldName);
+        json.writeStartArray();
+        json.writeStartObject();
+        json.writeStringField('investorCode', app.Investor__r.Investor_Code__c);
+        json.writeBooleanField('leadPartner', true);
+        json.writeEndObject();
         json.writeEndArray();
     }
 
@@ -520,6 +632,13 @@ public with sharing class MW_AllocationEngineHandler {
         callAllocationEngineService(appIds, json, decisionLevel);
     }
 
+    private static List<genesis__Applications__c> getApplicationsAllocationIds(List<Id> appIds) {
+        return [SELECT Id,
+                        Allocation_ID__c
+                FROM   genesis__Applications__c
+                WHERE   Id IN :appIds];
+    }
+
     private static List<genesis__Applications__c> getApplications(List<Id> appIds, String decisionLevel) {
 
         return isAllocationDecisionLevel(decisionLevel) ?
@@ -544,7 +663,7 @@ public with sharing class MW_AllocationEngineHandler {
                         Investor__r.Investor_Code__c,
                         Credit_Policy_Approval_Models__c,
                         Expected_Yield__c,
-                        Expected_Charge_Off__c,
+                        Expected_Chargeoff__c,
                         Allocation_ID__c,
                         Allocation_Timestamp__c
                  FROM    genesis__Applications__c
@@ -552,6 +671,8 @@ public with sharing class MW_AllocationEngineHandler {
                 [SELECT Id,
                         Lead_ID__c,
                         Allocation_ID__c,
+                        Investor__c,
+                        Investor__r.Investor_Code__c,
                         genesis__Status__c
                  FROM   genesis__Applications__c
                  WHERE   Id IN :appIds];
@@ -635,9 +756,12 @@ public with sharing class MW_AllocationEngineHandler {
         }
 
         try {
-            String certName = MW_Settings__c.getInstance().CertificateNameForLEADS__c;
+            /*
+            Don't include the client certificate because this call will be secured by oauth
+            TODO include oauth information
+             */
             String fmt = MW_Settings__c.getInstance().Allocation_Engine_Service_URL_FMT__c;
-            String url = String.format(fmt, new List<String> { decisionLevel });
+            String url = String.format(fmt, new List<String> { decisionLevel.toLowerCase() });
             String method = isAllocationDecisionLevel(decisionLevel) ? 'POST' : 'PATCH';
 
             HttpRequest req = new HttpRequest();
@@ -646,9 +770,6 @@ public with sharing class MW_AllocationEngineHandler {
             req.setTimeout(5); /* in seconds */
             req.setHeader('Content-Type', 'application/json');
             req.setHeader('Cache-Control', 'no-cache');
-            if (certName != null) {
-                req.setClientCertificateName(certName);
-            }
             req.setBody(json);
 
             Http http = new Http();

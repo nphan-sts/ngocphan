@@ -14,12 +14,16 @@ private class MW_AllocationEngineHandlerTest {
 
     public class AESServerErrorMock implements HttpCalloutMock {
 
+        public Integer attempts = 0;
+
         public HttpResponse respond(HttpRequest httpRequest) {
 
             String requestBody = httpRequest.getBody();
             System.debug(LoggingLevel.INFO, 'Request Body: ' + requestBody);
 
             String json = '{"timestamp":"2022-02-17T16:05:21.659Z","data":{},"errors":["Unhandled Exception"]}';
+
+            attempts++;
 
             HttpResponse res = new HttpResponse();
             res.setHeader('Content-Type', 'application/json');
@@ -171,7 +175,7 @@ private class MW_AllocationEngineHandlerTest {
     @TestSetup static void setup() {
 
         MW_Settings__c mwSettings = new MW_Settings__c();
-        mwSettings.Allocation_Engine_Deployment_Mode__c = 'legacy-mode';
+        mwSettings.Allocation_Engine_Deployment_Mode__c = 'DARK_MODE';
         mwSettings.Allocation_Engine_Service_URL_FMT__c = 'http://localhost:8080/{0}';
         insert mwSettings;
 
@@ -181,7 +185,13 @@ private class MW_AllocationEngineHandlerTest {
         Account investor2 = MW_GlobalTestUtility.GetAccount('Investor');
         investor2.Investor_Code__c = 'GCSU';
 
-        insert new List<Account> {investor1, investor2};
+        Account member1 = MW_GlobalTestUtility.GetAccount('Member');
+        member1.ZIP_Code__c = '12345';
+
+        Account member2 = MW_GlobalTestUtility.GetAccount('Member');
+        member2.ZIP_Code__c = '12346';
+
+        insert new List<Account> {investor1, investor2, member1, member2};
 
         clcommon__CL_Purpose__c purpose = new clcommon__CL_Purpose__c();
         purpose.Name = 'debt_consolidation';
@@ -189,6 +199,7 @@ private class MW_AllocationEngineHandlerTest {
 
         /* Used for most tests, but typical app wont have all this data */
         genesis__Applications__c app1 = MW_GlobalTestUtility.GetApplication();
+        app1.genesis__Account__c = member1.Id;
         app1.genesis__Status__c = MW_AllocationEngineHandler.ADVP;
         app1.Investor__c = investor1.Id;
         app1.Lead_ID__c = 'abc123';
@@ -209,10 +220,11 @@ private class MW_AllocationEngineHandlerTest {
         app1.Allocation_Operation_Error__c = MW_AllocationEngineHandler.ADVP;
         app1.Allocation_Timestamp__c = Datetime.now();
         app1.Expected_Yield__c = 321.11;
-        app1.Expected_Charge_Off__c = 432.0;
+        app1.Expected_Chargeoff__c = 432.0;
 
         /* fresh advp apps will look more like this */
         genesis__Applications__c app2 = MW_GlobalTestUtility.GetApplication();
+        app2.genesis__Account__c = member2.Id;
         app2.genesis__Status__c = MW_AllocationEngineHandler.ADVP;
         app2.Lead_ID__c = 'def456';
         app2.genesis__APR__c = 7.99;
@@ -290,6 +302,50 @@ private class MW_AllocationEngineHandlerTest {
         System.assertNotEquals(null, log.loan__Time__c);
     }
 
+    @IsTest static void testFilterByAllocationIds() {
+
+        List<Id> mainIds = new List<Id>();
+        List<genesis__Applications__c> apps = getApps();
+        for (genesis__Applications__c app : apps) {
+            app.Allocation_ID__c = null;
+            mainIds.add(app.Id);
+        }
+        update apps;
+
+        System.assertEquals(2, mainIds.size());
+
+        List<Id> noAllocsIds = null;
+        List<Id> actualIds1 = mainIds.clone();
+        noAllocsIds = MW_AllocationEngineHandler.filterByAllocationIds(actualIds1, false);
+
+        System.assertEquals(0, actualIds1.size());
+        System.assertEquals(2, noAllocsIds.size());
+
+
+        apps.get(0).Allocation_ID__c = '123';
+        update apps;
+        List<Id> actualIds2 = mainIds.clone();
+
+        noAllocsIds = MW_AllocationEngineHandler.filterByAllocationIds(actualIds2, false);
+
+        System.assertEquals(1, actualIds2.size());
+        System.assertEquals(1, noAllocsIds.size());
+
+        apps.get(1).Allocation_ID__c = '456';
+        update apps;
+        List<Id> actualIds3 = mainIds.clone();
+        noAllocsIds = MW_AllocationEngineHandler.filterByAllocationIds(actualIds3, false);
+
+        System.assertEquals(2, actualIds3.size());
+        System.assertEquals(0, noAllocsIds.size());
+
+        List<Id> actualIds4 = mainIds.clone();
+        List<Id> hasIds = MW_AllocationEngineHandler.filterByAllocationIds(actualIds4, true);
+
+        System.assertEquals(2, hasIds.size());
+        System.assertEquals(0, actualIds4.size());
+    }
+
     @IsTest static void advp_canGenerateJson() {
 
         genesis__Applications__c app = getApp();
@@ -327,10 +383,11 @@ private class MW_AllocationEngineHandlerTest {
         app.utm_campaign__c = null;
         app.utm_content__c = null;
         app.genesis__Loan_Amount__c = null;
-        app.Allocation_Operation_Error__c = 'none';
+        app.Allocation_Operation_Error__c = null;
+        app.Allocation_ID__c = null;
         update app;
 
-        System.assertEquals('none', app.Allocation_Operation_Error__c);
+        System.assertEquals(null, app.Allocation_Operation_Error__c);
 
         /* should not produce an error, just return */
         MW_AllocationEngineHandler.handleAdvp(null);
@@ -375,7 +432,7 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> actual = getApps();
         System.assertEquals(2, actual.size());
-        System.assertEquals(MW_AllocationEngineHandler.ADVP, actual.get(0).Allocation_Operation_Error__c);
+        System.assertEquals(MW_AllocationEngineHandler.REALLOCATION, actual.get(0).Allocation_Operation_Error__c);
         System.assertEquals(MW_AllocationEngineHandler.ADVP, actual.get(1).Allocation_Operation_Error__c);
 
         List<clcommon__Batch_Process_Log__c> bpls = getCommonLogs();
@@ -397,16 +454,20 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> apps = getApps();
 
-        Test.setMock(HttpCalloutMock.class, new AESServerErrorMock());
+        AESServerErrorMock errorMock = new AESServerErrorMock();
+        Test.setMock(HttpCalloutMock.class, errorMock);
         Test.startTest();
 
         MW_AllocationEngineHandler.handleAdvp(toIds(apps));
 
         Test.stopTest();
 
+        /* we should have two decision levels since one app has an allocation id, so 2 * 5 = 10 */
+        System.assertEquals(10, errorMock.attempts);
+
         List<genesis__Applications__c> actual = getApps();
         System.assertEquals(2, actual.size());
-        System.assertEquals(MW_AllocationEngineHandler.ADVP, actual.get(0).Allocation_Operation_Error__c);
+        System.assertEquals(MW_AllocationEngineHandler.REALLOCATION, actual.get(0).Allocation_Operation_Error__c);
         System.assertEquals(MW_AllocationEngineHandler.ADVP, actual.get(1).Allocation_Operation_Error__c);
 
         List<clcommon__Batch_Process_Log__c> bpls = getCommonLogs();
@@ -437,7 +498,7 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> actual = getApps();
         System.assertEquals(2, actual.size());
-        System.assertEquals(MW_AllocationEngineHandler.ADVP, actual.get(0).Allocation_Operation_Error__c);
+        System.assertEquals(MW_AllocationEngineHandler.REALLOCATION, actual.get(0).Allocation_Operation_Error__c);
         System.assertEquals(MW_AllocationEngineHandler.ADVP, actual.get(1).Allocation_Operation_Error__c);
 
         List<clcommon__Batch_Process_Log__c> bpls = getCommonLogs();
@@ -457,8 +518,11 @@ private class MW_AllocationEngineHandlerTest {
         System.assert(log2.clcommon__Message__c.contains('4xx response'));
         System.assert(log2.clcommon__Message__c.contains('Check loan batch process logs and DataDog for more info'));
 
+
         List<loan__Batch_Process_Log__c> loanLogs = getLoanLogs();
-        System.assertEquals(1, loanLogs.size());
+
+        /* since apps are split into relloaction and advp, two loan logs should appear */
+        System.assertEquals(2, loanLogs.size());
         System.assert(loanLogs.get(0).loan__Message__c.contains('Missing foo bar'));
     }
 
@@ -504,6 +568,10 @@ private class MW_AllocationEngineHandlerTest {
         /* should not produce an error, just return */
         MW_AllocationEngineHandler.handleReallocation(null);
 
+        genesis__Applications__c newApp = getNewApp();
+        newApp.Allocation_ID__c = '123';
+        update newApp;
+
         /* trigger validation failure */
         MW_AllocationEngineHandler.handleReallocation(toIds(getNewAppAsList()));
 
@@ -520,9 +588,8 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
         System.assert(log.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: def456'));
-        System.assert(log.clcommon__Message__c.contains('Field: Allocation_ID__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Expected_Yield__c cannot be null'));
-        System.assert(log.clcommon__Message__c.contains('Field: Expected_Charge_Off__c cannot be null'));
+        System.assert(log.clcommon__Message__c.contains('Field: Expected_Chargeoff__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Allocation_Timestamp__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('No previously allocated partners were found'));
 
@@ -555,12 +622,15 @@ private class MW_AllocationEngineHandlerTest {
     @IsTest static void reallocation_handles500Errors() {
         List<genesis__Applications__c> apps = getAppAsList();
 
-        Test.setMock(HttpCalloutMock.class, new AESServerErrorMock());
+        AESServerErrorMock errorMock = new AESServerErrorMock();
+        Test.setMock(HttpCalloutMock.class, errorMock);
         Test.startTest();
 
         MW_AllocationEngineHandler.handleReallocation(toIds(apps));
 
         Test.stopTest();
+
+        System.assertEquals(5, errorMock.attempts);
 
         List<genesis__Applications__c> actual = getAppAsList();
         System.assertEquals(1, actual.size());
@@ -660,7 +730,13 @@ private class MW_AllocationEngineHandlerTest {
         /* should not produce an error, just return */
         MW_AllocationEngineHandler.handleManual(null, null);
 
-        /* trigger validation failure */
+        /* trigger validation failure
+        * due to request mapping LSP-661,
+        * at least an allocation id is required to get to validation */
+        genesis__Applications__c newApp = getNewApp();
+        newApp.Allocation_ID__c = '123';
+        update newApp;
+
         MW_AllocationEngineHandler.handleManual(toIds(getNewAppAsList()), null);
 
         genesis__Applications__c actual = getNewApp();
@@ -676,9 +752,8 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
         System.assert(log.clcommon__Message__c.contains('Can not execute operation: manual for Lead Id: def456'));
-        System.assert(log.clcommon__Message__c.contains('Field: Allocation_ID__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Expected_Yield__c cannot be null'));
-        System.assert(log.clcommon__Message__c.contains('Field: Expected_Charge_Off__c cannot be null'));
+        System.assert(log.clcommon__Message__c.contains('Field: Expected_Chargeoff__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Allocation_Timestamp__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('No previously allocated partners were found'));
         System.assert(log.clcommon__Message__c.contains('No manually selected partners were found'));
@@ -709,12 +784,15 @@ private class MW_AllocationEngineHandlerTest {
     @IsTest static void manual_handles500Errors() {
         List<genesis__Applications__c> apps = getAppAsList();
 
-        Test.setMock(HttpCalloutMock.class, new AESServerErrorMock());
+        AESServerErrorMock errorMock = new AESServerErrorMock();
+        Test.setMock(HttpCalloutMock.class, errorMock);
         Test.startTest();
 
         MW_AllocationEngineHandler.handleManual(toIds(apps), toIds(getAllocationPartners()));
 
         Test.stopTest();
+
+        System.assertEquals(5, errorMock.attempts);
 
         genesis__Applications__c actual = getApp();
         System.assertEquals(MW_AllocationEngineHandler.MANUAL, actual.Allocation_Operation_Error__c);
@@ -798,6 +876,56 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(app.genesis__Status__c, actual.get('reason'));
     }
 
+    /**
+     * In-flight applications are identified by no allocation id
+     */
+    @IsTest static void cancelled_canGenerateJson_inFlight() {
+
+        /*
+        First assert for an in-flight with an investor
+         */
+
+        genesis__Applications__c app = getApp();
+        app.Allocation_ID__c = null;
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.CANCELLED);
+
+        Jsons actual = parseJsons(actualJson);
+        System.debug('Cancel json: ' + actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests')
+                .index(0)
+                .key('previousInvestor')
+                .index(0);
+
+        System.assertEquals(app.Investor__r.Investor_Code__c, actual.get('investorCode'));
+        System.assertEquals(true, actual.getBoolean('leadPartner'));
+
+        /*
+        Now assert for an in-flight with no investor selected
+         */
+        app.Investor__c = null;
+        update app;
+
+        actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.CANCELLED);
+
+        actual = parseJsons(actualJson);
+        System.debug('Cancel json: ' + actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests')
+                .index(0)
+                .key('previousInvestor');
+
+        System.assert(actual.isNull());
+    }
+
     @IsTest static void cancelled_handlesValidationFailures() {
 
         genesis__Applications__c app = getApp();
@@ -823,7 +951,7 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals('Info', log.clcommon__Type__c);
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
-        System.assert(log.clcommon__Message__c.contains('Can not execute operation: cancelled for Lead Id: abc123'));
+        System.assert(log.clcommon__Message__c.contains('Can not execute operation: cancel for Lead Id: abc123'));
         System.assert(log.clcommon__Message__c.contains('Field: genesis__Status__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Allocation_ID__c cannot be null'));
     }
@@ -855,12 +983,15 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void cancelled_handles500Errors() {
 
-        Test.setMock(HttpCalloutMock.class, new AESServerErrorMock());
+        AESServerErrorMock errorMock = new AESServerErrorMock();
+        Test.setMock(HttpCalloutMock.class, errorMock);
         Test.startTest();
 
         MW_AllocationEngineHandler.handleCancelled(toIds(getAppAsList()));
 
         Test.stopTest();
+
+        System.assertEquals(5, errorMock.attempts);
 
         genesis__Applications__c actual = getApp();
         System.assertEquals(MW_AllocationEngineHandler.CANCELLED, actual.Allocation_Operation_Error__c);
@@ -984,12 +1115,15 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void final_handles500Errors() {
 
-        Test.setMock(HttpCalloutMock.class, new AESServerErrorMock());
+        AESServerErrorMock errorMock = new AESServerErrorMock();
+        Test.setMock(HttpCalloutMock.class, errorMock);
         Test.startTest();
 
         MW_AllocationEngineHandler.handleFinal(toIds(getAppAsList()));
 
         Test.stopTest();
+
+        System.assertEquals(5, errorMock.attempts);
 
         genesis__Applications__c actual = getApp();
         System.assertEquals(MW_AllocationEngineHandler.FINALIZED, actual.Allocation_Operation_Error__c);
@@ -1100,7 +1234,7 @@ private class MW_AllocationEngineHandlerTest {
      * @param actual Jsons instance
      */
     static void assertTopLevelFields(Jsons actual) {
-        System.assertEquals('legacy-mode', actual.get('deploymentMode'));
+        System.assertEquals('DARK_MODE', actual.get('deploymentMode'));
         System.assert(regexMatches('[a-z0-9-]+', actual.get('batchID')));
         System.assertEquals(1, actual.key('allocation-requests').size());
     }
@@ -1111,7 +1245,6 @@ private class MW_AllocationEngineHandlerTest {
      * @param actual jsons instance
      */
     static void assertCommonRequestFields(genesis__Applications__c expected, Jsons actual) {
-        System.assertEquals(expected.Id, actual.get('applicationId'));
         System.assertEquals(expected.Lead_ID__c, actual.get('requestID'));
         System.assertEquals(expected.Lead_ID__c, actual.get('leadGuid'));
         System.assert(actual.containsKey('timestamp'));
@@ -1128,10 +1261,12 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(expected.genesis__Interest_Rate__c, actual.getDecimal('interestRate'));
         System.assertEquals(expected.Pricing_Tier__c, actual.get('tier'));
         System.assertEquals(expected.FICO__c, actual.getDecimal('FICO'));
+        System.assertEquals(expected.genesis__Account__r.ZIP_Code__c, actual.get('zipCode'));
         System.assertEquals(expected.Monthly_DTI__c, actual.getDecimal('debtToIncome'));
         System.assertEquals(expected.Net_Disposable_Income_NDI_Num__c, actual.getDecimal('netDisposableIncome'));
         System.assertEquals(new List<String> {expected.Credit_Policy_Approval_Models__c}, actual.getList('approvalModels'));
         System.assertEquals(expected.genesis__Loan_Amount__c, actual.getDecimal('loanAmount'));
+        System.assertEquals(expected.genesis__CL_Purpose__r.Name, actual.get('loanPurpose'));
 
         actual = actual.key('channel');
         System.assertEquals(expected.utm_medium__c, actual.get('utmMedium'));
@@ -1147,7 +1282,7 @@ private class MW_AllocationEngineHandlerTest {
     static void assertReallocationRequestFields(genesis__Applications__c expected, Jsons actual) {
         System.assertEquals(expected.Allocation_ID__c, actual.get('allocationId'));
         System.assertEquals(expected.Expected_Yield__c, actual.getDecimal('expectedYield'));
-        System.assertEquals(expected.Expected_Charge_Off__c, actual.getDecimal('expectedChargeOff'));
+        System.assertEquals(expected.Expected_Chargeoff__c, actual.getDecimal('expectedChargeoff'));
         System.assert(actual.containsKey('previousTimestamp'));
 
         /* assert previous investors */
@@ -1231,13 +1366,14 @@ private class MW_AllocationEngineHandlerTest {
                         utm_offerCode__c,
                         Lead_ID__c,
                         genesis__Loan_Amount__c,
+                        genesis__Account__c,
                         genesis__Account__r.ZIP_Code__c,
                         genesis__CL_Purpose__r.Name,
                         Investor__c,
                         Investor__r.Investor_Code__c,
                         Credit_Policy_Approval_Models__c,
                         Expected_Yield__c,
-                        Expected_Charge_Off__c,
+                        Expected_Chargeoff__c,
                         Allocation_ID__c,
                         Allocation_Timestamp__c,
                         Allocation_Operation_Error__c
