@@ -438,9 +438,6 @@ private class TestCreditPolicyResponse {
         obj = obj.parse(json,acc1.Id,app1.Id, app1.Lead_ID__c);
         
         System.assert(obj != null);
-        Credit_Policy__c creditPolicydata =obj.cpData;
-        System.debug('***data***'+ creditPolicydata);
-         System.debug('***data***'+ creditPolicydata.Bureau_Inquiry_Date__c);
         CreditPolicyResponse.credit_policy_decision cpd = obj.credit_policy_decision;
         CreditPolicyResponse.Decision_codes decision_codes = cpd.decision_codes;
         System.assert(decision_codes.invalid_input_knockout_codes != null);
@@ -699,9 +696,6 @@ private class TestCreditPolicyResponse {
         obj = obj.parse(json,acc1.Id,app1.Id, app1.Lead_ID__c);
                
         System.assert(obj != null);
-        Credit_Policy__c creditPolicydata =obj.cpData;
-        System.debug('***data***'+ creditPolicydata);
-        System.debug('***data***'+ creditPolicydata.Bureau_Inquiry_Date__c);
         CreditPolicyResponse.credit_policy_decision cpd = obj.credit_policy_decision;
         CreditPolicyResponse.Decision_codes decision_codes = cpd.decision_codes;
         System.assert(decision_codes.invalid_input_knockout_codes != null);
