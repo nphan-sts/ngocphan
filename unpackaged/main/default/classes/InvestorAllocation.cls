@@ -14,6 +14,7 @@
 public with sharing class InvestorAllocation{
     public static boolean isInvAllocExecuting=true;
     public static boolean allocationForADVPcalled = false;
+    public static boolean allocationForPricingTierCalled= false;//LOP-441
     
     
     /* Constructor to initialize
