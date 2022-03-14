@@ -223,10 +223,6 @@ private class MW_AllocationEngineHandlerTest {
 
         insert new List<Account> {investor1, investor2, member1, member2};
 
-        clcommon__CL_Purpose__c purpose = new clcommon__CL_Purpose__c();
-        purpose.Name = 'debt_consolidation';
-        insert purpose;
-
         /* Used for most tests, but typical app wont have all this data */
         genesis__Applications__c app1 = MW_GlobalTestUtility.GetApplication();
         app1.genesis__Account__c = member1.Id;
@@ -240,7 +236,7 @@ private class MW_AllocationEngineHandlerTest {
         app1.FICO__c = 700.00;
         app1.Monthly_DTI__c = 12;
         app1.Net_Disposable_Income_NDI_Num__c = 1200;
-        app1.genesis__CL_Purpose__c = purpose.Id;
+        app1.Loan_Purpose__c = 'debt_consolidation';
         app1.Credit_Policy_Approval_Models__c = 'crb_otb';
         app1.genesis__Loan_Amount__c = 25000.00;
         app1.utm_medium__c = 'medium';
@@ -264,7 +260,7 @@ private class MW_AllocationEngineHandlerTest {
         app2.FICO__c = 700.00;
         app2.Monthly_DTI__c = 12;
         app2.Net_Disposable_Income_NDI_Num__c = 1200;
-        app2.genesis__CL_Purpose__c = purpose.Id;
+        app2.Loan_Purpose__c = 'debt_consolidation';
         app2.Credit_Policy_Approval_Models__c = null;
         app2.genesis__Loan_Amount__c = 15000.00;
 
@@ -1303,7 +1299,7 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(expected.Net_Disposable_Income_NDI_Num__c, actual.getDecimal('netDisposableIncome'));
         System.assertEquals(new List<String> {expected.Credit_Policy_Approval_Models__c}, actual.getList('approvalModels'));
         System.assertEquals(expected.genesis__Loan_Amount__c, actual.getDecimal('loanAmount'));
-        System.assertEquals(expected.genesis__CL_Purpose__r.Name, actual.get('loanPurpose'));
+        System.assertEquals(expected.Loan_Purpose__c, actual.get('loanPurpose'));
 
         actual = actual.key('channel');
         System.assertEquals(expected.utm_medium__c, actual.get('utmMedium'));
@@ -1405,7 +1401,7 @@ private class MW_AllocationEngineHandlerTest {
                         genesis__Loan_Amount__c,
                         genesis__Account__c,
                         genesis__Account__r.ZIP_Code__c,
-                        genesis__CL_Purpose__r.Name,
+                        Loan_Purpose__c,
                         Investor__c,
                         Investor__r.Investor_Code__c,
                         Credit_Policy_Approval_Models__c,

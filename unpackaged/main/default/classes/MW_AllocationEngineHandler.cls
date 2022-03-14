@@ -440,7 +440,7 @@ public with sharing class MW_AllocationEngineHandler {
                 json.writeNumberField('netDisposableIncome', app.Net_Disposable_Income_NDI_Num__c);
                 json.writeStringField('zipCode', app.genesis__Account__r.ZIP_Code__c);
 
-                writeNullableString(json, 'loanPurpose', app.genesis__CL_Purpose__r.Name);
+                writeNullableString(json, 'loanPurpose', app.Loan_Purpose__c);
 
                 /*
                  Emulate an eventual array, but CLS only stores a single approval model if anything.
@@ -669,7 +669,7 @@ public with sharing class MW_AllocationEngineHandler {
                         Lead_ID__c,
                         genesis__Loan_Amount__c,
                         genesis__Account__r.ZIP_Code__c,
-                        genesis__CL_Purpose__r.Name,
+                        Loan_Purpose__c,
                         Investor__c,
                         Investor__r.Investor_Code__c,
                         Credit_Policy_Approval_Models__c,
