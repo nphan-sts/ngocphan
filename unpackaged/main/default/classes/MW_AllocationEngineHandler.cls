@@ -19,6 +19,9 @@ public with sharing class MW_AllocationEngineHandler {
 
     private static final Integer NO_RESPONSE = -1;
 
+    @TestVisible
+    private static final String HAPPY_MONEY_OKTA_SERVICE_NAME = 'Happy Money Okta';
+
     /**
      * These constants:
      * advp,reallocation,manual,final,cancel
@@ -40,6 +43,14 @@ public with sharing class MW_AllocationEngineHandler {
 
     @TestVisible
     private static final String CANCELLED = 'cancel';
+
+    private static final Integer CALLOUT_TIMEOUT_IN_SECONDS = 5 * 1000;
+
+    private static final Integer RESPONSE_CATEGORY_5XX = 5;
+
+    private static final Integer RESPONSE_CATEGORY_4XX = 4;
+
+    private static final Integer RESPONSE_CATEGORY_2XX = 2;
 
     private static final String LOG_NAME = 'MW_AllocationEngineHandler';
 
@@ -587,8 +598,8 @@ public with sharing class MW_AllocationEngineHandler {
             CalloutResult cr = executeCallout(leadIds, json, decisionLevel, 0, new List<String>());
 
             if (cr.responseCategory == NO_RESPONSE ||
-                cr.responseCategory == 5 ||
-                cr.responseCategory == 4) {
+                cr.responseCategory == RESPONSE_CATEGORY_5XX ||
+                cr.responseCategory == RESPONSE_CATEGORY_4XX) {
 
                 /*
                 < 0 = connection or local exceptions, 5 = 5xx error, 4 = 4xx error
@@ -758,18 +769,19 @@ public with sharing class MW_AllocationEngineHandler {
         try {
             /*
             Don't include the client certificate because this call will be secured by oauth
-            TODO include oauth information
              */
             String fmt = MW_Settings__c.getInstance().Allocation_Engine_Service_URL_FMT__c;
             String url = String.format(fmt, new List<String> { decisionLevel.toLowerCase() });
             String method = isAllocationDecisionLevel(decisionLevel) ? 'POST' : 'PATCH';
+            String bearerToken = MW_ClientCredentialsOAuthHelper.getBearerToken(HAPPY_MONEY_OKTA_SERVICE_NAME);
 
             HttpRequest req = new HttpRequest();
             req.setMethod(method);
             req.setEndpoint(url);
-            req.setTimeout(5); /* in seconds */
+            req.setTimeout(CALLOUT_TIMEOUT_IN_SECONDS);
             req.setHeader('Content-Type', 'application/json');
             req.setHeader('Cache-Control', 'no-cache');
+            req.setHeader('Authorization', 'Bearer ' + bearerToken);
             req.setBody(json);
 
             Http http = new Http();
@@ -777,7 +789,7 @@ public with sharing class MW_AllocationEngineHandler {
 
             responseCategory = res.getStatusCode() / 100;
 
-            if (5 == responseCategory) {
+            if (RESPONSE_CATEGORY_5XX == responseCategory) {
                 retryCount++;
                 if (MAX_RETRY <= retryCount) {
                     messages.add(makeCalloutMessage('Retrying exhausted after: ', res, null));
@@ -791,9 +803,9 @@ public with sharing class MW_AllocationEngineHandler {
 
                 messages.add(makeCalloutMessage('Retry ' + retryCount + ' after: ', res, null));
                 return executeCallout(leadIds, json, decisionLevel, retryCount, messages);
-            } else if (4 == responseCategory) {
+            } else if (RESPONSE_CATEGORY_4XX == responseCategory) {
                 messages.add(makeCalloutMessage('Failed AES validation: ', res, null));
-            } else if (2 != responseCategory) {
+            } else if (RESPONSE_CATEGORY_2XX != responseCategory) {
                 throw new IllegalArgumentException('Unhandled response code: ' + res.getStatusCode());
             }
 
@@ -875,9 +887,9 @@ public with sharing class MW_AllocationEngineHandler {
 
         if (NO_RESPONSE == responseCategory) {
             cause = 'Local exception';
-        } else if (5 == responseCategory) {
+        } else if (RESPONSE_CATEGORY_5XX == responseCategory) {
             cause = '5xx response, meaning unhandled AES error';
-        } else if (4 == responseCategory) {
+        } else if (RESPONSE_CATEGORY_4XX == responseCategory) {
             cause = '4xx response, meaning CLS side error according to AES';
         } else {
             cause = 'Unknown response';

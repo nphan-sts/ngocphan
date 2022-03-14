@@ -5,9 +5,16 @@
 @IsTest
 private class MW_AllocationEngineHandlerTest {
 
+    private static final String OKTA_DOMAIN = 'https://oktadomain';
+
     public class AESCalloutExceptionMock implements HttpCalloutMock {
 
         public HttpResponse respond(HttpRequest httpRequest) {
+
+            if(httpRequest.getEndpoint().startsWith(OKTA_DOMAIN)) {
+                return makeOktaSuccess();
+            }
+
             throw new CalloutException('Callout Failure Simulation');
         }
     }
@@ -18,6 +25,9 @@ private class MW_AllocationEngineHandlerTest {
 
         public HttpResponse respond(HttpRequest httpRequest) {
 
+            if(httpRequest.getEndpoint().startsWith(OKTA_DOMAIN)) {
+                return makeOktaSuccess();
+            }
             String requestBody = httpRequest.getBody();
             System.debug(LoggingLevel.INFO, 'Request Body: ' + requestBody);
 
@@ -37,6 +47,10 @@ private class MW_AllocationEngineHandlerTest {
 
         public HttpResponse respond(HttpRequest httpRequest) {
 
+            if(httpRequest.getEndpoint().startsWith(OKTA_DOMAIN)) {
+                return makeOktaSuccess();
+            }
+
             String requestBody = httpRequest.getBody();
             System.debug(LoggingLevel.INFO, 'Request Body: ' + requestBody);
 
@@ -54,6 +68,10 @@ private class MW_AllocationEngineHandlerTest {
 
         public HttpResponse respond(HttpRequest httpRequest) {
 
+            if(httpRequest.getEndpoint().startsWith(OKTA_DOMAIN)) {
+                return makeOktaSuccess();
+            }
+
             String requestBody = httpRequest.getBody();
             System.debug(LoggingLevel.INFO, 'Request Body: ' + requestBody);
 
@@ -65,6 +83,18 @@ private class MW_AllocationEngineHandlerTest {
             res.setStatusCode(201);
             return res;
         }
+    }
+
+    /**
+     * Not re-testing Okta in this class, so always return a success
+     * @return success token
+     */
+    private static HttpResponse makeOktaSuccess() {
+        HttpResponse res = new HttpResponse();
+        res.setHeader('Content-Type', 'application/json');
+        res.setBody('{"token_type":"Bearer","expires_in":3600,"access_token":"accesstokenvalue","scope":"HM"}');
+        res.setStatusCode(200);
+        return res;
     }
 
     /*
@@ -251,6 +281,13 @@ private class MW_AllocationEngineHandlerTest {
         ap2.Investor__c = investor2.Id;
 
         insert new List<Allocation_Partner__c> {ap1, ap2};
+
+        ints__OAuth_Settings__c okta = new ints__OAuth_Settings__c();
+        okta.ints__Consumer_Key__c = 'aclientid';
+        okta.ints__Consumer_Secret__c = 'aclientsecret';
+        okta.ints__Access_Token_URL__c = OKTA_DOMAIN + '/v1/token';
+        okta.ints__Service_Name__c = MW_AllocationEngineHandler.HAPPY_MONEY_OKTA_SERVICE_NAME;
+        insert okta;
     }
 
     @IsTest static void testHandleInvalidDecisionLevel() {
