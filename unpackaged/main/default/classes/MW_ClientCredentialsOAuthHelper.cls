@@ -8,7 +8,7 @@
  * for the client_credentials grant for Happy Money's IDP.
  * Pass a service name from ints__OAuth_Settings__c and it does the rest
  */
-public class MW_ClientCredentialsOAuthHelper {
+public with sharing class MW_ClientCredentialsOAuthHelper {
 
     private static String tokenBody = 'grant_type=client_credentials&scope=HM';
 
