@@ -69,6 +69,25 @@ public with sharing class MW_AllocationEngineHandler {
     };
 
     /**
+     * @param statusList Configured status list
+     * @param status An application status
+     *
+     * @return true/false
+     */
+    public static Boolean statusListContains(String statusList, String status) {
+        if (String.isBlank(statusList)) {
+            System.debug('Cancel status list is empty');
+            return false;
+        }
+        List<String> rawStrs = statusList.split(',');
+        Set<String> statusSet = new Set<String>();
+        for (String str : rawStrs) {
+            statusSet.add(str.trim());
+        }
+        return statusSet.contains(status);
+    }
+
+    /**
      * Dark mode is either legacy-mode, dark-mode, and full-mode.
      * The rules api should be active when either legacy, dark, or blank.
      * @return Should the rules api be executed

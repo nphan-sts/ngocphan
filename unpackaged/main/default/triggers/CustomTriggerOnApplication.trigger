@@ -16,14 +16,6 @@
 ******************Modification History*****************************************************************/
 trigger CustomTriggerOnApplication on genesis__Applications__c (before update, after update,before insert, after insert) {
 
-    private static final Set<String> CANCEL_STATUSES = new Set<String> {
-            'Declined',
-            'Expired',
-            'Withdrawn',
-            'Decline_Manual_Review',
-            'Expired-Withdrawn'
-    };
-
     public Boolean isInvestorAllocated = false;
     public Boolean isDcpEligibleFieldUpdated = false;
     System.debug('CustomTriggerOnApplication');
@@ -188,6 +180,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
 
                         if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
                             MW_AllocationEngineHandler.handleAdvp(new List<Id> {app.Id});
+                            InvestorAllocation.allocationForADVPcalled = true;
                         }
 
                         if (app.genesis__Status__c == 'agent_document_verification_pending' &&
@@ -264,7 +257,8 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                     /*pallavi(LOS-158)*/
                 }
 
-                if (CANCEL_STATUSES.contains(app.genesis__Status__c) &&
+                if (MW_AllocationEngineHandler.statusListContains(
+                        MW_Settings__c.getOrgDefaults().Allocation_Engine_Cancel_Statuses__c, app.genesis__Status__c) &&
                         oldApp.genesis__Status__c != app.genesis__Status__c &&
                         MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
                     MW_AllocationEngineHandler.handleCancelled(new List<Id> {app.Id});

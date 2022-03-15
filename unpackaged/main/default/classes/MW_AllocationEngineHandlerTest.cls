@@ -207,6 +207,7 @@ private class MW_AllocationEngineHandlerTest {
         MW_Settings__c mwSettings = new MW_Settings__c();
         mwSettings.Allocation_Engine_Deployment_Mode__c = 'DARK_MODE';
         mwSettings.Allocation_Engine_Service_URL_FMT__c = 'http://localhost:8080/{0}';
+        mwSettings.Allocation_Engine_Cancel_Statuses__c = 'Declined,Expired,Withdrawn,Decline_Manual_Review,Expired-Withdrawn';
         insert mwSettings;
 
         Account investor1 = MW_GlobalTestUtility.GetAccount('Investor');
@@ -284,6 +285,17 @@ private class MW_AllocationEngineHandlerTest {
         okta.ints__Access_Token_URL__c = OKTA_DOMAIN + '/v1/token';
         okta.ints__Service_Name__c = MW_AllocationEngineHandler.HAPPY_MONEY_OKTA_SERVICE_NAME;
         insert okta;
+    }
+
+    @IsTest static void testStatusChecker() {
+        String statusCsv = MW_Settings__c.getOrgDefaults().Allocation_Engine_Cancel_Statuses__c;
+
+        System.assert(MW_AllocationEngineHandler.statusListContains(statusCsv, 'Declined'));
+        System.assert(MW_AllocationEngineHandler.statusListContains(statusCsv, 'Expired'));
+        System.assert(MW_AllocationEngineHandler.statusListContains(statusCsv, 'Withdrawn'));
+        System.assert(MW_AllocationEngineHandler.statusListContains(statusCsv, 'Decline_Manual_Review'));
+        System.assert(MW_AllocationEngineHandler.statusListContains(statusCsv, 'Expired-Withdrawn'));
+        System.assert(!MW_AllocationEngineHandler.statusListContains(statusCsv, 'bogus'));
     }
 
     @IsTest static void testDeploymentModes() {
