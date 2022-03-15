@@ -64,15 +64,19 @@ public with sharing class MW_AllocationEngineHandler {
         ADVP, REALLOCATION, MANUAL
     };
 
+    private static final Set<String> DEPLOYMENT_MODES = new Set<String> {
+            'LEGACY_MODE', 'DARK_MODE', 'FULL_MODE'
+    };
+
     /**
      * Dark mode is either legacy-mode, dark-mode, and full-mode.
      * The rules api should be active when either legacy, dark, or blank.
      * @return Should the rules api be executed
      */
     public static Boolean isRulesApiEnabled() {
-        return MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'LEGACY_MODE' ||
-                MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'DARK_MODE' ||
-                String.isBlank(MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c);
+        return 'LEGACY_MODE' == MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c ||
+                'DARK_MODE' == MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c ||
+                !DEPLOYMENT_MODES.contains(MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c);
     }
 
     /**
@@ -80,8 +84,8 @@ public with sharing class MW_AllocationEngineHandler {
      * @return Should the AES callout be executed
      */
     public static Boolean isAllocationEngineServiceEnabled() {
-        return MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'DARK_MODE' ||
-                MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c == 'FULL_MODE';
+        return 'DARK_MODE' == MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c ||
+                'FULL_MODE' == MW_Settings__c.getOrgDefaults().Allocation_Engine_Deployment_Mode__c;
     }
 
     public static void handleAdvp(List<Id> appIds) {
@@ -120,10 +124,6 @@ public with sharing class MW_AllocationEngineHandler {
 
     public static void handleFinal(List<Id> appIds) {
         handle(appIds, null, FINALIZED);
-    }
-
-    public static void handleCancelledSynchronous(List<genesis__Applications__c> apps) {
-        handle(toIds(apps), null, CANCELLED, false);
     }
 
     private class CalloutResult {

@@ -286,6 +286,40 @@ private class MW_AllocationEngineHandlerTest {
         insert okta;
     }
 
+    @IsTest static void testDeploymentModes() {
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'foo';
+        update settings;
+
+        System.assert(MW_AllocationEngineHandler.isRulesApiEnabled());
+        System.assert(!MW_AllocationEngineHandler.isAllocationEngineServiceEnabled());
+
+        settings.Allocation_Engine_Deployment_Mode__c = 'LEGACY_MODE';
+        update settings;
+
+        System.assert(MW_AllocationEngineHandler.isRulesApiEnabled());
+        System.assert(!MW_AllocationEngineHandler.isAllocationEngineServiceEnabled());
+
+        settings.Allocation_Engine_Deployment_Mode__c = 'DARK_MODE';
+        update settings;
+
+        System.assert(MW_AllocationEngineHandler.isRulesApiEnabled());
+        System.assert(MW_AllocationEngineHandler.isAllocationEngineServiceEnabled());
+
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        update settings;
+
+        System.assert(!MW_AllocationEngineHandler.isRulesApiEnabled());
+        System.assert(MW_AllocationEngineHandler.isAllocationEngineServiceEnabled());
+
+        settings.Allocation_Engine_Deployment_Mode__c = null;
+        update settings;
+
+        System.assert(MW_AllocationEngineHandler.isRulesApiEnabled());
+        System.assert(!MW_AllocationEngineHandler.isAllocationEngineServiceEnabled());
+    }
+    
     @IsTest static void testHandleInvalidDecisionLevel() {
 
         List<Id> ids = toIds(getApps());
