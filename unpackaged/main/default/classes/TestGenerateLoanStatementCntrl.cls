@@ -1,52 +1,55 @@
 /* ****************Modification History******************
  * Created By        Date          JIRA number
  *1. Pallavi        2020/01/29     LOS-243(Create CL Loan Current Loan Statement)
- *      
+ *2. Bhanupriya		2022/03/01		LSP-554 (create setup method and add comments) 
  ******************Modification History******************/
 @isTest
 public class TestGenerateLoanStatementCntrl {
     
-    @isTest
-    public static void testMethod1(){
+    	//Create testsetup() method
+    	@testsetup()
+    public static void testsetup(){
         
-        //Creating Account
-         Account acc1 = new Account(
-            Name = 'TestAccount',
-            loan__Investor__c=False,
-            loan__Undeployed_Funds__c = 11000,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-        insert acc1;
+         //Creating Account
+         	Account acc1 = new Account(
+                                Name = 'TestAccount',
+                                loan__Investor__c=False,
+                                loan__Undeployed_Funds__c = 11000,
+                                cnotify__Email__c = 'abc@test.com',
+                                peer__Last_Name__c = 'TestAccount Last Name',					//LSP-554
+                                loan__SOCIAL_SECURITY_NUMBER__c = '123456789'			//LSP-554
+                                );
+        	insert acc1;
         
-         loan.TestHelper.createSeedDataForTesting();
-       loan__Currency__c curr = loan.TestHelper.createCurrency();
-       //Create a dummy MF_Account
-        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
-        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
+         	loan.TestHelper.createSeedDataForTesting();
+       		loan__Currency__c curr = loan.TestHelper.createCurrency();
+       	//Create a dummy MF_Account
+        	loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
+        	loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
      
         //Create a Fee Set
-        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
-        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+        	loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
+        	loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
+        	loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
         
-        loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
+        	loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
-        loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
-         org.loan__Disable_Triggers__c = true;
-         upsert org;
+        	loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
+         	org.loan__Disable_Triggers__c = true;
+         	upsert org;
         
-        
-        loan__Loan_Product__c loanProdObj = loan.TestHelper.createLoanProduct(dummyOffice,
+        //Create dummy Loan product
+        	loan__Loan_Product__c loanProdObj = loan.TestHelper.createLoanProduct(dummyOffice,
                                             dummyAccount, 
                                             curr, 
                                             dummyFeeSet);
-        loanProdObj.name = 'Auto Payer';
-        loanProdObj.loan__Minimum_Amount_Due_Type__c = 'Percent';
-        loanProdObj.loan__Pre_Bill_Days__c = 5;
-        upsert loanProdObj;        
-        
-        loan__Loan_Account__c lacc = new loan__Loan_Account__c(
+             loanProdObj.name = 'Auto Payer';
+             loanProdObj.loan__Minimum_Amount_Due_Type__c = 'Percent';
+             loanProdObj.loan__Pre_Bill_Days__c = 5;
+             upsert loanProdObj;        
+           
+        //Create Loan Account
+        	loan__Loan_Account__c lacc = new loan__Loan_Account__c(
                                             loan__Account__c= acc1.Id,
                                             loan__Product_Type__c='line of credit',
                                             loan__Loan_Amount__c =1000,
@@ -68,12 +71,27 @@ public class TestGenerateLoanStatementCntrl {
                                             loan__Previous_Installment_Date__c= system.today(),
                                             lead_Guid__c = 'testpayoff'
                                             );
-        insert lacc; 
+        	insert lacc; 
+       
+    }
+    
+    @isTest
+    public static void testMethod1(){
         
-        
-        test.startTest();
-        GenerateLoanStatementCntrl.GenerateLoanStatementCntrl(lacc.id);
-        test.stopTest();
+        		loan__Loan_Account__c lacc = [select id,
+                                              loan__Account__c,
+                                              loan__Payment_Amount__c
+                                             from loan__Loan_Account__c];
+        		test.startTest();
+        		GenerateLoanStatementCntrl.GenerateLoanStatementCntrl(lacc.id);
+        		test.stopTest();
+        		 list<loan__loan_account__c> contract = [Select id,name from loan__loan_account__c where id =: lacc.id];
+
+        		/* Attachment attach = [select name from Attachment];
+        				system.debug(' attachment after' +attach.Name);*/
+        			system.assertEquals([select name,Description from Attachment].size(),1);
+        			system.assertEquals(1,contract.size());
+
     }
 
 
