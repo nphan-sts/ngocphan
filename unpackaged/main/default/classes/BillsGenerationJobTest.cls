@@ -1,3 +1,8 @@
+/* ****************Modification History******************
+ * Modified By        Date          JIRA number
+ *1. Bhanupriya		2022/03/02		LSP-556  
+ ******************Modification History******************/
+
 @isTest
 public class BillsGenerationJobTest {
 @testSetup static void setup() {
@@ -80,6 +85,7 @@ public class BillsGenerationJobTest {
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
+            peer__Last_Name__c = 'Test Last Name',			//LSP-556
             loan__SOCIAL_SECURITY_NUMBER__c = '123456789'
             );
         insert acc;
@@ -103,6 +109,7 @@ public class BillsGenerationJobTest {
         pr.clcommon__Product_Name__c = 'P1';
         insert pr;
        
+    	//create application
         genesis__applications__c application = new genesis__applications__c();
         application.genesis__Product_Type__c = 'Loan';
         application.genesis__Loan_Amount__c = 100000;
@@ -125,7 +132,8 @@ public class BillsGenerationJobTest {
         application.genesis__Company__c = comp.id;
         application.genesis__CL_Product__c = pr.id;
         insert application;
-                
+           
+    	//create Loan account
         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
                                           	loan__Account__c = acc.Id,
                                             loan__Product_Type__c = 'Flexible Amz Loan',
@@ -184,13 +192,16 @@ public class BillsGenerationJobTest {
     	lacc.loan__loan_status__c = 'active - good standing';
     	lacc.loan__invalid_data__c = false;
         insert lacc; 
+    	
         
+      //create Repayment Schedule Summary 1
         loan__Repayment_Schedule_Summary__c repaymentScheduleSummary = new loan__Repayment_Schedule_Summary__c();
         repaymentScheduleSummary.loan__RSS_No_Of_Pmts__c = 10;
         repaymentScheduleSummary.loan__Archived__c = false;
         repaymentScheduleSummary.loan__RSS_Loan_Account__c = lacc.Id;
         insert repaymentScheduleSummary;
         
+      //create Repayment Summary 
         loan__Repayment_Schedule__c loanRepaymentSchedule = new loan__Repayment_Schedule__c();
         loanRepaymentSchedule.loan__Due_Date__c = Date.newInstance(2020, 01, 19);
         loanRepaymentSchedule.loan__Loan_Account__c = lacc.Id;
@@ -225,16 +236,25 @@ public class BillsGenerationJobTest {
 
 	@isTest
     public static void testRunBillGeneration(){  
-        	List<loan__Loan_Account__c> loanIds = [Select Id,loan__Branch__r.loan__Current_System_Date__c from loan__Loan_Account__c];
-        	List<Id> idList = new List<Id>();
-            for(loan__Loan_Account__c loanId:loanIds){
-                idList.add(loanId.Id);
-            }
-
-            BillsGenerationJob.runBillingJob(idList);
-
+        	
+        		List<loan__Loan_Account__c> loanIds = [Select Id,loan__Branch__r.loan__Current_System_Date__c from loan__Loan_Account__c];
+        		List<Id> idList = new List<Id>();
+            	for(loan__Loan_Account__c loanId:loanIds){
+                		idList.add(loanId.Id);
+            	}
+				test.startTest();
+            	BillsGenerationJob.runBillingJob(idList);
+        		test.stopTest();
+				
         	/*List<loan__Loan_Account__c> loanAcc = [select Id,loan__Loan_Status__c, loan__Is_Rescheduled__c,(Select id,name,loan__Due_Date__c from loan__Repayment_Schedule__r),(select id,name from loan__Repayment_Plan__r) from loan__Loan_Account__c];
         	System.assert(!loanAcc.isEmpty());
        		System.assertEquals(loanAcc[0].loan__Is_Rescheduled__c, true);*/
-    }
+        	
+        	loan__Loan_Account__c lac = [select id ,loan__Unpaid_Bills__c from loan__Loan_Account__c];
+        	system.assertEquals(lac.loan__Unpaid_Bills__c,true);
+        
+        	}
+    
+    
+
 }
