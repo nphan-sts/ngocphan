@@ -1,54 +1,56 @@
 /* ****************Modification History******************
  * Created By        Date          JIRA number
  *1. Pallavi        2020/01/29     LOS-243(Create CL Loan Current Loan Statement)
- *      
+ *2. Bhanupriya		2022/03/02		LSP-555(craete testsetup() and add required fields,assert statements)  
  ******************Modification History******************/
 @isTest
 public class TestLoanStatementController {
     
-    @isTest
-    public static void testMethod1(){
-        
+    //create testsetup() method
+    	@testsetup()
+     public static void testsetup(){
+        	
         //Creating Account
          Account acc1 = new Account(
-            Name = 'TestAccount',
-            loan__Investor__c=False,
-            loan__Undeployed_Funds__c = 11000,
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-        insert acc1;
+                            Name = 'TestAccount',
+                            loan__Investor__c=False,
+                            loan__Undeployed_Funds__c = 11000,
+                            cnotify__Email__c = 'abc@test.com',
+                            peer__Last_Name__c = 'TestAccount Last Name',			//LSP-555
+                            loan__SOCIAL_SECURITY_NUMBER__c = '123456789'			//LSP-555
+                            );
+        	insert acc1;
         
          loan.TestHelper.createSeedDataForTesting();
-       loan__Currency__c curr = loan.TestHelper.createCurrency();
+       	 loan__Currency__c curr = loan.TestHelper.createCurrency();
        //Create a dummy MF_Account
-        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
-        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
+         loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
+         loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
      
         //Create a Fee Set
-        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
-        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
+         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
+         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
         
-        loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
+         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
-        loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
+         loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
          org.loan__Disable_Triggers__c = true;
          upsert org;
         
-        
-        loan__Loan_Product__c loanProdObj = loan.TestHelper.createLoanProduct(dummyOffice,
+        //Create Loan Product
+         loan__Loan_Product__c loanProdObj = loan.TestHelper.createLoanProduct(dummyOffice,
                                             dummyAccount, 
                                             curr, 
                                             dummyFeeSet);
-        loanProdObj.name = 'Auto Payer';
-        loanProdObj.loan__Minimum_Amount_Due_Type__c = 'Percent';
-        loanProdObj.loan__Pre_Bill_Days__c = 5;
-        upsert loanProdObj;    
+         loanProdObj.name = 'Auto Payer';
+         loanProdObj.loan__Minimum_Amount_Due_Type__c = 'Percent';
+         loanProdObj.loan__Pre_Bill_Days__c = 5;
+         upsert loanProdObj;    
         
-        loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();
-        
-        loan__Loan_Account__c lacc = new loan__Loan_Account__c(
+         loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();
+        //create dummy Loan Account
+         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
                                             loan__Account__c= acc1.Id,
                                             loan__Product_Type__c='line of credit',
                                             loan__Loan_Amount__c =1000,
@@ -70,10 +72,11 @@ public class TestLoanStatementController {
                                             loan__Previous_Installment_Date__c= system.today(),
                                             lead_Guid__c = 'testpayoff'
                                             );
-        insert lacc;
+         insert lacc;
         
-        Contact a1 = new Contact(LastName='TestACH');
-        insert a1;
+        //create new contact
+         Contact a1 = new Contact(LastName='TestACH');
+         insert a1;
         
          /*loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                  loan__Bank_Name__c = 'Some Bank',
@@ -83,9 +86,11 @@ public class TestLoanStatementController {
                                                  loan__Contact__c = a1.id);
         insert ba;*/
         
-        loan__Payment_Mode__c pMode = [select id from loan__Payment_Mode__c where Name= 'ACH'];
+        //create Payment mode
+         loan__Payment_Mode__c pMode = [select id from loan__Payment_Mode__c where Name= 'ACH'];
         
-        loan__Loan_Account__c dummylaMonthly = loan.TestHelper.createLoanAccountForContactObj(loanProdObj,
+        //create a dummy Loan Account
+         loan__Loan_Account__c dummylaMonthly = loan.TestHelper.createLoanAccountForContactObj(loanProdObj,
                                         a1,
                                         dummyFeeSet,
                                         dummyLoanPurpose,
@@ -103,19 +108,19 @@ public class TestLoanStatementController {
         insert dummyPmt;*/
         
         Date systemDate = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();
-        
-        loan__Repayment_Schedule__c amz = new loan__Repayment_Schedule__c(loan__Due_Principal__c = 1000,
+        //create Repayment Schedule
+         loan__Repayment_Schedule__c amz = new loan__Repayment_Schedule__c(loan__Due_Principal__c = 1000,
                                                                          loan__Due_Interest__c = 10,
                                                                          loan__isPaid__c = true,
                                                                          loan__Archived__c = false,
                                                                          loan__Due_Date__c = systemDate-1,
                                                                          loan__Paid_Interest__c = 0,
                                                                          loan__Loan_Account__c = lacc.id);
-        insert amz;
+         insert amz;
         
-        Date prevYearDate = Date.newInstance(systemDate.year()-1, 1, 1);
+         Date prevYearDate = Date.newInstance(systemDate.year()-1, 1, 1);
         
-        loan__Repayment_Schedule__c amz1 = new loan__Repayment_Schedule__c(loan__Due_Principal__c = 1000,
+         loan__Repayment_Schedule__c amz1 = new loan__Repayment_Schedule__c(loan__Due_Principal__c = 1000,
                                                                          loan__Due_Interest__c = 10,
                                                                          loan__isPaid__c = false,
                                                                          loan__Archived__c = false,
@@ -124,13 +129,41 @@ public class TestLoanStatementController {
                                                                          loan__Loan_Account__c = lacc.id,
                                                                          loan__Is_Billed__c = true);
         
-        insert amz1;
+         insert amz1; 
+    }
+    
+    @isTest
+    public static void testMethod1(){
         
+        		loan__Loan_Account__c lacc = [select id,
+                                              loan__Account__c,
+                                              loan__Loan_Amount__c,
+                                               loan__Loan_Status__c
+                                              from loan__Loan_Account__c
+                                              where loan__Loan_Status__c = 'Active - Good Standing'];
         
-        PageReference pageRef = Page.GenerateLoanStatement;
-        Test.setCurrentPage(pageRef);
-        pageRef.getParameters().put('Id', String.valueOf(lacc.Id));
-        LoanStatementController state = new LoanStatementController();
+        		loan__Repayment_Schedule__c repy1 =  [Select id,loan__Due_Principal__c,loan__Due_Interest__c,loan__Total_Installment__c 
+                    												from loan__Repayment_Schedule__c
+                                                     where loan__isPaid__c = false and loan__Is_Billed__c = true];
+                     system.debug('before repyment ' +repy1);
+        		
+        		test.startTest();
+                PageReference pageRef = Page.GenerateLoanStatement;
+                Test.setCurrentPage(pageRef);
+                pageRef.getParameters().put('Id', String.valueOf(lacc.Id));
+                LoanStatementController state = new LoanStatementController();
+        		test.stopTest();
+        		list<loan__Repayment_Schedule__c> repy =  [Select id,loan__Due_Principal__c,loan__Due_Interest__c,loan__Total_Installment__c 
+                    												from loan__Repayment_Schedule__c
+                                                          			where loan__isPaid__c=false];
+                             
+    			
+        			system.debug('After Repayment' +repy);
+        		system.assert(repy1.loan__Due_Interest__c!=repy[0].loan__Due_Interest__c);
+    			system.assert(repy1.loan__Due_Principal__c!=repy[0].loan__Due_Principal__c);
+				system.assert(repy1.loan__Total_Installment__c!=repy[0].loan__Total_Installment__c);
+    			
+    
     }
 
 }
