@@ -189,7 +189,6 @@ private class TestCreditPolicyResponse {
         System.assert(data.student_loan_flag == null);
         System.assert(data.pricing_test_bucket != null);
         
-        
         Test.stopTest();
     }
     
@@ -344,6 +343,11 @@ private class TestCreditPolicyResponse {
         obj = obj.parse(json,acc1.Id,app1.Id, app1.Lead_ID__c);
         
         System.assert(obj != null);
+        //added for LOP-392
+        Credit_Policy__c creditPolicydata =obj.cpData;
+        System.debug('***data***'+ creditPolicydata.Bureau_Inquiry_Date__c);
+        System.assert(creditPolicydata.Bureau_Inquiry_Date__c != null);
+                //LOP-392
         CreditPolicyResponse.credit_policy_decision cpd = obj.credit_policy_decision;
         CreditPolicyResponse.Decision_codes decision_codes = cpd.decision_codes;
         System.assert(decision_codes.invalid_input_knockout_codes != null);
@@ -617,7 +621,12 @@ private class TestCreditPolicyResponse {
         Test.startTest();
         CreditPolicyResponse obj = new CreditPolicyResponse();
         obj = obj.parse(json,acc1.Id,app1.Id, app1.Lead_ID__c);
-
+        //added for LOP-392 
+		Credit_Policy__c creditPolicydata =obj.cpData;
+        System.debug('***data***'+ creditPolicydata.Bureau_Inquiry_Date__c);
+        System.assert(creditPolicydata.Bureau_Inquiry_Date__c != null);
+     
+        // LOP-392 
         genesis__Applications__c actual = selectCreditPolicyFields(String.valueOf(app1.Id));
 
         System.assertEquals(792, actual.FICO__c);
