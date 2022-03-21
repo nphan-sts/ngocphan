@@ -462,7 +462,7 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
         
         loan__loan_account__c LA = [select id,name,
                                     loan__Delinquent_Amount__c,
-                                    loan__Loan_Status__c,
+                                    loan__Loan_Status__c,loan__Oldest_Due_Date__c,
                                     loan__Next_Due_Generation_Date__c,
                                     loan__Next_Installment_Date__c, 
                                     loan__Last_Accrual_Date__c,//LSP-223 added LAD
@@ -505,6 +505,10 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
         else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Good Standing')
                 && futureBill == NULL && LA.loan__Next_Due_Generation_Date__c <= txnDate
                 && LA.loan__Next_Installment_Date__c > txnDate){
+                    system.debug('hello'+ LA.loan__Oldest_Due_Date__c );
+                    if(LA.loan__Oldest_Due_Date__c<txnDate)
+                         installmentFlagValue = false;
+                    else
                     installmentFlagValue = true;
                     System.debug(logginglevel.error,'IN 1st ELSE IF ::' +installmentFlagValue);            
                 }
