@@ -675,7 +675,7 @@ global class CreditPolicyResponse {
         global String months_since_derogatory_global_record {get;set;} 
         global Boolean no_hit {get;set;} 
         global Boolean frozen {get;set;} 
-        global String bureau_inquiry_date {get;set;} 
+        global String bureau_inquiry_date1 {get;set;} //LOP-392
         global String bureau_report_uid {get;set;}
         global Integer G095S_mo_since_public_record {get;set;}
         global Integer V71_G095S_mo_since_public_record {get;set;}
@@ -985,14 +985,15 @@ global class CreditPolicyResponse {
             
         }
         if(BureauResponse!=null){  
-            System.debug('***BureauResponse***' + BureauResponse);
+            System.debug('***BureauResponse*** Before replace' + BureauResponse);
             //obj.bureau_subset__c = String.ValueOf(CPResponse.credit_policy_decision.bureau_subset);
 
             /**
              * NOTE: the following line names all fields with date in the bureau string.
              * Not sure the history of it, seems dangerous
              */
-            BureauResponse = BureauResponse.replace('date', 'date1');           
+            BureauResponse = BureauResponse.replace('date', 'date1'); 
+             System.debug('***BureauResponse*** After replace' + BureauResponse);
             CreditPolicyResponse.BureauRequestAPI bureauReq = (BureauRequestAPI)System.JSON.deserialize(BureauResponse,BureauRequestAPI.class);
             Map<String, Object> bureauUntypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(BureauResponse);
 
@@ -1023,8 +1024,11 @@ global class CreditPolicyResponse {
                     obj.Tax_Liens__c                =bureauReq.number_of_tax_liens;
                 if(bureauReq.number_of_open_trades!=null)
                     obj.Total_Open_Trades__c        =bureauReq.number_of_open_trades;
-                if(bureauReq.bureau_inquiry_date!=null)
-                    obj.Bureau_Inquiry_Date__c      =bureauReq.bureau_inquiry_date;
+                if(bureauReq.bureau_inquiry_date1!=null){
+                    System.debug('****bureau_inquiry_date1****' + bureauReq.bureau_inquiry_date1 );//LOP-392
+                    obj.Bureau_Inquiry_Date__c      =bureauReq.bureau_inquiry_date1;
+                 	System.debug('****obj.Bureau_Inquiry_Date__c****' + obj.Bureau_Inquiry_Date__c );
+                }
                 /**
                 *Changes For CLS 384
                 **/
