@@ -460,18 +460,7 @@ public with sharing class MW_AllocationEngineHandler {
                 json.writeStringField('zipCode', app.genesis__Account__r.ZIP_Code__c);
 
                 writeNullableString(json, 'loanPurpose', app.Loan_Purpose__c);
-
-                /*
-                 Emulate an eventual array, but CLS only stores a single approval model if anything.
-                 */
-                if (app.Credit_Policy_Approval_Models__c == null) {
-                    json.writeNullField('approvalModels');
-                } else {
-                    json.writeFieldName('approvalModels');
-                    json.writeStartArray();
-                    json.writeString(app.Credit_Policy_Approval_Models__c);
-                    json.writeEndArray();
-                }
+                writeApprovalModels(json, 'approvalModels', app);
 
                 if (REALLOCATION == decisionLevel || MANUAL == decisionLevel) {
 
@@ -518,6 +507,28 @@ public with sharing class MW_AllocationEngineHandler {
         json.writeEndObject();
 
         return json.getAsString();
+    }
+
+    /**
+     * Emulate an eventual array, but CLS only stores a single approval model if anything.
+     * @param json The json request
+     * @param fieldName The field name
+     * @param app The source application
+     */
+    private static void writeApprovalModels(JSONGenerator json, String fieldName, genesis__Applications__c app) {
+
+        String rms = app.Risk_Model_Source__c;
+        String cpms = app.Credit_Policy_Approval_Models__c;
+        String value = rms == 'crb' ? 'crb' : cpms;
+
+        if (value == null) {
+            json.writeNullField(fieldName);
+        } else {
+            json.writeFieldName(fieldName);
+            json.writeStartArray();
+            json.writeString(value);
+            json.writeEndArray();
+        }
     }
 
     /**
@@ -692,6 +703,7 @@ public with sharing class MW_AllocationEngineHandler {
                         Investor__c,
                         Investor__r.Investor_Code__c,
                         Credit_Policy_Approval_Models__c,
+                        Risk_Model_Source__c,
                         Expected_Yield__c,
                         Expected_Chargeoff__c,
                         Allocation_ID__c,
@@ -1035,18 +1047,4 @@ public with sharing class MW_AllocationEngineHandler {
     private static String toLeadIdsStr(List<Id> appIds) {
         return String.join(toLeadIds(appIds),', ');
     }
-
-    /**
-     * @param apps Apps to turn intto id list
-     *
-     * @return the list
-     */
-    private static List<Id> toIds(List<genesis__Applications__c> apps) {
-        List<Id> ids = new List<Id>();
-        for (genesis__Applications__c app : apps) {
-            ids.add(app.Id);
-        }
-        return ids;
-    }
-
 }

@@ -425,9 +425,15 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(0, actualIds4.size());
     }
 
-    @IsTest static void advp_canGenerateJson() {
+    /**
+     * Generate json corresponding to an ITB loan
+     */
+    @IsTest static void advp_canGenerateJson_ITB() {
 
         genesis__Applications__c app = getApp();
+        app.Credit_Policy_Approval_Models__c = null;
+        app.Risk_Model_Source__c = 'hm';
+        update app;
 
         String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
                 null,
@@ -438,7 +444,51 @@ private class MW_AllocationEngineHandlerTest {
 
         actual = actual.key('allocation-requests').index(0);
         assertCommonRequestFields(app, actual);
-        assertAllocationRequestFields(app, actual);
+        assertAllocationRequestFields(app, actual, null);
+    }
+
+    /**
+     * Generate json corresponding to an OTB loan
+     */
+    @IsTest static void advp_canGenerateJson_OTB() {
+
+        genesis__Applications__c app = getApp();
+        app.Credit_Policy_Approval_Models__c = 'crb_otb';
+        app.Risk_Model_Source__c = 'hm';
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.ADVP);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual);
+        assertAllocationRequestFields(app, actual, 'crb_otb');
+    }
+
+    /**
+     * Generate json corresponding to a turn down loan
+     */
+    @IsTest static void advp_canGenerateJson_CRB() {
+
+        genesis__Applications__c app = getApp();
+        app.Credit_Policy_Approval_Models__c = 'crb_otb';
+        app.Risk_Model_Source__c = 'crb';
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.ADVP);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual);
+        assertAllocationRequestFields(app, actual, 'crb');
     }
 
     /**
@@ -625,9 +675,12 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
     }
 
-    @IsTest static void reallocation_canGenerateJson() {
+    @IsTest static void reallocation_canGenerateJson_ITB() {
 
         genesis__Applications__c app = getApp();
+        app.Credit_Policy_Approval_Models__c = null;
+        app.Risk_Model_Source__c = 'hm';
+        update app;
 
         String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
                 null,
@@ -638,7 +691,50 @@ private class MW_AllocationEngineHandlerTest {
 
         actual = actual.key('allocation-requests').index(0);
         assertCommonRequestFields(app, actual);
-        assertAllocationRequestFields(app, actual);
+        assertAllocationRequestFields(app, actual, null);
+        assertReallocationRequestFields(app, actual);
+    }
+
+    @IsTest static void reallocation_canGenerateJson_OTB() {
+
+        genesis__Applications__c app = getApp();
+        app.Credit_Policy_Approval_Models__c = 'crb_otb';
+        app.Risk_Model_Source__c = 'hm';
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.REALLOCATION);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual);
+        assertAllocationRequestFields(app, actual, 'crb_otb');
+        assertReallocationRequestFields(app, actual);
+    }
+
+    /**
+     * Turndown (currently only crb) loans
+     */
+    @IsTest static void reallocation_canGenerateJson_CRB() {
+
+        genesis__Applications__c app = getApp();
+        app.Credit_Policy_Approval_Models__c = 'crb_otb';
+        app.Risk_Model_Source__c = 'crb';
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.REALLOCATION);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual);
+        assertAllocationRequestFields(app, actual, 'crb');
         assertReallocationRequestFields(app, actual);
     }
 
@@ -1329,12 +1425,24 @@ private class MW_AllocationEngineHandlerTest {
         System.assert(actual.containsKey('timestamp'));
     }
 
-    /**
-     * These are fields for all allocation requests, advp, reallocation, manual
+    /**Fields for all allocation requests
      * @param expected Expected app
      * @param actual Jsons instance
      */
     static void assertAllocationRequestFields(genesis__Applications__c expected, Jsons actual) {
+        assertAllocationRequestFields(expected, actual, expected.Credit_Policy_Approval_Models__c);
+    }
+
+    /**
+     * These are fields for all allocation requests, advp, reallocation, manual
+     * @param expected Expected app
+     * @param actual Jsons instance
+     * @param approvalModels The string field which will be wrapped in an array
+     */
+    static void assertAllocationRequestFields(genesis__Applications__c expected, Jsons actual, String approvalModels) {
+
+        List<String> expectedApprovalModels = approvalModels == null ? null : new List<String> {approvalModels};
+
         System.assertEquals(expected.genesis__Status__c, actual.get('lendingState'));
         System.assertEquals(expected.genesis__APR__c, actual.getDecimal('APR'));
         System.assertEquals(expected.genesis__Interest_Rate__c, actual.getDecimal('interestRate'));
@@ -1343,7 +1451,7 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(expected.genesis__Account__r.ZIP_Code__c, actual.get('zipCode'));
         System.assertEquals(expected.Monthly_DTI__c, actual.getDecimal('debtToIncome'));
         System.assertEquals(expected.Net_Disposable_Income_NDI_Num__c, actual.getDecimal('netDisposableIncome'));
-        System.assertEquals(new List<String> {expected.Credit_Policy_Approval_Models__c}, actual.getList('approvalModels'));
+        System.assertEquals(expectedApprovalModels, actual.getList('approvalModels'));
         System.assertEquals(expected.genesis__Loan_Amount__c, actual.getDecimal('loanAmount'));
         System.assertEquals(expected.Loan_Purpose__c, actual.get('loanPurpose'));
 
@@ -1451,6 +1559,7 @@ private class MW_AllocationEngineHandlerTest {
                         Investor__c,
                         Investor__r.Investor_Code__c,
                         Credit_Policy_Approval_Models__c,
+                        Risk_Model_Source__c,
                         Expected_Yield__c,
                         Expected_Chargeoff__c,
                         Allocation_ID__c,
