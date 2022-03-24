@@ -105,15 +105,15 @@ public class CLS_TestBillUpdate {
         
     }
      /*Created By : Bhavya Maliwal
-Method name : BillJob
+Method name : billJobTest
 Purpose : to cover code satisfying below apex classes
 CLS_RepostLPTxnHandler
 CLS_RepostLPTxnJOB
 CLS_GenerateBillHandler
-CLS_DiscardBillJobHandler
+CLS_DiscardBillJobHandler 
 CLS_DiscardBillJob
 */
-    Testmethod static void BillJob(){
+    Testmethod static void billJobTest(){
         
         List<loan__Loan_Account__c> LAList = [SELECT ID,Name,
                                               loan__Previous_Installment_Date__c,
