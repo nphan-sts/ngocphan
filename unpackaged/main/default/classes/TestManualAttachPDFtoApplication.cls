@@ -6,10 +6,10 @@
 @isTest
 public class TestManualAttachPDFtoApplication{
     /*Created By : Bhavya Maliwal
-Method name : ManualAttachPDFtoApplication_PositiveScenario
+Method name : manualAttachPDFtoApplication_PositiveScenario
 Purpose : to cover code satisfying ManualAttachPDFtoApplication
 */
-    testmethod static void ManualAttachPDFtoApplication_PositiveScenario(){
+    testmethod static void manualAttachPDFtoApplication_PositiveScenario(){
         
         //Creating Account
         Account acc = new Account(
