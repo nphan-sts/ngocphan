@@ -6,10 +6,10 @@
 @isTest
 public class TestCustomAutomatedPaymentSetupTrigger {
      /*Created By : Bhavya Maliwal
-Method name : CustomAutomatedPaymentSetupTrigger_insert
+Method name : customAutomatedPaymentSetupTriggerInsert
 Purpose : to cover code satisfying CustomAutomatedPaymentSetupTrigger before Insert case
 */ 
-    Testmethod static void CustomAutomatedPaymentSetupTrigger_insert(){
+    Testmethod static void customAutomatedPaymentSetupTriggerInsert(){
         loan__Org_Parameters__c loanorg = loan.CustomSettingsUtil.getOrgParameters();
         loanorg.Manual_Payer_Lending_product_name__c = 'Manual Payer';
         loanorg.Auto_Payer_Lending_Product_Name__c = 'Auto Payer';
