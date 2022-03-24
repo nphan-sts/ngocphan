@@ -71,13 +71,13 @@ public class CLS_TestIPTUpdate {
         insert test_LPT2;
     }
      /*Created By : Bhavya Maliwal
-Method name : IPTJob
+Method name : iptJobTest
 Purpose : to cover code satisfying below apex classes
 CLS_DiscardIPTJob
 CLS_IPTDiscardHandler
 CLS_GenerateIPTHandler
 */
-    Testmethod static void IPTJob(){
+    Testmethod static void iptJobTest(){
         
         List<loan__Loan_Account__c> LAList = [SELECT ID,Name,
                                               loan__Previous_Installment_Date__c,
