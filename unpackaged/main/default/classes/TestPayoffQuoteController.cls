@@ -6,12 +6,12 @@
 @isTest
 public class TestPayoffQuoteController {
  /*Created By : Bhavya Maliwal
-Method name : PayoffQuoteController_PayoffQuote
+Method name : payoffQuoteControllerPayoffQuote
 Purpose : to cover PayoffQuoteController
 */
     @isTest
     
-    public static void PayoffQuoteController_PayoffQuote (){
+    public static void payoffQuoteControllerPayoffQuote (){
         loan__Org_Parameters__c orgParam = new loan__Org_Parameters__c();
         orgParam.loan__Disable_Triggers__c=true;
         orgParam.loan__Digits_After_Decimals__c=2;
