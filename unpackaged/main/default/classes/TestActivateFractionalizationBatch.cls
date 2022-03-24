@@ -101,17 +101,7 @@ Method name : activateFractionalizationBatchdefaultConstructor
 Purpose : to cover code satisfying default constructor and Batch execution for ActivateFractionalizationBatch
 */
     Testmethod static void activateFractionalizationBatchdefaultConstructor(){
-        List<loan__Loan_Account__c> lappList = [SELECT ID, 
-                                                loan__Previous_Installment_Date__c,
-                                                loan__Account__r.cnotify__Email__c,
-                                                loan__Loan_Product_Name__r.name, 
-                                                loan__Payment_Amount__c, 
-                                                loan__Next_Installment_Date__c, 
-                                                loan__Account__r.ID,Borrowers_First_Name__c,
-                                                loan__Account__r.Borrower_s_Last_Name__c,
-                                                loan__Loan_Product_Name__c 
-                                                from loan__Loan_Account__c];
-        
+      
         test.startTest();
         ActivateFractionalizationBatch b = new ActivateFractionalizationBatch();
         test.stopTest();
@@ -121,17 +111,7 @@ Method name : activateFractionalizationBatchThreadConstructor
 Purpose : to cover code satisfying constructor where thread is passed and for Batch execution, for ActivateFractionalizationBatch
 */
     Testmethod static void activateFractionalizationBatchThreadConstructor(){
-        List<loan__Loan_Account__c> lappList = [SELECT ID, 
-                                                loan__Previous_Installment_Date__c,
-                                                loan__Account__r.cnotify__Email__c,
-                                                loan__Loan_Product_Name__r.name, 
-                                                loan__Payment_Amount__c, 
-                                                loan__Next_Installment_Date__c, 
-                                                loan__Account__r.ID,Borrowers_First_Name__c,
-                                                loan__Account__r.Borrower_s_Last_Name__c,
-                                                loan__Loan_Product_Name__c 
-                                                from loan__Loan_Account__c];
-        
+       
         test.startTest();
         ActivateFractionalizationBatch b1 = new ActivateFractionalizationBatch(1);
         test.stopTest();
