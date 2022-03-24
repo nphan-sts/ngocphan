@@ -6,10 +6,10 @@
 @isTest
 public class TestHelperUtility{
     /*Created By : Bhavya Maliwal
-Method name : HelperUtility_OriginationDate_CreateLog
+Method name : helperUtilityOriginationDateCreateLog
 Purpose : to cover code satisfying getNextOriginationDate,createLog,createLogs method
 */
-    testmethod static void HelperUtility_OriginationDate_CreateLog(){
+    testmethod static void helperUtilityOriginationDateCreateLog(){
         Date currentSystemDate = Date.newInstance(2016,03,12);  //Saturday
         Date currentSystemDate1 = Date.newInstance(2016,03,10);
         String message = 'Test message';
