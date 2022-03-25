@@ -31,7 +31,7 @@ public class TestLoanStatementController {
          loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
          loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
          loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
-        
+         system.debug('Dummy fee junction'+dummyFeeJunction);
          loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
          loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
@@ -78,35 +78,17 @@ public class TestLoanStatementController {
          Contact a1 = new Contact(LastName='TestACH');
          insert a1;
         
-         /*loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
-                                                 loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '99999999',
-                                                 loan__Account_Type__c = 'Checking',
-                                                 Unmasked_Bank_Account_Number__c = '123234324',
-                                                 loan__Contact__c = a1.id);
-        insert ba;*/
         
         //create Payment mode
          loan__Payment_Mode__c pMode = [select id from loan__Payment_Mode__c where Name= 'ACH'];
-        
+        	system.debug('Payment Mode'+pMode);
         //create a dummy Loan Account
          loan__Loan_Account__c dummylaMonthly = loan.TestHelper.createLoanAccountForContactObj(loanProdObj,
                                         a1,
                                         dummyFeeSet,
                                         dummyLoanPurpose,
                                         dummyOffice);
-        
-        /*loan__Automated_Payment_Setup__c aPS = loan.TestHelper2.createAutomatedPaymentSetup(loan.LoanConstants.RECURRING,loan.LoanConstants.FIXED_AMOUNT,ba,dummylaMonthly,'Monthly',pMode);
-        
-        loan__Loan_Payment_Transaction__c dummyPmt = new loan__Loan_Payment_Transaction__c();
-        dummyPmt.loan__Cleared__c = false;
-        dummyPmt.loan__Payment_Mode__c = pMode.id;
-        dummyPmt.loan__Transaction_Amount__c  = 100;
-        dummyPmt.loan__Transaction_Date__c = loan.TestHelper.systemDate;
-        dummyPmt.loan__Loan_Account__c  = lacc.id;
-        dummyPmt.loan__Automated_Payment_Setup__c = aPS.id;
-        insert dummyPmt;*/
-        
+        system.debug('Dummy Loan Account' +dummylaMonthly);
         Date systemDate = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();
         //create Repayment Schedule
          loan__Repayment_Schedule__c amz = new loan__Repayment_Schedule__c(loan__Due_Principal__c = 1000,
@@ -153,6 +135,7 @@ public class TestLoanStatementController {
                 pageRef.getParameters().put('Id', String.valueOf(lacc.Id));
                 LoanStatementController state = new LoanStatementController();
         		test.stopTest();
+        		system.debug('LoanStatementController' +state);
         		list<loan__Repayment_Schedule__c> repy =  [Select id,loan__Due_Principal__c,loan__Due_Interest__c,loan__Total_Installment__c 
                     												from loan__Repayment_Schedule__c
                                                           			where loan__isPaid__c=false];
