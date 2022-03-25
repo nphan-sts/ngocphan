@@ -1,82 +1,76 @@
+/* ****************Modification History******************
+* Modified By       Date                    JIRA Number
+*   Shakul        15/3/2022          LSP-601 (Refactored Test Class)	
+******************Modification History******************/
 @isTest
 
 public class TestSendOfferExpiryNotification{
-     public static String CRON_EXP = '0 0 0 15 3 ? 2022';
-   @testSetup static void setup() {
-   
-       loan.TestHelper.createSeedDataForTesting();
-       loan__Currency__c curr = loan.TestHelper.createCurrency();
-       //Create a dummy MF_Account
-        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
-        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
-     
-        //Create a Fee Set
-        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
-        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+    public static String CRON_EXP = '0 0 0 15 3 ? 2025';
+    @TestSetup
+    public static void testSetup(){
+        Expiry_Date__c exp = new Expiry_Date__c();
+        exp.No_of_days_for_Expiration__c = 30;
+        exp.Alert_Before_Expiration_Date__c = 14;
+        insert exp;
         
+        loan.TestHelper.createSeedDataForTesting();
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
         //Creating Account
-         Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
+        Account acc = new Account(
+            peer__First_Name__c ='Account',
+            peer__Last_Name__c = 'Test',
+            loan__Investor__c= false,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
+            loan__SOCIAL_SECURITY_NUMBER__c = String.valueOf(math.random()).right(9)
+        );
         insert acc;
-        System.assertEquals('Test',acc.Name,'Wrong Account');
         
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
-                                        genesis__Due_Day__c = 20,
-                                        genesis__Expected_First_Payment_Date__c = system.Today(),
-                                        genesis__Expected_Start_Date__c = system.Today(),
-                                        genesis__Funding_in_Tranches__c = true,
-                                        Borrower_s_Email__c = null,
-                                        //X14day_s_Before_Expiration_Date__c =true,
-                                        genesis__Account__c = acc.Id,
-                                        genesis__Expected_Close_Date__c =Date.newInstance(2017,10,11),
-                                        Application_Start_DateV2__c = system.Today(),
-                                        DocuSignFlag__c=true,
-                                        genesis__Status__c = 'agent_verified',
-                                        genesis__Draw_Period_End_Date__c = system.Today()
-                                        );
-        List<genesis__Applications__c> applist = new List<genesis__Applications__c>();
-        appList.add(app);
-        insert appList;
-        System.debug('==============='+applist);
-        
-   }
-    Testmethod static void method1(){
-        List<genesis__Applications__c> applist1 = [select Id,name,Send_Offer_expiry_notification__c,X14day_s_Before_Expiration_Date__c,genesis__Status__c,genesis__Expected_Close_Date__c From genesis__Applications__c];
-        Test.startTest();
-        SendOfferExpiryNotification job = new SendOfferExpiryNotification();
-        job.Start(null);
-        job.Execute(null,appList1);
-        ID batchprocessid = Database.executeBatch(job);
-        job.finish(null);
-        String jobIdLDTAdd = System.schedule('SendOfferExpiryNotification',
-                        CRON_EXP, 
-                        new SendOfferExpiryNotification());
-        System.assert(batchprocessid!=null); 
-        Test.stopTest();
+            genesis__Due_Day__c = 20,
+            genesis__Expected_First_Payment_Date__c = system.Today(),
+            genesis__Expected_Start_Date__c = system.Today(),
+            genesis__Funding_in_Tranches__c = true,
+            Borrower_s_Email__c = null,
+            //X14day_s_Before_Expiration_Date__c =true,
+            genesis__Account__c = acc.Id,
+            genesis__Expected_Close_Date__c =Date.newInstance(2017,10,11),
+            Application_Start_DateV2__c = system.Today(),
+            DocuSignFlag__c=true,
+            genesis__Status__c = 'agent_verified',
+            genesis__Draw_Period_End_Date__c = system.Today()
+        );
+        insert app;
     }
-    Testmethod static void method2(){
     
-        List<genesis__Applications__c> applist1 = [select Id,name,genesis__Status__c,X14day_s_Before_Expiration_Date__c,genesis__Expected_Close_Date__c From genesis__Applications__c];        
-        String Query = 'select Id,name,genesis__Status__c,Send_Offer_expiry_notification__c,X14day_s_Before_Expiration_Date__c,genesis__Expected_Close_Date__c From genesis__Applications__c';
+    /*Created By: Shakul Siddharth
+    Purpose: To verify logic for send offer expiry notification using schedulable context*/
+    public static testMethod void sendOffExpNotifWithoutParam(){
+        Id cronTriggerId;
+        User testUsr = [SELECT id, loan__Current_Branch_s_System_Date__c FROM User WHERE Id =: UserInfo.getUserId()];
+        genesis__Applications__c testApp = [SELECT id, Expiry_Date__c FROM genesis__Applications__c LIMIT 1];
+        testUsr.loan__Current_Branch_s_System_Date__c = testApp.Expiry_Date__c.addDays(-14);
+        update testUsr;
         Test.startTest();
-        SendOfferExpiryNotification job = new SendOfferExpiryNotification(Query);
-        job.Start(null);
-        job.Execute(null,appList1);
-        ID batchprocessid = Database.executeBatch(job);
-        job.finish(null);
-        String jobIdLDTAdd = System.schedule('SendOfferExpiryNotification',
-                        CRON_EXP, 
-                        new SendOfferExpiryNotification());
-        System.assert(batchprocessid!=null); 
-        
+        System.runAs(testUsr){
+            SendOfferExpiryNotification soffExp = new SendOfferExpiryNotification();
+            cronTriggerId = System.schedule('TestSendOfferExpiry', CRON_EXP, soffExp);
+        }
         Test.stopTest();
+        CronTrigger ct = [SELECT id, State FROM CronTrigger WHERE id =: cronTriggerId];
+        System.assertEquals('WAITING', ct.State);
+    }
+    
+    /*Created By: Shakul Siddharth
+    Purpose: To verify logic for send offer expiry notification using batchable context*/
+    public static testMethod void sendOffExpNotifOneParam(){
+        String query = 'select Id,name,genesis__Status__c,Send_Offer_expiry_notification__c,X14day_s_Before_Expiration_Date__c,genesis__Expected_Close_Date__c From genesis__Applications__c LIMIT 1';
+        Test.startTest();
+        SendOfferExpiryNotification job = new SendOfferExpiryNotification(query);
+        Database.executeBatch(job, 1);
+        Test.stopTest();
+        genesis__Applications__c assertApp = [SELECT id, Send_Offer_expiry_notification__c FROM genesis__Applications__c LIMIT 1];
+        System.assertEquals(true, assertApp.Send_Offer_expiry_notification__c);
     }
 }
