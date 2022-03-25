@@ -35,14 +35,15 @@ public Class TestChangeTypeOfPayerController{
         dummyFee.loan__Time_Of_Charge__c = 'Other';
         upsert dummyFee;
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+      	loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         System.debug('dummyOffice'+dummyOffice.name);
+        system.debug('LOan Fee Junction' +dummyFeeJunction);
 
         //Create a dummy Loan Product for Auto Payer
         loan__Loan_Product__c dummyLP1 = loan.TestHelper.createLoanProduct(dummyOffice,
                             dummyAccount, 
-                            curr, 
+                            curr,
                             dummyFeeSet);
         dummyLP1.name = 'Auto Payer';
         dummyLP1.loan__Pre_Bill_Days__c = 5;
