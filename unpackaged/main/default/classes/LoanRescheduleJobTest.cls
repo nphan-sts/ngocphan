@@ -26,7 +26,7 @@ public class LoanRescheduleJobTest {
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
-        
+        system.debug('Fee Junction'+dummyFeeJunction);
        //create office
         loan__Office_Name__c dummyCompany = loan.TestHelper.createOffice();
       dummyCompany.loan__Current_System_Date__c = Date.newInstance(2020, 02, 19);
@@ -219,26 +219,13 @@ public class LoanRescheduleJobTest {
 		test.stopTest();
         	List<loan__Loan_Account__c> loanAcc = [select Id,loan__Loan_Status__c, loan__Is_Rescheduled__c,loan__Reschedule_Status__c,(Select id,name,loan__Due_Date__c from loan__Repayment_Schedule__r),(select id,name from loan__Repayment_Plan__r) from loan__Loan_Account__c];
              System.assert(!loanAcc.isEmpty());
-         /* try{
-                LoanRescheduleJob.runRescheduleJob(idList);
-                List<loan__Loan_Account__c> loanAcc = [select Id,loan__Loan_Status__c, loan__Is_Rescheduled__c,loan__Reschedule_Status__c,(Select id,name,loan__Due_Date__c from loan__Repayment_Schedule__r),(select id,name from loan__Repayment_Plan__r) from loan__Loan_Account__c];
-                System.assert(!loanAcc.isEmpty());
-        }catch(Exception e){
-            System.debug('Failed to run the batch');
-        }*/
+        
     }
     //Test method 2 for Exceptions
     @isTest
     public static void testReschedulejobException(){
           List<Id> idList = new List<Id>();
-        /*  try{
-                LoanRescheduleJob.runRescheduleJob(idList);
-                List<loan__Loan_Account__c> loanAcc = [select Id,loan__Loan_Status__c, loan__Is_Rescheduled__c,loan__Reschedule_Status__c,(Select id,name,loan__Due_Date__c from loan__Repayment_Schedule__r),(select id,name from loan__Repayment_Plan__r) from loan__Loan_Account__c];
-                System.assert(!loanAcc.isEmpty());
-        }catch(Exception e){
-            System.debug('Failed to run the batch');
-        }
-    }*/
+       
         test.startTest();
         LoanRescheduleJob.runRescheduleJob(idList);
 		test.stopTest();
