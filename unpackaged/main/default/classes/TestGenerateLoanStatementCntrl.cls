@@ -31,7 +31,7 @@ public class TestGenerateLoanStatementCntrl {
         	loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         	loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
         	loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
-        
+        	system.debug('Dummy Fee Junction' +dummyFeeJunction);
         	loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
         	loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
@@ -86,9 +86,6 @@ public class TestGenerateLoanStatementCntrl {
         		GenerateLoanStatementCntrl.GenerateLoanStatementCntrl(lacc.id);
         		test.stopTest();
         		 list<loan__loan_account__c> contract = [Select id,name from loan__loan_account__c where id =: lacc.id];
-
-        		/* Attachment attach = [select name from Attachment];
-        				system.debug(' attachment after' +attach.Name);*/
         			system.assertEquals([select name,Description from Attachment].size(),1);
         			system.assertEquals(1,contract.size());
 
