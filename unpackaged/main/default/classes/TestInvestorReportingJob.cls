@@ -49,10 +49,10 @@ public class TestInvestorReportingJob {
         
     }
     /*Created By : Bhavya Maliwal
-Method name : InvestorReporting_Date_as1
+Method name : investorReportingDateas1
 Purpose : to cover code satisfying Date as 1 for InvestorReportingJob
 */
-    @isTest static Void InvestorReporting_Date_as1(){
+    @isTest static Void investorReportingDateas1(){
         loan.GlobalProcessFacade.moveSystemToDate(Date.newInstance(2018, 12, 1), false);
         Test.startTest();
         InvestorReportingJob j = new InvestorReportingJob();
@@ -62,10 +62,10 @@ Purpose : to cover code satisfying Date as 1 for InvestorReportingJob
         system.assertEquals(true, acc.size()<=0);
     }
     /*Created By : Bhavya Maliwal
-Method name : InvestorReporting_Date_Month_as1
+Method name : investorReportingDateMonthas1
 Purpose : to cover code satisfying Date and Month as 1 for InvestorReportingJob
 */
-    @isTest static Void InvestorReporting_Date_Month_as1(){
+    @isTest static Void investorReportingDateMonthas1(){
         loan.GlobalProcessFacade.moveSystemToDate(Date.newInstance(2018, 1, 1), false);
         Test.startTest();
         InvestorReportingJob j = new InvestorReportingJob();
@@ -75,10 +75,10 @@ Purpose : to cover code satisfying Date and Month as 1 for InvestorReportingJob
         system.assertEquals(true, acc.size()<=0);
     }
     /*Created By : Bhavya Maliwal
-Method name : InvestorReporting_ScheduleMethod
+Method name : investorReportingScheduleMethod
 Purpose : to cover code satisfying Schedule Method for InvestorReportingJob
 */
-    @isTest static Void InvestorReporting_ScheduleMethod(){
+    @isTest static Void investorReportingScheduleMethod(){
         loan.GlobalProcessFacade.moveSystemToDate(Date.newInstance(2018, 1, 1), false);
         InvestorReportingJob batchSch=new InvestorReportingJob(); 
         String sch='0 30 15 * * ?'; 
