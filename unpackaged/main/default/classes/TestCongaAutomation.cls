@@ -1,3 +1,8 @@
+/* ****************Modification History******************
+*    Created By        	 Date			Version
+*1. Bhavya Maliwal        2022/03/02     LSP-621 Initial Version,renamed method, modified code for validation errors
+
+******************Modification History******************/
 @isTest
 
 private class TestCongaAutomation{
@@ -15,15 +20,19 @@ private class TestCongaAutomation{
             return res;
         }
     }
-    
-    Testmethod static void method1(){
+  /*Created By : Bhavya Maliwal
+Method name : congaAutomationTest
+Purpose : to cover code satisfying CongaAutomation
+*/    
+    Testmethod static void congaAutomationTest(){
         
          //Creating Account
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
+             peer__Last_Name__c='TestLName2',
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123123'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
