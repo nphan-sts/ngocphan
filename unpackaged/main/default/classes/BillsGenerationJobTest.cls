@@ -20,9 +20,8 @@ public class BillsGenerationJobTest {
     	loan__office_Type__c testBranchType = new loan__Office_Type__c(Name='Test Data',
                                                         loan__Office_Type_Short_Code__c='TestSC' );
         insert testBranchType;
-        Id rtId = Schema.SObjectType.loan__Office_Name__c.getRecordTypeInfosByName().get('Root Branch').getRecordTypeId();
-        Id prodRTId = Schema.SObjectType.loan__Loan_Product__c.getRecordTypeInfosByName().get('Loan Product Record Type').getRecordTypeId();
-
+    	
+       Id rtId = Schema.SObjectType.loan__Office_Name__c.getRecordTypeInfosByName().get('Root Branch').getRecordTypeId();
        loan__Currency__c curr = loan.TestHelper.createCurrency();
        //Create a dummy MF_Account
         loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
@@ -32,7 +31,7 @@ public class BillsGenerationJobTest {
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
-		
+		system.debug('Junction fee' +dummyFeeJunction);
     	//Create Company
         genesis__Company__c comp = genesis.TestHelper.createCompany(); 
         comp.Name = 'payoff';
@@ -100,7 +99,6 @@ public class BillsGenerationJobTest {
         loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyCompany, dummyAccount, curr, dummyFeeSet);
         dummyLP.loan__General_Rounding_Mode__c = null;
         dummyLP.loan__Digits_After_Decimals__c = null;
-    	//dummyLP.loan__Loan_Product_Type__c = 'flexible amz loan';
         update dummyLP;
         
         //creating CL Product
@@ -245,12 +243,7 @@ public class BillsGenerationJobTest {
 				test.startTest();
             	BillsGenerationJob.runBillingJob(idList);
         		test.stopTest();
-				
-        	/*List<loan__Loan_Account__c> loanAcc = [select Id,loan__Loan_Status__c, loan__Is_Rescheduled__c,(Select id,name,loan__Due_Date__c from loan__Repayment_Schedule__r),(select id,name from loan__Repayment_Plan__r) from loan__Loan_Account__c];
-        	System.assert(!loanAcc.isEmpty());
-       		System.assertEquals(loanAcc[0].loan__Is_Rescheduled__c, true);*/
-        	
-        	loan__Loan_Account__c lac = [select id ,loan__Unpaid_Bills__c from loan__Loan_Account__c];
+			loan__Loan_Account__c lac = [select id ,loan__Unpaid_Bills__c from loan__Loan_Account__c];
         	system.assertEquals(lac.loan__Unpaid_Bills__c,true);
         
         	}
