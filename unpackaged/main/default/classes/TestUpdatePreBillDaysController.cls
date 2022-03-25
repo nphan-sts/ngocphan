@@ -2,13 +2,12 @@
  * CreatedBy        Date          JIRA number
  * Pallavi        2020/11/02      CRM-867(Develop a tool to extend bill drop date for existing contracts for manual payers)
  * Modified By
- * 2. Bhanupriya	2022/02/18		LSP-535(Update required fields and add assert statement)   
+ * 2. Bhanupriya	2022/02/18		LSP-537(Update required fields and add assert statement)   
  ******************Modification History******************/
 @isTest
 public class TestUpdatePreBillDaysController {
     
    	static String str = '';
-    //public static String[] csvFileLines;
     	public static Blob csvFileBody;
     
   @testSetup static void setup(){
@@ -23,10 +22,10 @@ public class TestUpdatePreBillDaysController {
             loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
             loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
             loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
-            
+            system.debug('Fees Junction' +dummyFeeJunction);
             loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
-            
-            loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
+			System.debug('dummyOffice'+dummyOffice.name);
+      		loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
             org.loan__Disable_Triggers__c = true;
             upsert org; 
             
@@ -44,7 +43,6 @@ public class TestUpdatePreBillDaysController {
                                 peer__First_Name__c = 'abc' 
                                 );
         	insert acc;
-       	// System.assertEquals('Test',acc.Name,'Wrong Account');
         
             LoanPaymentDays__c lpdays = new LoanPaymentDays__c();
             lpdays.AutoPaymentRemainder__c= 3;
@@ -53,7 +51,6 @@ public class TestUpdatePreBillDaysController {
             
             loan__Loan_Product__c loanProdObj = new loan__Loan_Product__c(name='TestProduct'); 
             insert loanProdObj;
-           //System.assertEquals('TestProduct', loanProdObj.Name,'Wrong Loan Product');
                 
         //Creating Conpany
             genesis__Company__c comp = genesis.TestHelper.createCompany(); 
@@ -143,14 +140,13 @@ public class TestUpdatePreBillDaysController {
                             cont.importCSVFile();
                   Test.stopTest();
             
-             
+             		system.assert(!String.isEmpty(csvAsString));
            
-            	//system.assert(uploadDoc
     }
     
     @isTest
     	public static void testupdatePreBillDays(){
-                            Map<String,String> LoanNames = new Map<String,String>();
+                            Map<String,String> loanNames = new Map<String,String>();
                             loan__Loan_Account__c lacc1 = [select id,
                                                            name,
                                                            loan__Pre_Bill_Days__c,
@@ -159,10 +155,10 @@ public class TestUpdatePreBillDaysController {
                                                            loan__Next_Installment_Date__c
                                                            from loan__Loan_Account__c limit 1];
                             System.debug('lacc1--' + lacc1.name);
-                            LoanNames.put(lacc1.name,'15');
+                            loanNames.put(lacc1.name,'15');
             			 system.debug('NEXt due gen ' +lacc1.loan__Next_Due_Generation_Date__c);
                             Test.startTest();
-                                PreBillUpdateBatch a = new PreBillUpdateBatch(LoanNames);
+                                PreBillUpdateBatch a = new PreBillUpdateBatch(loanNames);
                                 database.executeBatch(a,1);
                             Test.stopTest();
             			loan__Loan_Account__c lacc = [select id,
