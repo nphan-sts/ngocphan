@@ -150,7 +150,6 @@ public Class TestChangeTypeOfPayerController{
         loanAccount.loan__Next_Due_Generation_Date__c = date.today().adddays(15);
         loanAccount.loan__Interest_Rate__c              = 10.0; //LOS-28
        
-        //loanAccount.Investor_Account__c = invacc.id;  //commented(LOS-28)
         upsert loanAccount;  
         system.assertNotEquals(loanAccount.id,null,'LoanAccount not inserted');
         
