@@ -6,10 +6,10 @@
 @isTest
 public class TestExpirationAlertEmail{
   /*Created By : Bhavya Maliwal
-Method name : ExpirationAlertEmail_daysbeforeExpirationDate
+Method name : expirationAlertEmaildaysbeforeExpirationDate
 Purpose : to cover code satisfying days before Expiration Date
 */
-    testmethod static void ExpirationAlertEmail_daysbeforeExpirationDate(){
+    testmethod static void expirationAlertEmaildaysbeforeExpirationDate(){
        //Creating Account
          Account acc = new Account(
             Name = 'Test',
