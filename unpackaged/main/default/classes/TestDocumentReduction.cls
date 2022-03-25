@@ -6,10 +6,10 @@
 @isTest
 public class TestDocumentReduction{
     /*Created By : Bhavya Maliwal
-Method name : DocumentReduction_payStubReduction
+Method name : documentReductionpayStubReduction
 Purpose : to cover code satisfying payStubReduction
 */
-    testmethod static void DocumentReduction_payStubReduction(){
+    testmethod static void documentReductionpayStubReduction(){
         //Creating Account
         Account acc = new Account(
             Name = 'Test',
