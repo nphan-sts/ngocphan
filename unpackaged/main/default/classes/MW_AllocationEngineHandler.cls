@@ -69,6 +69,11 @@ public with sharing class MW_AllocationEngineHandler {
     };
 
     /**
+     * @see MW_AllocationEngineHandler.putAndGetValidIds
+     */
+    private static Set<String> requestCache = new Set<String>();
+
+    /**
      * @param statusList Configured status list
      * @param status An application status
      *
@@ -179,16 +184,22 @@ public with sharing class MW_AllocationEngineHandler {
             return;
         }
 
-        List<Id> validAppIds;
+        List<Id> validAppIds = appIds;
         String json;
 
         try {
-            validAppIds = validateAndLogApps(appIds, manualPartnerIds, decisionLevel);
+            validAppIds = putAndGetValidIds(validAppIds, decisionLevel);
+            if (validAppIds.isEmpty()) {
+                System.debug('no valid ' + decisionLevel + ' ids after filtering against request cache');
+                return;
+            }
+            System.debug('valid ' + decisionLevel + ' ids after checking request cache: ' + validAppIds);
+
+            validAppIds = validateAndLogApps(validAppIds, manualPartnerIds, decisionLevel);
             if (validAppIds.isEmpty()) {
                 return;
             }
-
-            System.debug(': ' + validAppIds);
+            System.debug('valid ' + decisionLevel + ' ids after validating: ' + validAppIds);
 
             json = toJson(validAppIds, manualPartnerIds, decisionLevel);
 
@@ -209,6 +220,32 @@ public with sharing class MW_AllocationEngineHandler {
         } else {
             callAllocationEngineService(validAppIds, json, decisionLevel);
         }
+    }
+
+    /**
+     * Apex triggers can be executed recursively.
+     *
+     * From a list of ids, only return ids which have not yet been executed for this decision level.
+     * Once an id is tested in this app, it is added to the cache
+     *
+     * @param appIds App ids to test
+     * @param decisionLevel Decision level to test
+     *
+     * @return ids which have not been executed for this decision level yet
+     */
+    private static List<Id> putAndGetValidIds(List<Id> appIds, String decisionLevel) {
+        System.debug('transaction id: ' + Request.getCurrent().getRequestId());
+        List<Id> validAppIds = new List<Id>();
+        for (Id id : appIds) {
+            String key = decisionLevel + '-' + String.valueOf(id);
+            if (requestCache.contains(key)) {
+                System.debug('app key filtered: ' + key);
+            }  else {
+                requestCache.add(key);
+                validAppIds.add(id);
+            }
+        }
+        return validAppIds;
     }
 
     private static void handle(List<Id> appIds, List<Id> manualPartnerIds, String decisionLevel) {
@@ -391,7 +428,7 @@ public with sharing class MW_AllocationEngineHandler {
         }
 
         if (!updateApps.isEmpty()) {
-            update updateApps;
+            updateApps(updateApps, 'update apps: validateAndLogApps');
         }
 
         return validIds;
@@ -1010,7 +1047,7 @@ public with sharing class MW_AllocationEngineHandler {
             apps.add(app);
         }
 
-        update apps;
+        updateApps(apps, 'update apps: updateOperationError');
     }
 
     /**
@@ -1046,5 +1083,14 @@ public with sharing class MW_AllocationEngineHandler {
 
     private static String toLeadIdsStr(List<Id> appIds) {
         return String.join(toLeadIds(appIds),', ');
+    }
+
+    /**
+     * @param apps Apps to update
+     * @param msg Message to debug output
+     */
+    private static void updateApps(List<genesis__Applications__c> apps, String msg) {
+        System.debug(msg);
+        update apps;
     }
 }
