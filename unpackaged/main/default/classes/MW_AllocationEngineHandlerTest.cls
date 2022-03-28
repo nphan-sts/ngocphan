@@ -7,8 +7,6 @@ private class MW_AllocationEngineHandlerTest {
 
     private static final String OKTA_DOMAIN = 'https://oktadomain';
 
-    private static final String FE_ENDPOINT = 'https://sfapi-dev.payoff.com/ms/api/cls/update_user';
-
     public class AESCalloutExceptionMock implements HttpCalloutMock {
 
         public HttpResponse respond(HttpRequest httpRequest) {
@@ -68,19 +66,11 @@ private class MW_AllocationEngineHandlerTest {
 
     public class AESSuccessMock implements HttpCalloutMock {
 
-        public Integer attempts = 0;
-
         public HttpResponse respond(HttpRequest httpRequest) {
 
             if(httpRequest.getEndpoint().startsWith(OKTA_DOMAIN)) {
                 return makeOktaSuccess();
             }
-
-            if(httpRequest.getEndpoint().startsWith(FE_ENDPOINT)) {
-                return makeSimpleSuccess();
-            }
-
-            attempts++;
 
             String requestBody = httpRequest.getBody();
             System.debug(LoggingLevel.INFO, 'Request Body: ' + requestBody);
@@ -103,17 +93,6 @@ private class MW_AllocationEngineHandlerTest {
         HttpResponse res = new HttpResponse();
         res.setHeader('Content-Type', 'application/json');
         res.setBody('{"token_type":"Bearer","expires_in":3600,"access_token":"accesstokenvalue","scope":"HM"}');
-        res.setStatusCode(200);
-        return res;
-    }
-
-    /**
-     * @return success response
-     */
-    private static HttpResponse makeSimpleSuccess() {
-        HttpResponse res = new HttpResponse();
-        res.setHeader('Content-Type', 'application/json');
-        res.setBody('{"value":"success"}');
         res.setStatusCode(200);
         return res;
     }
@@ -225,33 +204,22 @@ private class MW_AllocationEngineHandlerTest {
 
     @TestSetup static void setup() {
 
-        CL_Document__c document = new CL_Document__c();
-        document.Doc1__c = 'Credit Score Notice';
-        document.Doc2__c = 'TIL Document';
-        document.Doc3__c = 'Adverse Action Notice';
-        insert document;
-
         MW_Settings__c mwSettings = new MW_Settings__c();
         mwSettings.Allocation_Engine_Deployment_Mode__c = 'DARK_MODE';
         mwSettings.Allocation_Engine_Service_URL_FMT__c = 'http://localhost:8080/{0}';
         mwSettings.Allocation_Engine_Cancel_Statuses__c = 'Declined,Expired,Withdrawn,Decline_Manual_Review,Expired-Withdrawn';
-        mwSettings.LEADS_FE_EndpointURL__c = FE_ENDPOINT;
         insert mwSettings;
 
         Account investor1 = MW_GlobalTestUtility.GetAccount('Investor');
-        investor1.loan__Collect_Service_Fees_on__c = 'No Fees';
         investor1.Investor_Code__c = 'FCU';
 
         Account investor2 = MW_GlobalTestUtility.GetAccount('Investor');
-        investor2.loan__Collect_Service_Fees_on__c = 'No Fees';
         investor2.Investor_Code__c = 'GCSU';
 
         Account member1 = MW_GlobalTestUtility.GetAccount('Member');
-        member1.loan__Collect_Service_Fees_on__c = 'No Fees';
         member1.ZIP_Code__c = '12345';
 
         Account member2 = MW_GlobalTestUtility.GetAccount('Member');
-        member2.loan__Collect_Service_Fees_on__c = 'No Fees';
         member2.ZIP_Code__c = '12346';
 
         insert new List<Account> {investor1, investor2, member1, member2};
@@ -259,7 +227,7 @@ private class MW_AllocationEngineHandlerTest {
         /* Used for most tests, but typical app wont have all this data */
         genesis__Applications__c app1 = MW_GlobalTestUtility.GetApplication();
         app1.genesis__Account__c = member1.Id;
-        app1.genesis__Status__c = PayoffConstants.OFFER_ACCEPTED;
+        app1.genesis__Status__c = MW_AllocationEngineHandler.ADVP;
         app1.Investor__c = investor1.Id;
         app1.Lead_ID__c = 'abc123';
         app1.genesis__APR__c = 7.00;
@@ -284,7 +252,7 @@ private class MW_AllocationEngineHandlerTest {
         /* fresh advp apps will look more like this */
         genesis__Applications__c app2 = MW_GlobalTestUtility.GetApplication();
         app2.genesis__Account__c = member2.Id;
-        app2.genesis__Status__c = PayoffConstants.OFFER_ACCEPTED;
+        app2.genesis__Status__c = MW_AllocationEngineHandler.ADVP;
         app2.Lead_ID__c = 'def456';
         app2.genesis__APR__c = 7.99;
         app2.genesis__Interest_Rate__c = 10.00;
@@ -699,35 +667,6 @@ private class MW_AllocationEngineHandlerTest {
         Test.stopTest();
 
         List<genesis__Applications__c> actual = getApps();
-        System.assertEquals(2, actual.size());
-        System.assertEquals(null, actual.get(0).Allocation_Operation_Error__c);
-        System.assertEquals(null, actual.get(1).Allocation_Operation_Error__c);
-
-        System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
-        System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
-    }
-
-    /**
-     * Test that request cache will prevent method from executing again.
-     */
-    @IsTest static void advp_handleTriggerBasedInvocation() {
-
-        System.debug('test transaction id: ' + Request.getCurrent().getRequestId());
-
-        List<genesis__Applications__c> apps = getApps();
-
-        AESSuccessMock aesSuccessMock = new AESSuccessMock();
-        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
-        Test.startTest();
-
-        MW_AllocationEngineHandler.handleAdvp(toIds(apps));
-        MW_AllocationEngineHandler.handleAdvp(toIds(apps));
-        MW_AllocationEngineHandler.handleAdvp(toIds(apps));
-
-        Test.stopTest();
-
-        List<genesis__Applications__c> actual = getApps();
-        System.assertEquals(2, aesSuccessMock.attempts);
         System.assertEquals(2, actual.size());
         System.assertEquals(null, actual.get(0).Allocation_Operation_Error__c);
         System.assertEquals(null, actual.get(1).Allocation_Operation_Error__c);
