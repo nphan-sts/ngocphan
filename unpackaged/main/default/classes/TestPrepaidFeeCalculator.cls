@@ -20,9 +20,9 @@ private class TestPrepaidFeeCalculator{
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
-        
+        system.debug('Fee Junction '+dummyFeeJunction);
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
-        
+        system.debug('Dummy Office'+dummyOffice);
         loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
         org.loan__Disable_Triggers__c = true;
         upsert org; 
@@ -37,12 +37,10 @@ private class TestPrepaidFeeCalculator{
                             loan__SOCIAL_SECURITY_NUMBER__c = '123456789'				//LSP-592
                             );
         	insert acc;
-        //System.assertEquals('Test',acc.Name,'Wrong Account');
         
         
         loan__Loan_Product__c loanProdObj = new loan__Loan_Product__c(name='TestProduct'); 
         insert loanProdObj;
-        //System.assertEquals('TestProduct', loanProdObj.Name,'Wrong Loan Product');
              
         //create loan account
         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
