@@ -1,5 +1,12 @@
+/* ****************Modification History******************
+ * Modified By        Date          JIRA number
+ *1. Bhanupriya		2022/03/03		LSP-557 (add comments,add required fileds,add test.start(),add teststop()and add assert statement)
+ ******************Modification History******************/
+
+
 @isTest
 public class IPTRescheduleJobTest {
+    //create testsetup()
 	@testSetup static void setup() {
         loan__Org_Parameters__c orgParam = new loan__Org_Parameters__c();
         orgParam.loan__Disable_Triggers__c=true;
@@ -21,7 +28,7 @@ public class IPTRescheduleJobTest {
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
-        
+        system.debug('Loan Dummy fee junction' +dummyFeeJunction);
         //Create Company...
         loan__Office_Name__c dummyCompany = new loan__Office_Name__c(Name='PayOff Inc.',
                                                     //loan__Office_Location__c = testLoc.ID,
@@ -59,13 +66,14 @@ public class IPTRescheduleJobTest {
    
         //Create Account
          Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            //Borrower_s_Last_Name__c='Testborrower',
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123456789'
-            );
-        insert acc;
+                                Name = 'Test',
+                                loan__Investor__c=False,
+                                //Borrower_s_Last_Name__c='Testborrower',
+                                cnotify__Email__c = 'abc@test.com',
+                                 peer__Last_Name__c = 'Test Last Name',		//LSP-557
+                                loan__SOCIAL_SECURITY_NUMBER__c = '123456789'
+                                );
+        	insert acc;
         
         LoanPaymentDays__c lpdays = new LoanPaymentDays__c();
         lpdays.AutoPaymentRemainder__c= 3;
@@ -89,6 +97,7 @@ public class IPTRescheduleJobTest {
         pr.clcommon__Product_Name__c = 'P1';
         insert pr;
        
+        //create dummy application
         genesis__applications__c application = new genesis__applications__c();
         application.genesis__Product_Type__c = 'Loan';
         application.genesis__Loan_Amount__c = 100000;
@@ -112,6 +121,7 @@ public class IPTRescheduleJobTest {
         application.genesis__CL_Product__c = pr.id;
         insert application;
         
+        //create dummy loan account
         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
                                           	loan__Account__c= acc.Id,
                                             loan__Product_Type__c=dummyLP.Id,
@@ -168,6 +178,7 @@ public class IPTRescheduleJobTest {
         lacc.loan__loan_status__c = 'active - good standing';
         insert lacc; 
         
+        //create Repayment Schedule 
         loan__Repayment_Schedule_Summary__c repaymentScheduleSummary = new loan__Repayment_Schedule_Summary__c();
         repaymentScheduleSummary.loan__RSS_No_Of_Pmts__c = 10;
         repaymentScheduleSummary.loan__Archived__c = false;
@@ -205,7 +216,7 @@ public class IPTRescheduleJobTest {
         insert loanRepaymentSchedule3;   
         
  }
-
+//test method 1
 	@isTest
     public static void testRunIPT(){    
         	List<loan__Loan_Account__c> loanIds = [Select Id,loan__Branch__r.loan__Current_System_Date__c from loan__Loan_Account__c];
@@ -213,7 +224,12 @@ public class IPTRescheduleJobTest {
             for(loan__Loan_Account__c loanId:loanIds){
                 idList.add(loanId.Id);
             }
+        
+        	test.startTest();
             IPTRescheduleJob.runIPTJob(idList);
+        	test.stopTest();
+        	system.assert([select id ,loan__Interest_Posted__c from loan__Loan_Account__c].size()>0);
+
     }
     
 }
