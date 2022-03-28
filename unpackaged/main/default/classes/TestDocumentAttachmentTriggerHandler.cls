@@ -1,19 +1,30 @@
+/* *************** Modification History**************
+* 
+*   Modified By          Date			Jira ID                  
+*   Bhanupriya           22/03/2022   	LSP-603(create setup method,add comments and assert statement)
+*
+* ****************Modification History******************/
+
 @isTest
 public class TestDocumentAttachmentTriggerHandler{
-   testmethod static void method1(){
-       //Creating Account
-         Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            //Borrower_s_Last_Name__c='Testborrower',
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-        insert acc;
-        System.assertEquals('Test',acc.Name,'Wrong Account');
+    
+    //create testsetup()
+    @testsetup()
+    public static void testsetup(){
         
-         //Creating Application
-        genesis__Applications__c app= new genesis__Applications__c(
+        //Creating Account
+         	Account acc = new Account(
+                                    Name = 'Test',
+                                    loan__Investor__c=False,
+                                    //Borrower_s_Last_Name__c='Testborrower',
+                                    cnotify__Email__c = 'abc@test.com',
+                                     peer__Last_Name__c = 'Test Last Name',				//LSP-603 required field
+                                    loan__SOCIAL_SECURITY_NUMBER__c = '123456789'		//LSP-603 must be 9 digit
+                                    );
+        	insert acc;
+        
+        //Creating Application
+        	genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
                                             genesis__Expected_First_Payment_Date__c = system.Today(),
                                             genesis__Expected_Start_Date__c = system.Today(),
@@ -25,8 +36,7 @@ public class TestDocumentAttachmentTriggerHandler{
                                             genesis__Status__c = 'agent_verified',
                                             genesis__Draw_Period_End_Date__c = system.Today()
                                             );
-        insert app;
-        System.assertEquals(null,app.Borrower_s_Email__c,'Borrower Email is not null');
+        	insert app;
         
         //Creating Document Sign Status
         dsfs__DocuSign_Status__c docSign = new dsfs__DocuSign_Status__c();
@@ -43,15 +53,29 @@ public class TestDocumentAttachmentTriggerHandler{
         att.Body = Blob.valueOf('Test Attachment');
         insert att;
         
+        //create application document
         genesis__Application_Document_Category__c appDoc = new genesis__Application_Document_Category__c();
         appDoc.genesis__Application__c=app.id;
         appDoc.Name='Promissory Note';
         insert appDoc;
         
+       
+    }
+    //test method for document
+   testmethod static void method1(){
+       
+       	dsfs__DocuSign_Status__c docSign = [select id,dsfs__Subject__c, dsfs__Company__c, Application__c, dsfs__Envelope_Status__c
+                                            from dsfs__DocuSign_Status__c];
+       
+       	genesis__Applications__c app = [select id , DocuSignFlag__c, genesis__Status__c
+                                        from genesis__Applications__c];
         Test.startTest();
         DocumentAttachmentTriggerHandler obj = new DocumentAttachmentTriggerHandler(true);
         DocumentAttachmentTriggerHandler.createDocumentCategory(docSign);
-        DocumentAttachmentTriggerHandler.createAppDocCategory(app.id);
+       	DocumentAttachmentTriggerHandler.createAppDocCategory(app.id);
         Test.stopTest();
+        system.debug('Document'+obj);
+       	system.assert([select id from Attachment].size()>=1);
+       	system.assert(docSign!=null);
     }
-}
+   }
