@@ -143,7 +143,7 @@ public class TestAutoSaleBatchAssignCntrl {
 	  Purpose: To test the logic when buyer account is blank */
     public static testMethod void testValidateBuyerandDate_BuyerBlank(){
         List<loan__loan_account__c> contractList = [SELECT id, Buyer__c, Effective_Date_for_AutoSale__c FROM loan__loan_account__c];
-        contractList[0].Effective_Date_for_AutoSale__c = Date.newInstance(2015, 02, 02);
+        contractList[0].Effective_Date_for_AutoSale__c = Date.newInstance(2015, 02, 03);
         update contractList[0];
         Test.startTest();
         ApexPages.StandardSetController stdSetController = new ApexPages.StandardSetController(contractList);
@@ -161,7 +161,7 @@ public class TestAutoSaleBatchAssignCntrl {
         Account buyerAcc = [SELECT id FROM Account WHERE peer__First_Name__c ='TestFName1'];
         List<loan__loan_account__c> contractList = [SELECT id, Buyer__c, Effective_Date_for_AutoSale__c FROM loan__loan_account__c];
         contractList[0].Buyer__c = buyerAcc.Id;        	
-        contractList[0].Effective_Date_for_AutoSale__c = Date.newInstance(2015, 02, 02);
+        contractList[0].Effective_Date_for_AutoSale__c = Date.newInstance(2015, 02, 04);
         update contractList[0];
         Test.startTest();
         ApexPages.StandardSetController stdSetController = new ApexPages.StandardSetController(contractList);
