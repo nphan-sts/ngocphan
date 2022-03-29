@@ -1,7 +1,7 @@
 /* *************** Modification History**************
 * 
 *   Modified By          Date			Jira ID                  
-*   Bhanupriya           21/03/2022   	LSP-628(add comments, remove deplicate method, Added asserts and Test.startTest and Test.stopTest)
+*   Bhanupriya           21/03/2022   	LSP-628(add comments, remove deplicate method, Added asserts and Test.startTest and Test.stopTest and remove code smells)
 *
 * ****************Modification History******************/
 
