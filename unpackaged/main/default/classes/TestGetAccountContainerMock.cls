@@ -3,7 +3,7 @@
 *   Shakul        15/3/2022          LSP-597 (Refactored Test Class)	
 ******************Modification History******************/
 public class TestGetAccountContainerMock implements HttpCalloutMock{
-
+    static final String CURLY_BRACKETCLOSE_CONST = '},';
     public HTTPResponse respond(HTTPRequest req) { 
              
         String json =  '{'+
@@ -17,7 +17,7 @@ public class TestGetAccountContainerMock implements HttpCalloutMock{
             '      "availableBalance": {'+
             '         "amount": 4699,'+
             '         "currencyAmount": "USD"'+
-            '      },'+
+            CURLY_BRACKETCLOSE_CONST+
             '      "accountType": "SAVINGS",'+
             '      "createdDate": "2016-08-25T09:16:32Z",'+
             '      "isAsset": true,'+
@@ -25,13 +25,13 @@ public class TestGetAccountContainerMock implements HttpCalloutMock{
             '      "balance": {'+
             '         "amount": 84699,'+
             '         "currencyAmount": "USD"'+
-            '      },'+
+            CURLY_BRACKETCLOSE_CONST+
             '      "providerId": 16441,'+
             '      "providerName": "Dag Site",'+
             '      "overDraftLimit": {'+
             '         "amount": 654,'+
             '         "currencyAmount": "INR"'+
-            '      },'+
+            CURLY_BRACKETCLOSE_CONST+
             '      "refreshinfo": {'+
             '         "statusCode": 0,'+
             '         "statusMessage": "OK",'+
