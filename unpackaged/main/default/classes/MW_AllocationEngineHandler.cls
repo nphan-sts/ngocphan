@@ -329,52 +329,41 @@ public with sharing class MW_AllocationEngineHandler {
         Map<Id, List<Allocation_Partner__c>> appIdPreviousPartners = groupAllocationPartnersByAppId(previousPartners);
         Map<Id, List<Allocation_Partner__c>> appIdToManualPartners = groupAllocationPartnersByAppId(manualPartners);
 
-        for (genesis__Applications__c app : getApplications(appIds, decisionLevel)) {
+        for (genesis__Applications__c app : getApplications(appIds)) {
             List<String> messages = new List<String>();
-            if (isAllocationDecisionLevel(decisionLevel)) {
-                validateNotNull(app, messages, new List<String>{
-                        'genesis__Status__c',
-                        'genesis__APR__c',
-                        'genesis__Interest_Rate__c',
-                        'Pricing_Tier__c',
-                        'genesis__Term__c',
-                        'FICO__c',
-                        'Monthly_DTI__c',
-                        'Net_Disposable_Income_NDI_Num__c',
-                        'genesis__Loan_Amount__c'
-                });
 
-                if (REALLOCATION == decisionLevel || MANUAL == decisionLevel) {
+            validateNotNull(app, messages, new List<String>{
+                    'genesis__Status__c',
+                    'genesis__APR__c',
+                    'genesis__Interest_Rate__c',
+                    'Pricing_Tier__c',
+                    'genesis__Term__c',
+                    'FICO__c',
+                    'Monthly_DTI__c',
+                    'Net_Disposable_Income_NDI_Num__c',
+                    'genesis__Loan_Amount__c'
+            });
 
-                    validateNotNull(app, messages, new List<String>{
-                            'Allocation_ID__c',
-                            'Expected_Yield__c',
-                            'Expected_Chargeoff__c',
-                            'Allocation_Timestamp__c'
-                    });
+            if (REALLOCATION == decisionLevel || MANUAL == decisionLevel) {
 
-                    List<Allocation_Partner__c> partners = appIdPreviousPartners.get(app.Id);
-                    if (partners == null || partners.size() == 0) {
-                        messages.add('No previously allocated partners were found');
-                    }
-
-                    if (MANUAL == decisionLevel) {
-                        List<Allocation_Partner__c> manuals = appIdToManualPartners.get(app.Id);
-                        if (manuals == null || manuals.size() == 0) {
-                            messages.add('No manually selected partners were found');
-                        }
-                    }
-                }
-
-            } else if (CANCELLED == decisionLevel) {
                 validateNotNull(app, messages, new List<String>{
                         'Allocation_ID__c',
-                        'genesis__Status__c'
+                        'Expected_Yield__c',
+                        'Expected_Chargeoff__c',
+                        'Allocation_Timestamp__c'
                 });
-            } else if (FINALIZED == decisionLevel) {
-                validateNotNull(app, messages, new List<String>{
-                        'Allocation_ID__c'
-                });
+
+                List<Allocation_Partner__c> partners = appIdPreviousPartners.get(app.Id);
+                if (partners == null || partners.size() == 0) {
+                    messages.add('No previously allocated partners were found');
+                }
+
+                if (MANUAL == decisionLevel) {
+                    List<Allocation_Partner__c> manuals = appIdToManualPartners.get(app.Id);
+                    if (manuals == null || manuals.size() == 0) {
+                        messages.add('No manually selected partners were found');
+                    }
+                }
             }
 
             if (messages.size() > 0) {
@@ -438,7 +427,7 @@ public with sharing class MW_AllocationEngineHandler {
         json.writeFieldName('allocation-requests');
         json.writeStartArray();
 
-        for (genesis__Applications__c app : getApplications(appIds, decisionLevel)) {
+        for (genesis__Applications__c app : getApplications(appIds)) {
 
             List<Allocation_Partner__c> appPartners = appIdPreviousPartners.get(app.Id);
 
@@ -447,59 +436,53 @@ public with sharing class MW_AllocationEngineHandler {
             json.writeStringField('leadGuid', app.Lead_ID__c);
             json.writeDateTimeField('timestamp', Datetime.now());
 
-            if (isAllocationDecisionLevel(decisionLevel)) {
+            json.writeStringField('lendingState', app.genesis__Status__c);
+            json.writeNumberField('APR', app.genesis__APR__c);
+            json.writeNumberField('interestRate', app.genesis__Interest_Rate__c);
+            json.writeStringField('tier', app.Pricing_Tier__c);
+            json.writeNumberField('term', app.genesis__Term__c);
+            json.writeNumberField('FICO', app.FICO__c);
+            json.writeNumberField('debtToIncome', app.Monthly_DTI__c);
+            json.writeNumberField('netDisposableIncome', app.Net_Disposable_Income_NDI_Num__c);
+            json.writeStringField('zipCode', app.genesis__Account__r.ZIP_Code__c);
 
-                json.writeStringField('lendingState', app.genesis__Status__c);
-                json.writeNumberField('APR', app.genesis__APR__c);
-                json.writeNumberField('interestRate', app.genesis__Interest_Rate__c);
-                json.writeStringField('tier', app.Pricing_Tier__c);
-                json.writeNumberField('term', app.genesis__Term__c);
-                json.writeNumberField('FICO', app.FICO__c);
-                json.writeNumberField('debtToIncome', app.Monthly_DTI__c);
-                json.writeNumberField('netDisposableIncome', app.Net_Disposable_Income_NDI_Num__c);
-                json.writeStringField('zipCode', app.genesis__Account__r.ZIP_Code__c);
+            writeNullableString(json, 'loanPurpose', app.Loan_Purpose__c);
+            writeApprovalModels(json, 'approvalModels', app);
+            writeChannel(json, 'channel', app);
+            json.writeNumberField('loanAmount', app.genesis__Loan_Amount__c);
 
-                writeNullableString(json, 'loanPurpose', app.Loan_Purpose__c);
-                writeApprovalModels(json, 'approvalModels', app);
+            /* these two decision levels will only occur after full mode is live,
+            *  so all these fields should be populated and be safely written not null */
+            if (REALLOCATION == decisionLevel || MANUAL == decisionLevel) {
 
-                if (REALLOCATION == decisionLevel || MANUAL == decisionLevel) {
+                json.writeStringField('allocationId', app.Allocation_ID__c);
+                json.writeNumberField('expectedYield', app.Expected_Yield__c);
+                json.writeNumberField('expectedChargeoff', app.Expected_Chargeoff__c);
+                json.writeDateTimeField('previousTimestamp', app.Allocation_Timestamp__c);
 
-                    json.writeStringField('allocationId', app.Allocation_ID__c);
-                    json.writeNumberField('expectedYield', app.Expected_Yield__c);
-                    json.writeNumberField('expectedChargeoff', app.Expected_Chargeoff__c);
-                    json.writeDateTimeField('previousTimestamp', app.Allocation_Timestamp__c);
+                writePartnerArray(json, 'previousInvestor', appPartners);
 
-                    writePartnerArray(json, 'previousInvestor', appPartners);
+                if (MANUAL == decisionLevel) {
 
-                    if (MANUAL == decisionLevel) {
-
-                        List<Allocation_Partner__c> manuals = appIdToManualPartners.get(app.Id);
-                        writePartnerArray(json, 'manualInvestor', manuals);
-                    }
+                    List<Allocation_Partner__c> manuals = appIdToManualPartners.get(app.Id);
+                    writePartnerArray(json, 'manualInvestor', manuals);
                 }
-
-                json.writeFieldName('channel');
-                json.writeStartObject();
-
-                writeNullableString(json, 'utmMedium', app.utm_medium__c);
-                writeNullableString(json, 'utmSource', app.utm_source__c);
-                writeNullableString(json, 'utmCampaign', app.utm_campaign__c);
-                writeNullableString(json, 'lastTouchUtmChannelGrouping', app.utm_content__c);
-
-                json.writeEndObject();
-                json.writeNumberField('loanAmount', app.genesis__Loan_Amount__c);
-
-            } else if (decisionLevel == CANCELLED) {
-
-                writeNullableString(json, 'allocationId', app.Allocation_ID__c);
-                writePartnerArrayWithInvestorFallback(json, 'previousInvestor', app, appPartners);
-                json.writeStringField('reason', app.genesis__Status__c);
-
-            } else if (decisionLevel == FINALIZED) {
-
-                writeNullableString(json, 'allocationId', app.Allocation_ID__c);
-                writePartnerArrayWithInvestorFallback(json, 'previousInvestor', app, appPartners);
             }
+
+            /* these decision levels can occur for dark more or in-flight apps so allow nullables
+            * For full mode cancel or final, all these values should be populated */
+            if (CANCELLED == decisionLevel || FINALIZED == decisionLevel) {
+
+                writeNullableString(json, 'allocationId', app.Allocation_ID__c);
+                writeNullableNumber(json, 'expectedYield', app.Expected_Yield__c);
+                writeNullableNumber(json, 'expectedChargeoff', app.Expected_Chargeoff__c);
+                writeNullableDatetime(json, 'previousTimestamp', app.Allocation_Timestamp__c);
+                writePartnerArrayWithInvestorFallback(json, 'previousInvestor', app, appPartners);
+                if (CANCELLED == decisionLevel) {
+                    json.writeStringField('reason', app.genesis__Status__c);
+                }
+            }
+
             json.writeEndObject();
         }
 
@@ -507,6 +490,18 @@ public with sharing class MW_AllocationEngineHandler {
         json.writeEndObject();
 
         return json.getAsString();
+    }
+
+    private static void writeChannel(JSONGenerator json, String fieldName, genesis__Applications__c app) {
+        json.writeFieldName(fieldName);
+        json.writeStartObject();
+
+        writeNullableString(json, 'utmMedium', app.utm_medium__c);
+        writeNullableString(json, 'utmSource', app.utm_source__c);
+        writeNullableString(json, 'utmCampaign', app.utm_campaign__c);
+        writeNullableString(json, 'lastTouchUtmChannelGrouping', app.utm_content__c);
+
+        json.writeEndObject();
     }
 
     /**
@@ -598,6 +593,22 @@ public with sharing class MW_AllocationEngineHandler {
         }
     }
 
+    private static void writeNullableDatetime(JSONGenerator json, String fieldName, Datetime value) {
+        if (value == null) {
+            json.writeNullField(fieldName);
+        } else {
+            json.writeDateTimeField(fieldName, value);
+        }
+    }
+
+    private static void writeNullableNumber(JSONGenerator json, String fieldName, Decimal value) {
+        if (value == null) {
+            json.writeNullField(fieldName);
+        } else {
+            json.writeNumberField(fieldName, value);
+        }
+    }
+
     private static void writeNullableString(JSONGenerator json, String fieldName, String value) {
         if (value == null) {
             json.writeNullField(fieldName);
@@ -680,10 +691,9 @@ public with sharing class MW_AllocationEngineHandler {
                 WHERE   Id IN :appIds];
     }
 
-    private static List<genesis__Applications__c> getApplications(List<Id> appIds, String decisionLevel) {
+    private static List<genesis__Applications__c> getApplications(List<Id> appIds) {
 
-        return isAllocationDecisionLevel(decisionLevel) ?
-                [SELECT Id,
+        return [SELECT Id,
                         genesis__Status__c,
                         genesis__APR__c,
                         genesis__Interest_Rate__c,
@@ -709,14 +719,6 @@ public with sharing class MW_AllocationEngineHandler {
                         Allocation_ID__c,
                         Allocation_Timestamp__c
                  FROM    genesis__Applications__c
-                 WHERE   Id IN :appIds] :
-                [SELECT Id,
-                        Lead_ID__c,
-                        Allocation_ID__c,
-                        Investor__c,
-                        Investor__r.Investor_Code__c,
-                        genesis__Status__c
-                 FROM   genesis__Applications__c
                  WHERE   Id IN :appIds];
     }
 
