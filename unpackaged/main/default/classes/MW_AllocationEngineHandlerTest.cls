@@ -211,15 +211,19 @@ private class MW_AllocationEngineHandlerTest {
         insert mwSettings;
 
         Account investor1 = MW_GlobalTestUtility.GetAccount('Investor');
+        investor1.loan__Collect_Service_Fees_on__c = 'No Fees';
         investor1.Investor_Code__c = 'FCU';
 
         Account investor2 = MW_GlobalTestUtility.GetAccount('Investor');
+        investor2.loan__Collect_Service_Fees_on__c = 'No Fees';
         investor2.Investor_Code__c = 'GCSU';
 
         Account member1 = MW_GlobalTestUtility.GetAccount('Member');
+        member1.loan__Collect_Service_Fees_on__c = 'No Fees';
         member1.ZIP_Code__c = '12345';
 
         Account member2 = MW_GlobalTestUtility.GetAccount('Member');
+        member2.loan__Collect_Service_Fees_on__c = 'No Fees';
         member2.ZIP_Code__c = '12346';
 
         insert new List<Account> {investor1, investor2, member1, member2};
@@ -1039,9 +1043,9 @@ private class MW_AllocationEngineHandlerTest {
                 null,
                 MW_AllocationEngineHandler.CANCELLED);
 
-        Jsons actual = parseJsons(actualJson);
-        System.debug('Cancel json: ' + actualJson);
+        System.debug('cancel json: ' + actualJson);
 
+        Jsons actual = parseJsons(actualJson);
         assertTopLevelFields(actual);
 
         actual = actual.key('allocation-requests').index(0);
@@ -1068,8 +1072,9 @@ private class MW_AllocationEngineHandlerTest {
                 null,
                 MW_AllocationEngineHandler.CANCELLED);
 
+        System.debug('in-flight w/ investor cancel json: ' + actualJson);
+
         Jsons actual = parseJsons(actualJson);
-        System.debug('Cancel json: ' + actualJson);
         assertTopLevelFields(actual);
 
         actual = actual.key('allocation-requests')
@@ -1090,8 +1095,9 @@ private class MW_AllocationEngineHandlerTest {
                 null,
                 MW_AllocationEngineHandler.CANCELLED);
 
+        System.debug('in-flight w/o investor cancel json:' + actualJson);
+
         actual = parseJsons(actualJson);
-        System.debug('Cancel json: ' + actualJson);
         assertTopLevelFields(actual);
 
         actual = actual.key('allocation-requests')
@@ -1104,7 +1110,6 @@ private class MW_AllocationEngineHandlerTest {
     @IsTest static void cancelled_handlesValidationFailures() {
 
         genesis__Applications__c app = getApp();
-        app.Allocation_ID__c = null;
         app.genesis__Status__c = null;
         update app;
 
@@ -1128,7 +1133,6 @@ private class MW_AllocationEngineHandlerTest {
 
         System.assert(log.clcommon__Message__c.contains('Can not execute operation: cancel for Lead Id: abc123'));
         System.assert(log.clcommon__Message__c.contains('Field: genesis__Status__c cannot be null'));
-        System.assert(log.clcommon__Message__c.contains('Field: Allocation_ID__c cannot be null'));
     }
 
     @IsTest static void cancelled_handlesCalloutExceptionErrors() {
@@ -1232,6 +1236,8 @@ private class MW_AllocationEngineHandlerTest {
                 null,
                 MW_AllocationEngineHandler.FINALIZED);
 
+        System.debug('final json: ' + actualJson);
+
         Jsons actual = parseJsons(actualJson);
         assertTopLevelFields(actual);
 
@@ -1239,31 +1245,6 @@ private class MW_AllocationEngineHandlerTest {
         assertCommonRequestFields(app, actual);
 
         System.assertEquals(app.Allocation_ID__c, actual.get('allocationId'));
-    }
-
-    @IsTest static void final_handlesValidationFailures() {
-
-        /* should not produce an error, just return */
-        MW_AllocationEngineHandler.handleFinal(null);
-
-        /* trigger validation failure */
-        MW_AllocationEngineHandler.handleFinal(toIds(getNewAppAsList()));
-
-        genesis__Applications__c actual = getNewApp();
-        System.assertEquals(MW_AllocationEngineHandler.FINALIZED, actual.Allocation_Operation_Error__c);
-
-        List<clcommon__Batch_Process_Log__c> logs = getCommonLogs();
-        System.assertEquals(1, logs.size());
-
-        Map<Id, clcommon__Batch_Process_Log__c> logById = logsByBatchId(logs);
-        clcommon__Batch_Process_Log__c log = logById.get(actual.Id);
-
-        System.assertEquals('INFO', log.clcommon__Log_Level__c);
-        System.assertEquals('Info', log.clcommon__Type__c);
-        System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
-
-        System.assert(log.clcommon__Message__c.contains('Can not execute operation: final for Lead Id: def456'));
-        System.assert(log.clcommon__Message__c.contains('Field: Allocation_ID__c cannot be null'));
     }
 
     @IsTest static void final_handlesCalloutExceptionErrors() {
