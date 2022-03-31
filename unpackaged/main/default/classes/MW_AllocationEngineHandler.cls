@@ -436,7 +436,7 @@ public with sharing class MW_AllocationEngineHandler {
             json.writeStringField('leadGuid', app.Lead_ID__c);
             json.writeDateTimeField('timestamp', Datetime.now());
 
-            json.writeStringField('lendingState', app.genesis__Status__c);
+            json.writeStringField('lendingState', app.genesis__Account__r.State__c);
             json.writeNumberField('APR', app.genesis__APR__c);
             json.writeNumberField('interestRate', app.genesis__Interest_Rate__c);
             json.writeStringField('tier', app.Pricing_Tier__c);
@@ -708,6 +708,7 @@ public with sharing class MW_AllocationEngineHandler {
                         utm_content__c,
                         Lead_ID__c,
                         genesis__Loan_Amount__c,
+                        genesis__Account__r.State__c,
                         genesis__Account__r.ZIP_Code__c,
                         Loan_Purpose__c,
                         Investor__c,

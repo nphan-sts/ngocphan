@@ -219,12 +219,14 @@ private class MW_AllocationEngineHandlerTest {
         investor2.Investor_Code__c = 'GCSU';
 
         Account member1 = MW_GlobalTestUtility.GetAccount('Member');
+        member1.State__c = 'CA';
         member1.loan__Collect_Service_Fees_on__c = 'No Fees';
-        member1.ZIP_Code__c = '12345';
+        member1.ZIP_Code__c = '92782';
 
         Account member2 = MW_GlobalTestUtility.GetAccount('Member');
+        member2.State__c = 'VA';
         member2.loan__Collect_Service_Fees_on__c = 'No Fees';
-        member2.ZIP_Code__c = '12346';
+        member2.ZIP_Code__c = '92782';
 
         insert new List<Account> {investor1, investor2, member1, member2};
 
@@ -1424,7 +1426,7 @@ private class MW_AllocationEngineHandlerTest {
 
         List<String> expectedApprovalModels = approvalModels == null ? null : new List<String> {approvalModels};
 
-        System.assertEquals(expected.genesis__Status__c, actual.get('lendingState'));
+        System.assertEquals(expected.genesis__Account__r.State__c, actual.get('lendingState'));
         System.assertEquals(expected.genesis__APR__c, actual.getDecimal('APR'));
         System.assertEquals(expected.genesis__Interest_Rate__c, actual.getDecimal('interestRate'));
         System.assertEquals(expected.Pricing_Tier__c, actual.get('tier'));
@@ -1535,6 +1537,7 @@ private class MW_AllocationEngineHandlerTest {
                         Lead_ID__c,
                         genesis__Loan_Amount__c,
                         genesis__Account__c,
+                        genesis__Account__r.State__c,
                         genesis__Account__r.ZIP_Code__c,
                         Loan_Purpose__c,
                         Investor__c,
