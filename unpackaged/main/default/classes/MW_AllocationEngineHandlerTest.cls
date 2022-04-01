@@ -546,7 +546,6 @@ private class MW_AllocationEngineHandlerTest {
         System.assert(log.clcommon__Message__c.contains('Field: genesis__Status__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: genesis__APR__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: genesis__Interest_Rate__c cannot be null'));
-        System.assert(log.clcommon__Message__c.contains('Field: Pricing_Tier__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: genesis__Term__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: FICO__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Monthly_DTI__c cannot be null'));

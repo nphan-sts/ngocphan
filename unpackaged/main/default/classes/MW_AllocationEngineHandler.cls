@@ -336,7 +336,6 @@ public with sharing class MW_AllocationEngineHandler {
                     'genesis__Status__c',
                     'genesis__APR__c',
                     'genesis__Interest_Rate__c',
-                    'Pricing_Tier__c',
                     'genesis__Term__c',
                     'FICO__c',
                     'Monthly_DTI__c',
