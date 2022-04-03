@@ -334,33 +334,39 @@ public with sharing class MW_AllocationEngineHandler {
 
             validateNotNull(app, messages, new List<String>{
                     'genesis__Status__c',
-                    'genesis__APR__c',
                     'genesis__Interest_Rate__c',
                     'genesis__Term__c',
-                    'FICO__c',
-                    'Monthly_DTI__c',
-                    'Net_Disposable_Income_NDI_Num__c',
                     'genesis__Loan_Amount__c'
             });
 
-            if (REALLOCATION == decisionLevel || MANUAL == decisionLevel) {
+            if (ADVP == decisionLevel || REALLOCATION == decisionLevel || MANUAL == decisionLevel || FINALIZED == decisionLevel) {
 
                 validateNotNull(app, messages, new List<String>{
-                        'Allocation_ID__c',
-                        'Expected_Yield__c',
-                        'Expected_Chargeoff__c',
-                        'Allocation_Timestamp__c'
+                        'genesis__APR__c',
+                        'FICO__c',
+                        'Monthly_DTI__c',
+                        'Net_Disposable_Income_NDI_Num__c'
                 });
 
-                List<Allocation_Partner__c> partners = appIdPreviousPartners.get(app.Id);
-                if (partners == null || partners.size() == 0) {
-                    messages.add('No previously allocated partners were found');
-                }
+                if (REALLOCATION == decisionLevel || MANUAL == decisionLevel) {
 
-                if (MANUAL == decisionLevel) {
-                    List<Allocation_Partner__c> manuals = appIdToManualPartners.get(app.Id);
-                    if (manuals == null || manuals.size() == 0) {
-                        messages.add('No manually selected partners were found');
+                    validateNotNull(app, messages, new List<String>{
+                            'Allocation_ID__c',
+                            'Expected_Yield__c',
+                            'Expected_Chargeoff__c',
+                            'Allocation_Timestamp__c'
+                    });
+
+                    List<Allocation_Partner__c> partners = appIdPreviousPartners.get(app.Id);
+                    if (partners == null || partners.size() == 0) {
+                        messages.add('No previously allocated partners were found');
+                    }
+
+                    if (MANUAL == decisionLevel) {
+                        List<Allocation_Partner__c> manuals = appIdToManualPartners.get(app.Id);
+                        if (manuals == null || manuals.size() == 0) {
+                            messages.add('No manually selected partners were found');
+                        }
                     }
                 }
             }
@@ -436,13 +442,13 @@ public with sharing class MW_AllocationEngineHandler {
             json.writeDateTimeField('timestamp', Datetime.now());
 
             json.writeStringField('lendingState', app.genesis__Account__r.State__c);
-            json.writeNumberField('APR', app.genesis__APR__c);
+            writeNullableNumber(json, 'APR', app.genesis__APR__c);
             json.writeNumberField('interestRate', app.genesis__Interest_Rate__c);
-            json.writeStringField('tier', app.Pricing_Tier__c);
+            writeNullableString(json, 'tier', app.Pricing_Tier__c);
             json.writeNumberField('term', app.genesis__Term__c);
-            json.writeNumberField('FICO', app.FICO__c);
-            json.writeNumberField('debtToIncome', app.Monthly_DTI__c);
-            json.writeNumberField('netDisposableIncome', app.Net_Disposable_Income_NDI_Num__c);
+            writeNullableNumber(json, 'FICO', app.FICO__c);
+            writeNullableNumber(json, 'debtToIncome', app.Monthly_DTI__c);
+            writeNullableNumber(json, 'netDisposableIncome', app.Net_Disposable_Income_NDI_Num__c);
             json.writeStringField('zipCode', app.genesis__Account__r.ZIP_Code__c);
 
             writeNullableString(json, 'loanPurpose', app.Loan_Purpose__c);
@@ -902,6 +908,8 @@ public with sharing class MW_AllocationEngineHandler {
         bpl.loan__Message__c = msg;
         bpl.loan__Type__c = 'Exception';
         bpl.loan__Time__c = Datetime.now();
+
+        System.debug('inserting loan__Batch_Process_Log__c: ' + bpl);
         insert bpl;
     }
 
@@ -940,6 +948,8 @@ public with sharing class MW_AllocationEngineHandler {
             bpl.clcommon__Batch_Id__c = appId;
             bpl.clcommon__Message__c = msg;
             logs.add(bpl);
+
+            System.debug('added to insert clcommon__Batch_Process_Log__c: ' + bpl);
         }
 
         insert logs;
@@ -961,6 +971,8 @@ public with sharing class MW_AllocationEngineHandler {
             bpl.clcommon__Batch_Id__c = appId;
             bpl.clcommon__Message__c = msg;
             logs.add(bpl);
+
+            System.debug('added to insert clcommon__Batch_Process_Log__c: ' + bpl);
         }
 
         insert logs;
@@ -991,6 +1003,9 @@ public with sharing class MW_AllocationEngineHandler {
         bpl.clcommon__Type__c = 'Info';
         bpl.clcommon__Batch_Id__c = app.Id;
         bpl.clcommon__Message__c = msg;
+
+        System.debug('added to insert clcommon__Batch_Process_Log__c: ' + bpl);
+
         return bpl;
     }
 
