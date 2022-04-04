@@ -41,7 +41,11 @@ global class ApplicationToContractConverter implements ints.IProcessContract{
         if(!validateResult.equalsIgnoreCase('SUCCESS')){
             return validateResult;
         }
-        
+
+        if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
+            MW_AllocationEngineHandler.handleFinal(new List<Id> {application.Id});
+        }
+
         Savepoint spDML = Database.setSavepoint();
         
         try{
@@ -254,10 +258,6 @@ global class ApplicationToContractConverter implements ints.IProcessContract{
             loan.InvestorAPI api = loan.APIFactory.getInvestorAPI();
             api.createInvestmentOrders(ios);
 
-            if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
-                MW_AllocationEngineHandler.handleFinal(new List<Id> {application.Id});
-            }
-            
             return 'Application converted to Loan successfully!!';        
             
         }catch(Exception e){

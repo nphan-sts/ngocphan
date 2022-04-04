@@ -6,7 +6,8 @@
  * Also, it typically logs cl common logs for application specific or ui reasons
  * Finally, use the log utility for non error scenarios
  *
- * Can invoke synchronously as well, in order to be invoked from Batch jobs
+ * If the handler detects it is already in a future or a batch or queueable, it invokes synchronously
+ * The Future/Batch/Queuable must allow callouts!
  *
  * Futures documentation
  * https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_async_overview.htm
@@ -163,26 +164,27 @@ public with sharing class MW_AllocationEngineHandler {
      * @param appIds The list of app ids to consider
      * @param manualPartnerIds The list of allocation partners
      * @param decisionLevel The allocation type to send
-     * @param useFuture Whether to execute in future or not
      */
-    private static void handle(List<Id> appIds, List<Id> manualPartnerIds, String decisionLevel, Boolean useFuture) {
+    private static void handle(List<Id> appIds, List<Id> manualPartnerIds, String decisionLevel) {
 
         final String logMethodName = 'handle';
 
-        if (appIds == null || appIds.isEmpty()) {
-            MW_LogUtility.warnMessage(LOG_NAME, logMethodName, 'Allocation Engine Handler called with null or 0 app ids');
-            return;
-        }
-
-        if (!DECISION_LEVELS.contains(decisionLevel)) {
-            handleInvalidDecisionLevel(logMethodName, appIds, decisionLevel);
-            return;
-        }
-
         List<Id> validAppIds;
+
         String json;
 
         try {
+
+            if (appIds == null || appIds.isEmpty()) {
+                MW_LogUtility.warnMessage(LOG_NAME, logMethodName, 'Allocation Engine Handler called with null or 0 app ids');
+                return;
+            }
+
+            if (!DECISION_LEVELS.contains(decisionLevel)) {
+                handleInvalidDecisionLevel(logMethodName, appIds, decisionLevel);
+                return;
+            }
+
             validAppIds = validateAndLogApps(appIds, manualPartnerIds, decisionLevel);
             if (validAppIds.isEmpty()) {
                 return;
@@ -191,6 +193,22 @@ public with sharing class MW_AllocationEngineHandler {
             System.debug(': ' + validAppIds);
 
             json = toJson(validAppIds, manualPartnerIds, decisionLevel);
+
+            /*
+            Futures are disallowed inside some other async Apex constructs
+            Attempt to execute synchronously if the handler detects async context.
+            Considering moving this functionality to a platform event to avoid these headaches.
+            Triggers and System.isScheduled must be executed via the future
+             */
+            Boolean useSync = System.isBatch() || System.isQueueable() || System.isFuture();
+            List<Boolean> params = new List<Boolean>{ useSync, System.isBatch(), System.isQueueable(), System.isFuture() };
+            System.debug(String.format('useSync: {0}, batch: {1}, queueable: {2}, future: {3}', params));
+
+            if (useSync) {
+                callAllocationEngineService(validAppIds, json, decisionLevel);
+            } else {
+                callAllocationEngineServiceFuture(validAppIds, json, decisionLevel);
+            }
 
         } catch (Exception e) {
 
@@ -203,16 +221,6 @@ public with sharing class MW_AllocationEngineHandler {
             handleExceptionHandler(logMethodName, logIds, decisionLevel, e);
             return;
         }
-
-        if (useFuture) {
-            callAllocationEngineServiceFuture(validAppIds, json, decisionLevel);
-        } else {
-            callAllocationEngineService(validAppIds, json, decisionLevel);
-        }
-    }
-
-    private static void handle(List<Id> appIds, List<Id> manualPartnerIds, String decisionLevel) {
-        handle(appIds, manualPartnerIds, decisionLevel, true);
     }
 
     /**
@@ -286,23 +294,30 @@ public with sharing class MW_AllocationEngineHandler {
      */
     @TestVisible
     private static void handleExceptionHandler(String logMethodName, List<Id> appIds, String decisionLevel, Exception e) {
-        updateOperationError(appIds, decisionLevel);
 
-        String message = LOG_NAME + ': Failed JSON request generation';
-        String leadIds = toLeadIdsStr(appIds);
-        String error = exceptionToStr(e);
+        try {
+            updateOperationError(appIds, decisionLevel);
 
-        String logMsg = String.format('{0}: Exception on lead guids: {1}, during decision level: {2}, caused by: {3}',
-                new List<String> {message, leadIds, decisionLevel, error});
-        insertLoanBatchProcessLog(logMsg);
+            String message = LOG_NAME + ': Failed JSON request generation';
+            String leadIds = toLeadIdsStr(appIds);
+            String error = exceptionToStr(e);
 
-        Map<String, String> msg = new Map<String, String>{
-                'decisionLevel' => decisionLevel,
-                'message' => message,
-                'leadIds' => leadIds,
-                'error' => error
-        };
-        MW_LogUtility.errorMessage(LOG_NAME, logMethodName, msg);
+            String logMsg = String.format('{0}: Exception on lead guids: {1}, during decision level: {2}, caused by: {3}',
+                    new List<String> {message, leadIds, decisionLevel, error});
+            insertLoanBatchProcessLog(logMsg);
+
+            Map<String, String> msg = new Map<String, String>{
+                    'decisionLevel' => decisionLevel,
+                    'message' => message,
+                    'leadIds' => leadIds,
+                    'error' => error
+            };
+            MW_LogUtility.errorMessage(LOG_NAME, logMethodName, msg);
+
+        } catch (Exception recoveryException) {
+            System.debug('Unable to recover from original exception: ' + exceptionToStr(e));
+            System.debug('Recovery exception: ' + exceptionToStr(recoveryException));
+        }
     }
 
     /**
@@ -634,9 +649,10 @@ public with sharing class MW_AllocationEngineHandler {
 
         final String logMethodName = 'callAllocationEngineService';
         List<String> leadIds = toLeadIds(appIds);
+        String leadIdStr = toLeadIdsStr(appIds);
         Map<String, Object> msg = new Map<String, Object>{
                 'decisionLevel' => decisionLevel,
-                'leadIds' => toLeadIdsStr(appIds),
+                'leadIds' => leadIdStr,
                 'requestBody' => json
         };
 
@@ -669,7 +685,7 @@ public with sharing class MW_AllocationEngineHandler {
                   3. It will note any errors, non allocations in cl errors logs
                  */
                 updateOperationError(appIds, null);
-                msg.put('message', '2xx response code, allocations handled by AES');
+                msg.put('message', 'AES 2xx response code, for ' + decisionLevel + ': ' + leadIdStr);
                 MW_LogUtility.infoMessage(LOG_NAME, logMethodName, msg);
             }
 
