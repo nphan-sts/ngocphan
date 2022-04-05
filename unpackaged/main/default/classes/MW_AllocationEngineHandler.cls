@@ -109,40 +109,66 @@ public with sharing class MW_AllocationEngineHandler {
     }
 
     public static void handleAdvp(List<Id> appIds) {
-        /* app somehow has is back at advp, reallocate */
+        if (appIds == null || appIds.isEmpty()) {
+            System.debug('handleAdvp: ' + appIds);
+            return;
+        }
+
         List<Id> hasAllocationIds = filterByAllocationIds(appIds, true);
         if (!hasAllocationIds.isEmpty()) {
             handle(hasAllocationIds, null, REALLOCATION);
         }
 
-        handle(appIds, null, ADVP);
+        if (!appIds.isEmpty()) {
+            handle(appIds, null, ADVP);
+        }
     }
 
     public static void handleReallocation(List<Id> appIds) {
-        /* app is asked to rellocate, but no allocation id is present */
+        if (appIds == null || appIds.isEmpty()) {
+            System.debug('handleReallocation: ' + appIds);
+            return;
+        }
+
         List<Id> noAllocationIds = filterByAllocationIds(appIds, false);
         if (!noAllocationIds.isEmpty()) {
             handle(noAllocationIds, null, ADVP);
         }
 
-        handle(appIds, null, REALLOCATION);
+        if (!appIds.isEmpty()) {
+            handle(appIds, null, REALLOCATION);
+        }
     }
 
     public static void handleManual(List<Id> appIds, List<Id> manualPartnerIds) {
-        /* app is asked to rellocate, but no allocation id is present */
+        if (appIds == null || appIds.isEmpty() || manualPartnerIds == null || manualPartnerIds.isEmpty()) {
+            System.debug('handleManual: appIds:' + appIds + ', manualPartnerIds:' + manualPartnerIds);
+            return;
+        }
+
         List<Id> noAllocationIds = filterByAllocationIds(appIds, false);
         if (!noAllocationIds.isEmpty()) {
             handle(noAllocationIds, null, ADVP);
         }
 
-        handle(appIds, manualPartnerIds, MANUAL);
+        if (!appIds.isEmpty()) {
+            handle(appIds, manualPartnerIds, MANUAL);
+        }
     }
 
     public static void handleCancelled(List<Id> appIds) {
+        if (appIds == null || appIds.isEmpty()) {
+            System.debug('handleCancelled: ' + appIds);
+            return;
+        }
         handle(appIds, null, CANCELLED);
     }
 
     public static void handleFinal(List<Id> appIds) {
+        if (appIds == null || appIds.isEmpty()) {
+            System.debug('handleFinal: ' + appIds);
+            return;
+        }
         handle(appIds, null, FINALIZED);
     }
 
