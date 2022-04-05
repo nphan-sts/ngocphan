@@ -41,7 +41,7 @@ global class ApplicationToContractConverter implements ints.IProcessContract{
         if(!validateResult.equalsIgnoreCase('SUCCESS')){
             return validateResult;
         }
-        
+
         Savepoint spDML = Database.setSavepoint();
         
         try{
@@ -236,8 +236,8 @@ global class ApplicationToContractConverter implements ints.IProcessContract{
             application.OwnerId = fundedQue.Queue.Id;
             update application;
             update lAccount;
-            
-            
+
+
             //Create Investment order.
             Account investor=[SELECT id,loan__Collect_Service_Fees_on__c,Funding_Partner__c,loan__Service_Rate_On_Investment__c 
                               FROM Account 
@@ -254,7 +254,7 @@ global class ApplicationToContractConverter implements ints.IProcessContract{
             ios.add(inv); 
             loan.InvestorAPI api = loan.APIFactory.getInvestorAPI();
             api.createInvestmentOrders(ios);
-            
+
             return 'Application converted to Loan successfully!!';        
             
         }catch(Exception e){
