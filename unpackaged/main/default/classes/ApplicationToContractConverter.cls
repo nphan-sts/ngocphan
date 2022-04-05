@@ -42,10 +42,6 @@ global class ApplicationToContractConverter implements ints.IProcessContract{
             return validateResult;
         }
 
-        if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
-            MW_AllocationEngineHandler.handleFinal(new List<Id> {application.Id});
-        }
-
         Savepoint spDML = Database.setSavepoint();
         
         try{
@@ -240,6 +236,7 @@ global class ApplicationToContractConverter implements ints.IProcessContract{
             application.OwnerId = fundedQue.Queue.Id;
             update application;
             update lAccount;
+
 
             //Create Investment order.
             Account investor=[SELECT id,loan__Collect_Service_Fees_on__c,Funding_Partner__c,loan__Service_Rate_On_Investment__c 
