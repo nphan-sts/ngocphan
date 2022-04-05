@@ -697,6 +697,8 @@ private class MW_AllocationEngineHandlerTest {
         Test.setMock(HttpCalloutMock.class, aesSuccessMock);
         Test.startTest();
 
+        MW_AllocationEngineHandler.handleAdvp(null);
+
         MW_AllocationEngineHandler.handleAdvp(toIds(apps));
 
         Test.stopTest();
@@ -927,6 +929,8 @@ private class MW_AllocationEngineHandlerTest {
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
 
+        MW_AllocationEngineHandler.handleReallocation(null);
+
         MW_AllocationEngineHandler.handleReallocation(toIds(apps));
 
         Test.stopTest();
@@ -978,7 +982,7 @@ private class MW_AllocationEngineHandlerTest {
         newApp.Allocation_ID__c = '123';
         update newApp;
 
-        MW_AllocationEngineHandler.handleManual(toIds(getNewAppAsList()), null);
+        MW_AllocationEngineHandler.handleManual(toIds(getNewAppAsList()), toIds(getAllocationPartners()));
 
         genesis__Applications__c actual = getNewApp();
         System.assertEquals(MW_AllocationEngineHandler.MANUAL, actual.Allocation_Operation_Error__c);
@@ -1085,6 +1089,10 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
+
+        MW_AllocationEngineHandler.handleManual(null, toIds(getAllocationPartners()));
+
+        MW_AllocationEngineHandler.handleManual(toIds(apps), null);
 
         MW_AllocationEngineHandler.handleManual(toIds(apps), toIds(getAllocationPartners()));
 
@@ -1280,6 +1288,8 @@ private class MW_AllocationEngineHandlerTest {
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
 
+        MW_AllocationEngineHandler.handleCancelled(null);
+
         MW_AllocationEngineHandler.handleCancelled(toIds(getAppAsList()));
 
         Test.stopTest();
@@ -1413,6 +1423,8 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
+
+        MW_AllocationEngineHandler.handleFinal(null);
 
         MW_AllocationEngineHandler.handleFinal(toIds(getAppAsList()));
 
