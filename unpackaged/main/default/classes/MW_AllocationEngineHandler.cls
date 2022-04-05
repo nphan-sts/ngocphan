@@ -197,12 +197,12 @@ public with sharing class MW_AllocationEngineHandler {
             /*
             Futures are disallowed inside some other async Apex constructs
             Attempt to execute synchronously if the handler detects async context.
-            Considering moving this functionality to a platform event to avoid these headaches.
             Triggers and System.isScheduled must be executed via the future
+            Move to a platform event to avoid these headaches long term.
              */
             Boolean useSync = System.isBatch() || System.isQueueable() || System.isFuture();
-            List<Boolean> params = new List<Boolean>{ useSync, System.isBatch(), System.isQueueable(), System.isFuture() };
-            System.debug(String.format('useSync: {0}, batch: {1}, queueable: {2}, future: {3}', params));
+            System.debug(String.format('Context: useSync: {0}, Batch:{1}, Queueable:{2}, Future:{3}, Quiddity:{4}',
+                    new List<Object>{ useSync, System.isBatch(), System.isQueueable(), System.isFuture(), Request.getCurrent().getQuiddity() }));
 
             if (useSync) {
                 callAllocationEngineService(validAppIds, json, decisionLevel);
