@@ -1,6 +1,11 @@
+/* ****************Modification History******************
+ * Updated By        Date				Jira Number		 
+ *1. Bhanupriya       2022/03/30     	LSP-634	(add test.start() and test.stop() methods)
+ ******************Modification History******************/
+
 @isTest
 public class TestAccessTokenContainer {
-
+    //testmethod
     public static testMethod void testParse() {
 		String json=		'{'+
 		'    "user": {'+
@@ -13,7 +18,9 @@ public class TestAccessTokenContainer {
 		'        ]'+
 		'    }'+
 		'}';
+        test.startTest();
 		AccessTokenContainer obj = AccessTokenContainer.parse(json);
+        test.stopTest();
 		System.assert(obj != null);
 	}
 }
