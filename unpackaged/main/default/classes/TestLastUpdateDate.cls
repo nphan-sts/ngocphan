@@ -1,3 +1,8 @@
+/* ****************Modification History******************
+ * Updated By        Date			 Jira Number
+ *1. Bhanupriya       2022/03/09     LSP-608(create setup() method,Add required fields, add comments, assert statements)
+ ******************Modification History******************/
+
 @isTest
 public class TestLastUpdateDate{
     
@@ -51,19 +56,22 @@ public class TestLastUpdateDate{
             return res;
         }
     }
-    Testmethod static void method1(){
-        //Creating custom setting
+   //create testsetup method() 	
+    @testsetup()
+    public static void testsetup()
+    {
+        		 //Creating custom setting
         ints__Yodlee_Cobrand_Credentials__c yodlee = ints__Yodlee_Cobrand_Credentials__c.getOrgdefaults();
-        
+        system.debug('Yodlee Credentials'+yodlee);
          //Creating Account
         Account accTest = new Account(
-        Name = 'Test',
-        loan__Investor__c=False,
-        cnotify__Email__c = 'abc@test.com',
-        loan__SOCIAL_SECURITY_NUMBER__c = '123'
-        );
+                                Name = 'Test',
+                                loan__Investor__c=False,
+                                cnotify__Email__c = 'abc@test.com',
+                                peer__Last_Name__c = 'Test Last Name',						//LSP-608 Required field
+                                loan__SOCIAL_SECURITY_NUMBER__c = '123456789'				//LSP-608 must be 9 digit
+                                );
         insert accTest;
-        System.assertEquals('Test',accTest.Name,'Wrong Account');
         
         //Creating Application
         genesis__Applications__c appTest= new genesis__Applications__c(
@@ -79,12 +87,18 @@ public class TestLastUpdateDate{
                                         genesis__Draw_Period_End_Date__c = system.Today()
                                         );
         insert appTest;
-        System.assertEquals(null,appTest.Borrower_s_Email__c,'Borrower Email is not null');
+               
+    }
+    //test method 
+    Testmethod static void useraccountLastupdateDate(){
         
-        Test.setMock(HttpCalloutMock.class, new TestGetAccountContainerMock());
-        Test.startTest();
-        LastUpdateDate.getLastUpdate('12292014_0:749a171967442663f14b6def055d7f5e2e4ca42ba7de5a0014597f950867cdb625bec7fcbc99b5eb806f1af7c8b04ed93668751207b27ed114dcb289ce0cb0f8','1234',appTest.id);
-        Test.stopTest();
+        	genesis__Applications__c appTest = [select id from genesis__Applications__c]; 
         
+        	Test.startTest();
+        	HttpResponse res = new HttpResponse();
+        	Test.setMock(HttpCalloutMock.class, new TestGetAccountContainerMock());
+        	LastUpdateDate.getLastUpdate('12292014_0:749a171967442663f14b6def055d7f5e2e4ca42ba7de5a0014597f950867cdb625bec7fcbc99b5eb806f1af7c8b04ed93668751207b27ed114dcb289ce0cb0f8','1234',appTest.id);
+        	Test.stopTest();
+        	system.assert(res!=null);  	
     }
 }
