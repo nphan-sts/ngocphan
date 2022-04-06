@@ -1,7 +1,12 @@
+/* ****************Modification History******************
+ * Updated By        Date			 Jira Number
+ *1. Bhanupriya       2022/03/08     LSP-607(Adding required fields, add comments and assert statements)
+ ******************Modification History******************/
 @isTest
 
 public class TestLoanApplicationUpdateJob{
-     public static String CRON_EXP = '0 0 0 15 3 ? 2022';
+     public static String CRON_EXP = '0 0 0 15 3 ? ';
+    //create testsetup()
    @testSetup static void setup() {
    
        loan.TestHelper.createSeedDataForTesting();
@@ -14,19 +19,18 @@ public class TestLoanApplicationUpdateJob{
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
-        
+        system.debug('Dummy Fee Junction'+dummyFeeJunction);
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
-        
+        system.debug('Office'+dummyOffice.name);
         //Creating Account
          Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            //Borrower_s_Last_Name__c='Testborrower',
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
+                                Name = 'Test',
+                                loan__Investor__c=False,
+                                cnotify__Email__c = 'abc@test.com',
+                                peer__Last_Name__c = 'Test Last Name',				//LSP-607 Required
+                                loan__SOCIAL_SECURITY_NUMBER__c = '123456789'				//LSP-607 must be 9 digit
+                                );
         insert acc;
-        System.assertEquals('Test',acc.Name,'Wrong Account');
         
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -36,10 +40,10 @@ public class TestLoanApplicationUpdateJob{
                                         genesis__Funding_in_Tranches__c = true,
                                         Borrower_s_Email__c = null,
                                         genesis__Account__c = acc.Id,
-                                        genesis__Expected_Close_Date__c =Date.newInstance(2017,10,11),
+                                        genesis__Expected_Close_Date__c =Date.newInstance(2022,10,11),	//LSP-607
                                         Application_Start_DateV2__c = system.Today(),
                                         DocuSignFlag__c=true,
-                                        genesis__Status__c = 'agent_verified',
+                                        genesis__Status__c = 'Agent Verified',
                                         genesis__Draw_Period_End_Date__c = system.Today()
                                         );
         List<genesis__Applications__c> applist = new List<genesis__Applications__c>();
@@ -48,35 +52,47 @@ public class TestLoanApplicationUpdateJob{
         System.debug('==============='+applist);
         
    }
-    Testmethod static void method1(){
+    //Test method 1 for batch processing
+    Testmethod static void batchprocessing_usecase1(){
         List<genesis__Applications__c> applist1 = [select Id,name,genesis__Status__c,CreatedDate,genesis__Expected_Close_Date__c From genesis__Applications__c Where genesis__Status__c!='LOAN APPROVED'];
         Test.startTest();
         LoanApplicationUpdateJob job = new LoanApplicationUpdateJob();
         job.doStart(null);
         job.doExecute(null,appList1);
         ID batchprocessid = Database.executeBatch(job);
-     //   job.finish(null);
-        String jobIdLDTAdd = System.schedule('LoanApplicationUpdateJob',
-                        CRON_EXP, 
-                        new LoanApplicationUpdateJob());
-        System.assert(batchprocessid!=null); 
         Test.stopTest();
+        genesis__Applications__c app = [select Id,genesis__Status__c From genesis__Applications__c];
+		System.assert(batchprocessid!=null); 
+       system.assertEquals('agent verified',app.genesis__Status__c);
+       
     }
-    Testmethod static void method2(){
+    //test method 2 batch processing query execute
+    Testmethod static void batchQueryexe(){
     
         List<genesis__Applications__c> applist1 = [select Id,name,genesis__Status__c,CreatedDate,genesis__Expected_Close_Date__c From genesis__Applications__c Where genesis__Status__c!='LOAN APPROVED'];        
-        String Query = 'select Id,name,genesis__Status__c,CreatedDate,genesis__Expected_Close_Date__c From genesis__Applications__c';
+        String query = 'select Id,name,genesis__Status__c,CreatedDate,genesis__Expected_Close_Date__c From genesis__Applications__c';
         Test.startTest();
-        LoanApplicationUpdateJob job = new LoanApplicationUpdateJob(Query);
+        LoanApplicationUpdateJob job = new LoanApplicationUpdateJob(query);
         job.doStart(null);
         job.doExecute(null,appList1);
         ID batchprocessid = Database.executeBatch(job);
-        //job.finish(null);
-        String jobIdLDTAdd = System.schedule('LoanApplicationUpdateJob',
-                        CRON_EXP, 
-                        new LoanApplicationUpdateJob());
-        System.assert(batchprocessid!=null); 
         
         Test.stopTest();
-    }
+        genesis__Applications__c app = [select Id,name,genesis__Status__c From genesis__Applications__c];
+
+        System.assert(batchprocessid!=null); 
+        system.assertEquals('agent verified', app.genesis__Status__c);
+        system.assert(!String.isEmpty(query));
+      }
+      //test method 3 for batch job for schedule  
+    Testmethod static void scheduleBatch(){
+            Test.startTest();
+        
+        	String jobIdLDTAdd = System.schedule('LoanApplicationUpdateJob',
+                        		CRON_EXP, 
+                        		new LoanApplicationUpdateJob());
+        	Test.stopTest();
+        	system.assert(jobIdLDTAdd!=null);
+      }
+
 }
