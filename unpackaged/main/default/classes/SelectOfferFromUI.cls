@@ -154,7 +154,16 @@ global class SelectOfferFromUI {
                             oldAppStatus.endsWithIgnoreCase('agent_document_verification_pending'))) {	//CRM-1022 (pallavi) added status condition
 
                         update app; //CRM-1022 (pallavi) (moving inside if block) LOP-337 restoring update so APR is available
-                        String res = runInvestorAllocationBasedOnWeighting(app); //CRM-1022 (pallavi) changed app.id to app
+
+                        String res;
+                        if (MW_AllocationEngineHandler.isRulesApiEnabled()) {
+                            res = runInvestorAllocationBasedOnWeighting(app); //CRM-1022 (pallavi) changed app.id to app
+                        }
+
+                        if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
+                            MW_AllocationEngineHandler.handleReallocation(new List<Id> {app.Id});
+                            res = 'Success'; // if we made it here, there's was no error
+                        }
 
                         if(res.equalsIgnoreCase('Success')) {
 

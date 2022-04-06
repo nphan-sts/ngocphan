@@ -22,15 +22,18 @@ private class TestApptoContractConverterBatchJob{
          upsert org;  
    
         //Creating Account
-         Account acc = new Account(
+        Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
+            peer__First_Name__c = 'Test',
+            peer__Last_Name__c = 'Account',
             //Borrower_s_Last_Name__c='Testborrower',
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
+            loan__SOCIAL_SECURITY_NUMBER__c = String.valueOf(Math.random()).right(9)
+        );
         insert acc;
-        System.assertEquals('Test',acc.Name,'Wrong Account');
+
+        System.assertEquals('Test', acc.Name, 'Wrong Account');
          //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                         genesis__Due_Day__c = 20,
