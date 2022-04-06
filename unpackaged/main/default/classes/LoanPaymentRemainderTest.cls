@@ -108,11 +108,11 @@ private class LoanPaymentRemainderTest{
                                                     from loan__Loan_Account__c];
                                                     
         System.debug('==============lapp=============='+lappList);
-       	string Query ='SELECT ID, loan__Previous_Installment_Date__c,loan__Account__r.cnotify__Email__c,loan__Loan_Product_Name__r.name, loan__Payment_Amount__c, loan__Next_Installment_Date__c,loan__Account__r.Borrower_s_Last_Name__c,loan__Loan_Product_Name__c from loan__Loan_Account__c';
+       	string query ='SELECT ID, loan__Previous_Installment_Date__c,loan__Account__r.cnotify__Email__c,loan__Loan_Product_Name__r.name, loan__Payment_Amount__c, loan__Next_Installment_Date__c,loan__Account__r.Borrower_s_Last_Name__c,loan__Loan_Product_Name__c from loan__Loan_Account__c';
 
         test.startTest();
         
-        LoanPaymentRemainder job = new LoanPaymentRemainder(Query);
+        LoanPaymentRemainder job = new LoanPaymentRemainder(query);
         Database.QueryLocator ql = job.start(null);
         job.execute(null,lappList);
         ID batchprocessid = Database.executeBatch(job);
