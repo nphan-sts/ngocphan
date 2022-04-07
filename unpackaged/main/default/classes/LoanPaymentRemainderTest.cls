@@ -89,6 +89,7 @@ private class LoanPaymentRemainderTest{
                             new LoanPaymentRemainder());
         System.assert(batchprocessid!=null);
         test.stopTest();
+       system.debug(ql);
        system.assert(jobIdLDTAdd!=null);
        }
     
@@ -119,6 +120,7 @@ private class LoanPaymentRemainderTest{
                             new LoanPaymentRemainder());
         System.assert(batchprocessid!=null);
         test.stopTest();
+       	system.debug(ql);
        	system.assert(jobIdLDTAdd!=null);
     }
   
