@@ -63,8 +63,8 @@ private class LoanPaymentRemainderTest{
         insert lacc;        
         
    }
-    //test method for loan Payment
-   Testmethod static void loanPaymentRemainderBatch_UseCase1(){
+    //test method for loan Payment Batch job for Default Constructor
+   @isTest static void loanPaymentBatchJob_Defaultconstructor(){
         List<loan__Loan_Account__c> lappList = [SELECT ID, 
                                                     loan__Previous_Installment_Date__c,
                                                     loan__Account__r.cnotify__Email__c,
@@ -76,8 +76,7 @@ private class LoanPaymentRemainderTest{
                                                     loan__Loan_Product_Name__c 
                                                     from loan__Loan_Account__c];
                                                     
-        System.debug('==============lapp=============='+lappList);
-
+       
         test.startTest();
         
         LoanPaymentRemainder job = new LoanPaymentRemainder();
@@ -91,11 +90,10 @@ private class LoanPaymentRemainderTest{
         System.assert(batchprocessid!=null);
         test.stopTest();
        system.assert(jobIdLDTAdd!=null);
-       system.debug(ql);
-    }
+       }
     
-      //test method
-   Testmethod static void loanPaymentRemainderBatch_UseCase2(){
+      //test method Batch job for parametrized constructor
+   @isTest static void loanPaymentBatchJob_Parametrizedconstructor(){
         List<loan__Loan_Account__c> lappList = [SELECT ID, 
                                                     loan__Previous_Installment_Date__c,
                                                     loan__Account__r.cnotify__Email__c,
@@ -107,8 +105,7 @@ private class LoanPaymentRemainderTest{
                                                     loan__Loan_Product_Name__c 
                                                     from loan__Loan_Account__c];
                                                     
-        System.debug('==============lapp=============='+lappList);
-       	string query ='SELECT ID, loan__Previous_Installment_Date__c,loan__Account__r.cnotify__Email__c,loan__Loan_Product_Name__r.name, loan__Payment_Amount__c, loan__Next_Installment_Date__c,loan__Account__r.Borrower_s_Last_Name__c,loan__Loan_Product_Name__c from loan__Loan_Account__c';
+        string query ='SELECT ID, loan__Previous_Installment_Date__c,loan__Account__r.cnotify__Email__c,loan__Loan_Product_Name__r.name, loan__Payment_Amount__c, loan__Next_Installment_Date__c,loan__Account__r.Borrower_s_Last_Name__c,loan__Loan_Product_Name__c from loan__Loan_Account__c';
 
         test.startTest();
         
@@ -122,8 +119,7 @@ private class LoanPaymentRemainderTest{
                             new LoanPaymentRemainder());
         System.assert(batchprocessid!=null);
         test.stopTest();
-       	system.debug(ql);
-        system.assert(jobIdLDTAdd!=null);
+       	system.assert(jobIdLDTAdd!=null);
     }
   
      
