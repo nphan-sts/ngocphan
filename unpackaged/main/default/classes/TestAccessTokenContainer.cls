@@ -19,8 +19,8 @@ public class TestAccessTokenContainer {
 		'    }'+
 		'}';
         test.startTest();
-		AccessTokenContainer obj = AccessTokenContainer.parse(json);
+        AccessTokenContainer obj = AccessTokenContainer.parse(json);
         test.stopTest();
-		System.assert(obj != null);
-	}
+        System.assert(obj.user != null);
+        }
 }
