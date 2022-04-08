@@ -5,7 +5,8 @@
 
 @isTest
 public class TestAccessTokenContainer {
-    //testmethod
+    //testmethod :- testParse
+    //Purpose: to create Json and test into Parse()method
     public static testMethod void testParse() {
 		String json=		'{'+
 		'    "user": {'+
