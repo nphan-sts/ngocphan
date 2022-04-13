@@ -31,15 +31,15 @@ Purpose : to cover code satisfying CongaAutomation
             Name = 'Test',
             loan__Investor__c=False,
              peer__Last_Name__c='TestLName2',
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123'
+            cnotify__Email__c = 'abc4@test.com',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123109'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
         
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
-                                            genesis__Due_Day__c = 20,
+                                            genesis__Due_Day__c = 25,
                                             genesis__Expected_First_Payment_Date__c = system.Today(),
                                             genesis__Expected_Start_Date__c = system.Today(),
                                             genesis__Funding_in_Tranches__c = true,
