@@ -21,6 +21,7 @@ private class SendLoanPaymentEmailHandlerTest{
         Account loanAcc = [Select Id 
                            from Account 
                            where Name Like '%Test%' LIMIT 1];
+        system.debug('Account details' +loanAcc);
         //dummy contact
         Contact conObj = new Contact(
             AccountId = loanAcc.id, 
@@ -31,7 +32,7 @@ private class SendLoanPaymentEmailHandlerTest{
         Contact con = [Select Id 
                        from Contact 
                        where LastName Like '%Test%' LIMIT 1];        
-        
+        system.debug('Contact' +con);
     }
     //test method for SendMail
     static testMethod void sendMailTest_EmailMessage(){
