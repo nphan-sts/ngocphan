@@ -40,7 +40,7 @@ private class TestApptoContractConverterBatchJob{
         insert acc;
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
-            genesis__Due_Day__c = 10,
+            genesis__Due_Day__c = 20,
             genesis__Expected_First_Payment_Date__c = system.Today(),
             genesis__Expected_Start_Date__c = system.Today(),
             genesis__Funding_in_Tranches__c = true,
