@@ -8,15 +8,14 @@ public class TestInvestorReportingJob {
     @testSetup
     static void setup(){
         loan.TestHelper.createSeedDataForTesting();
-        loan__Currency__c curr1 = loan.TestHelper.createCurrency();
+       loan__Currency__c curr1 = loan.TestHelper.createCurrency();
         //Create a dummy MF_Account
         loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','20000 - ASSETS');
-        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','40000 - INCOME');
+       loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','40000 - INCOME');
         
         //Create a Fee Set
         loan__Fee__c dummyFee1 = loan.TestHelper.createFee(curr1,dummyIncAccount ,dummyAccount);                                    
-        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee1,dummyFeeSet);
+       loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
         
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
