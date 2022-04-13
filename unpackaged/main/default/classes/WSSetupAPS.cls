@@ -508,9 +508,11 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
         else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Good Standing')
                 && futureBill == NULL && LA.loan__Next_Due_Generation_Date__c <= txnDate
                 && LA.loan__Next_Installment_Date__c > txnDate){
+
                     //LSP-694 start
                     installmentFlagValue =(LA.loan__Oldest_Due_Date__c >= txnDate);
                     //LSP-694 end
+          
                     System.debug(logginglevel.error,'IN 1st ELSE IF ::' +installmentFlagValue);            
                 }
         else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Bad Standing')

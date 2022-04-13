@@ -11,7 +11,7 @@ public with sharing class MW_BoxUtilHelper
 
   // Create a new Access Token. 
     public static String getNewAccessToken(){  
-     String accessToken = Null, refreshToken = Null;
+     String accessToken, refreshToken;
 
         ints__OAuth_Token__c authToken;
         
@@ -26,12 +26,12 @@ public with sharing class MW_BoxUtilHelper
                                      authToken = [SELECT id,
                                                          ints__Token__c, 
                                                          ints__Refresh_Token__c
-                                                        FROM ints__OAuth_Token__c WHERE 
-                                                        ints__OAuth_Settings__c =: oAuthName.Id and 
-                                                  ints__Is_Valid__c = true Order By CreatedDate DESC LIMIT 1];
+                                                         FROM ints__OAuth_Token__c WHERE 
+                                                         ints__OAuth_Settings__c =: oAuthName.Id AND 
+                                                         ints__Is_Valid__c = true Order By CreatedDate DESC LIMIT 1];
 
                 
-                if(authToken.ints__Refresh_Token__c !=null)
+                if(authToken.ints__Refresh_Token__c != null)
                 {  
                     Http http = new Http();
                     HttpRequest req = new HttpRequest();
@@ -52,22 +52,22 @@ public with sharing class MW_BoxUtilHelper
                     
                     BOXTokenResponseParcer tokenRespObj = BOXTokenResponseParcer.parse(response);
                    
-                    if(tokenRespObj.access_token != Null && tokenRespObj.refresh_token !=null){ 
+                    if(tokenRespObj.access_token != null  && tokenRespObj.access_token != 'null' && tokenRespObj.refresh_token != null && tokenRespObj.refresh_token != 'null'){ 
                         accessToken = tokenRespObj.access_token;
                         refreshToken = tokenRespObj.refresh_token;
                     }
 
-                    if(tokenRespObj.error !=null || tokenRespObj.error_description != null){
+                    if(tokenRespObj.error != null || tokenRespObj.error_description != null){                      
+                        MW_LogUtility.errorMessage('MW_BoxUtil1', 'getNewAccessToken', tokenRespObj.error_description);
                         System.debug('*****'+tokenRespObj.error+'*******'+tokenRespObj.error_description);
                     }
-                    if(tokenRespObj.error_description == 'Refresh token has expired'){
-                        System.debug('***call the authorization class****');
-                    }
+                }else{
+                    MW_LogUtility.errorMessage('MW_BoxUtil1', 'getNewAccessToken', 'BOX Refresh Token is NULL. Manual refresh is required.');
                 }
-            }
+            } 
             
         }catch(exception ex){
-           
+            MW_LogUtility.error('MW_BoxUtil1', '', '', 'getNewAccessToken', ex);
         } 
 
         return accessToken+'-'+refreshToken+'-'+authToken.id;
