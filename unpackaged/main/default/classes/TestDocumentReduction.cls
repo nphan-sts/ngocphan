@@ -15,15 +15,15 @@ Purpose : to cover code satisfying payStubReduction
             Name = 'Test',
             loan__Investor__c=False,
             peer__Last_Name__c='TestLName2',
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123'
+            cnotify__Email__c = 'abc2@test.com',
+            loan__SOCIAL_SECURITY_NUMBER__c = '123123167'
         );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
         
         //Creating Application
-        genesis__Applications__c app= new genesis__Applications__c(
-            genesis__Due_Day__c = 20,
+        genesis__Applications__c app1= new genesis__Applications__c(
+            genesis__Due_Day__c = 15,
             genesis__Expected_First_Payment_Date__c = system.Today(),
             genesis__Expected_Start_Date__c = system.Today(),
             genesis__Funding_in_Tranches__c = true,
@@ -34,16 +34,16 @@ Purpose : to cover code satisfying payStubReduction
             genesis__Status__c = 'agent_verified',
             genesis__Draw_Period_End_Date__c = system.Today()
         );
-        insert app;
-        System.assertEquals(null,app.Borrower_s_Email__c,'Borrower Email is not null');
+        insert app1;
+        System.assertEquals(null,app1.Borrower_s_Email__c,'Borrower Email is not null');
         
         Credit_Policy__c crPolicy = new Credit_Policy__c();
         crPolicy.Net_Disposable_Income_NDI__c = '1200';
-        crPolicy.Application__c =app.id;
+        crPolicy.Application__c =app1.id;
         insert crPolicy;
         
         test.startTest();
-        DocumentReduction.payStubReduction(app.id);
+        DocumentReduction.payStubReduction(app1.id);
         test.stopTest();
     }
 }
