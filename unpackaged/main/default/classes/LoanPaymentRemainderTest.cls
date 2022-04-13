@@ -118,9 +118,9 @@ private class LoanPaymentRemainderTest{
     	 String jobIdLDTAdd = System.schedule('LoanPaymentRemainder',
                             cron_EXP, 
                             new LoanPaymentRemainder());
-        System.assert(batchprocessid!=null);
         test.stopTest();
        	system.debug(ql);
+       	System.assert(batchprocessid!=null);
        	system.assert(jobIdLDTAdd!=null);
     }
   
