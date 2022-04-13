@@ -25,7 +25,7 @@ global class AllocationEngineCalloutBatch implements Database.batchable<sObject>
         return Database.getQueryLocator(queryStr);    
     }
     
-    global void Execute(Database.BatchableContext bc, List<genesis__Applications__c> scope) {
+    global void execute(Database.BatchableContext bc, List<genesis__Applications__c> scope) {
         List<Id> appIds = new List<Id>();
         if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
             for (genesis__Applications__c app : scope) {

@@ -4,21 +4,17 @@ private class AllocationEngineCalloutBatchTest {
     @TestSetup static void setup() {
     
         Account investor1 = MW_GlobalTestUtility.GetAccount('Investor');
-        investor1.loan__Collect_Service_Fees_on__c = 'No Fees';
         investor1.Investor_Code__c = 'FCU';
     
         Account investor2 = MW_GlobalTestUtility.GetAccount('Investor');
-        investor2.loan__Collect_Service_Fees_on__c = 'No Fees';
         investor2.Investor_Code__c = 'GCSU';
     
         Account member1 = MW_GlobalTestUtility.GetAccount('Member');
         member1.State__c = 'CA';
-        member1.loan__Collect_Service_Fees_on__c = 'No Fees';
         member1.ZIP_Code__c = '92782';
     
         Account member2 = MW_GlobalTestUtility.GetAccount('Member');
         member2.State__c = 'VA';
-        member2.loan__Collect_Service_Fees_on__c = 'No Fees';
         member2.ZIP_Code__c = '92782';
     
         insert new List<Account> {investor1, investor2, member1, member2};
