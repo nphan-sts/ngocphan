@@ -104,7 +104,7 @@ public class CLS_TestBillUpdate {
         
         
     }
-     /*Created By : Bhavya Maliwal
+    /*Created By : Bhavya Maliwal
 Method name : billJobTest
 Purpose : to cover code satisfying below apex classes
 CLS_RepostLPTxnHandler
@@ -162,8 +162,13 @@ CLS_DiscardBillJob
         CLS_DiscardBillJob job = new CLS_DiscardBillJob(new List<String>{LAList[0].Name});
         Database.executeBatch(job, 1);
         test.stopTest();
+        List<loan__Loan_account_Due_Details__c> billList = [SELECT Id,Name,loan__DD_Primary_Flag__c,loan__Transaction_Date__c 
+                                                            FROM loan__Loan_account_Due_Details__c 
+                                                            WHERE loan__Loan_Account__c=:LAList[0].Id];
+        system.assert(!billList[0].loan__DD_Primary_Flag__c);
+        
         
     }
     
-   
+    
 }
