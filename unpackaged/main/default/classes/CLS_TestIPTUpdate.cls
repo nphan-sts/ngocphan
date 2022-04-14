@@ -83,7 +83,8 @@ CLS_GenerateIPTHandler
                                               loan__Previous_Installment_Date__c,
                                               loan__Account__r.cnotify__Email__c,
                                               loan__Loan_Product_Name__r.name, 
-                                              loan__Payment_Amount__c, 
+                                              loan__Payment_Amount__c,
+                                              loan__Expected_Repayment_Start_Date__c,
                                               loan__Next_Installment_Date__c, 
                                               loan__Account__r.ID,Borrowers_First_Name__c,
                                               loan__Account__r.Borrower_s_Last_Name__c,
@@ -118,6 +119,8 @@ CLS_GenerateIPTHandler
         Database.executeBatch(job, 1);
         System.debug(Database.executeBatch(job, 1));
         test.stopTest();
+        loan__Loan_Account__c lla=[Select id,loan__Next_Installment_Date__c from loan__Loan_Account__c where id=:LAList[0].Id];
+        system.assert(lla.loan__Next_Installment_Date__c==LAList[0].loan__Expected_Repayment_Start_Date__c);
     }
     
 }
