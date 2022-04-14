@@ -69,7 +69,7 @@ private class AllocationEngineCalloutBatchTest {
     @isTest static void testBatchClassExecutionWithApps() {
         
         insert getMWSettings();
-        
+        Id jobId;
         set<Id> appIds = new set<Id>();
         Integer batchSize = Integer.valueOf(MW_Settings__c.getOrgDefaults().Allocation_Engine_Batch_Size__c);
         
@@ -78,18 +78,24 @@ private class AllocationEngineCalloutBatchTest {
         }
         Test.startTest();
             AllocationEngineCalloutBatch btch = new AllocationEngineCalloutBatch(appIds);
-            Database.executeBatch(btch,batchSize);
+            jobId = Database.executeBatch(btch,batchSize);
         Test.stopTest();
+        AsyncApexJob asapx = [SELECT Id, Status FROM AsyncApexJob WHERE Id =: jobId];
+        System.assertEquals('Completed',asapx.Status);
     }
     @isTest static void testBatchClassExecutionWithQuery() {
         insert getMWSettings();
-        
+        Id jobId;
         Integer batchSize = Integer.valueOf(MW_Settings__c.getOrgDefaults().Allocation_Engine_Batch_Size__c);
-        String queryStr = 'SELECT Id,genesis__status__c FROM genesis__applications__c WHERE Id IN (SELECT genesis__Application__c FROM genesis__Application_Status_History__c WHERE CreatedDate = TODAY AND genesis__New_Value__c = \'funded\')';
+        String queryStr =  'SELECT Id,genesis__status__c FROM genesis__applications__c ';
+               queryStr += 'WHERE Id IN (SELECT genesis__Application__c FROM genesis__Application_Status_History__c ';
+               queryStr += 'WHERE CreatedDate = TODAY AND genesis__New_Value__c = \'funded\')';
         Test.startTest();
             AllocationEngineCalloutBatch btch = new AllocationEngineCalloutBatch(queryStr);
-            Database.executeBatch(btch,batchSize);
+            jobId = Database.executeBatch(btch,batchSize);
         Test.stopTest();
+        AsyncApexJob asapx = [SELECT Id, Status FROM AsyncApexJob WHERE Id =: jobId];
+        System.assertEquals('Completed',asapx.Status);
     }
     static MW_Settings__c getMWSettings(){
         MW_Settings__c mwSettings = new MW_Settings__c();

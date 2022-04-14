@@ -1,4 +1,8 @@
-/**
+/*
+ * This class is serves as a bridge between ApptoContractConverterBatchJob which converts the applications to contracts 
+ * and MW_AllocationEngineHandler which sends the final callouts to Allocation Engine.
+ * This class isolates the execution contexts between callout and DMLs from both the classes. Better logic separation.
+ * Also it provides better control over the governor limits for Allocation Engine
  * For the constructor with String query parameter, you can pass any query to send final calls to a specific set of applications
  * This will help in case there's a failure and a final Allocation call is to be sent for some set of applications 
  * A sample query :  SELECT Id,genesis__status__c FROM genesis__applications__c WHERE Id IN 
