@@ -120,6 +120,8 @@ Purpose : to cover code satisfying appToPayoffTags where document check is True
         taglist.add(t);
         PayoffTags.appToPayoffTags(taglist);
         test.stopTest();
+        List<Application_Tags__c> atag=[Select id from Application_Tags__c where Application__c=:app.id];
+        system.assert(atag.size()>0);
     }
     /*Created By : Bhavya Maliwal
 Method name : interactionCheck
@@ -145,5 +147,7 @@ Purpose : to cover code satisfying InteractionCheck
         taglist.add(t);
         PayoffTags.appToPayoffTags(taglist);
         test.stopTest();
+        List<Application_Tags__c> at=[Select id from Application_Tags__c where Application__c=:app.id];
+        system.assert(at.size()>0);
     }
 }
