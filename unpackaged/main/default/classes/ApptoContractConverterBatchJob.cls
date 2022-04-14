@@ -34,18 +34,25 @@ global class ApptoContractConverterBatchJob implements Database.batchable<sObjec
         
         List<genesis__Applications__c > listOfApp = (List<genesis__Applications__c >)scope;
         System.debug(logginglevel.error,'listOfApp ++++' +listOfApp );
+        
         for(genesis__Applications__c app : listOfApp){
             appId = app.id;
             ApplicationToContractConverter.callDCPIntegration(appId);
             String res = genesis.ConvertApplicationCtrl.convertApplicationToContract(appId);
         }
-        
-        
-                
     }
     
-    public void Finish(Database.BatchableContext bc) {
-        
+    public void finish(Database.BatchableContext bc) {
+        if(applicationIdSet != null && applicationIdSet.size() > 0){
+            // Execute the AE callout batch
+            try{
+                Integer batchSize = Integer.valueOf(mw_settings__c.getInstance().Allocation_Engine_Batch_Size__c);
+                AllocationEngineCalloutBatch aEBatch = new AllocationEngineCalloutBatch(applicationIdSet);
+                Database.executeBatch(aEBatch,batchSize);
+            }catch(Exception ex){
+                MW_LogUtility.error('ApptoContractConverterBatchJob','','','finish',ex);
+            }
+        }
     }
 
 }

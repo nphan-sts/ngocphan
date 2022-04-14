@@ -33,12 +33,15 @@ private class TestApptoContractConverterBatchJob{
         Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
+            peer__First_Name__c = 'Test',
+            peer__Last_Name__c = 'Account',
             cnotify__Email__c = 'abc@test.com',
-            peer__Last_Name__c = 'Test Last Name',		//LSP-629 Required field
-            loan__SOCIAL_SECURITY_NUMBER__c = '123456789'		//LSP-629 must be 9 digit	
+            loan__SOCIAL_SECURITY_NUMBER__c = String.valueOf(Math.random()).right(9)
         );
         insert acc;
-        //Creating Application
+
+        System.assertEquals('Test', acc.Name, 'Wrong Account');
+         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
             genesis__Due_Day__c = 20,
             genesis__Expected_First_Payment_Date__c = system.Today(),

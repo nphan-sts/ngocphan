@@ -36,79 +36,6 @@ public with sharing class MW_BoxUtil1 {
 		}
 	}
 
-	//private static Integer searchCount =1;
-
-	// Search for the folder Under the given parentFolder.
-	// public static String SearchBoxFolderExist(String appID, String parentFolderID, String folder_name)
-	// {
-	//      try {
-	//              if(completeSecurityToken==null) {
-	//                      completeSecurityToken  = getOldAccessToken();
-	//                      System.debug(' ** Old Access Token  ** '+completeSecurityToken);
-	//                      s1 = completeSecurityToken.split('-')[0];
-	//                      s2 = completeSecurityToken.split('-')[1];
-	//                      token = s1;
-	//                      refreshToken = s2;
-	//              }
-	//
-	//              HttpResponse res = new HttpResponse();
-	//              Http http        = new Http();
-	//              HttpRequest req  = new HttpRequest();
-	//
-	//              req.setEndPoint('https://api.box.com/2.0/search?query='+folder_name+'&type=folder');
-	//              req.setMethod('GET');
-	//              req.setHeader('Content-Type', 'application/json');
-	//              req.setHeader('Authorization', 'Bearer '+token);
-	//
-	//              res = http.send(req);
-	//
-	//              MW_LogUtility.info('MW_BoxUtil1', appID, '', 'SearchBoxFolderExist', res.getBody(), res);
-	//
-	//              if(res.getStatusCode() == 200)
-	//              {
-	//                      MW_BoxUploadParser folderResp = MW_BoxUploadParser.parse(res.getBody());
-	//
-	//                      if(folderResp!=null) {
-	//                              for(Integer i=0; i<folderResp.entries.size(); i++)
-	//                              {
-	//                                      if(folder_name==folderResp.entries[i].name && folderResp.entries[i].parent.Id==parentFolderID) {
-	//                                              System.debug(' ** Folder Id ** '+ folderResp.entries[i].Id);
-	//                                              return folderResp.entries[i].Id;
-	//                                      }
-	//                              }
-	//                      }
-	//              }
-	//              if(res.getStatusCode() == 401 && res.getStatus() == 'Unauthorized')
-	//              {
-	//                      searchCount++;
-	//                      completeSecurityToken = null;
-	//                      token = null;
-	//                      refreshToken = null;
-	//                      authId = null;
-	//
-	//                      if(completeSecurityToken==null) {
-	//                              completeSecurityToken =  MW_BoxUtilHelper.getNewAccessToken();
-	//                              s1 = completeSecurityToken.split('-')[0];
-	//                              s2 = completeSecurityToken.split('-')[1];
-	//                              s3 = completeSecurityToken.split('-')[2];
-	//                              token = s1;
-	//                              refreshToken = s2;
-	//                              authId = s3;
-	//                              if(searchCount<5) {
-	//                                      return SearchBoxFolderExist(appID, parentFolderID, folder_name);
-	//                              }
-	//                              else{
-	//                                      return null;
-	//                              }
-	//                      }
-	//              }
-	//      } catch(exception ex){
-	//              MW_LogUtility.error('MW_BoxUtil1', appID, '', 'SearchBoxFolderExist', ex);
-	//      }
-	//
-	//      return null;
-	// }
-
 	public class CreateNewFolderCustomException extends Exception {}
 
 	public class FolderResponse {
@@ -174,23 +101,15 @@ public with sharing class MW_BoxUtil1 {
 				                                  ints__OAuth_Settings__c =: oAuthName.Id and ints__Is_Valid__c = true Order
 				                                                                                                  By CreatedDate DESC LIMIT 1];
 
-				if(authToken.ints__Token__c !=null) {
+				if(authToken.ints__Token__c != null && authToken.ints__Token__c != 'null' && authToken.ints__Refresh_Token__c != null && authToken.ints__Refresh_Token__c != 'null') {
 					accessToken  = authToken.ints__Token__c;
 					refreshToken = authToken.ints__Refresh_Token__c;
 				}
 			}
-		}
-
-		catch(Exception ex){
+		}catch(Exception ex){
 			MW_LogUtility.error('MW_BoxUtil1', '', '', 'getOldAccessToken', ex);
-			// loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
-			// bplog.loan__Origin__c = 'BoX_Integ.getOldAccessToken';
-			// bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString();
-			// bplog.loan__Type__c = 'Exception';
-			// bplog.loan__Time__c = DateTime.now();
-			// insert bplog;
 		}
-		return accessToken+'-'+refreshToken;
+		return accessToken + '-' + refreshToken;
 	}
 
 
@@ -201,18 +120,18 @@ public with sharing class MW_BoxUtil1 {
 			                                     FROM ints__OAuth_Settings__c WHERE ints__Service_Name__c =:BoxService LIMIT 1];
 
 			if(oAuthName != Null) {
-				ints__OAuth_Token__c authToken = [SELECT ints__Token__c, ints__Refresh_Token__c FROM ints__OAuth_Token__c WHERE
-				                                  ints__OAuth_Settings__c =: oAuthName.Id and ints__Is_Valid__c = true Order
-				                                                                                                  By CreatedDate DESC LIMIT 1];
+				ints__OAuth_Token__c authToken = [SELECT ints__Token__c, ints__Refresh_Token__c FROM ints__OAuth_Token__c 
+												  WHERE ints__OAuth_Settings__c =: oAuthName.Id AND ints__Is_Valid__c = true 
+												  Order By CreatedDate DESC LIMIT 1];
 
 				boolean upd= false;
 
-				if(authToken.ints__Token__c!=s1 && s1!=null) {
+				if(s1 != null && s1 != 'null' && authToken.ints__Token__c != s1) {
 					authToken.ints__Token__c = s1;
 					upd = true;
 				}
 
-				if(authToken.ints__Refresh_Token__c!=s2 && s2!=null) {
+				if(s2 != null && s2 != 'null' && authToken.ints__Refresh_Token__c != s2) {
 					authToken.ints__Refresh_Token__c = s2;
 					upd = true;
 				}
@@ -316,12 +235,12 @@ public with sharing class MW_BoxUtil1 {
 		String msgStr;
 
 		try {
-
+			MW_LogUtility.info('MW_BoxUtil1', appId, filename, 'uploadFileToBox', folderid, null);	
 			String strFolderId = folderid;
 			Integer startTime;
 
-			if(completeSecurityToken==null) {
-				completeSecurityToken  = getOldAccessToken();
+			if(completeSecurityToken == null) {
+				completeSecurityToken  = getOldAccessToken();				
 				System.debug(' ** Old Access Token  ** '+completeSecurityToken);
 				s1 = completeSecurityToken.split('-')[0];
 				s2 = completeSecurityToken.split('-')[1];
@@ -332,8 +251,6 @@ public with sharing class MW_BoxUtil1 {
 			HttpResponse res = new HttpResponse();
 			Http http = new Http();
 			HttpRequest req = new HttpRequest();
-
-			System.debug('>>>>>strFolderId ' +strFolderId);
             
 			if(strFolderId != null)
 			{
@@ -389,8 +306,7 @@ public with sharing class MW_BoxUtil1 {
 
 
 				res = http.send(req);
-				System.debug('*****res*****'+res);
-				System.debug('*****res_grtbody****'+res.getBody());
+				
 				/*******For CLS-1297 Debug only will remove after issue resolved********/
 				String requestURLLog = '\n *Request* *URL:* ' + sUrl;
 				String parentFolderIDLog = '\n *ParentFolder* *ID:* ' + strFolderId;
@@ -422,10 +338,11 @@ public with sharing class MW_BoxUtil1 {
 					token = s1;
 					refreshToken = s2;
 					authId = s3;
-					if(count<5) {
+					if(count < 5) {
 						return uploadFileToBox(file_body, filename, folderid, appId);
 					}
 					else{
+						MW_LogUtility.errorMessage('MW_BoxUtil1', 'uploadFileToBox', '5 Retries Exceeded For:'+folderid+'='+filename);
 					    if(logList.size() > 0){
                 		    insert logList;
                 		}
@@ -453,6 +370,4 @@ public with sharing class MW_BoxUtil1 {
 		}
 		return url;
 	}
-
-
 }

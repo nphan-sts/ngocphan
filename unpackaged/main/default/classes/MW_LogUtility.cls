@@ -118,17 +118,68 @@ public class MW_LogUtility {
     public static void error(String cls, String appId, String leadId, String method, Exception ex) {
         emit('Error', cls, appId, leadId, method, new ExceptionDO(ex));
     }
-    
+
     /**
-* Log an informative map as an error
-* @param cls Class where it occurs
-* @param label A label that unites this error message with potentially other error messages of same variety
-* @param info A map containing informative keys and values for context
-*/
-    public static void errorMessage(String cls, String label, Object info) {
-        new MW_LogTriggerHelper().construct('Error Message', cls, label, 'Error', JSON.serialize(info));
+     * A generic error where a single app id and lead id does not apply
+     * @param cls The invoking class
+     * @param method The invoking message
+     * @param data Key data
+     * @param e The exception to report
+     */
+    public static void error(String cls, String method, Object data, Exception e) {
+        Map<String, Object> msgdata = new Map<String, Object>();
+        msgdata.put('data', data);
+        msgdata.put('exception', new ExceptionDO(e));
+        emit('Error', cls, null, null, method, msgdata);
     }
-    
+
+    /**
+     * A generic error where a single app id and lead id does not apply, and no exception.
+     * @param cls The invoking class
+     * @param method The invoking message
+     * @param data Key data
+     */
+    public static void error(String cls, String method, Object data) {
+        emit('Error', cls, null, null, method, data);
+    }
+
+    /**
+    * Log an informative map as an info, via EventBus, not direct callout
+    *
+    * @param cls Class where it occurs
+    * @param label A label that unites this info message with potentially other info messages of same variety
+    * @param info A map containing informative keys and values for context
+    */
+    public static void infoMessage(String cls, String label, Object info) {
+        emitMessage('Info Message', cls, label, 'Info', info);
+    }
+
+    /**
+    * Log an informative map as an warning, via EventBus, not direct callout
+    *
+    * @param cls Class where it occurs
+    * @param label A label that unites this info message with potentially other info messages of same variety
+    * @param info A map containing informative keys and values for context
+    */
+    public static void warnMessage(String cls, String label, Object info) {
+        emitMessage('Warn Message', cls, label, 'Warn', info);
+    }
+
+    /**
+     * Log an informative map as an error, via EventBus, not direct callout
+     *
+     * @param cls Class where it occurs
+     * @param label A label that unites this error message with potentially other error messages of same variety
+     * @param info A map containing informative keys and values for context
+     */
+    public static void errorMessage(String cls, String label, Object info) {
+        emitMessage('Error Message', cls, label, 'Error', info);
+    }
+
+    private static void emitMessage(String name, String cls, String label, String type, Object data) {
+        new MW_LogTriggerHelper().construct(name, cls, label, type, JSON.serialize(data));
+    }
+
     /**
 * Log out a *warning* with generic Data. Anything can be passed into data so that
 *  the structure can be defined by the developer.

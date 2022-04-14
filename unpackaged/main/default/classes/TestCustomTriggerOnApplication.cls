@@ -1,4 +1,4 @@
-@isTest
+@IsTest
 public class TestCustomTriggerOnApplication {
     //Before update
     @TestSetup  static void mwSettingSetup(){
@@ -32,7 +32,7 @@ public class TestCustomTriggerOnApplication {
         //Creating Account
         Account acc = new Account(
             Name = 'Test',
-            loan__Investor__c = True,
+            loan__Investor__c = true,
             Amount_Invested__c = 1200,
             Number_Of_Applications_Invested__c =3,
             cnotify__Email__c = 'abc@test.com',
@@ -55,7 +55,7 @@ public class TestCustomTriggerOnApplication {
         Account acc1 = new Account(
             Name = 'TestNewAccount',
             Amount_Invested__c = 1100,
-            loan__Investor__c=True,
+            loan__Investor__c=true,
             Number_Of_Applications_Invested__c =2,
             cnotify__Email__c = 'abcd@test.com',
             peer__First_Name__c ='Test',
@@ -140,7 +140,7 @@ public class TestCustomTriggerOnApplication {
         //Creating Account
         Account acc = new Account(
             Name = 'Test',
-            loan__Investor__c=True,
+            loan__Investor__c=true,
             Amount_Invested__c = 1200,
             Number_Of_Applications_Invested__c =3,
             cnotify__Email__c = 'abc@test.com',
@@ -155,7 +155,7 @@ public class TestCustomTriggerOnApplication {
         //Creating Another Account
         Account acc1 = new Account(
             Name = 'TestNewAccount',
-            loan__Investor__c=True,
+            loan__Investor__c=true,
             Number_Of_Applications_Invested__c =2,
             Amount_Invested__c = 1100,
             cnotify__Email__c = 'abcd@test.com',
@@ -406,7 +406,7 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        Insert acc;
+        insert acc;
 
         //CRM-543 start
     TLO_URL_Config__c tlo = new TLO_URL_Config__c();
@@ -438,10 +438,10 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        Insert acc1;
+        insert acc1;
         Account acco = new Account(
             Name = 'Test',
-            loan__Investor__c=False,
+            loan__Investor__c=false,
             cnotify__Email__c = 'no-reply@testorganization.com',
             peer__First_Name__c = 'TestFName2',
             peer__Last_Name__c='TestLName2',
@@ -449,7 +449,7 @@ public class TestCustomTriggerOnApplication {
             State__c='CA',
             ZIP_Code__c='123456'
         );
-        Insert acco;
+        insert acco;
         //pallavi
 
         loan.TestHelper.createSeedDataForTesting();
@@ -573,7 +573,7 @@ public class TestCustomTriggerOnApplication {
         cta.runInvestorAllocationFieldsUpdate(list1,list2,oldMap);
 
     }
-    @IsTest static Void method5(){
+    @IsTest static void method5(){
         test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
@@ -632,7 +632,7 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        Insert acc1;
+        insert acc1;
         Account acc2 = new Account(
             Name = 'Test1',
             loan__Investor__c = true,
@@ -656,10 +656,10 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        Insert acc2;
+        insert acc2;
         Account acco = new Account(
             Name = 'Test',
-            loan__Investor__c=False,
+            loan__Investor__c=false,
             cnotify__Email__c = 'no-reply@testorganization.com',
             peer__First_Name__c = 'TestFName2',
             peer__Last_Name__c='TestLName2',
@@ -667,7 +667,7 @@ public class TestCustomTriggerOnApplication {
             State__c='CA',
             ZIP_Code__c='123456'
         );
-        Insert acco;
+        insert acco;
         //pallavi
         genesis__Applications__c app1 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
@@ -683,7 +683,7 @@ public class TestCustomTriggerOnApplication {
             genesis__Loan_Amount__c = 1000,
             DCP_Investor_Eligibility__c = false
         );
-        Insert app1;
+        insert app1;
 
         DCp_Arcus_Transactions__c DCP_obj = new DCp_Arcus_Transactions__c();
         DCP_obj.Application__c = app1.Id;
@@ -696,6 +696,16 @@ public class TestCustomTriggerOnApplication {
 
         app1.genesis__Status__c = 'agent_document_verification_pending';
         update app1;
+
+        app1.genesis__Status__c = 'review';
+        update app1;
+
+        Credit_Policy__c cp = mockCreditPolicy(720, 2400, app1.Id);
+        insert cp;
+
+        app1.genesis__Status__c = 'agent_document_verification_pending';
+        update app1;
+
 
         genesis__Applications__c app2 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
@@ -711,7 +721,7 @@ public class TestCustomTriggerOnApplication {
             genesis__Loan_Amount__c = 1000,
             DCP_Investor_Eligibility__c = false
         );
-        Insert app2;
+        insert app2;
 
         DCp_Arcus_Transactions__c DCP_obj2 = new DCp_Arcus_Transactions__c();
         DCP_obj2.Application__c = app2.Id;
@@ -727,7 +737,7 @@ public class TestCustomTriggerOnApplication {
         test.stopTest();
         //pallavi
      }
-    @IsTest static Void method6(){
+    @IsTest static void method6(){
         test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
@@ -786,7 +796,7 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        Insert acc1;
+        insert acc1;
         Account acc2 = new Account(
             Name = 'Test1',
             loan__Investor__c = true,
@@ -810,10 +820,10 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        Insert acc2;
+        insert acc2;
         Account acco = new Account(
             Name = 'Test',
-            loan__Investor__c=False,
+            loan__Investor__c=false,
             cnotify__Email__c = 'no-reply@testorganization.com',
             peer__First_Name__c = 'TestFName2',
             peer__Last_Name__c='TestLName2',
@@ -822,7 +832,7 @@ public class TestCustomTriggerOnApplication {
             ZIP_Code__c='123456',
             loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9)
         );
-        Insert acco;
+        insert acco;
         //pallavi
         genesis__Applications__c app3 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
@@ -839,7 +849,7 @@ public class TestCustomTriggerOnApplication {
             DCP_Investor_Eligibility__c = false,
             Investor__c = acc1.id
         );
-        Insert app3;
+        insert app3;
 
         app3.genesis__Status__c = 'Stacker_Check_Passed';
     update app3;
@@ -847,7 +857,7 @@ public class TestCustomTriggerOnApplication {
         test.stopTest();
         //pallavi
      }
-    @IsTest static Void method7(){
+    @IsTest static void method7(){
         test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
@@ -906,7 +916,7 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        Insert acc1;
+        insert acc1;
         Account acc2 = new Account(
             Name = 'Test1',
             loan__Investor__c = true,
@@ -930,10 +940,10 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        Insert acc2;
+        insert acc2;
         Account acco = new Account(
             Name = 'Test',
-            loan__Investor__c=False,
+            loan__Investor__c=false,
             cnotify__Email__c = 'no-reply@testorganization.com',
             peer__First_Name__c = 'TestFName2',
             peer__Last_Name__c='TestLName2',
@@ -942,7 +952,7 @@ public class TestCustomTriggerOnApplication {
             ZIP_Code__c='123456',
             loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9)
         );
-        Insert acco;
+        insert acco;
         //pallavi
         genesis__Applications__c app3 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
@@ -959,7 +969,7 @@ public class TestCustomTriggerOnApplication {
             DCP_Investor_Eligibility__c = false,
             Investor__c = acc1.id
         );
-        Insert app3;
+        insert app3;
 
         app3.genesis__Loan_Amount__c = 1001;
        update app3;
@@ -974,7 +984,7 @@ public class TestCustomTriggerOnApplication {
         test.stopTest();
         //pallavi
      }
-    @IsTest static Void method8(){
+    @IsTest static void method8(){
         test.startTest();
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
@@ -1033,7 +1043,7 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        Insert acc1;
+        insert acc1;
         Account acc2 = new Account(
             Name = 'Test1',
             loan__Investor__c = true,
@@ -1058,10 +1068,10 @@ public class TestCustomTriggerOnApplication {
             Total_Allocations_MTD__c =0,
 			DCP_Allowed__c = true
         );
-        Insert acc2;
+        insert acc2;
         Account acco = new Account(
             Name = 'Test',
-            loan__Investor__c=False,
+            loan__Investor__c=false,
             cnotify__Email__c = 'no-reply@testorganization.com',
             peer__First_Name__c = 'TestFName2',
             peer__Last_Name__c='TestLName2',
@@ -1070,7 +1080,7 @@ public class TestCustomTriggerOnApplication {
             ZIP_Code__c='123456',
             loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9)
         );
-        Insert acco;
+        insert acco;
         //pallavi
         genesis__Applications__c app3 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
@@ -1090,14 +1100,14 @@ public class TestCustomTriggerOnApplication {
             Bureau_SSN__c = '12344',
             Loan_Doc_Signed_On__c = Date.newInstance(2016, 12, 9)
         );
-        Insert app3;
+        insert app3;
 
         List<DCp_Arcus_Transactions__c> DCP_obj = new List<DCp_Arcus_Transactions__c>();
         DCp_Arcus_Transactions__c DCP_obj1 = new DCp_Arcus_Transactions__c();
         DCP_obj1.Application__c = app3.Id;
         DCP_obj1.Card_Number__c = '1234568';
         DCP_obj1.Bank_Name__c = 'CITI';
-        DCP_obj1.Pay_at_Funding__c = True;
+        DCP_obj1.Pay_at_Funding__c = true;
         DCP_obj1.Requested_Amount__c = 200;
         DCP_obj1.Transaction_id__c = '87007jj798889';
         DCP_obj1.Account__c = acco.id;
@@ -1108,7 +1118,7 @@ public class TestCustomTriggerOnApplication {
         DCP_obj2.Application__c = app3.Id;
         DCP_obj2.Card_Number__c = '12345689';
         DCP_obj2.Bank_Name__c = 'CITI';
-        DCP_obj2.Pay_at_Funding__c = True;
+        DCP_obj2.Pay_at_Funding__c = true;
         DCP_obj2.Requested_Amount__c = 200;
         DCP_obj2.Transaction_id__c = '87007jj7988890';
         DCP_obj2.Account__c = acco.id;
@@ -1126,10 +1136,10 @@ public class TestCustomTriggerOnApplication {
         );
         insert cPolicy;
 
-        QueueSobject Verificationqueue = [Select queue.id,queue.name,QueueID
-                                        from QueueSobject
-                                        where SobjectType ='genesis__Applications__c'
-                                        AND queue.DeveloperName =: 'Final_Verification' limit 1];
+        QueueSobject Verificationqueue = [SELECT queue.id,queue.name,QueueID
+                                        FROM QueueSobject
+                                        WHERE SobjectType ='genesis__Applications__c'
+                                        AND queue.DeveloperName =: 'Final_Verification' LIMIT 1];
 
         app3.Bureau_SSN__c = '54658';
         app3.OwnerId = Verificationqueue.Queue.Id;
@@ -1190,7 +1200,7 @@ public class TestCustomTriggerOnApplication {
 
         appDocCat1 = [SELECT Cleared_Reason__c, genesis__Status__c
             FROM genesis__Application_Document_Category__c
-            WHERE genesis__Application__c =: app.Id AND Name like 'Bank Statement %' AND genesis__Required__c = true LIMIT 1];
+            WHERE genesis__Application__c =: app.Id AND Name LIKE 'Bank Statement %' AND genesis__Required__c = TRUE LIMIT 1];
 
         appDocCat2 = [SELECT Cleared_Reason__c, genesis__Status__c
             FROM genesis__Application_Document_Category__c
@@ -1206,4 +1216,13 @@ public class TestCustomTriggerOnApplication {
 
         Test.stopTest();
      }
+
+    static Credit_Policy__c mockCreditPolicy(Decimal fico, Decimal ndi, Id id) {
+        Credit_Policy__c creditPolicy = new Credit_Policy__c();
+        creditPolicy.request_intent__c = 'application';
+        creditPolicy.FICO__c = fico;
+        creditPolicy.Net_Disposable_Income_NDI__c = String.valueOf(ndi);
+        creditPolicy.Application__c = id;
+        return creditPolicy;
+    }
 }
