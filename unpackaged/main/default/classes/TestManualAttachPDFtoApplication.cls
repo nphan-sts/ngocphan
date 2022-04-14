@@ -61,7 +61,8 @@ Purpose : to cover code satisfying ManualAttachPDFtoApplication
         
         Test.startTest();        
         ManualAttachPDFtoApplication.attachPDFWebService(app.id,true,true);
-        ManualAttachPDFtoApplication.ManualTILgenerate(app.id);
+        String result=ManualAttachPDFtoApplication.ManualTILgenerate(app.id);
         Test.stopTest();
+        system.assert(result!=null);
     } 
 }
