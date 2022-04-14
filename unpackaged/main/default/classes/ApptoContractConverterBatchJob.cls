@@ -34,18 +34,7 @@ global class ApptoContractConverterBatchJob implements Database.batchable<sObjec
         
         List<genesis__Applications__c > listOfApp = (List<genesis__Applications__c >)scope;
         System.debug(logginglevel.error,'listOfApp ++++' +listOfApp );
-
-        /*
-        Per the rules of callouts, we have to execute the callouts before dml begins.
-        Errors should not bubble up if the final statements fails.
-        Executing one at a time because this class is currently batch size one anyway
-         */
-        for (genesis__Applications__c app : listOfApp) {
-            if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
-                MW_AllocationEngineHandler.handleFinal(new List<Id> {app.Id});
-            }
-        }
-
+        
         for(genesis__Applications__c app : listOfApp){
             appId = app.id;
             ApplicationToContractConverter.callDCPIntegration(appId);
@@ -53,8 +42,17 @@ global class ApptoContractConverterBatchJob implements Database.batchable<sObjec
         }
     }
     
-    public void Finish(Database.BatchableContext bc) {
-        
+    public void finish(Database.BatchableContext bc) {
+        if(applicationIdSet != null && applicationIdSet.size() > 0){
+            // Execute the AE callout batch
+            try{
+                Integer batchSize = Integer.valueOf(mw_settings__c.getInstance().Allocation_Engine_Batch_Size__c);
+                AllocationEngineCalloutBatch aEBatch = new AllocationEngineCalloutBatch(applicationIdSet);
+                Database.executeBatch(aEBatch,batchSize);
+            }catch(Exception ex){
+                MW_LogUtility.error('ApptoContractConverterBatchJob','','','finish',ex);
+            }
+        }
     }
 
 }
