@@ -290,24 +290,29 @@ Webservice Static String AssignToReviewQueue(id appId) {
     }
 
 ///************ LOP-415 Sarath >> Assign To Me Button*/
-    Webservice Static String AssignToMe() {
-        try{
-            genesis__Applications__c application = [SELECT id, User_Processor__c, Owner.name, Fraud_Tag_Count__c, 
-                                                          CreatedDate 
+Webservice Static String AssignToMe() {
+    List<genesis__Applications__c> application = new List<genesis__Applications__c> ();
+    try{        
+        application = [SELECT id, User_Processor__c, Owner.name, Fraud_Tag_Count__c, 
+                                                          CreatedDate, Lead_ID__c  
                                                    FROM genesis__Applications__c 
                                                     WHERE Owner.name 
-                                                    IN ('Ready for Verification','Agent Verified', 'Final_Verification', 'Outbound') 
+                                                    IN ( 'Ready for Verification','Agent Verified', 'Final_Verification','Outbound') 
                                                         AND (User_Processor__c ='' AND Fraud_Tag_Count__c =0) 
                                                         ORDER BY CreatedDate ASC LIMIT 1]; 
-            application.OwnerId = UserInfo.getUserId();
-            
-            update application;
-            return application.id;
-            
+    
+            if(application.isEmpty()){
+                return 'noapps';
+            }
+            else{
+                application[0].OwnerId = UserInfo.getUserId();
+                update application[0];
+                return application[0].id;
+            }
         }catch(Exception ex){
-            loan__batch_process_log__c logs = new loan__batch_process_log__c(loan__Message__c='Error in AssignToMe:  '+ex.getlinenumber()+'Error: '+ex.getMessage());
-            insert logs;
-            return 'Exception: '+ex.getMessage(); 
+            MW_LogUtility.ExceptionDO expRex = new MW_LogUtility.ExceptionDO(ex);
+            MW_DataDogCallOut.futureSend(JSON.serialize(MW_LogUtility.getLogRecord('PayoffUtilities', application[0].id, application[0].Lead_ID__c , 'AssignToMe',JSON.serialize(expRex),'Error',null)), new List<String>());
+            return 'Exception';
         }
     } 
     //////** LOP-415 */
