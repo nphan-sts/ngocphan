@@ -1,3 +1,7 @@
+/* ****************Modification History******************
+ * Modified by    	Date    		JIRA number
+ *     Sarath      2022/04/15      LOP-415(Assign Me Button in Application List Views/Search Layout)
+ ******************Modification History******************/
 Global class PayOffUtilities{
     
     Static Map<id, recordtype> orgRecordtypes=new Map<id,recordtype>([SELECT Id, Name,  DeveloperName,  SobjectType, IsActive,NamespacePrefix FROM RecordType]);
@@ -284,6 +288,33 @@ Webservice Static String AssignToReviewQueue(id appId) {
             return 'Exception: '+ex.getMessage(); 
         }
     }
+
+///************ LOP-415 Sarath >> Assign To Me Button*/
+    Webservice Static String AssignToMe() {
+        try{
+            genesis__Applications__c application = [SELECT id, User_Processor__c, Owner.name, Fraud_Tag_Count__c, 
+                                                          CreatedDate 
+                                                   FROM genesis__Applications__c 
+                                                    WHERE Owner.name 
+                                                    IN ('Ready for Verification','Agent Verified', 'Final_Verification', 'Outbound') 
+                                                        AND (User_Processor__c ='' AND Fraud_Tag_Count__c =0) 
+                                                        ORDER BY CreatedDate ASC LIMIT 1]; 
+            application.OwnerId = UserInfo.getUserId();
+            
+            update application;
+            return application.id;
+            
+        }catch(Exception ex){
+            loan__batch_process_log__c logs = new loan__batch_process_log__c(loan__Message__c='Error in AssignToMe:  '+ex.getlinenumber()+'Error: '+ex.getMessage());
+            insert logs;
+            return 'Exception: '+ex.getMessage(); 
+        }
+    } 
+    //////** LOP-415 */
+
+
+
+
 
  Webservice Static String AssignToUserPreCheck(id appId) {
         try{
