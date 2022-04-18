@@ -35,7 +35,7 @@ private class SendLoanPaymentEmailHandlerTest{
         system.debug('Contact' +con);
     }
     //test method for SendMail
-    static testMethod void sendMailTest_EmailMessage(){
+    static testMethod void automated_Emailhandler(){
         List<Account> acc  =  [SELECT Id,
                                Name,
                                cnotify__Email__c 
@@ -64,7 +64,7 @@ private class SendLoanPaymentEmailHandlerTest{
         
     }
     //Test method for Manual Payment
-    static testMethod void manualPaymentModeTest_Email(){
+    static testMethod void manual_Emailhandler(){
         List<Account> acc  =  [SELECT Id,
                                Name,
                                cnotify__Email__c 
