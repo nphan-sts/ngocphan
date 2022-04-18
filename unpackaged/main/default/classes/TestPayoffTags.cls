@@ -75,6 +75,8 @@ Purpose : to cover code satisfying appToPayoffTags
         taglist.add(t);
         PayoffTags.appToPayoffTags(taglist);
         test.stopTest();
+        List<Application_Tags__c> atags=[Select id from Application_Tags__c where Application__c=:app.id];
+        system.assert(atags.size()<=0);
     }
     /*Created By : Bhavya Maliwal
 Method name : appToPayoffTags_documentCheckisTrue
