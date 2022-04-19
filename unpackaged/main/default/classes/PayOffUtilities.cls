@@ -297,7 +297,7 @@ Webservice Static String AssignToMe() {
                                                           CreatedDate, Lead_ID__c  
                                                    FROM genesis__Applications__c 
                                                     WHERE Owner.name 
-                                                    IN ( 'Ready for Verification','Agent Verified', 'Final_Verification','Outbound') 
+                                                    IN ( 'Ready for Verification') 
                                                         AND (User_Processor__c ='' AND Fraud_Tag_Count__c =0) 
                                                         ORDER BY CreatedDate ASC LIMIT 1]; 
     

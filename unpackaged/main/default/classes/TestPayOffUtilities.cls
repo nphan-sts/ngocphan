@@ -14,7 +14,7 @@ public class TestPayOffUtilities{
             peer__Last_Name__c='TestLName', 
             City__c='TestCity',
             State__c='TestState',
-            ZIP_Code__c='123456'
+            ZIP_Code__c='123456789'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -69,6 +69,7 @@ public class TestPayOffUtilities{
         PayOffUtilities.AssignToFundingQueue(null);
         PayOffUtilities.AssignToDeclinedQueue(null);
         PayOffUtilities.AssignToAgentVerifiedQueue(null);
+        PayOffUtilities.AssignToMe();//LOP-415
         test.stopTest();
    }
    @isTest static void  AgentVerifiedDQCheck(){
@@ -81,7 +82,7 @@ public class TestPayOffUtilities{
             peer__Last_Name__c='TestLName', 
             City__c='TestCity',
             State__c='TestState',
-            ZIP_Code__c='123456'
+            ZIP_Code__c='123456789'
             );
         insert acc;
         genesis__Applications__c app= new genesis__Applications__c(
@@ -113,4 +114,7 @@ public class TestPayOffUtilities{
         test.stopTest();
         
     }
+
+
+    
 }
