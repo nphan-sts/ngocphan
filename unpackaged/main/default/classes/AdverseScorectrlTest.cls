@@ -72,7 +72,12 @@ public class AdverseScorectrlTest{
             return res;
         }
     }
-    Testmethod static void adversefuturemethodTestUseCase1(){
+    /*Created By : Bhavya Maliwal
+Method name : adversefuturemethodTestconstructorTrue
+Purpose : to cover code satisfying AdverseScorectrl where true is passed to constructor and
+Adversefuturemethod method test as per TestAdverseScoreIntegrationMock1
+*/
+    Testmethod static void adversefuturemethodTestconstructorTrue(){
         genesis__Applications__c app = [SELECT Id, Employment_Status__c from genesis__Applications__c LIMIT 1];
         System.assertEquals(true, app!=Null);
         Test.setMock(HttpCalloutMock.class, new TestAdverseScoreIntegrationMock1());
@@ -80,14 +85,21 @@ public class AdverseScorectrlTest{
         AdverseScorectrl advScore = new AdverseScorectrl(true);
         AdverseScorectrl.Adversefuturemethod(app.Id);
         test.stopTest();
+        List<Adverse_Actions__c> advActionData = [Select Id from Adverse_Actions__c where Application__c = :app.Id];
+        system.assert(advActionData.size()>=1);
     }
-    
-    Testmethod static void adversefuturemethodTestUseCase2(){
+    /*Created By : Bhavya Maliwal
+Method name : adversefuturemethodTestInnerMock
+Purpose : to cover code satisfying AdverseScorectrl for Adversefuturemethod as per the TestAdverseScoreIntegrationMockInner
+*/
+    Testmethod static void adversefuturemethodTestInnerMock(){
         genesis__Applications__c app = [SELECT Id, Employment_Status__c from genesis__Applications__c LIMIT 1];
         System.assertEquals(true, app!=Null);
         Test.setMock(HttpCalloutMock.class, new TestAdverseScoreIntegrationMockInner());
         test.startTest();
         AdverseScorectrl.Adversefuturemethod(app.Id);
         test.stopTest();
+        List<Adverse_Actions__c> advActionData = [Select Id from Adverse_Actions__c where Application__c = :app.Id];
+        system.assert(advActionData.size()>=1);
     }
 }
