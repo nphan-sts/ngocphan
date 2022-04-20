@@ -90,12 +90,12 @@ public class TestUpdatePreBillDaysController {
         application.genesis__Expected_Close_Date__c = system.today().addDays(30);
         application.genesis__Interest_Calculation_Method__c = 'Declining Balance';
         application.genesis__Interest_Only_Period__c = 0;
-        application.genesis__Interest_Rate__c = 100;
+        application.genesis__Interest_Rate__c = 101;
         application.genesis__Account__c = account_Obj.Id;
-        application.genesis__Total_Estimated_Interest__c=500;
+        application.genesis__Total_Estimated_Interest__c=600;
         application.genesis__Valid_Pricing_Flag__c=false;
         application.genesis__Probability__c=100.00;
-        application.genesis__Payment_Amount__c=523.80;
+        application.genesis__Payment_Amount__c=524.80;
         application.genesis__Company__c = comp.id;
         application.genesis__CL_Product__c = pr.id;
         insert application;
@@ -104,10 +104,10 @@ public class TestUpdatePreBillDaysController {
         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
             loan__Account__c= acc.Id,
             loan__Product_Type__c='Flexible Amz Loan',
-            loan__Loan_Amount__c =1000,
+            loan__Loan_Amount__c =10000,
             loan__Loan_Product_Name__c=loanProdObj.Id,
-            loan__Payment_Amount__c=100,
-            loan__Principal_Remaining__c = 500,
+            loan__Payment_Amount__c=200,
+            loan__Principal_Remaining__c = 600,
             loan__Previous_Installment_Date__c= system.today(),
             application__c = application.id, 
             loan__First_Installment_Date__c = Date.newInstance(2019, 03, 01),
