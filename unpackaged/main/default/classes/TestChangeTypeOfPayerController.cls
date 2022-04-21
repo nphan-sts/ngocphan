@@ -18,19 +18,19 @@ public Class TestChangeTypeOfPayerController{
     public static void testsetup(){
         
         loan__Org_Parameters__c loanorg = loan.CustomSettingsUtil.getOrgParameters();
-        loanorg.Manual_Payer_Lending_product_name__c = 'Manual Payer';
-        loanorg.Auto_Payer_Lending_Product_Name__c = 'Auto Payer';
+        loanorg.Manual_Payer_Lending_product_name__c = 'Manual Payers';
+        loanorg.Auto_Payer_Lending_Product_Name__c = 'Auto Payers';
         upsert loanorg;
         
         //Creating loan account 
         loan.TestHelper.createSeedDataForTesting();
         loan__Currency__c curr = loan.TestHelper.createCurrency();
         //Create a dummy MF_Account
-        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
-        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
+        loan__MF_Account__c dummyAccounts = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
+        loan__MF_Account__c dummyIncAccounts = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
         
         //Create a Fee Set
-        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount); 
+        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccounts ,dummyAccounts); 
         dummyFee.loan__Amount__c = 4;      
         dummyFee.loan__Time_Of_Charge__c = 'Other';
         upsert dummyFee;
@@ -42,33 +42,33 @@ public Class TestChangeTypeOfPayerController{
         
         //Create a dummy Loan Product for Auto Payer
         loan__Loan_Product__c dummyLP1 = loan.TestHelper.createLoanProduct(dummyOffice,
-                                                                           dummyAccount, 
+                                                                           dummyAccounts, 
                                                                            curr,
                                                                            dummyFeeSet);
-        dummyLP1.name = 'Auto Payer';
+        dummyLP1.name = 'Auto Payers';
         dummyLP1.loan__Pre_Bill_Days__c = 4;
         upsert dummyLP1;
         
         //Create dummy Lending product for Manual Payer
         loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice,
-                                                                          dummyAccount, 
+                                                                          dummyAccounts, 
                                                                           curr, 
                                                                           dummyFeeSet);
-        dummyLP.name = 'Manual Payer';
+        dummyLP.name = 'Manual Payers';
         dummyLP.loan__Pre_Bill_Days__c = 4;
         upsert dummyLP;
         
         
         loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();        
         dummyLoanPurpose.loan__Loan_Purpose_Code__c = 'Refinance';
-        //create account for dummy client(Manual Payer)
+        //create account for dummy client(Manual Payers)
         account dummyClient = new account(); 
         dummyClient.Name = 'Payoff';
         dummyClient.peer__Last_Name__c = 'Account Name';
         dummyClient.peer__First_Name__c = 'Test Name';
         insert dummyClient;
         
-        //create account for dummy client(Auto Payer)
+        //create account for dummy client(Auto Payers)
         account dummyClient1 = new account(); 
         dummyClient1.Name = 'Payoff1';
         dummyClient1.peer__Last_Name__c = 'Account1 LName';
@@ -103,7 +103,7 @@ public Class TestChangeTypeOfPayerController{
         insert pm;
         
         //investor bank acc.
-        loan__Bank_Account__c bainv = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '1234',
+        loan__Bank_Account__c bainv = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '1224',
                                                                 loan__Bank_Name__c = 'Some Bank',
                                                                 loan__Routing_Number__c = '999999999',
                                                                 loan__Account_Type__c = 'Checking',
@@ -141,8 +141,8 @@ public Class TestChangeTypeOfPayerController{
                                                                                            dummyOffice);
         loanAccount.loan__Number_of_Installments__c     = 11;                                  
         loanAccount.Loan__Loan_Status__c                = loan.LoanConstants.LOAN_STATUS_ACTIVE_GOOD_STANDING;
-        loanAccount.Loan__Fees_Remaining__c             = 100;
-        loanAccount.Loan__Interest_Remaining__c         = 500;
+        loanAccount.Loan__Fees_Remaining__c             = 200;
+        loanAccount.Loan__Interest_Remaining__c         = 600;
         loanAccount.Loan__Principal_Remaining__c        = 1000;
         loanAccount.Loan__Fractionalization_Status__c   = loan.LoanConstants.FRACTIONALIZATION_STATUS_ACTIVE;
         loanAccount.Loan__Pay_off_Amount_As_Of_Today__c = loanAccount.loan__Fees_Remaining__c + loanAccount.loan__Principal_Remaining__c;
@@ -154,9 +154,9 @@ public Class TestChangeTypeOfPayerController{
         system.assertNotEquals(loanAccount.id,null,'LoanAccount not inserted');
         
         //create bank account for Auto Payer
-        loan__Bank_Account__c ba1 = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '121',
-                                                              loan__Bank_Name__c = 'Some Bank 1',
-                                                              loan__Routing_Number__c = '999999999',
+        loan__Bank_Account__c ba1 = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '1211',
+                                                              loan__Bank_Name__c = 'Some Bank ',
+                                                              loan__Routing_Number__c = '986743299',
                                                               loan__Account_Type__c = 'Checking',
                                                               loan__Active__c = true,
                                                               Unmasked_Bank_Account_Number__c = '99999999',
@@ -222,7 +222,7 @@ public Class TestChangeTypeOfPayerController{
         List<Account> acclist = [select id,
                                  peer__Last_Name__c 
                                  from Account 
-                                 where peer__Last_Name__c='Account'];
+                                 where peer__Last_Name__c='Account Name'];
         
         loan__Loan_Account__c loanAccount = [select id,
                                              loan__Loan_Product_Name__c,
@@ -267,7 +267,7 @@ public Class TestChangeTypeOfPayerController{
         List<Account> acclist = [select id,
                                  peer__Last_Name__c 
                                  from Account 
-                                 where peer__Last_Name__c='Account1'];
+                                 where peer__Last_Name__c='Account1 LName'];
         
         
         loan__Loan_Account__c loanAccount1 = [select id,
