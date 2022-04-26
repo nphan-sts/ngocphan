@@ -12,13 +12,13 @@ private class TestDataAccrualFixBatch{
         loan.TestHelper.createSeedDataForTesting();
         loan__Currency__c curr = loan.TestHelper.createCurrency();
         //Create a dummy MF_Account
-        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
-        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
+        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','20000 - ASSETS');
+        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','40000 - INCOME');
         
         //Create a Fee Set
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
-        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+        loan__Fee_Set__c dummyFeeSet1 = loan.TestHelper.createFeeSet();
+        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet1);
         
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
@@ -31,7 +31,6 @@ private class TestDataAccrualFixBatch{
             Name = 'Test',
             loan__Investor__c=False,
             peer__Last_Name__c = 'TestLasName',
-            //Borrower_s_Last_Name__c='Testborrower',
             cnotify__Email__c = 'abc@test.com',
             loan__SOCIAL_SECURITY_NUMBER__c = '123345987'
         );
@@ -55,7 +54,7 @@ private class TestDataAccrualFixBatch{
         update comp;
         
         //creating lending product
-        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet);
+        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet1);
         
         //creating CL Product
         clcommon__CL_Product__c pr = new clcommon__CL_Product__c();
@@ -84,7 +83,7 @@ private class TestDataAccrualFixBatch{
         application.genesis__Expected_Close_Date__c = system.today().addDays(30);
         application.genesis__Interest_Calculation_Method__c = 'Declining Balance';
         application.genesis__Interest_Only_Period__c = 0;
-        application.genesis__Interest_Rate__c = 100;
+        application.genesis__Interest_Rate__c = 120;
         application.genesis__Account__c = account_Obj.Id;
         application.genesis__Total_Estimated_Interest__c=500;
         application.genesis__Valid_Pricing_Flag__c=false;
@@ -116,7 +115,7 @@ private class TestDataAccrualFixBatch{
 Method name : DataAccrualFixBatchExecution
 Purpose : to cover code satisfying DataAccrualFixBatch and DataAccrualFixPatch
 */  
-    Testmethod static void DataAccrualFixBatchExecution(){
+    Testmethod static void dataAccrualFixBatchExecution(){
         
         List<loan__Loan_Account__c> LAList1 = new List<loan__Loan_Account__c>();
         Set<Id> LoanIdset = new Set<Id>();
