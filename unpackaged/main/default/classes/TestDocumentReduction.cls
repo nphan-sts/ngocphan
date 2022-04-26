@@ -19,7 +19,6 @@ Purpose : to cover code satisfying payStubReduction
             loan__SOCIAL_SECURITY_NUMBER__c = '123123167'
         );
         insert acc;
-        System.assertEquals('Test',acc.Name,'Wrong Account');
         
         //Creating Application
         genesis__Applications__c app1= new genesis__Applications__c(
@@ -35,7 +34,6 @@ Purpose : to cover code satisfying payStubReduction
             genesis__Draw_Period_End_Date__c = system.Today()
         );
         insert app1;
-        System.assertEquals(null,app1.Borrower_s_Email__c,'Borrower Email is not null');
         
         Credit_Policy__c crPolicy = new Credit_Policy__c();
         crPolicy.Net_Disposable_Income_NDI__c = '1200';
