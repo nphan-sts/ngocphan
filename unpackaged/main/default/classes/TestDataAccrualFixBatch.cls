@@ -1,15 +1,20 @@
+/* ****************Modification History******************
+*    Created By        	 Date			Version
+*1. Bhavya Maliwal        2022/04/21     Initial Version
+
+******************Modification History******************/
 @isTest
 private class TestDataAccrualFixBatch{
-
-   public static String CRON_EXP = '0 0 0 15 3 ? 2022';
-   @testSetup static void setup() {
-   
-       loan.TestHelper.createSeedDataForTesting();
-       loan__Currency__c curr = loan.TestHelper.createCurrency();
-       //Create a dummy MF_Account
+    
+    public static String CRON_EXP = '0 0 0 15 3 ? 2022';
+    @testSetup static void setup() {
+        
+        loan.TestHelper.createSeedDataForTesting();
+        loan__Currency__c curr = loan.TestHelper.createCurrency();
+        //Create a dummy MF_Account
         loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
         loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
-     
+        
         //Create a Fee Set
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
@@ -18,17 +23,18 @@ private class TestDataAccrualFixBatch{
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
         loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
-         org.loan__Disable_Triggers__c = true;
-         upsert org;  
-   
+        org.loan__Disable_Triggers__c = true;
+        upsert org;  
+        
         //Creating Account
-         Account acc = new Account(
+        Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
+            peer__Last_Name__c = 'TestLasName',
             //Borrower_s_Last_Name__c='Testborrower',
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
+            loan__SOCIAL_SECURITY_NUMBER__c = '123345987'
+        );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
         
@@ -40,15 +46,15 @@ private class TestDataAccrualFixBatch{
         loan__Loan_Product__c loanProdObj = new loan__Loan_Product__c(name='TestProduct'); 
         insert loanProdObj;
         System.assertEquals('TestProduct', loanProdObj.Name,'Wrong Loan Product');
-       
+        
         /*pallavi*/
-       
-       	//Creating Conpany
+        
+        //Creating Conpany
         genesis__Company__c comp = genesis.TestHelper.createCompany(); 
         comp.Name = 'payoff';
         update comp;
-       
-       	//creating lending product
+        
+        //creating lending product
         loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet);
         
         //creating CL Product
@@ -56,14 +62,15 @@ private class TestDataAccrualFixBatch{
         pr.loan__Lending_Product__c = dummyLp.id;
         pr.clcommon__Product_Name__c = 'P1';
         insert pr;
-      
-       	 Account account_Obj = new Account(
+        
+        Account account_Obj = new Account(
             Name = 'Test',
             loan__Investor__c=False,
+            peer__Last_Name__c = 'TestLasName',
             cnotify__Email__c = 'no-reply@testorganization.com'
         );
         Insert account_Obj;
-       
+        
         genesis__applications__c application = new genesis__applications__c();
         application.genesis__Product_Type__c = 'LOAN';
         application.genesis__Loan_Amount__c = 6700;
@@ -89,140 +96,62 @@ private class TestDataAccrualFixBatch{
         /*pallavi*/
         
         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
-                                            loan__Account__c= acc.Id,
-                                            loan__Product_Type__c='Flexible Amz Loan',
-                                            loan__Loan_Amount__c =1000,
-                                            loan__Loan_Product_Name__c=loanProdObj.Id,
-                                            loan__Payment_Amount__c=100, 
-                                            loan__Previous_Installment_Date__c= system.today(),
-            								application__c = application.id,	//pallavi
-            								DataAccrualFix__c = true,	//pallavi
-            								loan__First_Installment_Date__c = Date.newInstance(2019, 03, 01),	//pallavi
-            								loan__Next_Installment_Date__c = Date.newInstance(2019, 09, 01),	//pallavi
-            								loan__Maturity_Date_Current__c = Date.newInstance(2021, 03, 01),	//pallavi
-            								loan__Frequency_of_Loan_Payment__c = '6',	//pallavi
-            								loan__Last_Installment_Date__c = Date.newInstance(2019, 03, 01)		//pallavi
-                                            );
+            loan__Account__c= acc.Id,
+            loan__Product_Type__c='Flexible Amz Loan',
+            loan__Loan_Amount__c =1000,
+            loan__Loan_Product_Name__c=loanProdObj.Id,
+            loan__Payment_Amount__c=100, 
+            loan__Previous_Installment_Date__c= system.today(),
+            application__c = application.id,	//pallavi
+            DataAccrualFix__c = true,	//pallavi
+            loan__First_Installment_Date__c = Date.newInstance(2019, 03, 01),	//pallavi
+            loan__Next_Installment_Date__c = Date.newInstance(2019, 09, 01),	//pallavi
+            loan__Maturity_Date_Current__c = Date.newInstance(2021, 03, 01),	//pallavi
+            loan__Frequency_of_Loan_Payment__c = '6',	//pallavi
+            loan__Last_Installment_Date__c = Date.newInstance(2019, 03, 01)		//pallavi
+        );
         insert lacc; 
-       
-        
-        
-        
-   }
-   
-   Testmethod static void method1(){
-   
-        List<loan__Loan_Account__c> LAList = [SELECT ID, 
-                                                    loan__Previous_Installment_Date__c,
-                                                    loan__Account__r.cnotify__Email__c,
-                                                    loan__Loan_Product_Name__r.name, 
-                                                    loan__Payment_Amount__c, 
-                                                    loan__Next_Installment_Date__c, 
-                                                    loan__Account__r.ID,Borrowers_First_Name__c,
-                                                    loan__Account__r.Borrower_s_Last_Name__c,
-                                                    loan__Loan_Product_Name__c 
-                                                    from loan__Loan_Account__c];
-                                                    
-        
-        test.startTest();
-        
-        Set<Id> LoanIdset = new Set<Id>();
-        
-        for(loan__Loan_Account__c lc : LAList){
-            LoanIdset.add(lc.id);
-        }
-        
-        DataAccrualFixBatch job = new DataAccrualFixBatch(LoanIdset);
-        Database.executeBatch(job,1);
-
-        
-        test.stopTest();
     }
-    /*pallavi*/
-    Testmethod static void method2(){
-   
-        List<loan__Loan_Account__c> LAList = [SELECT ID, 
-                                                    loan__Previous_Installment_Date__c,
-                                                    loan__Account__r.cnotify__Email__c,
-                                                    loan__Loan_Product_Name__r.name, 
-                                                    loan__Payment_Amount__c, 
-                                                    loan__Next_Installment_Date__c, 
-                                                    loan__Account__r.ID,Borrowers_First_Name__c,
-                                                    loan__Account__r.Borrower_s_Last_Name__c,
-                                                    loan__Loan_Product_Name__c,
-                                              		Application__c,
-                                              		Application__r.genesis__Monthly_Debt_Payments__c,
-                                              		loan__Accrual_Start_Date__c,
-                                              		Application__r.Loan_Origination_Date__c
-                                                    from loan__Loan_Account__c];
+    /*Created By : Bhavya Maliwal
+Method name : DataAccrualFixBatchExecution
+Purpose : to cover code satisfying DataAccrualFixBatch and DataAccrualFixPatch
+*/  
+    Testmethod static void DataAccrualFixBatchExecution(){
         
         List<loan__Loan_Account__c> LAList1 = new List<loan__Loan_Account__c>();
+        Set<Id> LoanIdset = new Set<Id>();
         
-        for(loan__Loan_Account__c temp:LAList){
-            temp.loan__Payment_Amount__c = 1000;
-            temp.Application__r.genesis__Monthly_Debt_Payments__c = 1100;
-            temp.loan__Accrual_Start_Date__c = Date.newInstance(2019, 01, 01);
-            temp.Application__r.Loan_Origination_Date__c = Date.newInstance(2019, 02, 01);
-            LAList1.add(temp);
-        }
+        for(loan__Loan_Account__c temp:[SELECT ID, 
+                                        loan__Previous_Installment_Date__c,
+                                        loan__Account__r.cnotify__Email__c,
+                                        loan__Loan_Product_Name__r.name, 
+                                        loan__Payment_Amount__c, 
+                                        loan__Next_Installment_Date__c, 
+                                        loan__Account__r.ID,Borrowers_First_Name__c,
+                                        loan__Account__r.Borrower_s_Last_Name__c,
+                                        loan__Loan_Product_Name__c,
+                                        Application__c,
+                                        Application__r.genesis__Monthly_Debt_Payments__c,
+                                        loan__Accrual_Start_Date__c,
+                                        Application__r.Loan_Origination_Date__c
+                                        from loan__Loan_Account__c]){
+                                            temp.loan__Payment_Amount__c = 1000;
+                                            temp.Application__r.genesis__Monthly_Debt_Payments__c = 1100;
+                                            temp.loan__Accrual_Start_Date__c = Date.newInstance(2019, 01, 01);
+                                            temp.Application__r.Loan_Origination_Date__c = Date.newInstance(2019, 02, 01);
+                                            LAList1.add(temp);
+                                            
+                                            LoanIdset.add(temp.id);
+                                        }
         update LAList1;
         
         test.startTest();
-        
-        Set<Id> LoanIdset = new Set<Id>();
-        
-        for(loan__Loan_Account__c lc : LAList1){
-            LoanIdset.add(lc.id);
-        }
-        
         DataAccrualFixBatch job = new DataAccrualFixBatch(LoanIdset);
         Database.executeBatch(job,1);
-
-        
         test.stopTest();
+        loan__Loan_Account__c la=[Select id,DataAccrualFix__c from loan__Loan_Account__c limit 1];
+        system.assert(la.DataAccrualFix__c);
     }
-    Testmethod static void method3(){
-   
-        List<loan__Loan_Account__c> LAList = [SELECT ID, 
-                                                    loan__Previous_Installment_Date__c,
-                                                    loan__Account__r.cnotify__Email__c,
-                                                    loan__Loan_Product_Name__r.name, 
-                                                    loan__Payment_Amount__c, 
-                                                    loan__Next_Installment_Date__c, 
-                                                    loan__Account__r.ID,Borrowers_First_Name__c,
-                                                    loan__Account__r.Borrower_s_Last_Name__c,
-                                                    loan__Loan_Product_Name__c,
-                                              		Application__c,
-                                              		Application__r.genesis__Monthly_Debt_Payments__c,
-                                              		loan__Accrual_Start_Date__c,
-                                              		Application__r.Loan_Origination_Date__c
-                                                    from loan__Loan_Account__c];
-        
-        List<loan__Loan_Account__c> LAList1 = new List<loan__Loan_Account__c>();
-        
-        for(loan__Loan_Account__c temp:LAList){
-            temp.loan__Payment_Amount__c = 1000;
-            temp.Application__r.genesis__Monthly_Debt_Payments__c = 1100;
-            temp.loan__Accrual_Start_Date__c = Date.newInstance(2019, 01, 01);
-            temp.Application__r.Loan_Origination_Date__c = Date.newInstance(2019, 02, 01);
-            temp.DataAccrualFix__c = false;
-            LAList1.add(temp);
-        }
-        update LAList1;
-        
-        test.startTest();
-        
-        Set<Id> LoanIdset = new Set<Id>();
-        
-        for(loan__Loan_Account__c lc : LAList1){
-            LoanIdset.add(lc.id);
-        }
-        
-        DataAccrualFixBatch job = new DataAccrualFixBatch(LoanIdset);
-        Database.executeBatch(job,1);
-
-        
-        test.stopTest();
-    }
-    /*pallavi*/
+    
+    
 }
