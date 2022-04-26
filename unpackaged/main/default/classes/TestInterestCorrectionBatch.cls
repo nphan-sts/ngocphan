@@ -34,17 +34,17 @@ public class TestInterestCorrectionBatch {
         
         loan__MF_Account__c a1 = loan.TestHelper.createMFAccount('TestAccountForOffice', '20000 - ASSETS');
         
-        loan__Branch_Location__c testLoc = new loan__Branch_Location__c(Name='Data Migration',
+        loan__Branch_Location__c testLoc1 = new loan__Branch_Location__c(Name='Data Migration',
                                                                         loan__Address_Line_1__c = 'Add1',
                                                                         loan__Address_Line_2__c = 'Add2',
                                                                         loan__State__c = 'MH',
                                                                         loan__Phone__C = '32323233',
                                                                         loan__Zip_code__c = 33333
                                                                        );
-        insert testLoc;
+        insert testLoc1;
         
         loan__Office_Name__c dummyOffice = new loan__Office_Name__c(Name='PayOff Inc.',
-                                                                    loan__Office_Location__c = testLoc.ID,
+                                                                    loan__Office_Location__c = testLoc1.ID,
                                                                     loan__Office_Short_Name__c = 'XXXCSN',
                                                                     loan__Cash_Account__c = a1.Id,
                                                                     loan__Check_Account__c = a1.Id,
@@ -53,7 +53,7 @@ public class TestInterestCorrectionBatch {
                                                                     loan__Outward_Check_Clearance_Account__c= a1.Id,
                                                                     loan__Profit_and_Loss_Account__c = a1.Id,
                                                                     loan__Loan_Schedule_tied_to_Meeting_Schedule__c = false,
-                                                                    loan__Mark_Suspended_After_Days__c = 180,
+                                                                    loan__Mark_Suspended_After_Days__c = 160,
                                                                     loan__State__c = 'Active',
                                                                     loan__Write_Off_Suggestion_Days__c = 80,
                                                                     loan__Office_Type__c = testBranchType.ID,
@@ -67,7 +67,6 @@ public class TestInterestCorrectionBatch {
         loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest', '10000 - ASSETS');
         loan__Fee__c dummyFee1 = loan.TestHelper.createFee(curr, dummyIncAccount, dummyAccount); 
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet(); 
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee1, dummyFeeSet);
         
         loan__Loan_Product__c prod = new loan__Loan_Product__c(Name='Auto Payer',
                                                                loan__Loan_Product_Type__c = 'Loan',
@@ -78,7 +77,7 @@ public class TestInterestCorrectionBatch {
                                                                loan__Cash_Based_Accounting__c=false,
                                                                loan__Maximum_Gap_Between_Installments__c=1,
                                                                loan__Minimum_Gap_Between_Installments__c=1,
-                                                               loan__Max_Loan_Amount__c=30000,
+                                                               loan__Max_Loan_Amount__c=50000,
                                                                loan__Max_Overdue_Interest_Rate__c=24,
                                                                loan__Minimum_Installment_Amount__c=100,
                                                                loan__Min_Interest_Rate__c=1,
