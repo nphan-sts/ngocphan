@@ -65,14 +65,14 @@ private class UploadNachaToBoxJobTest {
         apc.Box_Folder_ID__c = '48673238292';
         insert apc;
 
-        Document Documents = new Document();
-        Documents.Body = Blob.valueOf('Some Text');
-        Documents.ContentType = 'application/pdf';
-        Documents.DeveloperName = 'my_document1';
-        Documents.IsPublic = true;
-        Documents.Name = 'My Document1';
-        Documents.FolderId = [SELECT Id FROM Folder WHERE Name = 'ACU'].Id;
-        insert Documents;
+        Document docRec = new Document();
+        docRec.Body = Blob.valueOf('Some Text');
+        docRec.ContentType = 'application/pdf';
+        docRec.DeveloperName = 'my_document1';
+        docRec.IsPublic = true;
+        docRec.Name = 'My Document1';
+        docRec.FolderId = [SELECT Id FROM Folder WHERE Name = 'ACU'].Id;
+        insert docRec;
 
     }
     
