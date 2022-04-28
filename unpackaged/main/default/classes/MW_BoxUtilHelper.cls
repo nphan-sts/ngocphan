@@ -30,7 +30,7 @@ public with sharing class MW_BoxUtilHelper
                                                          ints__OAuth_Settings__c =: oAuthName.Id AND 
                                                          ints__Is_Valid__c = true Order By CreatedDate DESC LIMIT 1];
 
-                
+
                 if(authToken.ints__Refresh_Token__c != null && authToken.ints__Refresh_Token__c != 'null')
                 {  
                     Http http = new Http();
