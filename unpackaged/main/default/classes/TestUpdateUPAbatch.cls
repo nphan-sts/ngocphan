@@ -41,7 +41,7 @@ public class TestUpdateUPAbatch {
                                                                         loan__Address_Line_2__c = 'Add2',
                                                                         loan__State__c = 'MH',
                                                                         loan__Phone__C = '32323232',
-                                                                        loan__Zip_code__c = 33333
+                                                                        loan__Zip_code__c = 33334
                                                                        );
         insert testLoc;
         
@@ -55,7 +55,7 @@ public class TestUpdateUPAbatch {
                                                                     loan__Outward_Check_Clearance_Account__c= a1.Id,
                                                                     loan__Profit_and_Loss_Account__c = a1.Id,
                                                                     loan__Loan_Schedule_tied_to_Meeting_Schedule__c = false,
-                                                                    loan__Mark_Suspended_After_Days__c = 180,
+                                                                    loan__Mark_Suspended_After_Days__c = 181,
                                                                     loan__State__c = 'Active',
                                                                     loan__Write_Off_Suggestion_Days__c = 90,
                                                                     loan__Office_Type__c = testBranchType.ID,
@@ -79,7 +79,7 @@ public class TestUpdateUPAbatch {
                                                                loan__Cash_Based_Accounting__c=false,
                                                                loan__Maximum_Gap_Between_Installments__c=1,
                                                                loan__Minimum_Gap_Between_Installments__c=1,
-                                                               loan__Max_Loan_Amount__c=30000,
+                                                               loan__Max_Loan_Amount__c=30001,
                                                                loan__Max_Overdue_Interest_Rate__c=24,
                                                                loan__Minimum_Installment_Amount__c=100,
                                                                loan__Min_Interest_Rate__c=1,
@@ -139,7 +139,7 @@ public class TestUpdateUPAbatch {
         loanAccount.loan__Oldest_Due_Date__c = loanAccount.loan__Expected_Repayment_Start_Date__c;
         loanAccount.loan__First_Installment_Date__c = null;
         loanAccount.loan__Next_Installment_Date__c = null;
-        loanAccount.loan__Disbursal_Date__c = Date.today().addDays(-20);
+        loanAccount.loan__Disbursal_Date__c = Date.today().addDays(-21);
         loanAccount.loan__Term_Cur__c = 0;
         loanAccount.loan__Principal_Remaining__c = 0;
         Integer dueday = 0;
