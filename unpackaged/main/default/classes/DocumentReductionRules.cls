@@ -31,7 +31,7 @@ public with Sharing class DocumentReductionRules{
                                              Id_Analytics_Score__c,Consistency_Snapd_score__c,Paste_Count__c,Accept_Refer_Code__c,
                                              Public_Records__c FROM KBA_Details__r Order By createddate desc Limit 1),Annual_Individual_Income_App__c  
                                              FROM genesis__Applications__c where Id=:applicationId];
-            if(null != app){
+            if(null != app){ 
                 
                 if(app.Credit_Policy__r!= null && app.Credit_Policy__r.size() > 0 && app.Credit_Policy__r[0].Net_Disposable_Income_NDI__c != null){
                     Decimal NDIncome = decimal.valueOf(app.Credit_Policy__r[0].Net_Disposable_Income_NDI__c);                  
@@ -91,14 +91,16 @@ public with Sharing class DocumentReductionRules{
                     System.debug('KBA...' + app.KBA_Details__r);
                     
                     //changing ID Reduction rules per revised requirements on CLS-040  09/04/2018  
+                    //LOP-563
                     if((app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != 9012 && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null 
                         && app.KBA_Details__r[0].Accept_Refer_Code__c != null && app.KBA_Details__r[0].Accept_Refer_Code__c == 'ACC')
-                       || (app.genesis__Status__c == 'kba_success' && app.Manual_KBA__c
+                       || (app.genesis__Status__c == 'kba_success' 
                            && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != 9012
-                           && (app.KBA_Details__r[0].Accept_Refer_Code__c == null || app.KBA_Details__r[0].Accept_Refer_Code__c == 'ACC'))){  //CRM-966(added one condition)
+                           && (app.KBA_Details__r[0].Accept_Refer_Code__c == null || app.KBA_Details__r[0].Accept_Refer_Code__c == 'ACC' || app.KBA_Details__r[0].Accept_Refer_Code__c =='REF'))){  //CRM-966(added one condition)
                                System.debug('eligible for reduction');
                                pidScoreFlag = true;                        
                            }
+                    
                     
                     System.debug('... pidScoreFlag...'+pidScoreFlag);
                     
