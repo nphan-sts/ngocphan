@@ -371,7 +371,7 @@ private class MW_AllocationEngineHandlerTest {
 
         List<Id> ids = toIds(getApps());
 
-        MW_AllocationEngineHandler.handleInvalidDecisionLevel('testHandleInvalidDecisionLevel', ids, 'potato');
+        MW_AllocationEngineHandler.handleInvalidDecisionLevel(ids, 'potato');
 
         List<loan__Batch_Process_Log__c> logs = getLoanLogs();
         System.assertEquals(1, logs.size());
@@ -400,7 +400,7 @@ private class MW_AllocationEngineHandlerTest {
         genesis__Applications__c app = getApp();
         IllegalArgumentException e = new IllegalArgumentException('There be dragons');
 
-        MW_AllocationEngineHandler.handleExceptionHandler('testHandleExceptionHandler', new List<String> {app.Id}, MW_AllocationEngineHandler.ADVP, e);
+        MW_AllocationEngineHandler.handleExceptionHandler(new List<String> {app.Id}, MW_AllocationEngineHandler.ADVP, e);
 
         genesis__Applications__c actual = getApp();
         System.assertEquals(MW_AllocationEngineHandler.ADVP, actual.Allocation_Operation_Error__c);

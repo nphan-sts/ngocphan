@@ -227,7 +227,7 @@ public with sharing class MW_AllocationEngineHandler {
             }
 
             if (!DECISION_LEVELS.contains(decisionLevel)) {
-                handleInvalidDecisionLevel(logMethodName, appIds, decisionLevel);
+                handleInvalidDecisionLevel(appIds, decisionLevel);
                 return;
             }
 
@@ -240,39 +240,7 @@ public with sharing class MW_AllocationEngineHandler {
 
             json = toJson(validAppIds, manualPartnerIds, decisionLevel);
 
-            /*
-            Futures are disallowed inside some other async Apex constructs
-            Attempt to execute synchronously if the handler detects async context.
-            Triggers and System.isScheduled must be executed via the future
-             */
-            Boolean useSync = System.isBatch() || System.isQueueable() || System.isFuture();
-            System.debug(String.format('AllocationEngineHandler Context: useSync: {0}, Batch:{1}, Queueable:{2}, Future:{3}, Quiddity:{4}, Trigger.isExecuting:{5}',
-                    new List<Object>{ useSync, System.isBatch(), System.isQueueable(), System.isFuture(), Request.getCurrent().getQuiddity(), Trigger.isExecuting }));
-
-            System.debug('handle validAppIds: ' + validAppIds);
-            System.debug('handle decisionLevel: ' + decisionLevel);
-            System.debug('handle json: ' + json);
-
-            if (useSync) {
-                /*
-                LSP-772, only cancelled statuses should be in a potentially conflicted scenario.
-                The cancel operation will be executed sometimes one by one, also potentially by batch.
-                The incoming requests from the trigger can be ignored since they are executed by the batch expiry jobs directly.
-                Non-batch trigger cancel operations are allowed just fine
-                 */
-                if (Trigger.isExecuting) {
-                    List<String> leadIds = toLeadIds(validAppIds);
-                    if (CANCELLED == decisionLevel) {
-                        MW_LogUtility.infoMessage(LOG_NAME, logMethodName, 'Batch cancel executing: ignoring trigger since batch already executed: ' + leadIds);
-                    } else {
-                        MW_LogUtility.errorMessage(LOG_NAME, logMethodName, 'Unhandled scenario: ' + decisionLevel + ' should not be both batch and in a trigger: ' + leadIds);
-                    }
-                } else {
-                    callAllocationEngineService(validAppIds, json, decisionLevel);
-                }
-            } else {
-                callAllocationEngineServiceFuture(validAppIds, json, decisionLevel);
-            }
+            executeInContext(validAppIds, decisionLevel, json);
 
         } catch (Exception e) {
 
@@ -282,8 +250,56 @@ public with sharing class MW_AllocationEngineHandler {
                else, we should use the original list
              */
             List<Id> logIds = validAppIds != null ? validAppIds : appIds;
-            handleExceptionHandler(logMethodName, logIds, decisionLevel, e);
+            handleExceptionHandler(logIds, decisionLevel, e);
             return;
+        }
+    }
+
+    /**
+     * Execute the callout considering the current async context
+     *
+     * Futures are disallowed inside some other async Apex constructs.
+     * Attempt to execute synchronously if the handler detects async context.
+     * Triggers and System.isScheduled must be executed via the future.
+     *
+     * @param validAppIds Validated app ids
+     * @param decisionLevel The decision level
+     * @param json The constructed json
+     */
+    private static void executeInContext(List<Id> validAppIds, String decisionLevel, String json) {
+
+        final String logMethodName = 'executeInContext';
+
+        Boolean useSync = System.isBatch() || System.isQueueable() || System.isFuture();
+
+        System.debug(String.format('AllocationEngineHandler Context: useSync: {0}, Batch:{1}, Queueable:{2}, Future:{3}, Quiddity:{4}, Trigger.isExecuting:{5}',
+                new List<Object>{
+                        useSync, System.isBatch(), System.isQueueable(), System.isFuture(), Request.getCurrent().getQuiddity(), Trigger.isExecuting
+                }));
+
+        System.debug('handle validAppIds: ' + validAppIds);
+        System.debug('handle decisionLevel: ' + decisionLevel);
+        System.debug('handle json: ' + json);
+
+        if (useSync) {
+            /*
+            LSP-772, only cancelled statuses should be in a potentially conflicted scenario.
+            The cancel operation will be executed sometimes one by one, also potentially by batch.
+            The incoming requests from the trigger can be ignored since they are executed by the batch expiry jobs directly.
+            Non-batch trigger cancel operations are allowed just fine
+             */
+            if (Trigger.isExecuting) {
+                List<String> leadIds = toLeadIds(validAppIds);
+                if (CANCELLED == decisionLevel) {
+                    MW_LogUtility.infoMessage(LOG_NAME, logMethodName, 'Batch cancel executing: ignoring trigger since batch already executed: ' + leadIds);
+                } else {
+                    MW_LogUtility.errorMessage(LOG_NAME, logMethodName, 'Unhandled scenario: ' + decisionLevel + ' should not be both batch and in a trigger: ' + leadIds);
+                }
+            } else {
+                callAllocationEngineService(validAppIds, json, decisionLevel);
+            }
+        } else {
+            callAllocationEngineServiceFuture(validAppIds, json, decisionLevel);
         }
     }
 
@@ -329,8 +345,11 @@ public with sharing class MW_AllocationEngineHandler {
     }
 
     @TestVisible
-    private static void handleInvalidDecisionLevel(String logMethodName, List<Id> appIds, String decisionLevel) {
+    private static void handleInvalidDecisionLevel(List<Id> appIds, String decisionLevel) {
+
+        final String logMethodName = 'handleInvalidDecisionLevel';
         final String format = LOG_NAME + ': Invalid decision level of "{0}" attempted';
+
         String message = String.format(format, new List<String>{ decisionLevel });
         String leadIds = toLeadIdsStr(appIds);
 
@@ -351,13 +370,14 @@ public with sharing class MW_AllocationEngineHandler {
      * It's possible to have attempted an incorrect decision level.
      * Record this in the object.
      *
-     * @param logMethodName The invoking method
      * @param appIds Valid app ids to execute the call for
      * @param decisionLevel The attempted decision level
      * @param e The exception received
      */
     @TestVisible
-    private static void handleExceptionHandler(String logMethodName, List<Id> appIds, String decisionLevel, Exception e) {
+    private static void handleExceptionHandler(List<Id> appIds, String decisionLevel, Exception e) {
+
+        final String logMethodName = 'handleExceptionHandler';
 
         System.debug('handleExceptionHandler Exception: ' + exceptionToStr(e));
 
