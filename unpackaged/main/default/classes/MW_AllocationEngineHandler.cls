@@ -119,6 +119,18 @@ public with sharing class MW_AllocationEngineHandler {
         }
     }
 
+    /**
+     * Skuid adapter
+     * @param appId App id
+     */
+    public static void handleReallocation(Id appId) {
+        if (appId == null) {
+            System.debug('handleReallocation: null app id' + appId);
+            return;
+        }
+        handleReallocation(new List<Id> {appId});
+    }
+
     public static void handleReallocation(List<Id> appIds) {
         if (appIds == null || appIds.isEmpty()) {
             System.debug('handleReallocation: ' + appIds);
