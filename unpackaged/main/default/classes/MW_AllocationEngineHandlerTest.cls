@@ -461,6 +461,22 @@ private class MW_AllocationEngineHandlerTest {
     }
 
     /**
+     * This executes trigger for receive coverage purposes only.
+     * Functionality is tested in other test methods.
+     *
+     * MW_AllocationParterTrigger is covered as part of this test
+     */
+    @IsTest static void testTriggerCoverage() {
+
+        Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
+        Test.startTest();
+
+        /* fires: MW_AllocationParterTrigger */
+        setManualPartner(false);
+        Test.stopTest();
+    }
+
+    /**
      * Generate json corresponding to an ITB loan
      */
     @IsTest static void advp_canGenerateJson_ITB() {
@@ -970,10 +986,13 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(manualPartner.Investor__r.Investor_Code__c, actual.get('investorCode'));
     }
 
+    /**
+     * The selected app for this test has no manually selected partners and should fail accordingly.
+     */
     @IsTest static void manual_handlesValidationFailure() {
 
         /* should not produce an error, just return */
-        MW_AllocationEngineHandler.handleManual(null, null);
+        MW_AllocationEngineHandler.handleManual(null);
 
         /* trigger validation failure
         * due to request mapping LSP-661,
@@ -982,7 +1001,7 @@ private class MW_AllocationEngineHandlerTest {
         newApp.Allocation_ID__c = '123';
         update newApp;
 
-        MW_AllocationEngineHandler.handleManual(toIds(getNewAppAsList()), toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(toIds(getNewAppAsList()));
 
         genesis__Applications__c actual = getNewApp();
         System.assertEquals(MW_AllocationEngineHandler.MANUAL, actual.Allocation_Operation_Error__c);
@@ -1005,10 +1024,13 @@ private class MW_AllocationEngineHandlerTest {
     }
 
     @IsTest static void manual_handlesCalloutExceptionErrors() {
+
+        setManualPartner();
+
         Test.setMock(HttpCalloutMock.class, new AESCalloutExceptionMock());
         Test.startTest();
 
-        MW_AllocationEngineHandler.handleManual(toIds(getAppAsList()), toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(toIds(getAppAsList()));
 
         Test.stopTest();
 
@@ -1027,13 +1049,15 @@ private class MW_AllocationEngineHandlerTest {
     }
 
     @IsTest static void manual_handles500Errors() {
+
         List<genesis__Applications__c> apps = getAppAsList();
+
+        setManualPartner();
 
         AESServerErrorMock errorMock = new AESServerErrorMock();
         Test.setMock(HttpCalloutMock.class, errorMock);
         Test.startTest();
-
-        MW_AllocationEngineHandler.handleManual(toIds(apps), toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(toIds(apps));
 
         Test.stopTest();
 
@@ -1057,10 +1081,12 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> apps = getAppAsList();
 
+        setManualPartner();
+
         Test.setMock(HttpCalloutMock.class, new AESValidationFailureMock());
         Test.startTest();
 
-        MW_AllocationEngineHandler.handleManual(toIds(apps), toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(toIds(apps));
 
         Test.stopTest();
 
@@ -1087,14 +1113,14 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> apps = getAppAsList();
 
+        setManualPartner();
+
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
 
-        MW_AllocationEngineHandler.handleManual(null, toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(null);
 
-        MW_AllocationEngineHandler.handleManual(toIds(apps), null);
-
-        MW_AllocationEngineHandler.handleManual(toIds(apps), toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(toIds(apps));
 
         Test.stopTest();
 
@@ -1104,6 +1130,38 @@ private class MW_AllocationEngineHandlerTest {
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
+    }
+
+
+    private static void setManualPartner() {
+        setManualPartner(true);
+    }
+
+    /**
+     * Sets the first allocation partner to assign to.
+     * This allows the first app to pass validation in order to execute test manual requests.
+     *
+     * @param toggleDeploymentMode If true, toggles legacy mode on, then updates partner then dark mode no
+     *                            This is to prevent the allocation partner trigger from firing as part of test setup.
+     */
+    private static void setManualPartner(Boolean toggleDeploymentMode) {
+
+        MW_Settings__c mwSettings = MW_Settings__c.getOrgDefaults();
+
+        if (toggleDeploymentMode) {
+            mwSettings.Allocation_Engine_Deployment_Mode__c = 'LEGACY_MODE';
+            update mwSettings;
+        }
+
+        List<Allocation_Partner__c> aps = getAllocationPartners();
+        Allocation_Partner__c ap = aps.get(0);
+        ap.Assign_To__c = true;
+        update ap;
+
+        if (toggleDeploymentMode) {
+            mwSettings.Allocation_Engine_Deployment_Mode__c = 'DARK_MODE';
+            update mwSettings;
+        }
     }
 
     @IsTest static void cancelled_canGenerateJson() {
@@ -1464,6 +1522,7 @@ private class MW_AllocationEngineHandlerTest {
         return [SELECT Id,
                 Application__c,
                 Lead_Partner__c,
+                Assign_To__c,
                 Investor__c
         FROM   Allocation_Partner__c];
     }
