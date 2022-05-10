@@ -5,9 +5,7 @@
  * Test Coverage: MW_AllocationEngineHandlerTest
  */
 trigger MW_AllocationPartnerTrigger on Allocation_Partner__c (after update) {
-    if (Trigger.isAfter && Trigger.isUpdate) {
-        if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
-            MW_AllocationEngineHandler.handleUpdatedAllocationPartners(Trigger.new);
-        }
+    if (Trigger.isAfter && Trigger.isUpdate && MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
+        MW_AllocationEngineHandler.handleUpdatedAllocationPartners(Trigger.new);
     }
 }
