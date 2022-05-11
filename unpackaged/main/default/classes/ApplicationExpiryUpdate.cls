@@ -4,11 +4,12 @@
 		   Database.executeBatch(b,1);
          */
 
-global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Schedulable, Database.AllowsCallouts {
+global class ApplicationExpiryUpdate implements Database.Batchable<SObject>,Schedulable, Database.AllowsCallouts {
             
     String query;
     List<String> skipLoanStatus = System.Label.Application_Expired_Status.split(',');
     String CSD;
+    static global Set<Id> notifyIds = new Set<Id>();
     Date currentSystemDate;
            
     global ApplicationExpiryUpdate(){
@@ -53,7 +54,7 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
     
     }
     
-    global void execute(Database.BatchableContext BC, List<sObject> scope){
+    global void execute(Database.BatchableContext bc, List<SObject> scope){
         
         System.debug('----Method execute(+)scope----'+ scope);
         //System.debug(CSD);
@@ -94,6 +95,8 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         }
         List<genesis__Applications__c > listOfApp = (List<genesis__Applications__c >)scope;
         List<genesis__Applications__c > listOfAppTobeUpdated = new List<genesis__Applications__c> ();
+
+        /* commented out usage in setAppExpired */
         Set<String> appEnvelope = new Set<String>();
         
         Set<String> pre_qual_status = new Set<String>{'pre_qual_collected','partner_pre_qual_shown','partner_offer_estimates',
@@ -106,73 +109,78 @@ global class ApplicationExpiryUpdate implements Database.batchable<sObject>,Sche
         
         Set<String> docs_status = new Set<String>{'hard_inquiry_disclosure_accepted','docusign_loan_docs_sent',
                                                     'docusign_loan_docs_complete', 'pre_funding','funded'};
-                
-        for(genesis__Applications__c  app : listOfApp){
-            if(app.Credit_Policy__r.size()==0){
-                
-                if((app.Expiry_Date__c != null && app.Expiry_Date__c <= currentSystemDate) && (app.genesis__Status__c != null && app.genesis__Status__c != 'funded')){
-               
-                    if(pre_qual_status.contains(app.genesis__Status__c)){
-                  
-                        app.Expiration_Tag__c = 'expired_pre_qual';
-                  
-                    }else if(verification_status.contains(app.genesis__Status__c)){
-                                  
-                      app.Expiration_Tag__c = 'expired_verification'; 
-                      
-                      }else if(docs_status.contains(app.genesis__Status__c) ){
-                                       
-                          app.Expiration_Tag__c = 'expired_docs';
-                      
-                      }
-                   if(app.DocuSign_EnvelopeId__c != null){
-                      System.debug('app.DocuSign_EnvelopeId__c...'+ app.DocuSign_EnvelopeId__c);
-                      //appEnvelope.add(app.DocuSign_EnvelopeId__c);
-                      SendEnvDocuSignAPI.voidDocuSignEnvelope(app.DocuSign_EnvelopeId__c);
-                   }
-                   app.genesis__Status__c = 'Expired';
-                   app.OwnerId = expiredQue.Queue.Id;
-                   //app.OwnerId = app.CreatedById;
-                }
-            }
-            else{
-                if(app.Credit_Policy__r.size()>0 && app.Expiry_Date__c != null && app.Expiry_Date__c <= currentSystemDate){  
-                   
-                    if(pre_qual_status.contains(app.genesis__Status__c)){
-                  
-                        app.Expiration_Tag__c = 'expired_pre_qual';
-                  
-                    }else if(verification_status.contains(app.genesis__Status__c)){
-                                  
-                      app.Expiration_Tag__c = 'expired_verification'; 
-                      
-                  
-                      }else if(docs_status.contains(app.genesis__Status__c)){
-                                       
-                          app.Expiration_Tag__c = 'expired_docs';
-                      
-                      }
-                   if(app.DocuSign_EnvelopeId__c != null){
-                      System.debug('app.DocuSign_EnvelopeId__c...'+ app.DocuSign_EnvelopeId__c);
-                      
-                      SendEnvDocuSignAPI.voidDocuSignEnvelope(app.DocuSign_EnvelopeId__c);
-                   }                
-                    
-                    app.genesis__Status__c = 'Expired-Withdrawn';
-                    app.OwnerId = expiredQue.Queue.Id;                          
-                    }
-        
-            }
-            
-            listOfAppTobeUpdated.add(app);
-            
-        } 
-        
-        update listOfAppTobeUpdated ;
-    } 
-    
-    public void finish(Database.BatchableContext BC){
 
+        System.debug('Size of listOfApp: ' + listOfApp.size());
+
+        for(genesis__Applications__c  app : listOfApp){
+            if (app.Credit_Policy__r.size() == 0) {
+                setAppExpired(app, pre_qual_status, verification_status, docs_status, expiredQue);
+            } else {
+                setAppExpiredWithdrawn(app, pre_qual_status, verification_status, docs_status, expiredQue);
+            }
+            listOfAppTobeUpdated.add(app);
+        }
+
+        System.debug('All notifyIds: ' + notifyIds);
+        update listOfAppTobeUpdated ;
     }
-    
+
+    private void setAppExpiredWithdrawn(genesis__Applications__c app, Set<String> pre_qual_status, Set<String> verification_status, Set<String> docs_status, QueueSobject expiredQue) {
+        if (app.Credit_Policy__r.size() > 0 && app.Expiry_Date__c != null && app.Expiry_Date__c <= currentSystemDate) {
+
+            if (pre_qual_status.contains(app.genesis__Status__c)) {
+                app.Expiration_Tag__c = 'expired_pre_qual';
+            } else if (verification_status.contains(app.genesis__Status__c)) {
+                app.Expiration_Tag__c = 'expired_verification';
+            } else if (docs_status.contains(app.genesis__Status__c)) {
+                app.Expiration_Tag__c = 'expired_docs';
+            }
+
+            if (app.DocuSign_EnvelopeId__c != null) {
+                System.debug('app.DocuSign_EnvelopeId__c...' + app.DocuSign_EnvelopeId__c);
+                SendEnvDocuSignAPI.voidDocuSignEnvelope(app.DocuSign_EnvelopeId__c);
+            }
+
+            app.genesis__Status__c = 'Expired-Withdrawn';
+            app.OwnerId = expiredQue.Queue.Id;
+            notifyIds.add(app.Id);
+        }
+    }
+
+    private void setAppExpired(genesis__Applications__c app, Set<String> pre_qual_status, Set<String> verification_status, Set<String> docs_status, QueueSobject expiredQue) {
+        if ((app.Expiry_Date__c != null && app.Expiry_Date__c <= currentSystemDate) && (app.genesis__Status__c != null && app.genesis__Status__c != 'funded')) {
+
+            if (pre_qual_status.contains(app.genesis__Status__c)) {
+                app.Expiration_Tag__c = 'expired_pre_qual';
+            } else if (verification_status.contains(app.genesis__Status__c)) {
+                app.Expiration_Tag__c = 'expired_verification';
+            } else if (docs_status.contains(app.genesis__Status__c)) {
+                app.Expiration_Tag__c = 'expired_docs';
+            }
+
+            if (app.DocuSign_EnvelopeId__c != null) {
+                System.debug('app.DocuSign_EnvelopeId__c...' + app.DocuSign_EnvelopeId__c);
+                //appEnvelope.add(app.DocuSign_EnvelopeId__c);
+                SendEnvDocuSignAPI.voidDocuSignEnvelope(app.DocuSign_EnvelopeId__c);
+            }
+
+            app.genesis__Status__c = 'Expired';
+            app.OwnerId = expiredQue.Queue.Id;
+            //app.OwnerId = app.CreatedById;
+            notifyIds.add(app.Id);
+        }
+    }
+
+    public void finish(Database.BatchableContext BC) {
+        System.debug('ApplicationExpiryUpdate.finish:' + notifyIds);
+        if (notifyIds != null && !notifyIds.isEmpty()) {
+            try{
+                Integer batchSize = Integer.valueOf(MW_Settings__c.getInstance().Allocation_Engine_Batch_Size__c);
+                AllocationEngineCalloutBatch aEBatch = new AllocationEngineCalloutBatch(notifyIds, MW_AllocationEngineHandler.CANCELLED);
+                Database.executeBatch(aEBatch,batchSize);
+            }catch(Exception ex){
+                MW_LogUtility.error('ApplicationExpiryUpdate','','','finish',ex);
+            }
+        }
+    }
 }

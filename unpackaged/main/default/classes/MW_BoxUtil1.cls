@@ -1,5 +1,5 @@
 public with sharing class MW_BoxUtil1 {
-  
+
     public static String completeSecurityToken;
     public static String token;
     public static String refreshToken;

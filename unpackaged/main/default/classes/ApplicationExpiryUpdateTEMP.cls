@@ -13,6 +13,7 @@ global class ApplicationExpiryUpdateTEMP implements Database.batchable<sObject>,
             
     String query;
     List<String> skipLoanStatus = System.Label.Application_Expired_Status.split(',');
+    static global Set<Id> notifyIds = new Set<Id>();
     String CSD;
     Date currentSystemDate; 
     
@@ -126,6 +127,7 @@ global class ApplicationExpiryUpdateTEMP implements Database.batchable<sObject>,
                     
                     app.genesis__Status__c = 'Expired';
                    app.OwnerId = expiredQue.Queue.Id;
+                    notifyIds.add(app.Id);
                    //app.OwnerId = app.CreatedById;
                     }
                     }
@@ -154,7 +156,8 @@ global class ApplicationExpiryUpdateTEMP implements Database.batchable<sObject>,
                    }                
                     
                     app.genesis__Status__c = 'Expired-Withdrawn';
-                    app.OwnerId = expiredQue.Queue.Id;                          
+                    app.OwnerId = expiredQue.Queue.Id;
+                    notifyIds.add(app.Id);
                     }
 
             }
@@ -167,7 +170,15 @@ global class ApplicationExpiryUpdateTEMP implements Database.batchable<sObject>,
     } 
     
     public void finish(Database.BatchableContext BC){
-
+        System.debug('ApplicationExpiryUpdateTEMP.finish:' + notifyIds);
+        if (notifyIds != null && !notifyIds.isEmpty()) {
+            try{
+                Integer batchSize = Integer.valueOf(MW_Settings__c.getInstance().Allocation_Engine_Batch_Size__c);
+                AllocationEngineCalloutBatch aEBatch = new AllocationEngineCalloutBatch(notifyIds, MW_AllocationEngineHandler.CANCELLED);
+                Database.executeBatch(aEBatch,batchSize);
+            }catch(Exception ex){
+                MW_LogUtility.error('ApplicationExpiryUpdateTEMP','','','finish',ex);
+            }
+        }
     }
-    
 }
