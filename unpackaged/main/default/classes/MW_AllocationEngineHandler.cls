@@ -16,7 +16,7 @@
  * https://developer.salesforce.com/docs/atlas.en-us.224.0.apexcode.meta/apexcode/apex_gov_limits.htm
  */
 
-public with sharing class MW_AllocationEngineHandler {
+global with sharing class MW_AllocationEngineHandler {
 
     private static final Integer NO_RESPONSE = -1;
 
@@ -120,10 +120,10 @@ public with sharing class MW_AllocationEngineHandler {
     }
 
     /**
-     * Skuid adapter
+     * Skuid method handler
      * @param appId App id
      */
-    public static void handleReallocationById(Id appId) {
+    webService static void handleReallocationById(Id appId) {
         if (appId == null) {
             System.debug('handleReallocationById: null app id' + appId);
             return;
