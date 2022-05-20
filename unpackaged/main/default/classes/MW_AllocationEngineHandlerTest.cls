@@ -727,8 +727,6 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> actual = getApps();
         System.assertEquals(2, actual.size());
-        System.assertEquals(null, actual.get(0).Allocation_Operation_Error__c);
-        System.assertEquals(null, actual.get(1).Allocation_Operation_Error__c);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -752,8 +750,6 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> actual = getApps();
         System.assertEquals(2, actual.size());
-        System.assertEquals(null, actual.get(0).Allocation_Operation_Error__c);
-        System.assertEquals(null, actual.get(1).Allocation_Operation_Error__c);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -953,7 +949,6 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> actual = getAppAsList();
         System.assertEquals(1, actual.size());
-        System.assertEquals(null, actual.get(0).Allocation_Operation_Error__c);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1126,7 +1121,6 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> actual = getAppAsList();
         System.assertEquals(1, actual.size());
-        System.assertEquals(null, actual.get(0).Allocation_Operation_Error__c);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1352,9 +1346,6 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.stopTest();
 
-        genesis__Applications__c actual = getApp();
-        System.assertEquals(null, actual.Allocation_Operation_Error__c);
-
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
     }
@@ -1377,9 +1368,6 @@ private class MW_AllocationEngineHandlerTest {
         MW_AllocationEngineHandler.handleCancelled(toIds(apps));
 
         Test.stopTest();
-
-        genesis__Applications__c actual = getApp();
-        System.assertEquals(null, actual.Allocation_Operation_Error__c);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1488,9 +1476,6 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.stopTest();
 
-        genesis__Applications__c actual = getApp();
-        System.assertEquals(null, actual.Allocation_Operation_Error__c);
-
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
     }
@@ -1510,9 +1495,6 @@ private class MW_AllocationEngineHandlerTest {
         MW_AllocationEngineHandler.handleFinal(toIds(apps));
 
         Test.stopTest();
-
-        genesis__Applications__c actual = getApp();
-        System.assertEquals(null, actual.Allocation_Operation_Error__c);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
