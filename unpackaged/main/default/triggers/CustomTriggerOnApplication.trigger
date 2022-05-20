@@ -178,15 +178,18 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                             result = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
                         }
 
-                        if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
-                            MW_AllocationEngineHandler.handleAdvp(new List<Id> {app.Id});
-                            InvestorAllocation.allocationForADVPcalled = true;
-                        }
-
+                        /*
+                         Setting both recursive guard flags true prior to handleAdvp to avoid recursion in failure or success
+                         */
                         if (app.genesis__Status__c == 'agent_document_verification_pending' &&
                                 app.genesis__Status__c == oldApp.genesis__Status__c &&
                                 app.Pricing_Tier__c != oldApp.Pricing_Tier__c) { //LOP-441
                             InvestorAllocation.allocationForPricingTierCalled = true;
+                        }
+
+                        if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
+                            InvestorAllocation.allocationForADVPcalled = true;
+                            MW_AllocationEngineHandler.handleAdvp(new List<Id> {app.Id});
                         }
 
                     } else {

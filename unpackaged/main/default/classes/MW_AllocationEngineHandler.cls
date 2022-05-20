@@ -766,11 +766,10 @@ global with sharing class MW_AllocationEngineHandler {
 
                 /*
                   This block will only be 2xx due to callout handling
-                  1. Clear previous operation error
-                  2. It will write Allocation_Partner__c for selected investors
-                  3. It will note any errors, non allocations in cl errors logs
+                  1. Successful AES invocation will clear previous operation error
+                  2. AES will write Allocation_Partner__c for selected investors
+                  3. AES will note any errors, non allocations in cl errors logs
                  */
-                updateOperationError(appIds, null);
                 msg.put('message', 'AES 2xx response code, for ' + decisionLevel + ': ' + leadIdStr);
                 MW_LogUtility.infoMessage(LOG_NAME, logMethodName, msg);
             }
