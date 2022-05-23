@@ -70,6 +70,8 @@ private class MW_AllocationEngineHandlerTest {
 
         public Integer requestCount = 0;
 
+        public List<String> endpoints = new List<String>();
+
         public HttpResponse respond(HttpRequest httpRequest) {
 
             if(httpRequest.getEndpoint().startsWith(OKTA_DOMAIN)) {
@@ -81,6 +83,8 @@ private class MW_AllocationEngineHandlerTest {
             }
 
             requestCount++;
+
+            endpoints.add(httpRequest.getEndpoint());
 
             String requestBody = httpRequest.getBody();
             System.debug(LoggingLevel.INFO, 'Request Body: ' + requestBody);
@@ -755,6 +759,28 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
     }
 
+    /**
+     * Assert CustomTriggerOnApplication does not fire recursively after AES sets value
+     */
+    @IsTest static void advp_canHandleAESResponse() {
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        update settings;
+
+        genesis__Applications__c app = getNewApp();
+
+        AESSuccessMock aesSuccessMock = new AESSuccessMock();
+        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
+        Test.startTest();
+
+        mockAESAllocationBehavior(app);
+
+        Test.stopTest();
+
+        System.assertEquals(0, aesSuccessMock.requestCount);
+    }
+
     @IsTest static void reallocation_canGenerateJson_ITB() {
 
         genesis__Applications__c app = getApp();
@@ -952,6 +978,29 @@ private class MW_AllocationEngineHandlerTest {
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
+    }
+
+    /**
+     * Assert CustomTriggerOnApplication does not fire recursively after AES sets value
+     * Manual version will look identical, so no need to create a duplicate test.
+     */
+    @IsTest static void reallocation_canHandleAESResponse() {
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        update settings;
+
+        genesis__Applications__c app = getApp();
+
+        AESSuccessMock aesSuccessMock = new AESSuccessMock();
+        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
+        Test.startTest();
+
+        mockAESAllocationBehavior(app);
+
+        Test.stopTest();
+
+        System.assertEquals(0, aesSuccessMock.requestCount);
     }
 
     @IsTest static void manual_canGenerateJson() {
@@ -1373,6 +1422,36 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
     }
 
+    @IsTest static void cancelled_canHandleAESResponse() {
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        update settings;
+
+        AESSuccessMock aesSuccessMock = new AESSuccessMock();
+        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
+        Test.startTest();
+
+        /* skuid user would update the app to expired or similar decline status or maybe even by apex */
+        genesis__Applications__c app = getApp();
+        app.genesis__Status__c = 'Expired';
+        update app;
+
+        /* AES will update the related allocation engine fields */
+        app.Allocation_Operation_Error__c = '';
+        update app;
+
+        Test.stopTest();
+
+        /*
+        We should have 1 callout.
+        1. on status change to 'cancel' status list, the callout executes
+        2. after the response, there should be no more
+         */
+        System.assertEquals(1, aesSuccessMock.requestCount);
+        System.assert(aesSuccessMock.endpoints.get(0).contains('cancel'));
+    }
+
     @IsTest static void final_canGenerateJson() {
         genesis__Applications__c app = getApp();
 
@@ -1498,6 +1577,69 @@ private class MW_AllocationEngineHandlerTest {
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
+    }
+
+    @IsTest static void final_canHandleAESResponse() {
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        update settings;
+
+        genesis__Applications__c app = getApp();
+        app.genesis__Status__c = PayoffConstants.FUNDED;
+        update app;
+
+        AESSuccessMock aesSuccessMock = new AESSuccessMock();
+        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
+        Test.startTest();
+
+        /* AES will update the related allocation engine fields */
+        app.Allocation_Operation_Error__c = '';
+        update app;
+
+        Test.stopTest();
+
+        System.assertEquals(0, aesSuccessMock.requestCount);
+    }
+
+    /**
+     * This is what the AES microservice will do on success response at ADVP, REALLOCATION and MANUAL
+     * @param app Update the app as per an allocation from the java microservice
+     */
+    static void mockAESAllocationBehavior(genesis__Applications__c app) {
+        /* AES will select investors that will apply */
+        Account investor = [
+                SELECT Id
+                FROM Account
+                WHERE Investor_Code__c = 'FCU'
+                LIMIT 1
+        ];
+
+        /* AES will clear any existing allocation partners */
+        delete [
+                SELECT Id
+                FROM Allocation_Partner__c
+                WHERE Application__c = :app.Id
+        ];
+
+        /* AES will insert new allocation partners */
+        Allocation_Partner__c ap = new Allocation_Partner__c();
+        ap.Investor__c = investor.Id;
+        ap.Application__c = app.Id;
+        ap.Lead_Partner__c = true;
+        insert ap;
+
+        /* AES will update the related allocation engine fields */
+        app.Expected_Chargeoff__c = 111;
+        app.Expected_Yield__c = 112;
+        app.Allocation_ID__c = new Uuid().getValue();
+        app.Allocation_Timestamp__c = Datetime.now();
+        app.Allocation_Engine_Version__c = '1.0';
+        app.Allocation_Detail__c = '';
+        app.Allocation_Operation_Error__c = '';
+        app.Allocation_Status__c = 'success';
+
+        update app;
     }
 
     static List<Allocation_Partner__c> getAllocationPartners() {
