@@ -40,7 +40,13 @@ global with sharing class MW_AllocationEngineHandler {
 
     public static final String CANCELLED = 'cancel';
 
-    private static final Integer CALLOUT_TIMEOUT_IN_SECONDS = 5 * 1000;
+    /**
+     * Max time to wait until to establish http connection
+     * Consider total callout time in transaction which is 120000 for the retries
+     */
+    private static final Integer CALLOUT_TIMEOUT_IN_SECONDS = 20 * 1000;
+
+    private static final Integer MAX_RETRY =  5;
 
     private static final Integer RESPONSE_CATEGORY_5XX = 5;
 
@@ -49,8 +55,6 @@ global with sharing class MW_AllocationEngineHandler {
     private static final Integer RESPONSE_CATEGORY_2XX = 2;
 
     private static final String LOG_NAME = 'MW_AllocationEngineHandler';
-
-    private static final Integer MAX_RETRY =  5;
 
     private static final Set<String> DECISION_LEVELS = new Set<String> {
         ADVP, REALLOCATION, MANUAL, FINALIZED, CANCELLED
@@ -191,6 +195,18 @@ global with sharing class MW_AllocationEngineHandler {
             }
         }
         MW_AllocationEngineHandler.handleManual(new List<Id>(idSet));
+    }
+
+    /**
+     *  After legacy RulesApi allocations, InvestorAllocation sets allocationForADVPcalled true if advp is status.
+     *  After allocation from Allocation Engine, the timestamp is always updated.
+     *  Use timestamp change to mimic behavior of InvestorAllocation class.
+     */
+    public static void setInvestorAdvpCalledForAES(genesis__Applications__c app, genesis__Applications__c oldApp) {
+        Boolean allocationEngineUpdated = app.Allocation_Timestamp__c != oldApp.Allocation_Timestamp__c;
+        if (allocationEngineUpdated && app.genesis__Status__c == 'agent_document_verification_pending') {
+            InvestorAllocation.allocationForADVPcalled = true;
+        }
     }
 
     private class CalloutResult {
