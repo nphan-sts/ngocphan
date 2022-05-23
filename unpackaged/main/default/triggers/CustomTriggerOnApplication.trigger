@@ -171,7 +171,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 if (app.genesis__Status__c == 'Default Documents' && appStatusChanged) {
                     TalxIntegration.CallTalxResponse(app.Id, app.genesis__account__c);
                 } else if(app.genesis__Status__c == 'offer_accepted' && appStatusChanged ) {
-
+                    /* do nothing from history, needs further analysis to see if conditional can be removed */
                 } else if(deactivateStatus.contains(app.genesis__Status__c) && appStatusChanged ) {
                     DeactivateBankAccountsforApplications.deactivateBankAccount(app.id);
                 } else if (
