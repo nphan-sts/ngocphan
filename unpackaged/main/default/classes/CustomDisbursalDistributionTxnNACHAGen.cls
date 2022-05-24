@@ -1,5 +1,6 @@
 /*
 * Custom Changes : Creating multiple Batch header and trailer per effective date.
+* Saryu 2022/04/18 LSP-380 updated immideate destination to truncate after 10 digits instead of 9
 *
 */
 global class CustomDisbursalDistributionTxnNACHAGen extends loan.FileGenerator {
@@ -305,7 +306,7 @@ global class CustomDisbursalDistributionTxnNACHAGen extends loan.FileGenerator {
         
         if(loan.CustomSettingsUtil.getACHParameters().loan__Multiple_Payment_Method_Support__c == true){
             if(autoPmtConfig.loan__Immediate_Destination__c!=null){
-                immediateDestination = loan.StringUtils.leftPadString( '' +autoPmtConfig.loan__Immediate_Destination__c,9,'0');
+                immediateDestination = loan.StringUtils.leftPadString( '' +autoPmtConfig.loan__Immediate_Destination__c,10,'0');
             }
             if(autoPmtConfig.loan__Immediate_origin__c!=null){
                 immediateOrigin = autoPmtConfig.loan__Immediate_origin__c;

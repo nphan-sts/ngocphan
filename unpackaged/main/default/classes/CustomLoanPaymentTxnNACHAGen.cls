@@ -7,6 +7,7 @@
 * Shakul 2021/12/02 LSP-374
 * Shakul    2022/02/15  LSP-505   Description: Added Test.isRunningTest check to run logic without multiple payment method support
 * Neha/Pallavi/Saryu 2021/08/06-2022/02/22  CRM-373/LSP-16
+* Saryu 2022/04/18 LSP-380 updated immideate destination to truncate after 10 digits instead of 9
 */
 global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
 
@@ -321,7 +322,7 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
 
         if(loan.CustomSettingsUtil.getACHParameters().loan__Multiple_Payment_Method_Support__c == true) {
             if(autoPmtConfig.loan__Immediate_Destination__c != null) {
-                immediateDestination = Loan.sTringUtils.leftPadString('' + autoPmtConfig.loan__Immediate_Destination__c, 9, '0');
+                immediateDestination = Loan.sTringUtils.leftPadString('' + autoPmtConfig.loan__Immediate_Destination__c, 10, '0');
             }
 
             if(autoPmtConfig.loan__Immediate_origin__c != null) {
@@ -347,7 +348,7 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
         }
         else {
             if(loan.CustomSettingsUtil.getACHParameters().loan__Immediate_Destination__c != null) {
-                immediateDestination = Loan.sTringUtils.leftPadString('' + loan.CustomSettingsUtil.getACHParameters().loan__Immediate_Destination__c, 9, '0');
+                immediateDestination = Loan.sTringUtils.leftPadString('' + loan.CustomSettingsUtil.getACHParameters().loan__Immediate_Destination__c, 10, '0');
             }
             else {
                 immediateDestination = String.valueOf(bank.loan__Routing_Number__c);
