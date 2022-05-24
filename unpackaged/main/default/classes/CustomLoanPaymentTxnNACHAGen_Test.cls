@@ -8,7 +8,7 @@ Anusha 		2020/11/05 CRM -986   New test method is added - 'testLatinConversionWi
 
 Shakul      2021/12/02  LSP-374   New Test method for missing bank account
 Shakul      2022/02/15  LSP-505   Refactored test class
-
+Bhavya		2022/05/24  LSP-380	  Refactored test class for LSP-380
 ******************Modification History******************/
 @IsTest
 public class CustomLoanPaymentTxnNACHAGen_Test {
@@ -156,8 +156,7 @@ Description: To test the logic for header level description in NACHA file with m
         String msg = cus.getHeader(state,fhrlist);
         Test.stopTest();
         loan__Automated_Payment_Configuration__c ap=[Select id,loan__Immediate_Destination__c from loan__Automated_Payment_Configuration__c LIMIT 1];
-        //system.assertEquals(1234567890,ap.loan__Immediate_Destination__c);
-        system.debug(ap.loan__Immediate_Destination__c);
+        system.assertEquals('2222222222',ap.loan__Immediate_Destination__c);
         System.assert(String.isNotBlank(msg));
     }
     
@@ -196,7 +195,7 @@ Description: To test header level functionality without multiple payment support
         fHR.filegen__Immediate_Origin__c = 'immediateOrigin';
         fHR.filegen__Creation_Date__c = system.today();
         fHR.filegen__Creation_Time__c = 'myTime';
-        fHR.filegen__ID_Modifier__c = 'abc';
+        fHR.filegen__ID_Modifier__c = 'abc1';
         fHR.filegen__Immediate_Destination_Name__c = 'immediateDestinationName';
         fHR.filegen__Immediate_Origin_Name__c = 'immediateOriginName';
         fHR.filegen__Reference_Code__c = 'referenceCode';
