@@ -129,8 +129,8 @@ Private Class DocumentReductionRulesTest{
         insert apptag;
         // for Accept_Refer_Code__c= Accept
         KBA_Details__c kbaObj = new KBA_Details__c(
-            Application__c = app.Id,
-            Precise_ID_Overall_SCore__c = 901, 
+            Application__c = app1.Id,
+            Precise_ID_Overall_SCore__c = 9012, 
             Precise_ID_First_Payment_Default__c = 9012, 
             Precise_ID_ID_Theft__c = 9012,  
             Precise_ID_Validation__c = 9012, 
@@ -144,7 +144,7 @@ Private Class DocumentReductionRulesTest{
             Public_Records__c=0,
             Accept_Refer_Code__c= 'ACC'  //CRM-966
         );
-       // Insert kbaObj;
+       Insert kbaObj;
         //LOP-563 for  Accept_Refer_Code__c= NULL  
          KBA_Details__c kbaObj1 = new KBA_Details__c(
             Application__c = app1.Id,
@@ -162,7 +162,7 @@ Private Class DocumentReductionRulesTest{
             Public_Records__c=0,
             Accept_Refer_Code__c= NULL  //CRM-966
         );
-        Insert kbaObj1;
+        //Insert kbaObj1;
        //  //LOP-563 for  Accept_Refer_Code__c= 'REF'
         KBA_Details__c kbaObj2 = new KBA_Details__c(
             Application__c = app1.Id,
@@ -237,7 +237,7 @@ Private Class DocumentReductionRulesTest{
         Id docCatID = [SELECT Id FROM genesis__Document_Category__c WHERE genesis__Category_Name__c LIKE '%ID%' LIMIT 1].Id;
         System.assertEquals(true, docCatID!=Null);
         genesis__Application_Document_Category__c docIDL = [SELECT ID, genesis__Required__c FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id AND name LIKE '%ID%'];
-        System.assertEquals(true,docIDL.genesis__Required__c==False);
+        System.assertEquals(false,docIDL.genesis__Required__c==True);
 
         genesis__Application_Document_Category__c appDocCatObj = [SELECT Id FROM genesis__Application_Document_Category__c WHERE Name Like '%Test%' LIMIT 1];
         System.assertEquals(true, appDocCatObj!=Null);  
