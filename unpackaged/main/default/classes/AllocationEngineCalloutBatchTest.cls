@@ -77,7 +77,7 @@ private class AllocationEngineCalloutBatchTest {
             appIds.add(app.Id);
         }
         Test.startTest();
-            AllocationEngineCalloutBatch btch = new AllocationEngineCalloutBatch(appIds);
+            AllocationEngineCalloutBatch btch = new AllocationEngineCalloutBatch(appIds, MW_AllocationEngineHandler.FINALIZED);
             jobId = Database.executeBatch(btch,batchSize);
         Test.stopTest();
         AsyncApexJob asapx = [SELECT Id, Status FROM AsyncApexJob WHERE Id =: jobId];
@@ -91,7 +91,7 @@ private class AllocationEngineCalloutBatchTest {
                queryStr += 'WHERE Id IN (SELECT genesis__Application__c FROM genesis__Application_Status_History__c ';
                queryStr += 'WHERE CreatedDate = TODAY AND genesis__New_Value__c = \'funded\')';
         Test.startTest();
-            AllocationEngineCalloutBatch btch = new AllocationEngineCalloutBatch(queryStr);
+            AllocationEngineCalloutBatch btch = new AllocationEngineCalloutBatch(queryStr, MW_AllocationEngineHandler.FINALIZED);
             jobId = Database.executeBatch(btch,batchSize);
         Test.stopTest();
         AsyncApexJob asapx = [SELECT Id, Status FROM AsyncApexJob WHERE Id =: jobId];

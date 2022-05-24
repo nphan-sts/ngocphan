@@ -70,6 +70,8 @@ private class MW_AllocationEngineHandlerTest {
 
         public Integer requestCount = 0;
 
+        public List<String> endpoints = new List<String>();
+
         public HttpResponse respond(HttpRequest httpRequest) {
 
             if(httpRequest.getEndpoint().startsWith(OKTA_DOMAIN)) {
@@ -81,6 +83,8 @@ private class MW_AllocationEngineHandlerTest {
             }
 
             requestCount++;
+
+            endpoints.add(httpRequest.getEndpoint());
 
             String requestBody = httpRequest.getBody();
             System.debug(LoggingLevel.INFO, 'Request Body: ' + requestBody);
@@ -371,7 +375,7 @@ private class MW_AllocationEngineHandlerTest {
 
         List<Id> ids = toIds(getApps());
 
-        MW_AllocationEngineHandler.handleInvalidDecisionLevel('testHandleInvalidDecisionLevel', ids, 'potato');
+        MW_AllocationEngineHandler.handleInvalidDecisionLevel(ids, 'potato');
 
         List<loan__Batch_Process_Log__c> logs = getLoanLogs();
         System.assertEquals(1, logs.size());
@@ -400,7 +404,7 @@ private class MW_AllocationEngineHandlerTest {
         genesis__Applications__c app = getApp();
         IllegalArgumentException e = new IllegalArgumentException('There be dragons');
 
-        MW_AllocationEngineHandler.handleExceptionHandler('testHandleExceptionHandler', new List<String> {app.Id}, MW_AllocationEngineHandler.ADVP, e);
+        MW_AllocationEngineHandler.handleExceptionHandler(new List<String> {app.Id}, MW_AllocationEngineHandler.ADVP, e);
 
         genesis__Applications__c actual = getApp();
         System.assertEquals(MW_AllocationEngineHandler.ADVP, actual.Allocation_Operation_Error__c);
@@ -458,6 +462,22 @@ private class MW_AllocationEngineHandlerTest {
 
         System.assertEquals(2, hasIds.size());
         System.assertEquals(0, actualIds4.size());
+    }
+
+    /**
+     * This executes trigger for receive coverage purposes only.
+     * Functionality is tested in other test methods.
+     *
+     * MW_AllocationParterTrigger is covered as part of this test
+     */
+    @IsTest static void testTriggerCoverage() {
+
+        Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
+        Test.startTest();
+
+        /* fires: MW_AllocationParterTrigger */
+        setManualPartner(false);
+        Test.stopTest();
     }
 
     /**
@@ -711,8 +731,6 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> actual = getApps();
         System.assertEquals(2, actual.size());
-        System.assertEquals(null, actual.get(0).Allocation_Operation_Error__c);
-        System.assertEquals(null, actual.get(1).Allocation_Operation_Error__c);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -736,11 +754,31 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> actual = getApps();
         System.assertEquals(2, actual.size());
-        System.assertEquals(null, actual.get(0).Allocation_Operation_Error__c);
-        System.assertEquals(null, actual.get(1).Allocation_Operation_Error__c);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
+    }
+
+    /**
+     * Assert CustomTriggerOnApplication does not fire recursively after AES sets value
+     */
+    @IsTest static void advp_canHandleAESResponse() {
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        update settings;
+
+        genesis__Applications__c app = getNewApp();
+
+        AESSuccessMock aesSuccessMock = new AESSuccessMock();
+        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
+        Test.startTest();
+
+        mockAESAllocationBehavior(app);
+
+        Test.stopTest();
+
+        System.assertEquals(0, aesSuccessMock.requestCount);
     }
 
     @IsTest static void reallocation_canGenerateJson_ITB() {
@@ -937,10 +975,32 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> actual = getAppAsList();
         System.assertEquals(1, actual.size());
-        System.assertEquals(null, actual.get(0).Allocation_Operation_Error__c);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
+    }
+
+    /**
+     * Assert CustomTriggerOnApplication does not fire recursively after AES sets value
+     * Manual version will look identical, so no need to create a duplicate test.
+     */
+    @IsTest static void reallocation_canHandleAESResponse() {
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        update settings;
+
+        genesis__Applications__c app = getApp();
+
+        AESSuccessMock aesSuccessMock = new AESSuccessMock();
+        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
+        Test.startTest();
+
+        mockAESAllocationBehavior(app);
+
+        Test.stopTest();
+
+        System.assertEquals(0, aesSuccessMock.requestCount);
     }
 
     @IsTest static void manual_canGenerateJson() {
@@ -970,10 +1030,13 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(manualPartner.Investor__r.Investor_Code__c, actual.get('investorCode'));
     }
 
+    /**
+     * The selected app for this test has no manually selected partners and should fail accordingly.
+     */
     @IsTest static void manual_handlesValidationFailure() {
 
         /* should not produce an error, just return */
-        MW_AllocationEngineHandler.handleManual(null, null);
+        MW_AllocationEngineHandler.handleManual(null);
 
         /* trigger validation failure
         * due to request mapping LSP-661,
@@ -982,7 +1045,7 @@ private class MW_AllocationEngineHandlerTest {
         newApp.Allocation_ID__c = '123';
         update newApp;
 
-        MW_AllocationEngineHandler.handleManual(toIds(getNewAppAsList()), toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(toIds(getNewAppAsList()));
 
         genesis__Applications__c actual = getNewApp();
         System.assertEquals(MW_AllocationEngineHandler.MANUAL, actual.Allocation_Operation_Error__c);
@@ -1005,10 +1068,13 @@ private class MW_AllocationEngineHandlerTest {
     }
 
     @IsTest static void manual_handlesCalloutExceptionErrors() {
+
+        setManualPartner();
+
         Test.setMock(HttpCalloutMock.class, new AESCalloutExceptionMock());
         Test.startTest();
 
-        MW_AllocationEngineHandler.handleManual(toIds(getAppAsList()), toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(toIds(getAppAsList()));
 
         Test.stopTest();
 
@@ -1027,13 +1093,15 @@ private class MW_AllocationEngineHandlerTest {
     }
 
     @IsTest static void manual_handles500Errors() {
+
         List<genesis__Applications__c> apps = getAppAsList();
+
+        setManualPartner();
 
         AESServerErrorMock errorMock = new AESServerErrorMock();
         Test.setMock(HttpCalloutMock.class, errorMock);
         Test.startTest();
-
-        MW_AllocationEngineHandler.handleManual(toIds(apps), toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(toIds(apps));
 
         Test.stopTest();
 
@@ -1057,10 +1125,12 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> apps = getAppAsList();
 
+        setManualPartner();
+
         Test.setMock(HttpCalloutMock.class, new AESValidationFailureMock());
         Test.startTest();
 
-        MW_AllocationEngineHandler.handleManual(toIds(apps), toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(toIds(apps));
 
         Test.stopTest();
 
@@ -1087,23 +1157,54 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> apps = getAppAsList();
 
+        setManualPartner();
+
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
 
-        MW_AllocationEngineHandler.handleManual(null, toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(null);
 
-        MW_AllocationEngineHandler.handleManual(toIds(apps), null);
-
-        MW_AllocationEngineHandler.handleManual(toIds(apps), toIds(getAllocationPartners()));
+        MW_AllocationEngineHandler.handleManual(toIds(apps));
 
         Test.stopTest();
 
         List<genesis__Applications__c> actual = getAppAsList();
         System.assertEquals(1, actual.size());
-        System.assertEquals(null, actual.get(0).Allocation_Operation_Error__c);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
+    }
+
+
+    private static void setManualPartner() {
+        setManualPartner(true);
+    }
+
+    /**
+     * Sets the first allocation partner to assign to.
+     * This allows the first app to pass validation in order to execute test manual requests.
+     *
+     * @param toggleDeploymentMode If true, toggles legacy mode on, then updates partner then dark mode no
+     *                            This is to prevent the allocation partner trigger from firing as part of test setup.
+     */
+    private static void setManualPartner(Boolean toggleDeploymentMode) {
+
+        MW_Settings__c mwSettings = MW_Settings__c.getOrgDefaults();
+
+        if (toggleDeploymentMode) {
+            mwSettings.Allocation_Engine_Deployment_Mode__c = 'LEGACY_MODE';
+            update mwSettings;
+        }
+
+        List<Allocation_Partner__c> aps = getAllocationPartners();
+        Allocation_Partner__c ap = aps.get(0);
+        ap.Assign_To__c = true;
+        update ap;
+
+        if (toggleDeploymentMode) {
+            mwSettings.Allocation_Engine_Deployment_Mode__c = 'DARK_MODE';
+            update mwSettings;
+        }
     }
 
     @IsTest static void cancelled_canGenerateJson() {
@@ -1294,9 +1395,6 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.stopTest();
 
-        genesis__Applications__c actual = getApp();
-        System.assertEquals(null, actual.Allocation_Operation_Error__c);
-
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
     }
@@ -1320,11 +1418,38 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.stopTest();
 
-        genesis__Applications__c actual = getApp();
-        System.assertEquals(null, actual.Allocation_Operation_Error__c);
-
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
+    }
+
+    @IsTest static void cancelled_canHandleAESResponse() {
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        update settings;
+
+        AESSuccessMock aesSuccessMock = new AESSuccessMock();
+        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
+        Test.startTest();
+
+        /* skuid user would update the app to expired or similar decline status or maybe even by apex */
+        genesis__Applications__c app = getApp();
+        app.genesis__Status__c = 'Expired';
+        update app;
+
+        /* AES will update the related allocation engine fields */
+        app.Allocation_Operation_Error__c = '';
+        update app;
+
+        Test.stopTest();
+
+        /*
+        We should have 1 callout.
+        1. on status change to 'cancel' status list, the callout executes
+        2. after the response, there should be no more
+         */
+        System.assertEquals(1, aesSuccessMock.requestCount);
+        System.assert(aesSuccessMock.endpoints.get(0).contains('cancel'));
     }
 
     @IsTest static void final_canGenerateJson() {
@@ -1430,9 +1555,6 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.stopTest();
 
-        genesis__Applications__c actual = getApp();
-        System.assertEquals(null, actual.Allocation_Operation_Error__c);
-
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
     }
@@ -1453,17 +1575,78 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.stopTest();
 
-        genesis__Applications__c actual = getApp();
-        System.assertEquals(null, actual.Allocation_Operation_Error__c);
-
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
+    }
+
+    @IsTest static void final_canHandleAESResponse() {
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        update settings;
+
+        genesis__Applications__c app = getApp();
+        app.genesis__Status__c = PayoffConstants.FUNDED;
+        update app;
+
+        AESSuccessMock aesSuccessMock = new AESSuccessMock();
+        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
+        Test.startTest();
+
+        /* AES will update the related allocation engine fields */
+        app.Allocation_Operation_Error__c = '';
+        update app;
+
+        Test.stopTest();
+
+        System.assertEquals(0, aesSuccessMock.requestCount);
+    }
+
+    /**
+     * This is what the AES microservice will do on success response at ADVP, REALLOCATION and MANUAL
+     * @param app Update the app as per an allocation from the java microservice
+     */
+    static void mockAESAllocationBehavior(genesis__Applications__c app) {
+        /* AES will select investors that will apply */
+        Account investor = [
+                SELECT Id
+                FROM Account
+                WHERE Investor_Code__c = 'FCU'
+                LIMIT 1
+        ];
+
+        /* AES will clear any existing allocation partners */
+        delete [
+                SELECT Id
+                FROM Allocation_Partner__c
+                WHERE Application__c = :app.Id
+        ];
+
+        /* AES will insert new allocation partners */
+        Allocation_Partner__c ap = new Allocation_Partner__c();
+        ap.Investor__c = investor.Id;
+        ap.Application__c = app.Id;
+        ap.Lead_Partner__c = true;
+        insert ap;
+
+        /* AES will update the related allocation engine fields */
+        app.Expected_Chargeoff__c = 111;
+        app.Expected_Yield__c = 112;
+        app.Allocation_ID__c = new Uuid().getValue();
+        app.Allocation_Timestamp__c = Datetime.now();
+        app.Allocation_Engine_Version__c = '1.0';
+        app.Allocation_Detail__c = '';
+        app.Allocation_Operation_Error__c = '';
+        app.Allocation_Status__c = 'success';
+
+        update app;
     }
 
     static List<Allocation_Partner__c> getAllocationPartners() {
         return [SELECT Id,
                 Application__c,
                 Lead_Partner__c,
+                Assign_To__c,
                 Investor__c
         FROM   Allocation_Partner__c];
     }

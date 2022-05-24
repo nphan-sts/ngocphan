@@ -87,13 +87,12 @@ public with Sharing class DocumentReductionRules{
                 // --- ID Reduction----
                 Boolean siftFlag= false, pRecordsFlag= false, pidScoreFlag= false, pidFPDFlag= false, pidValidationFlag= false, pidShieldFlag= false, pidAdvActionFlag= false, pidDecisionFlag= false, pidKIQDecisionFlag= false, pidVerificationFlag= false, pidAnalyticsFlag= false, pidConsistencyFlag= false, pidPCountFlag = false;
                 
-                if(! app.KBA_Details__r.isEmpty()){
+                if(! app.KBA_Details__r.isEmpty()){ 
                     System.debug('KBA...' + app.KBA_Details__r);
                     
                     //changing ID Reduction rules per revised requirements on CLS-040  09/04/2018  
                     //LOP-563
-                    if((app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != 9012 && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null 
-                        && app.KBA_Details__r[0].Accept_Refer_Code__c != null && app.KBA_Details__r[0].Accept_Refer_Code__c == 'ACC')
+                    if((app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != 9012 && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != null)//LOP-574
                        || (app.genesis__Status__c == 'kba_success' 
                            && app.KBA_Details__r[0].Precise_ID_Overall_SCore__c != 9012
                            && (app.KBA_Details__r[0].Accept_Refer_Code__c == null || app.KBA_Details__r[0].Accept_Refer_Code__c == 'ACC' || app.KBA_Details__r[0].Accept_Refer_Code__c =='REF'))){  //CRM-966(added one condition)
@@ -129,6 +128,20 @@ public with Sharing class DocumentReductionRules{
                         }
                     }                   
                 }
+                //LOP-574
+                if(!pidScoreFlag || !FraudTagFlag ){  
+                    System.debug('... ID Reduction Conditions...');
+                    List<genesis__Application_Document_Category__c> docCategory = [SELECT ID, genesis__Required__c FROM genesis__Application_Document_Category__c where genesis__Application__c=:applicationId and name LIKE '%ID%' ];
+                    
+                    if(!docCategory.isEmpty()){
+                        System.debug('docCategory.....'+ docCategory); 
+                        for(genesis__Application_Document_Category__c appDocCat : docCategory){
+                            appDocCat.genesis__Required__c = true;
+                            lstUpdateCat.add(appDocCat);
+                        }
+                    }                   
+                }
+                
                 //-- PayStub Conditions
                 if(bonusFlag || annualIncomeFlag || selfempFlag || employmentflag){    
                     System.debug('... PayStub Conditions...');
