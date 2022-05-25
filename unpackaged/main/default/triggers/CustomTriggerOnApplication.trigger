@@ -41,9 +41,11 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 Map<id,genesis__Applications__c> oldAppMap = trigger.oldMap;
                 Map<Id, genesis__Applications__c> newAppMap = null;
                 for(genesis__Applications__c app : trigger.new){
-                    
+
                     genesis__Applications__c oldApp = oldAppMap.get(app.id);
-                    
+
+                    MW_AllocationEngineHandler.setInvestorAdvpCalledForAES(app, oldApp);
+
                     if(app.Bureau_SSN__c != null && app.Bureau_SSN__c != oldApp.Bureau_SSN__c){
                         app.Bureau_SSN_Masked__c= '*******' + app.Bureau_SSN__c.right(4);
                     }
@@ -63,11 +65,17 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                                                                                                           mwsetting.CRB_THRM_Loan_Transfer_Days__c.intValue());
                         }
                     }
-                    if((app.Investor__c  != null && app.Investor__c != oldApp.Investor__c && !InvestorAllocation.allocationForADVPcalled)
-                       ||(app.Investor__c  != null && app.Investor__c == oldApp.Investor__c && !InvestorAllocation.allocationForADVPcalled
-                          && app.genesis__status__c == 'offer_accepted' && app.genesis__status__c != oldApp.genesis__status__c)){    //pallavi(PS-3695/LOS-132) //CRM-1022
-                              isInvestorAllocated = CustomTriggerOnApplicationHandler.investorAllocationFieldsUpdate(trigger.old,trigger.new,trigger.oldMap);
-                          }
+
+                    Boolean investorAssigned = app.Investor__c != null;
+                    Boolean investorChanged = app.Investor__c != oldApp.Investor__c;
+                    Boolean investorUnchanged = app.Investor__c == oldApp.Investor__c;
+                    Boolean statusChanged = app.genesis__Status__c != oldApp.genesis__Status__c;
+
+                    if ((investorAssigned && investorChanged && !InvestorAllocation.allocationForADVPcalled) ||
+                            (investorAssigned && investorUnchanged && !InvestorAllocation.allocationForADVPcalled &&
+                                app.genesis__Status__c == 'offer_accepted' && statusChanged)) {    //pallavi(PS-3695/LOS-132) //CRM-1022
+                            isInvestorAllocated = CustomTriggerOnApplicationHandler.investorAllocationFieldsUpdate(Trigger.old,Trigger.new,Trigger.oldMap);
+                    }
                     //CRM-531 - start
                     if(app.DCP_Remainder_to_Member_Account__c != null && app.DCP_Remainder_to_Member_Account__c < 0){
                         isDcpEligibleFieldUpdated = CustomTriggerOnApplicationHandler.dcpEligibleFieldForUpdate(trigger.new);
@@ -98,7 +106,11 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
             Map<id,genesis__Applications__c> oldAppMap = trigger.oldMap;
 
             for(genesis__Applications__c app : trigger.new){
+
                 genesis__Applications__c oldApp = oldAppMap.get(app.id);
+
+                MW_AllocationEngineHandler.setInvestorAdvpCalledForAES(app, oldApp);
+
                 /** Call to redecision logic */
                 CustomTriggerOnApplicationHandler.callRedecisionLogic(app, oldApp,trigger.oldMap,trigger.newMap);
                 
@@ -151,20 +163,24 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                     }
                 }
 
-                //CRM-815
-                if(app.genesis__Status__c == 'Default Documents' && app.genesis__Status__c != oldApp.genesis__Status__c) {
-                    TalxIntegration.CallTalxResponse(app.Id, app.genesis__account__c);
-                } else if(app.genesis__Status__c == 'offer_accepted' && app.genesis__Status__c != oldApp.genesis__Status__c ) {
+                Boolean appStatusChanged = app.genesis__Status__c != oldApp.genesis__Status__c;
+                Boolean isAdvpStatus = app.genesis__Status__c == 'agent_document_verification_pending';
+                Boolean appStatusUnchanged = app.genesis__Status__c == oldApp.genesis__Status__c;
 
-                } else if(deactivateStatus.contains(app.genesis__Status__c) && app.genesis__Status__c != oldApp.genesis__Status__c ) {
+                //CRM-815
+                if (app.genesis__Status__c == 'Default Documents' && appStatusChanged) {
+                    TalxIntegration.CallTalxResponse(app.Id, app.genesis__account__c);
+                } else if(app.genesis__Status__c == 'offer_accepted' && appStatusChanged ) {
+                    /* do nothing from history, needs further analysis to see if conditional can be removed */
+                } else if(deactivateStatus.contains(app.genesis__Status__c) && appStatusChanged ) {
                     DeactivateBankAccountsforApplications.deactivateBankAccount(app.id);
                 } else if (
                         (!InvestorAllocation.allocationForADVPcalled &&
-                                app.genesis__Status__c == 'agent_document_verification_pending' &&
-                                app.genesis__Status__c != oldApp.genesis__Status__c) ||
+                                isAdvpStatus &&
+                                appStatusChanged) ||
                         (!InvestorAllocation.allocationForPricingTierCalled &&
-                                app.genesis__Status__c == 'agent_document_verification_pending' &&
-                                app.genesis__Status__c == oldApp.genesis__Status__c &&
+                                isAdvpStatus &&
+                                appStatusUnchanged &&
                                 app.Pricing_Tier__c != oldApp.Pricing_Tier__c)) {  //CLS-1121,1216,1095,LOP-441
 
                     List<Credit_Policy__c> creditPolicies = [SELECT Id FROM Credit_Policy__c  WHERE Application__c= : app.Id];
@@ -178,15 +194,18 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                             result = InvestorAllocation.runInvestorAllocationBasedOnWeighting(app.Id);
                         }
 
-                        if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
-                            MW_AllocationEngineHandler.handleAdvp(new List<Id> {app.Id});
-                            InvestorAllocation.allocationForADVPcalled = true;
-                        }
-
-                        if (app.genesis__Status__c == 'agent_document_verification_pending' &&
-                                app.genesis__Status__c == oldApp.genesis__Status__c &&
+                        /*
+                         Setting both recursive guard flags true prior to handleAdvp to avoid trigger recursion
+                         */
+                        if (isAdvpStatus &&
+                                appStatusUnchanged &&
                                 app.Pricing_Tier__c != oldApp.Pricing_Tier__c) { //LOP-441
                             InvestorAllocation.allocationForPricingTierCalled = true;
+                        }
+
+                        if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
+                            InvestorAllocation.allocationForADVPcalled = true;
+                            MW_AllocationEngineHandler.handleAdvp(new List<Id> {app.Id});
                         }
 
                     } else {
@@ -201,7 +220,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                         MW_LogUtility.errorMessage('CustomTriggerOnApplication', 'Ignore Investor Allocation', msg);
                     }
 
-                } else if (app.genesis__status__c == 'docusign_loan_docs_sent' && app.genesis__status__c != oldapp.genesis__Status__c){ /*(LOS-135)*/
+                } else if (app.genesis__status__c == 'docusign_loan_docs_sent' && appStatusChanged){ /*(LOS-135)*/
                     if(app.Investor__c!=null){
                         if(app.Total_Arcus_Transactions__c >0){
                             TilGeneration__e til = new TilGeneration__e(RecordId__c = app.Id,
@@ -232,13 +251,13 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                     
                     PayoffUtilities.AssignToDeclinedQueueStatus(app.id,'Declined');
                 } else if(app.genesis__Status__c != null && app.Investor__c  != null) {
-                    if(app.genesis__Status__c == 'agent_verified' && app.DocuSignFlag__c && app.genesis__Status__c != oldApp.genesis__Status__c){
+                    if(app.genesis__Status__c == 'agent_verified' && app.DocuSignFlag__c && appStatusChanged){
                            SendEnvDocuSignAPI.sendDocuSignEnvelope(app.Id);
                     }
                     /*pallavi(LOS-158)*/
                     List<Attachment> toattachCSN = new List<Attachment>();
                     Set<Id> CSNattId = new Set<Id>();
-                    if(app.genesis__Status__c == 'Stacker_Check_Passed' && app.genesis__status__c != oldApp.genesis__Status__c){
+                    if(app.genesis__Status__c == 'Stacker_Check_Passed' && appStatusChanged){
                         
                         toattachCSN = [SELECT id FROM attachment WHERE parentId = :app.Id AND Name LIKE '%Credit Score Notice%'];
                         if(toattachCSN.size() == 0){
@@ -259,7 +278,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
 
                 if (MW_AllocationEngineHandler.statusListContains(
                         MW_Settings__c.getOrgDefaults().Allocation_Engine_Cancel_Statuses__c, app.genesis__Status__c) &&
-                        oldApp.genesis__Status__c != app.genesis__Status__c &&
+                        appStatusChanged &&
                         MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
                     MW_AllocationEngineHandler.handleCancelled(new List<Id> {app.Id});
                 }
