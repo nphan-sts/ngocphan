@@ -131,7 +131,7 @@ public with Sharing class DocumentReductionRules{
                 //LOP-574
                 if(!pidScoreFlag || !FraudTagFlag ){  
                     System.debug('... ID Reduction Conditions...');
-                    List<genesis__Application_Document_Category__c> docCategory = [SELECT ID, genesis__Required__c FROM genesis__Application_Document_Category__c where genesis__Application__c=:applicationId and name LIKE '%ID%' ];
+                    List<genesis__Application_Document_Category__c> docCategory = [SELECT ID, genesis__Required__c FROM genesis__Application_Document_Category__c where genesis__Application__c=:applicationId and name = 'Primary ID' ];
                     
                     if(!docCategory.isEmpty()){
                         System.debug('docCategory.....'+ docCategory); 
