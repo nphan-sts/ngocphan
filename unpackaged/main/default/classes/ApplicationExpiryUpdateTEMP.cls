@@ -48,11 +48,11 @@ global class ApplicationExpiryUpdateTEMP implements Database.Batchable<SObject>,
         return Database.getQueryLocator(query);
     }
 
-    global void execute(Database.BatchableContext BC, List<SObject> scope) {
+    global void execute(Database.BatchableContext bc, List<SObject> scope) {
         ApplicationExpiryUpdateHandler.execute(CSD, currentSystemDate, scope, notifyIds);
     }
 
-    public void finish(Database.BatchableContext BC) {
+    public void finish(Database.BatchableContext bc) {
 
         System.debug(LoggingLevel.INFO, 'ApplicationExpiryUpdateTEMP.finish:' + notifyIds);
         if (notifyIds != null && !notifyIds.isEmpty()) {
