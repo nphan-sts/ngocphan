@@ -11,17 +11,20 @@
  */
 
 global class AllocationEngineCalloutBatch implements Database.batchable<sObject>,Database.AllowsCallouts{
-    public set<Id> appIdList;
+    public Set<Id> appIdList;
     public String queryStr;
-    
-    global AllocationEngineCalloutBatch(String query){
-       queryStr = query;
+    public String decisionLevel;
+
+    global AllocationEngineCalloutBatch(String query, String decisionLevel){
+        this.queryStr = query;
+        this.decisionLevel = decisionLevel;
     }
     
-    global AllocationEngineCalloutBatch(set<Id> appIdList){
+    global AllocationEngineCalloutBatch(Set<Id> appIdList, String decisionLevel){
         this.appIdList = appIdList;
+        this.decisionLevel = decisionLevel;
         if(appIdList != null){
-            queryStr = 'SELECT Id FROM genesis__Applications__c WHERE Id IN : appIdList AND genesis__status__c = \'funded\''; 
+            queryStr = 'SELECT Id FROM genesis__Applications__c WHERE Id IN : appIdList';
         }
     }
     
@@ -34,8 +37,14 @@ global class AllocationEngineCalloutBatch implements Database.batchable<sObject>
         if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
             for (genesis__Applications__c app : scope) {
                 appIds.add(app.Id);
-            }   
-            MW_AllocationEngineHandler.handleFinal(appIds);
+            }
+            if (MW_AllocationEngineHandler.FINALIZED == decisionLevel) {
+                MW_AllocationEngineHandler.handleFinal(appIds);
+            } else if (MW_AllocationEngineHandler.CANCELLED == decisionLevel) {
+                MW_AllocationEngineHandler.handleCancelled(appIds);
+            } else {
+                MW_LogUtility.error('AllocationEngineCalloutBatch', 'Execute', 'Unsupported decision level ' + decisionLevel);
+            }
         }else{
             MW_LogUtility.info('AllocationEngineCalloutBatch','Execute','Allocation Engine is NOT enabled');
         }
