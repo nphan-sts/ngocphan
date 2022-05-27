@@ -7,23 +7,23 @@
  * Test this class by running tests for both ApplicationExpiryUpdate and ApplicationExpiryUpdateTEMP
  */
 
-global class ApplicationExpiryUpdateHandler {
+global without sharing class ApplicationExpiryUpdateHandler {
 
     /**
      * The main execution logic
      *
-     * @param CSD The target system date as a string
+     * @param csdStr The target system date as a string
      * @param currentSystemDate The target system date
      * @param scope The application scope
      * @param notifyIds Ids to to send to Allocation Engine Batch
      */
-    public static void execute(String CSD,
+    public static void execute(String csdStr,
                                Date currentSystemDate,
                                List<SObject> scope,
                                Set<Id> notifyIds) {
 
         System.debug('----Method execute(+)scope----' + scope);
-        System.debug(LoggingLevel.INFO, 'ApplicationExpiryUpdate CSD: ' + CSD);
+        System.debug(LoggingLevel.INFO, 'ApplicationExpiryUpdate current system date string: ' + csdStr);
 
         QueueSobject declinedQue;
         QueueSobject expiredQue;

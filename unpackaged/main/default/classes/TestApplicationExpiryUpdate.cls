@@ -119,6 +119,7 @@ public class TestApplicationExpiryUpdate {
         
         ApplicationExpiryUpdate obj = new ApplicationExpiryUpdate(); 
         Database.executeBatch(obj,1);
+        /* skipLoanStatus is used within the bind query */
          Set<String> skipLoanStatus = new Set<String>{'Funded','Expired','Expired-Withdrawn'};
         String CSD = String.valueof(new loan.GlobalLoanUtilFacade().getCurrentSystemDate());
         string query = 'select id, Expiry_Date__c, genesis__Status__c, CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c from genesis__Applications__c where Expiry_Date__c =' + CSD +' and genesis__Status__c not in : skipLoanStatus';
