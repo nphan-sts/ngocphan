@@ -14,7 +14,7 @@ global class AllocationEngineCalloutBatch implements Database.batchable<sObject>
     public Set<Id> appIdList;
     public String queryStr;
     public String decisionLevel;
-    
+
     global AllocationEngineCalloutBatch(String query, String decisionLevel){
         this.queryStr = query;
         this.decisionLevel = decisionLevel;
