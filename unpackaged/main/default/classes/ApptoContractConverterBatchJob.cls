@@ -43,16 +43,8 @@ global class ApptoContractConverterBatchJob implements Database.batchable<sObjec
     }
     
     public void finish(Database.BatchableContext bc) {
-        if(applicationIdSet != null && applicationIdSet.size() > 0){
-            // Execute the AE callout batch
-            try{
-                Integer batchSize = Integer.valueOf(mw_settings__c.getInstance().Allocation_Engine_Batch_Size__c);
-                AllocationEngineCalloutBatch aEBatch = new AllocationEngineCalloutBatch(applicationIdSet, MW_AllocationEngineHandler.FINALIZED);
-                Database.executeBatch(aEBatch,batchSize);
-            }catch(Exception ex){
-                MW_LogUtility.error('ApptoContractConverterBatchJob','','','finish',ex);
-            }
-        }
+        System.debug(LoggingLevel.INFO, 'ApptoContractConverterBatchJob.finish:' + applicationIdSet);
+        AllocationEngineCalloutBatch.executeBatch(applicationIdSet, MW_AllocationEngineHandler.FINALIZED);
     }
 
 }

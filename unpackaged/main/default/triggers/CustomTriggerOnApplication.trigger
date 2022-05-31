@@ -276,10 +276,9 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                     /*pallavi(LOS-158)*/
                 }
 
-                if (MW_AllocationEngineHandler.statusListContains(
-                        MW_Settings__c.getOrgDefaults().Allocation_Engine_Cancel_Statuses__c, app.genesis__Status__c) &&
-                        appStatusChanged &&
-                        MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
+                if (MW_AllocationEngineHandler.getCancelStatusSet().contains(app.genesis__Status__c) &&
+                    appStatusChanged &&
+                    MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
                     MW_AllocationEngineHandler.handleCancelled(new List<Id> {app.Id});
                 }
 
