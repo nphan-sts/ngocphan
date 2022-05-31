@@ -9,9 +9,9 @@ Database.executeBatch(new ApplicationExpiryUpdateTEMP(qry,dt),1);
 //System.schedule('ApplicationExpiryUpdateTEMP', '0 32 13 * * ?', new ApplicationExpiryUpdateTEMP(qry,dt));
 */
 
-global class ApplicationExpiryUpdateTEMP implements Database.Batchable<SObject>, Schedulable, Database.AllowsCallouts {
+global class ApplicationExpiryUpdateTEMP implements Database.Batchable<SObject>, Schedulable, Database.Stateful, Database.AllowsCallouts {
 
-    static global Set<Id> notifyIds = new Set<Id>();
+    global Set<Id> notifyIds = new Set<Id>();
 
     String query;
     List<String> skipLoanStatus = System.Label.Application_Expired_Status.split(',');
@@ -40,7 +40,6 @@ global class ApplicationExpiryUpdateTEMP implements Database.Batchable<SObject>,
 
     global Database.QueryLocator start(Database.BatchableContext bc) {
 
-        notifyIds.clear();
         if(query == null){
             query = 'select id, Expiry_Date__c, genesis__Status__c,CreatedById, DocuSign_EnvelopeId__c, Expiration_Tag__c, (select id,name,Loan_amount_counteroffer__c from Credit_Policy__r where Loan_amount_counteroffer__c!=null limit 1 ) from genesis__Applications__c where Expiry_Date__c =' + CSD +' and genesis__Status__c not in : skipLoanStatus';
         }

@@ -24,7 +24,7 @@ global class AllocationEngineCalloutBatch implements Database.Batchable<SObject>
      * This confirm the funnel state before executing the call.
      * Remember, all code here is executing inside System.isBatch() == true
      *
-     * @param ids The ids to execute
+     * @param ids The ids to execute, immediately cloned due to potentially shared list state
      * @param decisionLevel The decision level to consider
      *
      * @return Job id if executing
@@ -36,17 +36,19 @@ global class AllocationEngineCalloutBatch implements Database.Batchable<SObject>
             return null;
         }
 
+        Set<Id> batchIds = ids.clone();
+
         try {
             Decimal configSize = MW_Settings__c.getInstance().Allocation_Engine_Batch_Size__c;
             Integer batchSize = configSize == null || configSize == 0 ? 10 : configSize.intValue();
 
             if (MW_AllocationEngineHandler.FINALIZED == decisionLevel) {
-                List<String> unconvertedGuids = filterUnconvertedApps(ids);
+                List<String> unconvertedGuids = filterUnconvertedApps(batchIds);
                 if (!unconvertedGuids.isEmpty()) {
                     warn('Final call not executed for following, as no contract was available for: ' + unconvertedGuids);
                 }
             } else if (MW_AllocationEngineHandler.CANCELLED == decisionLevel) {
-                List<String> uncancelledApps = filterUncancelledApps(ids);
+                List<String> uncancelledApps = filterUncancelledApps(batchIds);
                 if (!uncancelledApps.isEmpty()) {
                     warn('Cancel call not executed for following, as app status not in MW_Settings cancel list: ' + uncancelledApps);
                 }
@@ -55,12 +57,12 @@ global class AllocationEngineCalloutBatch implements Database.Batchable<SObject>
                 return null;
             }
 
-            if (ids == null || ids.isEmpty()) {
+            if (batchIds == null || batchIds.isEmpty()) {
                 warn('No ids were available after filtering, for decision level: ' + decisionLevel);
                 return null;
             }
 
-            AllocationEngineCalloutBatch batch = new AllocationEngineCalloutBatch(ids, decisionLevel);
+            AllocationEngineCalloutBatch batch = new AllocationEngineCalloutBatch(batchIds, decisionLevel);
             return Database.executeBatch(batch, batchSize);
 
         } catch (Exception e) {
