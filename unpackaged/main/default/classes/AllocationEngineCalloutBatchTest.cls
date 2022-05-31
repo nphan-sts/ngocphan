@@ -2,7 +2,9 @@
 private class AllocationEngineCalloutBatchTest {
 
     @TestSetup static void setup() {
-    
+
+        insert getMWSettings();
+
         Account investor1 = MW_GlobalTestUtility.GetAccount('Investor');
         investor1.Investor_Code__c = 'FCU';
     
@@ -66,9 +68,8 @@ private class AllocationEngineCalloutBatchTest {
         
         update new List<genesis__Applications__c> {app1, app2};
     }
-    @isTest static void testBatchClassExecutionWithApps() {
+    @IsTest static void testBatchClassExecutionWithApps() {
         
-        insert getMWSettings();
         Id jobId;
         set<Id> appIds = new set<Id>();
         Integer batchSize = Integer.valueOf(MW_Settings__c.getOrgDefaults().Allocation_Engine_Batch_Size__c);
@@ -83,8 +84,8 @@ private class AllocationEngineCalloutBatchTest {
         AsyncApexJob asapx = [SELECT Id, Status FROM AsyncApexJob WHERE Id =: jobId];
         System.assertEquals('Completed',asapx.Status);
     }
-    @isTest static void testBatchClassExecutionWithQuery() {
-        insert getMWSettings();
+    @IsTest static void testBatchClassExecutionWithQuery() {
+
         Id jobId;
         Integer batchSize = Integer.valueOf(MW_Settings__c.getOrgDefaults().Allocation_Engine_Batch_Size__c);
         String queryStr =  'SELECT Id,genesis__status__c FROM genesis__applications__c ';
@@ -97,6 +98,121 @@ private class AllocationEngineCalloutBatchTest {
         AsyncApexJob asapx = [SELECT Id, Status FROM AsyncApexJob WHERE Id =: jobId];
         System.assertEquals('Completed',asapx.Status);
     }
+
+    /**
+     * Confirm that final calls are not executed if no contract is found.
+     */
+    @IsTest static void testBatchClassDoesNotRunForUnconvertedApps() {
+
+        Id jobId;
+        Set<Id> appIds = new Set<Id>();
+        List<genesis__Applications__c> apps = [SELECT Id, Lead_ID__c FROM genesis__Applications__c];
+        for (genesis__Applications__c app : apps) {
+            appIds.add(app.Id);
+        }
+
+        Test.startTest();
+        jobId = AllocationEngineCalloutBatch.executeBatch(appIds, MW_AllocationEngineHandler.FINALIZED);
+        Test.stopTest();
+
+        List<AsyncApexJob> jobs = [SELECT Id, Status FROM AsyncApexJob WHERE Id =: jobId];
+        System.assert(jobs.isEmpty());
+    }
+
+    /**
+     * Confirm that the batch runs for apps with a contract associated
+     */
+    @IsTest static void testBatchClassRunsForAppsWithContract() {
+
+        Id jobId;
+        Set<Id> appIds = new Set<Id>();
+        List<genesis__Applications__c> apps = [SELECT Id, Lead_ID__c FROM genesis__Applications__c];
+        for (genesis__Applications__c app : apps) {
+            appIds.add(app.Id);
+        }
+
+        genesis__Applications__c app = apps.get(0);
+        createContract(app);
+
+        Test.startTest();
+        jobId = AllocationEngineCalloutBatch.executeBatch(appIds, MW_AllocationEngineHandler.FINALIZED);
+        Test.stopTest();
+
+        List<AsyncApexJob> jobs = [SELECT Id, Status FROM AsyncApexJob WHERE Id = :jobId];
+        System.assertEquals(1, jobs.size());
+        System.assertEquals('Completed', jobs.get(0).Status);
+    }
+
+    /**
+     * Confirm that when apps are expired, the facade will execute the job
+     */
+    @IsTest static void testBatchClassRunsForCancelledApps() {
+
+        Id jobId;
+        Set<Id> appIds = new Set<Id>();
+        List<genesis__Applications__c> apps = [SELECT Id, Lead_ID__c FROM genesis__Applications__c];
+        for (genesis__Applications__c app : apps) {
+            app.genesis__Status__c = 'Expired';
+            appIds.add(app.Id);
+        }
+        update apps;
+
+        Test.startTest();
+        jobId = AllocationEngineCalloutBatch.executeBatch(appIds, MW_AllocationEngineHandler.CANCELLED);
+        Test.stopTest();
+
+        List<AsyncApexJob> jobs = [SELECT Id, Status FROM AsyncApexJob WHERE Id = :jobId];
+        System.assertEquals(1, jobs.size());
+        System.assertEquals('Completed', jobs.get(0).Status);
+    }
+
+    /**
+     * Confirm that when apps were not cancelled, then the job does not execute
+     */
+    @IsTest static void testBatchClassDoesNotRunForUncancelledApps() {
+
+        Id jobId;
+        Set<Id> appIds = new Set<Id>();
+        List<genesis__Applications__c> apps = [SELECT Id, Lead_ID__c FROM genesis__Applications__c];
+        for (genesis__Applications__c app : apps) {
+            app.genesis__Status__c = PayoffConstants.AGENT_DOCUMENT_VERIFICATION_PENDING;
+            appIds.add(app.Id);
+        }
+        update apps;
+
+        Test.startTest();
+        jobId = AllocationEngineCalloutBatch.executeBatch(appIds, MW_AllocationEngineHandler.CANCELLED);
+        Test.stopTest();
+
+        List<AsyncApexJob> jobs = [SELECT Id, Status FROM AsyncApexJob WHERE Id =: jobId];
+        System.assert(jobs.isEmpty());
+    }
+
+    /**
+     * Hack to create a contract association for an app for testing purposes.
+     * @param app App to create contract for
+     */
+    private static void createContract(genesis__Applications__c app) {
+
+        Account acc = [SELECT Id FROM Account WHERE State__c = 'CA' LIMIT 1];
+
+        loan.TestHelper.createSeedDataForTesting();
+        loan.TestHelper.createOffice();
+        loan__Loan_Product__c loanProd = MW_GlobalTestUtility.GetLoanProduct();
+        insert loanProd;
+
+        loan__Loan_Account__c contract = MW_GlobalTestUtility.GetCLContract();
+        contract.lead_Guid__c = app.Lead_ID__c;
+        contract.loan__Account__c = acc.Id;
+        contract.loan__Loan_Product_Name__c = loanProd.Id;
+        contract.Application__c = app.Id;
+        contract.loan__Loan_Status__c = 'Closed - Obligations met'; //'Active - Good Standing';
+        insert contract;
+
+        app.CL_Contract__c = contract.Id;
+        update app;
+    }
+
     static MW_Settings__c getMWSettings(){
         MW_Settings__c mwSettings = new MW_Settings__c();
         mwSettings.Allocation_Engine_Deployment_Mode__c = 'DARK_MODE';

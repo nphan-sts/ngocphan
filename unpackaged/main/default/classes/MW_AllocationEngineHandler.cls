@@ -88,6 +88,30 @@ global with sharing class MW_AllocationEngineHandler {
     }
 
     /**
+     * Parses the mw settings for a list of statuses.
+     * Does stuff like null handling, accidental extra commas, extra whitespace.
+     * @return Return the set of statuses which are considered cancelled.
+     */
+    public static Set<String> getCancelStatusSet() {
+        String statusCsv = MW_Settings__c.getOrgDefaults().Allocation_Engine_Cancel_Statuses__c;
+        if (String.isBlank(statusCsv)) {
+            System.debug(LoggingLevel.ERROR,
+                    'Invalid configuration! Add Cancel Statuses to: ' +
+                    'MW_Settings__c.Allocation_Engine_Cancel_Statuses__c');
+            return new Set<String>();
+        }
+        List<String> rawStrs = statusCsv.split(',');
+        Set<String> statusSet = new Set<String>();
+        for (String str : rawStrs) {
+            String trimmed = str.trim();
+            if (!String.isBlank(trimmed)) {
+                statusSet.add(trimmed);
+            }
+        }
+        return statusSet;
+    }
+
+    /**
      * Dark mode is either legacy-mode, dark-mode, and full-mode.
      * The rules api should be active when either legacy, dark, or blank.
      * @return Should the rules api be executed

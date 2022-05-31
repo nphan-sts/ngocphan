@@ -55,14 +55,6 @@ global class ApplicationExpiryUpdateTEMP implements Database.Batchable<SObject>,
     public void finish(Database.BatchableContext bc) {
 
         System.debug(LoggingLevel.INFO, 'ApplicationExpiryUpdateTEMP.finish:' + notifyIds);
-        if (notifyIds != null && !notifyIds.isEmpty()) {
-            try{
-                Integer batchSize = Integer.valueOf(MW_Settings__c.getInstance().Allocation_Engine_Batch_Size__c);
-                AllocationEngineCalloutBatch aEBatch = new AllocationEngineCalloutBatch(notifyIds, MW_AllocationEngineHandler.CANCELLED);
-                Database.executeBatch(aEBatch, batchSize);
-            }catch(Exception ex){
-                MW_LogUtility.error('ApplicationExpiryUpdateTEMP','','','finish',ex);
-            }
-        }
+        AllocationEngineCalloutBatch.executeBatch(notifyIds, MW_AllocationEngineHandler.CANCELLED);
     }
 }
