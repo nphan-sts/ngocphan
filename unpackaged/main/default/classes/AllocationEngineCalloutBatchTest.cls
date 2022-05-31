@@ -206,7 +206,7 @@ private class AllocationEngineCalloutBatchTest {
         contract.loan__Account__c = acc.Id;
         contract.loan__Loan_Product_Name__c = loanProd.Id;
         contract.Application__c = app.Id;
-        contract.loan__Loan_Status__c = 'Closed - Obligations met'; //'Active - Good Standing';
+        contract.loan__Loan_Status__c = 'Closed - Obligations met';
         insert contract;
 
         app.CL_Contract__c = contract.Id;
