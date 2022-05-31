@@ -1,6 +1,6 @@
-global class ApplicationExpiryUpdate implements Database.Batchable<SObject>, Schedulable, Database.AllowsCallouts {
+global class ApplicationExpiryUpdate implements Database.Batchable<SObject>, Schedulable, Database.Stateful, Database.AllowsCallouts {
 
-    static global Set<Id> notifyIds = new Set<Id>();
+    global Set<Id> notifyIds = new Set<Id>();
 
     String query;
     List<String> skipLoanStatus = System.Label.Application_Expired_Status.split(',');
@@ -28,7 +28,6 @@ global class ApplicationExpiryUpdate implements Database.Batchable<SObject>, Sch
     
     global Database.QueryLocator start(Database.BatchableContext bc){
 
-        notifyIds.clear();
         System.debug(LoggingLevel.INFO, 'ApplicationExpiryUpdate Query: ' + query);
         return Database.getQueryLocator(query);
     }
