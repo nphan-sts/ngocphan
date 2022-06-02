@@ -161,7 +161,17 @@ global class SelectOfferFromUI {
                         }
 
                         if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
-                            MW_AllocationEngineHandler.handleReallocation(new List<Id> {app.Id});
+                            /*
+                             LSP-834 fix for multiple AES calls from CLS
+                                If pricing tier is different, MW_PricingOfferTrigger will execute reallocation.
+                                If pricing tier is not different, execute reallocation here.
+                                WF Avoid App Stuck In Offer Accepted should send back to advp without causing advp trigger
+                                Set res is true so new offer is persisted (firing Trigger)
+                             */
+                            if (app.Pricing_Tier__c == p.Pricing_Tier__c) {
+                                System.debug('CLS-AES: SelectOfferFromUI');
+                                MW_AllocationEngineHandler.handleReallocation(new List<Id> {app.Id});
+                            }
                             res = 'Success'; // if we made it here, there's was no error
                         }
 
