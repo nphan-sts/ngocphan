@@ -74,8 +74,35 @@ private class MW_KbaDetailsTriggerTest {
         talx.Application__c = app1.Id;
         insert talx;
         
+         genesis__Document_Category__c docCat = new genesis__Document_Category__c(
+            genesis__Category_Name__c = 'Test_Paystub_ID',
+            genesis__Required__c = true
+        );
+        Insert docCat;
+        genesis__Application_Document_Category__c appDocCat = new genesis__Application_Document_Category__c(
+            Name = 'Primary ID',
+            genesis__Document_Category__c = docCat.Id,
+            genesis__Application__c = app.Id
+        );
+        Insert appDocCat;
         cso.genesis__Disable_Triggers__c = false;
         update cso;
+    }
+    
+    @isTest
+    public static void PrimaryID9012(){
+        Test.startTest();
+        
+        genesis__Applications__c app = [SELECT Id From genesis__Applications__c LIMIT 1];
+        
+        KBA_Details__c kba9012 = MW_GlobalTestUtility.GetKbaDetails();
+        kba9012.Application__c = app.Id;
+        kba9012.Precise_ID_Overall_SCore__c = 9012;
+        insert kba9012;
+        
+        Test.stopTest();
+              
+        System.assertEquals(TRUE, [SELECT ID, genesis__Required__c FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id AND name='Primary ID'].genesis__Required__c);
     }
     
     @isTest
@@ -89,7 +116,7 @@ private class MW_KbaDetailsTriggerTest {
         insert kbaHard;
         
         Test.stopTest();
-        
+              
         System.assertEquals('Hard', [SELECT Id, Verification_Complexity__c FROM genesis__Applications__c WHERE Id=: app.Id].Verification_Complexity__c);
     }
     
