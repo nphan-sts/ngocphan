@@ -18,7 +18,7 @@ public class CorrectLastBilledAmountTest {
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
-        
+        system.debug(' Fee Junctions' +dummyFeeJunction);
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
         loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
@@ -79,8 +79,9 @@ public class CorrectLastBilledAmountTest {
         insert pMode1;
         
         loan__Bank_Account__c bank = [select id from loan__Bank_Account__c where loan__Account_usage__c= 'Borrower/Investor Account' limit 1];
-        
+        system.debug('Bank Account' +bank);
         loan.GlobalLoanUtilFacade util = new loan.GlobalLoanUtilFacade();
+        system.debug('Global Loan util' +util);
         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
             loan__Account__c= acc.Id,
             loan__Contact__c= a1.ID,
