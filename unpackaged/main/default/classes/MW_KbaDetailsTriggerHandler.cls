@@ -21,7 +21,7 @@ public class MW_KbaDetailsTriggerHandler {
     */
     public void afterUpdate() {
         
-        DocReductionOnPreciseId(newRecords, oldMap); //LOP-597
+        DocReduction(newRecords, oldMap); //LOP-597
         Boolean isUpdateAppRequired = false;     
             for (KBA_Details__c kba : newRecords) {
             KBA_Details__c oldKba = oldMap.get(kba.Id);                
@@ -43,12 +43,12 @@ public class MW_KbaDetailsTriggerHandler {
 
     public void afterInsert() {
                         
-        DocReductionOnPreciseId(newRecords,null); //LOP-597             
+       DocReduction(newRecords,null); //LOP-597             
         UpdateApplications(newRecords, newMap, oldMap, null, null, null);
         
     }
     //LOP-597
-    Public static void DocReductionOnPreciseId(List<KBA_Details__c> LKba, Map<Id, KBA_Details__c> MapOldKba ){
+    Public static void DocReduction(List<KBA_Details__c> LKba, Map<Id, KBA_Details__c> MapOldKba ){
        for (KBA_Details__c kba : LKba) {
         Id appId;
         appId = kba.Application__c ;
@@ -56,14 +56,15 @@ public class MW_KbaDetailsTriggerHandler {
         KBA_Details__c oldKba = MapOldKba.get(kba.Id);      
            
               if(kba.Precise_ID_Overall_SCore__c == 9012 && ( kba.Precise_ID_Overall_SCore__c != oldKba.Precise_ID_Overall_SCore__c)){
-                 DocumentReductionRules.payStubReduction(appId);  
-           }
-           }else{
+                 DocumentReductionRules.payStubReduction(appId);
+              }
+        }
+           else{
                if(kba.Precise_ID_Overall_SCore__c == 9012){
-                 DocumentReductionRules.payStubReduction(appId);  
+                 DocumentReductionRules.payStubReduction(appId);
+               }
            }
-           }
-    }
+       }
     }
 
     Public static void UpdateApplications(List<KBA_Details__c> pListKba, Map<Id, KBA_Details__c> pMapNewKbaDetails,
