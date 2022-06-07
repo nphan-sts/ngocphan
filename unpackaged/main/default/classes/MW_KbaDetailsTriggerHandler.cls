@@ -49,21 +49,21 @@ public class MW_KbaDetailsTriggerHandler {
     }
     //LOP-597
     Public static void DocReduction(List<KBA_Details__c> LKba, Map<Id, KBA_Details__c> MapOldKba ){
-       for (KBA_Details__c kba : LKba) {
-        Id appId;
-        appId = kba.Application__c ;
-        if(MapOldKba!=null) {
-        KBA_Details__c oldKba = MapOldKba.get(kba.Id);      
-           
-              if(kba.Precise_ID_Overall_SCore__c == 9012 && ( kba.Precise_ID_Overall_SCore__c != oldKba.Precise_ID_Overall_SCore__c)){
-                 DocumentReductionRules.payStubReduction(appId);
-              }
-        }
-           else{
-               if(kba.Precise_ID_Overall_SCore__c == 9012){
-                 DocumentReductionRules.payStubReduction(appId);
-               }
-           }
+   		for(KBA_Details__c kba : LKba){
+        	Id appId;
+            appId = kba.Application__c ;
+            if(MapOldKba!=null){
+                KBA_Details__c oldKba = MapOldKba.get(kba.Id);
+            
+                if(kba.Precise_ID_Overall_SCore__c == 9012 && ( kba.Precise_ID_Overall_SCore__c != oldKba.Precise_ID_Overall_SCore__c)){
+                    DocumentReductionRules.payStubReduction(appId);
+          	    }
+            }
+            else{
+                if(kba.Precise_ID_Overall_SCore__c == 9012){
+                    DocumentReductionRules.payStubReduction(appId);
+        	    }
+            }
        }
     }
 
