@@ -39,8 +39,7 @@ public class MW_KbaDetailsTriggerHandler {
 
     public void afterInsert() {              
        DocReduction(newRecords,null); //LOP-597             
-       UpdateApplications(newRecords, newMap, oldMap, null, null, null);
-        
+       UpdateApplications(newRecords, newMap, oldMap, null, null, null);    
     }
     //LOP-597
     Public static void DocReduction(List<KBA_Details__c> LKba, Map<Id, KBA_Details__c> MapOldKba )
