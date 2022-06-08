@@ -43,8 +43,9 @@ global with sharing class MW_AllocationEngineHandler {
     /**
      * Max time to wait until to establish http connection
      * Consider total callout time in transaction which is 120000 for the retries
+     * Bumped up to 90 because occasionally initial CLS write back is longer than 60 seconds!
      */
-    private static final Integer CALLOUT_TIMEOUT_IN_SECONDS = 20 * 1000;
+    private static final Integer CALLOUT_TIMEOUT_IN_SECONDS = 90 * 1000;
 
     private static final Integer MAX_RETRY =  5;
 
