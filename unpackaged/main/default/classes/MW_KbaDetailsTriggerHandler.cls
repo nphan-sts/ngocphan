@@ -45,7 +45,7 @@ public class MW_KbaDetailsTriggerHandler {
     //LOP-597
     Public static void DocReduction(List<KBA_Details__c> LKba, Map<Id, KBA_Details__c> MapOldKba )
     {
-   		for(KBA_Details__c kba : LKba)
+        for(KBA_Details__c kba : LKba)
         {
         	Id appId;
             appId = kba.Application__c ;
