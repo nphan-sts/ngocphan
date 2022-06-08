@@ -47,7 +47,7 @@ public class MW_KbaDetailsTriggerHandler {
     {
         for(KBA_Details__c kba : LKba)
         {
-        	Id appId;
+            Id appId;
             appId = kba.Application__c ;
             if(MapOldKba!=null)
             {
