@@ -16,7 +16,7 @@
  * https://developer.salesforce.com/docs/atlas.en-us.224.0.apexcode.meta/apexcode/apex_gov_limits.htm
  */
 
-public with sharing class MW_AllocationEngineHandler {
+global with sharing class MW_AllocationEngineHandler {
 
     private static final Integer NO_RESPONSE = -1;
 
@@ -30,22 +30,24 @@ public with sharing class MW_AllocationEngineHandler {
      * They are also used in the final url to callout.
      */
 
-    @TestVisible
-    private static final String ADVP = 'advp';
+    public static final String ADVP = 'advp';
 
-    @TestVisible
-    private static final String REALLOCATION = 'reallocation';
+    public static final String REALLOCATION = 'reallocation';
 
-    @TestVisible
-    private static final String MANUAL = 'manual';
+    public static final String MANUAL = 'manual';
 
-    @TestVisible
-    private static final String FINALIZED = 'final';
+    public static final String FINALIZED = 'final';
 
-    @TestVisible
-    private static final String CANCELLED = 'cancel';
+    public static final String CANCELLED = 'cancel';
 
-    private static final Integer CALLOUT_TIMEOUT_IN_SECONDS = 5 * 1000;
+    /**
+     * Max time to wait until to establish http connection
+     * Consider total callout time in transaction which is 120000 for the retries
+     * Bumped up to 90 because occasionally initial CLS write back is longer than 60 seconds!
+     */
+    private static final Integer CALLOUT_TIMEOUT_IN_SECONDS = 90 * 1000;
+
+    private static final Integer MAX_RETRY =  5;
 
     private static final Integer RESPONSE_CATEGORY_5XX = 5;
 
@@ -54,8 +56,6 @@ public with sharing class MW_AllocationEngineHandler {
     private static final Integer RESPONSE_CATEGORY_2XX = 2;
 
     private static final String LOG_NAME = 'MW_AllocationEngineHandler';
-
-    private static final Integer MAX_RETRY =  5;
 
     private static final Set<String> DECISION_LEVELS = new Set<String> {
         ADVP, REALLOCATION, MANUAL, FINALIZED, CANCELLED
@@ -89,6 +89,30 @@ public with sharing class MW_AllocationEngineHandler {
     }
 
     /**
+     * Parses the mw settings for a list of statuses.
+     * Does stuff like null handling, accidental extra commas, extra whitespace.
+     * @return Return the set of statuses which are considered cancelled.
+     */
+    public static Set<String> getCancelStatusSet() {
+        String statusCsv = MW_Settings__c.getOrgDefaults().Allocation_Engine_Cancel_Statuses__c;
+        if (String.isBlank(statusCsv)) {
+            System.debug(LoggingLevel.ERROR,
+                    'Invalid configuration! Add Cancel Statuses to: ' +
+                    'MW_Settings__c.Allocation_Engine_Cancel_Statuses__c');
+            return new Set<String>();
+        }
+        List<String> rawStrs = statusCsv.split(',');
+        Set<String> statusSet = new Set<String>();
+        for (String str : rawStrs) {
+            String trimmed = str.trim();
+            if (!String.isBlank(trimmed)) {
+                statusSet.add(trimmed);
+            }
+        }
+        return statusSet;
+    }
+
+    /**
      * Dark mode is either legacy-mode, dark-mode, and full-mode.
      * The rules api should be active when either legacy, dark, or blank.
      * @return Should the rules api be executed
@@ -116,12 +140,24 @@ public with sharing class MW_AllocationEngineHandler {
 
         List<Id> hasAllocationIds = filterByAllocationIds(appIds, true);
         if (!hasAllocationIds.isEmpty()) {
-            handle(hasAllocationIds, null, REALLOCATION);
+            handle(hasAllocationIds, REALLOCATION);
         }
 
         if (!appIds.isEmpty()) {
-            handle(appIds, null, ADVP);
+            handle(appIds, ADVP);
         }
+    }
+
+    /**
+     * Skuid method handler
+     * @param appId App id
+     */
+    webService static void handleReallocationById(Id appId) {
+        if (appId == null) {
+            System.debug('handleReallocationById: null app id' + appId);
+            return;
+        }
+        handleReallocation(new List<Id> {appId});
     }
 
     public static void handleReallocation(List<Id> appIds) {
@@ -132,27 +168,27 @@ public with sharing class MW_AllocationEngineHandler {
 
         List<Id> noAllocationIds = filterByAllocationIds(appIds, false);
         if (!noAllocationIds.isEmpty()) {
-            handle(noAllocationIds, null, ADVP);
+            handle(noAllocationIds, ADVP);
         }
 
         if (!appIds.isEmpty()) {
-            handle(appIds, null, REALLOCATION);
+            handle(appIds, REALLOCATION);
         }
     }
 
-    public static void handleManual(List<Id> appIds, List<Id> manualPartnerIds) {
-        if (appIds == null || appIds.isEmpty() || manualPartnerIds == null || manualPartnerIds.isEmpty()) {
-            System.debug('handleManual: appIds:' + appIds + ', manualPartnerIds:' + manualPartnerIds);
+    public static void handleManual(List<Id> appIds) {
+        if (appIds == null || appIds.isEmpty()) {
+            System.debug('handleManual: appIds:' + appIds);
             return;
         }
 
         List<Id> noAllocationIds = filterByAllocationIds(appIds, false);
         if (!noAllocationIds.isEmpty()) {
-            handle(noAllocationIds, null, ADVP);
+            handle(noAllocationIds, ADVP);
         }
 
         if (!appIds.isEmpty()) {
-            handle(appIds, manualPartnerIds, MANUAL);
+            handle(appIds, MANUAL);
         }
     }
 
@@ -161,7 +197,7 @@ public with sharing class MW_AllocationEngineHandler {
             System.debug('handleCancelled: ' + appIds);
             return;
         }
-        handle(appIds, null, CANCELLED);
+        handle(appIds, CANCELLED);
     }
 
     public static void handleFinal(List<Id> appIds) {
@@ -169,7 +205,33 @@ public with sharing class MW_AllocationEngineHandler {
             System.debug('handleFinal: ' + appIds);
             return;
         }
-        handle(appIds, null, FINALIZED);
+        handle(appIds, FINALIZED);
+    }
+
+    /**
+     * An update to the allocation partner potentially means a manual allocation attempt
+     * @param allocationPartners allocation partners which have been updated
+     */
+    public static void handleUpdatedAllocationPartners(List<Allocation_Partner__c> allocationPartners) {
+        Set<Id> idSet = new Set<Id>();
+        for (Allocation_Partner__c ap : allocationPartners) {
+            if (ap.Assign_To__c) {
+                idSet.add(ap.Application__c);
+            }
+        }
+        MW_AllocationEngineHandler.handleManual(new List<Id>(idSet));
+    }
+
+    /**
+     *  After legacy RulesApi allocations, InvestorAllocation sets allocationForADVPcalled true if advp is status.
+     *  After allocation from Allocation Engine, the timestamp is always updated.
+     *  Use timestamp change to mimic behavior of InvestorAllocation class.
+     */
+    public static void setInvestorAdvpCalledForAES(genesis__Applications__c app, genesis__Applications__c oldApp) {
+        Boolean allocationEngineUpdated = app.Allocation_Timestamp__c != oldApp.Allocation_Timestamp__c;
+        if (allocationEngineUpdated && app.genesis__Status__c == 'agent_document_verification_pending') {
+            InvestorAllocation.allocationForADVPcalled = true;
+        }
     }
 
     private class CalloutResult {
@@ -188,10 +250,9 @@ public with sharing class MW_AllocationEngineHandler {
      * Internally will log and execute retries up until the maximum amount.
      *
      * @param appIds The list of app ids to consider
-     * @param manualPartnerIds The list of allocation partners
      * @param decisionLevel The allocation type to send
      */
-    private static void handle(List<Id> appIds, List<Id> manualPartnerIds, String decisionLevel) {
+    private static void handle(List<Id> appIds, String decisionLevel) {
 
         final String logMethodName = 'handle';
 
@@ -207,34 +268,20 @@ public with sharing class MW_AllocationEngineHandler {
             }
 
             if (!DECISION_LEVELS.contains(decisionLevel)) {
-                handleInvalidDecisionLevel(logMethodName, appIds, decisionLevel);
+                handleInvalidDecisionLevel(appIds, decisionLevel);
                 return;
             }
+
+            List<Id> manualPartnerIds = getManualPartnerIdsByAppIds(appIds);
 
             validAppIds = validateAndLogApps(appIds, manualPartnerIds, decisionLevel);
             if (validAppIds.isEmpty()) {
                 return;
             }
 
-            System.debug(': ' + validAppIds);
-
             json = toJson(validAppIds, manualPartnerIds, decisionLevel);
 
-            /*
-            Futures are disallowed inside some other async Apex constructs
-            Attempt to execute synchronously if the handler detects async context.
-            Triggers and System.isScheduled must be executed via the future
-            Move to a platform event to avoid these headaches long term.
-             */
-            Boolean useSync = System.isBatch() || System.isQueueable() || System.isFuture();
-            System.debug(String.format('Context: useSync: {0}, Batch:{1}, Queueable:{2}, Future:{3}, Quiddity:{4}',
-                    new List<Object>{ useSync, System.isBatch(), System.isQueueable(), System.isFuture(), Request.getCurrent().getQuiddity() }));
-
-            if (useSync) {
-                callAllocationEngineService(validAppIds, json, decisionLevel);
-            } else {
-                callAllocationEngineServiceFuture(validAppIds, json, decisionLevel);
-            }
+            executeInContext(validAppIds, decisionLevel, json);
 
         } catch (Exception e) {
 
@@ -244,8 +291,56 @@ public with sharing class MW_AllocationEngineHandler {
                else, we should use the original list
              */
             List<Id> logIds = validAppIds != null ? validAppIds : appIds;
-            handleExceptionHandler(logMethodName, logIds, decisionLevel, e);
+            handleExceptionHandler(logIds, decisionLevel, e);
             return;
+        }
+    }
+
+    /**
+     * Execute the callout considering the current async context
+     *
+     * Futures are disallowed inside some other async Apex constructs.
+     * Attempt to execute synchronously if the handler detects async context.
+     * Triggers and System.isScheduled must be executed via the future.
+     *
+     * @param validAppIds Validated app ids
+     * @param decisionLevel The decision level
+     * @param json The constructed json
+     */
+    private static void executeInContext(List<Id> validAppIds, String decisionLevel, String json) {
+
+        final String logMethodName = 'executeInContext';
+
+        Boolean useSync = System.isBatch() || System.isQueueable() || System.isFuture();
+
+        System.debug(String.format('AllocationEngineHandler Context: useSync: {0}, Batch:{1}, Queueable:{2}, Future:{3}, Quiddity:{4}, Trigger.isExecuting:{5}',
+                new List<Object>{
+                        useSync, System.isBatch(), System.isQueueable(), System.isFuture(), Request.getCurrent().getQuiddity(), Trigger.isExecuting
+                }));
+
+        System.debug('handle validAppIds: ' + validAppIds);
+        System.debug('handle decisionLevel: ' + decisionLevel);
+        System.debug('handle json: ' + json);
+
+        if (useSync) {
+            /*
+            LSP-772, only cancelled statuses should be in a potentially conflicted scenario.
+            The cancel operation will be executed sometimes one by one, also potentially by batch.
+            The incoming requests from the trigger can be ignored since they are executed by the batch expiry jobs directly.
+            Non-batch trigger cancel operations are allowed just fine
+             */
+            if (Trigger.isExecuting) {
+                List<String> leadIds = toLeadIds(validAppIds);
+                if (CANCELLED == decisionLevel) {
+                    MW_LogUtility.infoMessage(LOG_NAME, logMethodName, 'Batch cancel executing: ignoring trigger since batch already executed: ' + leadIds);
+                } else {
+                    MW_LogUtility.errorMessage(LOG_NAME, logMethodName, 'Unhandled scenario: ' + decisionLevel + ' should not be both batch and in a trigger: ' + leadIds);
+                }
+            } else {
+                callAllocationEngineService(validAppIds, json, decisionLevel);
+            }
+        } else {
+            callAllocationEngineServiceFuture(validAppIds, json, decisionLevel);
         }
     }
 
@@ -291,8 +386,11 @@ public with sharing class MW_AllocationEngineHandler {
     }
 
     @TestVisible
-    private static void handleInvalidDecisionLevel(String logMethodName, List<Id> appIds, String decisionLevel) {
+    private static void handleInvalidDecisionLevel(List<Id> appIds, String decisionLevel) {
+
+        final String logMethodName = 'handleInvalidDecisionLevel';
         final String format = LOG_NAME + ': Invalid decision level of "{0}" attempted';
+
         String message = String.format(format, new List<String>{ decisionLevel });
         String leadIds = toLeadIdsStr(appIds);
 
@@ -313,13 +411,16 @@ public with sharing class MW_AllocationEngineHandler {
      * It's possible to have attempted an incorrect decision level.
      * Record this in the object.
      *
-     * @param logMethodName The invoking method
      * @param appIds Valid app ids to execute the call for
      * @param decisionLevel The attempted decision level
      * @param e The exception received
      */
     @TestVisible
-    private static void handleExceptionHandler(String logMethodName, List<Id> appIds, String decisionLevel, Exception e) {
+    private static void handleExceptionHandler(List<Id> appIds, String decisionLevel, Exception e) {
+
+        final String logMethodName = 'handleExceptionHandler';
+
+        System.debug('handleExceptionHandler Exception: ' + exceptionToStr(e));
 
         try {
             updateOperationError(appIds, decisionLevel);
@@ -413,7 +514,7 @@ public with sharing class MW_AllocationEngineHandler {
             }
 
             if (messages.size() > 0) {
-                logs.add(makeCommonBatchProcessLog(app, decisionLevel, messages));
+                logs.add(makeValidationFailureBpl(app, decisionLevel, messages));
                 app.Allocation_Operation_Error__c = decisionLevel;
                 updateApps.add(app);
             } else {
@@ -706,11 +807,10 @@ public with sharing class MW_AllocationEngineHandler {
 
                 /*
                   This block will only be 2xx due to callout handling
-                  1. Clear previous operation error
-                  2. It will write Allocation_Partner__c for selected investors
-                  3. It will note any errors, non allocations in cl errors logs
+                  1. Successful AES invocation will clear previous operation error
+                  2. AES will write Allocation_Partner__c for selected investors
+                  3. AES will note any errors, non allocations in cl errors logs
                  */
-                updateOperationError(appIds, null);
                 msg.put('message', 'AES 2xx response code, for ' + decisionLevel + ': ' + leadIdStr);
                 MW_LogUtility.infoMessage(LOG_NAME, logMethodName, msg);
             }
@@ -720,7 +820,7 @@ public with sharing class MW_AllocationEngineHandler {
             msg.put('message', 'Failed execution of Allocation Engine Service Callout');
             msg.put('error', exceptionToStr(e));
 
-            System.debug('Exception: ' + exceptionToStr(e));
+            System.debug('AllocationEngineHandler Exception: ' + exceptionToStr(e));
             insertLoanBatchProcessLog(msg.toString());
             MW_LogUtility.errorMessage(LOG_NAME, logMethodName, msg);
         }
@@ -781,10 +881,31 @@ public with sharing class MW_AllocationEngineHandler {
                         Application__c,
                         Investor__c,
                         Investor__r.Investor_Code__c,
-                        Lead_Partner__c
+                        Lead_Partner__c,
+                        Assign_To__c
                 FROM   Allocation_Partner__c
                 WHERE  Application__c IN :appIds
                 ORDER BY Lead_Partner__c];
+    }
+
+    /**
+     * @param appIds Get allocation partner ids by app id where assign to = true
+     *
+     * @return Allocation Partner ids
+     */
+    private static List<Id> getManualPartnerIdsByAppIds(List<Id> appIds) {
+
+        List<Allocation_Partner__c> aps = [SELECT Id
+                                           FROM   Allocation_Partner__c
+                                           WHERE  Application__c IN :appIds
+                                           AND    Assign_To__c = TRUE];
+
+        List<Id> ids = new List<Id>();
+        for (Allocation_Partner__c ap : aps) {
+            ids.add(ap.Id);
+        }
+
+        return ids;
     }
 
     /**
@@ -983,12 +1104,7 @@ public with sharing class MW_AllocationEngineHandler {
             String msg = String.format('Unable to send to Allocation Engine to perform {0} for application due to: {1}.\n' +
                     'Check loan batch process logs and DataDog for more info',
                     new List<String> {decisionLevel, cause});
-
-            clcommon__Batch_Process_Log__c bpl = new clcommon__Batch_Process_Log__c();
-            bpl.clcommon__Log_Level__c = 'INFO';
-            bpl.clcommon__Type__c = 'Info';
-            bpl.clcommon__Batch_Id__c = appId;
-            bpl.clcommon__Message__c = msg;
+            clcommon__Batch_Process_Log__c bpl = makeAppBpl(appId, msg);
             logs.add(bpl);
 
             System.debug('added to insert clcommon__Batch_Process_Log__c: ' + bpl);
@@ -1006,12 +1122,7 @@ public with sharing class MW_AllocationEngineHandler {
         List<clcommon__Batch_Process_Log__c> logs = new List<clcommon__Batch_Process_Log__c>();
 
         for (Id appId : appIds) {
-
-            clcommon__Batch_Process_Log__c bpl = new clcommon__Batch_Process_Log__c();
-            bpl.clcommon__Log_Level__c = 'INFO';
-            bpl.clcommon__Type__c = 'Info';
-            bpl.clcommon__Batch_Id__c = appId;
-            bpl.clcommon__Message__c = msg;
+            clcommon__Batch_Process_Log__c bpl = makeAppBpl(appId, msg);
             logs.add(bpl);
 
             System.debug('added to insert clcommon__Batch_Process_Log__c: ' + bpl);
@@ -1027,7 +1138,7 @@ public with sharing class MW_AllocationEngineHandler {
      *
      * @return An instance to be inserted later
      */
-    private static clcommon__Batch_Process_Log__c makeCommonBatchProcessLog(
+    private static clcommon__Batch_Process_Log__c makeValidationFailureBpl(
             genesis__Applications__c app,
             String decisionLevel,
             List<String> messages) {
@@ -1040,12 +1151,7 @@ public with sharing class MW_AllocationEngineHandler {
                 }
         );
 
-        clcommon__Batch_Process_Log__c bpl = new clcommon__Batch_Process_Log__c();
-        bpl.clcommon__Log_Level__c = 'INFO';
-        bpl.clcommon__Type__c = 'Info';
-        bpl.clcommon__Batch_Id__c = app.Id;
-        bpl.clcommon__Message__c = msg;
-
+        clcommon__Batch_Process_Log__c bpl = makeAppBpl(app.Id, msg);
         System.debug('added to insert clcommon__Batch_Process_Log__c: ' + bpl);
 
         return bpl;
@@ -1070,6 +1176,21 @@ public with sharing class MW_AllocationEngineHandler {
         }
 
         update apps;
+    }
+
+    /**
+     * @param appId App id to create the log instance for
+     * @param msg The string msg
+     *
+     * @return an instance to insert
+     */
+    private static clcommon__Batch_Process_Log__c makeAppBpl(Id appId, String msg) {
+        clcommon__Batch_Process_Log__c bpl = new clcommon__Batch_Process_Log__c();
+        bpl.clcommon__Log_Level__c = 'INFO';
+        bpl.clcommon__Type__c = 'Info';
+        bpl.clcommon__Batch_Id__c = appId;
+        bpl.clcommon__Message__c = msg;
+        return bpl;
     }
 
     /**
