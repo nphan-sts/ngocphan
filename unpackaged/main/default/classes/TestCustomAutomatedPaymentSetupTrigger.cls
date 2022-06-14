@@ -232,7 +232,7 @@ public without sharing class TestCustomAutomatedPaymentSetupTrigger {
         //Create a Fee Set
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+        loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
         
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
@@ -405,6 +405,7 @@ public without sharing class TestCustomAutomatedPaymentSetupTrigger {
         apc.loan__Folder_Name__c = 'TestFolder';
         insert apc;
         
+        
         org.loan__Disable_Triggers__c = false;
         upsert org;
         
@@ -434,6 +435,8 @@ public without sharing class TestCustomAutomatedPaymentSetupTrigger {
         
         Test.startTest();
         insert apsInvestorLoan;
+        apsInvestorLoan.loan__Installment_Payment__c = true;
+        update apsInvestorLoan;
         Test.stopTest();
     }
     

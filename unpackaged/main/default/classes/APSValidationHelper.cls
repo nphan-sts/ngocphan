@@ -6,16 +6,14 @@
 
 ******************Modification History*****************************************************************
 ******************************************************************************/
-public class APSValidationHelper {
+public without sharing class APSValidationHelper {
     
     //Declaring variables 
     Map<id,loan__Automated_Payment_Setup__c> apsIdMap = new Map<id,loan__Automated_Payment_Setup__c> ();
     Map<id,String> contractIOMap = new Map<id,String>();
     List<loan__Investor_Loan__c> investorLoanList = new List< loan__Investor_Loan__c>();
     Map<String,String> oldType = new Map<String,String>();
-    List<loan__Automated_Payment_Setup__c> apsRecord;
     List<loan__Automated_Payment_Setup__c> APS;
-    List<id> clContractId;
     String APS_PM_VALIDATION_ERROR = Label.APSPMVaidationError;
     String APS_RP_VALIDATION_ERROR = Label.APSReccuringValidationError ;
     String paymentMode;
@@ -44,7 +42,6 @@ public class APSValidationHelper {
             }
             
             for(loan__Automated_Payment_Setup__c apsValidation:apsList){
-                
                 paymentMode = apsIdMap.get(apsValidation.id).Payment_Mode_Trimmed__c;
                 accountInvestorCode = contractIOMap.get(apsIdMap.get(apsValidation.id).loan__CL_Contract__C);
                 
@@ -61,14 +58,11 @@ public class APSValidationHelper {
             throw new apsException(' The record couldnt be saved. An exception occured: '+e.getMessage());
         }
     }
+    // existing code moved from trigger to helper
     
     public void recurringAPSValidator(list<id> loanRecordfromTrg, List<loan__Automated_Payment_Setup__c> apsRecordFromTrg){
-        
-        apsRecord = apsRecordFromTrg;
-        clContractId = loanRecordfromTrg; 
-       
         try{
-            aps = [Select id,loan__CL_Contract__r.id,loan__Type__c,loan__Active__c from loan__Automated_Payment_Setup__c where loan__CL_Contract__c IN:clContractId
+            aps = [Select id,loan__CL_Contract__r.id,loan__Type__c,loan__Active__c from loan__Automated_Payment_Setup__c where loan__CL_Contract__c IN:loanRecordfromTrg
                    and loan__Type__c = 'Recurring' and loan__Active__c = true LIMIT 1];
             
             for(loan__Automated_Payment_Setup__c temp : APS){
@@ -76,7 +70,7 @@ public class APSValidationHelper {
             }
             
             if(oldType.size() > 0){
-                for(loan__Automated_Payment_Setup__c newAPS : apsRecord){
+                for(loan__Automated_Payment_Setup__c newAPS : apsRecordFromTrg){
                     if(oldType.containsKey(String.valueOf(newAPS.loan__CL_Contract__c)) && newAPS.loan__Type__c.equalsIgnoreCase('Recurring'))
                         newAPS.addError(APS_RP_VALIDATION_ERROR);  
                 }

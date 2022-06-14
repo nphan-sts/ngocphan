@@ -8,27 +8,25 @@
 ******************************************************************************/
 public class APSTriggerHandler {
     
-    List<loan__Automated_Payment_Setup__c> apsRecord;
-    List<id> clContractId;
-    //Helper Method
+    List<loan__Automated_Payment_Setup__c> apsRecord = new List<loan__Automated_Payment_Setup__c>();
+    List<id> clContractId = new list<id>();
+    //Calling Helper Class
     APSValidationHelper validator = new APSValidationHelper();
     
-        public void beforeInsert(list<id> loanRecordfromTrg, List<loan__Automated_Payment_Setup__c> apsRecordFromTrg){
-        
-        apsRecord = apsRecordFromTrg;
-        clContractId = loanRecordfromTrg; 
-        validator.paymentmodeValidator(clContractId,apsRecord);
-        validator.recurringAPSValidator(clContractId,apsRecord);
-        
+    // Before Insert method
+    public void beforeInsert(List<loan__Automated_Payment_Setup__c> apsRecordFromTrg){
+        for(loan__Automated_Payment_Setup__c newAPS : apsRecordFromTrg){
+            clContractId.add(newAPS.loan__CL_Contract__c);
+        }
+        //validate paymentmode and recurring APS validation in case of before insert
+        validator.paymentmodeValidator(clContractId,apsRecordFromTrg);
+        validator.recurringAPSValidator(clContractId,apsRecordFromTrg);
     }
-    
-    public void beforeUpdate(list<id> loanRecordfromTrg, List<loan__Automated_Payment_Setup__c> apsRecordFromTrg){
-        
-        apsRecord = apsRecordFromTrg;
-        clContractId = loanRecordfromTrg; 
-        validator.paymentmodeValidator(clContractId,apsRecord);
-    }
-    
-
-    
+    	//validate payment mode incase of before update
+    public void beforeUpdate(List<loan__Automated_Payment_Setup__c> apsRecordFromTrg){
+        for(loan__Automated_Payment_Setup__c newAPS : apsRecordFromTrg){
+            clContractId.add(newAPS.loan__CL_Contract__c);
+        }
+        validator.paymentmodeValidator(clContractId,apsRecordFromTrg);
+    }   
 }

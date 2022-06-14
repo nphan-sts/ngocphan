@@ -9,35 +9,22 @@ trigger CustomAutomatedPaymentSetupTrigger on loan__Automated_Payment_Setup__c (
     
     loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
     
-    if(org.loan__Disable_Triggers__c == false){        
-        
+    if(org.loan__Disable_Triggers__c == false){   
+        //Variable declaration
         Map<String,String> oldType = new Map<String,String>();
         List<loan__Automated_Payment_Setup__c> apsList = new list<loan__Automated_Payment_Setup__c>();
-        
         List<Id> contractId= new List<Id>();
-        
-        //Handler Class
+        //Call Handler Class
         APSTriggerHandler callHandler = new APSTriggerHandler();
-        
-        
-        for(loan__Automated_Payment_Setup__c newAPS : trigger.new){
-            contractId.add(newAPS.loan__CL_Contract__c);
-            apsList.add(newAPS);
-        }
+        //Call Handler methods - Before Insert and Before Update.
         if(trigger.isBefore){
-            
             //LSP-473 - Send the loan Id and APS Payment mode details to the handler method
-            
             if(trigger.isInsert){
-                callHandler.beforeInsert(contractId,apsList);
+                callHandler.beforeInsert(Trigger.new);
             } 
-            
             if(trigger.isUpdate){
-                
-                callHandler.beforeUpdate(contractId,apsList);
+                callHandler.beforeUpdate(Trigger.new);
             }
-            
-            
         }
     }
     
