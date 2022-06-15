@@ -2,13 +2,14 @@
 * Test Class for UPB  @author - Pallavi
 Last Modified by        Date           JIRA number
 *  1. Saryu           2022/05/02       LSP-583 (Refactored Test Class)
-*  2. Bhanupriya	  2022/06/15	   LSP-583(Update and Remove code smells)
+*  2. Bhanupriya	  2022/06/15	   LSP-583(Update comments and Remove code smells)
 ******************Modification History******************/
 
 
 @isTest
 public class TestUPBfixbatch {
     static final String AUTO_PAYER = 'Auto Payer';
+    //create test setup method
     @testSetup
     static void testData(){
         
@@ -58,6 +59,7 @@ public class TestUPBfixbatch {
                                                                        );
         insert testLoc;
         
+        //Dummy Office
         loan__Office_Name__c dummyOffice = new loan__Office_Name__c(Name='PayOff Inc.',
                                                                     loan__Office_Location__c = testLoc.ID,
                                                                     loan__Office_Short_Name__c = 'XXXCSN',
@@ -84,6 +86,7 @@ public class TestUPBfixbatch {
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
         system.debug('Dummy Fee Junction' +dummyFeeJunction); //LSP-583 
         
+        //Loan Product
         loan__Loan_Product__c prod = new loan__Loan_Product__c(Name=AUTO_PAYER,
                                                                loan__Loan_Product_Type__c = 'Loan',
                                                                loan__Currency__c = (curr != null) ? curr.ID : null,
@@ -115,6 +118,7 @@ public class TestUPBfixbatch {
         
         insert prod;
         
+        //Payment Mode
         List<loan__Payment_Mode__c> pmList = new List<loan__Payment_Mode__c>();
         loan__Payment_Mode__c pMode = new loan__Payment_Mode__c(name='Cash');
         pmList.add(pMode);
@@ -124,6 +128,7 @@ public class TestUPBfixbatch {
         pmList.add(pm);
         insert pmList;
         
+        //Bank Account
         loan__Bank_Account__c bankAccount = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12', 
                                                                       loan__Bank_Name__c = 'Some Bank', 
                                                                       loan__Routing_Number__c = '999999999', 
@@ -133,6 +138,7 @@ public class TestUPBfixbatch {
                                                                       Unmasked_Bank_Account_Number__c = '12345');   //pallavi
         insert bankAccount;
         
+        //Loan Account
         List<loan__Loan_Account__c> lacList = new List<loan__Loan_Account__c>();
         loan__Loan_Account__c loanAccount = new loan__Loan_Account__c();
         loanAccount.loan__Product_Type__c = AUTO_PAYER;
@@ -213,7 +219,7 @@ public class TestUPBfixbatch {
         lacList.add(loanAccount1);
         insert lacList;
         
-        
+        //Loan Payment Transaction 
         List<loan__Loan_Payment_Transaction__c> lapList = new List<loan__Loan_Payment_Transaction__c>();
         loan__Loan_Payment_Transaction__c payment = new loan__Loan_Payment_Transaction__c();
         payment.loan__Transaction_Amount__c = 2000.00;
@@ -240,6 +246,7 @@ public class TestUPBfixbatch {
         lapList.add(payment1); 
         insert lapList;    
         
+        //Loan Interest Posting Transaction
         loan__Interest_Posting_Transaction__c ipt = new loan__Interest_Posting_Transaction__c();
         ipt.loan__Loan_Contract__c = loanAccount.id;
         ipt.loan__Principal_Posted__c = 1000;
@@ -278,7 +285,6 @@ Purpose: To test UPBfixbatch default constructor*/
             UPBfixbatch dm1 = new UPBfixbatch();
             Database.executeBatch(dm1);
             Test.stopTest();
-            system.debug('status' +dm1.status);
             system.assert(dm1.status!=null);
         }
     }
@@ -351,6 +357,7 @@ Purpose: To test UPBfixbatch constructor passing contract id as a parameter*/
         test.stopTest();
         loan__loan_Account__c testAssertContract = [SELECT id, Upbfixed__c FROM loan__loan_Account__c LIMIT 1];
         System.assertEquals(testAssertContract.UPBfixed__c, false);
-              
+        system.debug('Data Fix Batch' +dm1);
+        
     }
 }
