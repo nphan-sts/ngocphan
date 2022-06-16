@@ -45,10 +45,11 @@ public without sharing class APSValidationHelper {
                 paymentMode = apsIdMap.get(apsValidation.id).Payment_Mode_Trimmed__c;
                 accountInvestorCode = contractIOMap.get(apsIdMap.get(apsValidation.id).loan__CL_Contract__C);
                 
-                if((paymentMode!= 'Cash'&& paymentMode!= 'Debit Card' && paymentMode!= null) && !paymentMode.containsIgnoreCase(accountInvestorCode)) 
+                if((paymentMode!= 'Cash'&& paymentMode!= 'Debit Card' && paymentMode!= null) && !paymentMode.equalsIgnoreCase(accountInvestorCode)) 
                 {
                     apsValidation.addError(APS_PM_VALIDATION_ERROR);  
                 }
+
             }
             
         } //end try block
