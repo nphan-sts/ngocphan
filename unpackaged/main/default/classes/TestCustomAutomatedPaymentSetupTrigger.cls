@@ -5,7 +5,7 @@
 ******************Modification History*****************************************************************
 ******************************************************************************/
 @isTest
-public without sharing class TestCustomAutomatedPaymentSetupTrigger {
+public with sharing class TestCustomAutomatedPaymentSetupTrigger {
     
     
     
