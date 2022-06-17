@@ -6,7 +6,7 @@
 
 ******************Modification History*****************************************************************
 ******************************************************************************/
-public without sharing class APSValidationHelper {
+public with sharing class APSValidationHelper {
     
     //Declaring variables 
     Map<id,loan__Automated_Payment_Setup__c> apsIdMap = new Map<id,loan__Automated_Payment_Setup__c> ();
