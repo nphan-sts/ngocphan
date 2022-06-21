@@ -5,7 +5,7 @@
 ******************Modification History*****************************************************************
 ******************************************************************************/
 @isTest
-public with sharing class TestCustomAutomatedPaymentSetupTrigger {
+public class TestCustomAutomatedPaymentSetupTrigger {
     
     
     
@@ -264,6 +264,7 @@ public with sharing class TestCustomAutomatedPaymentSetupTrigger {
         Account investorAccount = new Account(
             Name = 'TestInvestorAcc',
             loan__Investor__c = True,
+            Investor_Code__c = paymentModeAcu, 
             Is_Funding_Partner__c = True,
             cnotify__Email__c = 'investorAcc@test.com',
             loan__SOCIAL_SECURITY_NUMBER__c = '123456798',
@@ -272,11 +273,11 @@ public with sharing class TestCustomAutomatedPaymentSetupTrigger {
             loan__Undeployed_Funds__c = 9000
         );
         insert investorAccount;
-        
+       
         //Creating Account
         Account validationAccount = new Account(
-            Name = paymentModeAcu,
-            Investor_Code__c = paymentModeAcu, 
+            Name = 'paymentModeTest',
+            Investor_Code__c = 'paymentModeTest', 
             loan__Investor__c = true,
             loan__Collect_Service_Fees_on__c = 'Principal',
             Funding_Partner__c = investorAccount.id,
@@ -290,10 +291,10 @@ public with sharing class TestCustomAutomatedPaymentSetupTrigger {
         );
         insert validationAccount;
         
-        System.assertEquals(paymentModeAcu,validationAccount.Name, 'Acu Account');
+        System.assertEquals('paymentModeTest',validationAccount.Name, 'Acu Account');
         
         //Creating Investor Account
-        Account investorAcc = new Account(
+  /*      Account investorAcc = new Account(
             Name = 'InvestorTest',
             // loan__Investor__c = False,
             loan__Collect_Service_Fees_on__c = 'Principal',
@@ -304,13 +305,15 @@ public with sharing class TestCustomAutomatedPaymentSetupTrigger {
             peer__First_Name__c = 'Investor First Name',
             peer__Last_Name__c = 'Investor Last Name',
             loan__Investor__c = true,
+            Investor_Code__c= 'paymentModeAcu',
+            
             loan__Undeployed_Funds__c = 9000
             
         );
         insert investorAcc;
         
         System.assertEquals('InvestorTest',investorAcc.Name);
-        
+        */
         Date systemDate =  new loan.GlobalLoanUtilFacade().getCurrentSystemDate();
         
         loan__Bank_Account__c savingsbankAccount = new loan__Bank_Account__c();
@@ -324,9 +327,9 @@ public with sharing class TestCustomAutomatedPaymentSetupTrigger {
         insert savingsbankAccount;
         system.assertEquals('TestSavingsBank',savingsbankAccount.loan__Bank_Name__c);
         
-        //
+        
         loan__Payment_Mode__c paymentmodeACH = new loan__Payment_Mode__c();
-        paymentmodeACH.name = 'ACH';
+        paymentmodeACH.name = 'paymentModeTest';
         insert paymentmodeACH;
         
         loan__Automated_Payment_Configuration__c savingsAPC = new loan__Automated_Payment_Configuration__c();
@@ -395,7 +398,7 @@ public with sharing class TestCustomAutomatedPaymentSetupTrigger {
         insert bankAccount;
         //
         loan__Payment_Mode__c pm = new loan__Payment_Mode__c();
-        pm.name = paymentModeAcu;
+        pm.name = 'paymentModeTest';
         insert pm;
         
         loan__Automated_Payment_Configuration__c apc = new loan__Automated_Payment_Configuration__c();
@@ -413,6 +416,7 @@ public with sharing class TestCustomAutomatedPaymentSetupTrigger {
         loan__Investor_Loan__c investorLoan = new loan__Investor_Loan__c();
         investorLoan.loan__Account__c  = validationAccount.Id;
         investorLoan.loan__Loan__c = loanAccount.Id;
+       // investorLoan.loan__Loan__r.Investor_Code__c= 'paymentModeAcu';
         investorLoan.loan__Investment_Amount__c = 90;
         investorLoan.loan__Loan_Principal_Remaining__c = 500;
         investorLoan.loan__Status__c = 'Active';
