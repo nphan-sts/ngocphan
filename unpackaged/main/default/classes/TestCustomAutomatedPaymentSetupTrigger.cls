@@ -7,8 +7,6 @@
 @isTest
 public class TestCustomAutomatedPaymentSetupTrigger {
     
-    
-    
     Testmethod static void recurringapsValidation(){
         
         String accountBorrowerName = 'Borrower/Investor Account';
@@ -43,8 +41,6 @@ public class TestCustomAutomatedPaymentSetupTrigger {
         dummyLP1.loan__Minimum_Amount_Due_Type__c = 'Percent';
         dummyLP1.loan__Pre_Bill_Days__c = 5;
         upsert dummyLP1;
-        
-        
         
         ///CL Product...........
         clcommon__CL_Product__c dummyCLPRoduct = new clcommon__CL_Product__c();
@@ -93,7 +89,7 @@ public class TestCustomAutomatedPaymentSetupTrigger {
         savingsBankAccount.loan__Routing_Number__c = '123456789';
         
         insert savingsBankAccount;
-        //
+        
         loan__Payment_Mode__c ach_PaymentMode = new loan__Payment_Mode__c();
         ach_PaymentMode.name = 'ACH';
         insert ach_PaymentMode;
@@ -162,7 +158,7 @@ public class TestCustomAutomatedPaymentSetupTrigger {
         bnk.loan__Account_Usage__c = accountBorrowerName ;
         bnk.loan__Routing_Number__c = '123456978';
         insert bnk;
-        //
+        
         loan__Payment_Mode__c pm = new loan__Payment_Mode__c();
         pm.name = 'cash';
         insert pm;
@@ -213,8 +209,8 @@ public class TestCustomAutomatedPaymentSetupTrigger {
         Test.stopTest();
     }
     
-    
     Testmethod static void investorAccountTest(){
+        
         String accountBorrowerName = 'Borrower/Investor Account';
         String paymentModeAcu = 'Acu Ach';
         
@@ -249,16 +245,12 @@ public class TestCustomAutomatedPaymentSetupTrigger {
         dummyLP1.loan__Pre_Bill_Days__c = 5;
         upsert dummyLP1;
         
-        
-        
         ///CL Product...........
         clcommon__CL_Product__c dummyCLPRoduct = new clcommon__CL_Product__c();
         dummyCLPRoduct.clcommon__Product_Name__c = 'Auto Payer';            
         dummyCLPRoduct.loan__Lending_Product__c = dummyLP1.id;
         
         insert dummyCLPRoduct;
-        
-        
         
         //Creating investor Account
         Account investorAccount = new Account(
@@ -293,27 +285,6 @@ public class TestCustomAutomatedPaymentSetupTrigger {
         
         System.assertEquals('paymentModeTest',validationAccount.Name, 'Acu Account');
         
-        //Creating Investor Account
-  /*      Account investorAcc = new Account(
-            Name = 'InvestorTest',
-            // loan__Investor__c = False,
-            loan__Collect_Service_Fees_on__c = 'Principal',
-            Funding_Partner__c = investorAccount.id,
-            loan__Service_Rate_On_Investment__c =11.45,
-            cnotify__Email__c = 'investorAccount@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123456999',
-            peer__First_Name__c = 'Investor First Name',
-            peer__Last_Name__c = 'Investor Last Name',
-            loan__Investor__c = true,
-            Investor_Code__c= 'paymentModeAcu',
-            
-            loan__Undeployed_Funds__c = 9000
-            
-        );
-        insert investorAcc;
-        
-        System.assertEquals('InvestorTest',investorAcc.Name);
-        */
         Date systemDate =  new loan.GlobalLoanUtilFacade().getCurrentSystemDate();
         
         loan__Bank_Account__c savingsbankAccount = new loan__Bank_Account__c();
@@ -396,7 +367,7 @@ public class TestCustomAutomatedPaymentSetupTrigger {
         bankAccount.loan__Routing_Number__c = '123456978';
         
         insert bankAccount;
-        //
+        
         loan__Payment_Mode__c pm = new loan__Payment_Mode__c();
         pm.name = 'paymentModeTest';
         insert pm;
@@ -416,7 +387,6 @@ public class TestCustomAutomatedPaymentSetupTrigger {
         loan__Investor_Loan__c investorLoan = new loan__Investor_Loan__c();
         investorLoan.loan__Account__c  = validationAccount.Id;
         investorLoan.loan__Loan__c = loanAccount.Id;
-       // investorLoan.loan__Loan__r.Investor_Code__c= 'paymentModeAcu';
         investorLoan.loan__Investment_Amount__c = 90;
         investorLoan.loan__Loan_Principal_Remaining__c = 500;
         investorLoan.loan__Status__c = 'Active';
