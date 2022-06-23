@@ -295,14 +295,45 @@
                     <stringValue>Decline_Manual_Review</stringValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Number</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>Number</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_current.Precise_ID_Overall_SCore__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
                 <targetReference>myRule_1_A1</targetReference>
             </connector>
             <label>update status to kba_success</label>
         </rules>
     </decisions>
-    <description>updating application status to KBA Success with or without KBA</description>
-    <interviewLabel>Update_Status_to_KBA_Success-16_InterviewLabel</interviewLabel>
+    <description>move status to KBA Success with or without KBA when Precise_ID_Overall_SCore__c is changed</description>
+    <interviewLabel>Update_Status_to_KBA_Success-17_InterviewLabel</interviewLabel>
     <label>Update Status to KBA_Success</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -325,7 +356,7 @@
     <processMetadataValues>
         <name>TriggerType</name>
         <value>
-            <stringValue>onCreateOnly</stringValue>
+            <stringValue>onAllChanges</stringValue>
         </value>
     </processMetadataValues>
     <processType>Workflow</processType>
