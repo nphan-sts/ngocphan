@@ -130,9 +130,7 @@ private class TestWSSelectedOffer{
     
     //Application ID null
     testMethod static void testAppIdNULLcheck(){
-        
-        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
-        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
+
         Pricing_Offer__c pOffer = [SELECT id,Key__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         Map<String,String> reqMap = new Map<String,String>(); 
         reqMap.put('applicationId',null);
@@ -187,9 +185,7 @@ private class TestWSSelectedOffer{
     }
     //App ID incorrect format
     testMethod static void testAppIDIncorrectFormat(){
-        
-        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
-        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
+
         Pricing_Offer__c pOffer = [SELECT id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         pOffer.Is_Offer_Selected__c = true;
         update pOffer;
