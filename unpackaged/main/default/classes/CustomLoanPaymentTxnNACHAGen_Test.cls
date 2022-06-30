@@ -5,6 +5,7 @@
 *Updated loan Account value and loan Routing Number with 9 digits to loan Bank Account
 
 Anusha 		2020/11/05 CRM -986   New test method is added - 'testLatinConversionWithSpace'
+
 Shakul      2021/12/02  LSP-374   New Test method for missing bank account
 Shakul      2022/02/15  LSP-505   Refactored test class
 Bhavya		2022/05/24  LSP-380	  Refactored test class for LSP-380
@@ -34,11 +35,12 @@ public class CustomLoanPaymentTxnNACHAGen_Test {
 
         loan.TestHelper.systemDate = Date.today();
         loan.TestHelper.createSeedDataForTesting();
-       
+        
         loan.TestHelper2.createFileGenMetaData();
         
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         loan__Currency__c curr = loan.TestHelper.createCurrency();
+        
 
         loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest', '10000 - ASSETS');
         loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest', '30000 - INCOME');
@@ -47,7 +49,7 @@ public class CustomLoanPaymentTxnNACHAGen_Test {
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
         loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();
 
-       
+        
         loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice,dummyAccount,curr,dummyFeeSet);
         
         loan__Payment_Mode__c pMode = [select id, name from loan__Payment_Mode__c where Name= 'ACH'];
@@ -73,7 +75,7 @@ public class CustomLoanPaymentTxnNACHAGen_Test {
         dummylaMonthly.loan__Borrower_ACH__c = ba.id;
         update dummylaMonthly;
 
-       
+        
         loan__Automated_Payment_Configuration__c aPC = loan.TestHelper2.createAutomatedPaymentConfiguration(loan.LoanConstants.LOAN_PAYMENT,pMode,ba,'CustomLoanPaymentTxnNACHAGen');
         apc.loan__Immediate_Destination__c = '2222222222';
         update apc;
@@ -103,10 +105,10 @@ public class CustomLoanPaymentTxnNACHAGen_Test {
         
         insert lpt;
     }
-    
     /*Created By: Shakul Siddharth
-      Description: To test the logic for file name generation */
-      
+
+Description: To test the logic for file name generation */
+
     static testMethod void testSimpleFileName(){
         Test.startTest();
         CustomLoanPaymentTxnNACHAGen cus=new CustomLoanPaymentTxnNACHAGen();
@@ -114,9 +116,10 @@ public class CustomLoanPaymentTxnNACHAGen_Test {
         Test.stopTest();
         System.assertEquals('Loan_Payments_ACH', msg);
     }
+
     
     /*Created By: Shakul Siddharth
-      Description: To test the logic for entry level description if multiple payment mode is supported in NACHA file */
+Description: To test the logic for entry level description if multiple payment mode is supported in NACHA file */
 
     static testMethod void testGetEntries(){
         loan.TransactionSweepToACHState state=new loan.TransactionSweepToACHState();
@@ -130,15 +133,17 @@ public class CustomLoanPaymentTxnNACHAGen_Test {
         Test.stopTest();
         System.assertEquals(msgs.isEmpty(), false);
     }
+
     
     /*Created By: Shakul Siddharth
-      Description: To test the logic for header level description in NACHA file with multi pay support*/
+Description: To test the logic for header level description in NACHA file with multi pay support*/
 
-  static testMethod void testGetHeader(){
+    static testMethod void testGetHeader(){
         loan.TransactionSweepToACHState state=new loan.TransactionSweepToACHState();
         map<string,integer> countMap=new map<string,integer>();
         countMap.put('test',1);
         state.o2=countMap;
+
         
         List<loan__Loan_Payment_Transaction__c> lpt = [SELECT id FROM loan__Loan_Payment_Transaction__c];
         Test.startTest();
