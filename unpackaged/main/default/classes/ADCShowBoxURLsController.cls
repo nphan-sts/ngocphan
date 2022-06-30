@@ -1,5 +1,5 @@
 
-//newcomment
+//comment
 
 public with sharing class ADCShowBoxURLsController
 {
