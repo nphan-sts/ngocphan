@@ -1,7 +1,4 @@
-/* ****************Modification History******************
- * Modified by    	Date    		JIRA number
- *     Sarath      2022/04/15       LOP-415
- ******************Modification History******************/
+
 @isTest
 public class TestPayOffUtilities{
     @isTest static void method1(){
@@ -58,6 +55,7 @@ public class TestPayOffUtilities{
         PayOffUtilities.AssignToWithdrawnQueue(app.id);
         PayOffUtilities.WorkEmailVerify(app.id);
         /*LOS-121*/
+        PayOffUtilities.AssignToMe();//LOP-415
         test.stopTest();
    }
    //Exception cases
@@ -115,6 +113,4 @@ public class TestPayOffUtilities{
         
     }
 
-
-    
 }
