@@ -31,11 +31,5 @@ global class LogsCalloutBatch implements Database.batchable<sObject>,Database.Al
         LogsCalloutBatchHelper.sendNACHALogs(successCount,failureCount,totalCount);
     }
     global void finish(Database.BatchableContext bc) {
-        if(failureCount > 0){
-           UploadNachaToBoxJob upJob = new UploadNachaToBoxJob();
-           if(!Test.IsRunningTest()){
-                System.scheduleBatch(upJob, 'Retry UploadNachaToBoxJob', 5, 1); 
-            } 
-        }  
     }
 }
