@@ -583,6 +583,7 @@ global with sharing class MW_AllocationEngineHandler {
             json.writeStringField('leadGuid', app.Lead_ID__c);
             json.writeDateTimeField('timestamp', Datetime.now());
 
+            writeProgramId(json, 'programId', app.Program_id__c);
             json.writeStringField('lendingState', app.genesis__Account__r.State__c);
             writeNullableNumber(json, 'APR', app.genesis__APR__c);
             json.writeNumberField('interestRate', app.genesis__Interest_Rate__c);
@@ -637,6 +638,13 @@ global with sharing class MW_AllocationEngineHandler {
         json.writeEndObject();
 
         return json.getAsString();
+    }
+
+    private static void writeProgramId(JSONGenerator json, String fieldName, String programId) {
+        if (programId == null) {
+            programId = MW_Settings__c.getOrgDefaults().Allocation_Engine_Default_Program_Id__c;
+        }
+        json.writeStringField(fieldName, programId);
     }
 
     private static void writeChannel(JSONGenerator json, String fieldName, genesis__Applications__c app) {
@@ -844,6 +852,7 @@ global with sharing class MW_AllocationEngineHandler {
                         genesis__Status__c,
                         genesis__APR__c,
                         genesis__Interest_Rate__c,
+                        Program_id__c,
                         Pricing_Tier__c,
                         genesis__Term__c,
                         FICO__c,

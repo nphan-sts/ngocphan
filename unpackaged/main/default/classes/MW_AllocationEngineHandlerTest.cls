@@ -233,6 +233,7 @@ private class MW_AllocationEngineHandlerTest {
         mwSettings.Allocation_Engine_Deployment_Mode__c = 'DARK_MODE';
         mwSettings.Allocation_Engine_Service_URL_FMT__c = 'http://localhost:8080/{0}';
         mwSettings.Allocation_Engine_Cancel_Statuses__c = 'Declined,Expired,Withdrawn,Decline_Manual_Review,Expired-Withdrawn';
+        mwSettings.Allocation_Engine_Default_Program_Id__c = 'test-program-id';
         mwSettings.LEADS_FE_EndpointURL__c = FE_ENDPOINT;
         insert mwSettings;
 
@@ -287,6 +288,7 @@ private class MW_AllocationEngineHandlerTest {
         app1.Allocation_Timestamp__c = Datetime.now();
         app1.Expected_Yield__c = 321.11;
         app1.Expected_Chargeoff__c = 432.0;
+        app1.Program_id__c = 'program_id1';
 
         /* fresh advp apps will look more like this */
         genesis__Applications__c app2 = MW_GlobalTestUtility.GetApplication();
@@ -303,6 +305,7 @@ private class MW_AllocationEngineHandlerTest {
         app2.Loan_Purpose__c = 'debt_consolidation';
         app2.Credit_Policy_Approval_Models__c = null;
         app2.genesis__Loan_Amount__c = 15000.00;
+        app2.Program_id__c = 'program_id2';
 
         insert new List<genesis__Applications__c> {app1, app2};
 
@@ -499,6 +502,26 @@ private class MW_AllocationEngineHandlerTest {
 
         actual = actual.key('allocation-requests').index(0);
         assertCommonRequestFields(app, actual);
+        assertAllocationRequestFields(app, actual, null);
+    }
+
+    @IsTest static void advp_canGenerateJson_ITB_nullProgramId() {
+
+        genesis__Applications__c app = getApp();
+        app.Credit_Policy_Approval_Models__c = null;
+        app.Risk_Model_Source__c = 'hm';
+        app.Program_id__c = null;
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.ADVP);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual, true);
         assertAllocationRequestFields(app, actual, null);
     }
 
@@ -712,6 +735,8 @@ private class MW_AllocationEngineHandlerTest {
     @IsTest static void advp_handles200Success() {
 
         List<genesis__Applications__c> apps = getApps();
+        apps[1].Program_id__c = null;
+        update apps[1];
 
         AESSuccessMock aesSuccessMock = new AESSuccessMock();
         Test.setMock(HttpCalloutMock.class, aesSuccessMock);
@@ -731,6 +756,7 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> actual = getApps();
         System.assertEquals(2, actual.size());
+        System.assert(actual.get(1).Program_id__c == null);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -797,6 +823,27 @@ private class MW_AllocationEngineHandlerTest {
 
         actual = actual.key('allocation-requests').index(0);
         assertCommonRequestFields(app, actual);
+        assertAllocationRequestFields(app, actual, null);
+        assertReallocationRequestFields(app, actual);
+    }
+
+    @IsTest static void reallocation_canGenerateJson_ITB_nullProgramId() {
+
+        genesis__Applications__c app = getApp();
+        app.Credit_Policy_Approval_Models__c = null;
+        app.Risk_Model_Source__c = 'hm';
+        app.Program_id__c = null;
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.REALLOCATION);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual, true);
         assertAllocationRequestFields(app, actual, null);
         assertReallocationRequestFields(app, actual);
     }
@@ -962,7 +1009,9 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void reallocation_handles200Success() {
 
-        List<genesis__Applications__c> apps = getAppAsList();
+        List<genesis__Applications__c> apps = getApps();
+        apps[1].Program_id__c = null;
+        update apps[1];
 
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
@@ -973,8 +1022,9 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.stopTest();
 
-        List<genesis__Applications__c> actual = getAppAsList();
-        System.assertEquals(1, actual.size());
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(2, actual.size());
+        System.assert(actual.get(1).Program_id__c == null);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1019,6 +1069,35 @@ private class MW_AllocationEngineHandlerTest {
 
         actual = actual.key('allocation-requests').index(0);
         assertCommonRequestFields(app, actual);
+        assertAllocationRequestFields(app, actual);
+        assertReallocationRequestFields(app, actual);
+
+        actual = actual.key('manualInvestor');
+        System.assertEquals(1, actual.size());
+        actual = actual.index(0);
+
+        System.assert(!actual.getBoolean('leadPartner'));
+        System.assertEquals(manualPartner.Investor__r.Investor_Code__c, actual.get('investorCode'));
+    }
+
+    @IsTest static void manual_canGenerateJson_nullProgramId() {
+
+        genesis__Applications__c app = getApp();
+        app.Program_id__c = null;
+        update app;
+
+        List<Allocation_Partner__c> partners = MW_AllocationEngineHandler.getAllocationPartnersByAppIds(new List<Id> {app.Id});
+        Allocation_Partner__c manualPartner = partners.get(0);
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                new List<Id> {manualPartner.Id},
+                MW_AllocationEngineHandler.MANUAL);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual, true);
         assertAllocationRequestFields(app, actual);
         assertReallocationRequestFields(app, actual);
 
@@ -1155,7 +1234,9 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void manual_handles200Success() {
 
-        List<genesis__Applications__c> apps = getAppAsList();
+        List<genesis__Applications__c> apps = getApps();
+        apps[1].Program_id__c = null;
+        update apps[1];
 
         setManualPartner();
 
@@ -1168,8 +1249,9 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.stopTest();
 
-        List<genesis__Applications__c> actual = getAppAsList();
-        System.assertEquals(1, actual.size());
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(2, actual.size());
+        System.assert(actual.get(1).Program_id__c == null);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1226,6 +1308,27 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(app.genesis__Status__c, actual.get('reason'));
     }
 
+    @IsTest static void cancelled_canGenerateJson_nullProgramId() {
+        genesis__Applications__c app = getApp();
+        app.Program_id__c = null;
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.CANCELLED);
+
+        System.debug('cancel json: ' + actualJson);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual, true);
+
+        System.assertEquals(app.Allocation_ID__c, actual.get('allocationId'));
+        System.assertEquals(app.genesis__Status__c, actual.get('reason'));
+    }
+
     /**
      * In-flight applications are identified by no allocation id
      */
@@ -1234,9 +1337,9 @@ private class MW_AllocationEngineHandlerTest {
         /*
         First assert for an in-flight with an investor
          */
-
         genesis__Applications__c app = getApp();
         app.Allocation_ID__c = null;
+        app.Program_id__c = null;
         update app;
 
         String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
@@ -1386,14 +1489,22 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void cancelled_handles200Success() {
 
+        List<genesis__Applications__c> apps = getApps();
+        apps[1].Program_id__c = null;
+        update apps[1];
+
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
 
         MW_AllocationEngineHandler.handleCancelled(null);
 
-        MW_AllocationEngineHandler.handleCancelled(toIds(getAppAsList()));
+        MW_AllocationEngineHandler.handleCancelled(toIds(apps));
 
         Test.stopTest();
+
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(2, actual.size());
+        System.assert(actual.get(1).Program_id__c == null);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1466,6 +1577,26 @@ private class MW_AllocationEngineHandlerTest {
 
         actual = actual.key('allocation-requests').index(0);
         assertCommonRequestFields(app, actual);
+
+        System.assertEquals(app.Allocation_ID__c, actual.get('allocationId'));
+    }
+
+    @IsTest static void final_canGenerateJson_nullProgramId() {
+        genesis__Applications__c app = getApp();
+        app.Program_id__c = null;
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.FINALIZED);
+
+        System.debug('final json: ' + actualJson);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual, true);
 
         System.assertEquals(app.Allocation_ID__c, actual.get('allocationId'));
     }
@@ -1546,14 +1677,22 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void final_handles200Success() {
 
+        List<genesis__Applications__c> apps = getApps();
+        apps[1].Program_id__c = null;
+        update apps[1];
+
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
 
         MW_AllocationEngineHandler.handleFinal(null);
 
-        MW_AllocationEngineHandler.handleFinal(toIds(getAppAsList()));
+        MW_AllocationEngineHandler.handleFinal(toIds(apps));
 
         Test.stopTest();
+
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(2, actual.size());
+        System.assert(actual.get(1).Program_id__c == null);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1707,8 +1846,24 @@ private class MW_AllocationEngineHandlerTest {
      * @param actual jsons instance
      */
     static void assertCommonRequestFields(genesis__Applications__c expected, Jsons actual) {
+        assertCommonRequestFields(expected, actual, false);
+    }
+
+    /**
+     * These are fields that are on all requests to AES
+     * @param expected app
+     * @param actual jsons instance
+     * @param nullProgramId assert program id as null.  If false, json checked with equality to expected
+     */
+    static void assertCommonRequestFields(genesis__Applications__c expected, Jsons actual, Boolean nullProgramId) {
         System.assertEquals(expected.Lead_ID__c, actual.get('requestID'));
         System.assertEquals(expected.Lead_ID__c, actual.get('leadGuid'));
+        if (nullProgramId) {
+            System.assertEquals('test-program-id', actual.get('programId'));
+        } else {
+            System.assert(expected.Program_id__c != null);
+            System.assertEquals(expected.Program_id__c, actual.get('programId'));
+        }
         System.assert(actual.containsKey('timestamp'));
     }
 
@@ -1830,6 +1985,7 @@ private class MW_AllocationEngineHandlerTest {
                         genesis__APR__c,
                         genesis__Interest_Rate__c,
                         Pricing_Tier__c,
+                        Program_id__c,
                         genesis__Term__c,
                         FICO__c,
                         Monthly_DTI__c,
@@ -1853,7 +2009,8 @@ private class MW_AllocationEngineHandlerTest {
                         Allocation_ID__c,
                         Allocation_Timestamp__c,
                         Allocation_Operation_Error__c
-               FROM   genesis__Applications__c];
+               FROM   genesis__Applications__c
+               ORDER BY Lead_ID__c];
     }
 
     /*
