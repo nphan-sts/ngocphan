@@ -1,7 +1,3 @@
-/* ****************Modification History******************
- * Modified by    	Date    		JIRA number
- *     Pallavi      2019/01/06      LOS-121(to increase the coverage)
- ******************Modification History******************/
 @isTest
 public class TestPayOffUtilities{
     @isTest static void method1(){
@@ -9,9 +5,12 @@ public class TestPayOffUtilities{
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
-            //Borrower_s_Last_Name__c='Testborrower',
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'TestFName',
+            peer__Last_Name__c='TestLName', 
+            City__c='TestCity',
+            State__c='TestState',
+            ZIP_Code__c='123456789'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -55,6 +54,7 @@ public class TestPayOffUtilities{
         PayOffUtilities.AssignToWithdrawnQueue(app.id);
         PayOffUtilities.WorkEmailVerify(app.id);
         /*LOS-121*/
+        PayOffUtilities.AssignToMe();//LOP-415
         test.stopTest();
    }
    //Exception cases
@@ -66,6 +66,7 @@ public class TestPayOffUtilities{
         PayOffUtilities.AssignToFundingQueue(null);
         PayOffUtilities.AssignToDeclinedQueue(null);
         PayOffUtilities.AssignToAgentVerifiedQueue(null);
+        PayOffUtilities.AssignToMe();//LOP-415
         test.stopTest();
    }
    @isTest static void  AgentVerifiedDQCheck(){
@@ -73,9 +74,12 @@ public class TestPayOffUtilities{
          Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
-            //Borrower_s_Last_Name__c='Testborrower',
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'TestFName',
+            peer__Last_Name__c='TestLName', 
+            City__c='TestCity',
+            State__c='TestState',
+            ZIP_Code__c='123456789'
             );
         insert acc;
         genesis__Applications__c app= new genesis__Applications__c(
@@ -107,4 +111,6 @@ public class TestPayOffUtilities{
         test.stopTest();
         
     }
+    
+      
 }

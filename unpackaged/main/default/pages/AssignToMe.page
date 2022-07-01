@@ -1,0 +1,3 @@
+<apex:page standardController="genesis__Applications__c" extensions="AssignMeController" recordSetVar="apps" action="{!onLoad}">
+
+</apex:page>
