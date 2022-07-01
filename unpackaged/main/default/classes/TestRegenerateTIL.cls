@@ -3,14 +3,19 @@ public class TestRegenerateTIL {
     
     public static testMethod void testWF_tilRegenerate(){
         
-        genesis__Org_Parameters__c cso = new genesis__Org_Parameters__c(genesis__Disable_Triggers__c = true);
-        insert cso;
+        Account account_Obj = new Account(
+            Name = 'Test',
+            loan__Investor__c=False,
+            cnotify__Email__c = 'no-reply@testorganization.com'
+        );
+        Insert account_Obj;
         
-        Account account_Obj = MW_GlobalTestUtility.GetAccount('Member');
-        Insert account_Obj; 
-        
-        Account investor_Obj = MW_GlobalTestUtility.GetAccount('Investor');
-        Insert investor_Obj; 
+        Account investor_Obj = new Account(
+            Name = 'Test',
+            loan__Investor__c=true,
+            cnotify__Email__c = 'no-reply@testorganizatio.com'
+        );
+        Insert investor_Obj;
         
         CL_Document__c cs = new CL_Document__c();
         cs.Doc1__c = 'Credit Score Notice';
@@ -18,9 +23,6 @@ public class TestRegenerateTIL {
         cs.Doc3__c = 'Adverse Action Document';
         cs.UploadedBOX__c = 'UploadedBOX';
         insert cs;
-        
-        cso.genesis__Disable_Triggers__c = false;
-        update cso;
         
         genesis__Applications__c genesis_applications_Obj = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
@@ -36,16 +38,13 @@ public class TestRegenerateTIL {
         );      
         Insert genesis_applications_Obj; 
         
-        cso.genesis__Disable_Triggers__c = true;
-        update cso;
-        
         Test.startTest();
         RegenerateTIL.WF_tilRegenerate(new List<Id>{genesis_applications_Obj.Id});
         Test.stopTest();
         
         CL_Document__c testDoc = [SELECT Id,Name,Doc2__c FROM CL_Document__c WHERE Id=:cs.Id LIMIT 1];
         System.assertEquals(testDoc.Doc2__c,'TIL Document');
-
+        
     }
     
 }
