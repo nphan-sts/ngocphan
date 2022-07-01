@@ -1,6 +1,6 @@
 @RestResource(urlMapping='/selectedoffer/*')
 global with sharing class WSSelectedOffer{
-   
+
     global class Response{
         public String status;
         public String errorCode;
@@ -61,14 +61,14 @@ global with sharing class WSSelectedOffer{
         
         
         
-        if(!(approvedOffers.applicationID instanceOf Id)) {
+        if(!(approvedOffers.applicationID instanceof Id)) {
             res.errorCode = PayoffConstants.INVALID_INPUT_FORMAT;
             res.status = PayoffConstants.ERROR;
             res.errorMessage = PayoffConstants.APP_ID_INCORRECT_FORMAT;
             MW_LogUtility.warn('WSSelectedOffer', approvedOffers.applicationID, null, 'markTentativeOfferSelected',res.errorMessage);
             return res;
         }
-        genesis__Applications__c app =[select id,Lead_ID__c,
+        genesis__Applications__c app =[SELECT id,Lead_ID__c,
                                        genesis__Term__c,
                                        genesis__APR__c,
                                        Origination_fee__c,
@@ -76,10 +76,12 @@ global with sharing class WSSelectedOffer{
                                        genesis__Interest_Rate__c,
                                        genesis__Loan_Amount__c,
                                        genesis__Financed_Amount__c,
-                                       genesis__Status__c
-                                       from genesis__Applications__c 
-                                       where id=:approvedOffers.applicationID 
-                                      limit 1];
+                                       genesis__Status__c,
+                                       Pricing_Tier__c,
+                                       Required_Docs_Count__c
+                                       FROM genesis__Applications__c
+                                       WHERE id=:approvedOffers.applicationID
+                                      LIMIT 1];
                                       
         poffer= [select id,name ,Is_Offer_Selected__c, EBP_Offer_Code__c
                  from Pricing_Offer__c
@@ -171,7 +173,21 @@ global with sharing class WSSelectedOffer{
                         app.genesis__Interest_Rate__c=p.Interest_Rate__c;
                         app.genesis__Financed_Amount__c= (p.Amount__c - p.Origination_fee__c);
                         app.genesis__Status__c='offer_accepted';
+
+                        /*
+                        LSP-870
+                        Pricing Tier requests to AE via Pricing Offer trigger, have to run since it's the correct one.
+                        If the pricing doesn't change, the update app can be allowed to execute (or not) now if it's supposed to
+                        The app will be allocated because offer_accepted && Required_Docs_Count__c is bumped back to advp
+                        via MW_ApplicationService.UpdateApplicationFlags by way of MW_CustomTriggerOnApplication1 before trigger execution
+                         */
+                        if (app.Required_Docs_Count__c == 0 && p.Pricing_Tier__c != app.Pricing_Tier__c) {
+                            System.debug('WSSelectedOffer: Required_Docs_Count__c = 0 and Pricing_Tier__c changed');
+                            InvestorAllocation.allocationForADVPcalled = true;
+                        }
+
                         update app;
+                        System.debug('WSSelectedOffer: update app completed');
                         p.Is_Offer_Selected__c=true;
                         updateOffer.add(p);
                         system.debug('poffer'+p);

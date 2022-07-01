@@ -26,11 +26,11 @@ public with sharing class MW_BoxUtilHelper
                                      authToken = [SELECT id,
                                                          ints__Token__c, 
                                                          ints__Refresh_Token__c
-                                                         FROM ints__OAuth_Token__c WHERE 
-                                                         ints__OAuth_Settings__c =: oAuthName.Id AND 
+                                                         FROM ints__OAuth_Token__c WHERE
+                                                         ints__OAuth_Settings__c =: oAuthName.Id AND
                                                          ints__Is_Valid__c = true Order By CreatedDate DESC LIMIT 1];
 
-                
+
                 if(authToken.ints__Refresh_Token__c != null && authToken.ints__Refresh_Token__c != 'null')
                 {  
                     Http http = new Http();
@@ -51,18 +51,18 @@ public with sharing class MW_BoxUtilHelper
                     
                     BOXTokenResponseParcer tokenRespObj = BOXTokenResponseParcer.parse(response);
                    
-                    if(tokenRespObj.access_token != null  && tokenRespObj.access_token != 'null' && tokenRespObj.refresh_token != null && tokenRespObj.refresh_token != 'null'){ 
+                    if(tokenRespObj.access_token != null  && tokenRespObj.access_token != 'null' && tokenRespObj.refresh_token != null && tokenRespObj.refresh_token != 'null'){
                         accessToken = tokenRespObj.access_token;
                         refreshToken = tokenRespObj.refresh_token;
                     }
 
-                    if(tokenRespObj.error != null || tokenRespObj.error_description != null){                      
+                    if(tokenRespObj.error != null || tokenRespObj.error_description != null){
                         MW_LogUtility.error('MW_BoxUtilHelper', 'getNewAccessToken', tokenRespObj.error_description);
                     }
                 }else{
                     MW_LogUtility.error('MW_BoxUtilHelper', 'getNewAccessToken', 'BOX Refresh Token is NULL. Manual refresh is required.');
                 }
-            } 
+            }
             
         }catch(exception ex){
             MW_LogUtility.error('MW_BoxUtil1', '', '', 'getNewAccessToken', ex);

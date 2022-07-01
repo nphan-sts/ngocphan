@@ -1,8 +1,16 @@
-@isTest
+@IsTest
 
 private class TestWSSelectedOffer{
-    @testSetup 
+    @TestSetup
     static void setupData() {
+
+        MW_Settings__c mwSettings = new MW_Settings__c();
+        mwSettings.Allocation_Engine_Deployment_Mode__c = 'DARK_MODE';
+        mwSettings.Allocation_Engine_Service_URL_FMT__c = 'http://localhost:8080/{0}';
+        mwSettings.Allocation_Engine_Cancel_Statuses__c = 'Declined,Expired,Withdrawn,Decline_Manual_Review,Expired-Withdrawn';
+        mwSettings.LEADS_FE_EndpointURL__c = 'https://sfapi-dev.payoff.com/ms/api/cls/update_user';
+        insert mwSettings;
+
         //Creating Account
         Account accTest = new Account(
                                 Name = 'GetsOverwritten',
@@ -46,11 +54,11 @@ private class TestWSSelectedOffer{
         insert pOffer;
     }
 
-    Testmethod static void testNewOfferIsSelectedWithKey(){
+    testMethod static void testNewOfferIsSelectedWithKey(){
         
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c from Pricing_Offer__c where Key__c=6 Limit 1];
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
+        Pricing_Offer__c pOffer = [SELECT id,Key__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         
         Map<String,String> reqMap = new Map<String,String>(); 
         reqMap.put('applicationId',app.id);
@@ -75,10 +83,10 @@ private class TestWSSelectedOffer{
         system.assertEquals(true, pOfferOut.Is_Offer_Selected__c);
     }
     // Check a Non EBP offer is already selected then return the message
-    Testmethod static void testNonEBPSelectedOfferAvailable(){
+    testMethod static void testNonEBPSelectedOfferAvailable(){
         
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
         Pricing_Offer__c  pOffer = new Pricing_Offer__c();
         pOffer.Above_prime_max__c= 'false';
         pOffer.Amount__c = 8000;
@@ -121,11 +129,9 @@ private class TestWSSelectedOffer{
     }
     
     //Application ID null
-    Testmethod static void testAppIdNULLcheck(){
-        
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c from Pricing_Offer__c where Key__c=6 Limit 1];
+    testMethod static void testAppIdNULLcheck(){
+
+        Pricing_Offer__c pOffer = [SELECT id,Key__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         Map<String,String> reqMap = new Map<String,String>(); 
         reqMap.put('applicationId',null);
         reqMap.put('Key',String.ValueOf(pOffer.Key__c));
@@ -148,11 +154,11 @@ private class TestWSSelectedOffer{
         system.assertEquals(PayoffConstants.APP_ID_CANNOT_BE_NULL, responseRec.errorMessage);
     }
     //Key null
-    Testmethod static void testKeyNULLcheck(){
+    testMethod static void testKeyNULLcheck(){
         
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c,Is_Offer_Selected__c from Pricing_Offer__c where Key__c=6 Limit 1];
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
+        Pricing_Offer__c pOffer = [SELECT id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         pOffer.Is_Offer_Selected__c = true;
         update pOffer;
         
@@ -178,11 +184,9 @@ private class TestWSSelectedOffer{
         system.assertEquals(PayoffConstants.KEY_CANNOT_BE_NULL, responseRec.errorMessage);
     }
     //App ID incorrect format
-    Testmethod static void testAppIDIncorrectFormat(){
-        
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c,Is_Offer_Selected__c from Pricing_Offer__c where Key__c=6 Limit 1];
+    testMethod static void testAppIDIncorrectFormat(){
+
+        Pricing_Offer__c pOffer = [SELECT id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         pOffer.Is_Offer_Selected__c = true;
         update pOffer;
         
@@ -208,9 +212,9 @@ private class TestWSSelectedOffer{
         system.assertEquals(PayoffConstants.APP_ID_INCORRECT_FORMAT, responseRec.errorMessage);
     }
 	// Check old EBP offer is deselected and new one is a success
-    Testmethod static void testEBPOfferDeselected(){
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
+    testMethod static void testEBPOfferDeselected(){
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
         Pricing_Offer__c  pOffer = new Pricing_Offer__c();
         pOffer.Above_prime_max__c= 'false';
         pOffer.Amount__c = 8000;
@@ -274,11 +278,11 @@ private class TestWSSelectedOffer{
     }
         
     //Offer Selected True and Key is same as Pricing offer Key
-    Testmethod static void testEBPOfferAlreadySelectedSameKey(){
+    testMethod static void testEBPOfferAlreadySelectedSameKey(){
         
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c,Is_Offer_Selected__c from Pricing_Offer__c where Key__c=6 Limit 1];
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
+        Pricing_Offer__c pOffer = [SELECT id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         pOffer.Is_Offer_Selected__c = true;
         pOffer.EBP_Offer_Code__c = '2021Feb_ebp_DCP_90';
         update pOffer;
@@ -305,11 +309,11 @@ private class TestWSSelectedOffer{
         system.assertEquals(PayoffConstants.THIS_OFFER_IS_ALREADY_APPROVED, responseRec.successMessage);
     }
     //Offer Selected True and Key is not same as Pricing offer Key
-    Testmethod static void testEBPOfferAlreadySelectedDifferenteKey(){
+    testMethod static void testEBPOfferAlreadySelectedDifferenteKey(){
         
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c,Is_Offer_Selected__c from Pricing_Offer__c where Key__c=6 Limit 1];
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
+        Pricing_Offer__c pOffer = [SELECT id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         pOffer.Is_Offer_Selected__c = true;
         pOffer.EBP_Offer_Code__c = '2021Feb_ebp_DCP_90';
         update pOffer;
@@ -334,5 +338,126 @@ private class TestWSSelectedOffer{
         responseRec = WSSelectedOffer.markTentativeOfferSelected();
         Test.stopTest();
         system.assertEquals(PayoffConstants.SUCCESS, responseRec.status);
+    }
+
+    /**
+     * Confirm that WSSelectedOffer will not fire the first request at ADVP
+     * if the app is a redecision app with an incoming pricing tier difference
+     */
+    @IsTest static void testAdvpFlagNotSetOnNewApplication() {
+
+        Account account = getAccount();
+        genesis__Applications__c app = getApplication();
+        Pricing_Offer__c offer = getOffer();
+
+        app.genesis__Status__c = 'offer_shown';
+        app.Required_Docs_Count__c = 2;
+        update app;
+
+        RestContext.request = makeRestRequest(app, offer);
+        RestContext.response = new RestResponse();
+
+        Test.startTest();
+        WSSelectedOffer.markTentativeOfferSelected();
+        Test.stopTest();
+
+        genesis__Applications__c actualApp = getApplication(account);
+        System.assertEquals('offer_accepted', actualApp.genesis__Status__c);
+
+        Pricing_Offer__c actual = getOffer();
+        System.assertEquals(true, actual.Is_Offer_Selected__c);
+        System.assertEquals(false, InvestorAllocation.allocationForADVPcalled);
+    }
+
+    /**
+     * Pricing tier change will trigger second (correct) allocation engine request
+     */
+    @IsTest static void testAdvpFlagSetOnRedecisionedAppWithPricingTierChange() {
+
+        Account account = getAccount();
+        genesis__Applications__c app = getApplication(account);
+        Pricing_Offer__c offer = getOffer();
+
+        app.genesis__Status__c = 'Redecision_Required';
+        app.Required_Docs_Count__c = 0;
+        app.Pricing_Tier__c = 't1';
+        update app;
+
+        offer.Pricing_Tier__c = 't2';
+        update offer;
+
+        RestContext.request = makeRestRequest(app, offer);
+        RestContext.response = new RestResponse();
+
+        Test.startTest();
+        WSSelectedOffer.markTentativeOfferSelected();
+        Test.stopTest();
+
+        genesis__Applications__c actualApp = getApplication(account);
+        System.assertEquals('agent_document_verification_pending', actualApp.genesis__Status__c);
+
+        Pricing_Offer__c actual = getOffer();
+        System.assertEquals(true, actual.Is_Offer_Selected__c);
+        System.assertEquals(true, InvestorAllocation.allocationForADVPcalled);
+    }
+
+    /**
+     * @param app The application instance
+     * @param offer The offer instance
+     *
+     * @return A test rest request
+     */
+    private static RestRequest makeRestRequest(genesis__Applications__c app, Pricing_Offer__c offer) {
+        Map<String, String> reqMap = new Map<String, String>();
+        reqMap.put('applicationId', app.Id);
+        reqMap.put('Key', String.valueOf(offer.Key__c));
+        String jsonStr = JSON.serialize(reqMap);
+
+        RestRequest req = new RestRequest();
+        req.requestURI = '/services/apexrest/selectedoffer';
+        req.requestBody = Blob.valueOf(jsonStr);
+        req.httpMethod = 'POST';
+        return req;
+    }
+
+    private static Account getAccount() {
+        List<Account> accounts = [
+                SELECT Id,
+                       Name
+                FROM   Account
+                WHERE  Name = 'WSSelectedOfferFirstName TestLastName'
+                LIMIT  1
+        ];
+        return accounts.get(0);
+    }
+
+    private static genesis__Applications__c getApplication() {
+        return getApplication(getAccount());
+    }
+
+    private static genesis__Applications__c getApplication(Account acc) {
+        List<genesis__Applications__c> apps = [
+                SELECT Id,
+                       Required_Docs_Count__c,
+                       genesis__Account__c,
+                       genesis__Status__c
+                FROM   genesis__Applications__c
+                WHERE  genesis__Account__c = :acc.Id
+                LIMIT 1
+        ];
+        return apps.get(0);
+    }
+
+    private static Pricing_Offer__c getOffer() {
+        List<Pricing_Offer__c> offers = [
+                SELECT Id,
+                       Key__c,
+                       Pricing_Tier__c,
+                       Is_Offer_Selected__c
+                FROM   Pricing_Offer__c
+                WHERE  Key__c = 6
+                LIMIT  1
+        ];
+        return offers.get(0);
     }
 }

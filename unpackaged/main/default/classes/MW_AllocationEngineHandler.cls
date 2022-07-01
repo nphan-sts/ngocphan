@@ -583,6 +583,7 @@ global with sharing class MW_AllocationEngineHandler {
             json.writeStringField('leadGuid', app.Lead_ID__c);
             json.writeDateTimeField('timestamp', Datetime.now());
 
+            writeNullableString(json, 'programId', app.Program_id__c);
             json.writeStringField('lendingState', app.genesis__Account__r.State__c);
             writeNullableNumber(json, 'APR', app.genesis__APR__c);
             json.writeNumberField('interestRate', app.genesis__Interest_Rate__c);
@@ -844,6 +845,7 @@ global with sharing class MW_AllocationEngineHandler {
                         genesis__Status__c,
                         genesis__APR__c,
                         genesis__Interest_Rate__c,
+                        Program_id__c,
                         Pricing_Tier__c,
                         genesis__Term__c,
                         FICO__c,

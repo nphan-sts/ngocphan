@@ -14,10 +14,10 @@ global class ApplicationExpiryUpdate implements Database.Batchable<SObject>, Sch
 
         System.debug(logginglevel.error, 'query+++' + query);
     }
-    
+
     global ApplicationExpiryUpdate(String query){
-        
-        this.query = query; 
+
+        this.query = query;
     }
     
     global void execute(SchedulableContext sc) {
