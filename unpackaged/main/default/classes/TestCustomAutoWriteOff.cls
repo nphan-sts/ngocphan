@@ -3,30 +3,40 @@ public class TestCustomAutoWriteOff {
     
     public static testMethod void Testone(){
         
+        
+        Account acc = new Account();
+        acc.Name = 'Test Account';
+        acc.Account_External_ID__c = 'Test';
+        insert acc;
+        
+        loan__loan_account__c loanAccount = CreateLoanContract(acc.id);
+        
+        System.debug('Loan Account --' + loanAccount);
+        loanAccount.loan__Account__c = acc.Id;
+        loanAccount.loan__Loan_Status__c = 'Active - Good Standing';
+        update loanAccount;
+        System.debug('Loan Account 2--' + loanAccount);
+        
         Test.startTest();
         
+        loan__Org_Parameters__c orgPAram = new loan__Org_Parameters__c();
+        orgPAram.WriteOffSuggestion__c = 90;
+        insert orgPAram;
+        
         Try{
-            CustomAutoWriteOff sh = new CustomAutoWriteOff();
-            
-            //string sh = String.ValueOf(orgPAram.WriteOffSuggestion__c);
-            String sch = '0 0 23 * * ?'; 
-            system.schedule('CustomAutoWriteOff', sch,sh); 
-        }
-        Catch(exception e){}
+        CustomAutoWriteOff sh = new CustomAutoWriteOff();
+        
+        //string sh = String.ValueOf(orgPAram.WriteOffSuggestion__c);
+        String sch = '0 0 23 * * ?'; 
+        system.schedule('CustomAutoWriteOff', sch,sh); 
+      }
+      Catch(exception e){}
         
         Test.stopTest();
     }
     
-    @testSetup
-    public static void testSetup(){
+    public static Loan__loan_account__c CreateLoanContract(id accId){
         
-        loan__Org_Parameters__c cso = new loan__Org_Parameters__c(loan__Disable_Triggers__c = true);
-        cso.WriteOffSuggestion__c = 90;
-        insert cso;
-        
-        Account acc = new Account( Name = 'Test Account', Account_External_ID__c = 'Test');
-        insert acc;
-       
         loan.TestHelper.createSeedDataForTesting();
         //Create Currency...
         loan__Currency__c curr = loan.TestHelper.createCurrency();
@@ -83,7 +93,7 @@ public class TestCustomAutoWriteOff {
         
         Date da = date.today();
         
-        loanContract.loan__Account__c = acc.Id;
+        loanContract.loan__Account__c = accId;
         loanContract.loan__Loan_Purpose__c=dummyLoanPurpose.id;
         loanContract.loan__Fee_Set__c = dummyFeeSet.id;
         loanContract.loan__Loan_Product_Name__c = dummyLoanLP.id;
@@ -123,12 +133,6 @@ public class TestCustomAutoWriteOff {
         loanContract.loan__Loan_Status__c='Active - Good Standing';
         
         insert loanContract;
-        
-        System.debug('Loan Account --' + loanContract);
-        loanContract.loan__Account__c = acc.Id;
-        loanContract.loan__Loan_Status__c = 'Active - Good Standing';
-        update loanContract;
-        System.debug('Loan Account 2--' + loanContract);
-        // return loanContract;
+        return loanContract;
     }
 }

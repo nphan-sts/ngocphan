@@ -3,9 +3,7 @@
 ---------------------------------------------------------------------------
 Developer               Date                Description
 ---------------------------------------------------------------------------
-Mohseen Begum           06/27/2017          Created.                   
-Sarath Posa             09/14/2021
-*/
+Mohseen Begum           06/27/2017          Created.                   */
 
 @isTest
 public class AttachmentTriggerTest {

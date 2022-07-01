@@ -9,7 +9,6 @@ private class MW_DocuSigneSignedDocumentsTest {
 		insert appList;
 		MW_Settings__c mwSetting = new MW_Settings__c();
 		mwSetting.LEADS_FE_EndpointURL__c = 'https://cls-lead.payoff.com/api/cls/update_user';
-		mwSetting.MemberMatchingDeactivationTool__c = 'http://test';
 		insert mwSetting;
 
 		Test.startTest();

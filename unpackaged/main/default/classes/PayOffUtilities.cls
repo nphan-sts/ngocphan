@@ -1,7 +1,3 @@
-/* ****************Modification History******************
- * Modified by    	Date    		JIRA number
- *     Sarath      2022/04/15      LOP-415(Assign Me Button in Application List Views/Search Layout)
- ******************Modification History******************/
 Global class PayOffUtilities{
     
     Static Map<id, recordtype> orgRecordtypes=new Map<id,recordtype>([SELECT Id, Name,  DeveloperName,  SobjectType, IsActive,NamespacePrefix FROM RecordType]);
@@ -288,41 +284,6 @@ Webservice Static String AssignToReviewQueue(id appId) {
             return 'Exception: '+ex.getMessage(); 
         }
     }
-
-///************ LOP-415 Sarath >> Assign To Me Button*/
-Webservice Static String AssignToMe() {
-    List<genesis__Applications__c> application = new List<genesis__Applications__c> ();
-    try{        
-        application = [SELECT id, User_Processor__c, Owner.name, Fraud_Tag_Count__c, 
-                                                          CreatedDate, Lead_ID__c  
-                                                   FROM genesis__Applications__c 
-                                                    WHERE Owner.name 
-                                                    IN ( 'Ready for Verification') 
-                                                        AND (User_Processor__c ='' AND Fraud_Tag_Count__c =0) 
-                                                        ORDER BY CreatedDate ASC LIMIT 1]; 
-    		
-            if(application.isEmpty()){
-                return null;
-            }
-            else{
-                application[0].User_Processor__c = UserInfo.getUserId();
-
-                update application[0];
-                return application[0].id;
-            }
-        }catch(Exception ex){
-            MW_LogUtility.ExceptionDO expRex = new MW_LogUtility.ExceptionDO(ex);
-            MW_DataDogCallOut.futureSend(JSON.serialize(MW_LogUtility.getLogRecord('PayoffUtilities', application[0].id, application[0].Lead_ID__c , 'AssignToMe',JSON.serialize(expRex),'Error',null)), new List<String>());
-
-            return null;
-
-        }
-    } 
-    //////** LOP-415 */
-
-
-
-
 
  Webservice Static String AssignToUserPreCheck(id appId) {
         try{
