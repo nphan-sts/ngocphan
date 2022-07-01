@@ -300,7 +300,6 @@ Webservice Static String AssignToMe() {
                                                     IN ( 'Ready for Verification') 
                                                         AND (User_Processor__c ='' AND Fraud_Tag_Count__c =0) 
                                                         ORDER BY CreatedDate ASC LIMIT 1]; 
-
     		
             if(application.isEmpty()){
                 return null;
