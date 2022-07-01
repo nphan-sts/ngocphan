@@ -12,6 +12,8 @@
 *	  Anusha		2021/11/09	  LSP-328.3 skipping transaction date validation on LPT object to allow future payoffpayment creation
 *	  Anusha		2021/11/25	  LSP-328.4 Normal LPT should get created when transaction amount is less than todays payoff amount
 *    Mohan Kiran    2021/12/30    LSP-245 Added code to capture every request and responses made to this endpoint to batch process log object in salesforce.
+*	Bhavya Maliwal  2022/03/22    LSP-694 Added the code to filter out if the APS creation is for the Bill for which the Debit date lies under 
+the pre bill days of the future bill which will get generated within the duration of APS creation and Debit Date.
 ******************Modification History*****************************************************************/
 
 @RestResource(urlMapping='/OTPOMBPEndpoint/*')
@@ -463,6 +465,7 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
         loan__loan_account__c LA = [select id,name,
                                     loan__Delinquent_Amount__c,
                                     loan__Loan_Status__c,
+                                    loan__Oldest_Due_Date__c,//LSP-694
                                     loan__Next_Due_Generation_Date__c,
                                     loan__Next_Installment_Date__c, 
                                     loan__Last_Accrual_Date__c,//LSP-223 added LAD
@@ -505,7 +508,11 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
         else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Good Standing')
                 && futureBill == NULL && LA.loan__Next_Due_Generation_Date__c <= txnDate
                 && LA.loan__Next_Installment_Date__c > txnDate){
-                    installmentFlagValue = true;
+
+                    //LSP-694 start
+                    installmentFlagValue =(LA.loan__Oldest_Due_Date__c >= txnDate);
+                    //LSP-694 end
+          
                     System.debug(logginglevel.error,'IN 1st ELSE IF ::' +installmentFlagValue);            
                 }
         else if(LA.loan__Loan_Status__c.equalsIgnoreCase('Active - Bad Standing')

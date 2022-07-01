@@ -35,6 +35,7 @@ global with sharing class UploadNachaToBoxJob implements Database.Batchable<sObj
        UploadNachaToBoxJob j = new UploadNachaToBoxJob();
        Database.executebatch(j,1);
    }
+
    global void execute(Database.BatchableContext BC, List<Document> scope) {
        uploadFile(scope,'execute',folderIdBoxMap);
        MW_BoxUtil1.insertAccessToken();

@@ -306,13 +306,16 @@ Webservice Static String AssignToMe() {
             }
             else{
                 application[0].User_Processor__c = UserInfo.getUserId();
+
                 update application[0];
                 return application[0].id;
             }
         }catch(Exception ex){
             MW_LogUtility.ExceptionDO expRex = new MW_LogUtility.ExceptionDO(ex);
             MW_DataDogCallOut.futureSend(JSON.serialize(MW_LogUtility.getLogRecord('PayoffUtilities', application[0].id, application[0].Lead_ID__c , 'AssignToMe',JSON.serialize(expRex),'Error',null)), new List<String>());
+
             return null;
+
         }
     } 
     //////** LOP-415 */
