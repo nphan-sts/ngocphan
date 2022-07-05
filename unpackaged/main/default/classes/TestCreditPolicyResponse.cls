@@ -834,4 +834,24 @@ private class TestCreditPolicyResponse {
             aPP.selected_vendor_amount = 'test'; 
     }
     
+    
+    @IsTest static void testBureauSubsetFields() {
+
+        Account acc1 = [SELECT Id,Name FROM Account WHERE Name ='Testfname Testlname' LIMIT 1];
+        genesis__Applications__c app1 = [SELECT Id,genesis__Status__c,Lead_ID__c FROM genesis__Applications__c WHERE genesis__Status__c='Offer shown' LIMIT 1];
+
+        StaticResource sr = [SELECT Id,Name,Body FROM StaticResource WHERE Name='lop613CRBPayloadFields'];
+        String json = sr.Body.toString();
+
+        Test.startTest();
+        
+        CreditPolicyResponse obj = new CreditPolicyResponse();
+        obj = obj.parse(json,acc1.Id,app1.Id, app1.Lead_ID__c);
+        credit_policy__c cP = [select id,MLA_Flag__c,Public_Records_On_File__c from credit_policy__c limit 1];
+        System.assertEquals(221, cP.Public_Records_On_File__c);
+        System.assertEquals(true, cP.MLA_Flag__c);
+        
+        Test.stopTest();
+    }
+
 }
