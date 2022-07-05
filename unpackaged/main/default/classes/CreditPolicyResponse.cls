@@ -650,6 +650,8 @@ global class CreditPolicyResponse {
         global List<String> fico_score_factors {get;set;} 
         global Boolean file_inquiries_impacted_score {get;set;} 
         global List<Trades> trades {get;set;}
+        global Integer V71_G093S_num_public_records {get;set;}
+        global Boolean military_lending_status {get;set;}
 
         /* Bureau changed bureau_date_of_birth array to string in 6.2.  Handling this manually.*/
         /*global List<String> bureau_social_security_number {get;set;}*/
@@ -817,8 +819,8 @@ global class CreditPolicyResponse {
         
         if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.bureau_subset != null){
             String bureau_data = String.valueOF(CPResponse.credit_policy_decision.bureau_subset);
-            System.debug(bureau_data);
-           
+            System.debug(bureau_data);      
+              
             //Id CPid = CPResponse.cpData.id;
            // System.debug('id of cp' + CPid);
              //String attnm = 'Bureau_subset_Data_'+CPid+'.xml';
@@ -1099,6 +1101,12 @@ global class CreditPolicyResponse {
                 if(bureauReq.V71_AT09S_num_trd_opned_pst_24mo!=null) {
                     obj.Num_Trades_Opened_Past_24mo__c = bureauReq.V71_AT09S_num_trd_opned_pst_24mo;
                 }
+                //Lop-613
+                 system.debug('public records'+bureauReq.V71_G093S_num_public_records+bureauReq.military_lending_status);
+                if(bureauReq.V71_G093S_num_public_records!=null) 
+                                    obj.Public_Records_On_File__c = bureauReq.V71_G093S_num_public_records;
+                if(bureauReq.military_lending_status!=null) 
+                                    obj.MLA_Flag__c = bureauReq.military_lending_status;
             }
             
         }
