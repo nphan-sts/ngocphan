@@ -20,24 +20,28 @@ public with sharing class AssignMeControllerTest {
                                             genesis__Due_Day__c = 20,
                                             genesis__Expected_First_Payment_Date__c = system.Today(),
                                             genesis__Expected_Start_Date__c = system.Today(),
-                                            genesis__Funding_in_Tranches__c = true,
-                                            Borrower_s_Email__c = null,
-                                           
+                                            genesis__Funding_in_Tranches__c = false,
+                                            Borrower_s_Email__c = 'test@gmail.com',
+                                      		OwnerId='00G41000002h4G3EAI',
+            								User_Processor__c=null,
                                             Application_Start_DateV2__c = system.Today(),
-                                            DocuSignFlag__c=true,
-                                            genesis__Status__c = 'agent_verified',
-                                            genesis__Draw_Period_End_Date__c = system.Today()
+            								genesis__Account__c = acc.id,
+                                            genesis__Status__c = 'agent_document_verification_pending'
                                             );
         appList.add(app);
         insert appList;
-        
-        
+     
         test.startTest();
         PageReference pageRef = page.AssignTome;
         Test.setCurrentPage(pageRef);
         ApexPages.StandardSetController sc = new ApexPages.StandardSetController(appList);
         AssignMeController ct = new AssignMeController(sc);
-        ct.onLoad();
+        try{
+            ct.onLoad(); 
+        } catch(exception ex) {
+            system.debug('Exception-->'+ ex.getMessage());
+        }
+       
         test.stopTest();
   
     }
