@@ -2,7 +2,7 @@
 * Modified by      Date            JIRA number
 *Bhavya Maliwal  2022/07/07    LSP-881 If Bank Account gets Inactive update the APS and mark it inactive.
 ******************Modification History*****************************************************************/
-public class CustomBankAccountHandler {
+public with sharing class CustomBankAccountHandler {
     /*Created By : Bhavya Maliwal
 Method name : updateAPSInactive
 Purpose : Deactivate (mark inactive) the APS if Bank Account gets Inactive.
