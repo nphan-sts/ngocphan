@@ -25,7 +25,9 @@ private class MWBatchPostExpiryApplicationTest {
         Test.startTest();
 
         //setup decline user
-        Profile p = [SELECT Id FROM Profile WHERE Name='System Administrator'];
+        Profile p = [SELECT Id 
+                         FROM Profile 
+                         WHERE Name='System Administrator'];
         User usr = new User(Alias = 'standt', Email='standarduser@happymoney.com',
                         EmailEncodingKey='UTF-8', LastName='Declined', LanguageLocaleKey='en_US',
                         LocaleSidKey='en_US', ProfileId = p.Id,
@@ -44,14 +46,18 @@ private class MWBatchPostExpiryApplicationTest {
         //run batch
         MWBatchPostExpiryApplication obj = new MWBatchPostExpiryApplication();
         DataBase.executeBatch(obj);
+       
         Test.stopTest();
-
+        List<genesis__Applications__c> appListUpdated =[SELECT Id, Expiry_Date__c,is_ApplicationExpiryPosted__c from genesis__Applications__c LIMIT 5];
+        System.debug('Updated List:'+appListUpdated);
+        System.assertEquals(true, appListUpdated[0].is_ApplicationExpiryPosted__c);
         System.assertEquals(true, MWBatchPostExpiryApplication.syncApp.data[0].is_expired);
         System.assertEquals(currentSystemDate, MWBatchPostExpiryApplication.syncApp.data[0].expiry_date);
     }
 
     //just for test coverage all logic already tested in previous test method
-    @isTest static void MWRunScheduleJob() {
+    @isTest static void MWRunScheduleJob()
+    {
         //setup for system date
         loanSetup();
 
