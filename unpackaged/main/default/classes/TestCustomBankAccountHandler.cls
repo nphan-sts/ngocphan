@@ -27,6 +27,9 @@ Purpose : to cover code satisfying if Bank Account gets inactive the correspondi
         test.startTest();
         bankAccount.loan__Active__c=false;
         test.stopTest();
+        loan__Automated_Payment_Setup__c apscheck=[Select id,loan__Active__c from loan__Automated_Payment_Setup__c
+                                                   where loan__Bank_Account__c=:bankAccount.id limit 1];
+        system.assert(!apscheck.loan__Active__c);
     }
     
 }
