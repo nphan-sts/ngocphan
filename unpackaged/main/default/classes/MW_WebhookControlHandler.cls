@@ -22,15 +22,63 @@ global with sharing class MW_WebhookControlHandler {
 		
         return ServiceGetHelper(req, res);
     }
+    public static List<String> stackerCheck(ID appId){
+
+        List<identity_verification__C> identityVerifications = [select id, application__r.Owner.Name, Credit_Policy_Verification_Flag__c, Bank_Verification_Flag__c, Deal_room_Verification_Flag__c, Identity_Verification__c, Income_Verification_Flag__c
+        from identity_verification__C where Application__c =:appId order by lastmodifieddate desc limit 1];
+        
+        List<String> results = new List<String>();
+        
+        System.debug(identityVerifications);
+        if (identityVerifications.size()>0){
+            
+            for (Identity_verification__C v : identityVerifications){
+                if(v.application__r.Owner.Name !='Final_Verification') results.add('Application owner is not Final_Verification');
+                
+                if(v.Credit_Policy_Verification_Flag__c !='PASS') results.add('Credit_Policy_Verification_Flag__c is not PASS');
+                
+                if(v.Bank_Verification_Flag__c != 'PASS') results.add('Bank_Verification_Flag__c is not PASS');
+                if(v.Deal_room_Verification_Flag__c != 'PASS') results.add('Deal_room_Verification_Flag__c is not PASS');
+                if(v.Identity_Verification__c !='PASS') results.add(' Identity_Verification__c  is not PASS');
+                if(v.Income_Verification_Flag__c != 'PASS') results.add(' Income_Verification_Flag__c  is not PASS');
+                
+            }//end for loop
+        
+        }
+        else results.add('No identity verification records/App Id found');
+
+        if(results.size()==0) {//if no fail results call stackercheck
+
+            results.add(PayOffUtilities.createAppTagforSoftpull(appID));
+        }
+
+        return results;
+        
+    }
 
     global static String ServiceGetHelper(RestRequest req, RestResponse res){
         try
         {
             Map <String, String> params      = req.params;
+            List<String> results = new List<String>();
 
             if(params.size()>0)
             {
+               //RequestType == 'StackerCheck' //ztf-235
+               if(params.get('RequestType') == 'StackerCheck'){
+                    
+                    Id appId = (ID)(params.get('ApplicationId'));
+
+                    results = stackerCheck(appID);
+
+               }
                
+               if(results.size()>0){
+                res.statusCode = 200;
+                return String.join(results, '\n');
+               }
+                //RequestType == 'AgentVerified' //ztf-236
+
                 if(params.get('RequestType')=='ECA') {
                     List<Document> ecaAttachment = new List<Document>([select Id, Body, Name from Document where name ='eca' order by CreatedDate desc limit 1]);
                     if(ecaAttachment.size()>0)
@@ -82,6 +130,10 @@ global with sharing class MW_WebhookControlHandler {
             mail.setPlainTextBody('TIL Document Exception' +e.getMessage());
             Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
             res.statusCode = 500;
+            //data dog exception handling
+            MW_LogUtility.ExceptionDO expRex = new MW_LogUtility.ExceptionDO(e);
+            MW_DataDogCallOut.futureSend(JSON.serialize(expRex), new List<String>());
+
             return e.getStackTraceString();
         }
         res.statusCode = 200;
