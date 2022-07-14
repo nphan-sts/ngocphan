@@ -916,8 +916,6 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
         System.assert(log.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: def456'));
-        System.assert(log.clcommon__Message__c.contains('Field: Expected_Yield__c cannot be null'));
-        System.assert(log.clcommon__Message__c.contains('Field: Expected_Chargeoff__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Allocation_Timestamp__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('No previously allocated partners were found'));
 
@@ -1139,8 +1137,6 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
         System.assert(log.clcommon__Message__c.contains('Can not execute operation: manual for Lead Id: def456'));
-        System.assert(log.clcommon__Message__c.contains('Field: Expected_Yield__c cannot be null'));
-        System.assert(log.clcommon__Message__c.contains('Field: Expected_Chargeoff__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Allocation_Timestamp__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('No previously allocated partners were found'));
         System.assert(log.clcommon__Message__c.contains('No manually selected partners were found'));

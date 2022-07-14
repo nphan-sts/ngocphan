@@ -494,8 +494,6 @@ global with sharing class MW_AllocationEngineHandler {
 
                     validateNotNull(app, messages, new List<String>{
                             'Allocation_ID__c',
-                            'Expected_Yield__c',
-                            'Expected_Chargeoff__c',
                             'Allocation_Timestamp__c'
                     });
 
@@ -604,8 +602,8 @@ global with sharing class MW_AllocationEngineHandler {
             if (REALLOCATION == decisionLevel || MANUAL == decisionLevel) {
 
                 json.writeStringField('allocationId', app.Allocation_ID__c);
-                json.writeNumberField('expectedYield', app.Expected_Yield__c);
-                json.writeNumberField('expectedChargeoff', app.Expected_Chargeoff__c);
+                writeNullableNumber(json, 'expectedYield', app.Expected_Yield__c);
+                writeNullableNumber(json, 'expectedChargeoff', app.Expected_Chargeoff__c);
                 json.writeDateTimeField('previousTimestamp', app.Allocation_Timestamp__c);
 
                 writePartnerArray(json, 'previousInvestor', appPartners);
