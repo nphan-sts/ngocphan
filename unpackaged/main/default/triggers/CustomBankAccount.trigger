@@ -25,12 +25,13 @@ trigger CustomBankAccount on loan__Bank_Account__c (before insert,before update,
             
         }
         if(trigger.isUpdate && trigger.isAfter) {
-            MW_SynchronizeHandler.postBankAccountDetailsOnWebHook(trigger.OldMap,trigger.NewMap);
             /* Bhavya Maliwal : LSP-881  : Below method checks for the bank account and there respective APS
 and if Bank Account gets inactive it marks the corresponding APS Inactive*/
             CustomBankAccountHandler checkAPS=new CustomBankAccountHandler();
             checkAPS.updateAPSInactive(trigger.new, trigger.oldMap);
             //end LSP-881
+            MW_SynchronizeHandler.postBankAccountDetailsOnWebHook(trigger.OldMap,trigger.NewMap);
+            
         }
         
     }

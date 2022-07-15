@@ -25,7 +25,8 @@ Purpose : Deactivate (mark inactive) the APS if Bank Account gets Inactive.
                 update apsList;
                } 
             catch(Exception e){
-                system.debug('error message:'+ e.getMessage());
+                system.debug(e+'	'+e.getMessage()+'		'+e.getLineNumber());
+                MW_LogUtility.error('CustomBankAccountHandler', '', '', 'updateAPSInactive', e);
             }
         }
     }
