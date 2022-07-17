@@ -5,6 +5,10 @@
 @IsTest
 private class MW_AllocationEngineHandlerTest {
 
+    private static final String OFFERS_API = 'offers-api';
+
+    private static final String OFFERS_API_ADVP_FAILURE_MSG_APP2 = 'Can not execute operation: advp for Lead Id: def456 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api';
+
     private static final String OKTA_DOMAIN = 'https://oktadomain';
 
     private static final String FE_ENDPOINT = 'https://sfapi-dev.payoff.com/ms/api/cls/update_user';
@@ -234,7 +238,7 @@ private class MW_AllocationEngineHandlerTest {
         mwSettings.Allocation_Engine_Service_URL_FMT__c = 'http://localhost:8080/{0}';
         mwSettings.Allocation_Engine_Cancel_Statuses__c = 'Declined,Expired,Withdrawn,Decline_Manual_Review,Expired-Withdrawn';
         mwSettings.Allocation_Engine_Default_Program_Id__c = 'test-program-id';
-        mwSettings.Allocation_Engine_API_Product_Flow__c = 'offers-api';
+        mwSettings.Allocation_Engine_API_Product_Flow__c = OFFERS_API;
         mwSettings.LEADS_FE_EndpointURL__c = FE_ENDPOINT;
         insert mwSettings;
 
@@ -630,9 +634,9 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> apps = getApps();
         apps[0].Program_id__c = null;
-        apps[0].utm_source__c = 'offers-api';
+        apps[0].utm_source__c = OFFERS_API;
         apps[1].Program_id__c = 'default';
-        apps[1].utm_source__c = 'offers-api';
+        apps[1].utm_source__c = OFFERS_API;
         update apps;
 
         Test.setMock(HttpCalloutMock.class, new AESValidationFailureMock());
@@ -662,7 +666,7 @@ private class MW_AllocationEngineHandlerTest {
 
         System.debug('Complete LOG> ' + log1.clcommon__Message__c);
         System.assert(log1.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: abc123 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
-        System.assert(log2.clcommon__Message__c.contains('Can not execute operation: advp for Lead Id: def456 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
+        System.assert(log2.clcommon__Message__c.contains(OFFERS_API_ADVP_FAILURE_MSG_APP2));
     }
 
     @IsTest static void advp_handlesCalloutExceptionErrors() {
@@ -968,9 +972,9 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> apps = getApps();
         apps[0].Program_id__c = null;
-        apps[0].utm_source__c = 'offers-api';
+        apps[0].utm_source__c = OFFERS_API;
         apps[1].Program_id__c = 'default';
-        apps[1].utm_source__c = 'offers-api';
+        apps[1].utm_source__c = OFFERS_API;
         update apps;
 
         MW_AllocationEngineHandler.handleReallocation(toIds(apps));
@@ -990,7 +994,7 @@ private class MW_AllocationEngineHandlerTest {
 
         System.debug(logs);
         System.assert(log1 != null && log1.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: abc123 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
-        System.assert(log2 != null && log2.clcommon__Message__c.contains('Can not execute operation: advp for Lead Id: def456 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
+        System.assert(log2 != null && log2.clcommon__Message__c.contains(OFFERS_API_ADVP_FAILURE_MSG_APP2));
     }
 
     @IsTest static void realloaction_handlesCalloutExceptionErrors() {
@@ -1217,9 +1221,9 @@ private class MW_AllocationEngineHandlerTest {
 
         List<genesis__Applications__c> apps = getApps();
         apps[0].Program_id__c = null;
-        apps[0].utm_source__c = 'offers-api';
+        apps[0].utm_source__c = OFFERS_API;
         apps[1].Program_id__c = 'default';
-        apps[1].utm_source__c = 'offers-api';
+        apps[1].utm_source__c = OFFERS_API;
         update apps;
 
         MW_AllocationEngineHandler.handleManual(toIds(apps));
@@ -1239,7 +1243,7 @@ private class MW_AllocationEngineHandlerTest {
 
         System.debug(logs);
         System.assert(log1 != null && log1.clcommon__Message__c.contains('Can not execute operation: manual for Lead Id: abc123 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
-        System.assert(log2 != null && log2.clcommon__Message__c.contains('Can not execute operation: advp for Lead Id: def456 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
+        System.assert(log2 != null && log2.clcommon__Message__c.contains(OFFERS_API_ADVP_FAILURE_MSG_APP2));
     }
 
     @IsTest static void manual_handlesCalloutExceptionErrors() {
