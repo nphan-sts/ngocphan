@@ -23,6 +23,8 @@ global with sharing class MW_AllocationEngineHandler {
     @TestVisible
     private static final String HAPPY_MONEY_OKTA_SERVICE_NAME = 'Happy Money Okta';
 
+    private static final String DEFAULT_PLACEHOLDER = 'default';
+
     /**
      * These constants:
      * advp,reallocation,manual,final,cancel
@@ -481,6 +483,8 @@ global with sharing class MW_AllocationEngineHandler {
                     'genesis__Loan_Amount__c'
             });
 
+            validateProgramId(app, messages);
+
             if (ADVP == decisionLevel || REALLOCATION == decisionLevel || MANUAL == decisionLevel || FINALIZED == decisionLevel) {
 
                 validateNotNull(app, messages, new List<String>{
@@ -542,6 +546,22 @@ global with sharing class MW_AllocationEngineHandler {
             if (!appMap.containsKey(field) || appMap.get(field) == null) {
                 messages.add(String.format('Field: {0} cannot be null', new List<String> {field}));
             }
+        }
+    }
+
+    /**
+     * @param app App to check
+     * @param messages Messages to add if the program id is not valid
+     */
+    private static void validateProgramId(genesis__Applications__c app, List<String> messages) {
+        if (app.Program_id__c != null && !app.Program_id__c.equalsIgnoreCase(DEFAULT_PLACEHOLDER)) {
+            return;
+        }
+        String apiProductFlow = MW_Settings__c.getOrgDefaults().Allocation_Engine_API_Product_Flow__c;
+        if (apiProductFlow.equals(app.utm_source__c)) {
+            messages.add(
+                    String.format('Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: {0} and api product flow: {1}',
+                            new List<String> {app.utm_source__c, apiProductFlow}));
         }
     }
 
@@ -638,8 +658,16 @@ global with sharing class MW_AllocationEngineHandler {
         return json.getAsString();
     }
 
+    /**
+     * @param json The json generator
+     * @param fieldName The field name
+     * @param programId The from the cls object
+     */
     private static void writeProgramId(JSONGenerator json, String fieldName, String programId) {
-        if (programId == null) {
+
+        /* this substitution is only valid if the app is not api product flow
+            validation method should have filtered out any application which does not apply */
+        if (programId == null || programId.equalsIgnoreCase(DEFAULT_PLACEHOLDER)) {
             programId = MW_Settings__c.getOrgDefaults().Allocation_Engine_Default_Program_Id__c;
         }
         json.writeStringField(fieldName, programId);
