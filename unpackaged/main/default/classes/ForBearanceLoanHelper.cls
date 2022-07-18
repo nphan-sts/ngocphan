@@ -10,7 +10,8 @@
     *  Pallavi       2020/01/14    CRM-952 (Completely automate the SAP processing for LoanOps/Produce errors/logs for failures.)
     *  Anusha 		 2021/02/17    LSP-3 (Completely automate the SAP processing for LoanOps)
     *  Mohan Kiran 	 2021/09/09	   LSP-292-Processing skip a pay for bad standing loans coming from callouts.
-    *  Mohan Kiran   2022/07/14	   LSP-836 - SAP processing within 45 days should not update loan mod forbearnce date
+    *  Mohan Kiran   2022/07/14	   LSP-836 - SAP processing within 45 days should not update Hardship request date. If the date difference between
+    											first skip and 2nd skip are less than 45 days, the hardship request date is not altered.
     
     ******************Modification History*****************************************************************
     ******************************************************************************/
@@ -26,6 +27,8 @@
         loan__Batch_Process_Log__c batch = new loan__Batch_Process_Log__c();
         boolean isEligibleForReschedule = false;
         Map<String,String> contractSAPerror; //CRM-952
+        static final Integer SAP_CHECK_DAYS = 45; // LSP-836 - 45 days check between first skipped date and present transaction date
+
         
         global ForBearanceLoanHelper(String leadGuid,Date repaymentDate){  
             leadId = leadGuid;
@@ -84,7 +87,7 @@
             Decimal interestOnlyPaymentAmt = 0;
             Boolean regenerateInvAmzSchedule = True;
             /* LSP-836 - START */
-            Integer sapdaysDifference; 
+            Integer sapdaysDifference;
             
             if(lAtobeUpdated.U_LoanModForbearDt__c!= null){
             sapdaysDifference = systemDate.daysBetween(lAtobeUpdated.U_LoanModForbearDt__c);
@@ -287,7 +290,7 @@
                 if(((lAtobeUpdated.loan__Loan_Status__c).equals('Active - Good Standing')) || 
                    isFromAPI && (((lAtobeUpdated.loan__Loan_Status__c).equals('Active - Bad Standing'))) ){ //LSP-292 - Update Mod fields for badstanding loans
                        
-                       
+                       /*LSP-3 start */
                        if(lAtobeUpdated.U_LoanModForbearance__c == null) lAtobeUpdated.U_LoanModForbearance__c = 0;
                        
                        /************************************************************
@@ -301,6 +304,7 @@
     [Note: Whenever skip-a-pay is performed U_LoanModForbearDt__c, U_LoanModForbearance__c and loan__Oldest_Due_Date__c are updated.
     loan__Oldest_Due_Date__c also gets updated whenever repayment is done on the contract.]
     *************************************************************/
+                      
                        if(lAtobeUpdated.Skipped_a_Pay__c == true && lAtobeUpdated.U_LoanModForbearDt__c != null && lAtobeUpdated.loan__Oldest_Due_Date__c != null
                           && (lAtobeUpdated.U_LoanModForbearDt__c.addMonths(Integer.valueOf(lAtobeUpdated.U_LoanModForbearance__c)) == lAtobeUpdated.loan__Oldest_Due_Date__c)){
                               System.debug('This is an extension to already performed skip a pay. Hence not changing U_LoanModForbearDt__c. Adding the extended number of skips to U_LoanModForbearance__c');
@@ -313,10 +317,14 @@
                               
 								}
                           }
+                       /*LSP-3 end */
                        
                        lAtobeUpdated.loan__Oldest_Due_Date__c = repaymentStartDate;
-                       /* START LSP-836*/
-                        if(sapdaysDifference>45 || !lAtobeUpdated.Skipped_a_Pay__c ){
+                       /* START LSP-836 - The below block checks if the difference between last skipped date and the transaction date
+							1- If the difference is greater than 45 days - the hardship date is set to the system date
+							2- Hardship date is not altered otherwise if the difference is less than 45 days*/
+                       
+                        if(sapdaysDifference > SAP_CHECK_DAYS || !lAtobeUpdated.Skipped_a_Pay__c ){
                               lAtobeUpdated.Hardship_Request_Date__c = systemDate;
                                   }
                        /*END LSP-836*/
