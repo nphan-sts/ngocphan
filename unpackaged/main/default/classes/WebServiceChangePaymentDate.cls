@@ -1,7 +1,8 @@
 /* ****************Modification History*****************************************************************
  * 
- * Modified by              Date        JIRA number
+ * Modified by      		Date        JIRA number
  * 1.   Pallavi/Neha      2020/12/11  CRM-1056 CPD issue/Reverting issue (short-term fix) - Case #02430069 
+ * 2.   Shakul            2022/07/18    LSP-864(Mapping lastPaymentDate to Active Maturity Date instead of Maturity Date)
  ******************Modification History*****************************************************************/
 @RestResource(urlMapping='/ChangePaymentDate/*') 
 global with sharing class WebServiceChangePaymentDate {
@@ -122,7 +123,7 @@ global with sharing class WebServiceChangePaymentDate {
                        
             repaymentStartDate = Date.newInstance(paymentDate.year(),paymentDate.month(),paymentDate.day());
   
-            lastPaymentDate = LAtobeUpdated.loan__Last_Installment_Date__c;
+            lastPaymentDate = LAtobeUpdated.loan__Maturity_Date_Current__c; //LSP-864
             System.debug(logginglevel.error,'lastPaymentDate'+lastPaymentDate);
             interestRate = LAtobeUpdated.loan__Interest_Rate__c;
             frequencyOfPayment = LAtobeUpdated.loan__Frequency_of_Loan_Payment__c;
@@ -165,7 +166,7 @@ global with sharing class WebServiceChangePaymentDate {
             
             insert repaymentPlan;
             System.Debug('repaymentStartDate***' + repaymentStartDate);
-            loan.LoanRescheduleParameters rescheduleParams = new loan.LoanRescheduleParameters(LAtobeUpdated.id,
+			 loan.LoanRescheduleParameters rescheduleParams = new loan.LoanRescheduleParameters(LAtobeUpdated.id,
                                                                                                transactionDate,
                                                                                                repaymentStartDate,
                                                                                                secondPaymentDate,
