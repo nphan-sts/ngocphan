@@ -23,6 +23,8 @@ global with sharing class MW_AllocationEngineHandler {
     @TestVisible
     private static final String HAPPY_MONEY_OKTA_SERVICE_NAME = 'Happy Money Okta';
 
+    private static final String DEFAULT_PLACEHOLDER = 'default';
+
     /**
      * These constants:
      * advp,reallocation,manual,final,cancel
@@ -481,6 +483,8 @@ global with sharing class MW_AllocationEngineHandler {
                     'genesis__Loan_Amount__c'
             });
 
+            validateProgramId(app, messages);
+
             if (ADVP == decisionLevel || REALLOCATION == decisionLevel || MANUAL == decisionLevel || FINALIZED == decisionLevel) {
 
                 validateNotNull(app, messages, new List<String>{
@@ -494,8 +498,6 @@ global with sharing class MW_AllocationEngineHandler {
 
                     validateNotNull(app, messages, new List<String>{
                             'Allocation_ID__c',
-                            'Expected_Yield__c',
-                            'Expected_Chargeoff__c',
                             'Allocation_Timestamp__c'
                     });
 
@@ -548,6 +550,22 @@ global with sharing class MW_AllocationEngineHandler {
     }
 
     /**
+     * @param app App to check
+     * @param messages Messages to add if the program id is not valid
+     */
+    private static void validateProgramId(genesis__Applications__c app, List<String> messages) {
+        if (app.Program_id__c != null && !app.Program_id__c.equalsIgnoreCase(DEFAULT_PLACEHOLDER)) {
+            return;
+        }
+        String apiProductFlow = MW_Settings__c.getOrgDefaults().Allocation_Engine_API_Product_Flow__c;
+        if (apiProductFlow.equals(app.utm_source__c)) {
+            messages.add(
+                    String.format('Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: {0} and api product flow: {1}',
+                            new List<String> {app.utm_source__c, apiProductFlow}));
+        }
+    }
+
+    /**
      * This method is public only for testing purposes
      * It doesn't make sense to break out into its own class because it's not a general json generator.
      *
@@ -583,6 +601,7 @@ global with sharing class MW_AllocationEngineHandler {
             json.writeStringField('leadGuid', app.Lead_ID__c);
             json.writeDateTimeField('timestamp', Datetime.now());
 
+            writeProgramId(json, 'programId', app.Program_id__c);
             json.writeStringField('lendingState', app.genesis__Account__r.State__c);
             writeNullableNumber(json, 'APR', app.genesis__APR__c);
             json.writeNumberField('interestRate', app.genesis__Interest_Rate__c);
@@ -603,8 +622,8 @@ global with sharing class MW_AllocationEngineHandler {
             if (REALLOCATION == decisionLevel || MANUAL == decisionLevel) {
 
                 json.writeStringField('allocationId', app.Allocation_ID__c);
-                json.writeNumberField('expectedYield', app.Expected_Yield__c);
-                json.writeNumberField('expectedChargeoff', app.Expected_Chargeoff__c);
+                writeNullableNumber(json, 'expectedYield', app.Expected_Yield__c);
+                writeNullableNumber(json, 'expectedChargeoff', app.Expected_Chargeoff__c);
                 json.writeDateTimeField('previousTimestamp', app.Allocation_Timestamp__c);
 
                 writePartnerArray(json, 'previousInvestor', appPartners);
@@ -637,6 +656,21 @@ global with sharing class MW_AllocationEngineHandler {
         json.writeEndObject();
 
         return json.getAsString();
+    }
+
+    /**
+     * @param json The json generator
+     * @param fieldName The field name
+     * @param programId The from the cls object
+     */
+    private static void writeProgramId(JSONGenerator json, String fieldName, String programId) {
+
+        /* this substitution is only valid if the app is not api product flow
+            validation method should have filtered out any application which does not apply */
+        if (programId == null || programId.equalsIgnoreCase(DEFAULT_PLACEHOLDER)) {
+            programId = MW_Settings__c.getOrgDefaults().Allocation_Engine_Default_Program_Id__c;
+        }
+        json.writeStringField(fieldName, programId);
     }
 
     private static void writeChannel(JSONGenerator json, String fieldName, genesis__Applications__c app) {
@@ -844,6 +878,7 @@ global with sharing class MW_AllocationEngineHandler {
                         genesis__Status__c,
                         genesis__APR__c,
                         genesis__Interest_Rate__c,
+                        Program_id__c,
                         Pricing_Tier__c,
                         genesis__Term__c,
                         FICO__c,
