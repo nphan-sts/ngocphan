@@ -89,13 +89,11 @@
             /* LSP-836 - START */
             Integer sapdaysDifference;
             
-            if(lAtobeUpdated.U_LoanModForbearDt__c!= null){
-            sapdaysDifference = systemDate.daysBetween(lAtobeUpdated.U_LoanModForbearDt__c);
-                }
+            
             /*LSP-836 - END*/
             
             try {      
-                if(leadId == null){              
+                if(leadId == null && lAtobeUpdated!=null){      //LSP-836 Added an extra null pointer check for lAtobeUpdated       
                     leadId = lAtobeUpdated.lead_Guid__c;
                 }
                 
@@ -137,9 +135,15 @@
                     
                 }
                 
-                System.debug('leadId..: '+leadId);          
+                System.debug('leadId..: '+leadId);    
+                
                 
                 system.debug('Skipped_a_Pay__c: '+lAtobeUpdated.Skipped_a_Pay__c+' and Skipped_a_pay_Date__c: '+lAtobeUpdated.Skipped_a_pay_Date__c);
+                
+                if(lAtobeUpdated!=null && lAtobeUpdated.U_LoanModForbearDt__c!= null){
+            	sapdaysDifference = systemDate.daysBetween(lAtobeUpdated.U_LoanModForbearDt__c);
+                }
+                
                 //Before processing the loan, check if skip-a-pay action is already peformed for the loan, if yes log an exception and dont process that loan
                 if(lAtobeUpdated.Skipped_a_Pay__c != null && lAtobeUpdated.Skipped_a_Pay__c == true){
                     if(lAtobeUpdated.Skipped_a_pay_Date__c != null && lAtobeUpdated.Skipped_a_pay_Date__c == systemDate){
@@ -324,7 +328,7 @@
 							1- If the difference is greater than 45 days - the hardship date is set to the system date
 							2- Hardship date is not altered otherwise if the difference is less than 45 days*/
                        
-                        if(sapdaysDifference > SAP_CHECK_DAYS || !lAtobeUpdated.Skipped_a_Pay__c ){
+                        if((sapdaysDifference!=null && sapdaysDifference > SAP_CHECK_DAYS) || !lAtobeUpdated.Skipped_a_Pay__c ){
                               lAtobeUpdated.Hardship_Request_Date__c = systemDate;
                                   }
                        /*END LSP-836*/
