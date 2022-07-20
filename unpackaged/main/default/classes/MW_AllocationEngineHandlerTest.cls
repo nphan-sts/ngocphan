@@ -7,7 +7,7 @@ private class MW_AllocationEngineHandlerTest {
 
     private static final String OFFERS_API = 'offers-api';
 
-    private static final String OFFERS_API_ADVP_FAILURE_MSG_APP2 = 'Can not execute operation: advp for Lead Id: def456 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api';
+    private static final String OFFERS_API_ADVP_FAILURE_MSG_APP2 = 'Can not execute operation: advp for Lead Id: def456 due to: Program Id is null and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api';
 
     private static final String OKTA_DOMAIN = 'https://oktadomain';
 
@@ -635,7 +635,7 @@ private class MW_AllocationEngineHandlerTest {
         List<genesis__Applications__c> apps = getApps();
         apps[0].Program_id__c = null;
         apps[0].utm_source__c = OFFERS_API;
-        apps[1].Program_id__c = 'default';
+        apps[1].Program_id__c = null;
         apps[1].utm_source__c = OFFERS_API;
         update apps;
 
@@ -665,7 +665,7 @@ private class MW_AllocationEngineHandlerTest {
         System.assert(log2 != null);
 
         System.debug('Complete LOG> ' + log1.clcommon__Message__c);
-        System.assert(log1.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: abc123 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
+        System.assert(log1.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: abc123 due to: Program Id is null and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
         System.assert(log2.clcommon__Message__c.contains(OFFERS_API_ADVP_FAILURE_MSG_APP2));
     }
 
@@ -973,7 +973,7 @@ private class MW_AllocationEngineHandlerTest {
         List<genesis__Applications__c> apps = getApps();
         apps[0].Program_id__c = null;
         apps[0].utm_source__c = OFFERS_API;
-        apps[1].Program_id__c = 'default';
+        apps[1].Program_id__c = null;
         apps[1].utm_source__c = OFFERS_API;
         update apps;
 
@@ -993,7 +993,7 @@ private class MW_AllocationEngineHandlerTest {
         clcommon__Batch_Process_Log__c log2 = logById.get(actual.get(1).Id);
 
         System.debug(logs);
-        System.assert(log1 != null && log1.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: abc123 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
+        System.assert(log1 != null && log1.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: abc123 due to: Program Id is null and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
         System.assert(log2 != null && log2.clcommon__Message__c.contains(OFFERS_API_ADVP_FAILURE_MSG_APP2));
     }
 
@@ -1222,7 +1222,7 @@ private class MW_AllocationEngineHandlerTest {
         List<genesis__Applications__c> apps = getApps();
         apps[0].Program_id__c = null;
         apps[0].utm_source__c = OFFERS_API;
-        apps[1].Program_id__c = 'default';
+        apps[1].Program_id__c = null;
         apps[1].utm_source__c = OFFERS_API;
         update apps;
 
@@ -1242,7 +1242,7 @@ private class MW_AllocationEngineHandlerTest {
         clcommon__Batch_Process_Log__c log2 = logById.get(actual.get(1).Id);
 
         System.debug(logs);
-        System.assert(log1 != null && log1.clcommon__Message__c.contains('Can not execute operation: manual for Lead Id: abc123 due to: Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
+        System.assert(log1 != null && log1.clcommon__Message__c.contains('Can not execute operation: manual for Lead Id: abc123 due to: Program Id is null and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
         System.assert(log2 != null && log2.clcommon__Message__c.contains(OFFERS_API_ADVP_FAILURE_MSG_APP2));
     }
 
