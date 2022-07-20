@@ -23,8 +23,6 @@ global with sharing class MW_AllocationEngineHandler {
     @TestVisible
     private static final String HAPPY_MONEY_OKTA_SERVICE_NAME = 'Happy Money Okta';
 
-    private static final String DEFAULT_PLACEHOLDER = 'default';
-
     /**
      * These constants:
      * advp,reallocation,manual,final,cancel
@@ -554,13 +552,13 @@ global with sharing class MW_AllocationEngineHandler {
      * @param messages Messages to add if the program id is not valid
      */
     private static void validateProgramId(genesis__Applications__c app, List<String> messages) {
-        if (app.Program_id__c != null && !app.Program_id__c.equalsIgnoreCase(DEFAULT_PLACEHOLDER)) {
+        if (app.Program_id__c != null) {
             return;
         }
         String apiProductFlow = MW_Settings__c.getOrgDefaults().Allocation_Engine_API_Product_Flow__c;
-        if (apiProductFlow.equals(app.utm_source__c)) {
+        if (apiProductFlow.equalsIgnoreCase(app.utm_source__c)) {
             messages.add(
-                    String.format('Program Id is null or \'default\' and default program id cannot be used due to utm_source__c: {0} and api product flow: {1}',
+                    String.format('Program Id is null and default program id cannot be used due to utm_source__c: {0} and api product flow: {1}',
                             new List<String> {app.utm_source__c, apiProductFlow}));
         }
     }
@@ -667,7 +665,7 @@ global with sharing class MW_AllocationEngineHandler {
 
         /* this substitution is only valid if the app is not api product flow
             validation method should have filtered out any application which does not apply */
-        if (programId == null || programId.equalsIgnoreCase(DEFAULT_PLACEHOLDER)) {
+        if (programId == null) {
             programId = MW_Settings__c.getOrgDefaults().Allocation_Engine_Default_Program_Id__c;
         }
         json.writeStringField(fieldName, programId);
