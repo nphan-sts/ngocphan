@@ -5,7 +5,7 @@
  *****************Modification History*****************************************************************
  * 
  ******************Modification History*****************************************************************/
-public class CorrectLastBilledAmountHandler {
+public with sharing class CorrectLastBilledAmountHandler {
     Set<String> lastPaymentDue;
     Set<String> neitherFirstNorLastPaymentDue;
     Set<String> firstPaymentDue;
