@@ -17,7 +17,7 @@ global class CorrectLastBilledAmountBatch implements Database.Batchable<sObject>
     Set<String> neitherFirstNorLastPaymentDue = new Set<String>();
     Set<String> firstPaymentDue = new Set<String>();
     // LSP-284 : Bhavya Maliwal : created the schedulable method 
-    global void execute(SchedulableContext SC){
+    global void execute(SchedulableContext sc){
         CorrectLastBilledAmountBatch job = new CorrectLastBilledAmountBatch(); 
         Database.executeBatch(job,200);
     }

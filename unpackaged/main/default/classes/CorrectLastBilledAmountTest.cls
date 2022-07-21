@@ -86,11 +86,13 @@ public class CorrectLastBilledAmountTest {
         loan.GlobalLoanUtilFacade util = new loan.GlobalLoanUtilFacade();
         system.debug('Global Loan util' +util);
         
-   
+        String productType='Flexible Amz Loan';
+        String loanStatus='Active - Good Standing';
+        String frequency='Monthly';
         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
             loan__Account__c= acc.Id,
             loan__Contact__c= a1.ID,
-            loan__Product_Type__c='Flexible Amz Loan',
+            loan__Product_Type__c=productType,
             loan__Loan_Amount__c =5000,
             loan__Loan_Product_Name__c=loanProdObj.Id,
             loan__Payment_Amount__c=439.70, 
@@ -98,9 +100,9 @@ public class CorrectLastBilledAmountTest {
             loan__First_Installment_Date__c = util.getCurrentSystemDate()+1,
             loan__Next_Installment_Date__c = util.getCurrentSystemDate()+1, 
             loan__Maturity_Date_Current__c = util.getCurrentSystemDate()+365, 
-            loan__Frequency_of_Loan_Payment__c = 'Monthly',
+            loan__Frequency_of_Loan_Payment__c = frequency,
             loan__Last_Installment_Date__c =util.getCurrentSystemDate()+365,
-            loan__Loan_Status__c = 'Active - Good Standing',
+            loan__Loan_Status__c = loanStatus,
             loan__Interest_Rate__c = 10,
             loan__Term_Cur__c = 12,
             Skipped_a_pay_Date__c = null,
@@ -114,7 +116,7 @@ public class CorrectLastBilledAmountTest {
         loan__Loan_Account__c lacc1 = new loan__Loan_Account__c(
             loan__Account__c= acc.Id,
             loan__Contact__c= a1.ID,
-            loan__Product_Type__c='Flexible Amz Loan',
+            loan__Product_Type__c=productType,
             loan__Loan_Amount__c =5000,
             loan__Loan_Product_Name__c=loanProdObj.Id,
             loan__Payment_Amount__c=439.70, 
@@ -125,8 +127,8 @@ public class CorrectLastBilledAmountTest {
             loan__Maturity_Date_Current__c = util.getCurrentSystemDate()+365,
             loan__Last_Billed_Amount__c = 490,
             loan__Pmt_Amt_Cur__c = 600,
-            loan__Frequency_of_Loan_Payment__c = 'Monthly',
-            loan__Loan_Status__c = 'Active - Good Standing',
+            loan__Frequency_of_Loan_Payment__c = frequency,
+            loan__Loan_Status__c = loanStatus,
             loan__Interest_Rate__c = 10,
             loan__Term_Cur__c = 12,
             Skipped_a_pay_Date__c = null,
@@ -139,7 +141,7 @@ public class CorrectLastBilledAmountTest {
         loan__Loan_Account__c lacc2 = new loan__Loan_Account__c(
             loan__Account__c= acc.Id,
             loan__Contact__c= a1.ID,
-            loan__Product_Type__c='Flexible Amz Loan',
+            loan__Product_Type__c=productType,
             loan__Loan_Amount__c =5000,
             loan__Loan_Product_Name__c=loanProdObj.Id,
             loan__Payment_Amount__c=439.70, 
@@ -150,8 +152,8 @@ public class CorrectLastBilledAmountTest {
             loan__Last_Billed_Amount__c = 490,
             loan__Pmt_Amt_Cur__c = 500,
             loan__First_Installment_Date__c = Date.newInstance(2020,06,30),
-            loan__Frequency_of_Loan_Payment__c = 'Monthly',
-            loan__Loan_Status__c = 'Active - Good Standing',
+            loan__Frequency_of_Loan_Payment__c = frequency,
+            loan__Loan_Status__c = loanStatus,
             loan__Interest_Rate__c = 10,
             loan__Term_Cur__c = 12,
             Skipped_a_pay_Date__c = null,
@@ -182,7 +184,7 @@ Purpose : to cover code satisfying if the first payment is due and the holiday l
         
         CorrectLastBilledAmountBatch batch = new CorrectLastBilledAmountBatch();
         Database.executeBatch(batch,200);
-       Test.stopTest();
+        Test.stopTest();
         loan__loan_account__c la = [select id, name,loan__Last_Billed_Amount__c,loan__Payment_Amount__c ,loan__Pmt_Amt_Cur__c
                                     from loan__loan_account__c where lead_guid__c = 'TestClassGuid0' limit 1];
         System.assertEquals(la.loan__Last_Billed_Amount__c , la.loan__Payment_Amount__c);
@@ -193,9 +195,6 @@ Purpose : to cover code satisfying if the last payment is due and the holiday li
 */  
     @isTest
     public static void testLBALastPaymentDue(){
-        loan__loan_account__c la = [select id, name,loan__Last_Billed_Amount__c,loan__Last_Installment_Date__c,loan__Maturity_Date_Current__c,loan__Pmt_Amt_Cur__c,loan__next_installment_date__c 
-                                    from loan__loan_account__c where lead_guid__c = 'TestClassGuid2' limit 1];
-        
         
         Test.startTest();
         loan.GlobalLoanUtilFacade util = new loan.GlobalLoanUtilFacade();
@@ -220,10 +219,6 @@ Purpose : to cover code satisfying if any payment between first and last payment
 */ 
     @isTest
     public static void testLBANeitherFirstNorLastPaymentDue(){
-        loan__loan_account__c la = [select id, name,loan__Last_Billed_Amount__c,loan__Last_Installment_Date__c,loan__Maturity_Date_Current__c,loan__Pmt_Amt_Cur__c,loan__next_installment_date__c 
-                                    from loan__loan_account__c where lead_guid__c = 'TestClassGuid1' limit 1];
-        
-        
         Test.startTest();
         loan.GlobalLoanUtilFacade util = new loan.GlobalLoanUtilFacade();
         Date currentDate = util.getCurrentSystemDate();
@@ -262,5 +257,5 @@ Purpose : to cover code satisfying execution of Schedulable method
         String sch = '0 0 23 * * ?'; 
         system.schedule('Test CorrectLastBilledAmountBatchSchedule', sch, sh1);
         Test.stopTest();
-         }
+    }
 }
