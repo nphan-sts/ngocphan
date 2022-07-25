@@ -5,6 +5,10 @@
 @IsTest
 private class MW_AllocationEngineHandlerTest {
 
+    private static final String OFFERS_API = 'offers-api';
+
+    private static final String OFFERS_API_ADVP_FAILURE_MSG_APP2 = 'Can not execute operation: advp for Lead Id: def456 due to: Program Id is null and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api';
+
     private static final String OKTA_DOMAIN = 'https://oktadomain';
 
     private static final String FE_ENDPOINT = 'https://sfapi-dev.payoff.com/ms/api/cls/update_user';
@@ -233,6 +237,8 @@ private class MW_AllocationEngineHandlerTest {
         mwSettings.Allocation_Engine_Deployment_Mode__c = 'DARK_MODE';
         mwSettings.Allocation_Engine_Service_URL_FMT__c = 'http://localhost:8080/{0}';
         mwSettings.Allocation_Engine_Cancel_Statuses__c = 'Declined,Expired,Withdrawn,Decline_Manual_Review,Expired-Withdrawn';
+        mwSettings.Allocation_Engine_Default_Program_Id__c = 'test-program-id';
+        mwSettings.Allocation_Engine_API_Product_Flow__c = OFFERS_API;
         mwSettings.LEADS_FE_EndpointURL__c = FE_ENDPOINT;
         insert mwSettings;
 
@@ -287,6 +293,7 @@ private class MW_AllocationEngineHandlerTest {
         app1.Allocation_Timestamp__c = Datetime.now();
         app1.Expected_Yield__c = 321.11;
         app1.Expected_Chargeoff__c = 432.0;
+        app1.Program_id__c = 'program_id1';
 
         /* fresh advp apps will look more like this */
         genesis__Applications__c app2 = MW_GlobalTestUtility.GetApplication();
@@ -303,6 +310,7 @@ private class MW_AllocationEngineHandlerTest {
         app2.Loan_Purpose__c = 'debt_consolidation';
         app2.Credit_Policy_Approval_Models__c = null;
         app2.genesis__Loan_Amount__c = 15000.00;
+        app2.Program_id__c = 'program_id2';
 
         insert new List<genesis__Applications__c> {app1, app2};
 
@@ -502,6 +510,26 @@ private class MW_AllocationEngineHandlerTest {
         assertAllocationRequestFields(app, actual, null);
     }
 
+    @IsTest static void advp_canGenerateJson_ITB_nullProgramId() {
+
+        genesis__Applications__c app = getApp();
+        app.Credit_Policy_Approval_Models__c = null;
+        app.Risk_Model_Source__c = 'hm';
+        app.Program_id__c = null;
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.ADVP);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual, true);
+        assertAllocationRequestFields(app, actual, null);
+    }
+
     /**
      * Generate json corresponding to an OTB loan
      */
@@ -600,6 +628,45 @@ private class MW_AllocationEngineHandlerTest {
         System.assert(log.clcommon__Message__c.contains('Field: Monthly_DTI__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Net_Disposable_Income_NDI_Num__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: genesis__Loan_Amount__c cannot be null'));
+    }
+
+    @IsTest static void advp_handlesApiProductFlowValidationFailure() {
+
+        List<genesis__Applications__c> apps = getApps();
+        apps[0].Program_id__c = null;
+        apps[0].utm_source__c = OFFERS_API;
+        apps[1].Program_id__c = null;
+        apps[1].utm_source__c = OFFERS_API;
+        update apps;
+
+        Test.setMock(HttpCalloutMock.class, new AESValidationFailureMock());
+        Test.startTest();
+
+        MW_AllocationEngineHandler.handleAdvp(toIds(apps));
+
+        Test.stopTest();
+
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(2, actual.size());
+        System.assertEquals(MW_AllocationEngineHandler.REALLOCATION, actual.get(0).Allocation_Operation_Error__c);
+        System.assertEquals(MW_AllocationEngineHandler.ADVP, actual.get(1).Allocation_Operation_Error__c);
+
+        List<clcommon__Batch_Process_Log__c> bpls = getCommonLogs();
+        System.assertEquals(2, bpls.size(), 'Should have a log for each app');
+
+        Map<Id, clcommon__Batch_Process_Log__c> logById = logsByBatchId(bpls);
+
+        clcommon__Batch_Process_Log__c log1 = logById.get(actual.get(0).Id);
+        clcommon__Batch_Process_Log__c log2 = logById.get(actual.get(1).Id);
+
+        System.debug(bpls);
+
+        System.assert(log1 != null);
+        System.assert(log2 != null);
+
+        System.debug('Complete LOG> ' + log1.clcommon__Message__c);
+        System.assert(log1.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: abc123 due to: Program Id is null and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
+        System.assert(log2.clcommon__Message__c.contains(OFFERS_API_ADVP_FAILURE_MSG_APP2));
     }
 
     @IsTest static void advp_handlesCalloutExceptionErrors() {
@@ -701,8 +768,8 @@ private class MW_AllocationEngineHandlerTest {
         System.assert(log2.clcommon__Message__c.contains('4xx response'));
         System.assert(log2.clcommon__Message__c.contains('Check loan batch process logs and DataDog for more info'));
 
-
         List<loan__Batch_Process_Log__c> loanLogs = getLoanLogs();
+        System.debug(loanLogs);
 
         /* since apps are split into relloaction and advp, two loan logs should appear */
         System.assertEquals(2, loanLogs.size());
@@ -712,6 +779,8 @@ private class MW_AllocationEngineHandlerTest {
     @IsTest static void advp_handles200Success() {
 
         List<genesis__Applications__c> apps = getApps();
+        apps[1].Program_id__c = null;
+        update apps[1];
 
         AESSuccessMock aesSuccessMock = new AESSuccessMock();
         Test.setMock(HttpCalloutMock.class, aesSuccessMock);
@@ -727,10 +796,13 @@ private class MW_AllocationEngineHandlerTest {
         The advp call will convert into one advp,
         and one reallocation call because one app has a pre-existing allocation id
         */
+        System.debug(getCommonLogs());
+        System.debug(getLoanLogs());
         System.assertEquals(2, aesSuccessMock.requestCount);
 
         List<genesis__Applications__c> actual = getApps();
         System.assertEquals(2, actual.size());
+        System.assert(actual.get(1).Program_id__c == null);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -797,6 +869,27 @@ private class MW_AllocationEngineHandlerTest {
 
         actual = actual.key('allocation-requests').index(0);
         assertCommonRequestFields(app, actual);
+        assertAllocationRequestFields(app, actual, null);
+        assertReallocationRequestFields(app, actual);
+    }
+
+    @IsTest static void reallocation_canGenerateJson_ITB_nullProgramId() {
+
+        genesis__Applications__c app = getApp();
+        app.Credit_Policy_Approval_Models__c = null;
+        app.Risk_Model_Source__c = 'hm';
+        app.Program_id__c = null;
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.REALLOCATION);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual, true);
         assertAllocationRequestFields(app, actual, null);
         assertReallocationRequestFields(app, actual);
     }
@@ -869,12 +962,39 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
         System.assert(log.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: def456'));
-        System.assert(log.clcommon__Message__c.contains('Field: Expected_Yield__c cannot be null'));
-        System.assert(log.clcommon__Message__c.contains('Field: Expected_Chargeoff__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Allocation_Timestamp__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('No previously allocated partners were found'));
 
         System.debug(log.clcommon__Message__c);
+    }
+
+    @IsTest static void realloaction_handlesApiProductFlowValidationFailure() {
+
+        List<genesis__Applications__c> apps = getApps();
+        apps[0].Program_id__c = null;
+        apps[0].utm_source__c = OFFERS_API;
+        apps[1].Program_id__c = null;
+        apps[1].utm_source__c = OFFERS_API;
+        update apps;
+
+        MW_AllocationEngineHandler.handleReallocation(toIds(apps));
+
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(MW_AllocationEngineHandler.REALLOCATION, actual[0].Allocation_Operation_Error__c);
+        System.assertEquals(MW_AllocationEngineHandler.ADVP, actual[1].Allocation_Operation_Error__c);
+
+        List<clcommon__Batch_Process_Log__c> logs = getCommonLogs();
+
+        System.assertEquals(2, logs.size());
+
+        Map<Id, clcommon__Batch_Process_Log__c> logById = logsByBatchId(logs);
+
+        clcommon__Batch_Process_Log__c log1 = logById.get(actual.get(0).Id);
+        clcommon__Batch_Process_Log__c log2 = logById.get(actual.get(1).Id);
+
+        System.debug(logs);
+        System.assert(log1 != null && log1.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: abc123 due to: Program Id is null and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
+        System.assert(log2 != null && log2.clcommon__Message__c.contains(OFFERS_API_ADVP_FAILURE_MSG_APP2));
     }
 
     @IsTest static void realloaction_handlesCalloutExceptionErrors() {
@@ -962,7 +1082,9 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void reallocation_handles200Success() {
 
-        List<genesis__Applications__c> apps = getAppAsList();
+        List<genesis__Applications__c> apps = getApps();
+        apps[1].Program_id__c = null;
+        update apps[1];
 
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
@@ -973,8 +1095,9 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.stopTest();
 
-        List<genesis__Applications__c> actual = getAppAsList();
-        System.assertEquals(1, actual.size());
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(2, actual.size());
+        System.assert(actual.get(1).Program_id__c == null);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1030,6 +1153,35 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(manualPartner.Investor__r.Investor_Code__c, actual.get('investorCode'));
     }
 
+    @IsTest static void manual_canGenerateJson_nullProgramId() {
+
+        genesis__Applications__c app = getApp();
+        app.Program_id__c = null;
+        update app;
+
+        List<Allocation_Partner__c> partners = MW_AllocationEngineHandler.getAllocationPartnersByAppIds(new List<Id> {app.Id});
+        Allocation_Partner__c manualPartner = partners.get(0);
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                new List<Id> {manualPartner.Id},
+                MW_AllocationEngineHandler.MANUAL);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual, true);
+        assertAllocationRequestFields(app, actual);
+        assertReallocationRequestFields(app, actual);
+
+        actual = actual.key('manualInvestor');
+        System.assertEquals(1, actual.size());
+        actual = actual.index(0);
+
+        System.assert(!actual.getBoolean('leadPartner'));
+        System.assertEquals(manualPartner.Investor__r.Investor_Code__c, actual.get('investorCode'));
+    }
+
     /**
      * The selected app for this test has no manually selected partners and should fail accordingly.
      */
@@ -1060,11 +1212,38 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
         System.assert(log.clcommon__Message__c.contains('Can not execute operation: manual for Lead Id: def456'));
-        System.assert(log.clcommon__Message__c.contains('Field: Expected_Yield__c cannot be null'));
-        System.assert(log.clcommon__Message__c.contains('Field: Expected_Chargeoff__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: Allocation_Timestamp__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('No previously allocated partners were found'));
         System.assert(log.clcommon__Message__c.contains('No manually selected partners were found'));
+    }
+
+    @IsTest static void manual_handlesApiProductFlowValidationFailure() {
+
+        List<genesis__Applications__c> apps = getApps();
+        apps[0].Program_id__c = null;
+        apps[0].utm_source__c = OFFERS_API;
+        apps[1].Program_id__c = null;
+        apps[1].utm_source__c = OFFERS_API;
+        update apps;
+
+        MW_AllocationEngineHandler.handleManual(toIds(apps));
+
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(MW_AllocationEngineHandler.MANUAL, actual[0].Allocation_Operation_Error__c);
+        System.assertEquals(MW_AllocationEngineHandler.ADVP, actual[1].Allocation_Operation_Error__c);
+
+        List<clcommon__Batch_Process_Log__c> logs = getCommonLogs();
+
+        System.assertEquals(2, logs.size());
+
+        Map<Id, clcommon__Batch_Process_Log__c> logById = logsByBatchId(logs);
+
+        clcommon__Batch_Process_Log__c log1 = logById.get(actual.get(0).Id);
+        clcommon__Batch_Process_Log__c log2 = logById.get(actual.get(1).Id);
+
+        System.debug(logs);
+        System.assert(log1 != null && log1.clcommon__Message__c.contains('Can not execute operation: manual for Lead Id: abc123 due to: Program Id is null and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api'));
+        System.assert(log2 != null && log2.clcommon__Message__c.contains(OFFERS_API_ADVP_FAILURE_MSG_APP2));
     }
 
     @IsTest static void manual_handlesCalloutExceptionErrors() {
@@ -1155,7 +1334,9 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void manual_handles200Success() {
 
-        List<genesis__Applications__c> apps = getAppAsList();
+        List<genesis__Applications__c> apps = getApps();
+        apps[1].Program_id__c = null;
+        update apps[1];
 
         setManualPartner();
 
@@ -1168,8 +1349,9 @@ private class MW_AllocationEngineHandlerTest {
 
         Test.stopTest();
 
-        List<genesis__Applications__c> actual = getAppAsList();
-        System.assertEquals(1, actual.size());
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(2, actual.size());
+        System.assert(actual.get(1).Program_id__c == null);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1226,6 +1408,27 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(app.genesis__Status__c, actual.get('reason'));
     }
 
+    @IsTest static void cancelled_canGenerateJson_nullProgramId() {
+        genesis__Applications__c app = getApp();
+        app.Program_id__c = null;
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.CANCELLED);
+
+        System.debug('cancel json: ' + actualJson);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual, true);
+
+        System.assertEquals(app.Allocation_ID__c, actual.get('allocationId'));
+        System.assertEquals(app.genesis__Status__c, actual.get('reason'));
+    }
+
     /**
      * In-flight applications are identified by no allocation id
      */
@@ -1234,9 +1437,9 @@ private class MW_AllocationEngineHandlerTest {
         /*
         First assert for an in-flight with an investor
          */
-
         genesis__Applications__c app = getApp();
         app.Allocation_ID__c = null;
+        app.Program_id__c = null;
         update app;
 
         String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
@@ -1386,14 +1589,22 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void cancelled_handles200Success() {
 
+        List<genesis__Applications__c> apps = getApps();
+        apps[1].Program_id__c = null;
+        update apps[1];
+
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
 
         MW_AllocationEngineHandler.handleCancelled(null);
 
-        MW_AllocationEngineHandler.handleCancelled(toIds(getAppAsList()));
+        MW_AllocationEngineHandler.handleCancelled(toIds(apps));
 
         Test.stopTest();
+
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(2, actual.size());
+        System.assert(actual.get(1).Program_id__c == null);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1466,6 +1677,26 @@ private class MW_AllocationEngineHandlerTest {
 
         actual = actual.key('allocation-requests').index(0);
         assertCommonRequestFields(app, actual);
+
+        System.assertEquals(app.Allocation_ID__c, actual.get('allocationId'));
+    }
+
+    @IsTest static void final_canGenerateJson_nullProgramId() {
+        genesis__Applications__c app = getApp();
+        app.Program_id__c = null;
+        update app;
+
+        String actualJson = MW_AllocationEngineHandler.toJson(new List<Id> {app.Id},
+                null,
+                MW_AllocationEngineHandler.FINALIZED);
+
+        System.debug('final json: ' + actualJson);
+
+        Jsons actual = parseJsons(actualJson);
+        assertTopLevelFields(actual);
+
+        actual = actual.key('allocation-requests').index(0);
+        assertCommonRequestFields(app, actual, true);
 
         System.assertEquals(app.Allocation_ID__c, actual.get('allocationId'));
     }
@@ -1546,14 +1777,22 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void final_handles200Success() {
 
+        List<genesis__Applications__c> apps = getApps();
+        apps[1].Program_id__c = null;
+        update apps[1];
+
         Test.setMock(HttpCalloutMock.class, new AESSuccessMock());
         Test.startTest();
 
         MW_AllocationEngineHandler.handleFinal(null);
 
-        MW_AllocationEngineHandler.handleFinal(toIds(getAppAsList()));
+        MW_AllocationEngineHandler.handleFinal(toIds(apps));
 
         Test.stopTest();
+
+        List<genesis__Applications__c> actual = getApps();
+        System.assertEquals(2, actual.size());
+        System.assert(actual.get(1).Program_id__c == null);
 
         System.assertEquals(0, getCommonLogs().size(), 'No common logs generated for success by CLS');
         System.assertEquals(0, getLoanLogs().size(), 'No loan logs generated for success by CLS');
@@ -1707,8 +1946,28 @@ private class MW_AllocationEngineHandlerTest {
      * @param actual jsons instance
      */
     static void assertCommonRequestFields(genesis__Applications__c expected, Jsons actual) {
+        assertCommonRequestFields(expected, actual, false);
+    }
+
+    /**
+     * These are fields that are on all requests to AES
+     *
+     * Update: no request should send null program ids now, it will not pass validation in cls.
+     * Code has the ability to write it, leaving in due to late requirements
+     *
+     * @param expected app
+     * @param actual jsons instance
+     * @param nullProgramId assert program id as null.  If false, json checked with equality to expected
+     */
+    static void assertCommonRequestFields(genesis__Applications__c expected, Jsons actual, Boolean nullProgramId) {
         System.assertEquals(expected.Lead_ID__c, actual.get('requestID'));
         System.assertEquals(expected.Lead_ID__c, actual.get('leadGuid'));
+        if (nullProgramId) {
+            System.assertEquals('test-program-id', actual.get('programId'));
+        } else {
+            System.assert(expected.Program_id__c != null);
+            System.assertEquals(expected.Program_id__c, actual.get('programId'));
+        }
         System.assert(actual.containsKey('timestamp'));
     }
 
@@ -1830,6 +2089,7 @@ private class MW_AllocationEngineHandlerTest {
                         genesis__APR__c,
                         genesis__Interest_Rate__c,
                         Pricing_Tier__c,
+                        Program_id__c,
                         genesis__Term__c,
                         FICO__c,
                         Monthly_DTI__c,
@@ -1853,7 +2113,8 @@ private class MW_AllocationEngineHandlerTest {
                         Allocation_ID__c,
                         Allocation_Timestamp__c,
                         Allocation_Operation_Error__c
-               FROM   genesis__Applications__c];
+               FROM   genesis__Applications__c
+               ORDER BY Lead_ID__c];
     }
 
     /*
