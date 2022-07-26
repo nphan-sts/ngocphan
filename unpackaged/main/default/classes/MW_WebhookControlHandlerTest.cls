@@ -518,6 +518,29 @@ public with sharing class MW_WebhookControlHandlerTest  {
         Test.stopTest();
     }
 
+    static testMethod void testAgentVerified(){
+        Test.startTest();
+
+        List<account> accList = MW_DataFactoryTest.createAccounts(1);
+        insert accList;
+        List<genesis__Applications__c> appList = MW_DataFactoryTest.createApplication(1, accList[0].Id);
+        insert appList;
+
+        RestRequest req    = new RestRequest();
+        RestResponse res   = new RestResponse();
+        req.requestURI     = '/services/apexrest/CL_MiddleWare';
+        req.addParameter('RequestType', 'AgentVerified');
+        req.addParameter('ApplicationId', appList[0].Id);
+        req.httpMethod = 'GET';
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        MW_WebhookControlHandler.handleGetRequest();
+        
+        System.assertEquals(200, res.statusCode);
+        Test.stopTest();
+    }
+
     static testMethod void TestOLNStacker(){
         Test.startTest();
         List<account> accList = MW_DataFactoryTest.createAccounts(1);
