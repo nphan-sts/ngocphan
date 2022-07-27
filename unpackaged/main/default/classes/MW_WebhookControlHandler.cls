@@ -22,15 +22,116 @@ global with sharing class MW_WebhookControlHandler {
 		
         return ServiceGetHelper(req, res);
     }
+    
+    public static List<String> agentVerify(ID appId){
+
+        List<identity_verification__C> identityVerifications = [select id, application__r.Owner.Name, 
+        application__R.lead_id__C, application__r.genesis__Status__c, application__r.Stacker_Reviewed__c, application__r.SSNMatch__c,
+        Credit_Policy_Verification_Flag__c, Bank_Verification_Flag__c, Deal_room_Verification_Flag__c, Identity_Verification__c, Income_Verification_Flag__c
+        from identity_verification__C where Application__c =:appId order by lastmodifieddate desc limit 1];
+        
+        //do we need credit policy check because if there are now rows it ignores the condition
+
+        List<String> results = new List<String>();
+        
+        System.debug(identityVerifications);
+        if (identityVerifications.size()>0){
+            
+            for (Identity_verification__C v : identityVerifications){
+                if(v.application__r.Owner.Name !='Final_Verification') results.add('Not assigned : Application owner is not Final_Verification');
+                
+                if(v.Credit_Policy_Verification_Flag__c !='PASS') results.add('Not assigned : Credit_Policy_Verification_Flag__c is not PASS');
+                
+                if(v.Bank_Verification_Flag__c != 'PASS') results.add('Not assigned : Bank_Verification_Flag__c is not PASS');
+                if(v.Deal_room_Verification_Flag__c != 'PASS') results.add('Not assigned : Deal_room_Verification_Flag__c is not PASS');
+                if(v.Identity_Verification__c !='PASS') results.add('Not assigned : Identity_Verification__c  is not PASS');
+                if(v.Income_Verification_Flag__c != 'PASS') results.add('Not assigned : Income_Verification_Flag__c  is not PASS');
+
+                if(v.application__r.genesis__Status__c == 'agent_verified') results.add('Not assigned : Application status is agent_verified');
+                if(v.application__r.Stacker_Reviewed__c != true) results.add('Not assigned : Application Stacker_Reviewed__c is false');
+                if(v.application__r.SSNMatch__c != true) results.add('Not assigned : Application SSNMatch__c is false');
+
+                
+            }//end for loop
+        
+        }
+        else results.add('Not assigned : No identity verification records/App Id found');
+
+        if(results.size()==0) {//if no fail results call assign to agent verified
+         
+            results.add(PayOffUtilities.AssignToAgentVerifiedQueue(appID));
+        }
+
+        return results;
+     
+
+    }
+
+    public static List<String> stackerCheck(ID appId){
+
+        List<identity_verification__C> identityVerifications = [select id, application__r.Owner.Name, Credit_Policy_Verification_Flag__c, Bank_Verification_Flag__c, Deal_room_Verification_Flag__c, Identity_Verification__c, Income_Verification_Flag__c
+        from identity_verification__C where Application__c =:appId order by lastmodifieddate desc limit 1];
+        
+        List<String> results = new List<String>();
+        
+        System.debug(identityVerifications);
+        if (identityVerifications.size()>0){
+            
+            for (Identity_verification__C v : identityVerifications){
+                if(v.application__r.Owner.Name !='Final_Verification') results.add('Application owner is not Final_Verification');
+                
+                if(v.Credit_Policy_Verification_Flag__c !='PASS') results.add('Credit_Policy_Verification_Flag__c is not PASS');
+                
+                if(v.Bank_Verification_Flag__c != 'PASS') results.add('Bank_Verification_Flag__c is not PASS');
+                if(v.Deal_room_Verification_Flag__c != 'PASS') results.add('Deal_room_Verification_Flag__c is not PASS');
+                if(v.Identity_Verification__c !='PASS') results.add(' Identity_Verification__c  is not PASS');
+                if(v.Income_Verification_Flag__c != 'PASS') results.add(' Income_Verification_Flag__c  is not PASS');
+                
+            }//end for loop
+        
+        }
+        else results.add('No identity verification records/App Id found');
+
+        if(results.size()==0) {//if no fail results call stackercheck
+
+            results.add(PayOffUtilities.createAppTagforSoftpull(appID));
+        }
+
+        return results;
+        
+    }
 
     global static String ServiceGetHelper(RestRequest req, RestResponse res){
         try
         {
             Map <String, String> params      = req.params;
+            List<String> results = new List<String>();
 
             if(params.size()>0)
             {
+               //RequestType == 'StackerCheck' //ztf-235
+               if(params.get('RequestType') == 'StackerCheck'){
+                    
+                    Id appId = (ID)(params.get('ApplicationId'));
+
+                    results = stackerCheck(appID);
+
+               }
                
+                //RequestType == 'AgentVerified' //ztf-236
+                if(params.get('RequestType') ==  'AgentVerified'){
+
+                    Id appId = (ID)(params.get('ApplicationId'));
+
+                    results = agentVerify(appId);
+                }
+
+                if(results.size()>0){
+                res.statusCode = 200;
+                return String.join(results, '\n');
+               }
+               
+
                 if(params.get('RequestType')=='ECA') {
                     List<Document> ecaAttachment = new List<Document>([select Id, Body, Name from Document where name ='eca' order by CreatedDate desc limit 1]);
                     if(ecaAttachment.size()>0)
@@ -82,6 +183,10 @@ global with sharing class MW_WebhookControlHandler {
             mail.setPlainTextBody('TIL Document Exception' +e.getMessage());
             Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
             res.statusCode = 500;
+            //data dog exception handling
+            MW_LogUtility.ExceptionDO expRex = new MW_LogUtility.ExceptionDO(e);
+            MW_DataDogCallOut.futureSend(JSON.serialize(expRex), new List<String>());
+
             return e.getStackTraceString();
         }
         res.statusCode = 200;
