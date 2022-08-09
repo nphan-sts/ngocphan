@@ -165,12 +165,11 @@ private class TestWSSelectedOffer{
     
     //Application ID null
     testMethod static void testAppIdNULLcheck(){
-        
-        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
-        Pricing_Offer__c pOffer = [SELECT id,Key__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
+
+        Pricing_Offer__c pOffer = [SELECT Id,Key__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         Map<String,String> reqMap = new Map<String,String>(); 
         reqMap.put('applicationId',null);
-        reqMap.put('Key',String.ValueOf(pOffer.Key__c));
+        reqMap.put('Key',String.valueOf(pOffer.Key__c));
         String jsonStr= JSON.serialize(reqMap);
         
         RestRequest req = new RestRequest(); 
@@ -187,7 +186,7 @@ private class TestWSSelectedOffer{
         Test.startTest();
         responseRec = WSSelectedOffer.markTentativeOfferSelected();
         Test.stopTest();
-        system.assertEquals(PayoffConstants.APP_ID_CANNOT_BE_NULL, responseRec.errorMessage);
+        System.assertEquals(PayoffConstants.APP_ID_CANNOT_BE_NULL, responseRec.errorMessage);
     }
     //Key null
     testMethod static void testKeyNULLcheck(){
@@ -221,9 +220,8 @@ private class TestWSSelectedOffer{
     }
     //App ID incorrect format
     testMethod static void testAppIDIncorrectFormat(){
-        
-        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
-        Pricing_Offer__c pOffer = [SELECT id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
+
+        Pricing_Offer__c pOffer = [SELECT Id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         pOffer.Is_Offer_Selected__c = true;
         update pOffer;
         
@@ -246,7 +244,7 @@ private class TestWSSelectedOffer{
         Test.startTest();
         responseRec = WSSelectedOffer.markTentativeOfferSelected();
         Test.stopTest();
-        system.assertEquals(PayoffConstants.APP_ID_INCORRECT_FORMAT, responseRec.errorMessage);
+        System.assertEquals(PayoffConstants.APP_ID_INCORRECT_FORMAT, responseRec.errorMessage);
     }
 	// Check old EBP offer is deselected and new one is a success
     testMethod static void testEBPOfferDeselected(){
