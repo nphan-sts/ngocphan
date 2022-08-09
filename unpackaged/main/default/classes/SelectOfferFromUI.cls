@@ -126,9 +126,11 @@ global class SelectOfferFromUI {
                 insert approve;
                 
                 system.debug('approve'+approve);
-                
+
+                /* See WSSelectedOffer for similar block */
                 app.genesis__Loan_Amount__c=p.Amount__c;
                 app.genesis__APR__c=p.APR__c;
+                app.Pricing_Tier__c = p.Pricing_Tier__c;
                 app.genesis__Term__c=p.Term__c;
                 app.Origination_fee__c=p.Origination_fee__c;
                 app.genesis__Monthly_Debt_Payments__c=p.Monthly_Payment__c;
@@ -168,10 +170,9 @@ global class SelectOfferFromUI {
                                 WF Avoid App Stuck In Offer Accepted should send back to advp without causing advp trigger
                                 Set res is true so new offer is persisted (firing Trigger)
                              */
-                            if (app.Pricing_Tier__c == p.Pricing_Tier__c) {
-                                System.debug('CLS-AES: SelectOfferFromUI');
-                                MW_AllocationEngineHandler.handleReallocation(new List<Id> {app.Id});
-                            }
+                            /* LSP-888, now that pricing tier is up to date here, let's always reallocate here */
+                            MW_AllocationEngineHandler.handleReallocation(new List<Id> {app.Id});
+
                             res = 'Success'; // if we made it here, there's was no error
                         }
 

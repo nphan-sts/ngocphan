@@ -91,7 +91,7 @@ public class TestSelectOfferFromUI{
         insert accounts;
     }
 
-    @isTest static void method1(){
+    @isTest static void method1SelectOfferSuccess(){
         Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -161,9 +161,35 @@ public class TestSelectOfferFromUI{
         System.assertEquals('Offer is been successfully approved/selected', result, 'Success');
         //SelectOfferFromUI.getselectedoffer(app1.id);
         Test.stopTest();
-             
+
+        genesis__Applications__c actual = [
+                SELECT Id,
+                       genesis__Loan_Amount__c,
+                       genesis__APR__c,
+                       Pricing_Tier__c,
+                       genesis__Term__c,
+                       Origination_fee__c,
+                       genesis__Monthly_Debt_Payments__c,
+                       genesis__Interest_Rate__c,
+                       genesis__Status__c,
+                       genesis__Financed_Amount__c
+                FROM   genesis__Applications__c
+                WHERE  Id = :app.Id
+                LIMIT  1
+        ];
+
+        System.assertEquals(actual.genesis__Loan_Amount__c, pOfferTrue.Amount__c);
+        System.assertEquals(actual.genesis__APR__c, pOfferTrue.APR__c);
+        System.assertEquals(actual.Pricing_Tier__c, pOfferTrue.Pricing_Tier__c);
+        System.assertEquals(actual.genesis__Term__c, pOfferTrue.Term__c);
+        System.assertEquals(actual.Origination_fee__c, pOfferTrue.Origination_fee__c);
+        System.assertEquals(actual.genesis__Monthly_Debt_Payments__c, pOfferTrue.Monthly_Payment__c);
+        System.assertEquals(actual.genesis__Interest_Rate__c, pOfferTrue.Interest_Rate__c);
+        System.assertEquals(actual.genesis__Financed_Amount__c,
+                genesis.ValueUtil.round(pOfferTrue.Amount__c - pOfferTrue.Origination_fee__c));
+        System.assertEquals(actual.genesis__Status__c, 'offer_shown'); /* due to non null ebp offer code */
     }
-    
+
     @isTest static void method2(){
         Account acc =[Select id, name from Account where name='TestF1Name TestL1Name' limit 1];
         Account acc1 =[Select id, name from Account where name='TestF2Name TestL2Name' limit 1];
