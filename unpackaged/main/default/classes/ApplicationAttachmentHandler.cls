@@ -77,7 +77,7 @@ public with sharing class ApplicationAttachmentHandler {
                 attmtId.add(att.Id);
             DeleteAppDocJunAttachments.delAttachments(attmtId);    
         }
-        
+        delBoxURl(applicationId);
         //delete([Select Id from Attachment where ParentId =: applicationId and Description like : docValue]);
     }
     
@@ -229,6 +229,30 @@ public with sharing class ApplicationAttachmentHandler {
             loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
             bplog.loan__Origin__c = 'AttachmentDealroom';
             bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString();
+            bplog.loan__Type__c = 'Exception';
+            bplog.loan__Time__c = DateTime.now();
+            insert bplog;
+            
+            throw ex;
+        } 
+    }
+    public static void delBoxURl(Id applicationID){
+        
+        genesis__Application_Document_Category__c appDoc = new genesis__Application_Document_Category__c();
+        try{  
+            appDoc = [SELECT id,genesis__Application__c, Lead_Id__c, Name, Box_URl__c 
+                      FROM genesis__Application_Document_Category__c where name = 'TIL Document' and genesis__application__c = : applicationID ];
+            
+                if(appDoc!=null  && appDoc.Box_URl__c !=null){
+                system.debug('---lstAppDocCat----'+appDoc); 
+                appDoc.Box_URl__c = null;
+                update appDoc;
+            }
+        }
+        catch (Exception ex){
+            loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
+            bplog.loan__Origin__c = 'TIL :Delete Old Box URL';
+            bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString()+' ApplicationId: '+appDoc.genesis__Application__c;
             bplog.loan__Type__c = 'Exception';
             bplog.loan__Time__c = DateTime.now();
             insert bplog;
