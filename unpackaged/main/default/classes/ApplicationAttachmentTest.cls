@@ -136,20 +136,20 @@ private class ApplicationAttachmentTest{
     test.stopTest();
   }
 
-  static testMethod void test_delBoxURl(){
-    test.startTest();
-      try{
-  ApplicationAttachmentHandler.delBoxURl(null);
-         }
-      Catch(Exception ex){
-          system.debug('testclassdeep'+ex.getMessage());
-                }
-
-  test.stopTest();
-      
-      loan__Batch_Process_Log__c lBP = [select id, name,loan__Origin__c from loan__Batch_Process_Log__c
-                                        where loan__Origin__c = 'TIL :Delete Old Box URL' limit 1];
-      system.assertEquals('TIL :Delete Old Box URL', lBP.loan__Origin__c);
-}
+     static testMethod void test_delBoxURl(){
+        String exceptionError;
+        test.startTest();
+        try{
+            ApplicationAttachmentHandler.delBoxURl(null);
+        }
+        Catch(Exception ex){
+            exceptionError = ex.getMessage();
+                    }
+        
+        test.stopTest();
+        System.assertEquals('List has no rows for assignment to SObject', exceptionError);
+        
+        
+    }
   
 }

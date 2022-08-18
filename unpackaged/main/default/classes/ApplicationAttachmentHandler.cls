@@ -250,12 +250,7 @@ public with sharing class ApplicationAttachmentHandler {
             }
         }
         catch (Exception ex){
-            loan__Batch_Process_Log__c bplog = new loan__Batch_Process_Log__c();
-            bplog.loan__Origin__c = 'TIL :Delete Old Box URL';
-            bplog.loan__Message__c = 'Error: ' + ex.getLineNumber() + ' Desc. ' + ex.getMessage()+' Stack: '+ex.getStackTraceString()+' ApplicationId: '+appDoc.genesis__Application__c;
-            bplog.loan__Type__c = 'Exception';
-            bplog.loan__Time__c = DateTime.now();
-            insert bplog;
+            MW_LogUtility.error('ApplicationAttachmentHandler', appDoc.genesis__Application__c, '', 'delBoxURl', ex);
             
             throw ex;
         } 
