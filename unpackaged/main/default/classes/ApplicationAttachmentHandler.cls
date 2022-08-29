@@ -77,7 +77,7 @@ public with sharing class ApplicationAttachmentHandler {
                 attmtId.add(att.Id);
             DeleteAppDocJunAttachments.delAttachments(attmtId);    
         }
-        
+        delBoxURl(applicationId);
         //delete([Select Id from Attachment where ParentId =: applicationId and Description like : docValue]);
     }
     
@@ -232,6 +232,25 @@ public with sharing class ApplicationAttachmentHandler {
             bplog.loan__Type__c = 'Exception';
             bplog.loan__Time__c = DateTime.now();
             insert bplog;
+            
+            throw ex;
+        } 
+    }
+    public static void delBoxURl(Id applicationID){
+        
+        genesis__Application_Document_Category__c appDoc = new genesis__Application_Document_Category__c();
+        try{  
+            appDoc = [SELECT id,genesis__Application__c, Lead_Id__c, Name, Box_URl__c 
+                      FROM genesis__Application_Document_Category__c where name = 'TIL Document' and genesis__application__c = : applicationID ];
+            
+                if(appDoc!=null  && appDoc.Box_URl__c !=null){
+                system.debug('---lstAppDocCat/delBoxURl----'+appDoc); 
+                appDoc.Box_URl__c = null;
+                update appDoc;
+            }
+        }
+        catch (Exception ex){
+            MW_LogUtility.error('ApplicationAttachmentHandler', appDoc.genesis__Application__c, appDoc.Lead_Id__c, 'delBoxURl', ex);
             
             throw ex;
         } 

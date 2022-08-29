@@ -24,7 +24,9 @@ private class ApplicationAttachmentTest{
     dc.genesis__Applicable_For__c = 'PARTY';
     insert dc;
     Account acc = new Account(
-            Name = 'Test',
+            Name = 'Testfname Testlname',
+            peer__First_Name__c= 'Testfname',
+            peer__Last_Name__c= 'Testlname',        
             loan__Investor__c = True,
             Amount_Invested__c = 1200,
             Number_Of_Applications_Invested__c =3,
@@ -78,6 +80,7 @@ private class ApplicationAttachmentTest{
         adc.genesis__Active__c = true;
         adc.genesis__Document_Category__c =  dc.id;
         adc.genesis__Application__c = genesis_applications_Obj.id;
+        adc.box_url__c = 'test';
         insert adc;
         
         genesis__AppDocCatAttachmentJunction__c adcj = new genesis__AppDocCatAttachmentJunction__c();
@@ -133,6 +136,20 @@ private class ApplicationAttachmentTest{
     test.stopTest();
   }
 
-  
+     static testMethod void test_delBoxURl(){
+        String exceptionError;
+        test.startTest();
+        try{
+            ApplicationAttachmentHandler.delBoxURl(null);
+        }
+        Catch(Exception ex){
+            exceptionError = ex.getMessage();
+                    }
+        
+        test.stopTest();
+        System.assertEquals('List has no rows for assignment to SObject', exceptionError);
+        
+        
+    }
   
 }
