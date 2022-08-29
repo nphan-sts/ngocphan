@@ -244,13 +244,13 @@ public with sharing class ApplicationAttachmentHandler {
                       FROM genesis__Application_Document_Category__c where name = 'TIL Document' and genesis__application__c = : applicationID ];
             
                 if(appDoc!=null  && appDoc.Box_URl__c !=null){
-                system.debug('---lstAppDocCat----'+appDoc); 
+                system.debug('---lstAppDocCat/delBoxURl----'+appDoc); 
                 appDoc.Box_URl__c = null;
                 update appDoc;
             }
         }
         catch (Exception ex){
-            MW_LogUtility.error('ApplicationAttachmentHandler', appDoc.genesis__Application__c, '', 'delBoxURl', ex);
+            MW_LogUtility.error('ApplicationAttachmentHandler', appDoc.genesis__Application__c, appDoc.Lead_Id__c, 'delBoxURl', ex);
             
             throw ex;
         } 
