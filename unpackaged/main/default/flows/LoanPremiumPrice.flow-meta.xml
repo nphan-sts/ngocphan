@@ -972,7 +972,7 @@
             <connector>
                 <targetReference>myRule_3_A1</targetReference>
             </connector>
-            <label>ACU Loan Purpose Expansion</label>
+            <label>ACU and GSCU_PART Loan Purpose Expansion</label>
         </rules>
     </decisions>
     <decisions>
@@ -1209,7 +1209,7 @@
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
             <name>myRule_29</name>
-            <conditionLogic>1 and (2 or 3)</conditionLogic>
+            <conditionLogic>1 and (2 or 3 or 4)</conditionLogic>
             <conditions>
                 <processMetadataValues>
                     <name>inputDataType</name>
@@ -1301,6 +1301,37 @@
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>debt_consolidation</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Formula</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_current.Application__r.Loan_Purpose__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>formula_30_myRule_29_1498613229</elementReference>
                 </rightValue>
             </conditions>
             <connector>
@@ -1537,7 +1568,18 @@
         </rules>
     </decisions>
     <description>LOP-728 Update GSCU_PART premium grid for LPE to 2.5%</description>
-    <interviewLabel>LoanPremiumPrice-26_InterviewLabel</interviewLabel>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>&apos;&apos;</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_30_myRule_29_1498613229</name>
+        <dataType>String</dataType>
+        <expression>&apos;&apos;</expression>
+    </formulas>
+    <interviewLabel>LoanPremiumPrice-27_InterviewLabel</interviewLabel>
     <label>LoanPremiumPrice</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -3564,7 +3606,7 @@
         <object>Pricing_Offer__c</object>
     </recordUpdates>
     <startElementReference>myDecision</startElementReference>
-    <status>Draft</status>
+    <status>Active</status>
     <variables>
         <name>myVariable_current</name>
         <dataType>SObject</dataType>
