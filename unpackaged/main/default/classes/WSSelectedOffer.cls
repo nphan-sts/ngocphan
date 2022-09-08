@@ -163,8 +163,11 @@ global with sharing class WSSelectedOffer{
                         approve.Term__c=p.Term__c;
                         approve.Type__c=p.Type__c;
                         insert approve;
+
+                        /* See SelectOfferFromUI for similar block */
                         app.genesis__Loan_Amount__c=p.Amount__c;
                         app.genesis__APR__c=p.APR__c;
+                        app.Pricing_Tier__c = p.Pricing_Tier__c;
                         app.genesis__Term__c=p.Term__c;
                         app.Origination_fee__c=p.Origination_fee__c;
                         app.genesis__Monthly_Debt_Payments__c=p.Monthly_Payment__c;
