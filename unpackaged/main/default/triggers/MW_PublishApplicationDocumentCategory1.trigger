@@ -25,14 +25,14 @@ trigger MW_PublishApplicationDocumentCategory1 on genesis__Application_Document_
     //     }
     // }
 
-    if (trigger.isInsert && trigger.isBefore) {
-        for (genesis__Application_Document_Category__c ac : Trigger.new) {
-            if(String.IsEmpty(ac.DataArchiva_Old_Id__c) == false)
-            {
-                return;
-            }
-        }
-    }
+    // if (trigger.isInsert && trigger.isBefore) {
+    //     for (genesis__Application_Document_Category__c ac : Trigger.new) {
+    //         if(String.IsEmpty(ac.DataArchiva_Old_Id__c) == false)
+    //         {
+    //             return;
+    //         } 
+    //     }
+    // }
     //End of - This is temporary code related DataArchiva and CRM-955 where we need to restore archived application and following code would take care of known errors.
 
     if (!genesis.CustomSettingsUtil.getOrgParameters().genesis__Disable_Triggers__c) {
