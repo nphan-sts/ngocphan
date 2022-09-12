@@ -1,6 +1,7 @@
 /* ****************Modification History******************
 *    Created By        	 Date			Version
 *1. Bhavya Maliwal        2022/04/21     Initial Version
+ 2. Bhavya Maliwal		  2022/06/06     Updated the fee	
 
 ******************Modification History******************/
 @isTest
@@ -32,7 +33,7 @@ public class TestInterestCorrectionBatch {
                                                                        loan__Office_Type_Short_Code__c='TestSC' );
         insert testBranchType;
         
-        loan__MF_Account__c a1 = loan.TestHelper.createMFAccount('TestAccountForOffice', '20000 - ASSETS');
+        loan__MF_Account__c a1 = loan.TestHelper.createMFAccount('TestAccountForOffice', '10000 - ASSETS');
         
         loan__Branch_Location__c testLoc1 = new loan__Branch_Location__c(Name='Data Migration',
                                                                         loan__Address_Line_1__c = 'Add1',
@@ -61,13 +62,13 @@ public class TestInterestCorrectionBatch {
                                                                     loan__Current_System_Date__c = Date.Today().addDays(-30),
                                                                     RecordTypeId = rtId,
                                                                     loan__Is_Branch__c=true);
-        insert dummyOffice;
+        insert dummyOffice; 
         
-        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest', '50000 - INCOME');
-        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest', '10000 - ASSETS');
+        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest', '20000 - ASSETS');
+        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest', '30000 - ASSETS');
         loan__Fee__c dummyFee1 = loan.TestHelper.createFee(curr, dummyIncAccount, dummyAccount); 
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet(); 
-        
+        loan__Fee_Junction__c dummyJunction=loan.TestHelper.createFeeJunction(dummyFee1, dummyFeeSet);
         loan__Loan_Product__c prod = new loan__Loan_Product__c(Name='Auto Payer',
                                                                loan__Loan_Product_Type__c = 'Loan',
                                                                loan__Currency__c = (curr != null) ? curr.ID : null,
