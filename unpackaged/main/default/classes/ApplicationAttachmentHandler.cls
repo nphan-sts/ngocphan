@@ -77,7 +77,10 @@ public with sharing class ApplicationAttachmentHandler {
                 attmtId.add(att.Id);
             DeleteAppDocJunAttachments.delAttachments(attmtId);    
         }
-        delBoxURl(applicationId);
+
+        if(docType=='TIL' || docType=='TILDocument_forDCP' || docType=='TILDocument_DCP'){
+            delBoxURl(applicationId);}
+
         //delete([Select Id from Attachment where ParentId =: applicationId and Description like : docValue]);
     }
     
@@ -205,7 +208,7 @@ public with sharing class ApplicationAttachmentHandler {
                 string name  = mapAttach.get(attachid);
                 string DocumentName = '%' + name + '%';
                 
-                List<genesis__Application_Document_Category__c> lstAppDocCat = [Select Id,genesis__status__c  from genesis__Application_Document_Category__c where genesis__Application__c =: applicationId and Name like : DocumentName and IsDeleted = false];
+                List<genesis__Application_Document_Category__c> lstAppDocCat = [Select Id,genesis__status__c,Box_URl__c  from genesis__Application_Document_Category__c where genesis__Application__c =: applicationId and Name like : DocumentName and IsDeleted = false];
                 
                 if(!lstAppDocCat.isEmpty()){
                     system.debug('---lstAppDocCat----'+lstAppDocCat); 
@@ -249,7 +252,9 @@ public with sharing class ApplicationAttachmentHandler {
                 update appDoc;
             }
         }
-        catch (Exception ex){
+
+        catch (Exception ex){system.debug('delboxurlexception');
+
             MW_LogUtility.error('ApplicationAttachmentHandler', appDoc.genesis__Application__c, appDoc.Lead_Id__c, 'delBoxURl', ex);
             
             throw ex;
