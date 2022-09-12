@@ -77,8 +77,10 @@ public with sharing class ApplicationAttachmentHandler {
                 attmtId.add(att.Id);
             DeleteAppDocJunAttachments.delAttachments(attmtId);    
         }
+
         if(docType=='TIL' || docType=='TILDocument_forDCP' || docType=='TILDocument_DCP'){
             delBoxURl(applicationId);}
+
         //delete([Select Id from Attachment where ParentId =: applicationId and Description like : docValue]);
     }
     
@@ -250,7 +252,9 @@ public with sharing class ApplicationAttachmentHandler {
                 update appDoc;
             }
         }
+
         catch (Exception ex){system.debug('delboxurlexception');
+
             MW_LogUtility.error('ApplicationAttachmentHandler', appDoc.genesis__Application__c, appDoc.Lead_Id__c, 'delBoxURl', ex);
             
             throw ex;
