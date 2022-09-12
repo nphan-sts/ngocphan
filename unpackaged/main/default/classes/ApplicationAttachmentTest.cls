@@ -171,4 +171,18 @@ private class ApplicationAttachmentTest{
                                                             WHERE genesis__AttachmentId__c =: att.id];
         System.assert(testJunc != null); 
     }
+    static testMethod void test_delBoxURl(){
+        String exceptionError;
+        test.startTest();
+        try{
+            ApplicationAttachmentHandler.delBoxURl(null);
+        }
+        Catch(Exception ex){
+            exceptionError = ex.getMessage();
+                    }
+        
+        test.stopTest();
+        System.assertEquals('List has no rows for assignment to SObject', exceptionError);
+        
+          }  
 }
