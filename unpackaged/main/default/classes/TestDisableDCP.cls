@@ -6,6 +6,10 @@
 public class TestDisableDCP {
     @TestSetup
     public static void testSetup(){
+        MW_Settings__c mwSetting = new MW_Settings__c();
+        mwSetting.FE_User_Filter__c ='abcUser@filtertest.com';
+        insert mwSetting;
+        
         Account account_Obj = new Account(Name = 'Test', loan__Investor__c=False, cnotify__Email__c = 'no-reply@testorganization.com',
                                           peer__Last_Name__c = 'Account');
         insert account_Obj;
@@ -52,6 +56,6 @@ public class TestDisableDCP {
         WF_DisableDCP.disableDCP(new List<Id>{app.id});
         Test.stopTest();
         DCp_Arcus_Transactions__c testdcp = [SELECT Id,Card_Number__c,Credit_Card_Name__c,Pay_at_Funding__c FROM DCp_Arcus_Transactions__c LIMIT 1];
-        System.assertEquals(testdcp.Pay_at_Funding__c,true);
+        System.assertEquals(testdcp.Pay_at_Funding__c,false);
     }
 }
