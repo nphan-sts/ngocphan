@@ -64,8 +64,6 @@ private class TestActivateFractionalizationBatch{
         );
         insert lacc; 
         
-        
-        
     }
     /*Created By : Bhavya Maliwal
 Method name : activateFractionalizationBatchSetofLoanIdsConstructor
@@ -95,6 +93,8 @@ Purpose : to cover code satisfying constructor where Set of loan Ids is passed a
         job.finish(null);
         
         test.stopTest();
+        loan__Loan_Account__c checkInvestor=[Select id,name,loan__Active_Investor__c from loan__Loan_Account__c limit 1];
+        system.assert(!checkInvestor.loan__Active_Investor__c);
     }
     /*Created By : Bhavya Maliwal
 Method name : activateFractionalizationBatchdefaultConstructor
