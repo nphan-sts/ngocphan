@@ -1,18 +1,22 @@
+/* ****************Modification History******************
+* Modified By       Date                    JIRA Number
+*   Shakul        10/3/2022          LSP-585 (Refactored Test Class)	
+******************Modification History******************/
 @isTest
 public class TestInvestorReallocation{
 
-    public static testMethod void TestMethod1(){
-        
+    @TestSetup
+    public static void testSetup(){
         //Creating Account
          Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
+            peer__First_Name__c ='Account',
+            peer__Last_Name__c = 'Test',
+            loan__Investor__c=false,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9)
             );
         insert acc;
-        System.assertEquals('Test',acc.Name,'Wrong Account');
-        
+
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
                                             genesis__Due_Day__c = 20,
@@ -22,7 +26,7 @@ public class TestInvestorReallocation{
                                             Borrower_s_Email__c = null,
                                             genesis__Account__c = acc.Id,
                                             Application_Start_DateV2__c = system.Today(),
-                                            //Anniversary_Date__c = system.Today()+1,
+                                            Anniversary_Date__c = system.Today()+1,
                                             DocuSignFlag__c=true,
                                             genesis__Status__c = 'agent_verified',
                                             genesis__Draw_Period_End_Date__c = system.Today(),
@@ -32,30 +36,23 @@ public class TestInvestorReallocation{
                                             genesis__payment_frequency__c = 'MONTHLY'
                                             );
         insert app;
-       // list<genesis__Applications__c> applist = new list<genesis__Applications__c>();
-       // applist.add(app);
-        //insert applist;
-      /*  app.Anniversary_Date__c = system.Today()+2;
-        Integer frequencyMultiplier = ((Integer)app.genesis__term__c - 1);
-        Integer day = app.Anniversary_Date__c.day();
-        Date nextdate = app.Anniversary_Date__c.addMonths(1);
-        Date maturityDate = loan.DateUtil.getNextCycleDate(app.Anniversary_Date__c , day,app.genesis__payment_frequency__c,app.Anniversary_Date__c ,nextdate,frequencyMultiplier);
-        app.maturityDate__c = maturityDate;
-        update app;*/
-        System.assertEquals(null,app.Borrower_s_Email__c,'Borrower Email is not null');
-        
+
         //Creating Application Document Category
         genesis__Application_Document_Category__c document = new genesis__Application_Document_Category__c();
         document.Name = 'TIL Document';
-        document.genesis__Active__c = TRUE;
+        document.genesis__Active__c = true;
         document.genesis__Application__c = app.Id;
         insert document;
-        System.assertEquals(True,document.genesis__Active__c,'Document Category is not active');
-        
+    }
+
+    /*Created By: Shakul Siddharth
+      Purpose: To test logic for Investor Reallocation class*/
+    public static testMethod void testInvReAlloc(){
         Test.startTest();
-        InvestorReallocation.ResetDoc(app.id);
-        System.debug('====================='+document.genesis__Active__c);
-        //System.assertEquals(False,document.genesis__Active__c,'InvestorReallocation failed');
+        genesis__Applications__c testApp = [SELECT id FROM genesis__Applications__c LIMIT 1];
+        InvestorReallocation.ResetDoc(testApp.id);
         Test.stopTest();
+        genesis__Applications__c assertApp = [SELECT id, Anniversary_Date__c FROM genesis__Applications__c WHERE id =: testApp.id];
+        System.assertEquals(null, assertApp.Anniversary_Date__c);
     }
 }
