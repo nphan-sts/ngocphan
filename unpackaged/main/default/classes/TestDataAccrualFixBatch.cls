@@ -16,9 +16,11 @@ private class TestDataAccrualFixBatch{
         loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','40000 - INCOME');
         
         //Create a Fee Set
+
        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr, dummyIncAccount, dummyAccount);
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
+
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
        
@@ -53,6 +55,7 @@ private class TestDataAccrualFixBatch{
         genesis__Company__c comp = genesis.TestHelper.createCompany(); 
         comp.Name = 'payoff';
         update comp;
+
         
        //Create a dummy Loan Product
         loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice,
