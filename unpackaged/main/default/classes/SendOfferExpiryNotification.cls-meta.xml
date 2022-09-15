@@ -3,7 +3,7 @@
     <apiVersion>41.0</apiVersion>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>3005</minorNumber>
+        <minorNumber>7011</minorNumber>
         <namespace>genesis</namespace>
     </packageVersions>
     <status>Active</status>
