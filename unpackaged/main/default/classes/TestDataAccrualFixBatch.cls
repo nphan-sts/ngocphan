@@ -16,10 +16,14 @@ private class TestDataAccrualFixBatch{
         loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','40000 - INCOME');
         
         //Create a Fee Set
-        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
-        loan__Fee_Set__c dummyFeeSet1 = loan.TestHelper.createFeeSet();
-        
+
+       loan__Fee__c dummyFee = loan.TestHelper.createFee(curr, dummyIncAccount, dummyAccount);
+        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
+        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
+
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
+        
+       
         
         loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
         org.loan__Disable_Triggers__c = true;
@@ -51,10 +55,14 @@ private class TestDataAccrualFixBatch{
         genesis__Company__c comp = genesis.TestHelper.createCompany(); 
         comp.Name = 'payoff';
         update comp;
+
         
-        //creating lending product
-        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet1);
-        
+       //Create a dummy Loan Product
+        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice,
+                            dummyAccount, 
+                            curr, 
+                            dummyFeeSet);
+         
         //creating CL Product
         clcommon__CL_Product__c pr = new clcommon__CL_Product__c();
         pr.loan__Lending_Product__c = dummyLp.id;
