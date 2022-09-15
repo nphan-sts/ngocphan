@@ -39,7 +39,9 @@ public class TestCustomIdentityVerificationTrigger{
             genesis__Expected_Start_Date__c = system.Today(),
             genesis__Account__c = acc.Id,
             Affiliate_Partner__c =true,
+
             Application_Start_DateV2__c= system.Today(),
+
             Sift_Status__c = 80
         );
         insert app;
@@ -50,7 +52,9 @@ public class TestCustomIdentityVerificationTrigger{
             genesis__Expected_Start_Date__c = system.Today(),
             genesis__Account__c = acc.Id,
             Affiliate_Partner__c =true,
+
             Application_Start_DateV2__c= system.Today(),
+
             Sift_Status__c = 70
         );
         insert app1;

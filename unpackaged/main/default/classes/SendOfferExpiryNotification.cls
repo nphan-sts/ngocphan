@@ -1,9 +1,14 @@
+/* ****************Modification History******************
+* Modified By       Date                    JIRA Number
+*   Shakul        15/3/2022          LSP-601 (Added Test.isRunningTest()in the query)	
+******************Modification History******************/
 global class SendOfferExpiryNotification implements Database.batchable<sObject>,Schedulable{
             
     String query;
        
     global SendOfferExpiryNotification(){
-        query = 'select id from genesis__Applications__c where X14day_s_Before_Expiration_Date__c = True ';
+        //LSP-601-- Modified the query
+        query = 'select id from genesis__Applications__c where X14day_s_Before_Expiration_Date__c = True '+(Test.isRunningTest()?' LIMIT 1':'');
                 // 'and genesis__Status__c !=\''+String.escapeSingleQuotes(Status1)+'\' and genesis__Status__c !=\''+String.escapeSingleQuotes(Status2)+'\'';
         
         System.debug(logginglevel.error,'query+++'+query); 
