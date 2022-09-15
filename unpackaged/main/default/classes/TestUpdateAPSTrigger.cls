@@ -3,6 +3,7 @@
  * Modified by              Date        JIRA number
  * 1.   Pallavi/Neha      2021/01/29  LSP-1/CRM-1056 CPD issue/Reverting issue (short-term fix) - Case #02430069 
  * 2.	Bhavya			  2022/02/09  Test class modification as per standards and covering the update case for the trigger
+ * 3.   Shakul            2022/02/24  LSP-528 (Changed the loan__Transaction_Type__c to Charge off)
  ******************Modification History*****************************************************************/
 @isTest
 public class TestUpdateAPSTrigger {
@@ -16,7 +17,6 @@ public class TestUpdateAPSTrigger {
         List<filegen__File_Metadata__c> metadata = Test.loadData(filegen__File_Metadata__c.sObjectType,'CustomTestMetaData');
         loan.TestHelper.setupACHParameters();
         loan.TestHelper2.createFileGenMetaData();
-        //loan.TestHelper2.createOrgBankAccounts();
         
         /*LSP-1*/
         Account acc = new Account(Name = 'Test Account',peer__Last_Name__c='TestLName2', loan__Undeployed_Funds__c = 10000);
@@ -51,7 +51,9 @@ public class TestUpdateAPSTrigger {
         loan__Payment_Mode__c pMode = [select id from loan__Payment_Mode__c where Name= 'ACH'];
         loan__Payment_Mode__c pMode1 = [select id from loan__Payment_Mode__c where Name = 'Cash'];
         
-        loan__Bank_Account__c bank = [select id from loan__Bank_Account__c where loan__Account_usage__c=:loan.FractionalizationConstants.COLLECTIONS_TRUST_ACCOUNT limit 1];
+        loan__Bank_Account__c bank = [select id,loan__Active__c from loan__Bank_Account__c where loan__Account_usage__c=:loan.FractionalizationConstants.COLLECTIONS_TRUST_ACCOUNT limit 1];
+        bank.loan__Active__c=true;
+        update bank;
         
         loan.TestHelper2.createAutomatedPaymentConfiguration(loan.LoanConstants.LOAN_PAYMENT,pMode,bank,'CustomLoanPaymentTxnNACHAGen');
         loan.TestHelper2.createAutomatedPaymentConfiguration(loan.LoanConstants.LOAN_PAYMENT,pMode1,bank,'CustomLoanPaymentTxnNACHAGen');
@@ -76,7 +78,8 @@ public class TestUpdateAPSTrigger {
                                                  loan__account__c = acc.id, //LSP-1            
                                                  loan__Routing_Number__c = '999999999', //LSP-1
                                                  loan__Account_Type__c = 'Checking',
-                                                 Unmasked_Bank_Account_Number__c = '123234324');
+                                                 Unmasked_Bank_Account_Number__c = '123234324',
+                                                            loan__Active__c=true);
         insert ba;
         
       
@@ -128,7 +131,7 @@ Purpose : to cover code satisfying after and update case for other transaction (
        loan__Loan_Account__c dummylaMonthly=[Select id from loan__Loan_Account__c LIMIT 1];
                 
         loan__Other_Transaction__c otherTxn = new loan__Other_Transaction__c();
-        otherTxn.loan__Transaction_Type__c = 'Reschedule';
+        otherTxn.loan__Transaction_Type__c = 'Charge Off'; //LSP-528
         otherTxn.loan__new_due_day__c = 12;
         otherTxn.loan__repayment_start_date__c = Date.today();
         otherTxn.loan__Loan_Account__c = dummylaMonthly.id;
@@ -137,9 +140,9 @@ Purpose : to cover code satisfying after and update case for other transaction (
          otherTxn.loan__new_due_day__c = 15;
         update otherTxn;
         test.stopTest();
-        List<loan__Other_Transaction__c> OT=[Select id,loan__new_due_day__c from loan__Other_Transaction__c];
-        system.assertEquals(True, OT.size()>0);
-        system.assertEquals(True, OT[0].loan__new_due_day__c==15);
+        List<loan__Other_Transaction__c> ot=[Select id,loan__new_due_day__c from loan__Other_Transaction__c];
+        system.assertEquals(True, ot.size()>0);
+        system.assertEquals(True, ot[0].loan__new_due_day__c==15);
     }
      /*Created By : Bhavya Maliwal
 Method name : testOtherTransactionWhenLPTExists
@@ -153,12 +156,12 @@ Purpose : to cover code satisfying after case for other transaction (UpdateAPSTr
         loan__Other_Transaction__c otherTxn = new loan__Other_Transaction__c();
         otherTxn.loan__Transaction_Type__c = 'Reschedule';
         otherTxn.loan__new_due_day__c = 12;
-        otherTxn.loan__repayment_start_date__c = loan.TestHelper.systemDate;//Date.newInstance(2020, 01, 01);
+        otherTxn.loan__repayment_start_date__c = loan.TestHelper.systemDate;
         otherTxn.loan__Loan_Account__c = dummylaMonthly.id;
         insert otherTxn;
         test.stopTest();
-        List<loan__Other_Transaction__c> OT=[Select id from loan__Other_Transaction__c];
-        system.assertEquals(True, OT.size()>0);
+        List<loan__Other_Transaction__c> ot=[Select id from loan__Other_Transaction__c];
+        system.assertEquals(True, ot.size()>0);
     }
    
 }
