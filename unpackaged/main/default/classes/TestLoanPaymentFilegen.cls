@@ -52,7 +52,9 @@ public class TestLoanPaymentFilegen {
         loan__Payment_Mode__c pMode = [select id from loan__Payment_Mode__c where Name= 'ACH'];
         loan__Payment_Mode__c pMode1 = [select id from loan__Payment_Mode__c where Name = 'Cash'];
         
-        loan__Bank_Account__c bank = [select id from loan__Bank_Account__c where loan__Account_usage__c=:loan.FractionalizationConstants.COLLECTIONS_TRUST_ACCOUNT limit 1];
+        loan__Bank_Account__c bank = [select id,loan__Active__c from loan__Bank_Account__c where loan__Account_usage__c=:loan.FractionalizationConstants.COLLECTIONS_TRUST_ACCOUNT limit 1];
+        bank.loan__Active__c=true;
+        update bank;
         
         loan.TestHelper2.createAutomatedPaymentConfiguration(loan.LoanConstants.LOAN_PAYMENT,pMode,bank,'CustomLoanPaymentTxnNACHAGen');
         loan.TestHelper2.createAutomatedPaymentConfiguration(loan.LoanConstants.LOAN_PAYMENT,pMode1,bank,'CustomLoanPaymentTxnNACHAGen');
@@ -78,7 +80,7 @@ public class TestLoanPaymentFilegen {
                                                  loan__Bank_Name__c = 'Some Bank',
                                                  loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
-                                                 Unmasked_Bank_Account_Number__c = '123234324',
+                                                 Unmasked_Bank_Account_Number__c = '123234324',loan__Active__c=true,
                                                  loan__Contact__c = a1.id,loan__Account__c = acc.id);
         insert ba;
         
