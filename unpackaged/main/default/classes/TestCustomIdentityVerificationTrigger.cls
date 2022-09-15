@@ -31,7 +31,7 @@ public class TestCustomIdentityVerificationTrigger{
         );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
-        
+       
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
             genesis__Due_Day__c = 20,
@@ -39,6 +39,9 @@ public class TestCustomIdentityVerificationTrigger{
             genesis__Expected_Start_Date__c = system.Today(),
             genesis__Account__c = acc.Id,
             Affiliate_Partner__c =true,
+
+            Application_Start_DateV2__c= system.Today(),
+
             Sift_Status__c = 80
         );
         insert app;
@@ -49,6 +52,9 @@ public class TestCustomIdentityVerificationTrigger{
             genesis__Expected_Start_Date__c = system.Today(),
             genesis__Account__c = acc.Id,
             Affiliate_Partner__c =true,
+
+            Application_Start_DateV2__c= system.Today(),
+
             Sift_Status__c = 70
         );
         insert app1;
