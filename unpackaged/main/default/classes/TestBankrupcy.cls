@@ -154,6 +154,7 @@ public class TestBankrupcy {
     
     public static testMethod void TestBankrupt(){
         
+
         List<Account> aclist = [select id,name,peer__First_Name__c from Account Where peer__First_Name__c = 'Test Account First Name'];
         
         system.debug('Account Record' +aclist);
@@ -189,6 +190,7 @@ public class TestBankrupcy {
     
     public static testMethod void TestBankrupt(){
         
+
         
         Account acc = new Account();
         acc.Name = 'Test Account';

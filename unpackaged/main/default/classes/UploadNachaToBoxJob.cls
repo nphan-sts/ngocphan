@@ -1,3 +1,7 @@
+/* ****************Modification History******************
+* Modified By       Date                    JIRA Number
+*   Shakul        10/3/2022                   LSP-584	
+******************Modification History******************/
 global with sharing class UploadNachaToBoxJob implements Database.Batchable<sObject>,Database.AllowsCallouts, Database.Stateful,Schedulable {
    
    String query;
@@ -13,8 +17,8 @@ global with sharing class UploadNachaToBoxJob implements Database.Batchable<sObj
            //folderBoxMap.put(apc.loan__Folder_Name__c,apc.Box_Folder_ID__c);
            folderBoxMap.put(apc.loan__Folder_Name__c,apc.Box_Folder_ID__c);
        }
-       
-       query = 'select id,name,Description,FolderId,Folder.Name,Body from Document where Folder.Name in:folderName and Description=null';
+       //LSP-584: Added Test.isRunningTest for single batch execution from test class
+       query = 'select id,name,Description,FolderId,Folder.Name,Body from Document where Folder.Name in:folderName and Description=null'+(Test.isRunningTest()?' LIMIT 1':'');
    }
    
    global Database.QueryLocator start(Database.BatchableContext BC) {

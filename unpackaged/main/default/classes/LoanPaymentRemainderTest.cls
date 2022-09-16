@@ -1,7 +1,13 @@
+/* ****************Modification History******************
+ * Updated By        Date				Jira Number		 
+ *1. Bhanupriya       2022/03/30     	LSP-636	(add required fields ,add comments, add assert statement )
+ ******************Modification History******************/
+
 @isTest
 private class LoanPaymentRemainderTest{
 
-   public static String CRON_EXP = '0 0 0 15 3 ? 2022';
+   public static String cron_EXP = '0 0 0 15 3 ? ';
+    //create testsetup
    @testSetup static void setup() {
    
        loan.TestHelper.createSeedDataForTesting();
@@ -14,35 +20,37 @@ private class LoanPaymentRemainderTest{
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
-        
+        system.debug('Dummy Fee Junction'+dummyFeeJunction);
+       //dummy Office
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
-        
+        system.debug('Dummy Office'+dummyOffice);
+       //Org Parameters
         loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
          org.loan__Disable_Triggers__c = true;
          upsert org;  
    
         //Creating Account
          Account acc = new Account(
-            Name = 'Test',
-            loan__Investor__c=False,
-            //Borrower_s_Last_Name__c='Testborrower',
-            cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
-            );
-        insert acc;
-        System.assertEquals('Test',acc.Name,'Wrong Account');
+                        Name = 'Test',
+                        loan__Investor__c=False,
+                        cnotify__Email__c = 'abc@test.com',
+                        peer__Last_Name__c = 'Test Last Name',				//LSP-636 required field
+                        loan__SOCIAL_SECURITY_NUMBER__c = '123456789'			//LSP-636 must be 9 digit
+                        );
+         insert acc;
         
+       //create Loan payment days
         LoanPaymentDays__c lpdays = new LoanPaymentDays__c();
         lpdays.AutoPaymentRemainder__c= 3;
         lpdays.ManualPaymentRemainder__c= 5;
         insert lpdays;
-        
+       //create loan product
         loan__Loan_Product__c loanProdObj = new loan__Loan_Product__c(name='TestProduct'); 
         insert loanProdObj;
-        System.assertEquals('TestProduct', loanProdObj.Name,'Wrong Loan Product');
         
-        Date CSD = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();
+        Date csd = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();
         
+       //create dummy loan account
         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
                                             loan__Account__c= acc.Id,
                                             loan__Product_Type__c='Flexible Amz Loan',
@@ -50,14 +58,13 @@ private class LoanPaymentRemainderTest{
                                             loan__Loan_Product_Name__c=loanProdObj.Id,
                                             loan__Payment_Amount__c=100, 
                                             loan__Next_Installment_Date__c=system.today(), 
-                                            loan__Previous_Installment_Date__c= CSD.adddays(3)
+                                            loan__Previous_Installment_Date__c= csd.adddays(3)
                                             );
-        insert lacc; 
-        
-        
+        insert lacc;        
         
    }
-   Testmethod static void LoanPaymentRemainderBatch_UseCase1(){
+    //test method for loan Payment Batch job for Default Constructor
+   @isTest static void loanPaymentBatchJob_Defaultconstructor(){
         List<loan__Loan_Account__c> lappList = [SELECT ID, 
                                                     loan__Previous_Installment_Date__c,
                                                     loan__Account__r.cnotify__Email__c,
@@ -69,7 +76,7 @@ private class LoanPaymentRemainderTest{
                                                     loan__Loan_Product_Name__c 
                                                     from loan__Loan_Account__c];
                                                     
-        System.debug('==============lapp=============='+lappList);
+       
         test.startTest();
         
         LoanPaymentRemainder job = new LoanPaymentRemainder();
@@ -77,11 +84,45 @@ private class LoanPaymentRemainderTest{
         job.execute(null,lappList);
         ID batchprocessid = Database.executeBatch(job);
         job.finish(null);
-        String jobIdLDTAdd = System.schedule('LoanPaymentRemainder',
-                            CRON_EXP, 
+    	  String jobIdLDTAdd = System.schedule('LoanPaymentRemainder',
+                            cron_EXP, 
                             new LoanPaymentRemainder());
         System.assert(batchprocessid!=null);
         test.stopTest();
+       system.debug(ql);
+       system.assert(jobIdLDTAdd!=null);
+       }
+    
+      //test method Batch job for parametrized constructor
+   @isTest static void loanPaymentBatchJob_Parametrizedconstructor(){
+        List<loan__Loan_Account__c> lappList = [SELECT ID, 
+                                                    loan__Previous_Installment_Date__c,
+                                                    loan__Account__r.cnotify__Email__c,
+                                                    loan__Loan_Product_Name__r.name, 
+                                                    loan__Payment_Amount__c, 
+                                                    loan__Next_Installment_Date__c, 
+                                                    loan__Account__r.ID,Borrowers_First_Name__c,
+                                                    loan__Account__r.Borrower_s_Last_Name__c,
+                                                    loan__Loan_Product_Name__c 
+                                                    from loan__Loan_Account__c];
+                                                    
+        string query ='SELECT ID, loan__Previous_Installment_Date__c,loan__Account__r.cnotify__Email__c,loan__Loan_Product_Name__r.name, loan__Payment_Amount__c, loan__Next_Installment_Date__c,loan__Account__r.Borrower_s_Last_Name__c,loan__Loan_Product_Name__c from loan__Loan_Account__c';
+
+        test.startTest();
+        
+        LoanPaymentRemainder job = new LoanPaymentRemainder(query);
+        Database.QueryLocator ql = job.start(null);
+        job.execute(null,lappList);
+        ID batchprocessid = Database.executeBatch(job);
+        job.finish(null);
+    	 String jobIdLDTAdd = System.schedule('LoanPaymentRemainder',
+                            cron_EXP, 
+                            new LoanPaymentRemainder());
+        test.stopTest();
+       	system.debug(ql);
+       	System.assert(batchprocessid!=null);
+       	system.assert(jobIdLDTAdd!=null);
     }
-       
+  
+     
 }

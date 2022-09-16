@@ -1686,6 +1686,6 @@ public class TestWSSetupAPS {
         Test.stopTest();
         List<loan__batch_process_log__c> successLog = [select id, name,loan__Log_Level__c from loan__batch_process_log__c where loan__Origin__c = 'WSSetupAPS'];
         System.assert(successLog.size()>0);
-        System.assertEquals('ERROR', successLog.get(0).loan__Log_Level__c);
+        System.assertEquals('INFO', successLog.get(0).loan__Log_Level__c);
     }//LSP - 328 end
 }

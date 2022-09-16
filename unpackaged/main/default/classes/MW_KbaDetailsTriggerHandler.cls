@@ -2,8 +2,7 @@ public class MW_KbaDetailsTriggerHandler {
 
     final List<KBA_Details__c> newRecords;
     final Map<Id, KBA_Details__c> oldMap;
-    final Map<Id, KBA_Details__c> newMap;
-
+    final Map<Id, KBA_Details__c> newMap; 
     public static boolean avoidrecursive = true;
 
     public MW_KbaDetailsTriggerHandler(List< KBA_Details__c> pNewRecords, Map<Id, KBA_Details__c> pNewMap, Map<Id, KBA_Details__c> pOldMap) {
@@ -19,9 +18,11 @@ public class MW_KbaDetailsTriggerHandler {
     }
     */
     public void afterUpdate() {
-        Boolean isUpdateAppRequired = false;
-        for (KBA_Details__c kba : newRecords) {
-            KBA_Details__c oldKba = oldMap.get(kba.Id);
+        DocReduction(newRecords, oldMap); //LOP-597
+        Boolean isUpdateAppRequired = false;     
+            for (KBA_Details__c kba : newRecords) {
+            KBA_Details__c oldKba = oldMap.get(kba.Id);                
+              
             if (kba.Precise_ID_First_Payment_Default__c != oldKba.Precise_ID_First_Payment_Default__c
                     || kba.Precise_ID_Decision_KIQ__c != oldKba.Precise_ID_Decision_KIQ__c
                     || kba.Precise_ID_Overall_SCore__c != oldKba.Precise_ID_Overall_SCore__c) {
@@ -36,8 +37,33 @@ public class MW_KbaDetailsTriggerHandler {
         }
     }
 
-    public void afterInsert() {
-        UpdateApplications(newRecords, newMap, oldMap, null, null, null);
+    public void afterInsert() {              
+       DocReduction(newRecords,null); //LOP-597             
+       UpdateApplications(newRecords, newMap, oldMap, null, null, null);    
+    }
+    //LOP-597
+    Public static void DocReduction(List<KBA_Details__c> LKba, Map<Id, KBA_Details__c> MapOldKba )
+    {
+        for(KBA_Details__c kba : LKba)
+        {
+            Id appId;
+            appId = kba.Application__c ;
+            if(MapOldKba!=null)
+            {
+                KBA_Details__c oldKba = MapOldKba.get(kba.Id);            
+                if(kba.Precise_ID_Overall_SCore__c == 9012 && ( kba.Precise_ID_Overall_SCore__c != oldKba.Precise_ID_Overall_SCore__c))
+                {
+                    DocumentReductionRules.payStubReduction(appId);
+                }
+            }
+            else
+            {
+                if(kba.Precise_ID_Overall_SCore__c == 9012)
+                {
+                    DocumentReductionRules.payStubReduction(appId);
+                }
+            }
+        }
     }
 
     Public static void UpdateApplications(List<KBA_Details__c> pListKba, Map<Id, KBA_Details__c> pMapNewKbaDetails,
@@ -140,12 +166,13 @@ public class MW_KbaDetailsTriggerHandler {
                         ) {
                     continue;
                 }
-
-                If (kba.Precise_ID_Overall_SCore__c == 9012 || kba.Precise_ID_Overall_SCore__c == 9013
+                
+              If (kba.Precise_ID_Overall_SCore__c == 9012 || kba.Precise_ID_Overall_SCore__c == 9013
                         || kba.Precise_ID_First_Payment_Default__c <= 10 || app.Employment_Status__c != 'Full Time'
                         || kba.Precise_ID_Decision_KIQ__c != 'Accept') {
-
+                                  
                     app.Verification_Complexity__c = 'Hard';
+                            
 
                 } Else If (
                         (app.Pricing_Tier__c == 't1' || app.Pricing_Tier__c == 't2' || app.Pricing_Tier__c == 't3')
@@ -158,6 +185,7 @@ public class MW_KbaDetailsTriggerHandler {
                                 && (kba.Precise_ID_Overall_SCore__c != 9012 || kba.Precise_ID_Overall_SCore__c != 9013)
                                 && kba.Precise_ID_Decision_KIQ__c == 'Accept'
                         ) {
+                     
                     app.Verification_Complexity__c = 'Very Easy';
                 } Else If (
                         (app.Pricing_Tier__c == 't1' || app.Pricing_Tier__c == 't2' || app.Pricing_Tier__c == 't3')
@@ -168,8 +196,10 @@ public class MW_KbaDetailsTriggerHandler {
                                 && (kba.Precise_ID_Overall_SCore__c != 9012 || kba.Precise_ID_Overall_SCore__c != 9013)
                                 && kba.Precise_ID_Decision_KIQ__c == 'Accept'
                         ) {
+                        
                     app.Verification_Complexity__c = 'Easy';
                 } Else {
+             
                     app.Verification_Complexity__c = 'Regular';
                 }
             } //End of If (app != null && empInfo != null)

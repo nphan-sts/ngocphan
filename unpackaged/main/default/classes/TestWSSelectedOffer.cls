@@ -1,7 +1,7 @@
-@isTest
+@IsTest
 
 private class TestWSSelectedOffer{
-    @testSetup 
+    @TestSetup
     static void setupData() {
         //Creating Account
         Account accTest = new Account(
@@ -46,11 +46,11 @@ private class TestWSSelectedOffer{
         insert pOffer;
     }
 
-    Testmethod static void testNewOfferIsSelectedWithKey(){
+    testMethod static void testNewOfferIsSelectedWithKey(){
         
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c from Pricing_Offer__c where Key__c=6 Limit 1];
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
+        Pricing_Offer__c pOffer = [SELECT id,Key__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         
         Map<String,String> reqMap = new Map<String,String>(); 
         reqMap.put('applicationId',app.id);
@@ -70,15 +70,58 @@ private class TestWSSelectedOffer{
         Test.startTest();
         WSSelectedOffer.markTentativeOfferSelected();
         Test.stopTest();
-        
-        Pricing_Offer__c pOfferOut = [SELECT Id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c =: pOffer.Key__c];
+
+        Pricing_Offer__c pOfferOut = [
+                SELECT Id,
+                        Amount__c,
+                        APR__c,
+                        Pricing_Tier__c,
+                        Term__c,
+                        Origination_fee__c,
+                        Monthly_Payment__c,
+                        Interest_Rate__c,
+                        Key__c,
+                        Is_Offer_Selected__c
+                FROM Pricing_Offer__c
+                WHERE Key__c = :pOffer.Key__c
+        ];
         system.assertEquals(true, pOfferOut.Is_Offer_Selected__c);
+
+        genesis__Applications__c actual = getApp(app.Id);
+
+        System.assertEquals(actual.genesis__Loan_Amount__c, pOfferOut.Amount__c);
+        System.assertEquals(actual.genesis__APR__c, pOfferOut.APR__c);
+        System.assertEquals(actual.Pricing_Tier__c, pOfferOut.Pricing_Tier__c);
+        System.assertEquals(actual.genesis__Term__c, pOfferOut.Term__c);
+        System.assertEquals(actual.Origination_fee__c, pOfferOut.Origination_fee__c);
+        System.assertEquals(actual.genesis__Monthly_Debt_Payments__c, pOfferOut.Monthly_Payment__c);
+        System.assertEquals(actual.genesis__Interest_Rate__c, pOfferOut.Interest_Rate__c);
+        System.assertEquals(actual.genesis__Financed_Amount__c, pOfferOut.Amount__c - pOfferOut.Origination_fee__c);
+        System.assertEquals(actual.genesis__Status__c, 'offer_accepted');
     }
+
+    private static genesis__Applications__c getApp(Id id) {
+        return [SELECT Id,
+                        genesis__Loan_Amount__c,
+                        genesis__APR__c,
+                        Pricing_Tier__c,
+                        genesis__Term__c,
+                        Origination_fee__c,
+                        genesis__Monthly_Debt_Payments__c,
+                        genesis__Interest_Rate__c,
+                        genesis__Financed_Amount__c,
+                        genesis__Status__c
+                FROM genesis__Applications__c
+                WHERE Id =: id
+                LIMIT 1
+        ];
+    }
+
     // Check a Non EBP offer is already selected then return the message
-    Testmethod static void testNonEBPSelectedOfferAvailable(){
+    testMethod static void testNonEBPSelectedOfferAvailable(){
         
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
         Pricing_Offer__c  pOffer = new Pricing_Offer__c();
         pOffer.Above_prime_max__c= 'false';
         pOffer.Amount__c = 8000;
@@ -121,14 +164,12 @@ private class TestWSSelectedOffer{
     }
     
     //Application ID null
-    Testmethod static void testAppIdNULLcheck(){
-        
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c from Pricing_Offer__c where Key__c=6 Limit 1];
+    testMethod static void testAppIdNULLcheck(){
+
+        Pricing_Offer__c pOffer = [SELECT Id,Key__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         Map<String,String> reqMap = new Map<String,String>(); 
         reqMap.put('applicationId',null);
-        reqMap.put('Key',String.ValueOf(pOffer.Key__c));
+        reqMap.put('Key',String.valueOf(pOffer.Key__c));
         String jsonStr= JSON.serialize(reqMap);
         
         RestRequest req = new RestRequest(); 
@@ -145,14 +186,14 @@ private class TestWSSelectedOffer{
         Test.startTest();
         responseRec = WSSelectedOffer.markTentativeOfferSelected();
         Test.stopTest();
-        system.assertEquals(PayoffConstants.APP_ID_CANNOT_BE_NULL, responseRec.errorMessage);
+        System.assertEquals(PayoffConstants.APP_ID_CANNOT_BE_NULL, responseRec.errorMessage);
     }
     //Key null
-    Testmethod static void testKeyNULLcheck(){
+    testMethod static void testKeyNULLcheck(){
         
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c,Is_Offer_Selected__c from Pricing_Offer__c where Key__c=6 Limit 1];
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
+        Pricing_Offer__c pOffer = [SELECT id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         pOffer.Is_Offer_Selected__c = true;
         update pOffer;
         
@@ -178,11 +219,9 @@ private class TestWSSelectedOffer{
         system.assertEquals(PayoffConstants.KEY_CANNOT_BE_NULL, responseRec.errorMessage);
     }
     //App ID incorrect format
-    Testmethod static void testAppIDIncorrectFormat(){
-        
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c,Is_Offer_Selected__c from Pricing_Offer__c where Key__c=6 Limit 1];
+    testMethod static void testAppIDIncorrectFormat(){
+
+        Pricing_Offer__c pOffer = [SELECT Id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         pOffer.Is_Offer_Selected__c = true;
         update pOffer;
         
@@ -205,12 +244,12 @@ private class TestWSSelectedOffer{
         Test.startTest();
         responseRec = WSSelectedOffer.markTentativeOfferSelected();
         Test.stopTest();
-        system.assertEquals(PayoffConstants.APP_ID_INCORRECT_FORMAT, responseRec.errorMessage);
+        System.assertEquals(PayoffConstants.APP_ID_INCORRECT_FORMAT, responseRec.errorMessage);
     }
 	// Check old EBP offer is deselected and new one is a success
-    Testmethod static void testEBPOfferDeselected(){
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
+    testMethod static void testEBPOfferDeselected(){
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
         Pricing_Offer__c  pOffer = new Pricing_Offer__c();
         pOffer.Above_prime_max__c= 'false';
         pOffer.Amount__c = 8000;
@@ -274,11 +313,11 @@ private class TestWSSelectedOffer{
     }
         
     //Offer Selected True and Key is same as Pricing offer Key
-    Testmethod static void testEBPOfferAlreadySelectedSameKey(){
+    testMethod static void testEBPOfferAlreadySelectedSameKey(){
         
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c,Is_Offer_Selected__c from Pricing_Offer__c where Key__c=6 Limit 1];
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
+        Pricing_Offer__c pOffer = [SELECT id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         pOffer.Is_Offer_Selected__c = true;
         pOffer.EBP_Offer_Code__c = '2021Feb_ebp_DCP_90';
         update pOffer;
@@ -305,11 +344,11 @@ private class TestWSSelectedOffer{
         system.assertEquals(PayoffConstants.THIS_OFFER_IS_ALREADY_APPROVED, responseRec.successMessage);
     }
     //Offer Selected True and Key is not same as Pricing offer Key
-    Testmethod static void testEBPOfferAlreadySelectedDifferenteKey(){
+    testMethod static void testEBPOfferAlreadySelectedDifferenteKey(){
         
-        Account acc =[Select id, name from Account where name='WSSelectedOfferFirstName TestLastName' limit 1];
-        genesis__Applications__c app=[select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
-        Pricing_Offer__c pOffer = [Select id,Key__c,Is_Offer_Selected__c from Pricing_Offer__c where Key__c=6 Limit 1];
+        Account acc =[SELECT id, name FROM Account WHERE name='WSSelectedOfferFirstName TestLastName' LIMIT 1];
+        genesis__Applications__c app=[SELECT id,genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__c=:acc.id LIMIT 1];
+        Pricing_Offer__c pOffer = [SELECT id,Key__c,Is_Offer_Selected__c FROM Pricing_Offer__c WHERE Key__c=6 LIMIT 1];
         pOffer.Is_Offer_Selected__c = true;
         pOffer.EBP_Offer_Code__c = '2021Feb_ebp_DCP_90';
         update pOffer;

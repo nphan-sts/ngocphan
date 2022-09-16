@@ -650,6 +650,8 @@ global class CreditPolicyResponse {
         global List<String> fico_score_factors {get;set;} 
         global Boolean file_inquiries_impacted_score {get;set;} 
         global List<Trades> trades {get;set;}
+        global Integer V71_G093S_num_public_records {get;set;}
+        global Boolean military_lending_status {get;set;}
 
         /* Bureau changed bureau_date_of_birth array to string in 6.2.  Handling this manually.*/
         /*global List<String> bureau_social_security_number {get;set;}*/
@@ -675,7 +677,7 @@ global class CreditPolicyResponse {
         global String months_since_derogatory_global_record {get;set;} 
         global Boolean no_hit {get;set;} 
         global Boolean frozen {get;set;} 
-        global String bureau_inquiry_date {get;set;} 
+        global String bureau_inquiry_date1 {get;set;} //LOP-392
         global String bureau_report_uid {get;set;}
         global Integer G095S_mo_since_public_record {get;set;}
         global Integer V71_G095S_mo_since_public_record {get;set;}
@@ -817,8 +819,8 @@ global class CreditPolicyResponse {
         
         if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.bureau_subset != null){
             String bureau_data = String.valueOF(CPResponse.credit_policy_decision.bureau_subset);
-            System.debug(bureau_data);
-           
+            System.debug(bureau_data);      
+              
             //Id CPid = CPResponse.cpData.id;
            // System.debug('id of cp' + CPid);
              //String attnm = 'Bureau_subset_Data_'+CPid+'.xml';
@@ -985,14 +987,15 @@ global class CreditPolicyResponse {
             
         }
         if(BureauResponse!=null){  
-            System.debug('***BureauResponse***' + BureauResponse);
+            System.debug('***BureauResponse*** Before replace' + BureauResponse);
             //obj.bureau_subset__c = String.ValueOf(CPResponse.credit_policy_decision.bureau_subset);
 
             /**
              * NOTE: the following line names all fields with date in the bureau string.
              * Not sure the history of it, seems dangerous
              */
-            BureauResponse = BureauResponse.replace('date', 'date1');           
+            BureauResponse = BureauResponse.replace('date', 'date1'); 
+             System.debug('***BureauResponse*** After replace' + BureauResponse);
             CreditPolicyResponse.BureauRequestAPI bureauReq = (BureauRequestAPI)System.JSON.deserialize(BureauResponse,BureauRequestAPI.class);
             Map<String, Object> bureauUntypedResponse = (Map<String, Object>) System.JSON.deserializeUntyped(BureauResponse);
 
@@ -1023,8 +1026,11 @@ global class CreditPolicyResponse {
                     obj.Tax_Liens__c                =bureauReq.number_of_tax_liens;
                 if(bureauReq.number_of_open_trades!=null)
                     obj.Total_Open_Trades__c        =bureauReq.number_of_open_trades;
-                if(bureauReq.bureau_inquiry_date!=null)
-                    obj.Bureau_Inquiry_Date__c      =bureauReq.bureau_inquiry_date;
+                if(bureauReq.bureau_inquiry_date1!=null){
+                    System.debug('****bureau_inquiry_date1****' + bureauReq.bureau_inquiry_date1 );//LOP-392
+                    obj.Bureau_Inquiry_Date__c      =bureauReq.bureau_inquiry_date1;
+                 	System.debug('****obj.Bureau_Inquiry_Date__c****' + obj.Bureau_Inquiry_Date__c );
+                }
                 /**
                 *Changes For CLS 384
                 **/
@@ -1095,6 +1101,12 @@ global class CreditPolicyResponse {
                 if(bureauReq.V71_AT09S_num_trd_opned_pst_24mo!=null) {
                     obj.Num_Trades_Opened_Past_24mo__c = bureauReq.V71_AT09S_num_trd_opned_pst_24mo;
                 }
+                //Lop-613
+                 system.debug('public records'+bureauReq.V71_G093S_num_public_records+bureauReq.military_lending_status);
+                if(bureauReq.V71_G093S_num_public_records!=null) 
+                                    obj.Public_Records_On_File__c = bureauReq.V71_G093S_num_public_records;
+                if(bureauReq.military_lending_status!=null) 
+                                    obj.MLA_Flag__c = bureauReq.military_lending_status;
             }
             
         }
