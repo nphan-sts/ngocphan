@@ -12,7 +12,7 @@
     *  Mohan Kiran 	 2021/09/09	   LSP-292-Processing skip a pay for bad standing loans coming from callouts.
     *  Mohan Kiran   2022/07/14	   LSP-836 - SAP processing within 45 days should not update Hardship request date. If the date difference between
     											first skip and 2nd skip are less than 45 days, the hardship request date is not altered.
-    
+    *  Shakul        2022/08/16    LSP-912 - Changing SAP behavior to not maintaining delinquency irrespective of good/bad loans
     ******************Modification History*****************************************************************
     ******************************************************************************/
     global class ForBearanceLoanHelper {
@@ -67,16 +67,16 @@
             Integer interestOnlyPeriod = 0;
             Decimal interestRate;
             String frequencyOfPayment;
-            Boolean maintainDelinquency = true;
+            Boolean maintainDelinquency = false; //LSP-912: Changing it to false irrespective of good/bad loans and invoking origination
             /* START-LSP-292 Block2 
     *Maintain Delinquency flag should be set to false when the active bad standing loan comes from processing
     */
-            
+            /*Commenting below code as part of LSP-912
             if(lAtobeUpdated!= null && isFromAPI && lAtobeUpdated.loan__Loan_Status__c == 'Active - Bad Standing'){
                 
                 maintainDelinquency = false;
                 
-            }
+            }*/
             
             /*END-LSP-292 Block2*/
             
@@ -373,7 +373,14 @@
                                                                       lAtobeUpdated.loan__Maturity_Date_Current__c,
                                                                       lAtobeUpdated.loan__Frequency_of_Loan_Payment__c));
             }
-            return remainingTerm;
+            //START - LSP-912: Modified to ensure single balloon payment at the end of the repayment schedule 
+            if(lAtobeUpdated.loan__Previous_Installment_Date__c == null){ //executes when there is no bill generated on the contract
+                return remainingTerm;
+            }
+            else{
+                return remainingTerm + 1; // executes otherwise
+            }
+            //END - LSP-912: Modified to ensure single balloon payment at the end of the repayment schedule 
         }
         
     /*
