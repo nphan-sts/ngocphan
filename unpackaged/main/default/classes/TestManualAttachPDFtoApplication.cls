@@ -10,7 +10,7 @@ Method name : manualAttachPDFtoApplication_PositiveScenario
 Purpose : to cover code satisfying ManualAttachPDFtoApplication
 */
     testmethod static void manualAttachPDFtoApplication_PositiveScenario(){
-         String CREDIT_SCORE_NOTICE = 'Credit Score Notice';
+        
         //Creating Account
         Account acc = new Account(
             Name = 'Test',
@@ -36,7 +36,7 @@ Purpose : to cover code satisfying ManualAttachPDFtoApplication
         insert acc1;
         
           CL_Document__c cs = new CL_Document__c();
-        cs.Doc1__c = CREDIT_SCORE_NOTICE;
+        cs.Doc1__c = 'Credit Score Notice';
         cs.Doc2__c = 'TIL Document';
         cs.Doc3__c = 'Adverse Action Document';
         cs.UploadedBOX__c = 'UploadedBOX';
