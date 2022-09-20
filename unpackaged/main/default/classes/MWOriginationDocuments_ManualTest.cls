@@ -24,6 +24,8 @@ private class MWOriginationDocuments_ManualTest {
         insert dc;
         Account acc = new Account(
                 Name = 'Test',
+           		peer__First_Name__c ='Testing',
+      		    peer__Last_Name__c = 'Account',
                 loan__Investor__c = True,
                 Amount_Invested__c = 1200,
                 Number_Of_Applications_Invested__c =3,

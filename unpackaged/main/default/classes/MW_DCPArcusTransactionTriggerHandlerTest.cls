@@ -7,6 +7,7 @@ public class MW_DCPArcusTransactionTriggerHandlerTest  {
         
         Account account_Obj = new Account(
             Name = 'Test',
+            peer__Last_Name__c = 'LastName',
             loan__Investor__c=False,
             cnotify__Email__c = 'no-reply@testorganization.com'
         );

@@ -26,7 +26,9 @@ private class MWOriginationDocumentsTest {
             Name = 'Test',
             loan__Investor__c = True,
             Amount_Invested__c = 1200,
-            Number_Of_Applications_Invested__c =3,
+			peer__First_Name__c ='Test',
+			peer__Last_Name__c = 'Account',
+        	Number_Of_Applications_Invested__c =3,
             cnotify__Email__c = 'abc@test.com',
             loan__SOCIAL_SECURITY_NUMBER__c = '123'
             );
