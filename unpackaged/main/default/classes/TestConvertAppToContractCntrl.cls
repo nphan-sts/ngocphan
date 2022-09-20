@@ -1,10 +1,12 @@
+/* ****************Modification History******************
+*    Created By        	 Date			Version
+*1. Bhavya Maliwal        2022/02/02     Initial Version
+
+******************Modification History******************/
 @isTest
 public Class TestConvertAppToContractCntrl{
-    
-    
-    public static testmethod void test(){
-                
-                
+    @testSetup
+    static void setup(){ 
         loan__Org_Parameters__c loanorg = loan.CustomSettingsUtil.getOrgParameters();
         loanorg.Manual_Payer_Lending_product_name__c = 'Manual Payer';
         loanorg.Auto_Payer_Lending_Product_Name__c = 'Auto Payer';
@@ -26,20 +28,20 @@ public Class TestConvertAppToContractCntrl{
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         System.debug('dummyOffice'+dummyOffice.name);
-
+        
         //Create a dummy Loan Product
         loan__Loan_Product__c dummyLP1 = loan.TestHelper.createLoanProduct(dummyOffice,
-                            dummyAccount, 
-                            curr, 
-                            dummyFeeSet);
+                                                                           dummyAccount, 
+                                                                           curr, 
+                                                                           dummyFeeSet);
         dummyLP1.name = 'Auto Payer';
         dummyLP1.loan__Pre_Bill_Days__c = 5;
         upsert dummyLP1;
-                          
+        
         loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice,
-                            dummyAccount, 
-                            curr, 
-                            dummyFeeSet);
+                                                                          dummyAccount, 
+                                                                          curr, 
+                                                                          dummyFeeSet);
         dummyLP.name = 'Manual Payer';
         dummyLP.loan__Pre_Bill_Days__c = 5;
         upsert dummyLP;
@@ -73,6 +75,7 @@ public Class TestConvertAppToContractCntrl{
         
         Account invacc = new Account();
         invacc.name = 'investor';
+        invacc.peer__Last_Name__c='scenario';
         invacc.loan__Investor__c = True;
         insert invacc;
         
@@ -82,12 +85,12 @@ public Class TestConvertAppToContractCntrl{
         
         //investor bank acc.
         loan__Bank_Account__c bainv = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
-                                                 loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '999999999',
-                                                 loan__Account_Type__c = 'Checking',
-                                                 loan__Active__c = true,
-                                                 Unmasked_Bank_Account_Number__c = '99999999',
-                                                 loan__Account__c = invacc.id);
+                                                                loan__Bank_Name__c = 'Some Bank',
+                                                                loan__Routing_Number__c = '999999999',
+                                                                loan__Account_Type__c = 'Checking',
+                                                                loan__Active__c = true,
+                                                                Unmasked_Bank_Account_Number__c = '99999999',
+                                                                loan__Account__c = invacc.id);
         insert bainv;
         
         loan__Automated_Payment_Configuration__c invaps = new loan__Automated_Payment_Configuration__c();
@@ -101,18 +104,18 @@ public Class TestConvertAppToContractCntrl{
         
         
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
-                                                 loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '999999999',
-                                                 loan__Account_Type__c = 'Checking',
-                                                 loan__Active__c = true,
-                                                 Unmasked_Bank_Account_Number__c = '99999999',
-                                                 loan__Account__c = dummyClient.id);
+                                                             loan__Bank_Name__c = 'Some Bank',
+                                                             loan__Routing_Number__c = '999999999',
+                                                             loan__Account_Type__c = 'Checking',
+                                                             loan__Active__c = true,
+                                                             Unmasked_Bank_Account_Number__c = '99999999',
+                                                             loan__Account__c = dummyClient.id);
         insert ba;
         //// Queue
         QueueSobject pendingForFundingque = [Select queue.id,queue.name,QueueID 
-                                        from QueueSobject 
-                                        where SobjectType ='genesis__Applications__c'                                   
-                                        AND queue.Name =: 'Pending for Funding' limit 1];
+                                             from QueueSobject 
+                                             where SobjectType ='genesis__Applications__c'                                   
+                                             AND queue.DeveloperName =: 'Pending_for_Funding' limit 1];
         ///////Creation Of Applications......
         genesis__Applications__c genesApp = new genesis__Applications__c();
         genesApp.genesis__Due_Day__c = 20;
@@ -136,9 +139,9 @@ public Class TestConvertAppToContractCntrl{
         genesApp.Loan_Origination_Date__c = date.today() + 4;
         //genesApp.OwnerId = pendingForFundingque.Queue.Id;
         insert genesApp;
-         genesApp.OwnerId = pendingForFundingque.QueueID;
+        genesApp.OwnerId = pendingForFundingque.QueueID;
         update genesApp;
-         genesis__Applications__c genesApp1 = new genesis__Applications__c();
+        genesis__Applications__c genesApp1 = new genesis__Applications__c();
         genesApp1.genesis__Due_Day__c = 20;
         genesApp1.genesis__Expected_First_Payment_Date__c = system.Today();
         genesApp1.genesis__Expected_Start_Date__c = system.Today();
@@ -161,34 +164,59 @@ public Class TestConvertAppToContractCntrl{
         //genesApp.OwnerId = pendingForFundingque.Queue.Id;
         insert genesApp1;
         
-        List<genesis__Applications__c> appList = new List<genesis__Applications__c>();
-        appList.add(genesApp);
-        appList.add(genesApp1);
         
+    }
+    /*Created By : Bhavya Maliwal
+Method name : ConvertAppToContractCntrl_UpdateApp_ConvertApp
+Purpose : to cover code satisfying Application Update (updateApps) and conversion of Application (convertApps) for ConvertAppToContractCntrl 
+*/ 
+    public static testmethod void ConvertAppToContractCntrl_UpdateApp_ConvertApp(){
+        List<genesis__Applications__c> appList =[Select id from genesis__Applications__c];
         Test.StartTest();
-        //Test.setCurrentPage(Page.ConvertApplication);
         ApexPages.StandardSetController stdctrl = new ApexPages.StandardSetController(appList);
         stdctrl.setSelected(appList);
         ConvertAppToContractCntrl ctopc = new ConvertAppToContractCntrl(stdctrl);
         //ctopc.checkJobStatus();
         ctopc.selectedAppList = appList;
         ctopc.convertApps();       
-        ctopc.updateApps();
+        PageReference uapp=ctopc.updateApps();
+        system.assertEquals(TRUE, uapp!=null);
         
         ConvertAppToContractCntrl.Errors err= new ConvertAppToContractCntrl.Errors();
         err.appName = '';
         err.error = '';
         Test.stopTest();
-
+        
     }
-     public static testmethod void test1(){
-         Test.StartTest();
-         ConvertAppToContractCntrl ctopc = new ConvertAppToContractCntrl();
-        //ctopc.checkJobStatus();
-        //ctopc.selectedAppList = appList;
-        //ctopc.convertApps();       
-        //ctopc.updateApps();
-     }
-    
+    /*Created By : Bhavya Maliwal
+Method name : ConvertAppToContractCntrl_JobIdNotNull
+Purpose : to cover code satisfying if condition for Method getIsEnabled inn ConvertAppToContractCntrl 
+where JOB ID is NOT NULL
+*/
+    public static testmethod void ConvertAppToContractCntrl_JobIdNotNull(){
+        Test.StartTest();
+        PageReference pageRef = Page.ConvertApplication; 
+        pageRef.getParameters().put('jobId','7074C00000UzIckQAF');// dummy id
+        Test.setCurrentPage(pageRef);
+        ConvertAppToContractCntrl ctopc = new ConvertAppToContractCntrl();
+        Boolean result=  ctopc.getIsEnabled();
+        system.assert(result);  
+        test.stopTest();
+        
+    }
+    /*Created By : Bhavya Maliwal
+Method name : ConvertAppToContractCntrl_JobIdNull
+Purpose : to cover code satisfying else condition for Method getIsEnabled inn ConvertAppToContractCntrl 
+where JOB ID is NULL
+*/
+    public static testmethod void ConvertAppToContractCntrl_JobIdNull(){
+        Test.StartTest();
+        ConvertAppToContractCntrl ctopc = new ConvertAppToContractCntrl();
+        ctopc.getIsEnabled();
+        Boolean result=  ctopc.getIsEnabled();
+        system.assert(!result);  
+        test.stopTest();
+        
+    }
     
 }

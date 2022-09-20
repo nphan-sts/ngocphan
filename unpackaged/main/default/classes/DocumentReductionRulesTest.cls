@@ -16,7 +16,19 @@ Private Class DocumentReductionRulesTest{
             loan__Investor__c = False,
             cnotify__Email__c = 'no-reply@testorganization.com'
         );
+       
         Insert acc;
+         //LOP-563
+            Account acc1 = new Account(
+            Name = 'Test1',
+            peer__First_Name__c = 'TestFirstName1',
+            peer__Last_Name__c = 'TestLastName1',
+            loan__Investor__c = False,
+            cnotify__Email__c = 'no-reply@testorganization1.com'
+        );
+        Insert acc1;
+        
+
         genesis__Applications__c app = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
             genesis__Expected_First_Payment_Date__c = system.Today(),
@@ -38,15 +50,16 @@ Private Class DocumentReductionRulesTest{
             genesis__Expected_First_Payment_Date__c = system.Today(),
             genesis__Expected_Start_Date__c = system.Today(),
             genesis__Funding_in_Tranches__c = true,
-            genesis__Account__c = acc.Id,        
+            genesis__Account__c = acc1.Id,        
             Application_Start_DateV2__c = system.Today(),
-            genesis__Status__c = 'agent_verified',
+            genesis__Status__c = 'kba_success',
             genesis__Draw_Period_End_Date__c = system.Today(),
             Employment_Status__c = 'Full Time',
             Sift_Status__c=30,
             Annual_Individual_Income_App__c = 10000
         );      
         Insert app1;
+    
         genesis__Employment_Information__c empInfo = new genesis__Employment_Information__c(
             genesis__Application__c = app.Id,
             Income_Include_Bonuses_or_Commissions__c = false    
@@ -61,6 +74,7 @@ Private Class DocumentReductionRulesTest{
             Hire_Date__c = System.Today()
         );
         Insert talx;
+       
         
         MW_Settings__c leadsEndPoint = new MW_Settings__c ();
         leadsEndPoint.LEADS_FE_EndpointURL__c = 'https://sfapi-dev.payoff.com/ms/api/cls/update_user';
@@ -90,14 +104,33 @@ Private Class DocumentReductionRulesTest{
             Net_Disposable_Income_NDI__c='2000'
         );
         Insert cPolicy; 
+        //LOP_563
+          genesis__Document_Category__c docCat1 = new genesis__Document_Category__c(
+            genesis__Category_Name__c = 'Test_Paystub_ID',
+            genesis__Required__c = true
+        );
+        Insert docCat1;
+        genesis__Application_Document_Category__c appDocCat1 = new genesis__Application_Document_Category__c(
+            Name = 'Test_paystub_ID_doc',
+            genesis__Document_Category__c = docCat1.Id,
+            genesis__Application__c = app1.Id
+        );
+        Insert appDocCat1;
+        Credit_Policy__c cPolicy1 = new Credit_Policy__c(
+            Name='TestPolicy',
+            Application__c =app1.Id,
+            Net_Disposable_Income_NDI__c='2000'
+        );
+        Insert cPolicy1; 
         
         Application_Tags__c apptag = new Application_Tags__c(
         Application_Tag__c = 'Soft Pull Requested.',
         Application__c = app.id);
         insert apptag;
+        // for Accept_Refer_Code__c= Accept
         KBA_Details__c kbaObj = new KBA_Details__c(
-            Application__c = app.Id,
-            Precise_ID_Overall_SCore__c = 901, 
+            Application__c = app1.Id,
+            Precise_ID_Overall_SCore__c = 9012, 
             Precise_ID_First_Payment_Default__c = 9012, 
             Precise_ID_ID_Theft__c = 9012,  
             Precise_ID_Validation__c = 9012, 
@@ -111,7 +144,43 @@ Private Class DocumentReductionRulesTest{
             Public_Records__c=0,
             Accept_Refer_Code__c= 'ACC'  //CRM-966
         );
-        Insert kbaObj;
+       Insert kbaObj;
+        //LOP-563 for  Accept_Refer_Code__c= NULL  
+         KBA_Details__c kbaObj1 = new KBA_Details__c(
+            Application__c = app1.Id,
+            Precise_ID_Overall_SCore__c = 254, 
+            Precise_ID_First_Payment_Default__c = 394, 
+            Precise_ID_ID_Theft__c = 259,  
+            Precise_ID_Validation__c = 397, 
+            Precise_ID_Adverse_Action_Code__c = ' ', 
+            Precise_ID_Decision__c = 'Priority 10 Referal' ,
+            Precise_ID_Decision_KIQ__c = NULL, 
+            Precise_ID_General_Fraud_Shield_Indicat__c = 'F04', 
+            Id_Analytics_Score__c = 500, 
+            Consistency_Snapd_score__c = 30, 
+            Paste_Count__c = 1,
+            Public_Records__c=0,
+            Accept_Refer_Code__c= NULL  //CRM-966
+        );
+        //Insert kbaObj1;
+       //  //LOP-563 for  Accept_Refer_Code__c= 'REF'
+        KBA_Details__c kbaObj2 = new KBA_Details__c(
+            Application__c = app1.Id,
+            Precise_ID_Overall_SCore__c = 318, 
+            Precise_ID_First_Payment_Default__c = 399, 
+            Precise_ID_ID_Theft__c = 349,  
+            Precise_ID_Validation__c = 417, 
+            Precise_ID_Adverse_Action_Code__c = ' ', 
+            Precise_ID_Decision__c = 'Priority 10 Referal' ,
+            Precise_ID_Decision_KIQ__c = NULL, 
+            Precise_ID_General_Fraud_Shield_Indicat__c = 'F04', 
+            Id_Analytics_Score__c = 500, 
+            Consistency_Snapd_score__c = 30, 
+            Paste_Count__c = 1,
+            Public_Records__c=0,
+            Accept_Refer_Code__c= 'REF' //CRM-966
+        );
+        //Insert kbaObj2;
         test.stopTest();
     }
     //PayStub Reduction
@@ -126,10 +195,10 @@ Private Class DocumentReductionRulesTest{
         genesis__Employment_Information__c empInfo = [select id,Income_Include_Bonuses_or_Commissions__c from genesis__Employment_Information__c  WHERE genesis__Application__c =: app.Id LIMIT 1];
         System.assertEquals(true, empInfo!=Null);
         
-        Id docCatID = [SELECT Id FROM genesis__Document_Category__c WHERE genesis__Category_Name__c LIKE '%PayStub%'].Id;
+        Id docCatID = [SELECT Id FROM genesis__Document_Category__c WHERE genesis__Category_Name__c LIKE '%PayStub%' LIMIT 1].Id;
         System.assertEquals(true, docCatID!=Null);
                 
-        genesis__Application_Document_Category__c appDocCatObj = [SELECT Id FROM genesis__Application_Document_Category__c WHERE Name Like '%Test%'];
+        genesis__Application_Document_Category__c appDocCatObj = [SELECT Id FROM genesis__Application_Document_Category__c WHERE Name Like '%Test%' LIMIT 1];
         System.assertEquals(true, appDocCatObj!=Null);
         DocumentReductionRules.payStubReduction(app.id);
         List<genesis__Application_Document_Category__c> docCategory = [SELECT Id FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id and genesis__Required__c = false];
@@ -144,6 +213,37 @@ Private Class DocumentReductionRulesTest{
     //ID Reduction
     Static testMethod Void payStubReduction_UseCase2(){
         
+        // LOP-563 use case 2 and 3 where Accept_Refer_Code__c != 'accept'
+        
+         Account acc = [select Id from Account  where peer__First_Name__c = 'TestFirstName1' LIMIT 1];
+        System.assertEquals(true, acc!=Null);
+        genesis__Applications__c app = [SELECT Id,Sift_Status__c from genesis__Applications__c WHERE genesis__Account__c =: acc.Id LIMIT 1];
+        System.assertEquals(true, app!=Null);
+        
+        //List<Id> appid = new List<Id>();
+        //appid.add(app.id);
+        DocumentReductionRules.payStubReduction(app.id);
+        List<genesis__Application_Document_Category__c> docCategory = [SELECT Id FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id and genesis__Required__c = false];
+        System.assertEquals(true, !docCategory.isEmpty());
+        
+        KBA_Details__c kba = [SELECT Precise_ID_Overall_SCore__c,Precise_ID_First_Payment_Default__c, 
+                              Precise_ID_ID_Theft__c, Precise_ID_Validation__c, 
+                              Phone_Verification_Result__c, Precise_ID_Adverse_Action_Code__c, 
+                              Precise_ID_Decision__c,Precise_ID_Decision_KIQ__c, 
+                              Precise_ID_General_Fraud_Shield_Indicat__c,Id_Analytics_Score__c, 
+                              Consistency_Snapd_score__c, Paste_Count__c, 
+                              Public_Records__c FROM KBA_Details__c WHERE Application__c =: app.Id LIMIT 1];
+        System.assertEquals(true, kba!=Null);  
+        Id docCatID = [SELECT Id FROM genesis__Document_Category__c WHERE genesis__Category_Name__c LIKE '%ID%' LIMIT 1].Id;
+        System.assertEquals(true, docCatID!=Null);
+        genesis__Application_Document_Category__c docIDL = [SELECT ID, genesis__Required__c FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id AND name LIKE '%ID%'];
+        System.assertEquals(false,docIDL.genesis__Required__c==True);
+
+        genesis__Application_Document_Category__c appDocCatObj = [SELECT Id FROM genesis__Application_Document_Category__c WHERE Name Like '%Test%' LIMIT 1];
+        System.assertEquals(true, appDocCatObj!=Null);  
+      
+        // LOP-563 existing version use case 1
+        /*
         Account acc = [select Id from Account  where peer__First_Name__c = 'TestFirstName' LIMIT 1];
         System.assertEquals(true, acc!=Null);
         genesis__Applications__c app = [SELECT Id,Sift_Status__c from genesis__Applications__c WHERE genesis__Account__c =: acc.Id LIMIT 1];
@@ -177,13 +277,16 @@ Private Class DocumentReductionRulesTest{
         System.assertEquals(true, kba.Public_Records__c == 0);
         Id docCatID = [SELECT Id FROM genesis__Document_Category__c WHERE genesis__Category_Name__c LIKE '%ID%'].Id;
         System.assertEquals(true, docCatID!=Null);
+        //LOP-563
+        genesis__Application_Document_Category__c docIDL = [SELECT ID, genesis__Required__c FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id AND name LIKE '%ID%'];
+        System.assertEquals(true,docIDL.genesis__Required__c==False);
         genesis__Application_Document_Category__c appDocCatObj = [SELECT Id FROM genesis__Application_Document_Category__c WHERE Name Like '%Test%'];
-        System.assertEquals(true, appDocCatObj!=Null);
+        System.assertEquals(true, appDocCatObj!=Null); */
     }
     
      Static testMethod Void payStubReduction_UseCase3(){
         
-        Account acc = [select Id from Account  where peer__First_Name__c = 'TestFirstName' LIMIT 1];
+        Account acc = [select Id from Account  where peer__First_Name__c = 'TestFirstName1' LIMIT 1];
         System.assertEquals(true, acc!=Null);
         genesis__Applications__c app = [SELECT Id,Sift_Status__c from genesis__Applications__c WHERE genesis__Account__c =: acc.Id LIMIT 1];
         System.assertEquals(true, app!=Null);

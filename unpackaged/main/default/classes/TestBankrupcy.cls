@@ -1,19 +1,203 @@
 /* ****************Modification History******************
- * Last Modified by        Date          JIRA number
- *      1. Pallavi        2020/01/27     LOS-28(Remove references to InvestorAccount field on CL contract)
- *      
+ * Last Modified By        		Date			JIRA number		
+ * 	1. Pallavi				2020/01/27				LOS-28(Remove references to InvestorAccount field on CL contract)
+ *	2. Bhanupriya       	2022/02/03     		LSP-524	
+ *			Purpose:- Create setup method and starttest() and stoptest()
+ *						add assert statements
+ *
  ******************Modification History******************/
+
+
 @isTest
 public class TestBankrupcy {
     
+    //Create setup method
+     @testSetup 
+    public static void testSetup() {
+        
+        //Create new account
+        Account acc = new Account();
+        acc.Name = 'Test Account';
+        acc.Account_External_ID__c = 'Test';
+        acc.peer__First_Name__c = 'Test Account First Name';
+        acc.peer__Last_Name__c='Test Account Last Name';
+        insert acc;
+        
+        //Creating loan account 
+        loan.TestHelper.createSeedDataForTesting();
+        loan__Currency__c curr = loan.TestHelper.createCurrency();
+        //Create a dummy MF_Account
+        loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest','10000 - ASSETS');
+        loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
+        
+        //Create a Fee Set
+        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount); 
+        dummyFee.loan__Amount__c = 3;      
+        dummyFee.loan__Time_Of_Charge__c = 'Other';
+        upsert dummyFee;
+        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
+        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+        loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
+        System.debug('dummyOffice'+dummyOffice.name);
+
+        //Create a dummy Loan Product
+        loan__Loan_Product__c dummyLP1 = loan.TestHelper.createLoanProduct(dummyOffice,
+                            dummyAccount, 
+                            curr, 
+                            dummyFeeSet);
+        dummyLP1.name = 'Auto Payer';
+        dummyLP1.loan__Pre_Bill_Days__c = 5;
+        upsert dummyLP1;
+                          
+        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice,
+                            dummyAccount, 
+                            curr, 
+                            dummyFeeSet);
+        dummyLP.name = 'Manual Payer';
+        dummyLP.loan__Pre_Bill_Days__c = 5;
+        upsert dummyLP;
+
+        
+        loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();        
+        dummyLoanPurpose.loan__Loan_Purpose_Code__c = 'Refinance';
+        account dummyClient = new account(); 
+        dummyClient.Name = 'Payoff';
+        dummyClient.peer__Last_Name__c = 'Account';
+        dummyClient.peer__First_Name__c = 'Test';
+        insert dummyClient;
+        
+        //Create investor new account
+        Account invacc = new Account(
+        	name = 'investor',
+        	loan__Investor__c = true,
+        	Amount_Invested__c = 1000,
+        	Number_Of_Applications_Invested__c = 3, 
+            Total_No_of_Application_Limit__c = 30,
+            Last_Application_assigned_on__c = system.now()-7,
+            Total_Investment_Limit__c = 1000000,
+            loan__Undeployed_Funds__c = 500000,
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'InvestorFirstName',
+            peer__Last_Name__c='InvestorLastName',
+            no_of_shares_to_be_Sold__c = 1,
+            Number_of_Days__c = 0,
+            loan__Active__c = 'YES', 
+            City__c='CANADA',
+            State__c='CA',
+            ZIP_Code__c='123456'
+        );
+       
+        
+        insert invacc;
+        
+        loan__Payment_Mode__c pm = new loan__Payment_Mode__c();
+        pm.name = 'Wire';
+        insert pm;
+        
+        //investor bank acc.
+        loan__Bank_Account__c bainv = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
+                                                 loan__Bank_Name__c = 'Some Bank',
+                                                 loan__Routing_Number__c = '123456789',
+                                                 loan__Account_Type__c = 'Checking',
+                                                 loan__Active__c = true,
+                                                 Unmasked_Bank_Account_Number__c = '99999999',
+                                                 loan__Account__c = invacc.id);
+        insert bainv;
+        
+        loan__Automated_Payment_Configuration__c invaps = new loan__Automated_Payment_Configuration__c();
+        invaps.loan__Payment_Mode__c = pm.id;
+        invaps.loan__Bank_Account__c = bainv.id;
+        invaps.loan__Filegen_Class__c = 'CustomLoanPaymentTxnNACHAGen';
+        invaps.loan__Folder_Name__c = 'ACU';
+        invaps.loan__File_Type__c = 'CSV';
+        invaps.loan__Event__c = 'LOAN PAYMENT';
+        insert invaps;
+        
+        
+        loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
+                                                 loan__Bank_Name__c = 'Some Bank',
+                                                 loan__Routing_Number__c = '123456789',
+                                                 loan__Account_Type__c = 'Checking',
+                                                 loan__Active__c = true,
+                                                 Unmasked_Bank_Account_Number__c = '99999999',
+                                                 loan__Account__c = dummyClient.id);
+        insert ba;
+        
+        
+        //Create a dummy Loan Account
+        loan__Loan_Account__c loanAccount = loan.TestHelper.createLoanAccountForAccountObj(dummyLP,
+                                                    dummyClient,
+                                                    dummyFeeSet,
+                                                    dummyLoanPurpose,
+                                                    dummyOffice);
+        loanAccount.loan__Number_of_Installments__c     = 12;                                  
+        loanAccount.Loan__Loan_Status__c                = loan.LoanConstants.LOAN_STATUS_ACTIVE_GOOD_STANDING;
+        loanAccount.Loan__Fees_Remaining__c             = 100;
+        loanAccount.Loan__Interest_Remaining__c         = 500;
+        loanAccount.Loan__Principal_Remaining__c        = 1000;
+        loanAccount.Loan__Fractionalization_Status__c   = loan.LoanConstants.FRACTIONALIZATION_STATUS_ACTIVE;
+        loanAccount.Loan__Pay_off_Amount_As_Of_Today__c = loanAccount.loan__Fees_Remaining__c + loanAccount.loan__Principal_Remaining__c;
+        loanAccount.loan__Delinquent_Amount__c             = 5000;
+        loanAccount.loan__Next_Due_Generation_Date__c = date.today().adddays(15);
+        //loanAccount.Investor_Account__c = invacc.id;	//commented(LOS-28)
+        upsert loanAccount;  
+        
+        System.debug('Loan Account --' + loanAccount);
+        loanAccount.loan__Account__c = acc.Id;
+        loanAccount.loan__Loan_Status__c = 'Active - Good Standing';
+        update loanAccount;
+        System.debug('Loan Account 2--' + loanAccount); 
+        
+        acc.Bankrupt__c = TRUE;
+        update acc;
+    }
+    
     public static testMethod void TestBankrupt(){
-        loan__Org_Parameters__c cso = new loan__Org_Parameters__c(loan__Disable_Triggers__c = true);
-        cso.WriteOffSuggestion__c = 90;
-        insert cso;
+        
+
+        List<Account> aclist = [select id,name,peer__First_Name__c from Account Where peer__First_Name__c = 'Test Account First Name'];
+        
+        system.debug('Account Record' +aclist);
+      	 
+        loan__Loan_Account__c loanAccList = [select id,loan__Account__c from loan__Loan_Account__c 
+                                              where loan__Account__c = : aclist[0].id LIMIT 1];
+        String query = 'SELECT id, Name '+
+                    +'FROM loan__loan_account__c'+
+                    +' WHERE loan__account__r.Bankrupt__c = TRUE';
+       
+        Test.startTest();
+        
+       	List<id> accid = new list<id>();
+        accid.add(aclist[0].id);
+        BankruptJob BJob = new BankruptJob(query);
+        BankRupt.MarkBankRupt(accid);
+        Database.executebatch(new BankruptJob(),1);
+        
+        Test.stopTest();
+        
+        list<loan__Loan_Block_Code__c> blockCoList = [select id,loan__Loan_Account__c,loan__Block_Code__c from loan__Loan_Block_Code__c
+                                                     where loan__Loan_Account__c = :loanAccList.id];
+                                
+        		system.debug('Records ' + blockCoList.size());
+              
+				System.assert(blockCoList.size()== 2,'List should be 2 records');
+ 
+    }
+  
+    
+   //Commenting and moving to testSetup method
+    /*
+    
+    public static testMethod void TestBankrupt(){
+        
+
         
         Account acc = new Account();
         acc.Name = 'Test Account';
         acc.Account_External_ID__c = 'Test';
+        acc.peer__First_Name__c = 'Test Account First Name';
+        acc.peer__Last_Name__c='Test Account Last Name';
+      
         insert acc;
         
            //Creating loan account 
@@ -55,6 +239,8 @@ public class TestBankrupcy {
         dummyLoanPurpose.loan__Loan_Purpose_Code__c = 'Refinance';
         account dummyClient = new account(); 
         dummyClient.Name = 'Payoff';
+        dummyClient.peer__Last_Name__c = 'Account';
+        dummyClient.peer__First_Name__c = 'Test';
         insert dummyClient;
         
         Account invacc = new Account();
@@ -110,7 +296,7 @@ public class TestBankrupcy {
         loanAccount.Loan__Pay_off_Amount_As_Of_Today__c = loanAccount.loan__Fees_Remaining__c + loanAccount.loan__Principal_Remaining__c;
         loanAccount.loan__Delinquent_Amount__c             = 5000;
         loanAccount.loan__Next_Due_Generation_Date__c = date.today().adddays(15);
-        //loanAccount.Investor_Account__c = invacc.id;  //commented(LOS-28)
+        //loanAccount.Investor_Account__c = invacc.id;	//commented(LOS-28)
         upsert loanAccount;  
         
         System.debug('Loan Account --' + loanAccount);
@@ -132,10 +318,10 @@ public class TestBankrupcy {
         Test.stopTest();
     }
     
+    
+    //Commenting 
+
     public static Loan__loan_account__c CreateLoanContract(id accId){
-       /* loan__Org_Parameters__c cso = new loan__Org_Parameters__c(loan__Disable_Triggers__c = true);
-        cso.WriteOffSuggestion__c = 90;
-        insert cso;*/
         
         loan.TestHelper.createSeedDataForTesting();
         //Create Currency...
@@ -232,5 +418,5 @@ public class TestBankrupcy {
         
         insert loanContract;
         return loanContract;
-    }
+    }*/
 }

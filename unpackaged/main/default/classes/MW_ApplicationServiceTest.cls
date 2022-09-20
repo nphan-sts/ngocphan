@@ -48,6 +48,28 @@ private class MW_ApplicationServiceTest {
     appForDuplicateAct.Bureau_SSN__c = preExistAct.loan__SOCIAL_SECURITY_NUMBER__c;
     appForDuplicateAct.genesis__Status__c = null;
     Insert appForDuplicateAct;
+      
+      Account preExistAct2 = MW_GlobalTestUtility.GetAccount('Member');
+    //preExistAct2.Name = 'preExistAct2';
+    preExistAct2.peer__First_Name__c ='PreExist';
+    preExistAct2.peer__Last_Name__c = 'Act2';
+	//preExistAct2.social_security_number_uniqueness_field__c = '';
+    Insert preExistAct2;
+	
+	//Create one more Account
+    Account actWithDuplicateSsn2 = MW_GlobalTestUtility.GetAccount('Member');
+    //actWithDuplicateSsn2.Name = 'actWithDuplicateSsn2';
+    actWithDuplicateSsn2.peer__First_Name__c ='ActWithDuplicate';
+    actWithDuplicateSsn2.peer__Last_Name__c = 'Ssn2';
+    actWithDuplicateSsn2.loan__SOCIAL_SECURITY_NUMBER__c = null;
+    Insert actWithDuplicateSsn2;
+
+    //Create app for one more account with duplicate SSN
+    genesis__Applications__c appForDuplicateAct2 = MW_GlobalTestUtility.GetApplication();
+    appForDuplicateAct2.genesis__Account__c = actWithDuplicateSsn2.Id;
+    appForDuplicateAct2.Bureau_SSN__c = preExistAct2.loan__SOCIAL_SECURITY_NUMBER__c;
+    appForDuplicateAct2.genesis__Status__c = null;
+    Insert appForDuplicateAct2;
 
     Test.stopTest();
   }
@@ -72,6 +94,26 @@ private class MW_ApplicationServiceTest {
 
     //Old Account's SSN has been set to NULL
     System.AssertEquals(true, String.isEmpty(PreExistAct.loan__SOCIAL_SECURITY_NUMBER__c));
+  }
+    
+     @isTest static void TestPifLoanUpdates2(){
+    
+
+    test.startTest();
+	genesis__Applications__c appForDuplicateAct2 = [SELECT Id, Name, Bureau_SSN__c, genesis__Status__c, genesis__Account__c FROM genesis__Applications__c WHERE genesis__Account__r.Name = 'ActWithDuplicate Ssn2' LIMIT 1];
+  
+    Account preExistAct = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'PreExist Act2' LIMIT 1];
+
+    Account actWithDuplicateSsn = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn' LIMIT 1];
+
+    appForDuplicateAct2.genesis__Status__c = 'kba_fail';
+    Update appForDuplicateAct2;
+	Test.stopTest();
+   
+   
+     Account ActWithDuplicate = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn2' LIMIT 1];
+	 
+	 system.assertEquals(ActWithDuplicate.loan__SOCIAL_SECURITY_NUMBER__c,appForDuplicateAct2.Bureau_SSN__c);
   }
 
   @isTest static void TestUpdateAccounts(){

@@ -5,7 +5,7 @@
  *****************Modification History*****************************************************************
  * 
  ******************Modification History*****************************************************************/
-public class CorrectLastBilledAmountHandler {
+public with sharing class CorrectLastBilledAmountHandler {
     Set<String> lastPaymentDue;
     Set<String> neitherFirstNorLastPaymentDue;
     Set<String> firstPaymentDue;
@@ -44,10 +44,10 @@ public class CorrectLastBilledAmountHandler {
                update loanToUpdate; 
             }catch(Exception e){
                 loan__Batch_Process_Log__c batch = new loan__Batch_Process_Log__c();
-                 batch.loan__Log_Level__c = 'ERROR';
-                 batch.loan__Message__c = 'Loans failed to update:: '+loanToUpdate+' ERROR :: '+e.getMessage() + ' :: StackTrace ::' +e.getStackTraceString();
-                 batch.loan__Batch_Id__c = 'CorrectLastBilledAmountBatch';
-                 insert batch;
+                batch.loan__Log_Level__c = 'ERROR';
+                batch.loan__Message__c = 'Loans failed to update:: '+loanToUpdate+' ERROR :: '+e.getMessage() + ' :: StackTrace ::' +e.getStackTraceString();
+                batch.loan__Batch_Id__c = 'CorrectLastBilledAmountBatch';
+                insert batch;
             }
         }
     }

@@ -1,14 +1,13 @@
 /* ****************Modification History******************
- * Last Modified by        Date          JIRA number
- *      1. Pallavi        2020/01/27     LOS-28(Remove references to InvestorAccount field on CL contract)
- *      
+ * Updated By        Date			Version					Purpose 
+ *1. Bhanupriya       2022/02/01     Initial Version		added assert statements and fix the test case and created a new method for batch job
  ******************Modification History******************/
 @isTest
 public Class TestAutoSale{
     
     
-    @testSetup static void Setup() {
-        Test.StartTest();
+    @testSetup static void testSetup() {
+        //Test.StartTest();
         
         loan__Org_Parameters__c loanorg = loan.CustomSettingsUtil.getOrgParameters();
         loanorg.Manual_Payer_Lending_product_name__c = 'Manual Payer';
@@ -49,12 +48,14 @@ public Class TestAutoSale{
         dummyLP.loan__Pre_Bill_Days__c = 5;
         upsert dummyLP;
 
+        // Create Rule
         genesis__Rule__c rule = new genesis__Rule__c();
         rule.name                       = 'TCU ruleset';
         rule.genesis__Enabled__c        = true;
         rule.genesis__Object_Type__c    = 'genesis__Object_Type__c';
         insert rule;
         
+        //Creating Rule Criteria
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
         genesis__Criteria_Sequence__c = 1.0,
         genesis__Field_API_Name__c    = 'genesis__Account__r.State__c',
@@ -69,6 +70,7 @@ public Class TestAutoSale{
         );
         insert rul;
         
+        //Create Dummy loan Purpose
         loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();        
         dummyLoanPurpose.loan__Loan_Purpose_Code__c = 'Refinance';
         account dummyClient = new account(); 
@@ -77,6 +79,7 @@ public Class TestAutoSale{
         dummyClient.peer__First_Name__c = 'Test';
         insert dummyClient;
         
+      //Create new Investor Account
         Account invacc = new Account(
             Name = 'Investor',
             loan__Investor__c = true,
@@ -88,8 +91,8 @@ public Class TestAutoSale{
             Total_Investment_Limit__c = 1000000,
             loan__Undeployed_Funds__c = 500000,
             cnotify__Email__c = 'no-reply@testorganization.com',
-            peer__First_Name__c = 'TestFName1',
-            peer__Last_Name__c='TestLName2',
+            peer__First_Name__c = 'InvestorFirstName',
+            peer__Last_Name__c='InvestorLastName',
             no_of_shares_to_be_Sold__c = 1,
             Number_of_Days__c = 0,
             loan__Active__c = 'YES', 
@@ -106,13 +109,14 @@ public Class TestAutoSale{
         //investor bank acc.
         loan__Bank_Account__c bainv = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '999999999',
+                                                 loan__Routing_Number__c = '123456789',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Active__c = true,
-                                                 Unmasked_Bank_Account_Number__c = '99999999',
+                                                 Unmasked_Bank_Account_Number__c = '12345689',
                                                  loan__Account__c = invacc.id);
         insert bainv;
         
+        //Create Automated Loan Payment Configuration
         loan__Automated_Payment_Configuration__c invaps = new loan__Automated_Payment_Configuration__c();
         invaps.loan__Payment_Mode__c = pm.id;
         invaps.loan__Bank_Account__c = bainv.id;
@@ -122,13 +126,13 @@ public Class TestAutoSale{
         invaps.loan__Event__c = 'LOAN PAYMENT';
         insert invaps;
         
-        
+        //Create a new Bank loan account
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                  loan__Bank_Name__c = 'Some Bank',
-                                                 loan__Routing_Number__c = '999999999',
+                                                 loan__Routing_Number__c = '123456789',
                                                  loan__Account_Type__c = 'Checking',
                                                  loan__Active__c = true,
-                                                 Unmasked_Bank_Account_Number__c = '99999999',
+                                                 Unmasked_Bank_Account_Number__c = '12345689',
                                                  loan__Account__c = dummyClient.id);
         insert ba;
         
@@ -156,6 +160,23 @@ public Class TestAutoSale{
         //loanAccount.Investor_Account__c = invacc.id;  //commented(LOS-28)
         upsert loanAccount;  
         system.assertNotEquals(loanAccount.id,null,'LoanAccount not inserted');
+        
+        Date d = date.newInstance(2021, 08, 06);
+        Date Enddate = date.newInstance(2024, 08, 06) ;
+        
+        loan__Automated_Payment_Setup__c apss = new loan__Automated_Payment_Setup__c () ;
+        
+        apss.loan__Type__c = 'RECURRING';
+        apss.loan__Active__c = true ;
+        apss.loan__Amount_Type__c ='CURRENT PAYMENT AMOUNT' ;
+        apss.loan__Debit_Date__c = d;
+        apss.loan__Recurring_ACH_End_Date__c = Enddate;
+        apss.loan__Recurring_ACH_Start_Date__c = d;
+        apss.loan__Frequency__c = 'Monthly';
+        apss.loan__CL_Contract__c = loanAccount.id;
+        apss.loan__Bank_Account__c = ba.id;
+        insert apss;
+       
         list<loan__Investor_Loan__c> ioList = new list<loan__Investor_Loan__c>();
          
            loan__Investor_Loan__c lo = new loan__Investor_Loan__c();
@@ -177,22 +198,76 @@ public Class TestAutoSale{
            insert lo;
       
            
-        Test.stopTest();
+        //Test.stopTest();
 
     }
-    @isTest static Void autoMethod(){
-        test.startTest();
-        Account ac =[select id from Account where name = 'Investor'];
-        List<loan__Investor_Loan__c> lo = [select id,name,loan__Certificate_Rate__c,Buyer__c,loan__Account__r.no_of_shares_to_be_Sold__c,loan__Service_Rate__c,
+    // Description : For Default Method in batch job
+    @isTest static Void autoMethodV1(){
+        
+        List<Account> aclist =[select id,name,peer__First_Name__c from Account Where peer__First_Name__c = 'InvestorFirstName'];
+        System.debug('Account __ INVESTOR ****** ' + aclist);
+        loan__Automated_Payment_Configuration__c apc = [Select id,loan__Payment_Mode__c FROM loan__Automated_Payment_Configuration__c where
+                                                       loan__Bank_Account__r.loan__Account__c =: aclist[0].id LIMIT 1];
+       
+        List<loan__Investor_Loan__c> io = [select id,name,loan__Certificate_Rate__c,Buyer__c,loan__Account__r.no_of_shares_to_be_Sold__c,loan__Service_Rate__c,
                                            loan__Account__c,loan__Loan__c,loan__Share__c,loan__Status__c,
                                             peer__Number_Of_Shares__c,loan__Enabled_Flag__c,loan__Inv_Accrued_Interest_Amt__c, 
                                             loan__Remaining_Investment_Amount__c from loan__Investor_Loan__c where Buyer__c != null 
-                                            and loan__Status__c = 'Active' AND loan__Account__c =: ac.id limit 1];
-              AutoSale Auto = new AutoSale();
-              Database.QueryLocator ql = Auto.start(null);
-              Auto.execute(null,lo);
-              Auto.Finish(null); 
+                                            and loan__Status__c = 'Active' AND loan__Account__c =: aclist[0].id limit 1];
+        
+          
+        test.startTest(); 
+            AutoSale Auto = new AutoSale();
+            Database.QueryLocator ql = Auto.start(null);
+            Auto.execute(null,io);
+            Auto.Finish(null); 
             
         test.stopTest();
+            
+        List<loan__Automated_Payment_Setup__c> aps = [select id,loan__Payment_Mode__c from loan__Automated_Payment_Setup__c where
+                                                     loan__CL_Contract__c =: io[0].loan__loan__c];
+        system.assert(aps[0].loan__Payment_Mode__c == apc.loan__Payment_Mode__c, 'Payment mode should match');
+        
+       
+        
+        
     }
+    // Description :- For Parameterized Method in batch job
+    @isTest static Void autoMethodV2(){
+        
+        String Status = 'Active';
+        Date CurrentSystemDate = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();
+        String query = 'select id,name,loan__Certificate_Rate__c,Buyer__c,loan__Account__r.no_of_shares_to_be_Sold__c,loan__Service_Rate__c,loan__Account__c,loan__Loan__c,loan__Share__c,loan__Status__c, '+
+                ' peer__Number_Of_Shares__c,loan__Enabled_Flag__c,loan__Inv_Accrued_Interest_Amt__c, loan__Remaining_Investment_Amount__c from loan__Investor_Loan__c where Buyer__c != null and loan__Loan__r.Effective_Date_for_AutoSale__c =: CurrentSystemDate '+   //(LOS-185/186)                   
+                ' and loan__Status__c =\''+String.escapeSingleQuotes(Status)+'\'';
+        
+        List<Account> aclist =[select id,
+                                 name,
+                                 peer__First_Name__c 
+                               from Account 
+                               Where peer__First_Name__c = 'InvestorFirstName'];
+        //System.debug('Account __ INVESTOR ****** ' + aclist);
+        loan__Automated_Payment_Configuration__c apc = [Select id,loan__Payment_Mode__c FROM loan__Automated_Payment_Configuration__c where
+                                                       loan__Bank_Account__r.loan__Account__c =: aclist[0].id LIMIT 1];
+        List<loan__Investor_Loan__c> io = [select id,name,loan__Certificate_Rate__c,Buyer__c,loan__Account__r.no_of_shares_to_be_Sold__c,loan__Service_Rate__c,
+                                           loan__Account__c,loan__Loan__c,loan__Share__c,loan__Status__c,
+                                            peer__Number_Of_Shares__c,loan__Enabled_Flag__c,loan__Inv_Accrued_Interest_Amt__c, 
+                                            loan__Remaining_Investment_Amount__c from loan__Investor_Loan__c where Buyer__c != null 
+                                            and loan__Status__c = 'Active' AND loan__Account__c =: aclist[0].id limit 1];
+        test.startTest(); 
+            AutoSale Auto = new AutoSale(query);
+            Database.QueryLocator ql = Auto.start(null);
+            Auto.execute(null,io);
+            Auto.Finish(null); 
+            
+        test.stopTest();
+        
+        
+        List<loan__Automated_Payment_Setup__c> aps = [select id,loan__Payment_Mode__c from loan__Automated_Payment_Setup__c where
+                                                     loan__CL_Contract__c =: io[0].loan__loan__c];
+        system.assert(aps[0].loan__Payment_Mode__c == apc.loan__Payment_Mode__c, 'Payment mode should match');
+        
+       
+    }
+    
 }

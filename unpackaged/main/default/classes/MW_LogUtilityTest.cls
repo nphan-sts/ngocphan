@@ -25,6 +25,10 @@ private class MW_LogUtilityTest {
         response.setStatusCode(400);
         MW_LogUtility.info('classInfo', 'appId info', 'leadId', 'info method', 'bad message', response);
 
+        MW_LogUtility.infoMessage('classInfo', 'label', new Map<String, String>());
+
+        MW_LogUtility.warnMessage('classInfo', 'label', new Map<String, String>());
+
         MW_LogUtility.errorMessage('classInfo', 'label', new Map<String, String>());
         Test.stopTest();
     }

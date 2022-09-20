@@ -15,6 +15,7 @@ private class MW_KbaDetailsTriggerTest {
         act.peer__Last_Name__c = 'LastName';
         act.loan__Investor__c = true;
         act.loan__SOCIAL_SECURITY_NUMBER__c = '987654345';
+        act.social_security_number_uniqueness_field__c = '987654345';
         accountList.add(act);
         
         Account act1 = MW_GlobalTestUtility.GetAccount('Member');
@@ -23,6 +24,7 @@ private class MW_KbaDetailsTriggerTest {
         act1.peer__Last_Name__c = 'LastName1';
         act1.loan__Investor__c = true;
         act1.loan__SOCIAL_SECURITY_NUMBER__c = '987654342';
+        act1.social_security_number_uniqueness_field__c = '987654342';
         accountList.add(act1);
         
         insert accountList;
@@ -31,6 +33,7 @@ private class MW_KbaDetailsTriggerTest {
         
         genesis__Applications__c app = MW_GlobalTestUtility.GetApplication();
         app.genesis__Account__c = act.Id;
+        app.genesis__Status__c  ='Default Documents';
         genApplicationList.add( app );
         
         genesis__Applications__c app1 = MW_GlobalTestUtility.GetApplication();
@@ -39,6 +42,7 @@ private class MW_KbaDetailsTriggerTest {
         app1.Employment_Status__c = 'Full Time';
         app1.Annual_Individual_Income_App__c = 100;
         app1.Monthly_Housing_Payment_App__c = 600;
+        app1.genesis__Status__c  ='Default Documents';
         genApplicationList.add( app1 );
         
         genesis__Applications__c app2 = MW_GlobalTestUtility.GetApplication();
@@ -47,6 +51,7 @@ private class MW_KbaDetailsTriggerTest {
         app2.Employment_Status__c = 'Full Time';
         app2.Annual_Individual_Income_App__c = 100;
         app2.Monthly_Housing_Payment_App__c = 600;
+        app2.genesis__Status__c  ='Default Documents';
         genApplicationList.add( app2 );
         
          genesis__Applications__c app3 = MW_GlobalTestUtility.GetApplication();
@@ -55,6 +60,7 @@ private class MW_KbaDetailsTriggerTest {
         app3.Employment_Status__c = 'Full Time';
         app3.Annual_Individual_Income_App__c = 100;
         app3.Monthly_Housing_Payment_App__c = 600;
+        app3.genesis__Status__c  ='Default Documents';
         genApplicationList.add( app3 );
         
         insert genApplicationList;
@@ -74,8 +80,36 @@ private class MW_KbaDetailsTriggerTest {
         talx.Application__c = app1.Id;
         insert talx;
         
+         genesis__Document_Category__c docCat = new genesis__Document_Category__c(
+            genesis__Category_Name__c = 'Test_Paystub_ID',
+            genesis__Required__c = true
+        );
+        Insert docCat;
+        genesis__Application_Document_Category__c appDocCat = new genesis__Application_Document_Category__c(
+            Name = 'Primary ID',
+            genesis__Document_Category__c = docCat.Id,
+            genesis__Application__c = app.Id
+        );
+        Insert appDocCat;
         cso.genesis__Disable_Triggers__c = false;
         update cso;
+    }
+    
+    @isTest
+    public static void PrimaryID9012(){
+        Test.startTest();
+        
+        genesis__Applications__c app = [SELECT Id From genesis__Applications__c LIMIT 1];
+        
+        KBA_Details__c kba9012 = MW_GlobalTestUtility.GetKbaDetails();
+        
+        kba9012.Application__c = app.Id;
+        kba9012.Precise_ID_Overall_SCore__c = 9012;
+        insert kba9012;
+        
+        Test.stopTest();
+              
+        System.assertEquals(TRUE, [SELECT ID, genesis__Required__c FROM genesis__Application_Document_Category__c where genesis__Application__c=:app.Id AND name='Primary ID'].genesis__Required__c);
     }
     
     @isTest
@@ -89,7 +123,7 @@ private class MW_KbaDetailsTriggerTest {
         insert kbaHard;
         
         Test.stopTest();
-        
+              
         System.assertEquals('Hard', [SELECT Id, Verification_Complexity__c FROM genesis__Applications__c WHERE Id=: app.Id].Verification_Complexity__c);
     }
     
@@ -118,7 +152,7 @@ private class MW_KbaDetailsTriggerTest {
         Account act = [SELECT Id From Account WHERE Name = 'Monthly Housing Account' LIMIT 1];
         
         List<genesis__Applications__c> app = [SELECT Id From genesis__Applications__c];
-        
+    
         KBA_Details__c kbaEasy = MW_GlobalTestUtility.GetKbaDetails();
         kbaEasy.Application__c = app[2].Id;
         kbaEasy.Precise_ID_Overall_SCore__c = 705;

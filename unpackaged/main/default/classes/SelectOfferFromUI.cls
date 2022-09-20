@@ -126,9 +126,11 @@ global class SelectOfferFromUI {
                 insert approve;
                 
                 system.debug('approve'+approve);
-                
+
+                /* See WSSelectedOffer for similar block */
                 app.genesis__Loan_Amount__c=p.Amount__c;
                 app.genesis__APR__c=p.APR__c;
+                app.Pricing_Tier__c = p.Pricing_Tier__c;
                 app.genesis__Term__c=p.Term__c;
                 app.Origination_fee__c=p.Origination_fee__c;
                 app.genesis__Monthly_Debt_Payments__c=p.Monthly_Payment__c;
@@ -154,7 +156,25 @@ global class SelectOfferFromUI {
                             oldAppStatus.endsWithIgnoreCase('agent_document_verification_pending'))) {	//CRM-1022 (pallavi) added status condition
 
                         update app; //CRM-1022 (pallavi) (moving inside if block) LOP-337 restoring update so APR is available
-                        String res = runInvestorAllocationBasedOnWeighting(app); //CRM-1022 (pallavi) changed app.id to app
+
+                        String res;
+                        if (MW_AllocationEngineHandler.isRulesApiEnabled()) {
+                            res = runInvestorAllocationBasedOnWeighting(app); //CRM-1022 (pallavi) changed app.id to app
+                        }
+
+                        if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
+                            /*
+                             LSP-834 fix for multiple AES calls from CLS
+                                If pricing tier is different, MW_PricingOfferTrigger will execute reallocation.
+                                If pricing tier is not different, execute reallocation here.
+                                WF Avoid App Stuck In Offer Accepted should send back to advp without causing advp trigger
+                                Set res is true so new offer is persisted (firing Trigger)
+                             */
+                            /* LSP-888, now that pricing tier is up to date here, let's always reallocate here */
+                            MW_AllocationEngineHandler.handleReallocation(new List<Id> {app.Id});
+
+                            res = 'Success'; // if we made it here, there's was no error
+                        }
 
                         if(res.equalsIgnoreCase('Success')) {
 
