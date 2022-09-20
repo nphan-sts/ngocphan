@@ -5,6 +5,7 @@ public class MW_SendAANEmailsTest{
         //Creating Account
          Account acc = new Account(
             Name = 'Test',
+            peer__Last_Name__c = 'LastName',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
             loan__SOCIAL_SECURITY_NUMBER__c = '123123123'

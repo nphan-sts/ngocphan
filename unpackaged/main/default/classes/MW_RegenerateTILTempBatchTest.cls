@@ -7,6 +7,7 @@ public class MW_RegenerateTILTempBatchTest {
         
         Account account_Obj = new Account(
             Name = 'Test',
+            peer__Last_Name__c = 'LastName',
             loan__Investor__c=False,
             cnotify__Email__c = 'no-reply@testorganization.com'
         );
@@ -14,6 +15,7 @@ public class MW_RegenerateTILTempBatchTest {
         
         Account investor_Obj = new Account(
             Name = 'Test',
+            peer__Last_Name__c = 'LastName',
             loan__Investor__c=true,
             cnotify__Email__c = 'no-reply@testorganizatio.com',
             Investor_Code__c='FTCU'
