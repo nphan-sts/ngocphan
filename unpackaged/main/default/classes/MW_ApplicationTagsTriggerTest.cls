@@ -1,3 +1,4 @@
+/*MW_ApplicationTagsTriggerTest - */
 @isTest
 private class MW_ApplicationTagsTriggerTest {
     

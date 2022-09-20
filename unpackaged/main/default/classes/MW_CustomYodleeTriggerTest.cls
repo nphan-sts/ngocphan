@@ -17,6 +17,7 @@ public class MW_CustomYodleeTriggerTest {
         
         Account acc = new Account();
         acc.name = 'Test Yodlee Account';
+        acc.peer__Last_Name__c = 'LastName';
         acc.Account_External_ID__c = 'Yodlee';
         acc.cnotify__Email__c = 'no-reply@testorganization.com';
         insert acc;
