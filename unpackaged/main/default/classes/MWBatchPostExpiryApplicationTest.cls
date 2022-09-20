@@ -63,7 +63,7 @@ private class MWBatchPostExpiryApplicationTest {
 
         Test.startTest();
         MWBatchPostExpiryApplication.lastModifiedDateField = genesis__Applications__c.Last_Investor_Assigned_On__c;
-        String scheduleStartTime = '0 0 0 3 9 ? 2022';
+        String scheduleStartTime = '0 0 2 * * ?';
         String jobId = System.schedule('MWBatchPostExpiryApplication', scheduleStartTime, new MWBatchPostExpiryApplication());
         Test.stopTest();
     }
