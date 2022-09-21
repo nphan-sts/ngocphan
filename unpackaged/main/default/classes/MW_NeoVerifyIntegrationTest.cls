@@ -3,6 +3,8 @@ private class MW_NeoVerifyIntegrationTest {
 
     @testSetup static void setup() {
         list<account> accList                  = MW_DataFactoryTest.createAccounts(1);
+        accList[0].loan__SOCIAL_SECURITY_NUMBER__c = '6831540283';
+        accList[0].loan__Investor__c=true;
         insert accList;
         list<genesis__Applications__c> appList = MW_DataFactoryTest.createApplication(1, accList[0].Id);
         insert appList;
@@ -104,20 +106,23 @@ private class MW_NeoVerifyIntegrationTest {
     }
 
     @isTest static void testCalloutFail2() {
-
+		test.startTest();
         Set<Id> alist = new Set<Id>();
         for(genesis__Applications__c app:[select Id from genesis__Applications__c limit 99]) {
             alist.add(app.id);
         }
-        String xmlString ='{ "report_id1": 123456,"url1": "https://payofftest.neoverify.com/income_verification/SL2Mq6jtrCuirj7OiiS5FcM85"}';
+        String xmlString ='{ "report_id": 123456,"url": "https://payofftest.neoverify.com/income_verification/SL2Mq6jtrCuirj7OiiS5FcM85"}';
         Test.setMock(HttpCalloutMock.class, new MW_NeoVerifyIntegrationHttpCalloutMock(xmlString, 200));
         MW_NeoVerifyIntegration.postRegNeoVerify(alist);
+        test.stopTest();
     }
 
     @isTest static void postlinkAccountTransactionsTest(){
+        test.startTest();
         List<Attachment> aList = [select id, name, body, parentId from Attachment limit 99];
         Test.setMock(HttpCalloutMock.class, new MW_NeoVerifyIntegrationHttpCalloutMock('test response', 202));
         MW_NeoVerifyIntegration.postlinkAccountTransactions(aList[0].id, 'SL2Mq6jtrCuirj7OiiS5FcM85');
+        test.stopTest();
     }
 
     @isTest static void testReportStatusFail() {
@@ -136,17 +141,18 @@ private class MW_NeoVerifyIntegrationTest {
     }
 
     @isTest static void testReportSta() {
-
+		test.startTest();
         List<ID> alist = new List<ID>();
 
         for(genesis__Applications__c app:[select Id from genesis__Applications__c limit 99]) {
             alist.add(app.id);
         }
 
-        String xmlString ='{ "report_status": {"status": "Report Ready","report_id": "ouztd12PRze8dYnceQ4eQAgBd"}}';
+        String xmlString ='{ "Employments": [{"employer": "Report Ready","first_pay_date1": "ouztd12PRze8dYnceQ4eQAgBd","last_pay_date1":"45454","paychecks":1,"avg_paycheck":"1.0","pay_cycle":"monthly","next_day_date1":"45454","total_earnings":"1.0"}]}';
 
         Test.setMock(HttpCalloutMock.class, new MW_NeoVerifyIntegrationHttpCalloutMock(xmlString, 200));
         MW_NeoVerifyIntegration.Neoverifyfuturemethod(alist[0]);
+        test.stoptest();
     }
     @isTest static void testscorecardtrigger() {
         
@@ -160,5 +166,15 @@ private class MW_NeoVerifyIntegrationTest {
          NSF_OD__c = '1');
          insert no;
         }
+    @isTest static void postCreateRegisterUserRequestTest(){
+        Set<Id> alist = new Set<Id>();
+        for(genesis__Applications__c app:[select Id from genesis__Applications__c limit 99]) {
+            alist.add(app.id);
+        }
+        String xmlString ='{ "report_id": "","url": "https://payofftest.neoverify.com/income_verification/SL2Mq6jtrCuirj7OiiS5FcM85"}';
+        Test.setMock(HttpCalloutMock.class, new MW_NeoVerifyIntegrationHttpCalloutMock(xmlString, 200));
+        MW_NeoVerifyIntegration.postCreateRegisterUserRequest([select Id from genesis__Applications__c limit 1].id);
+        
+    }
 
 }

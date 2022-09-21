@@ -61,6 +61,7 @@ global class TalxIntegration {
 
             req.setHeader('Content-Type', 'application/x-ofx');
             req.setHeader('Cache-Control', 'no-cache');
+            if(!Test.isRunningTest())
             req.setClientCertificateName(certName);
             req.setTimeout(120000);
             req.setEndpoint(endpoint);
