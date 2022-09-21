@@ -202,7 +202,25 @@ private class TestApplicationToContractConverter{
                                     loan__Next_Installment_Date__c=system.today(), 
                                     loan__Previous_Installment_Date__c= system.today()
                                     );
-        insert lacc; 
+        insert lacc;
+
+        //Party Type insert
+        clcommon__Party_Type__c pt = new clcommon__Party_Type__c();
+        pt.name = 'Borrower';
+        insert pt;
+
+        //Document category
+        genesis__Document_Category__c dc = new genesis__Document_Category__c();
+        dc.genesis__Responsible_Party_Type__c = pt.id;
+        dc.genesis__Applicable_For__c = 'PARTY';
+        insert dc;
+
+        genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
+        adc.name = 'TIL Document';
+        adc.genesis__Active__c = true;
+        adc.genesis__Document_Category__c =  dc.id;
+        adc.genesis__Application__c = app.id;
+        insert adc;
     }
 
     /*Created By: Shakul Siddharth
