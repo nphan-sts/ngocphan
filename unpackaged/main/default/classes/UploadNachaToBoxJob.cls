@@ -1,3 +1,7 @@
+/* ****************Modification History******************
+* Modified By       Date                    JIRA Number
+*   Shakul        10/3/2022                   LSP-584	
+******************Modification History******************/
 global with sharing class UploadNachaToBoxJob implements Database.Batchable<sObject>,Database.AllowsCallouts, Database.Stateful,Schedulable {
 
    String query;
@@ -22,7 +26,8 @@ global with sharing class UploadNachaToBoxJob implements Database.Batchable<sObj
                 folderIdBoxMap.put(ids,folderBoxMap.get(foldermap.get(ids).name));
             }
         }
-       query = 'SELECT Id,name,Description,FolderId,Folder.Name,Body FROM Document WHERE Folder.Name IN : folderName AND Description = null';
+       //LSP-584: Added Test.isRunningTest for single batch execution from test class
+       query = 'select id,name,Description,FolderId,Folder.Name,Body from Document where Folder.Name in:folderName and Description=null'+(Test.isRunningTest()?' LIMIT 1':'');
        String queryString = 'SELECT count() FROM Document WHERE Folder.Name IN : folderName AND Description = null'; 
        totalCount = Database.countQuery(queryString);
    }
@@ -35,7 +40,6 @@ global with sharing class UploadNachaToBoxJob implements Database.Batchable<sObj
        UploadNachaToBoxJob j = new UploadNachaToBoxJob();
        Database.executebatch(j,1);
    }
-
    global void execute(Database.BatchableContext BC, List<Document> scope) {
        uploadFile(scope,'execute',folderIdBoxMap);
        MW_BoxUtil1.insertAccessToken();
