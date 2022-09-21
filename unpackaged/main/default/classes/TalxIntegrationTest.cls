@@ -1,7 +1,7 @@
 /* ****************Modification History******************************************************************
  * Last Modified by    Date        JIRA number
  *     Pallavi      2019/12/03      LOS-168(Spike: 3rd Party - Increase of WorkNumber cost in August)
- * 	   Anusha      2020/12/03      	CRM-980 Capture and Store All TALX Responses for Each TALX API Request
+ *     Anusha      2020/12/03       CRM-980 Capture and Store All TALX Responses for Each TALX API Request
  ******************Modification History*****************************************************************/
 @isTest
 private class TalxIntegrationTest {
@@ -16,7 +16,7 @@ private class TalxIntegrationTest {
         
         List<String> parsedEmployers = new List<String>();
         for (TalxIntegration.Verification verification : talxVerification.verifications) {
-        	parsedEmployers.add(verification.employer.name);
+            parsedEmployers.add(verification.employer.name);
         }
         System.assertEquals(employers, parsedEmployers);
     }
@@ -31,7 +31,7 @@ private class TalxIntegrationTest {
         
         List<String> parsedEmployers = new List<String>();
         for (TalxIntegration.Verification verification : talxVerification.verifications) {
-        	parsedEmployers.add(verification.employer.name);
+            parsedEmployers.add(verification.employer.name);
         }
         System.assertEquals(employers, parsedEmployers);
     }
@@ -46,7 +46,7 @@ private class TalxIntegrationTest {
         
         List<String> parsedEmployers = new List<String>();
         for (TalxIntegration.Verification verification : talxVerification.verifications) {
-        	parsedEmployers.add(verification.employer.name);
+            parsedEmployers.add(verification.employer.name);
         }
     }
 
@@ -85,10 +85,10 @@ private class TalxIntegrationTest {
         
         List<String> parsedEmployers = new List<String>();
         for (TalxIntegration.Verification verification : talxVerification.verifications) {
-        	parsedEmployers.add(verification.employer.name);
+            parsedEmployers.add(verification.employer.name);
         }
             TalxIntegration.CallTalxIntegration(app.id,acc.id,'TestClass');
-        	TalxIntegration.insertTalxData(app.id,acc.id, talxResponse,null);
+            TalxIntegration.insertTalxData(app.id,acc.id, talxResponse,null);
         }Catch(Exception e){
             System.debug('Exception in test class');
         }
@@ -111,9 +111,10 @@ private class TalxIntegrationTest {
          //Creating Account
          Account acc = new Account(
             Name = 'Test',
-            loan__Investor__c=False,
+            loan__Investor__c=true,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123893456',
+            peer__Last_Name__c = 'Test'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -138,6 +139,7 @@ private class TalxIntegrationTest {
         Test.startTest();
         TalxIntegration.CallTalxResponse(app.id,acc.id);
         TalxIntegration.CallTalx(app.id,acc.id);
+        TalxIntegration.callingTalx = false;
         TalxIntegration.CallTalx(appIdlist);
         Test.stopTest();
     }
@@ -252,7 +254,8 @@ private class TalxIntegrationTest {
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '111111111',
+            peer__Last_Name__c = 'Test'
         );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -557,8 +560,8 @@ private class TalxIntegrationTest {
             System.debug('Exception in test class');
         }
     }
-	
-	static testMethod void testParseTalxResponseInvalidResponseWithCallTalx() {
+    
+    static testMethod void testParseTalxResponseInvalidResponseWithCallTalx() {
         try{
             Account acc = new Account(
                 Name = 'Test',
@@ -674,7 +677,7 @@ private class TalxIntegrationTest {
         }
     }
     
-	public class TestTalxResponseMock2 implements HttpCalloutMock{
+    public class TestTalxResponseMock2 implements HttpCalloutMock{
 
         public HTTPResponse respond(HTTPRequest req) { 
                  
