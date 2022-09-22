@@ -201,64 +201,19 @@ public Class TestAutoSale{
         //Test.stopTest();
 
     }
-    // Description : For Default Method in batch job
-    @isTest static Void autoMethodV1(){
-        
-        List<Account> aclist =[select id,name,peer__First_Name__c from Account Where peer__First_Name__c = 'InvestorFirstName'];
-        System.debug('Account __ INVESTOR ****** ' + aclist);
-        loan__Automated_Payment_Configuration__c apc = [Select id,loan__Payment_Mode__c FROM loan__Automated_Payment_Configuration__c where
-                                                       loan__Bank_Account__r.loan__Account__c =: aclist[0].id LIMIT 1];
-       
-        List<loan__Investor_Loan__c> io = [select id,name,loan__Certificate_Rate__c,Buyer__c,loan__Account__r.no_of_shares_to_be_Sold__c,loan__Service_Rate__c,
+    @isTest static Void autoMethod(){
+        test.startTest();
+        Account ac =[select id from Account limit 1];// where name = 'Investor'];
+        System.debug(ac);
+        List<loan__Investor_Loan__c> lo = [select id,name,loan__Certificate_Rate__c,Buyer__c,loan__Account__r.no_of_shares_to_be_Sold__c,loan__Service_Rate__c,
                                            loan__Account__c,loan__Loan__c,loan__Share__c,loan__Status__c,
                                             peer__Number_Of_Shares__c,loan__Enabled_Flag__c,loan__Inv_Accrued_Interest_Amt__c, 
                                             loan__Remaining_Investment_Amount__c from loan__Investor_Loan__c where Buyer__c != null 
-                                            and loan__Status__c = 'Active' AND loan__Account__c =: aclist[0].id limit 1];
-        
-          
-        test.startTest(); 
-            AutoSale Auto = new AutoSale();
-            Database.QueryLocator ql = Auto.start(null);
-            Auto.execute(null,io);
-            Auto.Finish(null); 
-            
-        test.stopTest();
-            
-        List<loan__Automated_Payment_Setup__c> aps = [select id,loan__Payment_Mode__c from loan__Automated_Payment_Setup__c where
-                                                     loan__CL_Contract__c =: io[0].loan__loan__c];
-        system.assert(aps[0].loan__Payment_Mode__c == apc.loan__Payment_Mode__c, 'Payment mode should match');
-        
-       
-        
-        
-    }
-    // Description :- For Parameterized Method in batch job
-    @isTest static Void autoMethodV2(){
-        
-        String Status = 'Active';
-        Date CurrentSystemDate = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();
-        String query = 'select id,name,loan__Certificate_Rate__c,Buyer__c,loan__Account__r.no_of_shares_to_be_Sold__c,loan__Service_Rate__c,loan__Account__c,loan__Loan__c,loan__Share__c,loan__Status__c, '+
-                ' peer__Number_Of_Shares__c,loan__Enabled_Flag__c,loan__Inv_Accrued_Interest_Amt__c, loan__Remaining_Investment_Amount__c from loan__Investor_Loan__c where Buyer__c != null and loan__Loan__r.Effective_Date_for_AutoSale__c =: CurrentSystemDate '+   //(LOS-185/186)                   
-                ' and loan__Status__c =\''+String.escapeSingleQuotes(Status)+'\'';
-        
-        List<Account> aclist =[select id,
-                                 name,
-                                 peer__First_Name__c 
-                               from Account 
-                               Where peer__First_Name__c = 'InvestorFirstName'];
-        //System.debug('Account __ INVESTOR ****** ' + aclist);
-        loan__Automated_Payment_Configuration__c apc = [Select id,loan__Payment_Mode__c FROM loan__Automated_Payment_Configuration__c where
-                                                       loan__Bank_Account__r.loan__Account__c =: aclist[0].id LIMIT 1];
-        List<loan__Investor_Loan__c> io = [select id,name,loan__Certificate_Rate__c,Buyer__c,loan__Account__r.no_of_shares_to_be_Sold__c,loan__Service_Rate__c,
-                                           loan__Account__c,loan__Loan__c,loan__Share__c,loan__Status__c,
-                                            peer__Number_Of_Shares__c,loan__Enabled_Flag__c,loan__Inv_Accrued_Interest_Amt__c, 
-                                            loan__Remaining_Investment_Amount__c from loan__Investor_Loan__c where Buyer__c != null 
-                                            and loan__Status__c = 'Active' AND loan__Account__c =: aclist[0].id limit 1];
-        test.startTest(); 
-            AutoSale Auto = new AutoSale(query);
-            Database.QueryLocator ql = Auto.start(null);
-            Auto.execute(null,io);
-            Auto.Finish(null); 
+                                            and loan__Status__c = 'Active' limit 1];
+              AutoSale Auto = new AutoSale();
+              Database.QueryLocator ql = Auto.start(null);
+              Auto.execute(null,lo);
+              Auto.Finish(null); 
             
         test.stopTest();
         
