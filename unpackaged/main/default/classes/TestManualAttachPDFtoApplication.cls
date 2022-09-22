@@ -35,10 +35,13 @@ Purpose : to cover code satisfying ManualAttachPDFtoApplication
         );
         insert acc1;
         
-        CL_Document__c doc = new CL_Document__c();
-        doc.Doc1__c = 'Credit File';
-        doc.Doc2__c = 'Til File';
-        insert doc;
+          CL_Document__c cs = new CL_Document__c();
+        cs.Doc1__c = 'Credit Score Notice';
+        cs.Doc2__c = 'TIL Document';
+        cs.Doc3__c = 'Adverse Action Document';
+        cs.UploadedBOX__c = 'UploadedBOX';
+        insert cs;
+        
         /*pallavi (LOS-123) correcting the Test class*/
         //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -57,6 +60,20 @@ Purpose : to cover code satisfying ManualAttachPDFtoApplication
             genesis__loan_amount__c = 100 //pallavi (LOS-123) correcting the Test class
         );
         insert app;
+         Attachment attachmentTwo = new Attachment(
+            ParentId = app.id, 
+            Name = 'TIL', 
+            IsPrivate = false, 
+            Body = Blob.valueOf('Unit Test Attachment Body Two'), 
+            Description = '15');
+        insert attachmentTwo;
+        
+        
+        genesis__Application_Document_Category__c adcTwo = new genesis__Application_Document_Category__c();
+        adcTwo.name = 'TIL Document';
+        adcTwo.genesis__Application__c = app.id;
+        insert adcTwo;
+        
         System.assertEquals(null,app.Borrower_s_Email__c,'Borrower Email is not null');
         
         Test.startTest();        

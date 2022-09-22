@@ -1,3 +1,9 @@
+/* *************** Modification History**************
+* 
+*   Modified By          Date			Jira ID                  
+*   Bhanupriya           21/03/2022   	LSP-628(add comments, remove deplicate method, Added asserts and Test.startTest and Test.stopTest and remove code smells)
+*
+* ****************Modification History******************/
 @isTest
 private class SendLoanPaymentEmailHandlerTest{
   @testSetup
@@ -43,6 +49,31 @@ private class SendLoanPaymentEmailHandlerTest{
     try{
         SendLoanPaymentEmailHandler.SendMail('01p2F000000GiS7','01p2F000000GiS7','01p2F000000GiS7','01p2F000000GiS7','acc@test.com');
     }
-    catch(exception e){}
-  }
+    //Test method for Manual Payment
+    static testMethod void manual_Emailhandler(){
+        List<Account> acc  =  [SELECT Id,
+                               Name,
+                               cnotify__Email__c 
+                               from Account];
+        List<Contact> con  =  [SELECT Id,
+                               AccountId,
+                               LastName 
+                               from Contact];
+        Map<Id, String> accMap = new Map<Id, String>();
+        test.startTest();
+        accMap.put(acc[0].Id, acc[0].cnotify__Email__c);
+        SendLoanPaymentEmailHandler.ManualPaymentMode(new List<ID>());
+        try{
+            SendLoanPaymentEmailHandler.SendMail('01p2F000000GiS7','01p2F000000GiS7','01p2F000000GiS7','01p2F000000GiS7','acc@test.com');
+        }
+        catch(exception e){
+            system.debug(e.getMessage());
+        }    		
+        test.stopTest();
+        System.assertEquals(true,acc.size()>0);
+        System.assertEquals(true,con.size()>0);
+        system.assert(accMap!=null);
+        system.assert(acc[0].cnotify__Email__c!=null);
+    }
+    
 }

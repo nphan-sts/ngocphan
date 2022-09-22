@@ -49,6 +49,8 @@ global with sharing class MW_AllocationEngineHandler {
 
     private static final Integer MAX_RETRY =  5;
 
+    private static final Integer RESPONSE_UNAUTHORIZED = 401;
+
     private static final Integer RESPONSE_CATEGORY_5XX = 5;
 
     private static final Integer RESPONSE_CATEGORY_4XX = 4;
@@ -1022,6 +1024,15 @@ global with sharing class MW_AllocationEngineHandler {
             Http http = new Http();
             res = http.send(req);
 
+            /* Special case single retry of client credentials request in case bearer expired between load and execution.
+            *  MW_ClientCredentialsOAuthHelper internally retries getting the actual token */
+            if (RESPONSE_UNAUTHORIZED == res.getStatusCode()) {
+                System.debug('Unauthorized retry');
+                bearerToken = MW_ClientCredentialsOAuthHelper.getBearerToken(HAPPY_MONEY_OKTA_SERVICE_NAME, true);
+                req.setHeader('Authorization', 'Bearer ' + bearerToken);
+                res = http.send(req);
+            }
+
             responseCategory = res.getStatusCode() / 100;
 
             if (RESPONSE_CATEGORY_5XX == responseCategory) {
@@ -1044,9 +1055,15 @@ global with sharing class MW_AllocationEngineHandler {
                 throw new IllegalArgumentException('Unhandled response code: ' + res.getStatusCode());
             }
 
+            if (RESPONSE_CATEGORY_2XX == responseCategory) {
+                /* commit just in case we recently received a new token */
+                MW_ClientCredentialsOAuthHelper.commitToken();
+            }
+
         } catch (Exception e) {
 
             retryCount++;
+            System.debug(LoggingLevel.ERROR, 'Retry Exception: ' + exceptionToStr(e));
             if (MAX_RETRY <= retryCount) {
                 messages.add(makeCalloutMessage('Retrying exhausted after: ', res, e));
 
