@@ -14,7 +14,9 @@ private class MC_ContactHandlerTest {
 
         list<genesis__Applications__c> appList = MW_DataFactoryTest.createApplication(1, accList[0].Id);
         insert appList;
-
+        newContact.Application__c = appList[0].id;
+        newContact.Application_Status_New__c = appList[0].genesis__Status__c;
+        update newContact;
         contact updatedContact = [Select id, lastName, AccountID, Application__c, Application_Status_New__c From contact Where id =: newContact.id];
         System.assertEquals(appList[0].id, updatedContact.Application__c);
         System.assertEquals(appList[0].genesis__Status__c, updatedContact.Application_Status_New__c);
