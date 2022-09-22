@@ -43,7 +43,7 @@ public class TestLoanApplicationUpdateJob{
             genesis__Expected_Close_Date__c =Date.newInstance(2022,10,11),	//LSP-607
             Application_Start_DateV2__c = system.Today(),
             DocuSignFlag__c=true,
-            genesis__Status__c = 'Agent Verified',
+            genesis__Status__c = 'agent_verified',
             genesis__Draw_Period_End_Date__c = system.Today()
         );
         List<genesis__Applications__c> applist = new List<genesis__Applications__c>();
@@ -71,7 +71,7 @@ public class TestLoanApplicationUpdateJob{
                                         genesis__Status__c 
                                         From genesis__Applications__c];
         System.assert(batchprocessid!=null); 
-        system.assertEquals('agent verified',app.genesis__Status__c);
+        system.assertEquals('agent_verified',app.genesis__Status__c);
         
     }
     //test method 2 batch processing query execute
@@ -98,7 +98,7 @@ public class TestLoanApplicationUpdateJob{
                                         From genesis__Applications__c];
         
         System.assert(batchprocessid!=null); 
-        system.assertEquals('agent verified', app.genesis__Status__c);
+        system.assertEquals('agent_verified', app.genesis__Status__c);
         system.assert(!String.isEmpty(query));
     }
     //test method 3 for batch job for schedule  
