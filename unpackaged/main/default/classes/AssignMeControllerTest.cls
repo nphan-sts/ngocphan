@@ -22,10 +22,10 @@ public with sharing class AssignMeControllerTest {
                                             genesis__Expected_Start_Date__c = system.Today(),
                                             genesis__Funding_in_Tranches__c = false,
                                             Borrower_s_Email__c = 'test@gmail.com',
-                                      		OwnerId='00G41000002h4G3EAI',
-            								User_Processor__c=null,
+                                            OwnerId= UserInfo.getUserId(), //'00G41000002h4G3EAI',
+                                            User_Processor__c=null,
                                             Application_Start_DateV2__c = system.Today(),
-            								genesis__Account__c = acc.id,
+                                            genesis__Account__c = acc.id,
                                             genesis__Status__c = 'agent_document_verification_pending'
                                             );
         appList.add(app);
