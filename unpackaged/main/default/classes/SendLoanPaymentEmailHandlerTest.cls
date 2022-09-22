@@ -18,7 +18,7 @@ private class SendLoanPaymentEmailHandlerTest{
         Email = 'Test@Test.com'
     );
     Insert conObj; 
-    Contact con = [Select Id from Contact where LastName Like '%Test%'];
+    Contact con = [Select Id from Contact where LastName = 'TestLName'];
     System.assertEquals(true, con!=null);
     
     test.stopTest();
