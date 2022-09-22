@@ -10,11 +10,16 @@
  */
 public with sharing class MW_ClientCredentialsOAuthHelper {
 
-    private static String tokenBody = 'grant_type=client_credentials&scope=HM';
+    private static final String tokenBody = 'grant_type=client_credentials&scope=HM';
 
+    private static final Integer RESPONSE_CODE_2XX = 2;
+
+    @TestVisible
     private static String accessToken = null;
 
-    private static Integer RESPONSE_CODE_2XX = 2;
+    private static ClientCredentialsResponse clientCredentialsResponse;
+
+    private static Id oAuthSettingsId;
 
     @TestVisible
     private static Integer MAX_RETRY = 3;
@@ -37,11 +42,21 @@ public with sharing class MW_ClientCredentialsOAuthHelper {
     /**
      * @param serviceName The integration name
      *
-     * @return The string for the authorization header
+     * @return The string for the auth header
      */
     public static String getBearerToken(String serviceName) {
+        return getBearerToken(serviceName, false);
+    }
 
-        if (accessToken != null) {
+    /**
+     * @param serviceName Integration name
+     * @param force       Force retrieval of a new token
+     *
+     * @return the string for the auth header
+     */
+    public static String getBearerToken(String serviceName, Boolean force) {
+
+        if (!force && accessToken != null) {
             return accessToken;
         }
 
@@ -51,22 +66,33 @@ public with sharing class MW_ClientCredentialsOAuthHelper {
         }
 
         ints__OAuth_Settings__c okta = oAuthSettings.get(0);
+
+        if (!force && loadAccessToken(okta)) {
+            return accessToken;
+        }
+
         getAccessToken(okta, 0);
 
         return accessToken;
     }
 
-    private static void getAccessToken(ints__OAuth_Settings__c okta, Integer retryCount) {
+    /**
+     * Retrieve the client credentials value.  Set to static variables if succeeds to commit later.
+     * @param oAuthSettings The oauth settings to use
+     * @param retryCount The retry count currently
+     */
+    private static void getAccessToken(ints__OAuth_Settings__c oAuthSettings, Integer retryCount) {
 
         if (retryCount >= MAX_RETRY) {
+            System.debug(LoggingLevel.ERROR, 'CCH: EXITING MAX RETRY getAccessToken');
             throw new ClientCredentialsException('Unable to produce access token after retries: ' + MAX_RETRY);
         }
 
-        String header = okta.ints__Consumer_Key__c + ':' + okta.ints__Consumer_Secret__c;
+        String header = oAuthSettings.ints__Consumer_Key__c + ':' + oAuthSettings.ints__Consumer_Secret__c;
         String authHeader = EncodingUtil.base64Encode(Blob.valueOf(header));
 
         HttpRequest req = new HttpRequest();
-        req.setEndpoint(okta.ints__Access_Token_URL__c);
+        req.setEndpoint(oAuthSettings.ints__Access_Token_URL__c);
         req.setHeader('Authorization', 'Basic ' + authHeader);
         req.setTimeout(5 * 1000);
         req.setMethod('POST');
@@ -77,12 +103,75 @@ public with sharing class MW_ClientCredentialsOAuthHelper {
         Integer code = res.getStatusCode();
 
         if (code / 100 != RESPONSE_CODE_2XX) {
-            getAccessToken(okta, ++retryCount);
+            getAccessToken(oAuthSettings, ++retryCount);
         }
 
         ClientCredentialsResponse ccr = (ClientCredentialsResponse) JSON.deserialize(res.getBody(), ClientCredentialsResponse.class);
 
         accessToken = ccr.access_token;
+        oAuthSettingsId = oAuthSettings.Id;
+        clientCredentialsResponse = ccr;
+    }
+
+    /**
+     * A successful token retrieval from the Okta should be saved
+     * It's not saved immediately after retrieving since client code might need to execute a callout first
+     * This is the classic 'you have uncommited work' exception.
+     * Client code should always call this after all callouts are complete on the request.
+     */
+    public static void commitToken() {
+
+        if (oAuthSettingsId == null || clientCredentialsResponse == null) {
+            return;
+        }
+
+        List<ints__OAuth_Token__c> tokens = findAccessToken(oAuthSettingsId);
+        if (tokens.isEmpty()) {
+            ints__OAuth_Token__c oAuthToken = new ints__OAuth_Token__c();
+            oAuthToken.ints__OAuth_Settings__c = oAuthSettingsId;
+            oAuthToken.Token_Large__c = clientCredentialsResponse.access_token;
+            oAuthToken.Valid_Time__c = clientCredentialsResponse.expires_in;
+            insert oAuthToken;
+        } else {
+            ints__OAuth_Token__c oAuthToken = tokens.get(0);
+            oAuthToken.Token_Large__c = clientCredentialsResponse.access_token;
+            oAuthToken.Valid_Time__c = clientCredentialsResponse.expires_in;
+            update oAuthToken;
+        }
+
+        Map<String, String> msg = new Map<String, String>();
+        msg.put('message', 'HM Okta client credentials access token issued.  Expires in ' + clientCredentialsResponse.expires_in + ' seconds.');
+        MW_LogUtility.infoMessage('MW_ClientCredentialsOAuthHelper', 'commitToken', msg);
+    }
+
+    /**
+     * @param okta the Settings instance
+     *
+     * @return true if was able to load
+     */
+    @TestVisible
+    private static Boolean loadAccessToken(ints__OAuth_Settings__c okta) {
+
+        List<ints__OAuth_Token__c> oAuthTokens = findAccessToken(okta.Id);
+
+        if (oAuthTokens.isEmpty()) {
+            return false;
+        }
+
+        ints__OAuth_Token__c oAuthToken = oAuthTokens.get(0);
+
+        Decimal validTime = oAuthToken.Valid_Time__c;
+        if (validTime == null) {
+            return false;
+        }
+
+        Datetime expiration = oAuthToken.LastModifiedDate.addSeconds(validTime.intValue());
+        if (Datetime.now() < expiration) {
+            accessToken = oAuthToken.Token_Large__c;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -101,5 +190,21 @@ public with sharing class MW_ClientCredentialsOAuthHelper {
                         ints__Service_Name__c
                 FROM   ints__OAuth_Settings__c
                 WHERE ints__Service_Name__c = :serviceName];
+    }
+
+    /**
+     * @param oAuthSettingsId the settings id
+     *
+     * @return The tokens loaded if any
+     */
+    private static List<ints__OAuth_Token__c> findAccessToken(Id oAuthSettingsId) {
+        return [
+                SELECT Id,
+                       Token_Large__c,
+                       Valid_Time__c,
+                       LastModifiedDate
+                FROM   ints__OAuth_Token__c
+                WHERE  ints__OAuth_Settings__c =: oAuthSettingsId
+        ];
     }
 }
