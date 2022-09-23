@@ -141,6 +141,7 @@ public Class TestConvertAppToContractCntrl{
         insert genesApp;
         genesApp.OwnerId = pendingForFundingque.QueueID;
         update genesApp;
+        /*
         genesis__Applications__c genesApp1 = new genesis__Applications__c();
         genesApp1.genesis__Due_Day__c = 20;
         genesApp1.genesis__Expected_First_Payment_Date__c = system.Today();
@@ -163,7 +164,7 @@ public Class TestConvertAppToContractCntrl{
         genesApp1.Loan_Origination_Date__c = date.today() + 4;
         //genesApp.OwnerId = pendingForFundingque.Queue.Id;
         insert genesApp1;
-        
+        */
         
     }
     /*Created By : Bhavya Maliwal
@@ -201,6 +202,7 @@ where JOB ID is NOT NULL
         ConvertAppToContractCntrl ctopc = new ConvertAppToContractCntrl();
         Boolean result=  ctopc.getIsEnabled();
         system.assert(result);  
+     
         test.stopTest();
         
     }
@@ -214,7 +216,8 @@ where JOB ID is NULL
         ConvertAppToContractCntrl ctopc = new ConvertAppToContractCntrl();
         ctopc.getIsEnabled();
         Boolean result=  ctopc.getIsEnabled();
-        system.assert(!result);  
+        system.assert(!result); 
+
         test.stopTest();
         
     }
