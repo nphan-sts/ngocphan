@@ -203,6 +203,7 @@ public Class TestAutoSale{
     }
     @isTest static Void autoMethod(){
         test.startTest();
+
         Account ac =[select id from Account limit 1];// where name = 'Investor'];
         System.debug(ac);
         List<loan__Investor_Loan__c> lo = [select id,name,loan__Certificate_Rate__c,Buyer__c,loan__Account__r.no_of_shares_to_be_Sold__c,loan__Service_Rate__c,
