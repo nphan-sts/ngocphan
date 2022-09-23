@@ -182,12 +182,13 @@ public Class TestAutoSale{
     }
     @isTest static Void autoMethod(){
         test.startTest();
-        Account ac =[select id from Account where name = 'Investor'];
+        Account ac =[select id from Account limit 1];
+        System.debug(ac);
         List<loan__Investor_Loan__c> lo = [select id,name,loan__Certificate_Rate__c,Buyer__c,loan__Account__r.no_of_shares_to_be_Sold__c,loan__Service_Rate__c,
                                            loan__Account__c,loan__Loan__c,loan__Share__c,loan__Status__c,
                                             peer__Number_Of_Shares__c,loan__Enabled_Flag__c,loan__Inv_Accrued_Interest_Amt__c, 
                                             loan__Remaining_Investment_Amount__c from loan__Investor_Loan__c where Buyer__c != null 
-                                            and loan__Status__c = 'Active' AND loan__Account__c =: ac.id limit 1];
+                                            and loan__Status__c = 'Active' limit 1];
               AutoSale Auto = new AutoSale();
               Database.QueryLocator ql = Auto.start(null);
               Auto.execute(null,lo);
