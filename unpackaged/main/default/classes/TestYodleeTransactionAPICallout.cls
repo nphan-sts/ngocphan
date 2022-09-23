@@ -1,6 +1,76 @@
+/* ****************Modification History******************
+ * Modified By        Date			Comments
+ *1. Shakul        2022/02/08       LSP-501
+ ******************Modification History******************/
 @isTest
 global class TestYodleeTransactionAPICallout{
+    @TestSetup
+    public static void testSetup() {
+        Account acc = new Account();
+        acc.name = 'Test Yodlee Account';
+        acc.Account_External_ID__c = 'Yodlee';
+        acc.cnotify__Email__c = 'no-reply@testorganization.com';
+        acc.peer__Last_Name__c = 'TestCont1';
+        insert acc;
 
+        ints__Yodlee_User_Credentials__c userCred = new ints__Yodlee_User_Credentials__c();
+        userCred.ints__Account__c = acc.Id;
+        userCred.ints__Yodlee_Username__c = 'testuserName';
+        userCred.ints__Yodlee_Password__c = 'testpassword';
+        userCred.yodlee_Account_count__c  =1;
+        insert userCred;
+
+        genesis__Applications__c app= new genesis__Applications__c(
+                                            genesis__Due_Day__c = 20,
+                                            genesis__Expected_First_Payment_Date__c = system.Today(),
+                                            genesis__Expected_Start_Date__c = system.Today(),
+                                            genesis__Funding_in_Tranches__c = true,
+                                            Borrower_s_Email__c = null,
+                                            genesis__Account__c = acc.Id,
+                                            Application_Start_DateV2__c = system.Today(),
+                                            DocuSignFlag__c=true,
+                                            genesis__Status__c = 'agent_verified',
+                                            genesis__Draw_Period_End_Date__c = system.Today()
+                                            );
+        insert app;
+
+        Yodlee_User_Account__c Yodleeacc = new Yodlee_User_Account__c();
+        Yodleeacc.Account_Number__c = 'xxxx3xxx'; 
+        Yodleeacc.Account_Type__c = 'SAVINGS';
+        Yodleeacc.Available_Balance__c = 65454.78;
+        Yodleeacc.Current_Balance__c = 904478;
+        Yodleeacc.Status__c = 'ACTIVE';
+        Yodleeacc.verified__c = false;
+        Yodleeacc.Yodlee_Account__c = acc.Id;
+        Yodleeacc.Yodlee_Application__c = app.Id;
+        Yodleeacc.YodleeBankAccountId__c = '44473248';
+        Yodleeacc.Name = 'DagBank';
+        insert Yodleeacc;
+
+        Yodlee_User_Transaction__c yodlee = new Yodlee_User_Transaction__c();
+        yodlee.Balance__c = 100;
+        yodlee.Category__c = 'Test';
+        yodlee.Yodlee_Account__c = acc.Id;
+        yodlee.YodleeBankAccountId__c = '10563602';
+        yodlee.Yodlee_Application__c = app.id;
+        insert yodlee;
+    }
+
+    /*Created By : Shakul Siddharth
+    Method name : testCountTxns
+    Purpose : This method is used to test logic around Yodlee User Transactions.
+    */
+    public static TestMethod void testCountTxns(){
+        Test.startTest();
+        Account acc = [SELECT id FROM Account LIMIT 1];
+        genesis__Applications__c app = [SELECT id FROM genesis__Applications__c LIMIT 1];
+        
+        Test.setMock(HttpCalloutMock.class, new MockYodleeTransactionAPICallOut1());
+        String msg = YodleeTransactionAPICallOut.getTransactions(acc.Id,app.id,10);
+        Test.stopTest();
+        System.assertEquals('Bank Account Transaction Details pulled successfully.', msg);
+    }
+    /*Commenting as part of LSP-501
     public static TestMethod void TestMethod1(){
         ints__Yodlee_Cobrand_Credentials__c ycc = new ints__Yodlee_Cobrand_Credentials__c();
         ycc.ints__APP_ID__c = '10003600';
@@ -46,6 +116,7 @@ global class TestYodleeTransactionAPICallout{
         acc.name = 'Test Yodlee Account';
         acc.Account_External_ID__c = 'Yodlee';
         acc.cnotify__Email__c = 'no-reply@testorganization.com';
+        acc.peer__Last_Name__c = 'TestCont1';
         insert acc;
         
         //Creating Application
@@ -94,6 +165,7 @@ global class TestYodleeTransactionAPICallout{
         acc.name = 'Test Yodlee Account2';
         acc.Account_External_ID__c = 'Yodlee1';
         acc.cnotify__Email__c = 'no-reply@testorganization.com';
+        acc.peer__Last_Name__c = 'TestCont1';
         insert acc;
         
         ints__Yodlee_User_Credentials__c userCred = new ints__Yodlee_User_Credentials__c();
@@ -131,6 +203,7 @@ global class TestYodleeTransactionAPICallout{
         acc.name = 'Test Yodlee Account';
         acc.Account_External_ID__c = 'Yodlee';
         acc.cnotify__Email__c = 'no-reply@testorganization.com';
+        acc.peer__Last_Name__c = 'TestCont1';
         insert acc;
         
         
@@ -188,6 +261,7 @@ global class TestYodleeTransactionAPICallout{
         acc.name = 'Test Yodlee Account';
         acc.Account_External_ID__c = 'Yodlee';
         acc.cnotify__Email__c = 'no-reply@testorganization.com';
+        acc.peer__Last_Name__c = 'TestCont1';
         insert acc;
         
         //Creating Application
