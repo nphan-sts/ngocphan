@@ -53,8 +53,6 @@ private class MW_ApplicationServiceTest {
         appForDuplicateAct.LEAD_ID__C = 'c9149473-e69f-ee12-38a7-d18b0cba847z';
         Insert appForDuplicateAct;
         
-        //loan.TestHelper.createSeedDataForTesting();
-        //loan__Office_Name__c office1 = loan.TestHelper.createOffice();
         loan__Loan_Product__c loanProd1 = MW_GlobalTestUtility.GetLoanProduct(); 
         loanProd1.name = 'TestProductNew';
         insert loanProd1;
@@ -63,7 +61,7 @@ private class MW_ApplicationServiceTest {
         loanForDuplicateSSN.loan__Account__c= actWithDuplicateSsn.Id;
         loanForDuplicateSSN.loan__Loan_Product_Name__c=loanProd1.Id;
         loanForDuplicateSSN.application__c = appForDuplicateAct.id;
-        loanForDuplicateSSN.loan__Loan_Status__c = 'Closed - Obligations met'; //'Active - Good Standing';
+        loanForDuplicateSSN.loan__Loan_Status__c = 'Closed - Obligations met'; 
         loanForDuplicateSSN.lead_guid__c = 'TestClassGuid01';
         Insert loanForDuplicateSSN;
         
@@ -107,7 +105,6 @@ private class MW_ApplicationServiceTest {
         appForDuplicateAct2.BoxFolderID__c = null;
         appForDuplicateAct2.genesis__Status__c = 'NEW - ENTERED';
         appForDuplicateAct2.genesis__CL_Product__c = null;
-        Update appForDuplicateAct2;
         appList.add(appForDuplicateAct2);
         
         MW_ApplicationService.updateBoxFolder(appList);
@@ -116,7 +113,7 @@ private class MW_ApplicationServiceTest {
         
         Test.stopTest();
         
-        Account ActWithDuplicate = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn2' LIMIT 1];
+        Account actwithDuplicate = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn2' LIMIT 1];
         
         
         system.assertEquals(appForDuplicateAct2.genesis__Status__c,'Default Documents');
@@ -143,7 +140,7 @@ private class MW_ApplicationServiceTest {
         Test.stopTest();
         
         
-        Account ActWithDuplicate = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn2' LIMIT 1];
+        Account actwithDuplicate = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn2' LIMIT 1];
         
         system.assertEquals(appForDuplicateAct2.Bureau_SSN__c,'123987123');
         system.assertEquals(appForDuplicateAct2.genesis__Status__c,'kba_fail');
