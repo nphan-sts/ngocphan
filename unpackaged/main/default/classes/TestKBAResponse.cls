@@ -8,12 +8,22 @@ private class TestKBAResponse{
     //Create testsetup()
     @testSetup static void setup(){
         //Creating Account
+        genesis__Org_Parameters__c genorg = genesis__Org_Parameters__c.getOrgDefaults();
+        genorg.genesis__Disable_Triggers__c = true;
+        upsert genorg;
+        
+        loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
+        org.loan__Disable_Triggers__c = true;
+        upsert org;
+
+
         Account acc = new Account(
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
             peer__Last_Name__c = 'Test Last Name',						//LSP-609 Required field
-            loan__SOCIAL_SECURITY_NUMBER__c = '123456789'				//LSP-609 must be 9 digit
+            loan__SOCIAL_SECURITY_NUMBER__c = '123456789',
+            social_security_number_uniqueness_field__c = null				//LSP-609 must be 9 digit
         );
         insert acc;
         
@@ -31,6 +41,28 @@ private class TestKBAResponse{
             genesis__Draw_Period_End_Date__c = system.Today()
         );
         insert app;
+
+
+        //Kba Details
+        KBA_Details__c kbaObj = new KBA_Details__c(
+            Application__c = app.Id,
+            Precise_ID_Overall_SCore__c = 9012, 
+            Precise_ID_First_Payment_Default__c = 9012, 
+            Precise_ID_ID_Theft__c = 9012,  
+            Precise_ID_Validation__c = 9012, 
+            Precise_ID_Adverse_Action_Code__c = 'I', 
+            Precise_ID_Decision__c = 'Accept',
+            Precise_ID_Decision_KIQ__c = 'Accept', 
+            Precise_ID_General_Fraud_Shield_Indicat__c = 'F04', 
+            Id_Analytics_Score__c = 500, 
+            Consistency_Snapd_score__c = 30, 
+            Paste_Count__c = 1,
+            Public_Records__c=0,
+            Accept_Refer_Code__c= 'ACC'  //CRM-966
+        );
+       Insert kbaObj;
+       app.genesis__Status__c = 'agent_verified';
+       update app;
         
     }
     //Test method
@@ -38,6 +70,9 @@ private class TestKBAResponse{
         Account acc1 = [Select id,name,peer__Last_Name__c 
                         from Account 
                         where peer__Last_Name__c ='Test Last Name'];
+        genesis__Applications__c app = [select id,genesis__Status__c 
+                        from genesis__Applications__c LIMIT 1];
+        system.debug('app-->'+ app);
         genesis__Applications__c app1 = [select id,genesis__Status__c 
                                          from genesis__Applications__c 
                                          where genesis__Status__c='agent_verified' limit 1];

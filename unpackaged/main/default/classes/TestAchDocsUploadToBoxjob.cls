@@ -244,29 +244,5 @@ Purpose : Mock / dummy response for Testing purpose
             return res;
         }
     }
-    /* public static testmethod void test2(){
 
-test.StartTest();  
-string folderid = '48673238292';      
-Blob b = Blob.valueOf('Unit Test Attachment Body');
-String namefile = 'filename';
-List<Document> Docum =  [SELECT Id,Name,FolderId,Folder.Name,body FROM Document];
-loan__Automated_Payment_Configuration__c APC = [Select id,name,
-Box_Folder_ID__c,
-loan__Folder_Name__c
-From loan__Automated_Payment_Configuration__c
-Where loan__Folder_Name__c =: Docum [0].Folder.Name 
-AND loan__Active__c = True limit 1];
-//Delete APC;
-UploadNachaToBoxJob AchDOC = new UploadNachaToBoxJob();
-
-Database.QueryLocator ql = AchDOC.start(null);
-AchDOC.execute(null,Docum);
-Test.setMock(HttpCalloutMock.class,new TestBoX_IntegMock());
-BoX_Integ.uploadFileToBox(Docum[0].body,Docum[0].Name,APC.Box_Folder_ID__c,null);
-AchDOC.Finish(null); 
-
-test.StopTest();
-}*/
-    
 }
