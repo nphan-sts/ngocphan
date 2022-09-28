@@ -110,12 +110,7 @@ private class MW_ApplicationServiceTest {
         MW_ApplicationService.updateBoxFolder(appList);
         MW_ApplicationService.PostAccounts(preExistAct,actWithDuplicateSsn);
         
-        
         Test.stopTest();
-        
-        Account actwithDuplicate = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn2' LIMIT 1];
-        
-        
         system.assertEquals(appForDuplicateAct2.genesis__Status__c,'Default Documents');
         system.assertEquals(appForDuplicateAct2.BoxFolderID__c,null);
         system.assertEquals(appForDuplicateAct2.Required_Docs_Count__c,0);
@@ -136,12 +131,7 @@ private class MW_ApplicationServiceTest {
         
         Account actWithDuplicateSsn = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn' LIMIT 1];
         
-        
         Test.stopTest();
-        
-        
-        Account actwithDuplicate = [SELECT Id, Name, loan__SOCIAL_SECURITY_NUMBER__c FROM Account WHERE Name = 'ActWithDuplicate Ssn2' LIMIT 1];
-        
         system.assertEquals(appForDuplicateAct2.Bureau_SSN__c,'123987123');
         system.assertEquals(appForDuplicateAct2.genesis__Status__c,'kba_fail');
         
