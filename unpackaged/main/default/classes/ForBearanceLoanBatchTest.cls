@@ -1,6 +1,7 @@
 /* ****************Modification History*****************************************************************
 * Modified by      Date            JIRA number
 *     Anusha        2021/08/09    LSP-339 fix tests for ForBearanceLoanBatchTest
+*     Shakul       2022/09/09     LSP-912 added testRescheduleWithoutBillGenerated and modified the setup method
 ******************Modification History*****************************************************************/
 
 @isTest
@@ -121,6 +122,7 @@ public class ForBearanceLoanBatchTest {
         
         loan.GlobalLoanUtilFacade util = new loan.GlobalLoanUtilFacade();
         Date systemDate = util.getCurrentSystemDate();
+        List<loan__loan_account__c> listLacc = new List<loan__loan_account__c>(); //LSP-912
         loan__Loan_Account__c lacc = new loan__Loan_Account__c(
             loan__Account__c= acc.Id,
             loan__Contact__c= a1.ID,
@@ -144,7 +146,34 @@ public class ForBearanceLoanBatchTest {
             lead_guid__c = 'TestClassGuid0',
             loan__Disbursal_Date__c = systemDate
         );
-        insert lacc; 
+        //START: LSP-912: Added one more loan account without Last Due Date
+        listLacc.add(lacc);
+        
+        loan__Loan_Account__c laccOne = new loan__Loan_Account__c(
+            loan__Account__c= acc.Id,
+            loan__Contact__c= a1.ID,
+            loan__Product_Type__c='Flexible Amz Loan',
+            loan__Loan_Amount__c =5000,
+            loan__Loan_Product_Name__c=loanProdObj.Id,
+            loan__Payment_Amount__c=439.70, 
+            loan__Principal_Remaining__c = 4243.60,
+            application__c = application.id, 
+            loan__First_Installment_Date__c = systemDate.addMonths(1),
+            loan__Next_Installment_Date__c = systemDate.addMonths(2), 
+            loan__Maturity_Date_Current__c = systemDate.addMonths(12), 
+            loan__Frequency_of_Loan_Payment__c = 'Monthly',  
+            loan__Last_Installment_Date__c = systemDate.addMonths(12),
+            loan__Loan_Status__c = 'Active - Good Standing',
+            loan__Interest_Rate__c = 10,
+            loan__Term_Cur__c = 12,
+            Skipped_a_pay_Date__c = null,
+            Skipped_a_Pay__c = false,
+            lead_guid__c = 'TestClassGuid1',
+            loan__Disbursal_Date__c = systemDate
+        );
+        listLacc.add(laccOne);
+        insert listLacc; 
+        //END: LSP-912: Added one more loan account without Last Due Date
         
         loan__Automated_Payment_Setup__c aPS = loan.TestHelper2.createAutomatedPaymentSetup(loan.LoanConstants.RECURRING,loan.LoanConstants.FIXED_AMOUNT,bank,lacc,'Monthly',pMode);
         
@@ -168,6 +197,7 @@ public class ForBearanceLoanBatchTest {
         insert repaymentScheduleSummary;
         
         //LSP-3 start (added because test cases were failing because of failure in fetching repaymentplan) - Anusha
+        List<loan__Repayment_Schedule__c> listRS = new List<loan__Repayment_Schedule__c>(); //Added as part of LSP-912
         loan__Repayment_Schedule__c loanRepaymentSchedule7 = new loan__Repayment_Schedule__c();
         loanRepaymentSchedule7.loan__Due_Date__c = systemDate.addMonths(1);
         loanRepaymentSchedule7.loan__Loan_Account__c = lacc.Id;
@@ -176,7 +206,7 @@ public class ForBearanceLoanBatchTest {
         loanRepaymentSchedule7.loan__Due_Amount__c = 2188.70;
         loanRepaymentSchedule7.loan__isPaid__c = false;
         loanRepaymentSchedule7.loan__Is_Billed__c = false;
-        insert loanRepaymentSchedule7;
+        listRS.add(loanRepaymentSchedule7); // Added as part of LSP-912
         
         loan__Repayment_Schedule__c loanRepaymentSchedule8 = new loan__Repayment_Schedule__c();
         loanRepaymentSchedule8.loan__Due_Date__c = systemDate.addMonths(2);
@@ -186,7 +216,7 @@ public class ForBearanceLoanBatchTest {
         loanRepaymentSchedule8.loan__Due_Amount__c = 2188.70;
         loanRepaymentSchedule8.loan__isPaid__c = false;
         loanRepaymentSchedule8.loan__Is_Billed__c = false;
-        insert loanRepaymentSchedule8;
+        listRS.add(loanRepaymentSchedule8); // Added as part of LSP-912
         
         loan__Repayment_Schedule__c loanRepaymentSchedule9 = new loan__Repayment_Schedule__c();
         loanRepaymentSchedule9.loan__Due_Date__c = systemDate.addMonths(3);
@@ -196,9 +226,42 @@ public class ForBearanceLoanBatchTest {
         loanRepaymentSchedule9.loan__Due_Amount__c = 2188.70;
         loanRepaymentSchedule9.loan__isPaid__c = false;
         loanRepaymentSchedule9.loan__Is_Billed__c = false;
-        insert loanRepaymentSchedule9;
+        listRS.add(loanRepaymentSchedule9); // Added as part of LSP-912
         //LSP-3 end
-        
+
+        //START: Added as part of LSP-912
+        loan__Repayment_Schedule__c loanRepaymentSchedule10 = new loan__Repayment_Schedule__c();
+        loanRepaymentSchedule10.loan__Due_Date__c = systemDate.addMonths(1);
+        loanRepaymentSchedule10.loan__Loan_Account__c = laccOne.Id;
+        loanRepaymentSchedule10.loan__Is_Archived__c = false;
+        loanRepaymentSchedule10.loan__Balance__c = 2188.70;
+        loanRepaymentSchedule10.loan__Due_Amount__c = 2188.70;
+        loanRepaymentSchedule10.loan__isPaid__c = false;
+        loanRepaymentSchedule10.loan__Is_Billed__c = false;
+        listRS.add(loanRepaymentSchedule10);
+
+        loan__Repayment_Schedule__c loanRepaymentSchedule11 = new loan__Repayment_Schedule__c();
+        loanRepaymentSchedule11.loan__Due_Date__c = systemDate.addMonths(2);
+        loanRepaymentSchedule11.loan__Loan_Account__c = laccOne.Id;
+        loanRepaymentSchedule11.loan__Is_Archived__c = false;
+        loanRepaymentSchedule11.loan__Balance__c = 2188.70;
+        loanRepaymentSchedule11.loan__Due_Amount__c = 2188.70;
+        loanRepaymentSchedule11.loan__isPaid__c = false;
+        loanRepaymentSchedule11.loan__Is_Billed__c = false;
+        listRS.add(loanRepaymentSchedule11);
+
+        loan__Repayment_Schedule__c loanRepaymentSchedule12 = new loan__Repayment_Schedule__c();
+        loanRepaymentSchedule12.loan__Due_Date__c = systemDate.addMonths(3);
+        loanRepaymentSchedule12.loan__Loan_Account__c = laccOne.Id;
+        loanRepaymentSchedule12.loan__Is_Archived__c = false;
+        loanRepaymentSchedule12.loan__Balance__c = 2188.70;
+        loanRepaymentSchedule12.loan__Due_Amount__c = 2188.70;
+        loanRepaymentSchedule12.loan__isPaid__c = false;
+        loanRepaymentSchedule12.loan__Is_Billed__c = false;
+        listRS.add(loanRepaymentSchedule12);
+        insert listRS;
+        //END: Added as part of LSP-912
+
         List<loan__Loan_Payment_Transaction__c> lptList = new List<loan__Loan_Payment_Transaction__c>();
         loan__Loan_Payment_Transaction__c lpt = new loan__Loan_Payment_Transaction__c();
         lpt.loan__Cleared__c = false;
@@ -844,7 +907,7 @@ public class ForBearanceLoanBatchTest {
         Boolean exceptionThrown = false;
         Map<String, String> errorMap = new Map<String, String>();
         try{
-            ForBearanceLoanHelper helper = new ForBearanceLoanHelper('TestClassGuid1',null);
+            ForBearanceLoanHelper helper = new ForBearanceLoanHelper('TestClassGuid2',null); //LSP-912: Replaced TestClassGuid1 with TestClassGuid2
             helper.rescheduleLoan(errorMap);
         }catch(Exception e){
             exceptionThrown = true;
@@ -1084,5 +1147,23 @@ public class ForBearanceLoanBatchTest {
         System.assertEquals(systemDate, loan.Hardship_Request_Date__c);
         System.assertEquals(2, loan.U_LoanModTermExt__c);
     }
-    
+
+    //START: Added as part of LSP-912
+    public static testMethod void testRescheduleWithoutBillGenerated() {
+        
+        loan__Loan_Account__c loan = [ SELECT Id, Name,lead_guid__C,Skipped_a_pay_Date__c,loan__Maturity_Date_Current__c,loan__Interest_Rate__c,
+                                      loan__Loan_Status__c, Skipped_a_Pay__c,loan__Pmt_Amt_Cur__c,Hardship_New_Maturity_Date__c,loan__First_Installment_Date__c,loan__Frequency_of_Loan_Payment__c,
+                                      loan__Next_Installment_Date__c ,
+                                      loan__Oldest_Due_Date__c,U_LoanModForbearDt__c,U_LoanModForbearance__c,
+                                      Hardship_Request_Date__c ,U_LoanModTermExt__c,loan__Previous_Installment_Date__c FROM
+                                      loan__Loan_Account__c where lead_guid__C = 'TestClassGuid1' ];
+        Test.startTest();
+        ForBearanceLoanHelper helper2 = new ForBearanceLoanHelper(loan,1);
+        helper2.rescheduleLoan(new Map<String, String>());
+        Test.stopTest();
+        
+        system.assertEquals(loan.loan__Loan_Status__c, 'Active - Good Standing');
+        system.assertEquals(loan.Skipped_a_Pay__c, true);
+    }
+    //END: Added as part of LSP-912
 }
