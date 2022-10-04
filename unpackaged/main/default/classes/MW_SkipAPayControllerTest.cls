@@ -191,8 +191,8 @@ private class MW_SkipAPayControllerTest {
                                       loan__Loan_Status__c, Skipped_a_Pay__c,loan__Pmt_Amt_Cur__c,Hardship_New_Maturity_Date__c,loan__First_Installment_Date__c,loan__Frequency_of_Loan_Payment__c,
                                       loan__Next_Installment_Date__c ,
                                       loan__Oldest_Due_Date__c,U_LoanModForbearDt__c,U_LoanModForbearance__c,
-                                      Hardship_Request_Date__c ,U_LoanModTermExt__c  FROM
-                                      loan__Loan_Account__c where lead_guid__C = 'TestClassGuid0' ];	
+                                      Hardship_Request_Date__c ,U_LoanModTermExt__c,loan__Previous_Installment_Date__c FROM
+                                      loan__Loan_Account__c where lead_guid__C = 'TestClassGuid0' ];	//Shakul: Added loan__Previous_Installment_Date__c as part of LSP-912
         
         ForBearanceLoanHelper helper2 = new ForBearanceLoanHelper(loan,1,false);
         helper2.rescheduleLoan(new Map<String, String>());
