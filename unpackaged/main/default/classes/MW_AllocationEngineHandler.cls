@@ -265,7 +265,8 @@ global with sharing class MW_AllocationEngineHandler {
         try {
 
             if (appIds == null || appIds.isEmpty()) {
-                MW_LogUtility.warnMessage(LOG_NAME, logMethodName, 'Allocation Engine Handler called with null or 0 app ids');
+                MW_LogUtility.warnMessage(LOG_NAME, logMethodName,
+                        message('Allocation Engine Handler called with null or 0 app ids'));
                 return;
             }
 
@@ -334,9 +335,11 @@ global with sharing class MW_AllocationEngineHandler {
             if (Trigger.isExecuting) {
                 List<String> leadIds = toLeadIds(validAppIds);
                 if (CANCELLED == decisionLevel) {
-                    MW_LogUtility.infoMessage(LOG_NAME, logMethodName, 'Batch cancel executing: ignoring trigger since batch already executed: ' + leadIds);
+                    MW_LogUtility.infoMessage(LOG_NAME, logMethodName,
+                            message('Batch cancel executing: ignoring trigger since batch already executed: ' + leadIds));
                 } else {
-                    MW_LogUtility.errorMessage(LOG_NAME, logMethodName, 'Unhandled scenario: ' + decisionLevel + ' should not be both batch and in a trigger: ' + leadIds);
+                    MW_LogUtility.errorMessage(LOG_NAME, logMethodName,
+                            message('Unhandled scenario: ' + decisionLevel + ' should not be both batch and in a trigger: ' + leadIds));
                 }
             } else {
                 callAllocationEngineService(validAppIds, json, decisionLevel);
@@ -399,14 +402,11 @@ global with sharing class MW_AllocationEngineHandler {
         insertErrorCommonLog(appIds, message + ' for this application');
         insertLoanBatchProcessLog(message + ' for lead ids: ' + leadIds);
 
-        Map<String, String> msg = new Map<String, String>{
+        MW_LogUtility.errorMessage(LOG_NAME, logMethodName, message(message, new Map<String, String>{
                 'decisionLevel' => decisionLevel,
-                'message' => message,
                 'leadIds' => leadIds,
                 'error' => 'Invalid decision level'
-        };
-
-        MW_LogUtility.errorMessage(LOG_NAME, logMethodName, msg);
+        }));
     }
 
     /**
@@ -435,13 +435,11 @@ global with sharing class MW_AllocationEngineHandler {
                     new List<String> {message, leadIds, decisionLevel, error});
             insertLoanBatchProcessLog(logMsg);
 
-            Map<String, String> msg = new Map<String, String>{
+            MW_LogUtility.errorMessage(LOG_NAME, logMethodName, message(message, new Map<String, String>{
                     'decisionLevel' => decisionLevel,
-                    'message' => message,
                     'leadIds' => leadIds,
                     'error' => error
-            };
-            MW_LogUtility.errorMessage(LOG_NAME, logMethodName, msg);
+            }));
 
         } catch (Exception recoveryException) {
             System.debug('Unable to recover from original exception: ' + exceptionToStr(e));
@@ -829,7 +827,7 @@ global with sharing class MW_AllocationEngineHandler {
                 1. Log any connectivity or server error to each app via common batch logs
                 2. Set operation error on app to know which action was attempted
                  */
-                msg.put('message', cr.finalMessage);
+                msg = message(cr.finalMessage, msg);
 
                 insertErrorCommonLog(appIds, cr.responseCategory, decisionLevel);
                 insertLoanBatchProcessLog(msg.toString());
@@ -845,14 +843,14 @@ global with sharing class MW_AllocationEngineHandler {
                   2. AES will write Allocation_Partner__c for selected investors
                   3. AES will note any errors, non allocations in cl errors logs
                  */
-                msg.put('message', 'AES 2xx response code, for ' + decisionLevel + ': ' + leadIdStr);
+                msg = message('AES 2xx response code, for ' + decisionLevel + ': ' + leadIdStr, msg);
                 MW_LogUtility.infoMessage(LOG_NAME, logMethodName, msg);
             }
 
         } catch (Exception e) {
 
-            msg.put('message', 'Failed execution of Allocation Engine Service Callout');
             msg.put('error', exceptionToStr(e));
+            msg = message('Failed execution of Allocation Engine Service Callout', msg);
 
             System.debug('AllocationEngineHandler Exception: ' + exceptionToStr(e));
             insertLoanBatchProcessLog(msg.toString());
@@ -860,7 +858,48 @@ global with sharing class MW_AllocationEngineHandler {
         }
     }
 
-    @Future(Callout = true)
+    private static Map<String, Object> contextSnapshot() {
+        return new Map<String, Object>{
+                'isBatch' => System.isBatch(),
+                'isQueueable' => System.isQueueable(),
+                'isFuture' => System.isFuture(),
+                'isScheduled' => System.isScheduled(),
+                'triggerIsExecuting' => Trigger.isExecuting,
+                'triggerOperationType' => Trigger.operationType,
+                'quiddity' => Request.getCurrent().getQuiddity().name(),
+                'requestId' => Request.getCurrent().getRequestId()
+        };
+    }
+
+    /**
+     * @param message Create message object with additional context
+     * @param data Keys specific to this log
+     *
+     * @return data object for MW_LogUtility
+     */
+    @TestVisible
+    private static Map<String, Object> message(String message, Map<String, Object> data) {
+
+        Map<String, Object> context = contextSnapshot();
+
+        if (data != null) {
+            context.putAll(data);
+        }
+
+        context.put('message', message);
+
+        return context;
+    }
+
+    /**
+     * @return data object for MW_LogUtility
+     */
+    @TestVisible
+    private static Map<String, Object> message(String message) {
+        return message(message, null);
+    }
+
+    @Future(Callout=true)
     private static void callAllocationEngineServiceFuture(List<Id> appIds, String json, String decisionLevel) {
         callAllocationEngineService(appIds, json, decisionLevel);
     }
