@@ -188,6 +188,24 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
 
                     if (creditPolicies.size() > 0) {
 
+                        MW_LogUtility.infoMessage('CustomTriggerOnApplication', 'ADVP Allocation Request Entry', new Map<String, Object> {
+                                'app.Id' => app.Id,
+                                'app.Lead_ID__c' => app.Lead_ID__c,
+                                'app.quiddity' => Request.getCurrent().getQuiddity(),
+                                'app.requestId' => Request.getCurrent().getRequestId(),
+                                'app.appStatusChanged' => appStatusChanged,
+                                'app.pricingTierChanged' => app.Pricing_Tier__c != oldApp.Pricing_Tier__c,
+                                'app.allocationForADVPcalled' => InvestorAllocation.allocationForADVPcalled,
+                                'app.allocationForPricingTierCalled' => InvestorAllocation.allocationForPricingTierCalled,
+                                'message' => String.format('{0}, status:{1}, pricing tier:{2}, reqdocs:{3}',
+                                        new List<Object>{
+                                                app.Lead_ID__c,
+                                                oldApp.genesis__Status__c + ' => ' + app.genesis__Status__c,
+                                                oldApp.Pricing_Tier__c + ' => ' + app.Pricing_Tier__c,
+                                                oldApp.Required_Docs_Count__c + ' => ' + app.Required_Docs_Count__c
+                                        })
+                        });
+
                         String res = genesis.ScorecardAPI.generateScorecard(app.id);
                         Boolean result = true;
                         if (MW_AllocationEngineHandler.isRulesApiEnabled()) {
