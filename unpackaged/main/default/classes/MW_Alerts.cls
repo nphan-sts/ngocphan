@@ -23,14 +23,14 @@ global class MW_Alerts implements Database.AllowsCallouts, Database.batchable<sO
             Integer max = limitApi.DailyApiRequests.Max;
             Integer remaining = limitApi.DailyApiRequests.Remaining;
             if(remaining < (max * (100 - threshold80) / 100)) {
-            Map<String, Object> msg = new Map<String, Object>();
-            msg.put('code', 'SFDC_API_THRESHOLD_EXCEEDED');
-                msg.put('percentDailyAPIThresholdCrossed', threshold80);
-                msg.put('maxDailyLimit', max);
-                msg.put('remainingDailyLimit', remaining);
+                Map<String, Object> msg = new Map<String, Object>();
+                msg.put('code', 'SFDC_API_THRESHOLD_EXCEEDED');
+                    msg.put('percentDailyAPIThresholdCrossed', threshold80);
+                    msg.put('maxDailyLimit', max);
+                    msg.put('remainingDailyLimit', remaining);
 
-            MW_LogUtility.warn('MW_Alerts', null, null, 'start', msg);
-        }
+                MW_LogUtility.warn('MW_Alerts', null, null, 'start', msg);
+            }
 
             Map<String, Object> slackMsg = new Map<String, Object>();
         	slackMsg.put('text', ':alert::alert::alert::alert::alert: \n' +
@@ -48,14 +48,14 @@ global class MW_Alerts implements Database.AllowsCallouts, Database.batchable<sO
             Integer max = limitApi.DataStorageMB.Max;
             Integer remaining = limitApi.DataStorageMB.Remaining;
             if(remaining < (max * (100 - threshold80) / 100)) {
-            Map<String, Object> msg = new Map<String, Object>();
-            msg.put('code', 'SFDC_DATA_STORAGE_THRESHOLD_EXCEEDED');
-                msg.put('percentDataStorageCrossed', threshold80);
-                msg.put('maxLimitMB', max);
-                msg.put('remainingLimit', remaining);
+                Map<String, Object> msg = new Map<String, Object>();
+                msg.put('code', 'SFDC_DATA_STORAGE_THRESHOLD_EXCEEDED');
+                    msg.put('percentDataStorageCrossed', threshold80);
+                    msg.put('maxLimitMB', max);
+                    msg.put('remainingLimit', remaining);
 
-            MW_LogUtility.warn('MW_Alerts', null, null, 'start', msg);
-        }
+                MW_LogUtility.warn('MW_Alerts', null, null, 'start', msg);
+            }
 
             Map<String, Object> slackMsg = new Map<String, Object>();
         	slackMsg.put('text', ':alert::alert::alert::alert::alert: \n' +
@@ -73,8 +73,8 @@ global class MW_Alerts implements Database.AllowsCallouts, Database.batchable<sO
             Integer max = limitApi.FileStorageMB.Max;
             Integer remaining = limitApi.FileStorageMB.Remaining;
             if(remaining < (max * (100 - threshold80) / 100)) {
-            Map<String, Object> msg = new Map<String, Object>();
-            msg.put('code', 'SFDC_FILE_STORAGE_THRESHOLD_EXCEEDED');
+                Map<String, Object> msg = new Map<String, Object>();
+                msg.put('code', 'SFDC_FILE_STORAGE_THRESHOLD_EXCEEDED');
                 msg.put('percentFileStorageCrossed', threshold80);
                 msg.put('maxLimitMB', max);
                 msg.put('remainingLimit', remaining);
