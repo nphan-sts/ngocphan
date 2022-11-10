@@ -500,48 +500,7 @@ global class MW_Alerts implements Database.AllowsCallouts, Database.batchable<sO
 
     global void execute(Database.BatchableContext BC, List<Account> scope) {
         for (Account act : scope) {
-            //Annual Funded Cap Alert
-            act.Annual_Funded_Cap__c = act.Annual_Funded_Cap__c == null ? 0 : act.Annual_Funded_Cap__c;
-
-            if (act.Total_Funded_YTD__c > (act.Annual_Funded_Cap__c * threshold80 / 100)) {
-                Map<String, Object> msg = new Map<String, Object>();
-                msg.put('code', 'SFDC_ANNUAL_FUNDED_CAP_EXCEEDED');
-                msg.put('investor', act.Name);
-                msg.put('thresholdFundingCapPercent', threshold80);
-
-                MW_LogUtility.warn('MW_Alerts', null, null, 'execute', msg);
-            }
-
-            //Monthly Funded Cap Alert
-            act.Monthly_Funded_Cap__c = act.Monthly_Funded_Cap__c == null ? 0 : act.Monthly_Funded_Cap__c;
-
-            if (act.Total_Funded_MTD__c > (act.Monthly_Funded_Cap__c * threshold80 / 100)) {
-                Map<String, Object> msg = new Map<String, Object>();
-                msg.put('code', 'SFDC_MONTHLY_FUNDED_CAP_EXCEEDED');
-                msg.put('investor', act.Name);
-                msg.put('thresholdFundingCapPercent', threshold80);
-
-                MW_LogUtility.warn('MW_Alerts', null, null, 'execute', msg);
-            }
-
-            // Monthly Allocation Cap Alert
-            act.Monthly_Allocation_Cap__c = act.Monthly_Allocation_Cap__c == null ? 0 : act.Monthly_Allocation_Cap__c;
-            Decimal fundedCap = act.Monthly_Funded_Cap__c == null ? 0 : act.Monthly_Funded_Cap__c;
-            Decimal percentageAllocated = (act.Total_Allocations_MTD__c / act.Monthly_Allocation_Cap__c * 100).setScale(1);
-
-            if (percentageAllocated > threshold80) {                
-                Map<String, Object> msg = new Map<String, Object>();
-                msg.put('code', 'SFDC_MONTHLY_ALLOCATION_CAP_EXCEEDED');
-                msg.put('investor', act.Name);
-                msg.put('thresholdFundingCapPercent', threshold80);
-                msg.put('numberAllocated', act.Total_Allocations_MTD__c.setScale(0));
-                msg.put('allocationCap', act.Monthly_Allocation_Cap__c.setScale(0));
-                msg.put('fundingAllocated', act.Total_Funded_MTD__c.setScale(0));
-                msg.put('fundingCap', fundedCap.setScale(0));
-                msg.put('percentAllocated', percentageAllocated);
-
-                MW_LogUtility.warn('MW_Alerts', null, null, 'execute', msg);
-            }
+            
         }
     }
 
