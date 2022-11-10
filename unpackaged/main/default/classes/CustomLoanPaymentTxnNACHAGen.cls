@@ -8,6 +8,7 @@
 * Shakul    2022/02/15  LSP-505   Description: Added Test.isRunningTest check to run logic without multiple payment method support
 * Neha/Pallavi/Saryu 2021/08/06-2022/02/22  CRM-373/LSP-16
 * Saryu 2022/04/18 LSP-380 updated immideate destination to truncate after 10 digits instead of 9
+* Shakul 2022/11/07 LSP-1047 Optimising the LPT query
 */
 global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
 
@@ -15,6 +16,10 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
     @testvisible Long routingHash = 0;        //LSP-16
     Integer linecount = 0;
     Double blocks = 0.0;
+    //START: LSP-1047
+    Date csd  = new loan.GlobalLoanUtilFacade().getCurrentSystemDate();
+    Date startDate = csd.addDays(-Integer.valueOf(System.Label.LPTNachaGenDaysConsideration));
+    //END: LSP-1047
     //Decimal creditTotal = 0;
     Decimal debitTotal = 0;
     Public String customerName ='';
@@ -33,18 +38,73 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
             ids.add(s.Id);
         }
 
+        //LSP-1047: Combined two queries on LPT into one with additional filter on transaction date.
         List<loan__Loan_Payment_Transaction__c> loanPmts = [SELECT Id,
                                                             Name,
                                                             loan__Transaction_Amount__c,
                                                             loan__Loan_Account__c,
+                                                            Loan__loan_account__r.Name,
+                                                            Loan__loan_account__r.loan__ACH_Relationship_Type__c,
+                                                            Loan__loan_account__r.loan__Borrower_ACH__c,
+                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Account__c,
+                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Account_Type__c,
+                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Account_Usage__c,
+                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Active__c,
+                                                            Loan__loan_account__r.loan__Borrower_ACH__r.Unmasked_Bank_Account_Number__c,
+                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Bank_Name__c,
+                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Contact__c,
+                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Routing_Number__c,
+                                                            loan__Automated_Payment_Setup__c,
+                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.Name,
+                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__ACH_Code__c,
+                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Routing_Number__c,
+                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Account__c,
+                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Account_Type__c,
+                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Account_Usage__c,
+                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Active__c,
+                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.Unmasked_Bank_Account_Number__c,
+                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Bank_name__c,
+                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Contact__c,
+                                                            Loan__loan_account__r.loan__Loan_Amount__c,
+                                                            Loan__loan_account__r.loan__Account__c,
+                                                            Loan__loan_account__r.loan__Account__r.Name,
+                                                            Loan__loan_account__r.loan__Contact__c,
+                                                            Loan__loan_account__r.loan__Contact__r.Name,
+                                                            Loan__loan_account__r.loan__ACH_On__c,
+                                                            Loan__loan_account__r.loan__ACH_Debit_Amount__c,
+                                                            Loan__loan_account__r.loan__Ach_Debit_Day__c,
+                                                            Loan__loan_account__r.loan__ACH_Drawer_Name__c,
+                                                            Loan__loan_account__r.loan__ACH_End_Date__c,
+                                                            Loan__loan_account__r.loan__ACH_Frequency__c,
+                                                            Loan__loan_account__r.loan__ACH_Frequency_Cycle__c,
+                                                            Loan__loan_account__r.loan__ACH_Next_Debit_Date__c,
+                                                            Loan__loan_account__r.loan__ACH_Start_Date__c,
+                                                            Loan__loan_account__r.loan__OT_ACH_Debit_Date__c,
+                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_Address1__c,
+                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_Address2__c,
+                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_City__c,
+                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_Name__c,
+                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_State__c,
+                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_Zip__c,
+                                                            Loan__loan_account__r.loan__OT_ACH_Fee_Amount__c,
+                                                            Loan__loan_account__r.loan__OT_ACH_Payment_Amount__c,
+                                                            Loan__loan_account__r.loan__OT_ACH_Relationship_Type__c,
+                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__c,
+                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Account__c,
+                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Account_Type__c,
+                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Account_Usage__c,
+                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Active__c,
+                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.Unmasked_Bank_Account_Number__c,
+                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Bank_Name__c,
+                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Contact__c,
+                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Routing_Number__c,
                                                             loan__Loan_Account__r.loan__ACH_Bank__c,
                                                             loan__Loan_Account__r.loan__ACH_Bank__r.Name,
                                                             loan__Loan_Account__r.loan__ACH_Bank__r.loan__ACH_Code__c,
                                                             loan__Loan_Account__r.loan__ACH_Bank__r.loan__Routing_Number__c,
                                                             loan__Payment_Mode__r.Name
-                                                      FROM loan__Loan_Payment_Transaction__c
-                                                      WHERE Id in:ids
-                                                     ];
+                                                            FROM loan__Loan_Payment_Transaction__c
+                                                            WHERE Id in :ids AND loan__Transaction_Date__c >= :startDate];
 
         try {
             if(loan.CustomSettingsUtil.getACHParameters().loan__Multiple_Payment_Method_Support__c == true) {
@@ -110,68 +170,7 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
             pmtsMap.put(pmt.id,pmt);
         }
         
-        List<loan__Loan_Payment_Transaction__c> payments = [Select Id,Name,
-                                                            loan__Transaction_Amount__c,
-                                                            loan__Loan_Account__c,
-                                                            Loan__loan_account__r.Name,
-                                                            Loan__loan_account__r.loan__ACH_Relationship_Type__c,
-                                                            Loan__loan_account__r.loan__Borrower_ACH__c,
-                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Account__c,
-                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Account_Type__c,
-                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Account_Usage__c,
-                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Active__c,
-                                                            Loan__loan_account__r.loan__Borrower_ACH__r.Unmasked_Bank_Account_Number__c,
-                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Bank_Name__c,
-                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Contact__c,
-                                                            Loan__loan_account__r.loan__Borrower_ACH__r.loan__Routing_Number__c,
-                                                            loan__Automated_Payment_Setup__c,
-                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.Name,
-                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__ACH_Code__c,
-                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Routing_Number__c,
-                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Account__c,
-                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Account_Type__c,
-                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Account_Usage__c,
-                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Active__c,
-                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.Unmasked_Bank_Account_Number__c,
-                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Bank_name__c,
-                                                            Loan__autoMated_paYment_Setup__r.loan__Bank_Account__r.loan__Contact__c,
-                                                            Loan__loan_account__r.loan__Loan_Amount__c,
-                                                            Loan__loan_account__r.loan__Account__c,
-                                                            Loan__loan_account__r.loan__Account__r.Name,
-                                                            Loan__loan_account__r.loan__Contact__c,
-                                                            Loan__loan_account__r.loan__Contact__r.Name,
-                                                            Loan__loan_account__r.loan__ACH_On__c,
-                                                            Loan__loan_account__r.loan__ACH_Debit_Amount__c,
-                                                            Loan__loan_account__r.loan__Ach_Debit_Day__c,
-                                                            Loan__loan_account__r.loan__ACH_Drawer_Name__c,
-                                                            Loan__loan_account__r.loan__ACH_End_Date__c,
-                                                            Loan__loan_account__r.loan__ACH_Frequency__c,
-                                                            Loan__loan_account__r.loan__ACH_Frequency_Cycle__c,
-                                                            Loan__loan_account__r.loan__ACH_Next_Debit_Date__c,
-                                                            Loan__loan_account__r.loan__ACH_Start_Date__c,
-                                                            Loan__loan_account__r.loan__OT_ACH_Debit_Date__c,
-                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_Address1__c,
-                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_Address2__c,
-                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_City__c,
-                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_Name__c,
-                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_State__c,
-                                                            Loan__loan_account__r.loan__OT_ACH_Drawer_Zip__c,
-                                                            Loan__loan_account__r.loan__OT_ACH_Fee_Amount__c,
-                                                            Loan__loan_account__r.loan__OT_ACH_Payment_Amount__c,
-                                                            Loan__loan_account__r.loan__OT_ACH_Relationship_Type__c,
-                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__c,
-                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Account__c,
-                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Account_Type__c,
-                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Account_Usage__c,
-                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Active__c,
-                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.Unmasked_Bank_Account_Number__c,
-                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Bank_Name__c,
-                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Contact__c,
-                                                            Loan__loan_account__r.loan__OT_Borrower_ACH__r.loan__Routing_Number__c
-                                                    From loan__Loan_Payment_Transaction__c
-                                                    WHERE ID in :ids];
-        
-        return payments;
+        return loanPmts;
     }
 
     global override String getSimpleFileName() {
