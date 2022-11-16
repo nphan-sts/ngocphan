@@ -1,7 +1,7 @@
 /******************Modification History*****************************************
  * Punith          2022-10-07          LSP-452**
  * ****************************************************************************/
-public class InterestLossCalcHandler {
+public with sharing class InterestLossCalcHandler {
     public List<loan__Loan_Account__c> loanAccounts;
     public Map<Id, List<loan__Loan_Payment_Transaction__c>> loanId2PaymentMap;
     public Map<Id, List<loan__Other_Transaction__c>> loanId2OltMap;
@@ -118,14 +118,14 @@ public class InterestLossCalcHandler {
                     excessPaymentDone = true;
                 }
                 if (!excessPaymentDone) {
-                    if(loanTxn.Txn instanceof loan__Loan_Payment_Transaction__c) {
-                        loan__Loan_Payment_Transaction__c lpt = (loan__Loan_Payment_Transaction__c)loanTxn.Txn;
+                    if(loanTxn.loanTransaction instanceof loan__Loan_Payment_Transaction__c) {
+                        loan__Loan_Payment_Transaction__c lpt = (loan__Loan_Payment_Transaction__c)loanTxn.loanTransaction;
                         dataStore.principalRemaining -= lpt.loan__Principal__c;
                         dataStore.lastAccrualDate = loanTxn.txnDate;
                     }
                 }
                 else {
-                    if (loanTxn.Txn instanceof loan__Loan_Payment_Transaction__c) {
+                    if (loanTxn.loanTransaction instanceof loan__Loan_Payment_Transaction__c) {
                         if (dataStore.lastAccrualDate != loanTxn.txnDate) {
                             Decimal interestAmount = loan.InterestCalc.calcSI(dataStore.interestRate,
                                                                               dataStore.accrualBaseCode,
@@ -135,7 +135,7 @@ public class InterestLossCalcHandler {
                                                                               loanTxn.txnDate);
                             dataStore.interestRemaining += interestAmount;
                         }
-                        loan__Loan_Payment_Transaction__c loanPayment = (loan__Loan_Payment_Transaction__c)loanTxn.Txn;
+                        loan__Loan_Payment_Transaction__c loanPayment = (loan__Loan_Payment_Transaction__c)loanTxn.loanTransaction;
                         //Reduce the payment amount
                         Decimal txnAmount = loanPayment.loan__Transaction_Amount__c;
                         if(txnAmount < dataStore.interestRemaining && !loanPayment.loan__Reschedule_Threshold_Crossed__c) {
@@ -154,7 +154,7 @@ public class InterestLossCalcHandler {
                         }
                         dataStore.lastAccrualDate = loanTxn.txnDate;
                     }
-                    else if (loanTxn.Txn instanceof loan__Other_Transaction__c) {
+                    else if (loanTxn.loanTransaction instanceof loan__Other_Transaction__c) {
                         dataStore.interestRemaining += loan.InterestCalc.calcSI(dataStore.interestRate,
                                                                               dataStore.accrualBaseCode,
                                                                               dataStore.paymentFrequency,
@@ -176,13 +176,13 @@ public class InterestLossCalcHandler {
     }
     
     public inherited sharing class LoanTransaction {
-        Public Sobject Txn;
+        Public Sobject loanTransaction;
         Public Date txnDate;
         Public DateTime txnDateTime;
         public Boolean excessPayment = false;
         
-        Public LoanTransaction(Sobject Txn, Date txnDate, DateTime txnDateTime) {
-            this.Txn = Txn;
+        Public LoanTransaction(Sobject loanTransaction, Date txnDate, DateTime txnDateTime) {
+            this.loanTransaction = loanTransaction;
             this.txnDate = txnDate;
             this.txnDateTime = txnDateTime;
         }

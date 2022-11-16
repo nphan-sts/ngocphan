@@ -9,7 +9,7 @@ global without sharing class InterestLossCalcJob extends clcommon.DynamicJob {
     }
     
     global override String getRuntimeQuery() {
-        String Query = getQuery();
+        String query = getQuery();
         return query;
     }
     
@@ -39,13 +39,13 @@ global without sharing class InterestLossCalcJob extends clcommon.DynamicJob {
     
     global override void doInitialize() {}
     
-    public override void doStart(Database.BatchableContext bc) {}
+    public override void doStart(Database.BatchableContext batchableContext) {}
     
-    global override void doExecute(Database.BatchableContext BC, List<sObject> scope) {
+    global override void doExecute(Database.BatchableContext batchableContext, List<sObject> scope) {
         List<loan__Loan_Account__c> loanAccounts = (List<loan__Loan_Account__c>)scope;
         InterestLossCalcHandler handler = new InterestLossCalcHandler(loanAccounts);
         handler.process();
     }
     
-    global override void doFinish(Database.BatchableContext bc) {}
+    global override void doFinish(Database.BatchableContext batchableContext) {}
 }
