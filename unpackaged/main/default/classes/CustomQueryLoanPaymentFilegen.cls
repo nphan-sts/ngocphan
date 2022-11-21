@@ -37,6 +37,7 @@ global class CustomQueryLoanPaymentFilegen implements clcommon.IBatchJobQuery{
                                         'Loan_Payment_Transaction__c',
                                         ns);
             loanPmtOC.addNamedParameter('pDate', startDate);
+            loanPmtOC.addNamedParameter('csd', iDate);
             loanPmtOC.addNamedParameter('pModes', paymentModes);
             loanPmtOC.addFields('Cleared__c,'+
                                 'Clearing_Date__c,'+
@@ -47,6 +48,7 @@ global class CustomQueryLoanPaymentFilegen implements clcommon.IBatchJobQuery{
                                 'Payment_Type__c,'+
                                 'Payment_Mode__c,Payment_Mode__r.Name');
             loanPmtOC.setWhereClause( 'Transaction_Date__c >= :pDate'
+                                     + ' AND Transaction_Date__c <= :csd'
                                      + ' AND Loan_Account__r.Invalid_Data__c = false'
                                      + ' AND Payment_Mode__r.Name IN :pModes '
                                      + ' AND Sent_To_ACH__c = false'
