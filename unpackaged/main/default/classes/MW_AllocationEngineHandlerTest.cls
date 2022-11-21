@@ -140,7 +140,7 @@ private class MW_AllocationEngineHandlerTest {
 
     class Jsons {
 
-        Object obj;
+        final Object obj;
 
         Jsons(Object obj) {
             this.obj = obj;
@@ -773,6 +773,8 @@ private class MW_AllocationEngineHandlerTest {
 
         /* since apps are split into relloaction and advp, two loan logs should appear */
         System.assertEquals(2, loanLogs.size());
+
+        System.debug('found logs: ' + loanLogs);
         System.assert(loanLogs.get(0).loan__Message__c.contains('Missing foo bar'));
     }
 
@@ -1841,6 +1843,37 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(0, aesSuccessMock.requestCount);
     }
 
+    @IsTest static void canGenerateMessageMap() {
+
+        Map<String, Object> actual1 = MW_AllocationEngineHandler.message(null);
+        System.assertEquals(false, actual1.get('isBatch'));
+        System.assertEquals(false, actual1.get('isQueueable'));
+        System.assertEquals(false, actual1.get('isFuture'));
+        System.assertEquals(false, actual1.get('isScheduled'));
+        System.assertEquals(false, actual1.get('triggerIsExecuting'));
+        System.assertEquals(null, actual1.get('triggerOperationType'));
+        System.assertEquals('RUNTEST_SYNC', actual1.get('quiddity'));
+
+        String transactionId = (String) actual1.get('requestId');
+        System.assert(transactionId != null && transactionId.length() > 0);
+
+        MW_AllocationEngineHandler.message(null, null);
+
+        Map<String, Object> actual2 = MW_AllocationEngineHandler.message('A thing happened');
+        System.assertEquals(9, actual2.size());
+        System.assertEquals('A thing happened', actual2.get('message'));
+
+        Map<String, Object> actual3 = MW_AllocationEngineHandler.message('Another thing happened', new Map<String, Object>{
+                'extraKey1' => 'first value',
+                'extraKey2' => true
+        });
+
+        System.assertEquals(11, actual3.size());
+        System.assertEquals('Another thing happened', actual3.get('message'));
+        System.assertEquals('first value', actual3.get('extraKey1'));
+        System.assertEquals(true, actual3.get('extraKey2'));
+    }
+
     /**
      * This is what the AES microservice will do on success response at ADVP, REALLOCATION and MANUAL
      * @param app Update the app as per an allocation from the java microservice
@@ -1888,15 +1921,6 @@ private class MW_AllocationEngineHandlerTest {
                 Assign_To__c,
                 Investor__c
         FROM   Allocation_Partner__c];
-    }
-
-    static List<Id> toIds(List<Allocation_Partner__c> allocationPartners) {
-        List<Id> ids = new List<Id>();
-        for (Allocation_Partner__c ap : allocationPartners) {
-            ids.add(ap.Id);
-        }
-
-        return ids;
     }
 
     static List<loan__Batch_Process_Log__c> getLoanLogs() {
