@@ -609,6 +609,9 @@ public class TestCustomTriggerOnApplication {
         //CRM-543 end
 
         Decimal investorWithLargestWeight = 0;
+
+        List<Account> accs = new List<Account>();
+
         Account acc1 = new Account(
             Name = 'Test1',
             loan__Investor__c = true,
@@ -632,7 +635,7 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        insert acc1;
+        accs.add(acc1);
         Account acc2 = new Account(
             Name = 'Test1',
             loan__Investor__c = true,
@@ -656,7 +659,7 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        insert acc2;
+        accs.add(acc2);
         Account acco = new Account(
             Name = 'Test',
             loan__Investor__c=false,
@@ -667,7 +670,10 @@ public class TestCustomTriggerOnApplication {
             State__c='CA',
             ZIP_Code__c='123456'
         );
-        insert acco;
+        accs.add(acco);
+
+        insert accs;
+
         //pallavi
         genesis__Applications__c app1 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
@@ -693,6 +699,8 @@ public class TestCustomTriggerOnApplication {
     DCP_obj.Requested_Amount__c = 200;
     DCP_obj.Transaction_id__c = '87007jj798889';
     insert DCP_obj;
+
+        insert makeTILApplicationDocumentCategory(app1);
 
         app1.genesis__Status__c = 'agent_document_verification_pending';
         update app1;
@@ -722,6 +730,8 @@ public class TestCustomTriggerOnApplication {
             DCP_Investor_Eligibility__c = false
         );
         insert app2;
+
+        insert makeTILApplicationDocumentCategory(app2);
 
         DCp_Arcus_Transactions__c DCP_obj2 = new DCp_Arcus_Transactions__c();
         DCP_obj2.Application__c = app2.Id;
@@ -1020,6 +1030,9 @@ public class TestCustomTriggerOnApplication {
         //CRM-543 end
 
         Decimal investorWithLargestWeight = 0;
+
+        List<Account> accs = new List<Account>();
+
         Account acc1 = new Account(
             Name = 'Test1',
             loan__Investor__c = true,
@@ -1043,7 +1056,7 @@ public class TestCustomTriggerOnApplication {
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0
         );
-        insert acc1;
+        accs.add(acc1);
         Account acc2 = new Account(
             Name = 'Test1',
             loan__Investor__c = true,
@@ -1068,7 +1081,7 @@ public class TestCustomTriggerOnApplication {
             Total_Allocations_MTD__c =0,
 			DCP_Allowed__c = true
         );
-        insert acc2;
+        accs.add(acc2);
         Account acco = new Account(
             Name = 'Test',
             loan__Investor__c=false,
@@ -1080,7 +1093,7 @@ public class TestCustomTriggerOnApplication {
             ZIP_Code__c='123456',
             loan__SOCIAL_SECURITY_NUMBER__c = string.valueOf(math.random()).right(9)
         );
-        insert acco;
+        accs.add(acco);
         //pallavi
         genesis__Applications__c app3 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
@@ -1101,6 +1114,8 @@ public class TestCustomTriggerOnApplication {
             Loan_Doc_Signed_On__c = Date.newInstance(2016, 12, 9)
         );
         insert app3;
+
+        insert makeTILApplicationDocumentCategory(app3);
 
         List<DCp_Arcus_Transactions__c> DCP_obj = new List<DCp_Arcus_Transactions__c>();
         DCp_Arcus_Transactions__c DCP_obj1 = new DCp_Arcus_Transactions__c();
@@ -1224,5 +1239,13 @@ public class TestCustomTriggerOnApplication {
         creditPolicy.Net_Disposable_Income_NDI__c = String.valueOf(ndi);
         creditPolicy.Application__c = id;
         return creditPolicy;
+    }
+
+    static genesis__Application_Document_Category__c makeTILApplicationDocumentCategory(genesis__Applications__c app) {
+        List<genesis__Application_Document_Category__c> lstCat = new List<genesis__Application_Document_Category__c>();
+        genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
+        adc.Name = 'TIL Document';
+        adc.genesis__Application__c = app.Id;
+        return adc;
     }
 }
