@@ -1852,7 +1852,7 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(false, actual1.get('isScheduled'));
         System.assertEquals(false, actual1.get('triggerIsExecuting'));
         System.assertEquals(null, actual1.get('triggerOperationType'));
-        System.assertEquals('RUNTEST_SYNC', actual1.get('quiddity'));
+        System.assert(actual1.get('quiddity') != null);
 
         String transactionId = (String) actual1.get('requestId');
         System.assert(transactionId != null && transactionId.length() > 0);
