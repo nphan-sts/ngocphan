@@ -1,6 +1,6 @@
 /* ****************Modification History*****************************************************************
  * Modified by      Date         JIRA number  Description
- * Mohan Kiran   2021/08/11       LSP-327 	  Used the endpoint CL_WebhookControlHandler to get Payoff parameters and pass the payoff quote back and save it in salesforce
+ * Mohan Kiran   2021/08/11       LSP-327     Used the endpoint CL_WebhookControlHandler to get Payoff parameters and pass the payoff quote back and save it in salesforce
  
  *******************Modification History*****************************************************************/
 
@@ -19,7 +19,7 @@ global with sharing class MW_WebhookControlHandler {
     global static String handleGetRequest(){
         RestRequest req = RestContext.request;
         RestResponse res = RestContext.response;
-		
+        
         return ServiceGetHelper(req, res);
     }
     
@@ -200,7 +200,7 @@ global with sharing class MW_WebhookControlHandler {
         {
             Map <String, String> params      = req.params;
             String requestBody = req.requestBody.toString();
-			
+            
             if(params.size()>0 && params.get('Lead_ID')!=null)
             {
                 
@@ -218,7 +218,7 @@ global with sharing class MW_WebhookControlHandler {
                         
                     return MW_PayOffQuote.Save(loanId, payOffDate);
                 }
-					/*END- Code change LSP-327*/
+                    /*END- Code change LSP-327*/
                     
                     /* credit_optic */
                     if(params.get('RequestType')=='credit_optic'){
@@ -342,9 +342,9 @@ global with sharing class MW_WebhookControlHandler {
             mail.setReplyTo('salesforceapi@happymoney.com');
             mail.setSenderDisplayName('MW: Apex error message');
             mail.setSubject('Error from Org : ' + UserInfo.getOrganizationName());
-            mail.setPlainTextBody(e.getMessage());
+            mail.setPlainTextBody(e.getStackTraceString());
             if(!Test.IsRunningTest()){
-                Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+                //Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
             }
             res.statusCode = 500;
             return e.getStackTraceString();
