@@ -2,15 +2,12 @@
 global class MW_Alerts implements Database.AllowsCallouts, Database.batchable<sObject> {
     private String baseUrl = getSalesforceInstanceUrl();
 
-    private final String SalesforceLimitsUrl = MW_Settings__c.getInstance().SalesforceLimitsUrl__c; //'/services/data/v45.0/limits';//(pending take from custom setting)
-    private final Decimal threshold70 = MW_Settings__c.getInstance().thresholdApiAndStorage__c; //70;//(pending take from custom setting)
-    private final Decimal threshold80 = MW_Settings__c.getInstance().thresholdFundingCaps__c; //80;//(pending take from custom setting)
+    private final String SalesforceLimitsUrl = MW_Settings__c.getInstance().SalesforceLimitsUrl__c; //'/services/data/v45.0/limits';
+    private final Decimal threshold80 = MW_Settings__c.getInstance().thresholdFundingCaps__c; //80;
+    private final Decimal threshold70 = threshold80 - 10;
     //Batchable Process
-    private String query = 'SELECT Id, Name, Annual_Funded_Cap__c, Total_Funded_YTD__c, Annual_Available_Balance__c,' +
-            'Monthly_Allocation_Cap__c, Total_Allocations_MTD__c, Current_Month_s_Available_Allocation__c,' +
-            'Monthly_Funded_Cap__c, Total_Funded_MTD__c, Current_Month_s_Available_Funded_Balance__c' +
-            ' FROM Account WHERE RecordType.Name = \'Investor\' AND loan__Investor__c = true';
 
+    private String query = 'SELECT Id FROM Account LIMIT 1';
 
     global Database.QueryLocator start(Database.BatchableContext BC) {
 
