@@ -95,7 +95,7 @@ public class MW_ApplicationService {
         Set<String> setDuplicateSsn = new Set<String>();
         List<Account> updateCurrentAccts = new List<Account>();
         List<Account> updatePreExistAccts = new List<Account>();
-        List<Account> listDuplicateAccts ;
+        List<Account> listDuplicateAccts = new List<Account>();
         List<loan__Loan_Account__c> updateExistingLoanAccts = new List<loan__Loan_Account__c>();
         //LOP-452
         Map<Id, genesis__Applications__c> mapPreExistAcctsApps = new Map<Id, genesis__Applications__c>(); 
