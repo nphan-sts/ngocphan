@@ -3,7 +3,6 @@
  *      1. Pallavi        2020/01/27     LOS-28(Remove references to InvestorAccount field on CL contract)
  *
  ******************Modification History******************/
-/* overwrite qa branch version, try again conflicts */
 @isTest
 public Class TestAutoSale{
 
