@@ -8,11 +8,12 @@
     
     * Modified by      Date            JIRA number
     *  Pallavi       2020/01/14    CRM-952 (Completely automate the SAP processing for LoanOps/Produce errors/logs for failures.)
-    *  Anusha 		 2021/02/17    LSP-3 (Completely automate the SAP processing for LoanOps)
-    *  Mohan Kiran 	 2021/09/09	   LSP-292-Processing skip a pay for bad standing loans coming from callouts.
-    *  Mohan Kiran   2022/07/14	   LSP-836 - SAP processing within 45 days should not update Hardship request date. If the date difference between
-    											first skip and 2nd skip are less than 45 days, the hardship request date is not altered.
+    *  Anusha        2021/02/17    LSP-3 (Completely automate the SAP processing for LoanOps)
+    *  Mohan Kiran   2021/09/09    LSP-292-Processing skip a pay for bad standing loans coming from callouts.
+    *  Mohan Kiran   2022/07/14    LSP-836 - SAP processing within 45 days should not update Hardship request date. If the date difference between
+                                                first skip and 2nd skip are less than 45 days, the hardship request date is not altered.
     *  Shakul        2022/08/16    LSP-912 - Changing SAP behavior to not maintaining delinquency irrespective of good/bad loans
+    *  Shakul        2022/12/05    LSP-1104 - Changing logic to get remaining terms based on due date of Amortization schedules.
     ******************Modification History*****************************************************************
     ******************************************************************************/
     global class ForBearanceLoanHelper {
@@ -141,7 +142,7 @@
                 system.debug('Skipped_a_Pay__c: '+lAtobeUpdated.Skipped_a_Pay__c+' and Skipped_a_pay_Date__c: '+lAtobeUpdated.Skipped_a_pay_Date__c);
                 
                 if(lAtobeUpdated!=null && lAtobeUpdated.U_LoanModForbearDt__c!= null){
-            	sapdaysDifference = systemDate.daysBetween(lAtobeUpdated.U_LoanModForbearDt__c);
+                sapdaysDifference = systemDate.daysBetween(lAtobeUpdated.U_LoanModForbearDt__c);
                 }
                 
                 //Before processing the loan, check if skip-a-pay action is already peformed for the loan, if yes log an exception and dont process that loan
@@ -188,7 +189,7 @@
                     return res; //don't process the loan if it is not eligible for rescheduling
                     
                 }
-                
+                Date repaymentDueDate; //LSP-1104 - Created variable to set the due date from the amortization schedule
                 //set repayment date
                 Integer limitNumber = Integer.valueOf(numberOfSkips)+1;
                 // Integer dueDateNumber =  Integer.valueOf(numberOfSkips)-1;
@@ -207,6 +208,7 @@
                                                                        order by loan__Due_Date__c asc limit :limitNumber];
                     if(amortSchedule.size()>0){                                                
                         repaymentStartDate = amortSchedule.get(Integer.valueOf(numberOfSkips)).loan__due_date__c;
+                        repaymentDueDate = amortSchedule.get(0).loan__due_date__c; //LSP-1104 - Setting the first due date which is not yet archived and paid from the repayment schedule
                     }
                     system.debug('repaymentStartDate is: '+repaymentStartDate);
                 }
@@ -229,6 +231,7 @@
                                                                        order by loan__Due_Date__c asc];
                     if(amortSchedule.size()>0){                                                
                         repaymentStartDate = (amortSchedule.get(0).loan__due_date__c).addMonths(numberOfSkips);
+                        repaymentDueDate = amortSchedule.get(0).loan__due_date__c; //LSP-1104 - Setting the first due date which is not yet archived and paid from the repayment schedule
                     }
                 }
                 system.debug('repaymentStartDate is: '+repaymentStartDate);
@@ -242,7 +245,7 @@
                 
                 System.debug(logginglevel.DEBUG,'lastPaymentDate: '+lastPaymentDate +' DUEDAY: '+dueDay);
                 
-                Integer terms = getRemainingTerm();
+                Integer terms = getRemainingTerm(repaymentDueDate); //LSP-1104 - Passing the due date as a parameter to calculate remaining no of terms
                 
                 if(lAtobeUpdated.loan__Repayment_Plan__r != null && lAtobeUpdated.loan__Repayment_Plan__r.size() != 0) {
                     delete lAtobeUpdated.loan__Repayment_Plan__r;
@@ -319,14 +322,14 @@
                               if(lAtobeUpdated.Skipped_a_Pay__c == false){
                               lAtobeUpdated.Hardship_Request_Date__c = systemDate;
                               
-								}
+                                }
                           }
                        /*LSP-3 end */
                        
                        lAtobeUpdated.loan__Oldest_Due_Date__c = repaymentStartDate;
                        /* START LSP-836 - The below block checks if the difference between last skipped date and the transaction date
-							1- If the difference is greater than 45 days - the hardship date is set to the system date
-							2- Hardship date is not altered otherwise if the difference is less than 45 days*/
+                            1- If the difference is greater than 45 days - the hardship date is set to the system date
+                            2- Hardship date is not altered otherwise if the difference is less than 45 days*/
                        
                         if((sapdaysDifference!=null && sapdaysDifference > SAP_CHECK_DAYS) || !lAtobeUpdated.Skipped_a_Pay__c ){
                               lAtobeUpdated.Hardship_Request_Date__c = systemDate;
@@ -365,22 +368,18 @@
     *  returns integer
     *
     */
-        public Integer getRemainingTerm() {
+        public Integer getRemainingTerm(Date repaymentDueDate) {
             
             Integer remainingTerm;
-            if (lAtobeUpdated.loan__Next_Installment_Date__c != null && lAtobeUpdated.loan__Maturity_Date_Current__c != null) {
-                remainingTerm = (Integer)(loan.DateUtil.cyclesBetween(lAtobeUpdated.loan__Next_Installment_Date__c,
+            //START:LSP-1104 - Replaced Next Due Date field on contract with due date passed as a parameter to the method
+            if (repaymentDueDate != null && lAtobeUpdated.loan__Maturity_Date_Current__c != null) {
+                remainingTerm = (Integer)(loan.DateUtil.cyclesBetween(repaymentDueDate,
                                                                       lAtobeUpdated.loan__Maturity_Date_Current__c,
-                                                                      lAtobeUpdated.loan__Frequency_of_Loan_Payment__c));
+                                                                      lAtobeUpdated.loan__Frequency_of_Loan_Payment__c)
+                                         );
             }
-            //START - LSP-912: Modified to ensure single balloon payment at the end of the repayment schedule 
-            if(lAtobeUpdated.loan__Previous_Installment_Date__c == null){ //executes when there is no bill generated on the contract
-                return remainingTerm;
-            }
-            else{
-                return remainingTerm + 1; // executes otherwise
-            }
-            //END - LSP-912: Modified to ensure single balloon payment at the end of the repayment schedule 
+            //END:LSP-1104 - Replaced Next Due Date field on contract with due date passed as a parameter to the method
+            return remainingTerm;
         }
         
     /*
@@ -444,7 +443,7 @@
                    update lpt;
                    isEligibleForReschedule = true;
                }else{//if(paymentTxnDate < systemDate){
-					loan__Batch_Process_Log__c rescheduleFailBatch = new loan__Batch_Process_Log__c(); 
+                    loan__Batch_Process_Log__c rescheduleFailBatch = new loan__Batch_Process_Log__c(); 
 
                    rescheduleFailBatch.loan__Log_Level__c = 'ERROR';
                    rescheduleFailBatch.loan__Message__c = 'There is an unprocessed payment on this contract, hence the loan cannot be rescheduled ::'+ lAtobeUpdated.Name;                
