@@ -3,7 +3,7 @@ global class MW_Alerts implements Database.AllowsCallouts, Database.batchable<sO
     private String baseUrl = getSalesforceInstanceUrl();
 
     private final String SalesforceLimitsUrl = MW_Settings__c.getInstance().SalesforceLimitsUrl__c; //'/services/data/v45.0/limits';
-    private final Decimal threshold80 = MW_Settings__c.getInstance().thresholdFundingCaps__c; //80;
+    private final Decimal threshold80 = MW_Settings__c.getInstance().thresholdApiAndStorage__c; //80;
     private final Decimal threshold70 = threshold80 - 10;
     //Batchable Process
 
