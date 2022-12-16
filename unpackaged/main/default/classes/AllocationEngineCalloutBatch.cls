@@ -163,6 +163,7 @@ global class AllocationEngineCalloutBatch implements Database.Batchable<SObject>
         }
     }
     public void finish(Database.BatchableContext bc) {
-        
+        System.debug(LoggingLevel.INFO, 'AllocationEngineCalloutBatch.finish:' + appIdList);
+        CertificateEmailSendBatch.executeBatch(appIdList);
     }
 }
