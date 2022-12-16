@@ -120,27 +120,32 @@ private class CertificateEmailSendBatchTest {
 
     @IsTest
     static void writeLogs() {
-        CertificateEmailSendBatch.log(LoggingLevel.INFO, 'info', 'abc123-info');
-        CertificateEmailSendBatch.log(LoggingLevel.WARN, 'warn', 'abc123-warn');
-        CertificateEmailSendBatch.log(LoggingLevel.ERROR, 'error', 'abc123-error');
-        CertificateEmailSendBatch.log(LoggingLevel.DEBUG, 'info', 'abc123-info');
+
+        String leadInfo = 'abc123-info';
+        String leadWarn = 'abc123-warn';
+        String leadError = 'abc123-error';
+
+        CertificateEmailSendBatch.log(LoggingLevel.INFO, 'info', leadInfo);
+        CertificateEmailSendBatch.log(LoggingLevel.WARN, 'warn', leadWarn);
+        CertificateEmailSendBatch.log(LoggingLevel.ERROR, 'error', leadError);
+        CertificateEmailSendBatch.log(LoggingLevel.DEBUG, 'info', leadInfo);
 
         /* 2 because the debug call should default to info */
         List<loan__Batch_Process_Log__c> infos = getLoanBatchProcessLogsByType('Info');
         System.assertEquals(2, infos.size());
         for (loan__Batch_Process_Log__c info : infos) {
-            System.assertEquals('abc123-info', info.App_Ids__c);
+            System.assertEquals(leadInfo, info.App_Ids__c);
             System.assertEquals('info', info.loan__Message__c);
         }
 
         List<loan__Batch_Process_Log__c> warns = getLoanBatchProcessLogsByType('Warning');
         System.assertEquals(1, warns.size());
-        System.assertEquals('abc123-warn', warns.get(0).App_Ids__c);
+        System.assertEquals(leadWarn, warns.get(0).App_Ids__c);
         System.assertEquals('warn', warns.get(0).loan__Message__c);
 
         List<loan__Batch_Process_Log__c> errors = getLoanBatchProcessLogsByType('Exception');
         System.assertEquals(1, errors.size());
-        System.assertEquals('abc123-error', errors.get(0).App_Ids__c);
+        System.assertEquals(leadError, errors.get(0).App_Ids__c);
         System.assertEquals('error', errors.get(0).loan__Message__c);
     }
 
