@@ -854,4 +854,24 @@ private class TestCreditPolicyResponse {
         Test.stopTest();
     }
 
+    //LOP-889
+    @IsTest static void TestIfPricingTestBucketIsNull() {
+       	Account acct = [SELECT Id,Name FROM Account WHERE Name ='Testfname Testlname' LIMIT 1];
+        genesis__Applications__c app = [SELECT Id,genesis__Status__c,Lead_ID__c FROM genesis__Applications__c WHERE genesis__Status__c='Offer shown' LIMIT 1];
+
+        StaticResource sr = [SELECT Id,Name,Body FROM StaticResource WHERE Name='LOP889_CbrFileNamingLogic'];
+        String jsonBody = sr.Body.toString();
+
+        Test.startTest();
+        
+        CreditPolicyResponse objCP = new CreditPolicyResponse();
+        objCP = objCP.Parse(jsonBody,acct.Id,app.Id, app.Lead_ID__c);
+        //File name should have postfix '_origination.xml' irrespective of PricingTestBucket value.
+        String expectedOrgnFileName = 'cbr_'+ app.Lead_ID__c +'_origination.xml';
+		List<Attachment> orgnAttchmts = [SELECT Id, Name FROM Attachment WHERE ParentId =: app.Id AND Name =: expectedOrgnFileName];
+        System.assertEquals(true, orgnAttchmts.size() > 0);
+        
+        Test.stopTest();
+    }
+
 }
