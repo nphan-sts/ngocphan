@@ -1,10 +1,9 @@
-public with sharing class loan_RepaymentScheduleHandler {
-
+public with sharing class RepaymentScheduleHandler {
     final List<loan__Repayment_Schedule_Summary__c> newRecords;
     final Map<Id, loan__Repayment_Schedule_Summary__c> oldMap;
     final Map<Id, loan__Repayment_Schedule_Summary__c> newMap;
 
-    public loan_RepaymentScheduleHandler(List< loan__Repayment_Schedule_Summary__c> newRecords, Map<Id, loan__Repayment_Schedule_Summary__c> oldMap, Map<Id, loan__Repayment_Schedule_Summary__c> newMap) {
+    public RepaymentScheduleHandler(List< loan__Repayment_Schedule_Summary__c> newRecords, Map<Id, loan__Repayment_Schedule_Summary__c> oldMap, Map<Id, loan__Repayment_Schedule_Summary__c> newMap) {
         this.newRecords = newRecords;
         this.oldMap = oldMap;
         this.newMap = newMap;
@@ -37,17 +36,16 @@ public with sharing class loan_RepaymentScheduleHandler {
                                                         WITH SECURITY_ENFORCED]){
             for(loan__Loan_Account__c clContract : clContracts) {
     
-                if (clContract.loan__Repayment_Schedule_Summary__r.size() >= 2) {
-                    if (clContract.loan__Repayment_Schedule_Summary__r[0].loan__RSS_Seq__c == 1 && 
-                        clContract.loan__Repayment_Schedule_Summary__r[0].loan__RSS_Repayment_Amt__c != clContract.loan__Payment_Amount__c
-                    ) {
-    
-                        clContract.Mod_Payment_Amount__c = clContract.loan__Repayment_Schedule_Summary__r[0].loan__RSS_Repayment_Amt__c;
-                        clContract.Mod_End_Date__c = clContract.loan__Repayment_Schedule_Summary__r[1].loan__RSS_Repayment_Dt__c.addDays(-1);
-    
-    
-                        updateContract.add(clContract);
-                    }
+                if (clContract.loan__Repayment_Schedule_Summary__r.size() >= 2 &&
+                    clContract.loan__Repayment_Schedule_Summary__r[0].loan__RSS_Seq__c == 1 && 
+                    clContract.loan__Repayment_Schedule_Summary__r[0].loan__RSS_Repayment_Amt__c != clContract.loan__Payment_Amount__c
+                ) {
+
+                    clContract.Mod_Payment_Amount__c = clContract.loan__Repayment_Schedule_Summary__r[0].loan__RSS_Repayment_Amt__c;
+                    clContract.Mod_End_Date__c = clContract.loan__Repayment_Schedule_Summary__r[1].loan__RSS_Repayment_Dt__c.addDays(-1);
+
+
+                    updateContract.add(clContract);
                 }
             }                                                    
         }
@@ -56,5 +54,4 @@ public with sharing class loan_RepaymentScheduleHandler {
             update updateContract;
         }
     }
-
 }

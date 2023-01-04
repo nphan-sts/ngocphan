@@ -1,6 +1,5 @@
-@isTest	
-public with sharing class loan_RepaymentScheduleTest {
-
+@isTest
+public with sharing class RepaymentScheduleTriggerTest {
     @testSetup static void setup(){	
 
         loan.TestHelper.createSeedDataForTesting();	
@@ -13,6 +12,8 @@ public with sharing class loan_RepaymentScheduleTest {
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    	
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();	
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);	
+
+        System.debug('Fees Junction' +dummyFeeJunction);
         
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();	
         
@@ -167,5 +168,4 @@ public with sharing class loan_RepaymentScheduleTest {
         system.assertEquals(updateLoanAcc.Mod_Payment_Amount__c != lacc.Mod_Payment_Amount__c, true);
 
     }
-
 }
