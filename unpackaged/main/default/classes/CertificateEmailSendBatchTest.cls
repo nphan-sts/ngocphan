@@ -82,7 +82,7 @@ private class CertificateEmailSendBatchTest {
         System.assertEquals('Completed', job.Status);
 
         List<loan__Batch_Process_Log__c> errors = getLoanBatchProcessLogsByType('Exception');
-        System.assertEquals(0, errors.size());
+        System.assertEquals(0, errors.size(), 'found errors: ' + errors);
 
         List<genesis__Application_Note__c> notes = getApplicationNotes(appIds);
         System.assertEquals(1, notes.size());

@@ -80,7 +80,9 @@ global class CertificateEmailSendBatch implements Database.Batchable<SObject>, D
             EmailTemplate et = [
                     SELECT Id, HtmlValue
                     FROM   EmailTemplate
-                    WHERE  Name = 'Insurance Certificate' LIMIT 1
+                    WHERE  Name = 'Insurance Certificate'
+                    AND    Folder.Name = 'Payoff Email Templates'
+                    LIMIT 1
             ];
 
             Document doc = [
