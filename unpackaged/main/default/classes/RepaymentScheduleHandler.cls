@@ -3,6 +3,14 @@ public with sharing class RepaymentScheduleHandler {
     final Map<Id, loan__Repayment_Schedule_Summary__c> oldMap;
     final Map<Id, loan__Repayment_Schedule_Summary__c> newMap;
 
+    final static Integer FIRST_PAYMENT = 1;
+    final static Integer NUMBER_OF_PAYMENT = 2;
+    final static Integer THIRD_PAYMENT = 3;
+
+    //update contract payment amount when there is a modification in repayment schedule
+    //when there are 3 repayment schedule inserted with priamry flag is true 
+    //and reschedule payment with sequence number 1 has repayment amount != contract payment amount
+    //and triggered only when there is a thrid payment with sequecen number = 3
     public RepaymentScheduleHandler(List< loan__Repayment_Schedule_Summary__c> newRecords, Map<Id, loan__Repayment_Schedule_Summary__c> oldMap, Map<Id, loan__Repayment_Schedule_Summary__c> newMap) {
         this.newRecords = newRecords;
         this.oldMap = oldMap;
@@ -19,7 +27,7 @@ public with sharing class RepaymentScheduleHandler {
     
         for(loan__Repayment_Schedule_Summary__c rs : newRecords) {
     
-            if (rs.loan__RSS_Seq__c == 3 && rs.loan__RSS_Primary_flag__c == true) {
+            if (rs.loan__RSS_Seq__c == THIRD_PAYMENT && rs.loan__RSS_Primary_flag__c == true) {
                 contractIds.add(rs.loan__RSS_Loan_Account__c);
             }
         }
@@ -36,8 +44,8 @@ public with sharing class RepaymentScheduleHandler {
                                                         WITH SECURITY_ENFORCED]){
             for(loan__Loan_Account__c clContract : clContracts) {
     
-                if (clContract.loan__Repayment_Schedule_Summary__r.size() >= 2 &&
-                    clContract.loan__Repayment_Schedule_Summary__r[0].loan__RSS_Seq__c == 1 && 
+                if (clContract.loan__Repayment_Schedule_Summary__r.size() >= NUMBER_OF_PAYMENT &&
+                    clContract.loan__Repayment_Schedule_Summary__r[0].loan__RSS_Seq__c == FIRST_PAYMENT && 
                     clContract.loan__Repayment_Schedule_Summary__r[0].loan__RSS_Repayment_Amt__c != clContract.loan__Payment_Amount__c
                 ) {
 
