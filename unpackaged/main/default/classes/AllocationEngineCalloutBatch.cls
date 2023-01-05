@@ -10,7 +10,7 @@
  *                   genesis__New_Value__c = 'funded')
  */
 
-global class AllocationEngineCalloutBatch implements Database.Batchable<SObject>, Database.AllowsCallouts {
+global class AllocationEngineCalloutBatch implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful {
 
     private static final String LOG_NAME = 'AllocationEngineCalloutBatch';
 
@@ -147,10 +147,21 @@ global class AllocationEngineCalloutBatch implements Database.Batchable<SObject>
     global void execute(Database.BatchableContext bc, List<genesis__Applications__c> scope) {
         final String methodName = 'execute';
         List<Id> appIds = new List<Id>();
+
+        for (genesis__Applications__c app : scope) {
+            appIds.add(app.Id);
+        }
+
+        /*
+        in case the batch was not invoked with a direct id list, set it with scope ids.
+        this is used to chain the batch to certificate send
+         */
+        if (this.appIdList == null) {
+            System.debug('AllocationEngineCalloutBatch.execute: setting appIdList: ' + appIds);
+            this.appIdList = new Set<Id>(appIds);
+        }
+
         if (MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
-            for (genesis__Applications__c app : scope) {
-                appIds.add(app.Id);
-            }
             if (MW_AllocationEngineHandler.FINALIZED == decisionLevel) {
                 MW_AllocationEngineHandler.handleFinal(appIds);
             } else if (MW_AllocationEngineHandler.CANCELLED == decisionLevel) {
@@ -164,6 +175,8 @@ global class AllocationEngineCalloutBatch implements Database.Batchable<SObject>
     }
     public void finish(Database.BatchableContext bc) {
         System.debug(LoggingLevel.INFO, 'AllocationEngineCalloutBatch.finish:' + appIdList);
-        CertificateEmailSendBatch.executeBatch(appIdList);
+        if (MW_AllocationEngineHandler.FINALIZED == decisionLevel) {
+            CertificateEmailSendBatch.executeBatch(appIdList);
+        }
     }
 }
