@@ -89,6 +89,33 @@ private class CertificateEmailSendBatchTest {
         System.assertEquals('Loan is covered by TruStage Payment Guard Insurance.', notes[0].genesis__Note__c);
     }
 
+    @IsTest
+    static void willNotSendAgainIfNoteExists() {
+
+        Set<Id> appIds = getApplicationIdByLeadId('abc123');
+        String query = getScopeQuery();
+
+        Test.startTest();
+        CertificateEmailSendBatch batch = new CertificateEmailSendBatch(appIds, query);
+        Integer batchSize = CertificateEmailSendBatch.getBatchSize();
+        Id jobId1 = Database.executeBatch(batch, batchSize);
+        Id jobId2 = Database.executeBatch(batch, batchSize);
+        Test.stopTest();
+
+        AsyncApexJob job1 = getAsyncApexJob(jobId1);
+        AsyncApexJob job2 = getAsyncApexJob(jobId2);
+
+        System.assertEquals('Completed', job1.Status);
+        System.assertEquals('Completed', job2.Status);
+
+        List<loan__Batch_Process_Log__c> errors = getLoanBatchProcessLogsByType('Exception');
+        System.assertEquals(0, errors.size(), 'found errors: ' + errors);
+
+        List<genesis__Application_Note__c> notes = getApplicationNotes(appIds);
+        System.assertEquals(1, notes.size(), 'Should only have one note for the first run');
+        System.assertEquals('Loan is covered by TruStage Payment Guard Insurance.', notes[0].genesis__Note__c);
+    }
+
     /**
      * Job should complete even if an exception occurs in the processing and log in batch process logs
      */
@@ -169,6 +196,8 @@ private class CertificateEmailSendBatchTest {
 
         System.assertEquals('Unable to send email for lead guid abc123 due to No result provided.', batchProcessLog.loan__Message__c);
     }
+
+
 
     /**
      * Should just exit quietly
