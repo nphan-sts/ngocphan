@@ -3,6 +3,12 @@
  */
 global class CertificateEmailSendBatch implements Database.Batchable<SObject>, Database.AllowsCallouts {
 
+    private static final String NOTE_CONTENT = 'Loan is covered by TruStage Payment Guard Insurance.';
+
+    private static final String NOTE_SUBJECT = 'Membership';
+
+    private static final String NOTE_TYPE = 'Internal';
+
     public Set<Id> appIds;
 
     public String query;
@@ -54,8 +60,6 @@ global class CertificateEmailSendBatch implements Database.Batchable<SObject>, D
 
     global void execute(Database.BatchableContext bc, List<genesis__Applications__c> scope) {
 
-        List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
-        List<Messaging.EmailFileAttachment> atts = new List<Messaging.EmailFileAttachment>();
         List<String> leadIds = new List<String>();
 
         try {
@@ -65,64 +69,34 @@ global class CertificateEmailSendBatch implements Database.Batchable<SObject>, D
                 return;
             }
 
-            List<Id> appIds = new List<Id>();
-
             if (scope == null || scope.isEmpty()) {
                 log(LoggingLevel.WARN, 'Found no apps to send certificate of insurance emails', null);
                 return;
             }
 
-            for (genesis__Applications__c app : scope) {
+            Map<Id, genesis__Applications__c> apps = new Map<Id, genesis__Applications__c>(scope);
+            List<Id> sentAppIds = getSentAppIds(apps.keySet());
+            List<String> sentLeadIds = new List<String>();
+
+            for (Id id: sentAppIds) {
+                if (apps.containsKey(id)) {
+                    genesis__Applications__c removed = apps.remove(id);
+                    sentLeadIds.add(removed.Lead_ID__c);
+                }
+            }
+
+            if (apps.isEmpty()) {
+                log(LoggingLevel.INFO, 'All apps in batch have already been sent insurance emails',
+                        String.join(sentLeadIds, ','));
+                return;
+            }
+
+            for (genesis__Applications__c app : apps.values()) {
                 appIds.add(app.Id);
                 leadIds.add(app.Lead_ID__c);
             }
 
-            EmailTemplate et = [
-                    SELECT Id, HtmlValue
-                    FROM   EmailTemplate
-                    WHERE  Name = 'Insurance Certificate'
-                    AND    Folder.Name = 'Payoff Email Templates'
-                    LIMIT 1
-            ];
-
-            Document doc = [
-                    SELECT Id, Name, Body
-                    FROM   Document
-                    WHERE  Name = 'Insurance Certificate'
-                    AND    Folder.Name = 'Certificate Email'
-                    LIMIT 1
-            ];
-
-            Messaging.EmailFileAttachment att = new Messaging.EmailFileAttachment();
-            att.setFileName(doc.Name);
-            att.setBody(doc.Body);
-            att.setContentType('application/pdf');
-            atts.add(att);
-
-            OrgWideEmailAddress orgWideEmailAddress = [
-                    SELECT Id, DisplayName, Address
-                    FROM   OrgWideEmailAddress
-                    WHERE  DisplayName = 'PayOff'
-                    LIMIT  1
-            ];
-
-            System.debug('Current Certificate Email scope size: ' + scope.size());
-
-            for (genesis__Applications__c app : scope) {
-
-                Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-                mail.setOrgWideEmailAddressId(orgWideEmailAddress.Id);
-                mail.setReplyTo(orgWideEmailAddress.Address);
-                mail.setTargetObjectId(app.genesis__Contact__c);
-                mail.setWhatId(app.Id);
-                mail.setTemplateId(et.Id);
-                mail.setSaveAsActivity(false);
-                mail.isTreatBodiesAsTemplate();
-                mail.setFileAttachments(atts);
-                mails.add(mail);
-            }
-
-            List<Id> successAppIds = sendEmailsAndReturnSuccesses(mails, scope);
+            List<Id> successAppIds = sendEmailsAndReturnSuccesses(apps.values());
 
             addApplicationNotes(successAppIds);
 
@@ -146,18 +120,67 @@ global class CertificateEmailSendBatch implements Database.Batchable<SObject>, D
 
     /**
      * Send emails and return a list of application ids that were successfully sent
-     * @param mails messages to send
-     * @param scope applications to send messages for
+     * @param apps applications to send messages for
      *
      * @return list of application ids that were successfully sent
      */
-    private static List<Id> sendEmailsAndReturnSuccesses(List<Messaging.SingleEmailMessage> mails, List<genesis__Applications__c> scope) {
+    private static List<Id> sendEmailsAndReturnSuccesses(List<genesis__Applications__c> apps) {
+
+        List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
+        List<Messaging.EmailFileAttachment> atts = new List<Messaging.EmailFileAttachment>();
+
+        EmailTemplate et = [
+                SELECT Id, HtmlValue
+                FROM   EmailTemplate
+                WHERE  Name = 'Insurance Certificate'
+                AND    Folder.Name = 'Payoff Email Templates'
+                LIMIT 1
+        ];
+
+        Document doc = [
+                SELECT Id, Name, Body
+                FROM   Document
+                WHERE  Name = 'Insurance Certificate'
+                AND    Folder.Name = 'Certificate Email'
+                LIMIT 1
+        ];
+
+        OrgWideEmailAddress orgWideEmailAddress = [
+                SELECT Id, DisplayName, Address
+                FROM   OrgWideEmailAddress
+                WHERE  DisplayName = 'PayOff'
+                LIMIT  1
+        ];
+
+        Messaging.EmailFileAttachment att = new Messaging.EmailFileAttachment();
+        att.setFileName(doc.Name);
+        att.setBody(doc.Body);
+        att.setContentType('application/pdf');
+        atts.add(att);
+
+
+        System.debug('Current Certificate Email apps size: ' + apps.size());
+
+        for (genesis__Applications__c app : apps) {
+
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            mail.setOrgWideEmailAddressId(orgWideEmailAddress.Id);
+            mail.setReplyTo(orgWideEmailAddress.Address);
+            mail.setTargetObjectId(app.genesis__Contact__c);
+            mail.setWhatId(app.Id);
+            mail.setTemplateId(et.Id);
+            mail.setSaveAsActivity(false);
+            mail.isTreatBodiesAsTemplate();
+            mail.setFileAttachments(atts);
+            mails.add(mail);
+        }
+
         Messaging.SendEmailResult [] results = Messaging.sendEmail(mails);
 
         List<Id> successAppIds = new List<Id>();
 
-        for (Integer i = 0; i < scope.size(); i++) {
-            genesis__Applications__c app = scope.get(i);
+        for (Integer i = 0; i < apps.size(); i++) {
+            genesis__Applications__c app = apps.get(i);
             Messaging.SendEmailResult result = results[i];
 
             if (result.success) {
@@ -203,13 +226,44 @@ global class CertificateEmailSendBatch implements Database.Batchable<SObject>, D
             for (Id appId : successAppIds) {
                 genesis__Application_Note__c note = new genesis__Application_Note__c();
                 note.genesis__Application__c = appId;
-                note.genesis__Note__c = 'Loan is covered by TruStage Payment Guard Insurance.';
-                note.NoteSubject__c = 'General';
-                note.NoteType__c = 'Internal';
+                note.genesis__Note__c = NOTE_CONTENT;
+                note.NoteSubject__c = NOTE_SUBJECT;
+                note.NoteType__c = NOTE_TYPE;
                 notes.add(note);
             }
             insert notes;
         }
+    }
+
+    /**
+     * @param incomingIds The list of incoming app ids to consider
+     *
+     * @return The list of applications which have already sent the email
+     */
+    private static List<Id> getSentAppIds(Set<Id> incomingIds) {
+
+        List<genesis__Application_Note__c> notes = [
+                SELECT genesis__Application__c,
+                       genesis__Note__c
+                FROM   genesis__Application_Note__c
+                WHERE  genesis__Application__c IN :incomingIds
+                AND    NoteSubject__c = :NOTE_SUBJECT
+                AND    NoteType__c = :NOTE_TYPE
+        ];
+
+        if (notes.isEmpty()) {
+            return new List<Id>();
+        }
+
+        Set<Id> allIds = new Set<Id>();
+
+        for (genesis__Application_Note__c note : notes) {
+            if (note.genesis__Note__c == NOTE_CONTENT) {
+                allIds.add(note.genesis__Application__c);
+            }
+        }
+
+        return new List<Id>(allIds);
     }
 
     /**
