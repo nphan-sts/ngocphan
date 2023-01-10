@@ -45,6 +45,7 @@ private class AllocationEngineCalloutBatchTest {
         app1.Allocation_Timestamp__c = Datetime.now();
         app1.Expected_Yield__c = 321.11;
         app1.Expected_Chargeoff__c = 432.0;
+        app1.Program_id__c = 'test_program_id';
     
         /* fresh advp apps will look more like this */
         genesis__Applications__c app2 = MW_GlobalTestUtility.GetApplication();
@@ -61,20 +62,27 @@ private class AllocationEngineCalloutBatchTest {
         app2.Loan_Purpose__c = 'debt_consolidation';
         app2.Credit_Policy_Approval_Models__c = null;
         app2.genesis__Loan_Amount__c = 15000.00;
+        app2.Program_id__c = 'test_program_id';
+
         insert new List<genesis__Applications__c> {app1, app2}; 
         
         app1.genesis__Status__c = PayoffConstants.FUNDED;
         app2.genesis__Status__c = PayoffConstants.FUNDED;  
         
         update new List<genesis__Applications__c> {app1, app2};
+
+        Allocation_Partner__c ap1 = makeAllocationPartner(app1, investor1);
+        Allocation_Partner__c ap2 = makeAllocationPartner(app2, investor2);
+
+        insert new List<Allocation_Partner__c> {ap1, ap2};
     }
     @IsTest static void testBatchClassExecutionWithApps() {
         
         Id jobId;
-        set<Id> appIds = new set<Id>();
+        Set<Id> appIds = new Set<Id>();
         Integer batchSize = Integer.valueOf(MW_Settings__c.getOrgDefaults().Allocation_Engine_Batch_Size__c);
         
-        for(genesis__applications__c app : [SELECT Id FROM genesis__applications__c]){
+        for(genesis__Applications__c app : [SELECT Id FROM genesis__Applications__c]){
             appIds.add(app.Id);
         }
         Test.startTest();
@@ -89,8 +97,11 @@ private class AllocationEngineCalloutBatchTest {
         Id jobId;
         Integer batchSize = Integer.valueOf(MW_Settings__c.getOrgDefaults().Allocation_Engine_Batch_Size__c);
         String queryStr =  'SELECT Id,genesis__status__c FROM genesis__applications__c ';
-               queryStr += 'WHERE Id IN (SELECT genesis__Application__c FROM genesis__Application_Status_History__c ';
-               queryStr += 'WHERE CreatedDate = TODAY AND genesis__New_Value__c = \'funded\')';
+               queryStr += 'WHERE  genesis__Status__c = \'funded\'';
+
+        List<SObject> sObjects = Database.query(queryStr);
+        System.assertEquals(2, sObjects.size(), 'We should have funded applications for this test');
+
         Test.startTest();
             AllocationEngineCalloutBatch btch = new AllocationEngineCalloutBatch(queryStr, MW_AllocationEngineHandler.FINALIZED);
             jobId = Database.executeBatch(btch,batchSize);
@@ -211,6 +222,21 @@ private class AllocationEngineCalloutBatchTest {
 
         app.CL_Contract__c = contract.Id;
         update app;
+    }
+
+    /**
+     * Method to make allocation partners given an Application object
+     * @param app applications
+     * @param inv investor
+     *
+     * @return ap to insert
+     */
+    private static Allocation_Partner__c makeAllocationPartner(genesis__Applications__c app, Account inv) {
+        Allocation_Partner__c ap = new Allocation_Partner__c();
+        ap.Application__c = app.Id;
+        ap.Investor__c = inv.Id;
+        ap.Lead_Partner__c = true;
+        return ap;
     }
 
     static MW_Settings__c getMWSettings(){
