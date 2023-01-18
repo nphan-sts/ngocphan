@@ -4,8 +4,6 @@ public without sharing class JobLoggingTriggerHandler{
     final Map<Id, clcommon__Job_Logging__c> newMap;
     List<String> folderName = new List<String>();
 
-    public static boolean avoidrecursive = true;
-
     public JobLoggingTriggerHandler(List<clcommon__Job_Logging__c> pNewRecords, Map<Id, clcommon__Job_Logging__c> pNewMap) {
         this.newRecords = pNewRecords;
         this.newMap = pNewMap;
