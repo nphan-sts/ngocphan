@@ -13,7 +13,6 @@ public without sharing class JobLoggingTriggerHandler{
     }
 
     public void checkAndSendNachaJobNotifications(clcommon__Job_Logging__c newRecord){
-        String msg = '';
         clcommon__Job_Logging__c jobLog = newRecord;
         if(jobLog.clcommon__Label__c == 'Loan Payment Filegen' && jobLog.clcommon__Status__c == 'Success'){
             for(loan__Automated_Payment_Configuration__c apc : [ SELECT Id,name,loan__Folder_Name__c,Box_Folder_ID__c  FROM loan__Automated_Payment_Configuration__c
@@ -24,8 +23,6 @@ public without sharing class JobLoggingTriggerHandler{
            
            String queryString = 'SELECT count() FROM Document WHERE Folder.Name IN : folderName AND CreatedDate = Today'; 
            Integer totalCount = Database.countQuery(queryString);
-           
-            msg += '@here Loan Payment Filegen completed successfully with ' + totalCount + ' files';
             
             string slackMentions = '';
             for(string userIds : MW_Settings__c.getInstance().Slack_mentions_for_Nacha_alert__c.split(',')){
