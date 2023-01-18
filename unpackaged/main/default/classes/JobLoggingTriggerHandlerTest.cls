@@ -12,8 +12,8 @@ public class JobLoggingTriggerHandlerTest {
         loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest', '30000 - INCOME');
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr, dummyIncAccount, dummyAccount);
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
-        loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();
+        loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
+        loan.TestHelper.createLoanPurpose();
         
         MW_Settings__c mwSettings = new MW_Settings__c();
         mwSettings.Slack_mentions_for_Nacha_alert__c = 'TestSlackMentions1,TestSlackMentions2';
@@ -29,7 +29,7 @@ public class JobLoggingTriggerHandlerTest {
         Contact a1 = new Contact(LastName='TestACH');
         insert a1;
         
-        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice,dummyAccount,curr,dummyFeeSet);
+        loan.TestHelper.createLoanProduct(dummyOffice,dummyAccount,curr,dummyFeeSet);
         
         loan__Payment_Mode__c pMode = [select id, name from loan__Payment_Mode__c where Name= 'ACH'];
         

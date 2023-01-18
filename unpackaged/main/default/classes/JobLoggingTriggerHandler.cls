@@ -1,4 +1,4 @@
-public class JobLoggingTriggerHandler{
+public without sharing class JobLoggingTriggerHandler{
  final List<clcommon__Job_Logging__c> newRecords;
     final Map<Id, clcommon__Job_Logging__c> oldMap;
     final Map<Id, clcommon__Job_Logging__c> newMap;
