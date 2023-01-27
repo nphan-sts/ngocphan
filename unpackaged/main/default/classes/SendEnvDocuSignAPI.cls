@@ -80,7 +80,7 @@ public with sharing class SendEnvDocuSignAPI {
 
         System.debug('...sendDocuSignEnvelope...' );
 
-        List<genesis__Applications__c> lstApp = [SELECT Applicant_Name__c, Name, DocuSignFlag__c, Application_Email__c, Bank_Account__c, Employer__c, Investor__c, DocuSign_EnvelopeId__c,
+        List<genesis__Applications__c> lstApp = [SELECT Applicant_Name__c, Name, DocuSignFlag__c, Application_Email__c, Bank_Account__c, Employer__c, Investor__c, DocuSign_EnvelopeId__c,Borrower_Name_Formula__c,
                                                     Employment_Status__c, genesis__Account__c, genesis__Bank_Account_Number__c,
                                                     genesis__Bank_Account_Type__c, genesis__Bank_Name__c, genesis__Loan_Amount__c,
                                                     genesis__Monthly_Income_Expense_Info__c, genesis__No_Of_Payments_Required_Upfront__c,
@@ -382,7 +382,7 @@ public with sharing class SendEnvDocuSignAPI {
                     //JSON Request which contains template id and receivers email and name.
                     String json/*json1*/ =
                         '{'+
-                        '"emailBlurb": "Dear '+ lstApp[0].genesis__Account__r.peer__First_Name__c + ',<br /> <br /> Congrats! Your Payoff Loan documents are ready for you to review, accept and eSign for your convenience. All you need to do is click the link below and follow the instructions to accept, and sign your final documents.<br /><br /> This is a required final step before we deposit your Payoff Loan funds into your bank account.<br /><br /> If you have any questions, feel free to give us a call at 1-800-878-0901.",'+
+                        '"emailBlurb": "Dear '+ lstApp[0].Borrower_Name_Formula__c + ',<br /> <br /> Congrats! Your Payoff Loan documents are ready for you to review, accept and eSign for your convenience. All you need to do is click the link below and follow the instructions to accept, and sign your final documents.<br /><br /> This is a required final step before we deposit your Payoff Loan funds into your bank account.<br /><br /> If you have any questions, feel free to give us a call at 1-800-878-0901.",'+
                         '"emailSubject": "Action Required - Please eSign your '+ docType +' '+ applicationId +'",'+
                         '"status": "sent",'+
                         //'"customFields":{'+
