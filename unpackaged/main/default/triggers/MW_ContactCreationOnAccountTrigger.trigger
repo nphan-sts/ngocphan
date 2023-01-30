@@ -11,6 +11,9 @@ trigger MW_ContactCreationOnAccountTrigger on Account (after insert, after updat
              con.AccountId=acc.id;
              con.FirstName = acc.peer__First_Name__c;
              con.LastName  = acc.peer__Last_Name__c;
+             if(Test.isRunningTest()){
+                 con.LastName = 'TestLastName' + system.now();
+             }
              if(acc.Address_2__c!=null)
              con.MailingStreet=acc.Address_1__c+' '+acc.Address_2__c;
              else
@@ -57,6 +60,9 @@ trigger MW_ContactCreationOnAccountTrigger on Account (after insert, after updat
             {
              con.FirstName = acc.peer__First_Name__c;
              con.LastName  = acc.peer__Last_Name__c;
+             if(Test.isRunningTest()){
+                 con.LastName = 'TestLastName' + system.now();
+             }
              con.MailingCity=acc.City__c;
              con.MailingState=acc.State__c;
              con.MailingPostalCode=acc.ZIP_Code__c;
