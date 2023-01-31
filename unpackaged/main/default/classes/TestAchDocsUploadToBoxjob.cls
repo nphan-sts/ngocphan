@@ -53,13 +53,10 @@ private class TestAchDocsUploadToBoxjob{
         dummyClient.Name = 'Payoff';
         dummyClient.peer__Last_Name__c = 'Account';
         dummyClient.peer__First_Name__c = 'Test';
-        dummyClient.loan__SOCIAL_SECURITY_NUMBER__c = '123456789';
         insert dummyClient;
         
-        Account invacc = new Account();
+        Account invacc = MW_GlobalTestUtility.GetAccount('Investor');
         invacc.name = 'investor';
-        invacc.loan__SOCIAL_SECURITY_NUMBER__c = '123456789';
-        //invacc.loan__Investor__c = 
         insert invacc;
         
         loan__Payment_Mode__c pm = new loan__Payment_Mode__c();
