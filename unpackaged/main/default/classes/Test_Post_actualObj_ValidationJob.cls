@@ -24,7 +24,11 @@ public class Test_Post_actualObj_ValidationJob {
         /*Account a2 = loan.TestHelper2.createInvestor('Bull', 1000);   //pallavi(commented)
         a2.loan__Undeployed_Funds__c=999999;
         update a2;*/
-        Account a2 = new Account(peer__First_Name__c = 'Bull', peer__Last_Name__c = 'Frank', loan__Undeployed_Funds__c = 999999,loan__Investor__c = true);   //pallavi
+        Account a2 = MW_GlobalTestUtility.GetAccount('Investor');
+        a2.peer__First_Name__c = 'Bull';
+        a2.peer__Last_Name__c = 'Frank';
+        a2.loan__Undeployed_Funds__c = 999999;
+        a2.loan__Investor__c = true;
         insert a2;
         loan.CustomSettingsUtil.getNS();
         //Create Borrower
