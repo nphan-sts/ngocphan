@@ -6,7 +6,7 @@
 @isTest
 public class Test_DM_DataCleanUp {
 
-    @testSetup
+    @TestSetup
     static void testData(){
         loan__Org_Parameters__c orgParam = new loan__Org_Parameters__c();
         orgParam.loan__Disable_Triggers__c=true;
@@ -25,9 +25,7 @@ public class Test_DM_DataCleanUp {
 
         loan.TestHelper.createSeedDataForTesting();
         loan.TestHelper.setupApprovalProcessForTxn();
-        /*Account a2 = loan.TestHelper2.createInvestor('Bull', 1000); 	//pallavi(commented)
-        a2.loan__Undeployed_Funds__c=999999;
-        update a2;*/
+
         Account a2 = MW_GlobalTestUtility.GetAccount('Investor');
         a2.peer__First_Name__c = 'Bull';
         a2.peer__Last_Name__c = 'Frank';
@@ -42,8 +40,7 @@ public class Test_DM_DataCleanUp {
         insert b1;
 
         loan.TestHelper.systemDate = Date.today();
-        Id rtId = Schema.SObjectType.loan__Office_Name__c.getRecordTypeInfosByName().get('Root Branch').getRecordTypeId();
-        Id prodRTId = Schema.SObjectType.loan__Loan_Product__c.getRecordTypeInfosByName().get('Loan Product Record Type').getRecordTypeId();
+        Id rtId = Schema.SObjectType.loan__Office_Name__c.getRecordTypeInfosByDeveloperName().get('Root_Branch').getRecordTypeId();
 
         loan__Currency__c curr = loan.TestHelper.createCurrency();
         loan__office_Type__c testBranchType = new loan__Office_Type__c(Name='Data Migration',
@@ -85,7 +82,8 @@ public class Test_DM_DataCleanUp {
         loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest', '10000 - ASSETS');
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr, dummyIncAccount, dummyAccount);
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
+
+        loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
         List<loan__Loan_Product__c> loanProductList = new List<loan__Loan_Product__c>();
         loan__Loan_Product__c simpleLP = Post_actualObj_TestHelper.createLoanProduct('Auto Payer',dummyOffice,
                 dummyAccount, curr, dummyFeeSet, 'Loan');
@@ -133,17 +131,11 @@ public class Test_DM_DataCleanUp {
         loan__Loan_Disbursal_Transaction__c ldt =  Post_actualObj_TestHelper.fundLoan(dmLoan, Date.Today(), pmode,bankAccount);
         insert ldt;
 
-        /*loan__Loan_Disbursal_Transaction__c ldt1 =  Post_actualObj_TestHelper.fundLoan1(dmLoan2, Date.Today(), pmode,bankAccount);
-        insert ldt1;*/
-
         loan__Disbursal_Txn_Distribution__c dtd = Post_actualObj_TestHelper.createDTD(ldt);
         insert dtd;
 
         loan__Loan_account_Due_Details__c bill =  Post_actualObj_TestHelper.createUnpaidDue(dmLoan, 6500.00);
         insert bill;
-
-        /*loan__Bill__c bill1 =  Post_actualObj_TestHelper.createUnpaidDue1(dmLoan2, 6500.00);
-        insert bill1;*/
 
         loan__Repayment_Schedule_Summary__c dm_RSS = Post_actualObj_TestHelper.CreateRSSData(dmLoan, 600.00);
         insert dm_RSS;
@@ -151,27 +143,19 @@ public class Test_DM_DataCleanUp {
         loan__Charge__c charge =  Post_actualObj_TestHelper.createUnpaidCharge(dmLoan, dummyFee, 100.00 );
         insert charge;
 
-        loan__Repayment_Schedule__c AmzSchedule = Post_actualObj_TestHelper.CreateAmzScheduleData(dmLoan, 1000.00);
-        insert AmzSchedule;
-
-        /*loan__Repayment_Schedule__c AmzSchedule1 = Post_actualObj_TestHelper.CreateAmzScheduleData1(dmLoan2, 1000.00);
-        insert AmzSchedule1;*/
+        loan__Repayment_Schedule__c amzSchedule = Post_actualObj_TestHelper.CreateAmzScheduleData(dmLoan, 1000.00);
+        insert amzSchedule;
 
         loan__Automated_Payment_Setup__c aps =  Post_actualObj_TestHelper.createAutomatedPaymentSetup('DO it later', '', bankAccount,
                 dmLoan, '', pMode, Date.Today(),1);
         insert aps;
         System.debug('aps----' + aps);
 
-
-
         loan__Loan_Payment_Transaction__c lpt = Post_actualObj_TestHelper.createLoanPayment(dmLoan.Id, 10000.00,Date.today(),aPS, pMode, null);
         insert lpt;
 
         loan__Due_Payment__c due = Post_actualObj_TestHelper.createDP(lpt);
         insert due;
-
-        /*loan__Loan_Payment_Transaction__c lpt1 = Post_actualObj_TestHelper.createLoanPayment1(dmLoan2.Id, 10000.00,Date.today(),aPS, pMode, null);
-        insert lpt1;*/
 
         loan__Interest_Posting_Transaction__c IPT = Post_actualObj_TestHelper.create_InterestPostingTransaction(dmLoan.Id,system.Today(),12758.00,1598.00,8900.90,890.00,false,system.Today(),234500.00,system.Today().addDays(-5),
                 'Regular',true,false,system.today().addDays(-10),system.today().addDays(30));
@@ -192,7 +176,7 @@ public class Test_DM_DataCleanUp {
     }//END testData
     @isTest
     static void testMehod_1(){
-        //List<DM_Loan_Account__c> dmList = [select id from DM_Loan_Account__c];
+
         User u = [Select Id from User limit 1];
         system.runAs(u){
             Test.startTest();

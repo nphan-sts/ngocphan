@@ -1,6 +1,11 @@
-@isTest
+@IsTest
 public class Test_DM_MigrationJob {
-    @testSetup
+
+    private static final String SIMPLE_LOAN_PRODUCT = 'Simple Loan';
+
+    private static final String LOAN_PRODUCT_TYPE = 'Loan';
+
+    @TestSetup
     static void testData(){
         loan__Org_Parameters__c orgParam = new loan__Org_Parameters__c();
         orgParam.loan__Disable_Triggers__c=true;
@@ -14,9 +19,7 @@ public class Test_DM_MigrationJob {
 
         loan.TestHelper.createSeedDataForTesting();
         loan.TestHelper.setupApprovalProcessForTxn();
-        /*Account a2 = loan.TestHelper2.createInvestor('Bull', 1000);   //pallavi(commented)
-        a2.loan__Undeployed_Funds__c=999999;
-        update a2;*/
+
         Account a2 = MW_GlobalTestUtility.GetAccount('Investor');
         a2.peer__First_Name__c = 'Bull';
         a2.loan__Undeployed_Funds__c = 999999;
@@ -30,8 +33,7 @@ public class Test_DM_MigrationJob {
         insert b1;
 
         loan.TestHelper.systemDate = Date.today();
-        Id rtId = Schema.SObjectType.loan__Office_Name__c.getRecordTypeInfosByName().get('Root Branch').getRecordTypeId();
-        Id prodRTId = Schema.SObjectType.loan__Loan_Product__c.getRecordTypeInfosByName().get('Loan Product Record Type').getRecordTypeId();
+        Id rtId = Schema.SObjectType.loan__Office_Name__c.getRecordTypeInfosByDeveloperName().get('Root_Branch').getRecordTypeId();
 
         loan__Currency__c curr = loan.TestHelper.createCurrency();
         loan__office_Type__c testBranchType = new loan__Office_Type__c(Name='Data Migration',
@@ -73,25 +75,25 @@ public class Test_DM_MigrationJob {
         loan__MF_Account__c dummyAccount = loan.TestHelper.createMFAccount('XXXAccountForTest', '10000 - ASSETS');
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr, dummyIncAccount, dummyAccount);
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
+
+        loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
         List<loan__Loan_Product__c> loanProductList = new List<loan__Loan_Product__c>();
-        loan__Loan_Product__c simpleLP = DM_TestHelper.createLoanProduct('Simple Loan',dummyOffice,
-                dummyAccount, curr, dummyFeeSet, 'Loan');
+        loan__Loan_Product__c simpleLP = DM_TestHelper.createLoanProduct(SIMPLE_LOAN_PRODUCT,dummyOffice,
+                dummyAccount, curr, dummyFeeSet, LOAN_PRODUCT_TYPE);
         loanProductList.add(simpleLP);
 
         loan__Loan_Product__c difficultLP = DM_TestHelper.createLoanProduct('Difficult Loan',dummyOffice,
-                dummyAccount, curr, dummyFeeSet, 'Loan');
+                dummyAccount, curr, dummyFeeSet, LOAN_PRODUCT_TYPE);
         loanProductList.add(difficultLP);
 
-        loan__Loan_Product__c errorLp = DM_TestHelper.createLoanProduct('Simple Loan',dummyOffice,
-                dummyAccount, curr, dummyFeeSet, 'Loan');
+        loan__Loan_Product__c errorLp = DM_TestHelper.createLoanProduct(SIMPLE_LOAN_PRODUCT,dummyOffice,
+                dummyAccount, curr, dummyFeeSet, LOAN_PRODUCT_TYPE);
         loanProductList.add(errorLp);
 
 
         insert loanProductList;
 
         loan__Payment_Mode__c pMode = new loan__Payment_Mode__c(name='Cash');
-        //insert pMode;
 
         loan__Bank_Account__c bankAccount = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                 loan__Active__c = true,
@@ -158,14 +160,14 @@ public class Test_DM_MigrationJob {
         DM_Charge__c charge =  DM_TestHelper.createUnpaidCharge(dmLoan, dummyFee, 100.00 );
         insert charge;
 
-        DM_Repayment_Schedule__c AmzSchedule = DM_TestHelper.CreateAmzScheduleData(dmLoan, 1000.00);
-        AmzSchedule.DM_Due_Date__c = Date.today().addDays(1);
-        AmzSchedule.DM_Is_Billed__c = true;
-        AmzSchedule.DM_isPaid__c = true;
-        insert AmzSchedule;
+        DM_Repayment_Schedule__c amzSchedule = DM_TestHelper.CreateAmzScheduleData(dmLoan, 1000.00);
+        amzSchedule.DM_Due_Date__c = Date.today().addDays(1);
+        amzSchedule.DM_Is_Billed__c = true;
+        amzSchedule.DM_isPaid__c = true;
+        insert amzSchedule;
         /*pallavi*/
-        DM_Repayment_Schedule__c AmzSchedule1 = DM_TestHelper.CreateAmzScheduleData1(dmLoan2, 1000.00);
-        insert AmzSchedule1;
+        DM_Repayment_Schedule__c amzSchedule1 = DM_TestHelper.CreateAmzScheduleData1(dmLoan2, 1000.00);
+        insert amzSchedule1;
         /*pallavi*/
         DM_Automated_Payment_Setup__c aps =  DM_TestHelper.createAutomatedPaymentSetup('DO it later', '', bankAccount,
                 dmLoan, '', pMode, Date.Today(),1);
@@ -199,9 +201,9 @@ public class Test_DM_MigrationJob {
         insert rep1;
         /*pallavi*/
 
-        DM_Interest_Posting_Transaction__c IPT = DM_TestHelper.create_DMInterestPostingTransaction(dmLoan.Id,system.Today(),12758.00,1598.00,8900.90,890.00,false,system.Today(),234500.00,system.Today().addDays(-5),
+        DM_Interest_Posting_Transaction__c ipt = DM_TestHelper.create_DMInterestPostingTransaction(dmLoan.Id,system.Today(),12758.00,1598.00,8900.90,890.00,false,system.Today(),234500.00,system.Today().addDays(-5),
                 'Regular',true,false,system.today().addDays(-10),system.today().addDays(30));
-        insert IPT;
+        insert ipt;
 
         clcommon__Accounting_Entry__c accountingEntry = new clcommon__Accounting_Entry__c(clcommon__Transaction_Creation_Date__c=System.Today(),clcommon__Transaction_Date__c=System.Today());
         insert accountingEntry;
@@ -215,13 +217,13 @@ public class Test_DM_MigrationJob {
         clcommon__Contingency_Status_Code__c co = new clcommon__Contingency_Status_Code__c(name = 'No Communication (X)');
         insert co;
 
-        DM_Loan_Account_Conditions__c LAC = new DM_Loan_Account_Conditions__c(DM_Enabled__c = true,
+        DM_Loan_Account_Conditions__c lac = new DM_Loan_Account_Conditions__c(DM_Enabled__c = true,
                 DM_External_Id__c = 'gggg',
                 DM_Loan__c = dmLoan.id,
                 DM_Reason_Code__c = 'CIIC_A',
                 DM_Action__c = 'Queue/Condition Request',
                 DM_Start_Date__c = System.today());
-        insert LAC;
+        insert lac;
 
         loan__Lookup__c lookup = new loan__Lookup__c(loan__Lookup_Code__c = 'CIIC_A',
                 loan__Enabled_Flag__c = true,
@@ -339,66 +341,58 @@ public class Test_DM_MigrationJob {
 
     }//END testData
 
-    @isTest
-    static void JobForSimpleLoanAndStrategyZero_IsTest(){
-        //List<DM_Loan_Account__c> dmList = [select id from DM_Loan_Account__c];
-        User u = [Select Id from User limit 1];
+    @IsTest
+    static void jobForSimpleLoanAndStrategyZero_IsTest(){
+        User u = [SELECT Id FROM User LIMIT 1];
         system.runAs(u){
             Test.startTest();
-            DM_MigrationJob dm1 = new Dm_MigrationJob();
-            DM_MigrationJob dm2 = new Dm_MigrationJob(2);
+            new Dm_MigrationJob();
+            new Dm_MigrationJob(2);
 
-            DM_MigrationJob dm = new Dm_MigrationJob('Simple Loan',1);
+            DM_MigrationJob dm = new Dm_MigrationJob(SIMPLE_LOAN_PRODUCT,1);
             Database.executeBatch(dm,1);
             Test.stopTest();
-            List<loan__Loan_Account__c> loanAcc = [select Id,custesting__c,custesting2__c,custesting3__c,custesting4__c,cusTesting5__c,cusTesting6__c from loan__Loan_Account__c];
+            List<loan__Loan_Account__c> loanAcc = [SELECT Id,custesting__c,custesting2__c,custesting3__c,custesting4__c,cusTesting5__c,cusTesting6__c FROM loan__Loan_Account__c];
             System.assert(!loanAcc.isEmpty());
-            /*system.assert(loanAcc[0].custesting__c<>null);
-            system.assert(loanAcc[0].custesting2__c<>null);
-            system.assert(loanAcc[0].custesting3__c<>null);
-            system.assert(loanAcc[0].custesting4__c<>null);
-            system.assertEquals(loanAcc[0].cusTesting5__c,false);
-            system.assertEquals(loanAcc[0].cusTesting6__c,false);*/
-            List<DM_Loan_Account__c> DMAcc = [select Id,migration_Status__c,DM_Error__c,DM_Is_Migrated__c,Migrated_CL_Contract__c from DM_Loan_Account__c where Batch_Type__c='Simple Loan'];
-            system.assert(DMAcc[0].migration_Status__c=='Success');
-            system.assert(DMAcc[0].DM_Is_Migrated__c);
-            system.assert(DMAcc[0].Migrated_CL_Contract__c<>null);
+            List<DM_Loan_Account__c> dmAcc = [SELECT Id,migration_Status__c,DM_Error__c,DM_Is_Migrated__c,Migrated_CL_Contract__c FROM DM_Loan_Account__c WHERE Batch_Type__c='Simple Loan'];
+            system.assert(dmAcc[0].migration_Status__c=='Success');
+            system.assert(dmAcc[0].DM_Is_Migrated__c);
+            system.assert(dmAcc[0].Migrated_CL_Contract__c<>null);
         }//END system.runAs(u)
     }//END RunJobTemp_IsTest 
 
-    @isTest
-    static void JobForDifficultLoanAndStrategy1000_IsTest(){
-        User u = [Select Id from User limit 1];
+    @IsTest
+    static void jobForDifficultLoanAndStrategy1000_IsTest(){
+        User u = [SELECT Id FROM User LIMIT 1];
         system.runAs(u){
             Test.startTest();
             DM_MigrationJob dm = new Dm_MigrationJob('Difficult Loan',2);
             Database.executeBatch(dm,1);
             Test.stopTest();
-            List<loan__Loan_Account__c> loanAcc = [select Id,custesting__c from loan__Loan_Account__c];
+            List<loan__Loan_Account__c> loanAcc = [SELECT Id,custesting__c FROM loan__Loan_Account__c];
             System.assert(!loanAcc.isEmpty());
-            List<DM_Loan_Account__c> DMAcc = [select Id,migration_Status__c,DM_Error__c,DM_Is_Migrated__c,Migrated_CL_Contract__c from DM_Loan_Account__c where dm_thread_number__c=2];
-            System.debug('DM_Error__c----' + DMAcc[0].DM_Error__c);
-            system.assert(DMAcc[0].migration_Status__c=='Success');
-            system.assert(DMAcc[0].DM_Is_Migrated__c);
-            system.assert(DMAcc[0].Migrated_CL_Contract__c<>null);
+            List<DM_Loan_Account__c> dmAcc = [SELECT Id,migration_Status__c,DM_Error__c,DM_Is_Migrated__c,Migrated_CL_Contract__c FROM DM_Loan_Account__c WHERE dm_thread_number__c=2];
+            System.debug('DM_Error__c----' + dmAcc[0].DM_Error__c);
+            system.assert(dmAcc[0].migration_Status__c=='Success');
+            system.assert(dmAcc[0].DM_Is_Migrated__c);
+            system.assert(dmAcc[0].Migrated_CL_Contract__c<>null);
         }//END system.runAs(u) 
     }//END RunJobTemp_IsTest 
 
-    @isTest
-    static void JobForFailedCustomValidation_IsTest(){
-        List<DM_Loan_Account__c> dmList = [select id from DM_Loan_Account__c];
-        User u = [Select Id from User limit 1];
+    @IsTest
+    static void jobForFailedCustomValidation_IsTest(){
+        User u = [SELECT Id FROM User LIMIT 1];
         system.runAs(u){
             Test.startTest();
             DM_MigrationJob dm = new Dm_MigrationJob('Error',3);
             Database.executeBatch(dm,1);
             Test.stopTest();
-            List<loan__Loan_Account__c> loanAcc = [select Id,custesting__c from loan__Loan_Account__c];
+            List<loan__Loan_Account__c> loanAcc = [SELECT Id,custesting__c FROM loan__Loan_Account__c];
             System.assert(loanAcc.isEmpty());
-            List<DM_Loan_Account__c> DMAcc = [select Id,migration_Status__c,DM_Error__c,DM_Is_Migrated__c,Migrated_CL_Contract__c from DM_Loan_Account__c where Batch_Type__c='Error'];
-            system.assert(DMAcc[0].migration_Status__c=='Failed');
-            system.assert(!DMAcc[0].DM_Is_Migrated__c);
-            system.assert(DMAcc[0].Migrated_CL_Contract__c==null);
+            List<DM_Loan_Account__c> dmAcc = [SELECT Id,migration_Status__c,DM_Error__c,DM_Is_Migrated__c,Migrated_CL_Contract__c FROM DM_Loan_Account__c WHERE Batch_Type__c='Error'];
+            system.assert(dmAcc[0].migration_Status__c=='Failed');
+            system.assert(!dmAcc[0].DM_Is_Migrated__c);
+            system.assert(dmAcc[0].Migrated_CL_Contract__c==null);
         }//END system.runAs(u)
     }//END RunJobTemp_IsTest
 }//END Test_DM_MigrationJob
