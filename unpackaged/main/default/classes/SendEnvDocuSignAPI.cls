@@ -2,6 +2,7 @@
     Developer           Date            Description
     Mohseen Begum       12/05/2017      Created
                         25/09/2017      Modified
+    Other tickets       NA              CRM-1003, CLS-193, LOS-196
     Pallavi             2019-11-29      LOS-205(setting the tieout to 120 sec) 
     Abhijeet            2023-01-31.     LPC-354 Update Anniversary / Payment start date logic for prom note for Feb month
     --------------------------------------------------------------------------- */
@@ -256,7 +257,7 @@ public with sharing class SendEnvDocuSignAPI {
                     CustomTriggerOnApplicationHandler ctdh = new CustomTriggerOnApplicationHandler();
                     String paymentEndDate, paymentStartDate;
                     if(!lstAmortization.isEmpty()) {
-
+                        FINAL String DATE_FORMAT = 'MMMMMMMM dd, yyyy';
                         Integer lstSize = lstAmortization.Size();
                         if(lstAmortization[0].genesis__Due_Date__c != null) {
                              /* LPC-359 Feb payment start date / anniversary date promissory note issue fix */
@@ -264,13 +265,13 @@ public with sharing class SendEnvDocuSignAPI {
                                 signDateforPaymentStartDate = system.today();
                             } 
                             Date anniversaryDate = getPaymentStartDate();
-                            paymentStartDate = DateTime.newInstance(anniversaryDate.year(),anniversaryDate.month(),anniversaryDate.day()).format('MMMMMMMM dd, yyyy');
+                            paymentStartDate = DateTime.newInstance(anniversaryDate.year(),anniversaryDate.month(),anniversaryDate.day()).format(DATE_FORMAT);
                         }
                         if(lstAmortization[lstSize-1].genesis__Due_Date__c != null) {
                             system.debug('Last Amortization Details:.... '+lstAmortization[lstSize-1]);
                             Date dt = ctdh.addWorkingDaysTodate(system.today(),3).addMonths(Integer.valueOf(loanTerm));
                             dt = dt.addDays(MW_DocuSignTriggerHandler.calcdate(dt));
-                            paymentEndDate = DateTime.newInstance(dt.year(),dt.month(),dt.day()).format('MMMMMMMM dd, yyyy');
+                            paymentEndDate = DateTime.newInstance(dt.year(),dt.month(),dt.day()).format(DATE_FORMAT);
                         }
                     }
                     String appLoanId = '';
@@ -811,15 +812,16 @@ public with sharing class SendEnvDocuSignAPI {
             CustomTriggerOnApplicationHandler ctdh = new CustomTriggerOnApplicationHandler();
             
             /* LPC-359 Feb payment start date / anniversary date promissory note issue fix */
+            FINAL String DATE_FORMAT = 'MMMMMMMM dd, yyyy';
             if(signDateforPaymentStartDate == null){
                 signDateforPaymentStartDate = system.today();
             } 
             Date anniversaryDate = getPaymentStartDate();
-            String paymentStartDate = DateTime.newInstance(anniversaryDate.year(),anniversaryDate.month(),anniversaryDate.day()).format('MMMMMMMM dd, yyyy');
+            String paymentStartDate = DateTime.newInstance(anniversaryDate.year(),anniversaryDate.month(),anniversaryDate.day()).format(DATE_FORMAT);
             
             Date endDt = ctdh.addWorkingDaysTodate(system.today(),3).addMonths(Integer.valueOf(loanTerm));
             endDt = endDt.addDays(MW_DocuSignTriggerHandler.calcdate(endDt));
-            String paymentEndDate = DateTime.newInstance(endDt.year(),endDt.month(),endDt.day()).format('MMMMMMMM dd, yyyy');
+            String paymentEndDate = DateTime.newInstance(endDt.year(),endDt.month(),endDt.day()).format(DATE_FORMAT);
             
             String json = '{"textTabs": [{'+
                             '"tabLabel": "PaymentStartDate",'+

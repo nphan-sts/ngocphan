@@ -167,21 +167,21 @@ private class SendEnvDocuSignAPITest{
         SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-24');        
         Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2023-02-27'));
         
-        
+        FINAL String EXPECTED_DATE = '2023-03-01';
         SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-25');        
-        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2023-03-01'));
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf(EXPECTED_DATE));
         
         SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-26');        
-        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2023-03-01'));
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf(EXPECTED_DATE));
         
         SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-27');        
-        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2023-03-01'));
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf(EXPECTED_DATE));
         
         SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-28');        
-        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2023-03-01'));
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf(EXPECTED_DATE));
         
         SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-29');        
-        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2023-03-01'));
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf(EXPECTED_DATE));
         
         SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-30');        
         Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2023-03-02'));
