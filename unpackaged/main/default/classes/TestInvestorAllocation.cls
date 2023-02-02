@@ -1375,7 +1375,6 @@ private class TestInvestorAllocation{
             DCP_Investor_Eligibility__c = false,
             Investor__c = acc1.id
         );      
-        // Insert app2;
         listApp.add(app2);
 
         insert listApp;
