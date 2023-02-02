@@ -19,6 +19,7 @@ private class TestDataAccrualFixBatch{
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet1 = loan.TestHelper.createFeeSet();
         loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet1);
+        System.debug(dummyFeeJunction);
         
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         

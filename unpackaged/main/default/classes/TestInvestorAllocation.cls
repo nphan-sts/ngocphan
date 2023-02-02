@@ -1301,7 +1301,6 @@ private class TestInvestorAllocation{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =10
         );
-        // Insert acc1;
         accList.add(acc1);
         Account acc2 = new Account(
             Name = 'Test1',
@@ -1327,7 +1326,6 @@ private class TestInvestorAllocation{
             Total_Allocations_MTD__c =0,
 			DCP_Allowed__c = true            
         );
-        // Insert acc2;
         accList.add(acc2);
 
         Insert accList;
@@ -1360,7 +1358,6 @@ private class TestInvestorAllocation{
             genesis__Loan_Amount__c = 1000,
             DCP_Investor_Eligibility__c = false
         );      
-        // Insert app1;
         listApp.add(app1);
 
         genesis__Applications__c app2 = new genesis__Applications__c(
@@ -1389,7 +1386,6 @@ private class TestInvestorAllocation{
         adc1.name = 'TIL Document';
         adc1.genesis__Application__c = app1.id;
         
-        // insert adc1;
         listAdc.add(adc1);
 
         genesis__Application_Document_Category__c adc2 = new genesis__Application_Document_Category__c();

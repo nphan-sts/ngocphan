@@ -45,7 +45,7 @@ class TestCustomACHReturnFileParser{
         Account b1 = new Account(
             Name = 'ShoeString',
             loan__Investor__c=False,
-            cnotify__Email__c = 'no-reply@testorganization.com',
+            cnotify__Email__c = 'no-reply2@testorganization.com',
             peer__First_Name__c = 'TestFName1',
             peer__Last_Name__c='TestLName1', 
             City__c='TestCity',
@@ -403,7 +403,7 @@ class TestCustomACHReturnFileParser{
         Account b1 = new Account(
             Name = 'ShoeString',
             loan__Investor__c=False,
-            cnotify__Email__c = 'no-reply@testorganization.com',
+            cnotify__Email__c = 'no-reply1@testorganization.com',
             peer__First_Name__c = 'TestFName1',
             peer__Last_Name__c='TestLName1', 
             City__c='TestCity',
