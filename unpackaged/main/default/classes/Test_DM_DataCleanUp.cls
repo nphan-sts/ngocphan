@@ -157,9 +157,9 @@ public class Test_DM_DataCleanUp {
         loan__Due_Payment__c due = Post_actualObj_TestHelper.createDP(lpt);
         insert due;
 
-        loan__Interest_Posting_Transaction__c IPT = Post_actualObj_TestHelper.create_InterestPostingTransaction(dmLoan.Id,system.Today(),12758.00,1598.00,8900.90,890.00,false,system.Today(),234500.00,system.Today().addDays(-5),
+        loan__Interest_Posting_Transaction__c ipt = Post_actualObj_TestHelper.create_InterestPostingTransaction(dmLoan.Id,system.Today(),12758.00,1598.00,8900.90,890.00,false,system.Today(),234500.00,system.Today().addDays(-5),
                 'Regular',true,false,system.today().addDays(-10),system.today().addDays(30));
-        insert IPT;
+        insert ipt;
 
         clcommon__Accounting_Entry__c accountingEntry = new clcommon__Accounting_Entry__c(clcommon__Transaction_Creation_Date__c=System.Today(),clcommon__Transaction_Date__c=System.Today());
         insert accountingEntry;
