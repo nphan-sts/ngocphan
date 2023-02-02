@@ -1,11 +1,10 @@
 /******************Modification History*****************************************
 * Pallavi      2019-11-29      LOS-205/LOS-214
 * Bhanupriya   2022-02-21      LSP-539
-* Abhijeet     2023-01-31      LPC-354  
+* Abhijeet     2023-01-31      LPC-354  Test case for Update Anniversary / Payment start date logic for prom note for February month anniversary dates
 * ****************************************************************************/
 @isTest
-private class SendEnvDocuSignAPITest{
-    
+private class SendEnvDocuSignAPITest{    
     
     @testsetup()
     public static void testsetup(){
@@ -117,8 +116,7 @@ private class SendEnvDocuSignAPITest{
         Insert amSchedle;
         
     }
-    
-        
+            
     static testMethod void test_sendDocuSignEnvelope_UseCase1(){
         
         genesis__Applications__c app = [select id,
@@ -153,6 +151,7 @@ private class SendEnvDocuSignAPITest{
         
         system.assertEquals([select Id from genesis__Applications__c].size(),1);
     }
+    
     static testMethod void test_FebPromNoteUseCase(){
         
         // Year 2022 use cases

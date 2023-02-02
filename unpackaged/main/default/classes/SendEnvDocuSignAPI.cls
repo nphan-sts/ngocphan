@@ -4,7 +4,7 @@
                         25/09/2017      Modified
     Other tickets       NA              CRM-1003, CLS-193, LOS-196
     Pallavi             2019-11-29      LOS-205(setting the tieout to 120 sec) 
-    Abhijeet            2023-01-31.     LPC-354 Update Anniversary / Payment start date logic for prom note for Feb month
+    Abhijeet            2023-01-31.     LPC-354 Update Anniversary / Payment start date logic for prom note for February month anniversary dates
     --------------------------------------------------------------------------- */
 
 public with sharing class SendEnvDocuSignAPI {
@@ -854,6 +854,7 @@ public with sharing class SendEnvDocuSignAPI {
         }
         return null;
     }
+    
     public static Date getPaymentStartDate(){
         Date orignationDt = addWorkingDays(signDateforPaymentStartDate,3,0); 
         Date anniversaryDate      = orignationDt.addMonths(1);
@@ -863,6 +864,7 @@ public with sharing class SendEnvDocuSignAPI {
         }
         return anniversaryDate;       
     }
+    
     public static boolean handleFebruary(Date originationDate){
         if(originationDate.month() == 1 && (originationDate.day() == 29 || originationDate.day() == 30 || originationDate.day() == 31))
         {
@@ -870,6 +872,7 @@ public with sharing class SendEnvDocuSignAPI {
         }
         return false;
     }
+    
     public static Date addWorkingDays(Date dateParam, Integer numberOfDays,Integer numberOfMonths){
         CustomTriggerOnApplicationHandler ctdh = new CustomTriggerOnApplicationHandler();
         Date dateval = ctdh.addWorkingDaysTodate(dateParam,numberOfDays);
@@ -883,6 +886,7 @@ public with sharing class SendEnvDocuSignAPI {
         Date dt = dateParam.addDays(MW_DocuSignTriggerHandler.calcdate(dateParam));
         return dt;
     }
+    
     public static String getFormattedDate(Date dateParam){
         return DateTime.newInstance(dateParam.year(),dateParam.month(),dateParam.day()).format(dateFormat);
     }
