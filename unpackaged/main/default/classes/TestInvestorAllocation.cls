@@ -82,6 +82,20 @@ private class TestInvestorAllocation{
         );      
         Insert app1;
         
+        Attachment attachment = new Attachment(
+            ParentId = app1.id, 
+            Name = 'TIL', 
+            IsPrivate = false, 
+            Body = Blob.valueOf('Unit Test Attachment Body Two'), 
+            Description = '15');
+        insert attachment;
+        
+        genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
+        adc.name = 'TIL Document';
+        adc.genesis__Application__c = app1.id;
+        
+        insert adc;
+        
         DCp_Arcus_Transactions__c DCP_obj = new DCp_Arcus_Transactions__c();
         DCP_obj.Application__c = app1.Id;
         DCP_obj.Card_Number__c = '1234568';
@@ -1261,6 +1275,9 @@ private class TestInvestorAllocation{
         );
         insert rul; 
         Decimal investorWithLargestWeight = 0;
+
+        List<Account> accList = new List<Account>();
+
         Account acc1 = new Account(
             Name = 'Test1',
             loan__Investor__c = true,
@@ -1284,7 +1301,8 @@ private class TestInvestorAllocation{
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =10
         );
-        Insert acc1;
+        // Insert acc1;
+        accList.add(acc1);
         Account acc2 = new Account(
             Name = 'Test1',
             loan__Investor__c = true,
@@ -1309,7 +1327,10 @@ private class TestInvestorAllocation{
             Total_Allocations_MTD__c =0,
 			DCP_Allowed__c = true            
         );
-        Insert acc2;
+        // Insert acc2;
+        accList.add(acc2);
+
+        Insert accList;
         /*Account acco = new Account(
             Name = 'Test',
             loan__Investor__c=False,
@@ -1322,6 +1343,9 @@ private class TestInvestorAllocation{
         );
         Insert acco;*/
         //pallavi
+
+        List<genesis__Applications__c> listApp = new List<genesis__Applications__c>();
+
         genesis__Applications__c app1 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
             genesis__Expected_First_Payment_Date__c = system.Today(),
@@ -1336,13 +1360,52 @@ private class TestInvestorAllocation{
             genesis__Loan_Amount__c = 1000,
             DCP_Investor_Eligibility__c = false
         );      
-        Insert app1;
+        // Insert app1;
+        listApp.add(app1);
 
-         Credit_Policy__c creditPolicy = new Credit_Policy__c();
-         creditPolicy.FICO__c = 750.0;
-         creditPolicy.Net_Disposable_Income_NDI__c = '2400';
-         creditPolicy.Application__c = app1.Id;
-         insert creditPolicy;
+        genesis__Applications__c app2 = new genesis__Applications__c(
+            genesis__Due_Day__c = 20,
+            genesis__Expected_First_Payment_Date__c = system.Today(),
+            genesis__Expected_Start_Date__c = system.Today(),
+            genesis__Funding_in_Tranches__c = false,
+            genesis__Account__c = acc1.Id,
+            Invested_Amount__c  = 1000,       
+            Application_Start_DateV2__c = system.Today(),
+            genesis__Status__c = 'offer_shown',//agent_document_verification_pending',
+            genesis__Draw_Period_End_Date__c = system.Today(),
+            Employment_Status__c    = 'Full Time',
+            genesis__Loan_Amount__c = 1000,
+            DCP_Investor_Eligibility__c = false,
+            Investor__c = acc1.id
+        );      
+        // Insert app2;
+        listApp.add(app2);
+
+        insert listApp;
+
+        List<genesis__Application_Document_Category__c> listAdc = new List<genesis__Application_Document_Category__c>();
+        
+        genesis__Application_Document_Category__c adc1 = new genesis__Application_Document_Category__c();
+        adc1.name = 'TIL Document';
+        adc1.genesis__Application__c = app1.id;
+        
+        // insert adc1;
+        listAdc.add(adc1);
+
+        genesis__Application_Document_Category__c adc2 = new genesis__Application_Document_Category__c();
+        adc2.name = 'TIL Document';
+        adc2.genesis__Application__c = app2.id;
+
+        listAdc.add(adc2);
+
+        insert listAdc;
+
+
+        Credit_Policy__c creditPolicy = new Credit_Policy__c();
+        creditPolicy.FICO__c = 750.0;
+        creditPolicy.Net_Disposable_Income_NDI__c = '2400';
+        creditPolicy.Application__c = app1.Id;
+        insert creditPolicy;
         
         DCp_Arcus_Transactions__c DCP_obj = new DCp_Arcus_Transactions__c();
         DCP_obj.Application__c = app1.Id;
@@ -1360,23 +1423,6 @@ private class TestInvestorAllocation{
         /* retrigger again for re-allocation coverage */
         InvestorAllocation.allocateInvestor(appId);
         
-        genesis__Applications__c app2 = new genesis__Applications__c(
-            genesis__Due_Day__c = 20,
-            genesis__Expected_First_Payment_Date__c = system.Today(),
-            genesis__Expected_Start_Date__c = system.Today(),
-            genesis__Funding_in_Tranches__c = false,
-            genesis__Account__c = acc1.Id,
-            Invested_Amount__c  = 1000,       
-            Application_Start_DateV2__c = system.Today(),
-            genesis__Status__c = 'offer_shown',//agent_document_verification_pending',
-            genesis__Draw_Period_End_Date__c = system.Today(),
-            Employment_Status__c    = 'Full Time',
-            genesis__Loan_Amount__c = 1000,
-            DCP_Investor_Eligibility__c = false,
-            Investor__c = acc1.id
-        );      
-        Insert app2;
-         
         Pricing_Offer__c  pOffer = new Pricing_Offer__c();
         pOffer.Above_prime_max__c= 'false';
         pOffer.Amount__c = 8000;

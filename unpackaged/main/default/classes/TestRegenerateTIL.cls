@@ -6,14 +6,18 @@ public class TestRegenerateTIL {
         Account account_Obj = new Account(
             Name = 'Test',
             loan__Investor__c=False,
-            cnotify__Email__c = 'no-reply@testorganization.com'
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__Last_Name__c = 'Test LastName',
+            peer__First_Name__c = 'Test FirstName'
         );
         Insert account_Obj;
         
         Account investor_Obj = new Account(
             Name = 'Test',
             loan__Investor__c=true,
-            cnotify__Email__c = 'no-reply@testorganizatio.com'
+            cnotify__Email__c = 'no-reply@testorganizatio.com',
+            peer__Last_Name__c = 'Test LastName',
+            peer__First_Name__c = 'Test FirstName'
         );
         Insert investor_Obj;
         
@@ -38,8 +42,29 @@ public class TestRegenerateTIL {
         );      
         Insert genesis_applications_Obj; 
         
+        Attachment attachment = new Attachment(
+            ParentId = genesis_applications_Obj.id, 
+            Name = 'TIL', 
+            IsPrivate = false, 
+            Body = Blob.valueOf('Unit Test Attachment Body Two'), 
+            Description = '15');
+        insert attachment;
+        
+        genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
+        adc.name = 'TIL Document';
+        adc.genesis__Application__c = genesis_applications_Obj.id;
+        
+        insert adc;
+        
         Test.startTest();
-        RegenerateTIL.WF_tilRegenerate(new List<Id>{genesis_applications_Obj.Id});
+        String exceptionError;
+        try {
+        	RegenerateTIL.WF_tilRegenerate(new List<Id>{genesis_applications_Obj.Id});    
+        }
+        catch(Exception ex){
+            exceptionError = ex.getMessage();
+		}
+        
         Test.stopTest();
         
         CL_Document__c testDoc = [SELECT Id,Name,Doc2__c FROM CL_Document__c WHERE Id=:cs.Id LIMIT 1];

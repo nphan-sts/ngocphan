@@ -41,7 +41,19 @@ class TestCustomACHReturnFileParser{
         
         loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();
         //Account a1 = loan.TestHelper2.createInvestor('Bull', 1000);
-        Account b1 = loan.TestHelper2.createBorrower('ShoeString');
+        // Account b1 = loan.TestHelper2.createBorrower('ShoeString');
+        Account b1 = new Account(
+            Name = 'ShoeString',
+            loan__Investor__c=False,
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'TestFName1',
+            peer__Last_Name__c='TestLName1', 
+            City__c='TestCity',
+            State__c='TestState',
+            ZIP_Code__c='123456'
+        );
+        insert b1;
+
         Contact con= new Contact(LastName='Test');
         insert con; 
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
@@ -53,7 +65,7 @@ class TestCustomACHReturnFileParser{
                                                  loan__Active__c = True);
         insert ba;
         
-        Account acc = new Account(Name = 'Member'); //pallavi(CRM-253)
+        Account acc = new Account(Name = 'Member', peer__Last_Name__c = 'TestLasName'); //pallavi(CRM-253)
         insert acc;
         
         loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
@@ -214,7 +226,19 @@ class TestCustomACHReturnFileParser{
         insert pMode;
         loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();
         //Account a1 = loan.TestHelper2.createInvestor('Bull', 1000);
-        Account b1 = loan.TestHelper2.createBorrower('ShoeString');
+        // Account b1 = loan.TestHelper2.createBorrower('ShoeString');
+        Account b1 = new Account(
+            Name = 'ShoeString',
+            loan__Investor__c=False,
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'TestFName1',
+            peer__Last_Name__c='TestLName1', 
+            City__c='TestCity',
+            State__c='TestState',
+            ZIP_Code__c='123456'
+        );
+        insert b1;
+
         Contact con= new Contact(LastName='Test');
         insert con;
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
@@ -222,6 +246,7 @@ class TestCustomACHReturnFileParser{
                                                  loan__Routing_Number__c = '999999999',
                                                  Unmasked_Bank_Account_Number__c = '123234324',
                                                  loan__Account_Type__c = 'Checking',
+                                                 loan__Active__c = True,
                                                  loan__Account__c = b1.id);
         insert ba;
         
@@ -374,7 +399,19 @@ class TestCustomACHReturnFileParser{
         insert pMode;
         loan__Loan_Purpose__c dummyLoanPurpose = loan.TestHelper.createLoanPurpose();
         //Account a1 = loan.TestHelper2.createInvestor('Bull', 1000);
-        Account b1 = loan.TestHelper2.createBorrower('ShoeString');
+        // Account b1 = loan.TestHelper2.createBorrower('ShoeString');
+        Account b1 = new Account(
+            Name = 'ShoeString',
+            loan__Investor__c=False,
+            cnotify__Email__c = 'no-reply@testorganization.com',
+            peer__First_Name__c = 'TestFName1',
+            peer__Last_Name__c='TestLName1', 
+            City__c='TestCity',
+            State__c='TestState',
+            ZIP_Code__c='123456'
+        );
+        insert b1;
+
         Contact con= new Contact(LastName='Test');
         insert con;
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',
@@ -382,10 +419,11 @@ class TestCustomACHReturnFileParser{
                                                  Unmasked_Bank_Account_Number__c = '123234324',
                                                  loan__Routing_Number__c = '999999999',
                                                  loan__Account_Type__c = 'Checking',
+                                                 loan__Active__c = True,
                                                  loan__Account__c = b1.id);
         insert ba;
         
-        Account acc = new Account(Name = 'Member');
+        Account acc = new Account(Name = 'Member',peer__Last_Name__c = 'TestLasName');
         insert acc; //pallavi(CRM-253)
         
         loan__Bank_Account__c collectionTrustBA = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '123234324',

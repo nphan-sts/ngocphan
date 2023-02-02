@@ -18,6 +18,7 @@ private class TestDataAccrualFixBatch{
         //Create a Fee Set
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet1 = loan.TestHelper.createFeeSet();
+        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet1);
         
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
@@ -53,7 +54,7 @@ private class TestDataAccrualFixBatch{
         update comp;
         
         //creating lending product
-        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet1);
+        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct('Simple Loan', dummyOffice, dummyAccount, curr, dummyFeeSet1, 'Loan');
         
         //creating CL Product
         clcommon__CL_Product__c pr = new clcommon__CL_Product__c();

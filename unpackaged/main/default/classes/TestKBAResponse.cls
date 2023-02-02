@@ -7,7 +7,9 @@ private class TestKBAResponse{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123456789',
+            peer__Last_Name__c = 'LastName',
+            peer__First_Name__c = 'FirstName'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -30,7 +32,7 @@ private class TestKBAResponse{
         
         }
         Testmethod static void method1(){
-            Account acc1 = [Select id,name from Account where name='Test' limit 1];
+            Account acc1 = [Select id,name from Account where name='FirstName LastName' limit 1];
             genesis__Applications__c app1 = [select id,genesis__Status__c from genesis__Applications__c where genesis__Status__c='agent_verified' limit 1];
             String json = '{"kiq_result":{"updated_at":"13/04/2015","review_reference_id":"154qw","result_code_description":"Success","result_code":"13213424","reference_number":"121313","precise_id_score":"500","payoff_uid":"Abc","out_wallet_score":"213","kba_session_id":123323,"id":123,"final_decision":"ACC","created_at":"12/03/2015","additional_data":"No","accept_refer_code":"12"},"kba_attempts":2,"kba":null,"fraud_shield_result":{"verification_score":23,"validation_score":54,"updated_at":"15/08/2013","ssn_result_description":"correct","ssn_result":"1314124","ssn_issue_start_range":"13/03/2013","ssn_issue_end_range":"12/03/2013","scores":{"verification_score":232,"validation_score":242,"precise_id_score":22,"fpd_score":121},"review_reference_id":"1324","reference_number":"A","reasons":"Unknown","precise_id_score":32,"phone_verification_result_description":"Success","phone_verification_result":"success","payoff_uid":"ABC","ofac_validation_result_description":"Success","ofac_validation_result":"Success","kba_session_id":123,"id":13213,"fraud_shield_indicators":[{"description":"Test","code":"FS09"}],"fraud_shield_description":"12","fraud_shield_code":"123","fpd_score":20,"final_decision":"ACC","date_of_birth_match_description":"Matched","date_of_birth_match":"true","created_at":"12/08/2013","adverse_actions":[{"reason":"No reason","name":"Test","description":"No"}],"additional_data":"no data"}}';
             String json1 = '{"kiq_result":{"updated_at":"13/04/2015","review_reference_id":"154qw","result_code_description":"Success","result_code":"13213424","reference_number":"121313","precise_id_score":"500","payoff_uid":"Abc","out_wallet_score":"213","kba_session_id":123323,"id":123,"final_decision":"REF","created_at":"12/03/2015","additional_data":"No","accept_refer_code":"12"},"kba_attempts":2,"kba":null,"fraud_shield_result":{"verification_score":23,"validation_score":54,"updated_at":"15/08/2013","ssn_result_description":"correct","ssn_result":"1314124","ssn_issue_start_range":"13/03/2013","ssn_issue_end_range":"12/03/2013","scores":{"verification_score":232,"validation_score":242,"precise_id_score":22,"fpd_score":121},"review_reference_id":"1324","reference_number":"A","reasons":"Unknown","precise_id_score":32,"phone_verification_result_description":"Success","phone_verification_result":"success","payoff_uid":"ABC","ofac_validation_result_description":"Success","ofac_validation_result":"Success","kba_session_id":123,"id":13213,"fraud_shield_indicators":[{"description":"Test","code":"FS01"}],"fraud_shield_description":"12","fraud_shield_code":"123","fpd_score":20,"final_decision":"REF","date_of_birth_match_description":"Matched","date_of_birth_match":"true","created_at":"12/08/2013","adverse_actions":[{"reason":"No reason","name":"Test","description":"No"}],"additional_data":"no data"}}';
