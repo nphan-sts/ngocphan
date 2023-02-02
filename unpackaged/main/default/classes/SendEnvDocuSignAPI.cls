@@ -12,7 +12,9 @@ public with sharing class SendEnvDocuSignAPI {
     Public static boolean isDSTrgExecuting = true;
     Public static boolean isvoidTrgExecuting = true;
     Public static Date signDateforPaymentStartDate;
-
+    Public FINAL static Integer timeOut = 120000;
+    Public FINAL Static String dateFormat = 'MMMMMMMM dd, yyyy';
+            
     
     Public Static String accountID = DocuSignAPICred__c.getInstance().account_ID__c;
     Public Static String userName = DocuSignAPICred__c.getInstance().userName__c;
@@ -254,10 +256,9 @@ public with sharing class SendEnvDocuSignAPI {
                     
 
                     List<genesis__Amortization_Schedule__c> lstAmortization = [SELECT genesis__Due_Date__c FROM genesis__Amortization_Schedule__c where genesis__Application__c=:ApplicationId];
-                    CustomTriggerOnApplicationHandler ctdh = new CustomTriggerOnApplicationHandler();
+                    //CustomTriggerOnApplicationHandler ctdh = new CustomTriggerOnApplicationHandler();
                     String paymentEndDate, paymentStartDate;
                     if(!lstAmortization.isEmpty()) {
-                        FINAL String DATE_FORMAT = 'MMMMMMMM dd, yyyy';
                         Integer lstSize = lstAmortization.Size();
                         if(lstAmortization[0].genesis__Due_Date__c != null) {
                              /* LPC-359 Feb payment start date / anniversary date promissory note issue fix */
@@ -265,13 +266,12 @@ public with sharing class SendEnvDocuSignAPI {
                                 signDateforPaymentStartDate = system.today();
                             } 
                             Date anniversaryDate = getPaymentStartDate();
-                            paymentStartDate = DateTime.newInstance(anniversaryDate.year(),anniversaryDate.month(),anniversaryDate.day()).format(DATE_FORMAT);
+                            paymentStartDate = getFormattedDate(anniversaryDate); //DateTime.newInstance(anniversaryDate.year(),anniversaryDate.month(),anniversaryDate.day()).format(DATE_FORMAT);
                         }
                         if(lstAmortization[lstSize-1].genesis__Due_Date__c != null) {
-                            system.debug('Last Amortization Details:.... '+lstAmortization[lstSize-1]);
-                            Date dt = ctdh.addWorkingDaysTodate(system.today(),3).addMonths(Integer.valueOf(loanTerm));
-                            dt = dt.addDays(MW_DocuSignTriggerHandler.calcdate(dt));
-                            paymentEndDate = DateTime.newInstance(dt.year(),dt.month(),dt.day()).format(DATE_FORMAT);
+                            Date dt = addWorkingDays(system.today(),3,Integer.valueOf(loanTerm)); //ctdh.addWorkingDaysTodate(system.today(),3).addMonths(Integer.valueOf(loanTerm));
+                            dt = getCalculatedDate(dt); //dt.addDays(MW_DocuSignTriggerHandler.calcdate(dt));
+                            paymentEndDate = getFormattedDate(dt); //DateTime.newInstance(dt.year(),dt.month(),dt.day()).format(DATE_FORMAT);
                         }
                     }
                     String appLoanId = '';
@@ -303,7 +303,7 @@ public with sharing class SendEnvDocuSignAPI {
                     req.setHeader('Content-Length','162100');
                     req.setHeader('Content-Type','application/json');
                     req.setHeader('Content-Disposition','form-data');
-                    req.setTimeout(120000); 
+                    req.setTimeout(timeOut); 
 
                     String json =
                         '{'+
@@ -642,7 +642,7 @@ public with sharing class SendEnvDocuSignAPI {
         String methodType = 'PUT';
         req.setEndpoint(endpoint);
         req.setMethod(methodType);
-        req.setTimeout(120000); //LOS-205
+        req.setTimeout(timeOut); //LOS-205
 
         //Apex HTTP Method Initialization.
         String authorizationHeader = '<DocuSignCredentials><Username>'+userName+
@@ -692,7 +692,7 @@ public with sharing class SendEnvDocuSignAPI {
         req.setHeader('X-DocuSign-Authentication', authorizationHeader);
         req.setHeader('Accept','application/json');
         req.setHeader('Content-Type','application/json');
-        req.setTimeout(120000); 
+        req.setTimeout(timeOut); 
         try {
 
             Http http = new Http();
@@ -726,7 +726,7 @@ public with sharing class SendEnvDocuSignAPI {
         String methodType = 'GET';
         req.setEndpoint(endpoint);
         req.setMethod(methodType);
-        req.setTimeout(120000); 
+        req.setTimeout(timeOut); 
 
         //Apex HTTP Method Initialization.
         String authorizationHeader = '<DocuSignCredentials><Username>'+userName+
@@ -785,7 +785,7 @@ public with sharing class SendEnvDocuSignAPI {
             req.setHeader('X-DocuSign-Authentication', authorizationHeader);
             req.setHeader('Accept','application/json');
             req.setHeader('Content-Type','application/json');
-            req.setTimeout(120000);
+            req.setTimeout(timeOut);
             Http http = new Http();
             HTTPResponse res;
             //Docusign Request Callout.
@@ -809,19 +809,18 @@ public with sharing class SendEnvDocuSignAPI {
                 }
             }
 
-            CustomTriggerOnApplicationHandler ctdh = new CustomTriggerOnApplicationHandler();
+            //CustomTriggerOnApplicationHandler ctdh = new CustomTriggerOnApplicationHandler();
             
             /* LPC-359 Feb payment start date / anniversary date promissory note issue fix */
-            FINAL String DATE_FORMAT = 'MMMMMMMM dd, yyyy';
             if(signDateforPaymentStartDate == null){
                 signDateforPaymentStartDate = system.today();
             } 
             Date anniversaryDate = getPaymentStartDate();
-            String paymentStartDate = DateTime.newInstance(anniversaryDate.year(),anniversaryDate.month(),anniversaryDate.day()).format(DATE_FORMAT);
+            String paymentStartDate = getFormattedDate(anniversaryDate); //DateTime.newInstance(anniversaryDate.year(),anniversaryDate.month(),anniversaryDate.day()).format(DATE_FORMAT);
             
-            Date endDt = ctdh.addWorkingDaysTodate(system.today(),3).addMonths(Integer.valueOf(loanTerm));
-            endDt = endDt.addDays(MW_DocuSignTriggerHandler.calcdate(endDt));
-            String paymentEndDate = DateTime.newInstance(endDt.year(),endDt.month(),endDt.day()).format(DATE_FORMAT);
+            Date endDt = addWorkingDays(system.today(),3,Integer.valueOf(loanTerm)); //ctdh.addWorkingDaysTodate(system.today(),3).addMonths(Integer.valueOf(loanTerm));
+            endDt = getCalculatedDate(endDt); //endDt.addDays(MW_DocuSignTriggerHandler.calcdate(endDt));
+            String paymentEndDate = getFormattedDate(endDt); //DateTime.newInstance(endDt.year(),endDt.month(),endDt.day()).format(DATE_FORMAT);
             
             String json = '{"textTabs": [{'+
                             '"tabLabel": "PaymentStartDate",'+
@@ -859,14 +858,36 @@ public with sharing class SendEnvDocuSignAPI {
         return null;
     }
     public static Date getPaymentStartDate(){
-        CustomTriggerOnApplicationHandler ctdh = new CustomTriggerOnApplicationHandler();
-        Date orignationDt = ctdh.addWorkingDaysTodate(signDateforPaymentStartDate,3);
+        //CustomTriggerOnApplicationHandler ctdh = new CustomTriggerOnApplicationHandler();
+        Date orignationDt = addWorkingDays(signDateforPaymentStartDate,3,0); //ctdh.addWorkingDaysTodate(signDateforPaymentStartDate,3);
         Date anniversaryDate      = orignationDt.addMonths(1);
         //Set anniversary date March 1st instead of Feb 28.
-        if(orignationDt.month() == 1 && (orignationDt.day() == 29 || orignationDt.day() == 30 || orignationDt.day() == 31))
-        {
+        if(handleFebruary(orignationDt)){
             anniversaryDate = anniversaryDate.addDays(1);
         }
         return anniversaryDate;       
+    }
+    public static boolean handleFebruary(Date originationDate){
+        if(originationDate.month() == 1 && (originationDate.day() == 29 || originationDate.day() == 30 || originationDate.day() == 31))
+        {
+            return true;
+        }
+        return false;
+    }
+    public static Date addWorkingDays(Date dateParam, Integer numberOfDays,Integer numberOfMonths){
+        CustomTriggerOnApplicationHandler ctdh = new CustomTriggerOnApplicationHandler();
+        Date dateval = ctdh.addWorkingDaysTodate(dateParam,numberOfDays);
+        if(numberOfMonths > 0){
+            dateval= dateval.addMonths(numberOfMonths);
+        }
+        return dateval;
+    }
+    
+    public static Date getCalculatedDate(Date dateParam){
+        Date dt = dateParam.addDays(MW_DocuSignTriggerHandler.calcdate(dateParam));
+        return dt;
+    }
+    public static String getFormattedDate(Date dateParam){
+        return DateTime.newInstance(dateParam.year(),dateParam.month(),dateParam.day()).format(dateFormat);
     }
 }
