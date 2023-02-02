@@ -1,18 +1,18 @@
 /******************Modification History*****************************************
-* Pallavi      2019-11-29      LOS-205/LOS-214**
-* Bhanupriya	2022-02-21		LSP-539
-* 	
+* Pallavi      2019-11-29      LOS-205/LOS-214
+* Bhanupriya   2022-02-21      LSP-539
+* Abhijeet     2023-01-31      LPC-354  
 * ****************************************************************************/
 @isTest
 private class SendEnvDocuSignAPITest{
     
-    //Create testsetup()
+    
     @testsetup()
     public static void testsetup(){
         
         // Create Investor Account
         Account invAcc = new Account(Name = 'TestInvestor',loan__Investor__c=True);
-        invAcc.peer__Last_Name__c = 'TestInvestor Last Name';					//LSP-539 required field
+        invAcc.peer__Last_Name__c = 'TestInvestor Last Name';                   
         Insert invAcc;  
         
         //Create new Account 
@@ -21,7 +21,7 @@ private class SendEnvDocuSignAPITest{
             loan__Investor__c=false,
             peer__First_Name__c='Test_PeerFName', 
             peer__Last_Name__c='Test_PeerLName',
-            loan__SOCIAL_SECURITY_NUMBER__c='123456789', 	//LSP-539 update Social Security number (must be 9 digit)
+            loan__SOCIAL_SECURITY_NUMBER__c='123456789',    
             peer__Date_of_Birth__c=System.today(),
             Address_1__c='TestAddr1', 
             Address_2__c='TestAddr2', 
@@ -50,7 +50,7 @@ private class SendEnvDocuSignAPITest{
             DocuSignFlag__c=true,
             genesis__Draw_Period_End_Date__c = system.Today(),
             TU_consumer_id__c = '1324536829',
-            genesis__Loan_Amount__c = 1000,  //pallavi
+            genesis__Loan_Amount__c = 1000,  
             Origination_fee__c = 50
         );
         Insert app; 
@@ -94,7 +94,7 @@ private class SendEnvDocuSignAPITest{
             loan__Account_Type__c = 'Checking',
             loan__Account__c = acc.Id,
             loan__Active__c = true,
-            loan__Account_Usage__c = 'Borrower/Investor Account'  //LOS-205
+            loan__Account_Usage__c = 'Borrower/Investor Account'  
         );
         insert ba;
         
@@ -118,8 +118,7 @@ private class SendEnvDocuSignAPITest{
         
     }
     
-    //Test method
-    
+        
     static testMethod void test_sendDocuSignEnvelope_UseCase1(){
         
         genesis__Applications__c app = [select id,
@@ -153,5 +152,46 @@ private class SendEnvDocuSignAPITest{
         System.assertEquals(true, lstgenesis_applications_Obj.size()>0);   
         
         system.assertEquals([select Id from genesis__Applications__c].size(),1);
+    }
+    static testMethod void test_FebPromNoteUseCase(){
+        
+        // Year 2022 use cases
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2022-01-27');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2022-03-01'));
+        
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2022-01-28');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2022-03-02'));
+        
+        // Year 2023 use cases
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-24');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2023-02-27'));
+        
+        FINAL String expectedDate = '2023-03-01';
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-25');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf(expectedDate));
+        
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-26');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf(expectedDate));
+        
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-27');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf(expectedDate));
+        
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-28');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf(expectedDate));
+        
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-29');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf(expectedDate));
+        
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2023-01-30');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2023-03-02'));
+        
+        // Year 2024 Leap Year use cases
+        
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2024-01-23');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2024-02-26'));
+        
+        SendEnvDocuSignAPI.signDateforPaymentStartDate = Date.valueOf('2024-01-24');        
+        Assert.isTrue(SendEnvDocuSignAPI.getPaymentStartDate() == Date.valueOf('2024-03-01'));
+        
     }
 }
