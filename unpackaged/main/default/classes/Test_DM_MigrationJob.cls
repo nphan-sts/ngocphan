@@ -1,6 +1,3 @@
-/**
- * Add comment for phoenix2 merge - IL
- */
 @IsTest
 public class Test_DM_MigrationJob {
 
