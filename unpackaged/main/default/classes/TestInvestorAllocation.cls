@@ -132,7 +132,7 @@ private class TestInvestorAllocation{
         try{
            update app1; 
         }catch(Exception e){
-            
+            system.debug(e);
         }
         
         test.stopTest();
@@ -1433,7 +1433,7 @@ private class TestInvestorAllocation{
         try{
             update app2;
         }catch(Exception e){
-            
+            system.debug(e);
         }
                  
         test.stopTest();
