@@ -7,7 +7,7 @@
 public class TestGenerateTILatDocusisgn {
     
     @isTest
-    public static void testMethod1(){
+    public static void testGenerateDocusign(){
         Account account_Obj = new Account(
             Name = 'Test',
             peer__First_Name__c = 'TestFName',
@@ -69,6 +69,10 @@ public class TestGenerateTILatDocusisgn {
         Test.startTest();
         GenerateTILatDocusisgn.invoke_Generate_TIL(appId);
         Test.stopTest();
+
+        List<Attachment> attachmentObj  = [SELECT Id,ParentId,Name,IsPrivate,Body,Description from Attachment];
+
+        Assert.isTrue(attachmentObj.size()>0, 'true');
     }
 
 }

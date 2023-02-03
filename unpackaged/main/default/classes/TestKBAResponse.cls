@@ -66,10 +66,11 @@ private class TestKBAResponse{
         
     }
     //Test method
-    Testmethod static void kbaResponse_Details(){
+    @isTest
+    public static void kbaResponseDetails(){
         Account acc1 = [Select id,name,peer__Last_Name__c 
                         from Account 
-                        where peer__Last_Name__c ='Test Last Name'];
+                        where peer__Last_Name__c ='LastName'];
         genesis__Applications__c app = [select id,genesis__Status__c 
                         from genesis__Applications__c LIMIT 1];
         system.debug('app-->'+ app);

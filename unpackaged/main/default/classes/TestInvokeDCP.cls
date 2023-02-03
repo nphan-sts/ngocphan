@@ -88,6 +88,9 @@ public class TestInvokeDCP {
         InvokeDCP.InvokeDCP(app.Id);
 
         test.stopTest();
+
+        DCp_Arcus_Transactions__c dcpTran = [Select id, DCP_Callout_done__c from DCp_Arcus_Transactions__c limit 1];
+        Assert.areEqual(dcpTran.DCP_Callout_done__c, true, 'true');
     }
     
     @isTest
@@ -160,6 +163,9 @@ public class TestInvokeDCP {
         }
 
         test.stopTest();
+
+       List<DCp_Arcus_Transactions__c> dcpTran = [Select id, DCP_Callout_done__c from DCp_Arcus_Transactions__c];
+       Assert.isTrue(dcpTran.size() > 0);
        
     }
 

@@ -1,7 +1,8 @@
 @isTest
 public class TestTalxIntegration {
     
-    Testmethod static void method1(){
+    @isTest
+    public static void testCallTalx(){
         //Creating custom setting
         TalxInt__c taxInt = new TalxInt__c();
         
@@ -51,5 +52,7 @@ public class TestTalxIntegration {
         TalxIntegration.CallTalx(app.id,acc.id);
         TalxIntegration.CallTalx(appIdlist);
         Test.stopTest();
+
+
         }
 }
