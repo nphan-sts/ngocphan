@@ -7,9 +7,11 @@
 public class TestGenerateTILatDocusisgn {
     
     @isTest
-    public static void testMethod1(){
+    public static void testGenerateDocusign(){
         Account account_Obj = new Account(
             Name = 'Test',
+            peer__First_Name__c = 'TestFName',
+            peer__Last_Name__c='TestLName',
             loan__Investor__c=False,
             cnotify__Email__c = 'no-reply@testorganization.com'
         );
@@ -20,6 +22,8 @@ public class TestGenerateTILatDocusisgn {
         
         Account investor_Obj = new Account(
             Name = 'Test',
+            peer__First_Name__c = 'TestFName2',
+            peer__Last_Name__c='TestLName2',
             loan__Investor__c=true,
             cnotify__Email__c = 'no-reply@testorganizatio.com'
         );
@@ -46,11 +50,29 @@ public class TestGenerateTILatDocusisgn {
         );      
         Insert genesis_applications_Obj;
         
+        Attachment attachment = new Attachment(
+            ParentId = genesis_applications_Obj.id, 
+            Name = 'TIL', 
+            IsPrivate = false, 
+            Body = Blob.valueOf('Unit Test Attachment Body Two'), 
+            Description = '15');
+        insert attachment;
+        
+        genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
+        adc.name = 'TIL Document';
+        adc.genesis__Application__c = genesis_applications_Obj.id;
+        
+        insert adc;
+        
         appID.add(genesis_applications_Obj.id);
         
         Test.startTest();
         GenerateTILatDocusisgn.invoke_Generate_TIL(appId);
         Test.stopTest();
+
+        List<Attachment> attachmentObj  = [SELECT Id,ParentId,Name,IsPrivate,Body,Description from Attachment];
+
+        Assert.isTrue(attachmentObj.size()>0, 'true');
     }
 
 }

@@ -26,9 +26,10 @@ public class TestCustomIdentityVerificationTrigger{
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            peer__Last_Name__c='TestLName2',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123123123'
-        );
+            loan__SOCIAL_SECURITY_NUMBER__c = '123456789',
+            peer__Last_Name__c = 'LastName',
+            peer__First_Name__c = 'FirstName'
+            );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
        
@@ -134,9 +135,8 @@ Purpose : to cover code satisfying if condition/ before update code.
         idv.Credit_Policy_Verification_Flag__c = 'PASS';
         idv.Identity_Verification__c = 'PASS';
         update idv;
-        test.stopTest();
-        List<Identity_Verification__c> iv=[Select id from Identity_Verification__c];
-        system.assert(iv.size()>=1);
+
+        List<Identity_Verification__c> iv= [Select id from Identity_Verification__c];
+        Assert.isTrue(iv.size()>=1, 'true');
     }
-    
 }
