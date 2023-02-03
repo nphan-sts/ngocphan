@@ -6,6 +6,7 @@
 public class DM_Batch_rescheduleFailedLoans_Test{
     
     @testSetup static void setup() {
+       String sampleName = 'test Mock';  
        loan.TestHelper.createSeedDataForTesting();
        loan__Currency__c curr = loan.TestHelper.createCurrency();
        //Create a dummy MF_Account
@@ -15,7 +16,7 @@ public class DM_Batch_rescheduleFailedLoans_Test{
         //Create a Fee Set
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+        loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
         
         //create office
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
@@ -65,7 +66,7 @@ public class DM_Batch_rescheduleFailedLoans_Test{
         application.genesis__Expected_Close_Date__c = system.today().addDays(30);
         application.genesis__Interest_Calculation_Method__c = 'Declining Balance';
         application.genesis__Interest_Only_Period__c = 0;
-        //application.genesis__Interest_Rate__c = 10;
+        application.genesis__Interest_Rate__c = 10;
         application.genesis__Account__c = acc.Id;
         application.genesis__Total_Estimated_Interest__c=500;
         application.genesis__Valid_Pricing_Flag__c=false;
@@ -128,7 +129,7 @@ public class DM_Batch_rescheduleFailedLoans_Test{
                                             loan__Uncleared_Written_Off_Amount__c =10000,
                                             loan__Loan_Balance__c = 10000,
                                             DM_ActivateIO_and_IPT__c = true,
-            								DM_Migration_Phase__c = 'test Mock',
+            								DM_Migration_Phase__c = sampleName,
             								DM_Rescheduling_Error__c = 'Divide by 0',
             								isMigrated__c = true
                                             );
@@ -173,8 +174,8 @@ public class DM_Batch_rescheduleFailedLoans_Test{
         /*pallavi*/
         
          MigrationPhase__c phase = new MigrationPhase__c();
-         phase.name = 'test Mock';
-         phase.phase__c = 'test Mock';
+         phase.name = sampleName;
+         phase.phase__c = sampleName;
          phase.NumberOfTermsToReduce__c = 0;
          insert phase;
  }

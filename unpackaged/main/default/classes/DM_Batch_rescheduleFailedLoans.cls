@@ -24,7 +24,7 @@ Global class DM_Batch_rescheduleFailedLoans implements Database.Batchable<sObjec
         errorMessage.add('List index out of bounds: 0');
         System.debug('default constructor');
     }
-    global Database.QueryLocator start(Database.BatchableContext BC){
+    global Database.QueryLocator start(Database.BatchableContext bC){
                 
         query  = 'SELECT Id, name FROM loan__loan_account__c where loan__Is_Rescheduled__c = false and loan__Invalid_Data__c = false and DM_Migration_Phase__c = \'' +phase+ '\' and DM_Rescheduling_Error__c in: errorMessage' ;	
         if(thread > 0)
@@ -33,9 +33,9 @@ Global class DM_Batch_rescheduleFailedLoans implements Database.Batchable<sObjec
         System.debug(query);	//loan__Is_Rescheduled__c = false and 
         return Database.getQueryLocator(query);
     }
-    global void execute(Database.BatchableContext BC,List<loan__Loan_Account__c> dmList){
+    global void execute(Database.BatchableContext bC,List<loan__Loan_Account__c> dmList){
         
-        List<loan__Loan_Account__c> LAtobeUpdated = [Select id,name,lead_Guid__c,
+        List<loan__Loan_Account__c> lAtobeUpdated = [Select id,name,lead_Guid__c,
                              loan__First_Installment_Date__c,
                              loan__Oldest_Due_Date__c,
                              Application__r.genesis__Monthly_Debt_Payments__c,
@@ -64,12 +64,12 @@ Global class DM_Batch_rescheduleFailedLoans implements Database.Batchable<sObjec
                              where id In: dmList];
         
         RescheduleFailedLoansPostMigration a = new RescheduleFailedLoansPostMigration();
-        System.debug('Loan to be updated.. '+LAtobeUpdated);
-        a.rescheduleLoan_throughBatch(LAtobeUpdated);
+        System.debug('Loan to be updated.. '+lAtobeUpdated);
+        a.rescheduleLoan_throughBatch(lAtobeUpdated);
             
         }
     
-    global void finish(Database.BatchableContext BC){
+    global void finish(Database.BatchableContext bC){
         system.debug('Finish Batch Job');
     }
 }
