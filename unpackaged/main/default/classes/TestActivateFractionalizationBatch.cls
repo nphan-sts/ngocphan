@@ -1,5 +1,5 @@
 /* ****************Modification History******************
-*    Created By        	 Date			Version
+*    Created By          Date           Version
 *1. Bhavya Maliwal        2022/02/16    LSP-546 Initial Version
 
 ******************Modification History******************/
