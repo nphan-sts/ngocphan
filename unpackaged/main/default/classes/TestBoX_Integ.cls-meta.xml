@@ -3,27 +3,27 @@
     <apiVersion>42.0</apiVersion>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>5000</minorNumber>
+        <minorNumber>7000</minorNumber>
         <namespace>cnotify</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>5014</minorNumber>
+        <minorNumber>7011</minorNumber>
         <namespace>genesis</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>5000</minorNumber>
+        <minorNumber>7000</minorNumber>
         <namespace>ints</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>5016</minorNumber>
+        <minorNumber>7016</minorNumber>
         <namespace>loan</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>5001</minorNumber>
+        <minorNumber>7004</minorNumber>
         <namespace>peer</namespace>
     </packageVersions>
     <status>Active</status>
