@@ -1,7 +1,8 @@
 @isTest
 public class TestTalxIntegration {
     
-    Testmethod static void method1(){
+    @isTest
+    public static void testCallTalx(){
         //Creating custom setting
         TalxInt__c taxInt = new TalxInt__c();
         
@@ -20,7 +21,9 @@ public class TestTalxIntegration {
             Name = 'Test',
             loan__Investor__c=False,
             cnotify__Email__c = 'abc@test.com',
-            loan__SOCIAL_SECURITY_NUMBER__c = '123'
+            loan__SOCIAL_SECURITY_NUMBER__c = '123456789',
+            peer__Last_Name__c = 'Test LastName',
+            peer__First_Name__c = 'Test FirstName'
             );
         insert acc;
         System.assertEquals('Test',acc.Name,'Wrong Account');
@@ -49,5 +52,7 @@ public class TestTalxIntegration {
         TalxIntegration.CallTalx(app.id,acc.id);
         TalxIntegration.CallTalx(appIdlist);
         Test.stopTest();
+
+
         }
 }
