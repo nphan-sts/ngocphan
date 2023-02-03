@@ -59,6 +59,20 @@ Purpose : to cover code satisfying ManualAttachPDFtoApplication
         insert app;
         System.assertEquals(null,app.Borrower_s_Email__c,'Borrower Email is not null');
         
+        Attachment attachment = new Attachment(
+            ParentId = app.id, 
+            Name = 'TIL', 
+            IsPrivate = false, 
+            Body = Blob.valueOf('Unit Test Attachment Body Two'), 
+            Description = '15');
+        insert attachment;
+        
+        genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
+        adc.name = 'TIL Document';
+        adc.genesis__Application__c = app.id;
+        
+        insert adc;
+        
         Test.startTest();        
         ManualAttachPDFtoApplication.attachPDFWebService(app.id,true,true);
         String result=ManualAttachPDFtoApplication.ManualTILgenerate(app.id);

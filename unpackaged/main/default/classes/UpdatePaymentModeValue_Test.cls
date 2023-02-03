@@ -81,6 +81,7 @@ public class UpdatePaymentModeValue_Test {
                                                              loan__Account_Type__c = 'Checking',
                                                              Unmasked_Bank_Account_Number__c = '123234324',
                                                              loan__Contact__c = a1.id,
+                                                             loan__Active__c = True,
                                                              loan__Account__c = acc.id);
         insert ba;
         

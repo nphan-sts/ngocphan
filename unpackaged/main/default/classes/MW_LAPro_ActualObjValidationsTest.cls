@@ -86,7 +86,7 @@ private class MW_LAPro_ActualObjValidationsTest {
         
         loan__Bank_Account__c bankAccount = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12345678', 
                                                  loan__Bank_Name__c = 'Some Bank', 
-                                                 loan__Routing_Number__c = '99999999', 
+                                                 loan__Routing_Number__c = '999999999', 
                                                  loan__Account_Type__c = 'Savings', 
                                                  loan__Account_Usage__c = 'Borrower/Investor Account', 
                                                  loan__Account__c = b1.id,
