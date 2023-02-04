@@ -7,7 +7,6 @@ public class MW_DCPArcusTransactionTriggerHandlerTest  {
         
         Account account_Obj = new Account(
             Name = 'Test',
-            peer__Last_Name__c = 'LastName',
             loan__Investor__c=False,
             cnotify__Email__c = 'no-reply@testorganization.com'
         );
@@ -25,6 +24,11 @@ public class MW_DCPArcusTransactionTriggerHandlerTest  {
             Employment_Status__c = 'Full Time'
         );      
         Insert genesis_applications_Obj; 
+        
+        genesis__Application_Document_Category__c appDoc = new genesis__Application_Document_Category__c();
+        appdoc.name = 'TIL Document';
+        appdoc.genesis__Application__c = genesis_applications_Obj.id;
+        insert appdoc;
         
         DCp_Arcus_Transactions__c DCP_obj = new DCp_Arcus_Transactions__c();
         DCP_obj.Account__c = account_Obj.Id;
