@@ -104,6 +104,11 @@ private class TestArcusWebhookAPI {
                                                                     genesis__Loan_Amount__c=3000
                                                                     );
         insert app;
+        //Inserting Application Document Category record
+        genesis__Application_Document_Category__c genAppDocCatTIL = new genesis__Application_Document_Category__c();
+        genAppDocCatTIL.Name = 'TIL Document';
+        genAppDocCatTIL.genesis__Application__c = app.Id;
+        insert genAppDocCatTIL;
 
         DCp_Arcus_Transactions__c dcpTxn = new DCp_Arcus_Transactions__c(application__c = app.id);
         dcpTxn.pay_at_funding__c = true;
