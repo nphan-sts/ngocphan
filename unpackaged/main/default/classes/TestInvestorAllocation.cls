@@ -4,7 +4,9 @@ private class TestInvestorAllocation{
 
     private enum RelatedObject {CREDIT_POLICY, APPLICATIONS}
 
-    private static final String DOC_NAME = 'TIL Document';
+    private static final String tilDocName = 'TIL Document';
+    private static final String csnDocName = 'Credit Score Notice';
+    private static final String aanDocName = 'Adverse Action Notice';
     private static final String ATTACHMENT_BODY = 'Unit Test Attachment Body Two';
 
     @TestSetup static void setup() {
@@ -23,9 +25,9 @@ private class TestInvestorAllocation{
         insert rule;
          
          CL_Document__c document = new CL_Document__c();
-         document.Doc1__c = 'Credit Score Notice';
-         document.Doc2__c = 'TIL Document';
-         document.Doc3__c = 'Adverse Action Notice';
+         document.Doc1__c = csnDocName;
+         document.Doc2__c = tilDocName;
+         document.Doc3__c = aanDocName;
          insert document;
         
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
@@ -94,7 +96,7 @@ private class TestInvestorAllocation{
         insert attachment;
         
         genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
-        adc.name = DOC_NAME;
+        adc.name = tilDocName;
         adc.genesis__Application__c = app1.id;
         
         insert adc;
@@ -129,12 +131,9 @@ private class TestInvestorAllocation{
         try{
            update app1; 
         }catch(Exception e){
-            //Do nothing
-		}
-        
+            system.debug(e);
+        }        
         test.stopTest();
-        //pallavi
-
         genesis__Applications__c app = [Select id,genesis__Status__c from genesis__Applications__c limit 1];
         Assert.areEqual(app.genesis__Status__c, 'agent_document_verification_pending');
         
@@ -222,7 +221,7 @@ private class TestInvestorAllocation{
         insert attachment;
         
         genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
-        adc.name = DOC_NAME;
+        adc.name = tilDocName;
         adc.genesis__Application__c = app1.id;
         
         insert adc;
@@ -264,9 +263,9 @@ private class TestInvestorAllocation{
         Create document
          */
         CL_Document__c document = new CL_Document__c();
-        document.Doc1__c = 'Credit Score Notice';
-        document.Doc2__c = 'TIL Document';
-        document.Doc3__c = 'Adverse Action Notice';
+        document.Doc1__c = csnDocName;
+        document.Doc2__c = tilDocName;
+        document.Doc3__c = aanDocName;
         insert document;
 
         /*
@@ -1069,7 +1068,7 @@ private class TestInvestorAllocation{
             genesis__Stipulation_Type__c = 'FUNDING'
         );
         insert rul;
-        //genesis__RuleCriteria__c rul =[select id,name,genesis__Rule__r.name from genesis__RuleCriteria__c where genesis__Rule__r.name = 'TCU ruleset'];
+        
         List<Account> accs = new List<Account>();
         Account acco = new Account(
             Name = 'Test',
@@ -1082,7 +1081,7 @@ private class TestInvestorAllocation{
             ZIP_Code__c='123456'
         );
         accs.add(acco);
-        //Insert acco;
+        
         
         Account acc1 = new Account(
             Name = 'Test1',
@@ -1223,21 +1222,12 @@ private class TestInvestorAllocation{
                                   order by Investor_Alloted_Weight__c desc];
         
         System.assertEquals(apps[0].investor__c,accounts[1].id );
-       // System.assertEquals(accounts[1].Investor_Current_Weight__c,1 );
         System.assertEquals(accounts[0].Investor_Current_Weight__c,0 );
         
         
         InvestorAllocation.runInvestorAllocationBasedOnWeighting(appInsert[0].id);
         InvestorAllocation.runInvestorAllocationBasedOnWeighting(appInsert[1].id);
-       // InvestorAllocation.runInvestorAllocationBasedOnWeighting(appInsert[2].id);
-        //InvestorAllocation.runInvestorAllocationBasedOnWeighting(appInsert[3].id);
-        //apps = [select id,name,investor__c,investor__r.name from genesis__applications__c where id=: appInsert];
-        //System.assertEquals(apps[1].investor__c,accounts[0].id ); //LOS-63
-        //System.assertEquals(apps[2].investor__c,accounts[1].id );
-        /// reset happen
-        //System.assertEquals(apps[3].investor__c,accounts[0].id );
-        //System.assertEquals(apps[4].investor__c,accounts[0].id );
-                
+       
         Test.stopTest();
           
     }
@@ -1255,9 +1245,9 @@ private class TestInvestorAllocation{
         insert rule;
 
         CL_Document__c document = new CL_Document__c();
-        document.Doc1__c = 'Credit Score Notice';
-        document.Doc2__c = 'TIL Document';
-        document.Doc3__c = 'Adverse Action Notice';
+        document.Doc1__c = csnDocName;
+        document.Doc2__c = tilDocName;
+        document.Doc3__c = aanDocName;
         insert document;
         
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
@@ -1324,7 +1314,7 @@ private class TestInvestorAllocation{
             Total_Funded_MTD__c = 500,
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
-			DCP_Allowed__c = true            
+            DCP_Allowed__c = true            
         );
         accList.add(acc2);
 
@@ -1333,7 +1323,6 @@ private class TestInvestorAllocation{
 
         List<genesis__Applications__c> listApp = new List<genesis__Applications__c>();
 
-        //pallavi
         genesis__Applications__c app1 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
             genesis__Expected_First_Payment_Date__c = system.Today(),
@@ -1372,13 +1361,14 @@ private class TestInvestorAllocation{
         List<genesis__Application_Document_Category__c> listAdc = new List<genesis__Application_Document_Category__c>();
 
         genesis__Application_Document_Category__c adc1 = new genesis__Application_Document_Category__c();
-        adc1.name = 'TIL Document';
+        adc1.name = tilDocName;
+
         adc1.genesis__Application__c = app1.id;
 
         listAdc.add(adc1);
 
         genesis__Application_Document_Category__c adc2 = new genesis__Application_Document_Category__c();
-        adc2.name = 'TIL Document';
+        adc2.name = tilDocName;
         adc2.genesis__Application__c = app2.id;
 
         listAdc.add(adc2);
@@ -1438,12 +1428,10 @@ private class TestInvestorAllocation{
         try{
             update app2;
         }catch(Exception e){
-            //Do nothing
+            system.debug(e);
         }
                  
         test.stopTest();
-        //pallavi
-
         genesis__Applications__c app = [Select id,genesis__Status__c from genesis__Applications__c limit 1];
         Assert.areEqual(app.genesis__Status__c, 'agent_document_verification_pending');
      }  
@@ -1458,9 +1446,9 @@ private class TestInvestorAllocation{
         insert rule;
          
          CL_Document__c document = new CL_Document__c();
-         document.Doc1__c = 'Credit Score Notice';
-         document.Doc2__c = 'TIL Document';
-         document.Doc3__c = 'Adverse Action Notice';
+         document.Doc1__c = csnDocName;
+         document.Doc2__c = tilDocName;
+         document.Doc3__c = aanDocName;
          insert document;
 
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
@@ -1523,7 +1511,7 @@ private class TestInvestorAllocation{
             Total_Funded_MTD__c = 500,
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
-			DCP_Allowed__c = true            
+            DCP_Allowed__c = true            
         );
         Insert acc2;
         
@@ -1579,9 +1567,9 @@ private class TestInvestorAllocation{
         insert rule;
          
          CL_Document__c document = new CL_Document__c();
-         document.Doc1__c = 'Credit Score Notice';
-         document.Doc2__c = 'TIL Document';
-         document.Doc3__c = 'Adverse Action Notice';
+         document.Doc1__c = csnDocName;
+         document.Doc2__c = tilDocName;
+         document.Doc3__c = aanDocName;
          insert document;
         
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
@@ -1658,7 +1646,7 @@ private class TestInvestorAllocation{
             Total_Funded_MTD__c = 500,
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
-			DCP_Allowed__c = true            
+            DCP_Allowed__c = true            
         );
         Insert acc2;
         
@@ -1762,9 +1750,9 @@ private class TestInvestorAllocation{
         insert rule;
          
          CL_Document__c document = new CL_Document__c();
-         document.Doc1__c = 'Credit Score Notice';
-         document.Doc2__c = 'TIL Document';
-         document.Doc3__c = 'Adverse Action Notice';
+         document.Doc1__c = csnDocName;
+         document.Doc2__c = tilDocName;
+         document.Doc3__c = aanDocName;
          insert document;
         
         genesis__RuleCriteria__c rul = new genesis__RuleCriteria__c(
@@ -1825,7 +1813,7 @@ private class TestInvestorAllocation{
             Total_Funded_MTD__c = 500,
             Monthly_Allocation_Cap__c = 10,
             Total_Allocations_MTD__c =0,
-			DCP_Allowed__c = true            
+            DCP_Allowed__c = true            
         );
         Insert acc2;
         
@@ -2102,9 +2090,9 @@ private class TestInvestorAllocation{
 
     private static CL_Document__c GetDocument() {
         CL_Document__c document = new CL_Document__c();
-        document.Doc1__c = 'Credit Score Notice';
-        document.Doc2__c = 'TIL Document';
-        document.Doc3__c = 'Adverse Action Notice';
+        document.Doc1__c = csnDocName;
+        document.Doc2__c = tilDocName;
+        document.Doc3__c = aanDocName;
         return document;
     }
 

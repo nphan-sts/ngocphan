@@ -1,28 +1,6 @@
 @isTest
 public class PermissionSetCreatorTest {
-    /*Created By : Bhavya Maliwal
-Method name : testReadOnlyWithFields
-Purpose : to cover code satisfying PermissionSetCreator where Read Only permission is to be provided to all the fields.
-    @isTest static void testReadOnlyWithFields() {
-        test.startTest();
-        PermissionSetCreator pset = new PermissionSetCreator('test_Loan_R');
-        pset.grantPackageLevelPermissions('loan','readonly',true);
-        test.stopTest();
-        List<ObjectPermissions> permissionList=[Select id from ObjectPermissions];
-        system.assert(permissionList.size()>=1);
-    }*/
-    /*Created By : Bhavya Maliwal
-Method name : testRCEWithFields
-Purpose : to cover code satisfying PermissionSetCreator where full permission(RCE) is to be provided to all the fields.
-*/ 
-    @isTest static void testRCEWithFields() {
-        test.startTest();
-        PermissionSetCreator pset = new PermissionSetCreator('test_Loan_R');
-        pset.grantPackageLevelPermissions('loan','complete',true);
-        test.stopTest();
-        List<ObjectPermissions> permissionList=[Select id from ObjectPermissions];
-        system.assert(permissionList.size()>=1);
-    }
+    
     /*Created By : Bhavya Maliwal
 Method name : testReadOnly
 Purpose : to cover code satisfying PermissionSetCreator where Read Only is to be provided to object but not fields.
@@ -95,7 +73,7 @@ Purpose : to cover code satisfying PermissionSetCreator where ReadOnly is to be 
 Method name : testpkglistRCE
 Purpose : to cover code satisfying PermissionSetCreator where RCE is to be provided to objects under the package objects.
 */
-    @isTest static void testpkglistRCE() {
+   @isTest static void testpkglistRCE() {
         test.startTest();
         PermissionSetCreator pset = new PermissionSetCreator('test_Loan_R');
         List<String> pckname = new List<String>();

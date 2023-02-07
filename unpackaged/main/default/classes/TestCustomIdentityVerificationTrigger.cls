@@ -1,5 +1,5 @@
 /* ****************Modification History******************
-*    Created By        	 Date			Version
+*    Created By          Date           Version
 *1. Bhavya Maliwal        2022/03/02     LSP-619 Initial Version,renamed method, modified code for validation errors,increased coverage, added start and stop,added assert
 
 ******************Modification History******************/
@@ -15,8 +15,8 @@ public class TestCustomIdentityVerificationTrigger{
         loan__MF_Account__c dummyIncAccount = loan.TestHelper.createMFAccount('XXXIncAccountForTest','30000 - INCOME');
         
         //Create a Fee Set
-        loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
-        loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
+        loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
+        loan.TestHelper.createFeeSet();
         loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
         org.loan__Disable_Triggers__c = true;
         upsert org;  
