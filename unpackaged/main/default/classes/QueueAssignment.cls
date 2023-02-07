@@ -19,8 +19,7 @@ public class QueueAssignment{
                if(queryRecord.QualifiedApiName == 'Id_Analytics_Score')
                     Id_Analytics_Score_Threshold = queryRecord.Threshold_Value__c;
           }
-          //System.debug('Id_Analytics_Score_Threshold=' + Id_Analytics_Score_Threshold);
-     
+         
           List<Application_Tags__c> lstApplicationTags = new List<Application_Tags__c>();
           String reason = '' ;
           String temp;

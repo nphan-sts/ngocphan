@@ -294,7 +294,7 @@ public class TestQueueAssignment{
         System.assertEquals(QueueAssignment.KBAFraudT, false, 'No fraud tag being assigned');
     }
 
-    Testmethod static void FraudBasedOnIdaScore(){
+    Testmethod static void fraudBasedOnIdaScore(){
         Account acct = [SELECT Id FROM Account LIMIT 1];
         genesis__Applications__c app =[SELECT Id,genesis__Account__c,Sift_Status__c FROM genesis__Applications__c
                                        WHERE genesis__Account__c =: acct.id LIMIT 1];
