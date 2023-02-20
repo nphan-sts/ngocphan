@@ -20,28 +20,19 @@ public class InterestAccrualFebMonthBatch implements Database.Batchable<SObject>
                                                         WHERE Id IN:scope];
         Integer month = currentSystemDate.month();
         Integer day = currentSystemDate.day();
+        Integer daysInterestToAdd=day==Integer.valueOf(System.Label.DaysFebMonthNonLeapYear)?2:1;
         Decimal accuredInterest = 0;
         if(!filteredLoanAccs.isEmpty()){
             for(loan__Loan_Account__c eachLoan : filteredLoanAccs){
                 System.debug('eachLoan.loan__Last_Accrual_Date__c--'+eachLoan.loan__Last_Accrual_Date__c);
                 if(eachLoan.loan__Last_Accrual_Date__c <= currentSystemDate && statusSet.contains(eachLoan.loan__Loan_Status__c)){
                     if(month == 2){
-                        if(day == Integer.valueOf(System.Label.DaysFebMonthNonLeapYear)){
-                            if(eachLoan.loan__Dues_Details__r.size() > 0){
-                                accuredInterest = (eachLoan.loan__Dues_Details__r.get(0).loan__Balance__c*eachLoan.loan__Interest_Rate__c *2)/36000.00;
+                          if(eachLoan.loan__Dues_Details__r.size() > 0){
+                                accuredInterest = (eachLoan.loan__Dues_Details__r.get(0).loan__Balance__c*eachLoan.loan__Interest_Rate__c *daysInterestToAdd)/36000.00;
                             }
                             else if(eachLoan.loan__Dues_Details__r.size() == 0){
-                                accuredInterest = (eachLoan.loan__Principal_Remaining__c*eachLoan.loan__Interest_Rate__c *2)/36000.00;
+                                accuredInterest = (eachLoan.loan__Principal_Remaining__c*eachLoan.loan__Interest_Rate__c *daysInterestToAdd)/36000.00;
                             }
-                        }
-                        else if(day == Integer.valueOf(System.Label.DaysFebMonthLeapYear)){
-                            if(eachLoan.loan__Dues_Details__r.size() > 0){
-                                accuredInterest = (eachLoan.loan__Dues_Details__r.get(0).loan__Balance__c*eachLoan.loan__Interest_Rate__c *1)/36000.00;
-                            }
-                            else if(eachLoan.loan__Dues_Details__r.size() == 0){
-                                accuredInterest = (eachLoan.loan__Principal_Remaining__c*eachLoan.loan__Interest_Rate__c *1)/36000.00;
-                            }
-                        }
                     }
                     eachLoan.Interest_Accrued_Feb30__c = eachLoan.loan__Interest_Accrued_Not_Due__c + accuredInterest;
                 }
@@ -53,7 +44,6 @@ public class InterestAccrualFebMonthBatch implements Database.Batchable<SObject>
             }
         }
         if(!newLoanAccs.isEmpty()){
-            //loan.SecureDML.updateRecords(newLoanAccs);
             update newLoanAccs;
         }
     }
