@@ -24,6 +24,7 @@ public class InterestAccrualFebMonthBatch implements Database.Batchable<SObject>
         Decimal accuredInterest = 0;
         if(!filteredLoanAccs.isEmpty()){
             for(loan__Loan_Account__c eachLoan : filteredLoanAccs){
+                 eachLoan.Interest_Accrued_Feb30__c = 0;
                 System.debug('eachLoan.loan__Last_Accrual_Date__c--'+eachLoan.loan__Last_Accrual_Date__c);
                 if(eachLoan.loan__Last_Accrual_Date__c <= currentSystemDate && statusSet.contains(eachLoan.loan__Loan_Status__c)){
                     if(month == 2){
@@ -35,9 +36,6 @@ public class InterestAccrualFebMonthBatch implements Database.Batchable<SObject>
                             }
                     }
                     eachLoan.Interest_Accrued_Feb30__c = eachLoan.loan__Interest_Accrued_Not_Due__c + accuredInterest;
-                }
-                else{
-                    eachLoan.Interest_Accrued_Feb30__c = 0;
                 }
                 accuredInterest = 0;
                 newLoanAccs.add(eachLoan);
