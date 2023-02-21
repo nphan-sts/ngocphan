@@ -19,7 +19,7 @@ public class InterestAccrualFebMonthBatchTest {
         //dummy fee
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr, dummyIncAccount, dummyAccount);
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
+        loan.TestHelper.createFeeJunction(dummyFee, dummyFeeSet);
         
         //creating lending product
         loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet);
