@@ -14,16 +14,15 @@ public class InterestAccrualFebMonthBatch implements Database.Batchable<SObject>
     
     public void execute(Database.BatchableContext bc, List<loan__loan_account__c> scope){
         List<loan__loan_account__c> newLoanAccs = new List<loan__loan_account__c>();
-        List<loan__loan_account__c> filteredLoanAccs = [SELECT Id,loan__Interest_Rate__c,loan__Loan_Status__c,loan__Interest_Accrued_Not_Due__c,loan__Principal_Remaining__c,loan__Last_Accrual_Date__c,
-                                                        (SELECT id, loan__Balance__c FROM loan__Dues_Details__r WHERE loan__DD_Primary_Flag__c = true AND loan__Due_Date__c <=: currentSystemDate order by loan__Due_Date__c desc LIMIT 1) 
-                                                        FROM loan__Loan_Account__c
-                                                        WHERE Id IN:scope];
-        Integer month = currentSystemDate.month();
+       Integer month = currentSystemDate.month();
         Integer day = currentSystemDate.day();
         Integer daysInterestToAdd=day==Integer.valueOf(System.Label.DaysFebMonthNonLeapYear)?2:1;
         Decimal accuredInterest = 0;
-        if(!filteredLoanAccs.isEmpty()){
-            for(loan__Loan_Account__c eachLoan : filteredLoanAccs){
+        
+            for(loan__Loan_Account__c eachLoan : [SELECT Id,loan__Interest_Rate__c,loan__Loan_Status__c,loan__Interest_Accrued_Not_Due__c,loan__Principal_Remaining__c,loan__Last_Accrual_Date__c,
+                                                        (SELECT id, loan__Balance__c FROM loan__Dues_Details__r WHERE loan__DD_Primary_Flag__c = true AND loan__Due_Date__c <=: currentSystemDate order by loan__Due_Date__c desc LIMIT 1) 
+                                                        FROM loan__Loan_Account__c
+                                                        WHERE Id IN:scope]){
                  eachLoan.Interest_Accrued_Feb30__c = 0;
                 System.debug('eachLoan.loan__Last_Accrual_Date__c--'+eachLoan.loan__Last_Accrual_Date__c);
                 if(eachLoan.loan__Last_Accrual_Date__c <= currentSystemDate && statusSet.contains(eachLoan.loan__Loan_Status__c)){
@@ -39,8 +38,7 @@ public class InterestAccrualFebMonthBatch implements Database.Batchable<SObject>
                 }
                 accuredInterest = 0;
                 newLoanAccs.add(eachLoan);
-            }
-        }
+         }
         if(!newLoanAccs.isEmpty()){
             update newLoanAccs;
         }
