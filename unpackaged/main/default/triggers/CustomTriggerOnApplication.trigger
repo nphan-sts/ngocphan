@@ -19,7 +19,9 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
     public Boolean isInvestorAllocated = false;
     public Boolean isDcpEligibleFieldUpdated = false;
     System.debug('CustomTriggerOnApplication');
-    
+
+    Boolean allocateAtAgentVerified = MW_Settings__c.getOrgDefaults().Allocation_Engine_At_Agent_Verified__c;
+
     if (!genesis.CustomSettingsUtil.getOrgParameters().genesis__Disable_Triggers__c ) {
         MW_Settings__c mwsetting = MW_Settings__c.getOrgDefaults();
         
@@ -163,8 +165,11 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                     }
                 }
 
+                String allocationStatus = allocateAtAgentVerified ?
+                        PayoffConstants.AGENT_VERIFIED :
+                        PayoffConstants.AGENT_DOCUMENT_VERIFICATION_PENDING;
+                Boolean isAllocationStatus = app.genesis__Status__c == allocationStatus;
                 Boolean appStatusChanged = app.genesis__Status__c != oldApp.genesis__Status__c;
-                Boolean isAdvpStatus = app.genesis__Status__c == 'agent_document_verification_pending';
                 Boolean appStatusUnchanged = app.genesis__Status__c == oldApp.genesis__Status__c;
 
                 //CRM-815
@@ -176,10 +181,10 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                     DeactivateBankAccountsforApplications.deactivateBankAccount(app.id);
                 } else if (
                         (!InvestorAllocation.allocationForADVPcalled &&
-                                isAdvpStatus &&
+                                isAllocationStatus &&
                                 appStatusChanged) ||
                         (!InvestorAllocation.allocationForPricingTierCalled &&
-                                isAdvpStatus &&
+                                isAllocationStatus &&
                                 appStatusUnchanged &&
                                 app.Pricing_Tier__c != oldApp.Pricing_Tier__c)) {  //CLS-1121,1216,1095,LOP-441
 
@@ -215,7 +220,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                         /*
                          Setting both recursive guard flags true prior to handleAdvp to avoid trigger recursion
                          */
-                        if (isAdvpStatus &&
+                        if (isAllocationStatus &&
                                 appStatusUnchanged &&
                                 app.Pricing_Tier__c != oldApp.Pricing_Tier__c) { //LOP-441
                             InvestorAllocation.allocationForPricingTierCalled = true;
@@ -231,7 +236,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                         Map<String, Object> msg = new Map<String, Object>();
                         msg.put('app.Id', app.Id);
                         msg.put('app.Lead_ID__c', app.Lead_ID__c);
-                        msg.put('app.genesis__Status__c.', app.genesis__Status__c);
+                        msg.put('app.genesis__Status__c', app.genesis__Status__c);
                         msg.put('app.msg', 'No application credit policy record found.  Ignoring allocation request in CustomTriggerOnApplication');
 
                         System.debug('sending datadog creditPolicies error');
@@ -268,10 +273,17 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                     system.debug('olnstatus--->'+app.OLN_Stacker_Status__c);
                     
                     PayoffUtilities.AssignToDeclinedQueueStatus(app.id,'Declined');
-                } else if(app.genesis__Status__c != null && app.Investor__c  != null) {
-                    if(app.genesis__Status__c == 'agent_verified' && app.DocuSignFlag__c && appStatusChanged){
-                           SendEnvDocuSignAPI.sendDocuSignEnvelope(app.Id);
+
+                } else if (app.genesis__Status__c != null && app.Investor__c != null) {
+
+                    if (app.genesis__Status__c == PayoffConstants.AGENT_VERIFIED && app.DocuSignFlag__c) {
+                        if (allocateAtAgentVerified) {
+                            SendEnvDocuSignAPI.sendDocuSignEnvelope(app.Id);
+                        } else if (appStatusChanged) {
+                            SendEnvDocuSignAPI.sendDocuSignEnvelope(app.Id);
+                        }
                     }
+
                     /*pallavi(LOS-158)*/
                     List<Attachment> toattachCSN = new List<Attachment>();
                     Set<Id> CSNattId = new Set<Id>();
