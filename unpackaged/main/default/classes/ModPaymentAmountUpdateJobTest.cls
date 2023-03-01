@@ -152,10 +152,6 @@ public with sharing class ModPaymentAmountUpdateJobTest {
         String jobId = Database.executeBatch(job, 200);
 
         Test.stopTest();
-        
-        loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c FROM loan__Loan_Account__c where lead_guid__c = 'TestClassGuid0' LIMIT 1];
-
-        List<loan__Repayment_Schedule_Summary__c> repayemtSchedule = [Select loan__RSS_Repayment_Dt__c from loan__Repayment_Schedule_Summary__c order by loan__RSS_Seq__c asc];
 
         Assert.isTrue(jobId != null);
 
