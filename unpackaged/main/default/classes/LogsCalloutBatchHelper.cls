@@ -2,8 +2,10 @@
  * This class is serves as a helper class to LogsCalloutBatch class with success and failure messages to slack.
  */
 public class LogsCalloutBatchHelper{
-    
-    private static final String hereStr = '<!here>';
+
+    private static String hereStr = '<!here>';
+    private static String whiteMark = ':white_check_mark: ';
+
     public static string failedFiles = '';
     public static void sendNACHALogs(Integer successCount, Integer failureCount, Integer totalCount){
         Map<String, Object> msg = new Map<String, Object>();        
@@ -16,7 +18,7 @@ public class LogsCalloutBatchHelper{
             slackMentions += '<@' + userIds + '> ';
         }
         Map<String, Object> msgMap = new Map<String, Object>();        
-        msgMap.put('text', hereStr+':white_check_mark: ' + '*' + nachaDocs.size() +' NACHA FILES were created today * cc ' + slackMentions);                      
+        msgMap.put('text', hereStr + whiteMark + '*' + nachaDocs.size() +' NACHA FILES were created today * cc ' + slackMentions);                      
         sendSlackCallouts(JSON.serialize(msgMap));
     }
 
@@ -26,7 +28,7 @@ public class LogsCalloutBatchHelper{
             slackMentions += '<@' + userIds + '> ';
         }
         Map<String, Object> msgMap = new Map<String, Object>();        
-        msgMap.put('text', hereStr+':white_check_mark: ' + '*' + ' Nightly Jobs complete successfully * cc ' + slackMentions);                      
+        msgMap.put('text', hereStr + whiteMark + '*' + ' Nightly Jobs complete successfully * cc ' + slackMentions);                      
         sendSlackCallouts(JSON.serialize(msgMap));
     }
 
@@ -43,7 +45,7 @@ public class LogsCalloutBatchHelper{
     }
     public static Map<String, Object> getSuccessMessage(Integer successCount,Integer totalCount){
         Map<String, Object> msgMap = new Map<String, Object>();        
-        msgMap.put('text', hereStr+':white_check_mark: ' + '*' + successCount + '/'+ totalCount +' NACHA FILES UPLOADED TO BOX*');                      
+        msgMap.put('text', hereStr + whiteMark + '*' + successCount + '/'+ totalCount +' NACHA FILES UPLOADED TO BOX*');                      
         return msgMap;        
     }
     public static void sendSlackCallouts(String msg){
