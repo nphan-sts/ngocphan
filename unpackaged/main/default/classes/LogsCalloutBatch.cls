@@ -38,6 +38,7 @@ global class LogsCalloutBatch implements Database.batchable<sObject>,Database.Al
     }
     
     global void execute(Database.BatchableContext bc, List<sObject> scope) {
+        /* This was added just for sending Nacha file count alert */
         if(apcList != null && apcList.size() > 0){
             LogsCalloutBatchHelper.sendNachaAlerts((List<Document>)scope);
         }else{
@@ -46,16 +47,11 @@ global class LogsCalloutBatch implements Database.batchable<sObject>,Database.Al
     }
 
     global void finish(Database.BatchableContext bc) {
-        if(apcList != null && apcList.size() > 0){
-            System.debug('::');
-        }
-        else{
-            if(failureCount > 0){
-               UploadNachaToBoxJob upJob = new UploadNachaToBoxJob();
-               if(!Test.IsRunningTest()){
-                    System.scheduleBatch(upJob, 'Retry UploadNachaToBoxJob', 5, 1); 
-                } 
+        if(failureCount > 0){
+            UploadNachaToBoxJob upJob = new UploadNachaToBoxJob();
+            if(!Test.IsRunningTest()){
+                System.scheduleBatch(upJob, 'Retry UploadNachaToBoxJob', 5, 1); 
             } 
-        }
+        } 
     }
 }
