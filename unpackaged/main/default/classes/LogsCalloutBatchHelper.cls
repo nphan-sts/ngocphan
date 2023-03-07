@@ -5,6 +5,7 @@ public class LogsCalloutBatchHelper{
 
     private static String hereStr = '<!here>';
     private static String whiteMark = ':white_check_mark: ';
+    private static String alertSign = ':alert::alert::alert::alert::alert:';
 
     public static string failedFiles = '';
     public static void sendNACHALogs(Integer successCount, Integer failureCount, Integer totalCount){
@@ -22,25 +23,37 @@ public class LogsCalloutBatchHelper{
         sendSlackCallouts(JSON.serialize(msgMap));
     }
 
-    public static void sendSuccesNightlyJobAlerts(){
+    public static void sendSuccesNightlyJobAlerts(Datetime startTime){
         string slackMentions = '';
         for(string userIds : MW_Settings__c.getInstance().Slack_mentions_for_Nacha_alert__c.split(',')){
             slackMentions += '<@' + userIds + '> ';
         }
         Map<String, Object> msgMap = new Map<String, Object>();        
-        msgMap.put('text', hereStr + whiteMark + '*' + ' Nightly Jobs complete successfully * cc ' + slackMentions);                      
+        msgMap.put('text', hereStr + whiteMark +' Nightly Jobs complete successfully:\n'+ 
+                                                'Start time: ' + String.valueOf(startTime) + '\n' + 
+                                                'Finish time: ' + String.valueOf(System.now()) + '\n' + 
+                                                'cc ' + slackMentions);                      
         sendSlackCallouts(JSON.serialize(msgMap));
     }
 
-    public static void sendFailureNightlyJobAlerts(String msg, String apexClass){
+    public static void sendFailureNightlyJobAlerts(List<String> apexClassList, Datetime startTime){
+        string slackMentions = '';
+        for(string userIds : MW_Settings__c.getInstance().Slack_mentions_for_Nacha_alert__c.split(',')){
+            slackMentions += '<@' + userIds + '> ';
+        }
+
         Map<String, Object> msgMap = new Map<String, Object>();
-        msgMap.put('text', hereStr+':alert::alert::alert::alert::alert: \n' + 'Nightly jobs complete:\n' + msg +'\n ' + apexClass);        
+        msgMap.put('text', hereStr + alertSign + ' Nightly jobs complete:\n' + 
+                                                        'Start time: ' + String.valueOf(startTime) + '\n'+ 
+                                                        'Finish time: ' + String.valueOf(System.now()) + '\n'+ 
+                                                        'Failed Jobs:' + String.join(apexClassList, ' , ') + '\n'+ 
+                                                        'cc: ' + slackMentions);    
         sendSlackCallouts(JSON.serialize(msgMap)); 
     }
 
     public static Map<String, Object> getFailureMessage(Integer failureCount,Integer totalCount){
         Map<String, Object> msgMap = new Map<String, Object>();
-        msgMap.put('text', hereStr+':alert::alert::alert::alert::alert: \n' + '*' + failureCount + '/'+ totalCount +' NACHA FILES FAILED to UPLOAD TO BOX*');        
+        msgMap.put('text', hereStr + alertSign + '\n' + '*' + failureCount + '/'+ totalCount +' NACHA FILES FAILED to UPLOAD TO BOX*');        
         return msgMap;        
     }
     public static Map<String, Object> getSuccessMessage(Integer successCount,Integer totalCount){

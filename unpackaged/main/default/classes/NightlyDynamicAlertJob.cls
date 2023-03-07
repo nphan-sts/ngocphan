@@ -20,7 +20,7 @@ global with sharing class NightlyDynamicAlertJob extends clcommon.DynamicJob imp
         dagLog = ec.createObject('clcommon__DAG_Logging__c',
                                     'clcommon__DAG_Logging__c',
                                     '');
-        dagLog.addFields('id,name,clcommon__Status__c'); 
+        dagLog.addFields('id,name,clcommon__Status__c,clcommon__Start_Time__c,clcommon__Finish_Time__c'); 
         dagLog.setWhereClause('CreatedDate = TODAY');
         dagLog.setOrderClause('CreatedDate DESC ');
         dagLog.setLimitClause('1');
