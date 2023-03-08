@@ -37,7 +37,16 @@ global class NachaAlertDynamicJob extends clcommon.DynamicJob implements Databas
     global override void dofinish(Database.BatchableContext bc) {
         List<loan__Automated_Payment_Configuration__c> apcList = Database.query(getRuntimeQuery());
 
-        LogsCalloutBatch logJob = new LogsCalloutBatch(apcList);
+        clcommon__DAG_Logging__c dagLog = [Select id, clcommon__Start_Time__c 
+        FROM clcommon__DAG_Logging__c 
+        WHERE CreatedDate = TODAY 
+        AND DAG_Name__c = 'Payment - Filegen - Upload to Box' 
+        WITH SECURITY_ENFORCED
+        ORDER BY CreatedDate DESC
+        LIMIT 1
+        ];
+
+        LogsCalloutBatch logJob = new LogsCalloutBatch(apcList, dagLog.clcommon__Start_Time__c);
         
         if(!test.isRunningTest()){
             Database.executebatch(logJob);
