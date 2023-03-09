@@ -13,9 +13,11 @@ global class LogsCalloutBatch implements Database.batchable<sObject>,Database.Al
     global Integer remainingCount;
     global set<Id> qryIds;
     global List<loan__Automated_Payment_Configuration__c> apcList;
+    global Datetime startTime;
     
-    global LogsCalloutBatch(List<loan__Automated_Payment_Configuration__c> apcList ){
+    global LogsCalloutBatch(List<loan__Automated_Payment_Configuration__c> apcList, Datetime startTime){
         this.apcList = apcList; 
+        this.startTime = startTime;
         folderName = new List<String>();
 
         for(loan__Automated_Payment_Configuration__c apc : apcList){
@@ -40,7 +42,7 @@ global class LogsCalloutBatch implements Database.batchable<sObject>,Database.Al
     global void execute(Database.BatchableContext bc, List<sObject> scope) {
         /* This was added just for sending Nacha file count alert */
         if(apcList != null && apcList.size() > 0){
-            LogsCalloutBatchHelper.sendNachaAlerts((List<Document>)scope);
+            LogsCalloutBatchHelper.sendNachaAlerts((List<Document>)scope, startTime);
         }else{
             LogsCalloutBatchHelper.sendNACHALogs(successCount,failureCount,totalCount);
         }
