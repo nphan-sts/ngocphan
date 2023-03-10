@@ -16,7 +16,7 @@ public class LogsCalloutBatchHelper{
     public static void sendNACHALogs(Integer successCount, Integer failureCount, Integer totalCount){
         Map<String, Object> msg = new Map<String, Object>();        
         msg = (successCount == totalCount) ? getSuccessMessage(successCount,totalCount) : getFailureMessage(failureCount,totalCount);        
-        sendSlackCallouts(JSON.serialize(msg));        
+        sendSlackCallouts(JSON.serialize(msg));    
     }
 
     /**
