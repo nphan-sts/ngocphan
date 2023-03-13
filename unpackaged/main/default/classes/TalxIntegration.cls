@@ -78,7 +78,7 @@ global class TalxIntegration {
                 System.debug('Test: Fake Response');	
             }
 
-            MW_LogUtility.info('TalxIntegration', String.valueOf(appId), app.Lead_ID__c, 'CallTalxIntegration', res.getBody(), res);
+            MW_LogUtility.info('TalxIntegration', String.valueOf(appId), app.Lead_ID__c, 'CallTalxIntegration', res.getBody().replaceALL('<SSN>[sensitive_data]</SSN>',''), res);
             System.debug('Response --> ' + res.getBody());
             
             //////LOS-168 Logging for Talx start((Snehal))
