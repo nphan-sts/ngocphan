@@ -78,7 +78,7 @@ public class LogsCalloutBatchHelper{
         msgMap.put('text', hereStr + alertSign + ' Nightly jobs complete:\n' + 
                                                         startTimeStr + startTime.format(timeFormat,timezone) + ' ' + timezone + newLineStr+ 
                                                         finishTimeStr + System.now().format(timeFormat,timezone) + ' ' + timezone + newLineStr+ 
-                                                        'Failed Jobs:' + String.join(apexClassList, ' , ') + newLineStr+ 
+                                                        'Failed Jobs:' + String.join(apexClassList, ' , ') + newLineStr + 
                                                         ccStr + slackMentions);    
         sendSlackCallouts(JSON.serialize(msgMap)); 
     }
