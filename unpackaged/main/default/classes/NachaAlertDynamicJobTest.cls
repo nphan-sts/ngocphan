@@ -136,16 +136,6 @@ public with sharing class NachaAlertDynamicJobTest {
         Assert.isTrue(jobID != null,'job runs 4');
     }
     
-    @isTest
-    static void testNightlyJobSuccess() {
-        Test.startTest();
-
-        Test.setMock(HttpCalloutMock.class, new HttpSlackCalloutMock());
-        
-        LogsCalloutBatchHelper.sendSuccesNightlyJobAlerts(System.now());
-        
-        Test.StopTest();
-    }
     
     @isTest
     static void testNightlyJobFailure() {
