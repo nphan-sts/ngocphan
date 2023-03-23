@@ -39,30 +39,6 @@ public class LogsCalloutBatchHelper{
         sendSlackCallouts(JSON.serialize(msgMap));
     }
 
-    /**
-     * 
-        @here:alert::alert::alert::alert::alert: Nightly jobs complete:
-        Start time: 2023-03-06 11:40 PM PST
-        Finish time: 2023-03-06 11:46 PM PST
-        Failed Jobs:StartOfDayDynamicJob,InterestPostingAmzDynamicJob,LoanPayoffPaymentTxnClearingDynamicJob
-        cc: 
-        @Abhijeet Thorat
-     */
-    public static void sendFailureNightlyJobAlerts(List<String> apexClassList, Datetime startTime){
-        string slackMentions = '';
-        for(string userIds : MW_Settings__c.getInstance().Slack_mentions_for_Nacha_alert__c.split(',')){
-            slackMentions += '<@' + userIds + '> ';
-        }
-
-        Map<String, Object> msgMap = new Map<String, Object>();
-        msgMap.put('text', hereStr + alertSign + ' Nightly jobs complete:\n' + 
-                                                        startTimeStr + startTime.format(timeFormat,timezone) + ' ' + timezone + newLineStr+ 
-                                                        finishTimeStr + System.now().format(timeFormat,timezone) + ' ' + timezone + newLineStr+ 
-                                                        'Failed Jobs:' + String.join(apexClassList, ' , ') + newLineStr + 
-                                                        ccStr + slackMentions);    
-        sendSlackCallouts(JSON.serialize(msgMap)); 
-    }
-
     public static Map<String, Object> getFailureMessage(Integer failureCount,Integer totalCount){
         Map<String, Object> msgMap = new Map<String, Object>();
         msgMap.put('text', hereStr + alertSign + newLineStr + '*' + failureCount + '/'+ totalCount +' NACHA FILES FAILED to UPLOAD TO BOX*');        

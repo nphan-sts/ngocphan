@@ -135,19 +135,4 @@ public with sharing class NachaAlertDynamicJobTest {
         
         Assert.isTrue(jobID != null,'job runs 4');
     }
-    
-    
-    @isTest
-    static void testNightlyJobFailure() {
-        Test.startTest();
-
-        Test.setMock(HttpCalloutMock.class, new HttpSlackCalloutMock());
-        
-        List<String> apexListDummy = new List<String>();
-        apexListDummy.add('StartOfDayDynamicJob');
-        
-        LogsCalloutBatchHelper.sendFailureNightlyJobAlerts(apexListDummy, System.now());
-        
-        Test.StopTest();
-    }
 }
