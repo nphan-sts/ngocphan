@@ -2,20 +2,21 @@ Steps to run schema_comparison.py script:
 
 1. Installations:
 
-    - Install python. 
-    
+    - Install python 
         Follow instructions https://realpython.com/installing-python/
 
     - Install pip 
-    
         https://pip.pypa.io/en/stable/installation/
 
     - Install simple_salesforce using the command: 
         pip install simple-salesforce
 
+    - Install pandas using the command:
+        pip install pandas
+
 2. Access requirements:
 
-    - Get access to schema_comparison_config.json file from LastPass from LPC Team
+    - Get access to schema_comparison_config.json file on LastPass from LPC Team
     - Download the file to a suitable location in your local machine.
 
 3. Running the script:
@@ -45,7 +46,7 @@ Steps to run schema_comparison.py script:
       same path as the terminal.
 
 4. About schema_comparison_config.json file:
-    - This json contains credentials to login into all the instances mentioned above.
+    - This json contains credentials to login into all the Salesforce instances mentioned above.
     - In order to add new environments, update the json file with appropriate credentials.
     - Currently, the config file only checks for schema discrepancies with respect to 18 objects.
     - The 18 objects mentioned against the "sObjects" field in the schema_comparison_config.json are as follows:
@@ -67,4 +68,8 @@ Steps to run schema_comparison.py script:
         "loan__Investor_Loan__c", 
         "loan__Payment_Mode__c", 
         "genesis__Employment_Information__c"
-    - To compare more objects, add the object API Name to this list
+    - To compare more objects, add the object API Name to this list in schema_comparison_config.json.
+
+5. Alternate schema comparison tools with better UI:
+    - Use the comparison tool on Gearset
+    - Use opensource comparison tool https://sforgcompare.herokuapp.com/
