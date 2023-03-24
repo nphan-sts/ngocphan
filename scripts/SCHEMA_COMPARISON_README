@@ -1,0 +1,70 @@
+Steps to run schema_comparison.py script:
+
+1. Installations:
+
+    - Install python. 
+    
+        Follow instructions https://realpython.com/installing-python/
+
+    - Install pip 
+    
+        https://pip.pypa.io/en/stable/installation/
+
+    - Install simple_salesforce using the command: 
+        pip install simple-salesforce
+
+2. Access requirements:
+
+    - Get access to schema_comparison_config.json file from LastPass from LPC Team
+    - Download the file to a suitable location in your local machine.
+
+3. Running the script:
+    - Download schema_comparison.py file from the repo into a suitable location in your local machine.
+    - Open Terminal/Command Prompt from the folder containing schema_comparison.py on your local machine.
+    - Enter the following command in the terminal:
+        python3  schema_comparison.py
+    - You will be prompted to enter the full path of configuration file.
+    - Copy the full path name of config file schema_comparison_config.json downloaded from LastPass
+    - Paste the copied path on the terminal and press enter.
+    - Next enter the instaces you want to compare
+    - Following are the list of environments and the keys corresponding to each environment you can enter in the script:
+
+        -------------------------------------------
+        | Environment       | Code                |
+        --------------------|----------------------
+        | DEV               | dev                 |
+        | QA                | qa                  |
+        | QA1               | qa1                 |
+        | QA1 Spring 22     | qa1spring22         |
+        | UAT (End-2-end)   | uat                 |
+        | Stage             | stage               |
+        | Production        | prod                |
+        -------------------------------------------
+
+    - Once the comparison is complete, a schema_comparison_{date_of_creation}.csv file will be generated and saved in the 
+      same path as the terminal.
+
+4. About schema_comparison_config.json file:
+    - This json contains credentials to login into all the instances mentioned above.
+    - In order to add new environments, update the json file with appropriate credentials.
+    - Currently, the config file only checks for schema discrepancies with respect to 18 objects.
+    - The 18 objects mentioned against the "sObjects" field in the schema_comparison_config.json are as follows:
+        "genesis__Applications__c", 
+        "Account", 
+        "KBA_Details__c", 
+        "loan__Bank_Account__c", 
+        "Pricing_Offer__c", 
+        "genesis__Application_Document_Category__c", 
+        "loan__Loan_Block_Code__c", 
+        "Credit_Policy__c", 
+        "loan__Loan_Product__c", 
+        "loan__Repayment_Schedule__c", 
+        "loan__Loan_Payment_Transaction__c", 
+        "genesis__Document_Category__c", 
+        "loan__Loan_account_Due_Details__c", 
+        "Lead", 
+        "loan__Loan_Account__c", 
+        "loan__Investor_Loan__c", 
+        "loan__Payment_Mode__c", 
+        "genesis__Employment_Information__c"
+    - To compare more objects, add the object API Name to this list
