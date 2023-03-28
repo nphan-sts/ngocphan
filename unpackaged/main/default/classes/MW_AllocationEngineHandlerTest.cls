@@ -7,11 +7,19 @@ private class MW_AllocationEngineHandlerTest {
 
     private static final String OFFERS_API = 'offers-api';
 
-    private static final String OFFERS_API_ADVP_FAILURE_MSG_APP2 = 'Can not execute operation: advp for Lead Id: def456 due to: Program Id is null and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api';
+    /* A realistic UUID is required for docusign related test in agent verified test method */
+    private static final String REALISTIC_UUID = '5fdc44e3-d43d-47ed-a800-9d7aa1f7c147';
+
+    private static final String OFFERS_API_ADVP_FAILURE_MSG_APP2 = 'Can not execute operation: advp for Lead Id: '
+            + REALISTIC_UUID + ' due to: Program Id is null and default program id cannot be used due to utm_source__c: offers-api and api product flow: offers-api';
 
     private static final String OKTA_DOMAIN = 'https://oktadomain';
 
     private static final String FE_ENDPOINT = 'https://sfapi-dev.payoff.com/ms/api/cls/update_user';
+
+    private static final String BOX_URL = 'https://test.app.box.com/file/00000000000';
+
+    private static final String DOCUSIGN_URL_PART = 'envelopes/';
 
     public class AESCalloutExceptionMock implements HttpCalloutMock {
 
@@ -86,12 +94,16 @@ private class MW_AllocationEngineHandlerTest {
                 return makeSimpleSuccess();
             }
 
+            if (httpRequest.getEndpoint().containsIgnoreCase(DOCUSIGN_URL_PART)) {
+                return makeDocusignSentSuccess();
+            }
+
             requestCount++;
 
             endpoints.add(httpRequest.getEndpoint());
 
             String requestBody = httpRequest.getBody();
-            System.debug(LoggingLevel.INFO, 'Request Body: ' + requestBody);
+            System.debug(LoggingLevel.INFO, 'Requesting: ' + httpRequest.getEndpoint() + ' Request Body: ' + requestBody);
 
             String json = '{ "timestamp": "2022-02-18T21:27:24.509Z", "data": { "allocation-responses": [ { "timestamp": "2022-02-18T21:27:24.509Z", "status": "success", "detail": "string", "allocationId": "string", "allocationEngineVersion": "string", "requestID": "string", "capitalPartnerInfo": [ { "capitalPartnerName": "string", "investorCode": "string", "leadPartner": true } ] } ] }, "errors": [] }';
 
@@ -122,6 +134,24 @@ private class MW_AllocationEngineHandlerTest {
         HttpResponse res = new HttpResponse();
         res.setHeader('Content-Type', 'application/json');
         res.setBody('{"value":"success"}');
+        res.setStatusCode(200);
+        return res;
+    }
+
+    /**
+     * @return A mocked successful return from docusign
+     */
+    private static HttpResponse makeDocusignSentSuccess() {
+
+        WrapperDocuSign body = new WrapperDocuSign();
+        body.envelopeId = '1234567890';
+        body.status = 'sent';
+        body.statusDateTime = '2022-02-18T21:27:24.509Z';
+        body.uri = 'https://demo.docusign.net/restapi/v2/accounts/123456/envelopes/1234567890';
+
+        HttpResponse res = new HttpResponse();
+        res.setHeader('Content-Type', 'application/json');
+        res.setBody(JSON.serialize(body));
         res.setStatusCode(200);
         return res;
     }
@@ -285,6 +315,7 @@ private class MW_AllocationEngineHandlerTest {
         app1.Loan_Purpose__c = 'debt_consolidation';
         app1.Credit_Policy_Approval_Models__c = 'crb_otb';
         app1.genesis__Loan_Amount__c = 25000.00;
+        app1.Origination_fee__c = 10.00;
         app1.utm_medium__c = 'medium';
         app1.utm_source__c = 'source';
         app1.utm_campaign__c = 'campaign';
@@ -299,7 +330,7 @@ private class MW_AllocationEngineHandlerTest {
         genesis__Applications__c app2 = MW_GlobalTestUtility.GetApplication();
         app2.genesis__Account__c = member2.Id;
         app2.genesis__Status__c = PayoffConstants.AGENT_DOCUMENT_VERIFICATION_PENDING;
-        app2.Lead_ID__c = 'def456';
+        app2.Lead_ID__c = REALISTIC_UUID;
         app2.genesis__APR__c = 7.99;
         app2.genesis__Interest_Rate__c = 10.00;
         app2.Pricing_Tier__c = 't2';
@@ -310,8 +341,10 @@ private class MW_AllocationEngineHandlerTest {
         app2.Loan_Purpose__c = 'debt_consolidation';
         app2.Credit_Policy_Approval_Models__c = null;
         app2.genesis__Loan_Amount__c = 15000.00;
+        app2.Origination_fee__c = 10.00;
         app2.Program_id__c = 'program_id2';
 
+        /* order of insertion matters for getApps call */
         insert new List<genesis__Applications__c> {app1, app2};
 
         /* insert allocation partners only for the first app for scenarios */
@@ -390,7 +423,7 @@ private class MW_AllocationEngineHandlerTest {
         loan__Batch_Process_Log__c loanLog = logs.get(0);
 
         System.assertEquals(
-                'MW_AllocationEngineHandler: Invalid decision level of "potato" attempted for lead ids: abc123, def456',
+                'MW_AllocationEngineHandler: Invalid decision level of "potato" attempted for lead ids: abc123, ' + REALISTIC_UUID,
                 loanLog.loan__Message__c);
 
         List<clcommon__Batch_Process_Log__c> commonlogs = getCommonLogs();
@@ -855,6 +888,82 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(0, aesSuccessMock.requestCount);
     }
 
+    /**
+     * Mimic an app reaching agent verified status and then allocating.
+     * After completion of allocation, should be transitioned to docs sent status
+     *
+     * The flow is something like:
+     * 1. App is in advp, and moved to agent_verify (either manually or via something like ztf)
+     * 2. Custom Trigger on Application - with credit policy, Allocation Engine is called, and responds successfully assigning investor
+     * 3. Custom Trigger on Application - Creates docusign envelope for av app and moves to docusign loan docs sent
+     * 4. Custom Trigger on Application - Til is generated for docusign loan docs sent app
+     */
+    @IsTest static void agentverified_canHandleAESResponse() {
+
+        /* required for TIL gen after loan docs sent */
+        CL_Document__c docs = new CL_Document__c();
+        docs.Doc1__c = 'Credit Score Notice';
+        docs.Doc2__c = 'TIL Document';
+        docs.Doc3__c = 'Adverse Action Notice';
+        insert docs;
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        settings.Allocation_Engine_At_Agent_Verified__c = true;
+        update settings;
+
+        genesis__Applications__c app = getNewApp();
+
+        AESSuccessMock aesSuccessMock = new AESSuccessMock();
+        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
+        Test.startTest();
+
+        /* required to allocate.  (see CustomTriggerOnApplication) */
+        Credit_Policy__c creditPolicy = makeCreditPolicyRecord(app, app.FICO__c, app.Net_Disposable_Income_NDI_Num__c);
+        insert creditPolicy;
+
+        /*
+        following objects required to send docusign env and subsequent til generation.
+        Partly taken from WSApplicationDocumentsTest as well as debugging
+        */
+        clcommon__Party_Type__c partyType = TestDataFactory.createTestPartyType('BORROWER');
+        insert partyType;
+
+        genesis__Document_Category__c docType = new genesis__Document_Category__c();
+        docType.genesis__Category_Name__c='ESign Documents';
+        docType.Application_Status__c = PayoffConstants.AGENT_VERIFIED;
+
+        genesis__Document_Category__c docCat = TestDataFactory.createTestDocumentCategory(partyType.Id, 'til');
+
+        insert new List<genesis__Document_Category__c>{ docType, docCat };
+
+        genesis__Application_Document_Category__c appDocCat = TestDataFactory.createTestApplicationDocumentCategory('TIL Document',
+                app.Id, docCat.Id, BOX_URL, 'CLEARED');
+        insert appDocCat;
+
+        DocuSign_Template__c docuSignTemplate = new DocuSign_Template__c();
+        docuSignTemplate.Name = 'Test_DSTemplate';
+        docuSignTemplate.Template_Id__c = '12345678';
+        docuSignTemplate.State__c = 'Test_State,Test_state1';
+        docuSignTemplate.Account__c = getInvestor().Id;
+        docuSignTemplate.Document_Category__c = docType.Id;
+        docuSignTemplate.Active__c = true;
+        insert docuSignTemplate;
+
+        app.genesis__Status__c = PayoffConstants.AGENT_VERIFIED;
+        update app;
+
+        mockAESAllocationBehavior(app);
+
+        Test.stopTest();
+
+        genesis__Applications__c actual = getNewApp();
+
+        System.assertEquals(PayoffConstants.DOCUSIGN_LOAN_DOCS_SENT, actual.genesis__Status__c);
+        System.assertEquals(false, actual.DocuSignFlag__c); /* after sending, flag should be set to false */
+        System.assertEquals(1, aesSuccessMock.requestCount);
+    }
+
     @IsTest static void reallocation_canGenerateJson_ITB() {
 
         genesis__Applications__c app = getApp();
@@ -963,7 +1072,7 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals('Info', log.clcommon__Type__c);
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
-        System.assert(log.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: def456'));
+        System.assert(log.clcommon__Message__c.contains('Can not execute operation: reallocation for Lead Id: ' + REALISTIC_UUID));
         System.assert(log.clcommon__Message__c.contains('Field: Allocation_Timestamp__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('No previously allocated partners were found'));
 
@@ -1213,7 +1322,7 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals('Info', log.clcommon__Type__c);
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
-        System.assert(log.clcommon__Message__c.contains('Can not execute operation: manual for Lead Id: def456'));
+        System.assert(log.clcommon__Message__c.contains('Can not execute operation: manual for Lead Id: ' + REALISTIC_UUID));
         System.assert(log.clcommon__Message__c.contains('Field: Allocation_Timestamp__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('No previously allocated partners were found'));
         System.assert(log.clcommon__Message__c.contains('No manually selected partners were found'));
@@ -1880,12 +1989,7 @@ private class MW_AllocationEngineHandlerTest {
      */
     static void mockAESAllocationBehavior(genesis__Applications__c app) {
         /* AES will select investors that will apply */
-        Account investor = [
-                SELECT Id
-                FROM Account
-                WHERE Investor_Code__c = 'FCU'
-                LIMIT 1
-        ];
+        Account investor = getInvestor();
 
         /* AES will clear any existing allocation partners */
         delete [
@@ -1910,8 +2014,19 @@ private class MW_AllocationEngineHandlerTest {
         app.Allocation_Detail__c = '';
         app.Allocation_Operation_Error__c = '';
         app.Allocation_Status__c = 'success';
+        app.Investor__c = investor.Id;
 
         update app;
+    }
+
+    private static Account getInvestor() {
+        Account investor = [
+                SELECT Id
+                FROM Account
+                WHERE Investor_Code__c = 'FCU'
+                LIMIT 1
+        ];
+        return investor;
     }
 
     static List<Allocation_Partner__c> getAllocationPartners() {
@@ -2092,7 +2207,7 @@ private class MW_AllocationEngineHandlerTest {
      */
     static genesis__Applications__c getNewApp() {
         for (genesis__Applications__c app : getApps()) {
-            if (app.Lead_ID__c == 'def456') {
+            if (app.Lead_ID__c == REALISTIC_UUID) {
                 System.debug('found: ' + app.Lead_ID__c + ' ' + app.Allocation_ID__c);
                 return app;
             }
@@ -2131,6 +2246,7 @@ private class MW_AllocationEngineHandlerTest {
                         Investor__c,
                         Investor__r.Investor_Code__c,
                         Credit_Policy_Approval_Models__c,
+                        DocuSignFlag__c,
                         Risk_Model_Source__c,
                         Expected_Yield__c,
                         Expected_Chargeoff__c,
@@ -2138,7 +2254,16 @@ private class MW_AllocationEngineHandlerTest {
                         Allocation_Timestamp__c,
                         Allocation_Operation_Error__c
                FROM   genesis__Applications__c
-               ORDER BY Lead_ID__c];
+               ORDER BY Id];
+    }
+
+    static Credit_Policy__c makeCreditPolicyRecord(genesis__Applications__c application, Decimal fico, Decimal ndi) {
+        Credit_Policy__c creditPolicy = new Credit_Policy__c();
+        creditPolicy.request_intent__c = 'application';
+        creditPolicy.FICO__c = fico;
+        creditPolicy.Net_Disposable_Income_NDI__c = ndi == null ? null : String.valueOf(ndi);
+        creditPolicy.Application__c = application.Id;
+        return creditPolicy;
     }
 
     /*
