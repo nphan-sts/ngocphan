@@ -69,7 +69,7 @@ def compare():
     return duckdb.query(schema_comparison_query).to_df()
 
 if __name__ == "__main__":
-    tm = time.strftime('%d %b %Y %H:%M:%S')
+    tm = time.strftime('%d-%b-%Y %H:%M:%S')
     config_file=input('Enter the full path of the config file: ')
     print('{}: Configuration file location: {}'.format(tm, config_file))
     source=input('Enter 1st Salesforce instance name to compare. Eg. [qa,stage]: ')
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     print('{}: Comparing {} and {} instances......'.format(tm, source, target))
     comparison_df = compare()
     print('{}: Comparison complete!!'.format(tm))
-    comparison_output = "schema_difference.csv"
+    comparison_output = "schema_difference_"+time.strftime('%d-%b-%Y_%H:%M:%S')+".csv"
     print('{}: Output file name: {}'.format(tm, comparison_output))
     print('{}: Outful file is being generated.....'.format(tm))
     comparison_df.to_csv(comparison_output,index=False)

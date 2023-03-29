@@ -3,10 +3,10 @@ Steps to run schema_comparison.py script:
 1. Installations:
 
     - Install python 
-        Follow instructions https://realpython.com/installing-python/
+        Follow instructions on https://realpython.com/installing-python/
 
     - Install pip 
-        https://pip.pypa.io/en/stable/installation/
+        Follow instructions on https://pip.pypa.io/en/stable/installation/
 
     - Install simple_salesforce using the command: 
         pip install simple-salesforce
