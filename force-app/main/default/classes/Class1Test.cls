@@ -4,5 +4,6 @@ public with sharing class Class1Test {
      static void Class1Test() {
 
         System.debug('demo');
+        Class1 cls = new Class1();
     }
 }
