@@ -121,6 +121,10 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt install default-jdk
+                python -m pip install --upgrade pip
+                pip install xq
+                pip install yq
+                pip install jq
 
             # Install SFDX scanner
             # - name: 'Installing SFDX scanner'
