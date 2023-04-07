@@ -1,4 +1,4 @@
-public class MW_ADCTriggerHandler {
+public with sharing class MW_ADCTriggerHandler {
     
     final List<genesis__Application_Document_Category__c> newRecords;
     final Map<Id, genesis__Application_Document_Category__c> oldMap;
