@@ -58,5 +58,5 @@ jobs:
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a integration
 
-            - name: 'Deploy the entire branch to Integration org'
+            - name: 'Test All local Integration org'
               run: sfdx force:apex:test:run --testlevel RunLocalTests --json
