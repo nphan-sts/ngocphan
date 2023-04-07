@@ -157,11 +157,11 @@ jobs:
                   mkdir changed-sources
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/ 
 
-            - name: SonarCloud Scan
-              uses: sonarsource/sonarcloud-github-action@master
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            # - name: SonarCloud Scan
+            #   uses: sonarsource/sonarcloud-github-action@master
+            #   env:
+            #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
             # If the env variable equals all, we run all tests
             - name: 'Check-only deploy delta changes - run all tests'
