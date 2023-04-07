@@ -176,7 +176,7 @@ jobs:
                   sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
 
             - name: 'Check-only deploy delta changes - run specified tests - Changed source specified'
-              if: ${{ env.APEX_TESTS == '' }} && ${{ env.APEX_CLASSES != null }}
+              if: ${{ env.APEX_TESTS == '' }} && ${{ env.APEX_CLASSES }}
               run: | 
                   echo ${{env.APEX_CLASSES}}
                   echo "--- Delta Check-Only Deploy ---"
