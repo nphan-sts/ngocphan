@@ -166,17 +166,17 @@ jobs:
                   echo $APEX_CLASSES
                   echo $APEX_CLASSES >> $GITHUB_ENV
 
-            - name: 'Check-only deploy delta changes - run specified tests'
+            - name: 'Check-only deploy delta changes - run specified tests - User specified'
               if: ${{ env.APEX_TESTS != 'all' }} && ${{ env.APEX_TESTS != '' }}
               run: |
                   echo ${{env.APEX_TESTS}}
-                  echo "--- User specified ---"
                   echo "--- Delta Check-Only Deploy ---"
                   sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
-              if: ${{ env.APEX_TESTS == '' } && { env.APEX_CLASSES != '' }}
+
+            - name: 'Check-only deploy delta changes - run specified tests - Changed source specified'
+              if: ${{ env.APEX_TESTS == '' }} && ${{ env.APEX_CLASSES != '' }}
               run: | 
                   echo ${{env.APEX_CLASSES}}
-                  echo "--- Changed source specified ---"
                   echo "--- Delta Check-Only Deploy ---"
                   sfdx force:source:deploy -x changed-sources/force-app --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
                   
