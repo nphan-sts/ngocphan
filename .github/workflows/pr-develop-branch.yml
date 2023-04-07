@@ -122,13 +122,6 @@ jobs:
                 sudo apt-get update
                 sudo apt install default-jdk
                 
-            
-            - name: 'Installing xq yq jq'
-              run: |
-                pip install xq
-                pip install yq
-                pip install jq
-
             # Install SFDX scanner
             # - name: 'Installing SFDX scanner'
             #   run: sfdx plugins:install @salesforce/sfdx-scanner
@@ -181,13 +174,6 @@ jobs:
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
                   sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
-
-            - name: 'Check-only deploy delta changes - run specified tests - Changed source specified'
-              if: ${{ env.APEX_TESTS == '' }} && ${{ env.APEX_CLASSES != '' }}
-              run: | 
-                  echo ${{env.APEX_CLASSES}}
-                  echo "--- Delta Check-Only Deploy ---"
-                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
                   
             - name: 'Deploy destructive changes (if any)'
               run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
