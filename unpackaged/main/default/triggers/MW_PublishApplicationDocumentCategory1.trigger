@@ -47,48 +47,7 @@ trigger MW_PublishApplicationDocumentCategory1 on genesis__Application_Document_
         if (trigger.isAfter)
         {
 
-            Set<String> names = new Set<String>();
-            Set<Id> appIds = new Set<Id>();
-            for (genesis__Application_Document_Category__c adc : Trigger.new) {
-                appIds.add(adc.genesis__Application__c);
-                names.add(adc.Name);
-            }
-
-            List<String> leadIds = new List<String>();
-            for (genesis__Applications__c app : [
-                    SELECT Id,
-                            Lead_ID__c,
-                            genesis__Status__c
-                    FROM   genesis__Applications__c
-                    WHERE Id IN :appIds
-            ]) {
-                leadIds.add(app.Lead_ID__c);
-            }
-
-            String leadIdStr = String.join(new List<String>(leadIds), ', ');
-            String categories = String.join(new List<String>(names), ', ');
-            String message = String.format('{0} genesis__Application_Document_Category__c {1} ({2}): {3}',
-                    new List<Object>{
-                            leadIdStr,
-                            Trigger.operationType,
-                            Trigger.new.size(),
-                            categories
-                    });
-
-            MW_LogUtility.infoMessage('MW_PublishApplicationDocumentCategory1', 'TriggerLogger', new Map<String, Object>{
-                    'context.isBatch' => System.isBatch(),
-                    'context.isQueueable' => System.isQueueable(),
-                    'context.isFuture' => System.isFuture(),
-                    'context.isScheduled' => System.isScheduled(),
-                    'context.leadIds' => leadIdStr,
-                    'context.categories' => categories,
-                    'context.triggerOperationType' => Trigger.operationType,
-                    'context.quiddity' => Request.getCurrent().getQuiddity().name(),
-                    'context.requestId' => Request.getCurrent().getRequestId(),
-                    'message' => message
-            });
-
-            System.debug('MW_PublishApplicationDocumentCategory1: ' + message);
+          handle.log();
 
           if (trigger.isUpdate) handle.afterUpdate();
           if (trigger.isInsert) handle.afterInsert();

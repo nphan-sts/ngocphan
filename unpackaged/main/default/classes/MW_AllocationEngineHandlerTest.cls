@@ -21,6 +21,8 @@ private class MW_AllocationEngineHandlerTest {
 
     private static final String DOCUSIGN_URL_PART = 'envelopes/';
 
+    private static final String TIL_DOCUMENT = 'TIL Document';
+
     public class AESCalloutExceptionMock implements HttpCalloutMock {
 
         public HttpResponse respond(HttpRequest httpRequest) {
@@ -363,12 +365,12 @@ private class MW_AllocationEngineHandlerTest {
 
         /* insert til cateegory and attachment for allocated app */
         genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
-        adc.Name = 'TIL Document';
+        adc.Name = TIL_DOCUMENT;
         adc.genesis__Application__c = app1.Id;
         insert adc;
 
         Attachment att = new Attachment();
-        att.Name = 'TIL Document' + app1.Id;
+        att.Name = TIL_DOCUMENT + app1.Id;
         att.Body = Blob.valueOf('Unit Test Attachment Body');
         att.ParentId = app1.Id;
         insert att;
@@ -965,7 +967,7 @@ private class MW_AllocationEngineHandlerTest {
 
         insert new List<genesis__Document_Category__c>{ docType, docCat };
 
-        genesis__Application_Document_Category__c appDocCat = TestDataFactory.createTestApplicationDocumentCategory('TIL Document',
+        genesis__Application_Document_Category__c appDocCat = TestDataFactory.createTestApplicationDocumentCategory(TIL_DOCUMENT,
                 app.Id, docCat.Id, BOX_URL, 'CLEARED');
         insert appDocCat;
 
