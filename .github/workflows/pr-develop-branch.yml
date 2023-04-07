@@ -98,11 +98,13 @@ jobs:
                   echo "$HOME/sfdx/bin" >> $GITHUB_PATH
                   ~/sfdx/bin/sfdx version
 
-            # Install yq
-            - name: 'Install yq'
-              run: |
-                  wget https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64.tar.gz -O - |\
-                  tar xz && mv yq_linux_amd64 /usr/bin/yq
+            # # Install yq
+            # - name: 'Install yq'
+            #   run: |
+            #       wget https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64.tar.gz -O - |\
+            #       mkdir ~/yq
+            #       tar xz -C ~/yq --strip-components 1
+            #       echo "$HOME/bin/yq" >> $GITHUB_PATH
 
             # Then we install the SFDX-Git-Delta plugin - https://github.com/scolladon/sfdx-git-delta
             # This is an awesome plugin that allows us to extract a package.xml with the metadata
@@ -119,7 +121,8 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt install default-jdk
-
+                
+                
             # Install SFDX scanner
             # - name: 'Installing SFDX scanner'
             #   run: sfdx plugins:install @salesforce/sfdx-scanner
@@ -154,26 +157,24 @@ jobs:
                   mkdir changed-sources
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/ 
 
+            # - name: SonarCloud Scan
+            #   uses: sonarsource/sonarcloud-github-action@master
+            #   env:
+            #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
             # If the env variable equals all, we run all tests
             - name: 'Check-only deploy delta changes - run all tests'
               if: ${{ env.APEX_TESTS == 'all' }}
               run: |
                   sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunLocalTests  --json
 
-            - name: 'Check-only deploy delta changes - run specified tests'
-              run: |
-                  export APEX_CLASSES=$(xq . < changed-sources/force-app | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | unique | join(",")' -r)
-                  echo $APEX_CLASSES
-
-              if: ${{ env.APEX_TESTS != 'all' } && { env.APEX_TESTS != '' }}
+            - name: 'Check-only deploy delta changes - run specified tests - User specified'
+              if: ${{ env.APEX_TESTS != 'all' }}
               run: |
                   echo ${{env.APEX_TESTS}}
-                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
-              if: ${{ env.APEX_TESTS == '' } && { APEX_CLASSES != '' }}
-              run: | 
-                  echo $APEX_CLASSES
                   echo "--- Delta Check-Only Deploy ---"
-                  sfdx force:source:deploy -x changed-sources/force-app --checkonly --testlevel RunSpecifiedTests --runtests "$APEX_CLASSES" 
+                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
                   
             - name: 'Deploy destructive changes (if any)'
               run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
