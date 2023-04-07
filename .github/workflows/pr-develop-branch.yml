@@ -161,8 +161,10 @@ jobs:
                   sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunLocalTests  --json
 
             - name: 'Check-only deploy delta changes - run specified tests'
-              export APEX_CLASSES=$(xq . < changed-sources/force-app | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | unique | join(",")' -r)
-              echo $APEX_CLASSES
+              run: |
+                  export APEX_CLASSES=$(xq . < changed-sources/force-app | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | unique | join(",")' -r)
+                  echo $APEX_CLASSES
+
               if: ${{ env.APEX_TESTS != 'all' } && { env.APEX_TESTS != '' }}
               run: |
                   echo ${{env.APEX_TESTS}}
