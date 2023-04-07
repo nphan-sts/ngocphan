@@ -121,7 +121,10 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt install default-jdk
-                python -m pip install --upgrade pip
+                
+            
+            - name: 'Installing xq yq jq'
+              run: |
                 pip install xq
                 pip install yq
                 pip install jq
@@ -168,7 +171,7 @@ jobs:
 
             - name: 'Get apex test classes in changed-sources'
               run: |
-                  export APEX_CLASSES = $(xq . < package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | unique | join(",")' -r)
+                  export APEX_CLASSES=$(xq . < package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | unique | join(",")' -r)                  
                   echo $APEX_CLASSES
                   echo $APEX_CLASSES >> $GITHUB_ENV
 
@@ -184,7 +187,7 @@ jobs:
               run: | 
                   echo ${{env.APEX_CLASSES}}
                   echo "--- Delta Check-Only Deploy ---"
-                  sfdx force:source:deploy -p changed-sources/force-app --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
+                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
                   
             - name: 'Deploy destructive changes (if any)'
               run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
