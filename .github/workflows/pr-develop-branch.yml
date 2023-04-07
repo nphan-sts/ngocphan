@@ -160,20 +160,25 @@ jobs:
               run: |
                   sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunLocalTests  --json
 
-            - name: 'Check-only deploy delta changes - run specified tests'
+            - name: 'Get apex test classes in changed-sources'
               run: |
                   export APEX_CLASSES=$(xq . < changed-sources/force-app | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | unique | join(",")' -r)
                   echo $APEX_CLASSES
+                  echo $APEX_CLASSES >> $GITHUB_ENV
 
+            - name: 'Check-only deploy delta changes - run specified tests'
               if: ${{ env.APEX_TESTS != 'all' }} && ${{ env.APEX_TESTS != '' }}
               run: |
                   echo ${{env.APEX_TESTS}}
-                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
-              if: ${{ env.APEX_TESTS == '' } && { APEX_CLASSES != '' }}
-              run: | 
-                  echo $APEX_CLASSES
+                  echo "--- User specified ---"
                   echo "--- Delta Check-Only Deploy ---"
-                  sfdx force:source:deploy -x changed-sources/force-app --checkonly --testlevel RunSpecifiedTests --runtests "$APEX_CLASSES" 
+                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+              if: ${{ env.APEX_TESTS == '' } && { env.APEX_CLASSES != '' }}
+              run: | 
+                  echo ${{env.APEX_CLASSES}}
+                  echo "--- Changed source specified ---"
+                  echo "--- Delta Check-Only Deploy ---"
+                  sfdx force:source:deploy -x changed-sources/force-app --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
                   
             - name: 'Deploy destructive changes (if any)'
               run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
