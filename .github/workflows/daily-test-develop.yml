@@ -6,7 +6,7 @@ on:
     schedule:
       # At the end of every day
       - cron: "0 0 * * *"
-
+            
 # Jobs to be executed
 jobs:
     run-test-int-org:
@@ -43,5 +43,5 @@ jobs:
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a integration
 
-            - name: 'Deploy the entire branch to Integration org'
+            # - name: 'Deploy the entire branch to Integration org'
               # run: sfdx force:apex:test:run --testlevel RunLocalTests --json
