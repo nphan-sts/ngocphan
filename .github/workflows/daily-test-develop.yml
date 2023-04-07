@@ -59,4 +59,4 @@ jobs:
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a integration
 
             - name: 'Test All local Integration org'
-              run: sfdx force:apex:test:run --test-level RunLocalTests --json
+              run: sfdx force:apex:test:run --testlevel RunLocalTests --json
