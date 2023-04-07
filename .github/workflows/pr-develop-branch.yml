@@ -121,6 +121,8 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt install default-jdk
+                sudo apt install xq
+                sudo apt install yq
 
             # Install SFDX scanner
             # - name: 'Installing SFDX scanner'
@@ -180,7 +182,7 @@ jobs:
               run: | 
                   echo ${{env.APEX_CLASSES}}
                   echo "--- Delta Check-Only Deploy ---"
-                  sfdx force:source:deploy -x changed-sources/force-app --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
+                  sfdx force:source:deploy -p changed-sources/force-app --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
                   
             - name: 'Deploy destructive changes (if any)'
               run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
