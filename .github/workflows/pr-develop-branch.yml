@@ -121,9 +121,6 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt install default-jdk
-                sudo apt install xq
-                sudo apt install yq
-                sudo apt install jq
 
             # Install SFDX scanner
             # - name: 'Installing SFDX scanner'
