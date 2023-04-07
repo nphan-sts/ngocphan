@@ -272,6 +272,8 @@ private class MW_AllocationEngineHandlerTest {
         mwSettings.LEADS_FE_EndpointURL__c = FE_ENDPOINT;
         insert mwSettings;
 
+        insert MW_GlobalTestUtility.getCLDocumentRecord();
+
         /* in theory not required, but leave triggers executing to observe for errors */
         /*
         genesis__Org_Parameters__c genorg = genesis__Org_Parameters__c.getOrgDefaults();
@@ -281,11 +283,21 @@ private class MW_AllocationEngineHandlerTest {
 
         Account investor1 = MW_GlobalTestUtility.GetAccount('Investor');
         investor1.loan__Collect_Service_Fees_on__c = 'No Fees';
+        investor1.Amount_Invested__c = 100000;
+        investor1.Number_Of_Applications_Invested__c = 3;
         investor1.Investor_Code__c = 'FCU';
 
         Account investor2 = MW_GlobalTestUtility.GetAccount('Investor');
         investor2.loan__Collect_Service_Fees_on__c = 'No Fees';
+        investor2.Amount_Invested__c = 100000;
+        investor2.Number_Of_Applications_Invested__c = 3;
         investor2.Investor_Code__c = 'GCSU';
+
+        Account investor3 = MW_GlobalTestUtility.GetAccount('Investor');
+        investor3.loan__Collect_Service_Fees_on__c = 'No Fees';
+        investor3.Amount_Invested__c = 100000;
+        investor3.Number_Of_Applications_Invested__c = 3;
+        investor3.Investor_Code__c = 'USAFCU';
 
         Account member1 = MW_GlobalTestUtility.GetAccount('Member');
         member1.State__c = 'CA';
@@ -297,7 +309,7 @@ private class MW_AllocationEngineHandlerTest {
         member2.loan__Collect_Service_Fees_on__c = 'No Fees';
         member2.ZIP_Code__c = '92782';
 
-        insert new List<Account> {investor1, investor2, member1, member2};
+        insert new List<Account> {investor1, investor2, investor3, member1, member2};
 
         /* Used for most tests, but typical app wont have all this data */
         genesis__Applications__c app1 = MW_GlobalTestUtility.GetApplication();
@@ -324,6 +336,7 @@ private class MW_AllocationEngineHandlerTest {
         app1.Allocation_Timestamp__c = Datetime.now();
         app1.Expected_Yield__c = 321.11;
         app1.Expected_Chargeoff__c = 432.0;
+        app1.Invested_Amount__c = app1.genesis__Loan_Amount__c;
         app1.Program_id__c = 'program_id1';
 
         /* fresh advp apps will look more like this */
@@ -342,10 +355,23 @@ private class MW_AllocationEngineHandlerTest {
         app2.Credit_Policy_Approval_Models__c = null;
         app2.genesis__Loan_Amount__c = 15000.00;
         app2.Origination_fee__c = 10.00;
+        app2.Invested_Amount__c = app2.genesis__Loan_Amount__c;
         app2.Program_id__c = 'program_id2';
 
         /* order of insertion matters for getApps call */
         insert new List<genesis__Applications__c> {app1, app2};
+
+        /* insert til cateegory and attachment for allocated app */
+        genesis__Application_Document_Category__c adc = new genesis__Application_Document_Category__c();
+        adc.Name = 'TIL Document';
+        adc.genesis__Application__c = app1.Id;
+        insert adc;
+
+        Attachment att = new Attachment();
+        att.Name = 'TIL Document' + app1.Id;
+        att.Body = Blob.valueOf('Unit Test Attachment Body');
+        att.ParentId = app1.Id;
+        insert att;
 
         /* insert allocation partners only for the first app for scenarios */
         Allocation_Partner__c  ap1 = new Allocation_Partner__c();
@@ -614,6 +640,11 @@ private class MW_AllocationEngineHandlerTest {
      */
     @IsTest static void advp_handlesValidationFailure() {
 
+        /*
+        used to validate null status as well, but no longer since setup added til docs which triggers
+        W_ApplicationService.UpdateApplicationFlags to send back to advp.
+         */
+
         genesis__Applications__c app = getApp();
         app.genesis__Status__c = null;
         app.genesis__APR__c = null;
@@ -647,13 +678,17 @@ private class MW_AllocationEngineHandlerTest {
 
         System.assertEquals(1, logs.size());
         clcommon__Batch_Process_Log__c log = logs.get(0);
+        System.debug('clcommon__Batch_Process_Log__c: ' + log);
 
         System.assertEquals('INFO', log.clcommon__Log_Level__c);
         System.assertEquals('Info', log.clcommon__Type__c);
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
         System.assert(log.clcommon__Message__c.contains('Can not execute operation: advp for Lead Id: abc123'));
+        /*
+        invalid assertion now, see above
         System.assert(log.clcommon__Message__c.contains('Field: genesis__Status__c cannot be null'));
+         */
         System.assert(log.clcommon__Message__c.contains('Field: genesis__APR__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: genesis__Interest_Rate__c cannot be null'));
         System.assert(log.clcommon__Message__c.contains('Field: genesis__Term__c cannot be null'));
@@ -900,13 +935,6 @@ private class MW_AllocationEngineHandlerTest {
      */
     @IsTest static void agentverified_canHandleAESResponse() {
 
-        /* required for TIL gen after loan docs sent */
-        CL_Document__c docs = new CL_Document__c();
-        docs.Doc1__c = 'Credit Score Notice';
-        docs.Doc2__c = 'TIL Document';
-        docs.Doc3__c = 'Adverse Action Notice';
-        insert docs;
-
         MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
         settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
         settings.Allocation_Engine_At_Agent_Verified__c = true;
@@ -952,6 +980,14 @@ private class MW_AllocationEngineHandlerTest {
 
         app.genesis__Status__c = PayoffConstants.AGENT_VERIFIED;
         update app;
+
+        /* history insert by managed packaged which appears to be disabled in test, so insert manually */
+        genesis__Application_Status_History__c history = new genesis__Application_Status_History__c();
+        history.genesis__Application__c = app.Id;
+        history.genesis__New_Value__c = PayoffConstants.AGENT_VERIFIED;
+        history.genesis__Old_value__c = PayoffConstants.AGENT_DOCUMENT_VERIFICATION_PENDING;
+        history.IsADCDeleted__c = false;
+        insert history;
 
         mockAESAllocationBehavior(app);
 
@@ -1231,6 +1267,31 @@ private class MW_AllocationEngineHandlerTest {
         Test.startTest();
 
         mockAESAllocationBehavior(app);
+
+        Test.stopTest();
+
+        System.assertEquals(0, aesSuccessMock.requestCount);
+    }
+
+    /**
+     * Assert CustomTriggerOnApplication does not fire recursively after AES sets value
+     * Manual version will look identical, so no need to create a duplicate test.
+     */
+    @IsTest static void reallocation_afterAgentVerifiedEnabled_canHandleAESResponse() {
+
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        settings.Allocation_Engine_Deployment_Mode__c = 'FULL_MODE';
+        settings.Allocation_Engine_At_Agent_Verified__c = true;
+        update settings;
+
+        genesis__Applications__c app = getApp();
+
+        AESSuccessMock aesSuccessMock = new AESSuccessMock();
+        Test.setMock(HttpCalloutMock.class, aesSuccessMock);
+        Test.startTest();
+
+        /* reallocate to an investor that is different that the setup assigned one */
+        mockAESAllocationBehavior(app, getInvestor('USAFCU'));
 
         Test.stopTest();
 
@@ -1594,8 +1655,13 @@ private class MW_AllocationEngineHandlerTest {
 
     @IsTest static void cancelled_handlesValidationFailures() {
 
+        /*
+        switched from status null to loan amount null.
+        status no longer works since documents are valid
+        (required docs 0 which bumps status back to advp)
+        */
         genesis__Applications__c app = getApp();
-        app.genesis__Status__c = null;
+        app.genesis__Loan_Amount__c = null;
         update app;
 
         /* should not produce an error, just return */
@@ -1617,7 +1683,7 @@ private class MW_AllocationEngineHandlerTest {
         System.assertEquals(actual.Id, log.clcommon__Batch_Id__c);
 
         System.assert(log.clcommon__Message__c.contains('Can not execute operation: cancel for Lead Id: abc123'));
-        System.assert(log.clcommon__Message__c.contains('Field: genesis__Status__c cannot be null'));
+        System.assert(log.clcommon__Message__c.contains('Field: genesis__Loan_Amount__c cannot be null'));
     }
 
     @IsTest static void cancelled_handlesCalloutExceptionErrors() {
@@ -1986,10 +2052,9 @@ private class MW_AllocationEngineHandlerTest {
     /**
      * This is what the AES microservice will do on success response at ADVP, REALLOCATION and MANUAL
      * @param app Update the app as per an allocation from the java microservice
+     * @param investor The investor to allocate to
      */
-    static void mockAESAllocationBehavior(genesis__Applications__c app) {
-        /* AES will select investors that will apply */
-        Account investor = getInvestor();
+    static void mockAESAllocationBehavior(genesis__Applications__c app, Account investor) {
 
         /* AES will clear any existing allocation partners */
         delete [
@@ -2005,11 +2070,14 @@ private class MW_AllocationEngineHandlerTest {
         ap.Lead_Partner__c = true;
         insert ap;
 
+        Datetime aesTimestamp = Datetime.now();
+
         /* AES will update the related allocation engine fields */
         app.Expected_Chargeoff__c = 111;
         app.Expected_Yield__c = 112;
         app.Allocation_ID__c = new Uuid().getValue();
-        app.Allocation_Timestamp__c = Datetime.now();
+        app.Allocation_Timestamp__c = aesTimestamp;
+        app.Last_Investor_Assigned_On__c = aesTimestamp;
         app.Allocation_Engine_Version__c = '1.0';
         app.Allocation_Detail__c = '';
         app.Allocation_Operation_Error__c = '';
@@ -2019,14 +2087,22 @@ private class MW_AllocationEngineHandlerTest {
         update app;
     }
 
-    private static Account getInvestor() {
+    static void mockAESAllocationBehavior(genesis__Applications__c app) {
+        mockAESAllocationBehavior(app, getInvestor());
+    }
+
+    private static Account getInvestor(String investorCode) {
         Account investor = [
                 SELECT Id
                 FROM Account
-                WHERE Investor_Code__c = 'FCU'
+                WHERE Investor_Code__c = :investorCode
                 LIMIT 1
         ];
         return investor;
+    }
+
+    private static Account getInvestor() {
+        return getInvestor('FCU');
     }
 
     static List<Allocation_Partner__c> getAllocationPartners() {
