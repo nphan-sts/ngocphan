@@ -102,7 +102,9 @@ jobs:
             - name: 'Install yq'
               run: |
                   wget https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64.tar.gz -O - |\
-                  tar xz && mv yq_linux_amd64 /usr/bin/yq
+                  mkdir ~/yq
+                  tar xz -C ~/yq --strip-components 1
+                  echo "$HOME/bin/yq" >> $GITHUB_PATH
 
             # Then we install the SFDX-Git-Delta plugin - https://github.com/scolladon/sfdx-git-delta
             # This is an awesome plugin that allows us to extract a package.xml with the metadata
