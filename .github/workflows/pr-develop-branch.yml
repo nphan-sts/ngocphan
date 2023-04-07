@@ -162,14 +162,8 @@ jobs:
               run: |
                   sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunLocalTests  --json
 
-            - name: 'Get apex test classes in changed-sources'
-              run: |
-                  export APEX_CLASSES=$(xq . < changed-sources/package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | map(select(. | index("TEST"))) | unique | join(",")' -r)                  
-                  echo $APEX_CLASSES
-                  echo $APEX_CLASSES >> $GITHUB_ENV
-
             - name: 'Check-only deploy delta changes - run specified tests - User specified'
-              if: ${{ env.APEX_TESTS != 'all' }} && ${{ env.APEX_TESTS != '' }}
+              if: ${{ env.APEX_TESTS != 'all' }}
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
