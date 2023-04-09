@@ -181,4 +181,4 @@ jobs:
                   
             - name: 'Deploy destructive changes (if any)'
               run: |
-                  grep -q '<types>' destructiveChanges/destructiveChanges.xml && sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+                  grep -q '<types>' changed-sources/destructiveChanges && sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
