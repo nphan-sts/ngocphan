@@ -190,7 +190,7 @@ jobs:
 
             # Run tests specified by dev
             - name: 'Check-only deploy delta changes - run specified tests - User specified'
-              if: ${{ env.APEX_TESTS != 'all' && env.APEX_TESTS != '' &&  !env.APEX_TESTS }}
+              if: ${{ env.APEX_TESTS != 'all' && env.APEX_TESTS != '' &&  !!env.APEX_TESTS }}
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
