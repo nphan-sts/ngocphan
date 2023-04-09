@@ -206,6 +206,6 @@ jobs:
 
                   
             - name: 'Deploy destructive changes (if any)'
-              if:  ${{-d "changed-sources/destructiveChanges"}}
+              if:  [-d "changed-sources/destructiveChanges"]
               run: |
                   sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
