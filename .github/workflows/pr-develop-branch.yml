@@ -178,9 +178,9 @@ jobs:
 
             # If no test specified
             - name: 'Check-only deploy delta changes - no tests'
-              if: env.APEX_TESTS == '' && {-d "changed-sources/force-app"}
+              if: env.APEX_TESTS == ''
               run: |
-                  force:source:deploy -p "changed-sources/force-app" --checkonly  --json
+                [-d "changed-sources/force-app"] && force:source:deploy -p "changed-sources/force-app" --checkonly  --json
 
             # If the env variable equals all, we run all tests
             - name: 'Check-only deploy delta changes - run all tests'
