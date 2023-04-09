@@ -168,7 +168,7 @@ jobs:
             - name: 'Check-only deploy delta changes - run all tests'
               if: ${{ env.APEX_TESTS == 'all' }}
               run: |
-                  grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly  --json
+                  grep -q '<types>' changed-sources/force-app && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly  --json
 
             #sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
             - name: 'Check-only deploy delta changes - run specified tests - User specified'
@@ -176,7 +176,7 @@ jobs:
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly --json
+                  grep -q '<types>' changed-sources/force-app && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly --json
 
                   
             - name: 'Deploy destructive changes (if any)'
