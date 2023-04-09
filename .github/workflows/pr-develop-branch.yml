@@ -178,19 +178,19 @@ jobs:
 
             # If no test specified
             - name: 'Check-only deploy delta changes - no tests'
-              if: env.APEX_TESTS == '' && -d "changed-sources/force-app"
+              if: env.APEX_TESTS == '' && {-d "changed-sources/force-app"}
               run: |
                   force:source:deploy -p "changed-sources/force-app" --checkonly  --json
 
             # If the env variable equals all, we run all tests
             - name: 'Check-only deploy delta changes - run all tests'
-              if: env.APEX_TESTS == 'all' && -d "changed-sources/force-app" 
+              if: env.APEX_TESTS == 'all' && {-d "changed-sources/force-app"}
               run: |
                   force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  --json
 
             # Run tests specified by dev
             - name: 'Check-only deploy delta changes - run specified tests - User specified'
-              if: env.APEX_TESTS != 'all' && env.APEX_TESTS != '' && [-n "$env.APEX_TESTS"] && -d "changed-sources/force-app"
+              if: env.APEX_TESTS != 'all' && env.APEX_TESTS != '' && [-n "$env.APEX_TESTS"] && {-d "changed-sources/force-app"}
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
@@ -206,6 +206,6 @@ jobs:
 
                   
             - name: 'Deploy destructive changes (if any)'
-              if:  -d "changed-sources/destructiveChanges"
+              if:  {-d "changed-sources/destructiveChanges"}
               run: |
                   sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
