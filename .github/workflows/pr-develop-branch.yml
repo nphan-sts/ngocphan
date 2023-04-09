@@ -164,17 +164,21 @@ jobs:
             #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
             # If the env variable equals all, we run all tests
+            #sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly --testlevel RunLocalTests  --json
             - name: 'Check-only deploy delta changes - run all tests'
               if: ${{ env.APEX_TESTS == 'all' }}
               run: |
-                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunLocalTests  --json
+                  grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly  --json
 
+            #sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
             - name: 'Check-only deploy delta changes - run specified tests - User specified'
               if: ${{ env.APEX_TESTS != 'all' }}
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+                  grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly --json
+
                   
             - name: 'Deploy destructive changes (if any)'
-              run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+              run: |
+                  grep -q '<types>' destructiveChanges/destructiveChanges.xml && sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
