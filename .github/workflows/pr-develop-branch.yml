@@ -216,6 +216,7 @@ jobs:
                   if test -f "./changed-sources/force-app"; then
                     #file exists
                     grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --json
                   fi
                   
             - name: 'Deploy destructive changes (if any)'
