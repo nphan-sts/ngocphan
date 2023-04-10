@@ -182,15 +182,18 @@ jobs:
               if: env.APEX_TESTS == '' && env.APEX_CLASSES == ''
               run: |
                   if test -f "./changed-sources/force-app"; then
-                      #file exists
-                      grep -q '<types>' changed-sources/force-app/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  --json
+                    #file exists
+                    grep -q '<types>' changed-sources/force-app/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  --json
                   fi
 
             # If the env variable equals all, we run all tests
             - name: 'Check-only deploy delta changes - run all tests'
               if: env.APEX_TESTS == 'all'
               run: |
-                  grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  --json
+                  if test -f "./changed-sources/force-app"; then
+                    #file exists
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  --json
+                  fi
 
             # Run tests specified by dev
             - name: 'Check-only deploy delta changes - run specified tests - User specified'
@@ -198,7 +201,10 @@ jobs:
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+                  if test -f "./changed-sources/force-app"; then
+                    #file exists
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+                  fi
 
             # Run tests generated in change-sources/package/package.xml
             - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
@@ -206,8 +212,14 @@ jobs:
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
+                  if test -f "./changed-sources/force-app"; then
+                    #file exists
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
+                  fi
                   
             - name: 'Deploy destructive changes (if any)'
               run: |
-                  grep -q '<types>' changed-sources/destructiveChanges/package.xml && sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+                  if test -f "./changed-sources/force-app"; then
+                    #file exists
+                    grep -q '<types>' changed-sources/destructiveChanges/package.xml && sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+                  fi
