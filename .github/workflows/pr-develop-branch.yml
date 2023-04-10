@@ -179,7 +179,7 @@ jobs:
 
             # If no test specified
             - name: 'Check-only deploy delta changes - no tests'
-              if: env.APEX_TESTS == '' && (git status -s | grep -x "changed-sources/force-app")
+              if: env.APEX_TESTS == '' && (test -f "changed-sources/force-app")
               run: |
                 force:source:deploy -p "changed-sources/force-app" --checkonly  --json
 
