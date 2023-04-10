@@ -54,7 +54,7 @@ jobs:
 
             - name: 'Deploy the entire branch to Integration org'
               run: |
-                  if test -f "./changed-sources/force-app"; then
+                  if [ -d "./changed-sources/force-app" ]; then
                     #file exists
                     grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"
                   fi
@@ -62,7 +62,7 @@ jobs:
 
             - name: 'Deploy destructive changes (if any) to Integration org'
               run: |
-                  if test -f "./changed-sources/destructiveChanges"; then
+                  if [ -d "./changed-sources/destructiveChanges" ]; then
                     #file exists
                     grep -q '<types>' changed-sources/destructiveChanges/package.xml && sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --ignorewarnings 
                   fi
