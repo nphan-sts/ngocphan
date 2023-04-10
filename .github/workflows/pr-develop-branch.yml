@@ -165,7 +165,7 @@ jobs:
 
             - name: 'extract test classes in changed-sources/package/package.xml' 
               run: |
-                  APEX_CLASSES=$(xq . < changed-sources/package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | map(select(. | index("Test"))) | unique | join(",")' -r)
+                  APEX_CLASSES=$(xq . < changed-sources/package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | map(select(. | index("Test") | not)) | map(. + "Test") | unique | join(",")' -r)
                   echo "$APEX_CLASSES" >> $GITHUB_ENV
 
 
