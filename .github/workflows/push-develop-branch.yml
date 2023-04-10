@@ -64,7 +64,7 @@ jobs:
               run: |
                   if [ -d "./changed-sources/destructiveChanges" ]; then
                     #file exists
-                    grep -q '<types>' changed-sources/destructiveChanges/package.xml && sfdx force:mdapi:deploy -d destructiveChanges --ignorewarnings 
+                    grep -q '<types>' changed-sources/destructiveChanges/destructiveChanges.xml && sfdx force:mdapi:deploy -d destructiveChanges --ignorewarnings 
                   fi
                 #sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
               
