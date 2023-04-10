@@ -121,6 +121,12 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt install default-jdk
+            
+            # Install jq,yq as it is required for the next step
+            - name: 'Install jq,yq'
+              run: |
+                pip install yq
+                sudo apt-get install jq
                 
                 
             # Install SFDX scanner
@@ -155,7 +161,15 @@ jobs:
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
                   mkdir changed-sources
-                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/ 
+                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
+
+            - name: 'extract test classes in changed-sources/package/package.xml' 
+              run: |
+                  APEX_CLASSES=$(xq . < changed-sources/package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | map(select(. | index("Test") | not)) | map(. + "Test") | unique | join(",")' -r)
+                  echo $APEX_CLASSES 
+                  echo "APEX_CLASSES=$APEX_CLASSES" >> $GITHUB_ENV
+
+
 
             # - name: SonarCloud Scan
             #   uses: sonarsource/sonarcloud-github-action@master
@@ -163,23 +177,34 @@ jobs:
             #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-            # If the env variable equals all, we run all tests
-            #sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly --testlevel RunLocalTests  --json
-            - name: 'Check-only deploy delta changes - run all tests'
-              if: ${{ env.APEX_TESTS == 'all' }} && {-d "changed-sources/force-app"}
+            # If no test specified
+            - name: 'Check-only deploy delta changes - no tests'
+              if: env.APEX_TESTS == '' && env.APEX_CLASSES == ''
               run: |
-                  force:source:deploy -p "changed-sources/force-app"  --checkonly  --json
+                sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  --json
 
-            #sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+            # If the env variable equals all, we run all tests
+            - name: 'Check-only deploy delta changes - run all tests'
+              if: env.APEX_TESTS == 'all'
+              run: |
+                  sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  --json
+
+            # Run tests specified by dev
             - name: 'Check-only deploy delta changes - run specified tests - User specified'
-              if: ${{ env.APEX_TESTS != 'all' }} && {-d "changed-sources/force-app"}
+              if: env.APEX_TESTS != 'all' && env.APEX_TESTS != ''
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  force:source:deploy -p "changed-sources/force-app"  --checkonly --json
+                  sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
 
+            # Run tests generated in change-sources/package/package.xml
+            - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
+              if: env.APEX_TESTS != 'all' && env.APEX_TESTS == '' && env.APEX_CLASSES != ''
+              run: |
+                  echo ${{env.APEX_TESTS}}
+                  echo "--- Delta Check-Only Deploy ---"
+                  sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
                   
             - name: 'Deploy destructive changes (if any)'
-              if:  {-d "changed-sources/destructiveChanges"}
               run: |
-                  sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+                sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
