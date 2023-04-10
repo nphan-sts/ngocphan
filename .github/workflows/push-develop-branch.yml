@@ -56,7 +56,7 @@ jobs:
               run: |
                   if test -f "./changed-sources/force-app"; then
                     #file exists
-                    grep -q '<types>' changed-sources/force-app/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"
                   fi
                 #sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
 
