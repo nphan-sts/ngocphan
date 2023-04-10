@@ -210,7 +210,9 @@ public class CustomTriggerOnApplicationHandler{
 
         }
 
-        executeAdcChanges(toIds(adcToBeDeleted), toIds(adcToBeUpdated));
+        if(!adcToBeDeleted.isEmpty() || !adcToBeUpdated.isEmpty()){
+            executeAdcChanges(toIds(adcToBeDeleted), toIds(adcToBeUpdated));
+        }
 
         if(investorsToBeUpdate != null && investorsToBeUpdate.size() > 0){
             update investorsToBeUpdate;
