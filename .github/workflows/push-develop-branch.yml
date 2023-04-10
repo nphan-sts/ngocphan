@@ -4,7 +4,7 @@ name: Deploy integration branch to integration and staging/uat orgs
 # Definition when the workflow should run
 on:
     push:
-      branches: [ integration ]
+      branches: [ develop ]
       paths:
         - 'force-app/**'
             
@@ -53,17 +53,28 @@ jobs:
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a integration
 
             - name: 'Deploy the entire branch to Integration org'
-              run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
+              run: |
+                  if test -f "./changed-sources/force-app"; then
+                    #file exists
+                    grep -q '<types>' changed-sources/force-app/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"
+                  fi
+                #sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
 
             - name: 'Deploy destructive changes (if any) to Integration org'
-              run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+              run: |
+                  if test -f "./changed-sources/destructiveChanges"; then
+                    #file exists
+                    grep -q '<types>' changed-sources/destructiveChanges/package.xml && sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --ignorewarnings 
+                  fi
+                #sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+              
 
             # Authenticate to org
-            - name: 'Authenticate to Staging Org to Staging org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_STAGING_URL.txt -s -a staging
+            #- name: 'Authenticate to Staging Org to Staging org'
+            #  run: sfdx auth:sfdxurl:store -f ./SFDX_STAGING_URL.txt -s -a staging
 
-            - name: 'Deploy the entire branch'
-              run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
+            #- name: 'Deploy the entire branch'
+            #  run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
 
-            - name: 'Deploy destructive changes (if any) to Staging org'
-              run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
+            #- name: 'Deploy destructive changes (if any) to Staging org'
+            #  run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
