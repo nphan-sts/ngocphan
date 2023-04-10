@@ -214,10 +214,12 @@ jobs:
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
                   if test -f "./changed-sources/force-app"; then
-                    #file exists
                     grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
                     sfdx force:source:deploy -p "changed-sources/force-app"  --json
+                    #file exists
                   fi
+                  sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
+                  sfdx force:source:deploy -p "changed-sources/force-app"  --json
                   
             - name: 'Deploy destructive changes (if any)'
               run: |
