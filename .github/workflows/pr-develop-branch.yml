@@ -181,7 +181,7 @@ jobs:
             - name: 'Check-only deploy delta changes - no tests'
               if: env.APEX_TESTS == '' && env.APEX_CLASSES == ''
               run: |
-                  [-d "./changed-sources/force-app"] && grep -q '<types>' changed-sources/force-app/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  --json
+                  [ -d "./changed-sources/force-app" ] && grep -q '<types>' changed-sources/force-app/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  --json
 
             # If the env variable equals all, we run all tests
             - name: 'Check-only deploy delta changes - run all tests'
