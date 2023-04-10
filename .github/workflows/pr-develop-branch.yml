@@ -191,7 +191,7 @@ jobs:
 
             # Run tests specified by dev
             - name: 'Check-only deploy delta changes - run specified tests - User specified'
-              if: ${{ env.APEX_TESTS != 'all' && env.APEX_TESTS != '' &&  !!env.APEX_TESTS && (git status -s | grep -x "changed-sources/force-app")}}
+              if: env.APEX_TESTS != 'all' && env.APEX_TESTS != '' &&  !!env.APEX_TESTS && (git status -s | grep -x "changed-sources/force-app")
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
