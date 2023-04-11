@@ -97,6 +97,7 @@ jobs:
                     TEST_ID=$(cat testresults/test-run-id.txt)
                     echo "--- TEST_ID ---"
                     echo $TEST_ID
+                    echo "TEST_ID=$TEST_ID" >> $GITHUB_ENV
                     echo "--- PAY_LOAD ---"
                     PAY_LOAD=$(xq . < testresults/test-result-$TEST_ID.json | jq .summary )
                     echo $PAY_LOAD 
@@ -108,7 +109,7 @@ jobs:
               id: slack
               uses: slackapi/slack-github-action@v1.23.0
               with:
-                payload-file-path: "testresults/test-result-${TEST_ID}.json"
+                payload-file-path: "testresults/test-result-${env.TEST_ID}.json"
               env:
                 SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
