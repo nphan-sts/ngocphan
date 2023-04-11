@@ -6,5 +6,8 @@ public with sharing class Class1 {
         String testString1 = 'String demo';
         String testString2 = 'String demo';
         String testString3 = 'String demo';
+        String testString4 = 'String demo';
+        String testString5 = 'String demo';
+        String testString6 = 'String demo';
     }
 }
