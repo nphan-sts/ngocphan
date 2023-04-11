@@ -224,7 +224,7 @@ jobs:
                     echo $TEST_ID
                     echo "TEST_ID=$TEST_ID" >> $GITHUB_ENV
                     echo "--- PAY_LOAD ---"
-                    PAY_LOAD=$(xq . < testresults/test-result-$TEST_ID.json | jq .summary )
+                    PAY_LOAD=$(xq . < testresults/test-result-${{TEST_ID}}.json | jq .summary )
                     echo $PAY_LOAD 
                     echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
                   fi
