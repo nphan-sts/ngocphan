@@ -233,7 +233,7 @@ jobs:
               id: slack
               uses: slackapi/slack-github-action@v1.23.0
               with:
-                payload-file-path: "./testresults/test-result-$TEST_ID.json"
+                payload-file-path: "testresults/test-result-${TEST_ID}.json"
               env:
                 SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
