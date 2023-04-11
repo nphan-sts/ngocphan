@@ -221,6 +221,9 @@ jobs:
 
                     #get report summary
                     TEST_ID=$(cat testresults/test-run-id.txt)
+                    echo "--- TEST_ID ---"
+                    echo $TEST_ID
+                    echo "--- PAY_LOAD ---"
                     PAY_LOAD=$(jq .summary testresults/test-result-$TEST_ID.json)
                     echo $PAY_LOAD 
                     echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
