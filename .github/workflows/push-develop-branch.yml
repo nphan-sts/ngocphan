@@ -4,7 +4,7 @@ name: Deploy integration branch to integration and staging/uat orgs
 # Definition when the workflow should run
 on:
     push:
-      branches: [ develop ]
+      branches: [ qa ]
       paths:
         - 'force-app/**'
             
@@ -30,6 +30,20 @@ jobs:
                   echo y | sfdx plugins:install sfdx-git-delta
                   sfdx plugins 
 
+#JUST FOR DEMO 
+            # Install java as it is required for the next step
+            - name: 'Installing java'
+              run: |
+                sudo apt-get update
+                sudo apt install default-jdk
+
+#JUST FOR DEMO 
+            # Install jq,yq as it is required for the next step
+            - name: 'Install jq,yq'
+              run: |
+                pip install yq
+                sudo apt-get install jq
+
             # Checkout the source code
             - name: 'Checkout source code'
               uses: actions/checkout@v3
@@ -48,6 +62,13 @@ jobs:
                   mkdir changed-sources
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
 
+#JUST FOR DEMO 
+            - name: 'extract test classes in changed-sources/package/package.xml' 
+              run: |
+                  APEX_CLASSES=$(xq . < changed-sources/package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | map(select(. | index("Test") | not)) | map(. + "Test") | unique | join(",")' -r)
+                  echo $APEX_CLASSES 
+                  echo "APEX_CLASSES=$APEX_CLASSES" >> $GITHUB_ENV
+
             # Authenticate to org
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a integration
@@ -59,6 +80,39 @@ jobs:
                     grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"
                   fi
                 #sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
+
+#JUST FOR DEMO 
+            # Run tests generated in change-sources/package/package.xml
+            - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
+              if: env.APEX_TESTS != 'all' && env.APEX_TESTS == '' && env.APEX_CLASSES != ''
+              run: |
+                  echo ${{env.APEX_TESTS}}
+                  echo "--- Delta Check-Only Deploy ---"
+                  if [ -d "./changed-sources/force-app" ]; then
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --json
+                    #file exists
+
+                 #run test report
+                    mkdir testresults
+                    sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --code-coverage -r human
+
+                    #get report summary
+                    TEST_ID=$(cat test-run-id.txt)
+                    PAY_LOAD=$(jq .summary test-result-$TEST_ID.json)
+                    echo $PAY_LOAD 
+                    echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
+                  fi
+#JUST FOR DEMO 
+            - name: Send custom JSON data to Slack workflow
+              id: slack
+              uses: slackapi/slack-github-action@v1.23.0
+              with:
+                # This data can be any valid JSON from a previous step in the GitHub Action
+                payload: |
+                  env.PAY_LOAD
+              env:
+                SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
             - name: 'Deploy destructive changes (if any) to Integration org'
               run: |
