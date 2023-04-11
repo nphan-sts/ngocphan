@@ -109,10 +109,10 @@ jobs:
               id: slack
               uses: slackapi/slack-github-action@v1.23.0
               with:
-                payload-file-path: "testresults/test-result-${{env.TEST_ID}}.json"
+                payload: |
+                  ${{env.PAY_LOAD}}
               env:
                 SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-                SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
             - name: 'Deploy destructive changes (if any) to Integration org'
               run: |
