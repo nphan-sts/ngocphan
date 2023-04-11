@@ -98,8 +98,11 @@ jobs:
                     sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --code-coverage -r human
 
                     #get report summary
-                    TEST_ID=$(cat test-run-id.txt)
-                    PAY_LOAD=$(jq .summary test-result-$TEST_ID.json)
+                    TEST_ID=$(cat testresults/test-run-id.txt)
+                    echo "--- TEST_ID ---"
+                    echo $TEST_ID
+                    echo "--- PAY_LOAD ---"
+                    PAY_LOAD=$(xq . < testresults/test-result-$TEST_ID.json | jq .summary )
                     echo $PAY_LOAD 
                     echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
                   fi
