@@ -232,8 +232,8 @@ jobs:
               with:
                 payload: |
                   {
-                    "test" : "test",
-                    ${{env.PAY_LOAD}}
+                    "key": "value",
+                    "foo": "bar"
                   }
                   
               env:
