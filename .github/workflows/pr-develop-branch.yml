@@ -214,10 +214,30 @@ jobs:
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
                   if [ -d "./changed-sources/force-app" ]; then
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
-                    sfdx force:source:deploy -p "changed-sources/force-app"  --json
-                    #file exists
+
+
+                    mkdir testresults
+                    sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --code-coverage -r human
+
+                    TEST_ID=$(cat testresults/test-run-id.txt)
+                    echo PAY_LOAD = "$(jq .summary testresults/test-result-${TEST_ID}.json)"
+                    echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
+                    echo ${{env.PAY_LOAD}}
                   fi
+
+            #JUST FOR DEMO 
+            # - name: Send custom JSON data to Slack workflow
+            #   id: slack
+            #   uses: slackapi/slack-github-action@v1.23.0
+            #   with:
+            #     payload: |
+            #       {
+            #         "key": "value",
+            #         "foo": "bar"
+            #       }
+                  
+            #   env:
+            #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
                   
             - name: 'Deploy destructive changes (if any)'
               run: |
