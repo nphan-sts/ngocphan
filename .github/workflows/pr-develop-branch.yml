@@ -231,10 +231,10 @@ jobs:
               uses: slackapi/slack-github-action@v1.23.0
               with:
                 payload: |
-                {
-                  "test" : "test",
-                  ${{env.PAY_LOAD}}
-                }
+                  {
+                    "test" : "test",
+                    ${{env.PAY_LOAD}}
+                  }
                   
               env:
                 SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
