@@ -30,14 +30,14 @@ jobs:
                   echo y | sfdx plugins:install sfdx-git-delta
                   sfdx plugins 
 
-#JUST FOR DEMO 
+            #JUST FOR DEMO 
             # Install java as it is required for the next step
             - name: 'Installing java'
               run: |
                 sudo apt-get update
                 sudo apt install default-jdk
 
-#JUST FOR DEMO 
+            #JUST FOR DEMO 
             # Install jq,yq as it is required for the next step
             - name: 'Install jq,yq'
               run: |
@@ -62,7 +62,7 @@ jobs:
                   mkdir changed-sources
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
 
-#JUST FOR DEMO 
+            #JUST FOR DEMO 
             - name: 'extract test classes in changed-sources/package/package.xml' 
               run: |
                   APEX_CLASSES=$(xq . < changed-sources/package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | map(select(. | index("Test") | not)) | map(. + "Test") | unique | join(",")' -r)
@@ -81,7 +81,7 @@ jobs:
                   fi
                 #sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
 
-#JUST FOR DEMO 
+            #JUST FOR DEMO 
             # Run tests generated in change-sources/package/package.xml
             - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
               if: env.APEX_TESTS != 'all' && env.APEX_TESTS == '' && env.APEX_CLASSES != ''
