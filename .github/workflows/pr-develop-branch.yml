@@ -214,16 +214,13 @@ jobs:
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
                   if [ -d "./changed-sources/force-app" ]; then
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
-                    sfdx force:source:deploy -p "changed-sources/force-app"  --json
-                    #file exists
 
 
                     mkdir testresults
                     sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --code-coverage -r human
 
                     #get report summary
-                    TEST_ID=$(cat test-run-id.txt)
+                    TEST_ID=$(cat testresults/test-run-id.txt)
                     PAY_LOAD=$(jq .summary test-result-$TEST_ID.json)
                     echo $PAY_LOAD 
                     echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
