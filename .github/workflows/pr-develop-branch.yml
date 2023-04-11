@@ -220,14 +220,9 @@ jobs:
                     sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --code-coverage -r human
 
                     TEST_ID=$(cat testresults/test-run-id.txt)
-                    echo "--- TEST_ID ---"
-                    echo $TEST_ID
-                    echo "TEST_ID=$TEST_ID" >> $GITHUB_ENV
-                    echo "--- PAY_LOAD ---"
-                    echo "testresults/test-result-${TEST_ID}.json"
                     echo PAY_LOAD = "$(jq .summary testresults/test-result-${TEST_ID}.json)"
-                    echo $PAY_LOAD 
                     echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
+                    echo ${{env.PAY_LOAD}}
                   fi
 
             #JUST FOR DEMO 
@@ -236,9 +231,14 @@ jobs:
               uses: slackapi/slack-github-action@v1.23.0
               with:
                 payload: |
+                {
+                  "test" : "test",
                   ${{env.PAY_LOAD}}
+                }
+                  
               env:
                 SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+                
 
 
                   
