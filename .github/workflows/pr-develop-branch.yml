@@ -235,7 +235,10 @@ jobs:
               with:
                 # This data can be any valid JSON from a previous step in the GitHub Action
                 payload: |
-                  env.PAY_LOAD
+                {
+                  "summary" : $env.PAY_LOAD
+                }
+                  
               env:
                 SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
