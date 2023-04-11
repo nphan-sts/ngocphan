@@ -95,28 +95,24 @@ jobs:
                     sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --code-coverage -r human
 
                     TEST_ID=$(cat testresults/test-run-id.txt)
-                    echo "--- TEST_ID ---"
-                    echo $TEST_ID
-                    echo "TEST_ID=$TEST_ID" >> $GITHUB_ENV
-                    echo "--- PAY_LOAD ---"
-                    PAY_LOAD=$(xq . < testresults/test-result-$TEST_ID.json | jq .summary )
-                    echo $PAY_LOAD 
+                    echo PAY_LOAD = "$(jq .summary testresults/test-result-${TEST_ID}.json)"
                     echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
+                    echo ${{env.PAY_LOAD}}
                   fi
 
             #JUST FOR DEMO 
-            - name: Send custom JSON data to Slack workflow
-              id: slack
-              uses: slackapi/slack-github-action@v1.23.0
-              with:
-                payload: |
-                  ${{env.PAY_LOAD}}
-              env:
-                SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-            - name: 'Deploy destructive changes (if any) to Integration org'
-              run: |
-                  sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --ignorewarnings
+            # - name: Send custom JSON data to Slack workflow
+            #   id: slack
+            #   uses: slackapi/slack-github-action@v1.23.0
+            #   with:
+            #     payload: |
+            #       {
+            #         "key": "value",
+            #         "foo": "bar"
+            #       }
+                  
+            #   env:
+            #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               
 
             # Authenticate to org
