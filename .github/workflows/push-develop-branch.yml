@@ -103,7 +103,7 @@ jobs:
                     echo $PAY_LOAD 
                     echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
                   fi
-#JUST FOR DEMO 
+            #JUST FOR DEMO 
             - name: Send custom JSON data to Slack workflow
               id: slack
               uses: slackapi/slack-github-action@v1.23.0
