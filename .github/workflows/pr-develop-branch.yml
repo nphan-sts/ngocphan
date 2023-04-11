@@ -236,7 +236,7 @@ jobs:
                 # This data can be any valid JSON from a previous step in the GitHub Action
                 payload: |
                 {
-                  "summary" : $env.PAY_LOAD
+                  "summary" : "$env.PAY_LOAD"
                 }
                   
               env:
