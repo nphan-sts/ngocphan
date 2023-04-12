@@ -9,5 +9,7 @@ public with sharing class Class1 {
         String testString4 = 'String demo';
         String testString5 = 'String demo';
         String testString6 = 'String demo';
+
+        
     }
 }
