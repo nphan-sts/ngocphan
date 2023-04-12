@@ -239,7 +239,7 @@ jobs:
               with:
                 payload: |
                   {
-                    "text": ${{env.msg}}
+                    "text": ${env.msg}
                   }
                   
               env:
