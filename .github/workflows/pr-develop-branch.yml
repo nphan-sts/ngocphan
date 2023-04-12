@@ -220,24 +220,30 @@ jobs:
                     sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --code-coverage -r human
 
                     TEST_ID=$(cat testresults/test-run-id.txt)
-                    echo PAY_LOAD = "$(jq .summary testresults/test-result-${TEST_ID}.json)"
-                    echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
-                    echo ${{env.PAY_LOAD}}
+                    echo testsRan = "$(jq .summary.testsRan testresults/test-result-${TEST_ID}.json)"
+                    echo passing = "$(jq .summary.passing testresults/test-result-${TEST_ID}.json)"
+                    echo failing = "$(jq .summary.failing testresults/test-result-${TEST_ID}.json)"
+                    echo passRate = "$(jq .summary.passRate testresults/test-result-${TEST_ID}.json)"
+                    echo failRate = "$(jq .summary.failRate testresults/test-result-${TEST_ID}.json)"
+                    echo hostname = "$(jq .summary.hostname testresults/test-result-${TEST_ID}.json)"
+                    echo testRunCoverage = "$(jq .summary.testRunCoverage testresults/test-result-${TEST_ID}.json)"
+                    echo orgWideCoverage = "$(jq .summary.orgWideCoverage testresults/test-result-${TEST_ID}.json)"
+
+                    echo $msg = "testRan : ${testsRan}`n passing : ${passing}`n failing : ${failing}`n passRate : ${passRate}`n failRate : ${failRate}`n hostname : ${hostname}`n testRunCoverage : ${testRunCoverage}`n orgWideCoverage : ${orgWideCoverage}`n " >> $GITHUB_ENV
                   fi
 
-            #JUST FOR DEMO 
-            # - name: Send custom JSON data to Slack workflow
-            #   id: slack
-            #   uses: slackapi/slack-github-action@v1.23.0
-            #   with:
-            #     payload: |
-            #       {
-            #         "key": "value",
-            #         "foo": "bar"
-            #       }
+            JUST FOR DEMO 
+            - name: Send custom JSON data to Slack workflow
+              id: slack
+              uses: slackapi/slack-github-action@v1.23.0
+              with:
+                payload: |
+                  {
+                    "text": ${{env.msg}}
+                  }
                   
-            #   env:
-            #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              env:
+                SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
                   
             - name: 'Deploy destructive changes (if any)'
               run: |
