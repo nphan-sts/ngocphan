@@ -220,15 +220,15 @@ jobs:
                     sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --code-coverage -r human
 
                     TEST_ID=$(cat testresults/test-run-id.txt)
-                    echo testsRan = "$(jq .summary.testsRan testresults/test-result-${TEST_ID}.json)"
-                    echo passing = "$(jq .summary.passing testresults/test-result-${TEST_ID}.json)"
-                    echo failing = "$(jq .summary.failing testresults/test-result-${TEST_ID}.json)"
-                    echo passRate = "$(jq .summary.passRate testresults/test-result-${TEST_ID}.json)"
-                    echo failRate = "$(jq .summary.failRate testresults/test-result-${TEST_ID}.json)"
-                    echo hostname = "$(jq .summary.hostname testresults/test-result-${TEST_ID}.json)"
-                    echo testRunCoverage = "$(jq .summary.testRunCoverage testresults/test-result-${TEST_ID}.json)"
-                    echo orgWideCoverage = "$(jq .summary.orgWideCoverage testresults/test-result-${TEST_ID}.json)"
-                    echo msg="testRan : $testsRan\npassing : $passing\nfailing : ${failing}\npassRate : ${passRate}\nfailRate : ${failRate}\nhostname : ${hostname}\ntestRunCoverage : ${testRunCoverage}\norgWideCoverage : ${orgWideCoverage}"
+                    testsRan = "$(jq .summary.testsRan testresults/test-result-${TEST_ID}.json)"
+                    passing = "$(jq .summary.passing testresults/test-result-${TEST_ID}.json)"
+                    failing = "$(jq .summary.failing testresults/test-result-${TEST_ID}.json)"
+                    passRate = "$(jq .summary.passRate testresults/test-result-${TEST_ID}.json)"
+                    failRate = "$(jq .summary.failRate testresults/test-result-${TEST_ID}.json)"
+                    hostname = "$(jq .summary.hostname testresults/test-result-${TEST_ID}.json)"
+                    testRunCoverage = "$(jq .summary.testRunCoverage testresults/test-result-${TEST_ID}.json)"
+                    orgWideCoverage = "$(jq .summary.orgWideCoverage testresults/test-result-${TEST_ID}.json)"
+                    msg="testRan : $testsRan\npassing : $passing\nfailing : ${failing}\npassRate : ${passRate}\nfailRate : ${failRate}\nhostname : ${hostname}\ntestRunCoverage : ${testRunCoverage}\norgWideCoverage : ${orgWideCoverage}"
                     echo "msg=$msg" >> $GITHUB_ENV
                   fi
 
