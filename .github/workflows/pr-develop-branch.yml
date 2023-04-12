@@ -220,14 +220,14 @@ jobs:
                     sfdx force:apex:run:test  --target-org integration -d testresults --synchronous --test-level  RunLocalTests --json
 
                     TEST_ID=$(cat testresults/test-run-id.txt)
-                    testsRan=$(jq .summary.testsRan testresults/test-result-${TEST_ID}.json | sed 's/"//g')
-                    passing=$(jq .summary.passing testresults/test-result-${TEST_ID}.json | sed 's/"//g')
-                    failing=$(jq .summary.failing testresults/test-result-${TEST_ID}.json | sed 's/"//g')
-                    passRate=$(jq .summary.passRate testresults/test-result-${TEST_ID}.json | sed 's/"//g')
-                    failRate=$(jq .summary.failRate testresults/test-result-${TEST_ID}.json | sed 's/"//g')
-                    hostname=$(jq .summary.hostname testresults/test-result-${TEST_ID}.json | sed 's/"//g')
-                    testRunCoverage=$(jq .summary.testRunCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
-                    orgWideCoverage=$(jq .summary.orgWideCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    testsRan=$(jq .result.summary.testsRan testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    passing=$(jq .result.summary.passing testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    failing=$(jq .result.summary.failing testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    passRate=$(jq .result.summary.passRate testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    failRate=$(jq .result.summary.failRate testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    hostname=$(jq .result.summary.hostname testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    testRunCoverage=$(jq .result.summary.testRunCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    orgWideCoverage=$(jq .result.summary.orgWideCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
                     msg="testRan : $testsRan\npassing : $passing\nfailing : $failing\npassRate : $passRate\nfailRate : $failRate\nhostname : $hostname\ntestRunCoverage : $testRunCoverage\norgWideCoverage : $orgWideCoverage"
                     echo "msg=$msg" >> $GITHUB_ENV
                   fi
