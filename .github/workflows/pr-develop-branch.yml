@@ -228,7 +228,7 @@ jobs:
                     hostname="$(jq .summary.hostname testresults/test-result-${TEST_ID}.json)"
                     testRunCoverage="$(jq .summary.testRunCoverage testresults/test-result-${TEST_ID}.json)"
                     orgWideCoverage="$(jq .summary.orgWideCoverage testresults/test-result-${TEST_ID}.json)"
-                    msg="testRan : $testsRan\npassing : $passing\nfailing : ${failing}\npassRate : ${passRate}\nfailRate : ${failRate}\nhostname : ${hostname}\ntestRunCoverage : ${testRunCoverage}\norgWideCoverage : ${orgWideCoverage}"
+                    msg="testRan : $testsRan\npassing : $passing\nfailing : $failing\npassRate : $passRate\nfailRate : $failRate\nhostname : $hostname\ntestRunCoverage : $testRunCoverage\norgWideCoverage : $orgWideCoverage"
                     echo "msg=$msg" >> $GITHUB_ENV
                   fi
 
@@ -239,7 +239,7 @@ jobs:
               with:
                 payload: |
                   {
-                    "text": ${env.msg}
+                    "text": ${{env.msg}}
                   }
                   
               env:
