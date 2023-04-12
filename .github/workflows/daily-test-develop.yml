@@ -5,7 +5,7 @@ name: Daily run test
 on:
     schedule:
       # At the end of every day
-      - cron: "0 20 8 * *"
+      - cron: "50 13 * * *"
             
 # Jobs to be executed
 jobs:
@@ -46,7 +46,7 @@ jobs:
             - name: 'Deploy the entire branch to Integration org'
               run: |
                   mkdir testresults
-                  sfdx force:apex:run:test --target-org integration -d testresults --code-coverage -r human --testlevel RunLocalTests --json
+                  sfdx force:apex:run:test  --target-org integration -d testresults --synchronous --test-level  RunLocalTests --json
 
                   TEST_ID=$(cat testresults/test-run-id.txt)
                   testsRan=$(jq .summary.testsRan testresults/test-result-${TEST_ID}.json | sed 's/"//g')
