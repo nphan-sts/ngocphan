@@ -228,7 +228,7 @@ jobs:
                     echo hostname = "$(jq .summary.hostname testresults/test-result-${TEST_ID}.json)"
                     echo testRunCoverage = "$(jq .summary.testRunCoverage testresults/test-result-${TEST_ID}.json)"
                     echo orgWideCoverage = "$(jq .summary.orgWideCoverage testresults/test-result-${TEST_ID}.json)"
-                    echo msg = "testRan : ${testsRan}\npassing : ${passing}\nfailing : ${failing}\npassRate : ${passRate}\nfailRate : ${failRate}\nhostname : ${hostname}\ntestRunCoverage : ${testRunCoverage}\norgWideCoverage : ${orgWideCoverage}"
+                    echo msg="testRan : ${testsRan}\npassing : ${passing}\nfailing : ${failing}\npassRate : ${passRate}\nfailRate : ${failRate}\nhostname : ${hostname}\ntestRunCoverage : ${testRunCoverage}\norgWideCoverage : ${orgWideCoverage}"
                     echo "msg=$msg" >> $GITHUB_ENV
                   fi
 
