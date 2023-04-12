@@ -217,7 +217,7 @@ jobs:
 
 
                     mkdir testresults
-                    sfdx force:apex:run:test  --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --synchronous --test-level  RunLocalTests --json
+                    sfdx force:apex:run:test  --target-org integration -d testresults --synchronous --test-level  RunLocalTests --json
 
                     TEST_ID=$(cat testresults/test-run-id.txt)
                     testsRan=$(jq .summary.testsRan testresults/test-result-${TEST_ID}.json | sed 's/"//g')
