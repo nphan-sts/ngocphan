@@ -4,7 +4,7 @@ name: Deploy integration branch to integration and staging/uat orgs
 # Definition when the workflow should run
 on:
     push:
-      branches: [ qa ]
+      branches: [develop, qa]
       paths:
         - 'force-app/**'
             
@@ -95,24 +95,30 @@ jobs:
                     sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --code-coverage -r human
 
                     TEST_ID=$(cat testresults/test-run-id.txt)
-                    echo PAY_LOAD = "$(jq .summary testresults/test-result-${TEST_ID}.json)"
-                    echo "PAY_LOAD=$PAY_LOAD" >> $GITHUB_ENV
-                    echo ${{env.PAY_LOAD}}
+                    testsRan=$(jq .summary.testsRan testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    passing=$(jq .summary.passing testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    failing=$(jq .summary.failing testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    passRate=$(jq .summary.passRate testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    failRate=$(jq .summary.failRate testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    hostname=$(jq .summary.hostname testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    testRunCoverage=$(jq .summary.testRunCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    orgWideCoverage=$(jq .summary.orgWideCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
+                    msg="testRan : $testsRan\npassing : $passing\nfailing : $failing\npassRate : $passRate\nfailRate : $failRate\nhostname : $hostname\ntestRunCoverage : $testRunCoverage\norgWideCoverage : $orgWideCoverage"
+                    echo "msg=$msg" >> $GITHUB_ENV
                   fi
 
             #JUST FOR DEMO 
-            # - name: Send custom JSON data to Slack workflow
-            #   id: slack
-            #   uses: slackapi/slack-github-action@v1.23.0
-            #   with:
-            #     payload: |
-            #       {
-            #         "key": "value",
-            #         "foo": "bar"
-            #       }
+            - name: Send custom JSON data to Slack workflow
+              id: slack
+              uses: slackapi/slack-github-action@v1.23.0
+              with:
+                payload: |
+                  {
+                    "text": "${{env.msg}}"
+                  }
                   
-            #   env:
-            #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              env:
+                SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               
 
             # Authenticate to org
