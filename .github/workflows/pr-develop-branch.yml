@@ -215,9 +215,7 @@ jobs:
                   echo "--- Delta Check-Only Deploy ---"
                   if [ -d "./changed-sources/force-app" ]; then
 
-                    mkdir testresults
-                    sfdx force:apex:run:test  --target-org integration -d testresults --synchronous --test-level  RunLocalTests --wait 120 --json
-                    
+                    mkdir testresults                    
                   fi
 
             - name: Get test result
@@ -233,7 +231,7 @@ jobs:
                     testRunCoverage=$(jq .summary.testRunCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
                     orgWideCoverage=$(jq .summary.orgWideCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
 
-                    if [ $tetsRan != '' ]; then
+                    if $tetsRan != '' ; then
                       msg="testRan : $testsRan\npassing : $passing\nfailing : $failing\npassRate : $passRate\nfailRate : $failRate\nhostname : $hostname\ntestRunCoverage : $testRunCoverage\norgWideCoverage : $orgWideCoverage"
                       echo $msg
                       echo "msg=$msg" >> $GITHUB_ENV
