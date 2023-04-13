@@ -72,6 +72,7 @@ jobs:
                     fi
 
             - name: Send custom JSON data to Slack workflow
+              if: ${{ always() }}
               id: slack
               uses: slackapi/slack-github-action@v1.23.0
               with:
