@@ -5,7 +5,7 @@ name: Daily run test
 on:
     schedule:
       # At the end of every day
-      - cron: "50 13 * * *"
+      - cron: "20 7 * * *"
             
 # Jobs to be executed
 jobs:
