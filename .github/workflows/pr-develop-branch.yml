@@ -215,10 +215,14 @@ jobs:
                   echo "--- Delta Check-Only Deploy ---"
                   if [ -d "./changed-sources/force-app" ]; then
 
-
                     mkdir testresults
                     sfdx force:apex:run:test  --target-org integration -d testresults --synchronous --test-level  RunLocalTests --wait 120 --json
+                    
+                  fi
 
+            - name: Get test result
+              if: ${{ failure() }}
+              run: |
                     TEST_ID=$(cat testresults/test-run-id.txt)
                     testsRan=$(jq .result.summary.testsRan testresults/test-result-${TEST_ID}.json | sed 's/"//g')
                     passing=$(jq .result.summary.passing testresults/test-result-${TEST_ID}.json | sed 's/"//g')
@@ -230,7 +234,7 @@ jobs:
                     orgWideCoverage=$(jq .result.summary.orgWideCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
                     msg="testRan : $testsRan\npassing : $passing\nfailing : $failing\npassRate : $passRate\nfailRate : $failRate\nhostname : $hostname\ntestRunCoverage : $testRunCoverage\norgWideCoverage : $orgWideCoverage"
                     echo "msg=$msg" >> $GITHUB_ENV
-                  fi
+
 
             #JUST FOR DEMO 
             - name: Send custom JSON data to Slack workflow
