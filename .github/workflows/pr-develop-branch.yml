@@ -30,7 +30,7 @@ jobs:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
-            # Now we install nodejs in the VM, and specify version 14
+            # Now we install nodejs in the VM, and specify version 18, below 18 might not work
             - uses: actions/setup-node@v3
               with:
                 node-version: '18'
@@ -216,7 +216,7 @@ jobs:
                   if [ -d "./changed-sources/force-app" ]; then
 
                     mkdir testresults
-                    sfdx force:apex:run:test  --target-org integration -d testresults --synchronous --test-level  RunLocalTests --wait 120 --json
+                    sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --synchronous --json
                     
                   fi
 

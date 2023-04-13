@@ -15,6 +15,12 @@ jobs:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
+
+            # Now we install nodejs in the VM, and specify version 18, below 18 might not work
+            - uses: actions/setup-node@v3
+              with:
+                node-version: '18'
+                
             # Install Salesforce CLI
             - name: 'Install Salesforce CLI'
               run: |
@@ -30,7 +36,6 @@ jobs:
                   echo y | sfdx plugins:install sfdx-git-delta
                   sfdx plugins 
 
-            #JUST FOR DEMO 
             # Install java as it is required for the next step
             - name: 'Installing java'
               run: |
@@ -80,7 +85,6 @@ jobs:
                     grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"
                   fi
 
-            #JUST FOR DEMO 
             - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
               if: env.APEX_TESTS != 'all' && env.APEX_TESTS == '' && env.APEX_CLASSES != ''
               run: |
@@ -92,8 +96,12 @@ jobs:
                     #file exists
 
                     mkdir testresults
-                    sfdx force:apex:run:test  --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --synchronous --test-level  RunLocalTests --json
+                    sfdx force:apex:run:test --target-org integration -n ${{env.APEX_CLASSES}} -d testresults --synchronous --json
+                  fi
 
+            - name: Get test result
+              if: ${{ always() }}
+              run: |
                     TEST_ID=$(cat testresults/test-run-id.txt)
                     testsRan=$(jq .summary.testsRan testresults/test-result-${TEST_ID}.json | sed 's/"//g')
                     passing=$(jq .summary.passing testresults/test-result-${TEST_ID}.json | sed 's/"//g')
@@ -103,11 +111,13 @@ jobs:
                     hostname=$(jq .summary.hostname testresults/test-result-${TEST_ID}.json | sed 's/"//g')
                     testRunCoverage=$(jq .summary.testRunCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
                     orgWideCoverage=$(jq .summary.orgWideCoverage testresults/test-result-${TEST_ID}.json | sed 's/"//g')
-                    msg="testRan : $testsRan\npassing : $passing\nfailing : $failing\npassRate : $passRate\nfailRate : $failRate\nhostname : $hostname\ntestRunCoverage : $testRunCoverage\norgWideCoverage : $orgWideCoverage"
-                    echo "msg=$msg" >> $GITHUB_ENV
-                  fi
 
-            #JUST FOR DEMO 
+                    if [ $tetsRan!='' ]; then
+                      msg="testRan : $testsRan\npassing : $passing\nfailing : $failing\npassRate : $passRate\nfailRate : $failRate\nhostname : $hostname\ntestRunCoverage : $testRunCoverage\norgWideCoverage : $orgWideCoverage"
+                      echo $msg
+                      echo "msg=$msg" >> $GITHUB_ENV
+                    fi
+
             - name: Send custom JSON data to Slack workflow
               id: slack
               uses: slackapi/slack-github-action@v1.23.0
