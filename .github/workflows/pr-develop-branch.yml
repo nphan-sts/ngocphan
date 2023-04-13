@@ -221,7 +221,7 @@ jobs:
                   fi
 
             - name: Get test result
-              if: ${{ failure() }}
+              if: ${{ always() }}
               run: |
                     TEST_ID=$(cat testresults/test-run-id.txt)
                     testsRan=$(jq .summary.testsRan testresults/test-result-${TEST_ID}.json | sed 's/"//g')
@@ -242,7 +242,7 @@ jobs:
 
             #JUST FOR DEMO 
             - name: Send custom JSON data to Slack workflow
-              if: ${{ failure() }}
+              if: env.msg != ''
               id: slack
               uses: slackapi/slack-github-action@v1.23.0
               with:
