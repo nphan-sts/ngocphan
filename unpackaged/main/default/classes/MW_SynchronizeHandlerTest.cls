@@ -4,7 +4,7 @@ public with sharing class MW_SynchronizeHandlerTest {
     public static void mwSettingSetup() {
         MW_Settings__c mwSetting = new MW_Settings__c();
         mwSetting.API_User_Filter__c = 'test@example.com';
-        insert mwSetting;
+        insert mwSetting;     
     }
 
     static testMethod void TestPostToWebhookOnAppupdate()
@@ -19,6 +19,18 @@ public with sharing class MW_SynchronizeHandlerTest {
         appList[0].Annual_Individual_Income_App__c = 95000;
         update appList;
         System.assertEquals(25000, appList[0].genesis__Loan_Amount__c);
+    }
+
+    static testMethod void testPostToWebhookOnExpiryDateAppupdate()
+    {
+        mwSettingSetup();
+        list<account> accList = MW_DataFactoryTest.createAccounts(1);
+        insert accList;
+        list<genesis__Applications__c> appList = MW_DataFactoryTest.createApplication(1, accList[0].Id);
+        insert appList;
+        appList[0].Application_Start_DateV2__c = System.today().addDays(10);
+        update appList;
+        System.assertEquals(Limits.getFutureCalls(), 1);
     }
 
     static testMethod void TestPostToWebhookOnAccupdate()
