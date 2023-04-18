@@ -29,9 +29,10 @@ public with sharing class MW_SynchronizeHandlerTest {
         insert accList;
         list<genesis__Applications__c> appList = MW_DataFactoryTest.createApplication(1, accList[0].Id);
         insert appList;
+        System.assertEquals(Limits.getFutureCalls(), 0, 'expect future calls equal 0');
         appList[0].Application_Start_DateV2__c = System.today().addDays(10);
         update appList;
-        System.assertEquals(Limits.getFutureCalls(), 1);
+        System.assertEquals(Limits.getFutureCalls(), 1, 'expect future calls equal 1');
     }
 
     static testMethod void TestPostToWebhookOnAccupdate()
