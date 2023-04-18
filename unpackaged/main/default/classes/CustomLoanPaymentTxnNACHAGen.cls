@@ -114,7 +114,7 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
                     }
                 }
 
-                autoPmtConfig = [SELECT Id,
+                List<loan__Automated_Payment_Configuration__c> autoPmtConfigList = [SELECT Id,
                                         loan__Immediate_Destination__c,
                                         loan__Company_Identification__c,
                                         loan__Originating_DFI_Identification__c,
@@ -141,6 +141,10 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
                                      AND loan__Event__c INCLUDES (:loan.LoanConstants.LOAN_PAYMENT)
                                  LIMIT 1
                                 ];
+
+                if(autoPmtConfigList != null && autoPmtConfigList.size() > 0){
+                    autoPmtConfig = autoPmtConfigList[0];
+                }
             }
             else {
                 bank = [SELECT Id,
@@ -321,7 +325,7 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
 
         if(loan.CustomSettingsUtil.getACHParameters().loan__Multiple_Payment_Method_Support__c == true) {
             if(autoPmtConfig.loan__Immediate_Destination__c != null) {
-                immediateDestination = Loan.sTringUtils.leftPadString('' + autoPmtConfig.loan__Immediate_Destination__c, 10, '0');
+                immediateDestination = Loan.sTringUtils.leftPadString('' + autoPmtConfig.loan__Immediate_Destination__c, 10, getLeftPadChar());
             }
 
             if(autoPmtConfig.loan__Immediate_origin__c != null) {
@@ -347,12 +351,12 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
         }
         else {
             if(loan.CustomSettingsUtil.getACHParameters().loan__Immediate_Destination__c != null) {
-                immediateDestination = Loan.sTringUtils.leftPadString('' + loan.CustomSettingsUtil.getACHParameters().loan__Immediate_Destination__c, 10, '0');
+                immediateDestination = Loan.sTringUtils.leftPadString('' + loan.CustomSettingsUtil.getACHParameters().loan__Immediate_Destination__c, 10, getLeftPadChar());
             }
             else {
                 immediateDestination = String.valueOf(bank.loan__Routing_Number__c);
                 if(immediateDestination.length() < 9) {
-                    immediateDestination = Loan.sTringUtils.leftPadString('' + bank.loan__Routing_Number__c, 9, '0');
+                    immediateDestination = Loan.sTringUtils.leftPadString('' + bank.loan__Routing_Number__c, 9, getLeftPadChar());
                 }
             }
             immediateorigin = (loan.CustomSettingsUtil.getACHParameters().loan__Fed_Tax_Id__c != null ? loan.CustomSettingsUtil.getACHParameters().loan__Fed_Tax_Id__c : '');
@@ -649,5 +653,13 @@ global class CustomLoanPaymentTxnNACHAGen extends loan.FileGenerator {
         }
 
         return str.rightPad(size,padString);
+    }
+
+    /**
+     * @return the character to use for left padding of the immediate destination field
+     */
+    private static String getLeftPadChar() {
+        MW_Settings__c settings = MW_Settings__c.getOrgDefaults();
+        return settings.US_Bank_Enabled__c ? ' ' : '0';
     }
 }
