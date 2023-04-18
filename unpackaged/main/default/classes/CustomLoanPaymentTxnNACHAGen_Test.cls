@@ -13,7 +13,11 @@ Bhavya		2022/05/24  LSP-380	  Refactored test class for LSP-380
 
 @IsTest
 public class CustomLoanPaymentTxnNACHAGen_Test {
-    
+
+    private static final String STR_TO_PAD = '987656789';
+    private static final String STR_TO_PAD_0_PADDED = '0' + STR_TO_PAD;
+    private static final String STR_TO_PAD_WS_PADDED = ' ' + STR_TO_PAD;
+
     @TestSetup
     public static void testSetup(){
 
@@ -164,7 +168,7 @@ Description: To test the logic for header level description in NACHA file with m
         loan.TransactionSweepToACHState state = getACHState();
 
         loan__Automated_Payment_Configuration__c ap = getApc();
-        ap.loan__Immediate_Destination__c = '987656789';
+        ap.loan__Immediate_Destination__c = STR_TO_PAD;
         update ap;
 
         Test.startTest();
@@ -186,10 +190,10 @@ Description: To test the logic for header level description in NACHA file with m
         System.debug('actualFlagOff: ' + flagDisabledMsg);
         System.debug('flagEnabledMsg: ' + flagEnabledMsg);
 
-        System.assertEquals('987656789', getApc().loan__Immediate_Destination__c);
+        System.assertEquals(STR_TO_PAD, getApc().loan__Immediate_Destination__c);
 
-        System.assert(flagDisabledMsg.contains('0987656789') && !flagDisabledMsg.contains(' 987656789'));
-        System.assert(flagEnabledMsg.contains(' 987656789') && !flagEnabledMsg.contains('0987656789'));
+        System.assert(flagDisabledMsg.contains(STR_TO_PAD_0_PADDED) && !flagDisabledMsg.contains(STR_TO_PAD_WS_PADDED));
+        System.assert(flagEnabledMsg.contains(STR_TO_PAD_WS_PADDED) && !flagEnabledMsg.contains(STR_TO_PAD_0_PADDED));
     }
 
     /*Created By: Shakul Siddharth
@@ -236,7 +240,7 @@ Description: To test header level functionality without multiple payment support
         loan.TransactionSweepToACHState state = getACHState();
 
         loan__ACH_Parameters__c achSettings = loan.CustomSettingsUtil.getACHParameters();
-        achSettings.loan__Immediate_Destination__c = '987656789';
+        achSettings.loan__Immediate_Destination__c = STR_TO_PAD;
         upsert achSettings;
 
         loan__ACH_Parameters__c ach = [SELECT Id, loan__Multiple_Payment_Method_Support__c FROM loan__ACH_Parameters__c];
@@ -264,8 +268,8 @@ Description: To test header level functionality without multiple payment support
         System.debug('flagDisabledMsg: ' + flagDisabledMsg);
         System.debug('flagEnabledMsg: ' + flagEnabledMsg);
 
-        System.assert(flagDisabledMsg.contains('0987656789') && !flagDisabledMsg.contains(' 987656789'));
-        System.assert(flagEnabledMsg.contains(' 987656789') && !flagEnabledMsg.contains('0987656789'));
+        System.assert(flagDisabledMsg.contains(STR_TO_PAD_0_PADDED) && !flagDisabledMsg.contains(STR_TO_PAD_WS_PADDED));
+        System.assert(flagEnabledMsg.contains(STR_TO_PAD_WS_PADDED) && !flagEnabledMsg.contains(STR_TO_PAD_0_PADDED));
     }
 
     /**
