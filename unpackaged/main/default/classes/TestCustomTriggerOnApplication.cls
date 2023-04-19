@@ -1,5 +1,7 @@
 @IsTest
 public class TestCustomTriggerOnApplication {
+
+    static final String BANK_STATEMENT = 'Bank Statement 1';
     //Before update
     @TestSetup  static void mwSettingSetup(){
         MW_Settings__c mwSetting = new MW_Settings__c();
@@ -1182,13 +1184,13 @@ public class TestCustomTriggerOnApplication {
         clcommon__Party_Type__c partyType = TestDataFactory.createTestPartyType('BORROWER');
         insert partyType;
 
-        genesis__Document_Category__c docCat1 = TestDataFactory.createTestDocumentCategory(partyType.Id, 'Bank Statement 1', 'statement');
+        genesis__Document_Category__c docCat1 = TestDataFactory.createTestDocumentCategory(partyType.Id, BANK_STATEMENT, 'statement');
         insert docCat1;
 
         genesis__Document_Category__c docCat2 = TestDataFactory.createTestDocumentCategory(partyType.Id, 'Plaid Asset Report', 'linked_acct');
         insert docCat2;
 
-        genesis__Application_Document_Category__c appDocCat1 = TestDataFactory.createTestApplicationDocumentCategory('Bank Statement 1',
+        genesis__Application_Document_Category__c appDocCat1 = TestDataFactory.createTestApplicationDocumentCategory(BANK_STATEMENT,
             app.Id, docCat1.Id, null, 'OPEN');
         appDocCat1.genesis__Required__c = true;
         insert appDocCat1;
@@ -1249,10 +1251,10 @@ public class TestCustomTriggerOnApplication {
         clcommon__Party_Type__c partyType = TestDataFactory.createTestPartyType('BORROWER');
         insert partyType;
 
-        genesis__Document_Category__c docCat1 = TestDataFactory.createTestDocumentCategory(partyType.Id, 'Bank Statement 1', 'statement');
+        genesis__Document_Category__c docCat1 = TestDataFactory.createTestDocumentCategory(partyType.Id, BANK_STATEMENT, 'statement');
         insert docCat1;
 
-        genesis__Application_Document_Category__c appDocCat1 = TestDataFactory.createTestApplicationDocumentCategory('Bank Statement 1',
+        genesis__Application_Document_Category__c appDocCat1 = TestDataFactory.createTestApplicationDocumentCategory(BANK_STATEMENT,
             app.Id, docCat1.Id, null, 'OPEN');
         appDocCat1.genesis__Required__c = true;
         insert appDocCat1;
