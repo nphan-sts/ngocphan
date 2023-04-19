@@ -1231,6 +1231,90 @@ public class TestCustomTriggerOnApplication {
 
         Test.stopTest();
      }
+    
+    //LPC-441
+    // test remove giact status = accept trigger update identity verification
+    @isTest static void testRemoveGiactStatus(){
+        Account acct = TestDataFactory.createTestAccount();
+        insert acct;
+
+        Account inv = TestDataFactory.createTestInvestor();
+        inv.Investor_Code__c = 'TEST';
+        insert inv;
+
+        genesis__Applications__c app = TestDataFactory.createTestApplication(acct.Id, inv.Id, '9ffffff9-9fff-f999-ff99-9f9f9f9f9f9f',
+            Date.today().addDays(2), 'agent_document_verification_pending');
+        insert app;
+
+        clcommon__Party_Type__c partyType = TestDataFactory.createTestPartyType('BORROWER');
+        insert partyType;
+
+        genesis__Document_Category__c docCat1 = TestDataFactory.createTestDocumentCategory(partyType.Id, 'Bank Statement 1', 'statement');
+        insert docCat1;
+
+        genesis__Application_Document_Category__c appDocCat1 = TestDataFactory.createTestApplicationDocumentCategory('Bank Statement 1',
+            app.Id, docCat1.Id, null, 'OPEN');
+        appDocCat1.genesis__Required__c = true;
+        insert appDocCat1;
+
+        Test.startTest();
+
+        appDocCat1.Box_URl__c = 'https://test.app.box.com/file/123456789';
+        appDocCat1.genesis__Status__c = 'SUBMITTED';
+        update appDocCat1;
+
+        app.is_Plaid_Asset_Available__c = true;
+        update app;
+
+        app.Plaid_Status__c = 'Accept';
+        update app;
+
+        appDocCat1 = [SELECT Cleared_Reason__c, genesis__Status__c
+            FROM genesis__Application_Document_Category__c
+            WHERE genesis__Application__c =: app.Id AND Name LIKE 'Bank Statement %' AND genesis__Required__c = TRUE LIMIT 1];
+
+
+        System.assertEquals('CLEARED', appDocCat1.genesis__Status__c);
+        System.assertEquals('Satisfied by PLAID transactions', appDocCat1.Cleared_Reason__c);
+        
+        ProfilesForBankAccTab__c profile = new ProfilesForBankAccTab__c(
+            name = 'System Administrator',
+            profile_name__c = 'System Administrator'
+        );
+        insert profile;
+
+		Identity_Verification__c idv= new Identity_Verification__c();
+        idv.Application__c = app.id;
+        idv.IDMV_Status__c = 'Fail';
+        idv.IDMA_Status__c = 'Fail'; 
+        idv.OFAC_Status__c='Not Performed';
+        idv.Bank_Verification_Flag__c= 'Fail';
+        idv.Deal_room_Verification_Flag__c = 'Fail';
+        idv.Identity_Verification__c ='Fail';
+        idv.Income_Verification_Flag__c = 'Fail';
+        idv.Neo_Verification_Flag__c ='Fail';
+        idv.KBA_Verification_Flag__c = 'Fail';
+        idv.Precise_Account_Opening_Status__c='Reject';
+        idv.Credit_Policy_Verification_Flag__c ='Fail';
+        insert idv;
+
+        List<Identity_Verification__c> bankAccTab = [select id,Bank_Verification_Flag__c from Identity_Verification__c
+                                                             where Application__c =: app.Id];
+        
+        System.assertEquals(bankAccTab.size(), 1 ,'expect only one identity created');
+        
+        System.assertEquals(null,app.GIACT_Status__c , 'check Giact not set');
+
+        app.GIACT_Status__c = 'Accept';
+        update app;
+        
+        Test.stopTest();
+
+        bankAccTab = [select id,Bank_Verification_Flag__c from Identity_Verification__c
+                                                             where Application__c =: app.Id and Bank_Verification_Flag__c = 'PASS'];
+        
+        System.assertEquals(bankAccTab.size(), 0 ,'no trigger to change IV bank verification to PASS');        
+    }
 
     static Credit_Policy__c mockCreditPolicy(Decimal fico, Decimal ndi, Id id) {
         Credit_Policy__c creditPolicy = new Credit_Policy__c();
