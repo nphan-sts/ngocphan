@@ -143,4 +143,31 @@ private class TestWSGetPricingOffer{
         System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
         Test.stopTest();
     }
+
+    @isTest static void testNewExternalOfferId() {
+        Account acc = [Select id, name from Account where name='TestFName TestLName' limit 1];
+        genesis__Applications__c app = [select id,genesis__Account__c from genesis__Applications__c where genesis__Account__c=:acc.id Limit 1];
+      
+        String jsonStr =  '"applicationId":"'+ app.id+'"},{"offers":[{"external_offer_id": "5a17de3f-3ee1-4161-b5d8-4ebbcf840b8f","Is_Offer_Selected":true,"above_prime_max":"3","segment":"2","pricing_tier":"3","origination_fee":"150","key":"1","ebp_offer_code":"2021Feb_ebp_DCP_optout","ebp_parent_offer_key":"","score":"780"}]';
+        RestRequest req = new RestRequest(); 
+        RestResponse res = new RestResponse();
+        
+        req.requestURI = '/services/apexrest/offers';
+        req.requestBody = Blob.valueOf(jsonStr);
+        req.httpMethod = 'POST';
+                
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        WSGetPricingOffer.Response response = WSGetPricingOffer.parse();
+        Test.stopTest();
+
+        System.assertEquals(PayoffConstants.NO_ERROR, response.errorCode, 'No error');
+
+        Pricing_Offer__c pOffer = [Select external_offer_id__c from Pricing_Offer__c where Application__c =:app.Id limit 1];
+
+        System.assertNotEquals('5a17de3f-3ee1-4161-b5d8-4ebbcf840b8f', pOffer.external_offer_id__c, 'external offer id should be inserted');
+
+    }
 }
