@@ -437,9 +437,17 @@ System.debug(LoggingLevel.ERROR, 'checked debit date validation complete');*/
         /*LOS-28*/
         
         try{
-            apc = [Select id,name, loan__Payment_Mode__r.Name From loan__Automated_Payment_Configuration__c Where loan__Bank_Account__r.loan__Account__c =:investor.loan__Account__c limit 1];  //LOS-28
+            apc = [
+                SELECT Id,
+                       Name,
+                       loan__Payment_Mode__r.Name
+                FROM   loan__Automated_Payment_Configuration__c
+                WHERE  loan__Bank_Account__r.loan__Account__c = :investor.loan__Account__c
+                AND    loan__Active__c = TRUE
+                LIMIT  1
+            ];  //LOS-28
         }
-        catch(exception ex) {    
+        catch(exception ex) {
             loan__batch_process_log__c logs = new loan__batch_process_log__c(loan__Message__c='Error in assignToUnderwriterQueue:  '+ex.getlinenumber()+'Error: '+ex.getMessage() + loanAccount.name);             
             insert logs;             
             throw new ints.IntegrationException('NO APC FOUND FOR THIS INVESTOR');         

@@ -110,6 +110,7 @@ private class TestApplicationToContractConverter{
         apc1.loan__Bank_Account__c = bnk1.id;
         apc1.loan__Filegen_Class__c = 'Test';
         apc1.loan__Folder_Name__c = 'TestFolder';
+        apc1.loan__Active__c = true;
         insert apc1;
         
          //Creating Application
@@ -210,6 +211,7 @@ private class TestApplicationToContractConverter{
         apc.loan__Bank_Account__c = bnk.id;
         apc.loan__Filegen_Class__c = 'Test';
         apc.loan__Folder_Name__c = 'TestFolder';
+        apc.loan__Active__c = true;
         insert apc;
         
         Map<SObject,SObject> AppVsLoanAppMap = new Map<SObject,SObject>();

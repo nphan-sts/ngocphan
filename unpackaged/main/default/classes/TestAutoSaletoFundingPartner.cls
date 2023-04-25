@@ -145,6 +145,7 @@ public class TestAutoSaletoFundingPartner {
         invaps.loan__Folder_Name__c = 'ACU';
         invaps.loan__File_Type__c = 'CSV';
         invaps.loan__Event__c = 'LOAN PAYMENT';
+        invaps.loan__Active__c = true;
         insert invaps;
         
         

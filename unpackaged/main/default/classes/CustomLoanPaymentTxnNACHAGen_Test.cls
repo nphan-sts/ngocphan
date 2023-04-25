@@ -289,8 +289,9 @@ Description: To test header level functionality without multiple payment support
     private static loan__Automated_Payment_Configuration__c getApc() {
         return [
                 SELECT Id,
-                        loan__Immediate_Destination__c
-                FROM loan__Automated_Payment_Configuration__c
+                       loan__Immediate_Destination__c
+                FROM   loan__Automated_Payment_Configuration__c
+                WHERE  loan__Active__c = TRUE
                 LIMIT 1
         ];
     }
