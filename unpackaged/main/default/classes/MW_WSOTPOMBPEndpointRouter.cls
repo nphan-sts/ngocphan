@@ -124,7 +124,15 @@ global with sharing class MW_WSOTPOMBPEndpointRouter {
         loan__Loan_Account__c loanAccount = getloanAccountDetails(LeadId);
         
         try{
-          apc = [Select id,name, loan__Payment_Mode__r.Name From loan__Automated_Payment_Configuration__c Where loan__Bank_Account__r.loan__Account__c =:loanAccount.Investor_Account__c limit 1];
+            apc = [
+                SELECT Id,
+                       Name,
+                       loan__Payment_Mode__r.Name
+                FROM   loan__Automated_Payment_Configuration__c
+                WHERE  loan__Bank_Account__r.loan__Account__c = :loanAccount.Investor_Account__c
+                AND    loan__Active__c = TRUE
+                LIMIT  1
+            ];
         }
         catch(exception ex)
         {    

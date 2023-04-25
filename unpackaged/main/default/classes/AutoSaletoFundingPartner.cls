@@ -54,8 +54,14 @@ global class AutoSaletoFundingPartner implements Database.Batchable<SObject>,Sch
         
         loan__loan_account__c contract = [Select id,IO_AutoSale_to_Funding_Partner__c from loan__loan_account__c where id =: contractID];
         
-        loan__Automated_Payment_Configuration__c apc = [Select id,loan__Payment_Mode__c FROM loan__Automated_Payment_Configuration__c where
-                                                       loan__Bank_Account__r.loan__Account__c =: ioForSale.loan__Account__r.Funding_Partner__c LIMIT 1];
+        loan__Automated_Payment_Configuration__c apc = [
+                SELECT Id,
+                       loan__Payment_Mode__c
+                FROM   loan__Automated_Payment_Configuration__c
+                WHERE  loan__Bank_Account__r.loan__Account__c = :ioForSale.loan__Account__r.Funding_Partner__c
+                AND    loan__Active__c = TRUE
+                LIMIT 1
+        ];
         
         Id paymentMode = apc.loan__Payment_Mode__c;
         

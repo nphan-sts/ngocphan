@@ -13,7 +13,11 @@ Bhavya		2022/05/24  LSP-380	  Refactored test class for LSP-380
 
 @IsTest
 public class CustomLoanPaymentTxnNACHAGen_Test {
-    
+
+    private static final String STR_TO_PAD = '987656789';
+    private static final String STR_TO_PAD_0_PADDED = '0' + STR_TO_PAD;
+    private static final String STR_TO_PAD_WS_PADDED = ' ' + STR_TO_PAD;
+
     @TestSetup
     public static void testSetup(){
 
@@ -52,7 +56,7 @@ public class CustomLoanPaymentTxnNACHAGen_Test {
         
         loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice,dummyAccount,curr,dummyFeeSet);
         
-        loan__Payment_Mode__c pMode = [select id, name from loan__Payment_Mode__c where Name= 'ACH'];
+        loan__Payment_Mode__c pMode = [SELECT id, name FROM loan__Payment_Mode__c WHERE Name= 'ACH'];
         
         loan__Bank_Account__c ba = new loan__Bank_Account__c(loan__Bank_Account_Number__c = '12',
                                                              loan__Bank_Name__c = 'Some Bank',
@@ -71,7 +75,7 @@ public class CustomLoanPaymentTxnNACHAGen_Test {
 
         dummylaMonthly.loan__Account__c = acc.Id;
         dummylaMonthly.loan__Loan_Status__c = 'Active - Good Standing';
-        dummylaMonthly.loan__ACH_On__c=True;
+        dummylaMonthly.loan__ACH_On__c=true;
         dummylaMonthly.loan__Borrower_ACH__c = ba.id;
         update dummylaMonthly;
 
@@ -122,11 +126,10 @@ Description: To test the logic for file name generation */
 Description: To test the logic for entry level description if multiple payment mode is supported in NACHA file */
 
     static testMethod void testGetEntries(){
-        loan.TransactionSweepToACHState state=new loan.TransactionSweepToACHState();
-        map<string,integer> countMap=new map<string,integer>();
-        countMap.put('test',1);
-        state.o2=countMap;
-        List<loan__Loan_Payment_Transaction__c> lpt = [SELECT id FROM loan__Loan_Payment_Transaction__c];
+
+        loan.TransactionSweepToACHState state = getACHState();
+
+        List<loan__Loan_Payment_Transaction__c> lpt = [SELECT Id FROM loan__Loan_Payment_Transaction__c];
         Test.startTest();
         CustomLoanPaymentTxnNACHAGen cus=new CustomLoanPaymentTxnNACHAGen();
         List<String> msgs = cus.getEntries(state,lpt);
@@ -139,45 +142,66 @@ Description: To test the logic for entry level description if multiple payment m
 Description: To test the logic for header level description in NACHA file with multi pay support*/
 
     static testMethod void testGetHeader(){
-        loan.TransactionSweepToACHState state=new loan.TransactionSweepToACHState();
-        map<string,integer> countMap=new map<string,integer>();
-        countMap.put('test',1);
-        state.o2=countMap;
 
-        
+        loan.TransactionSweepToACHState state = getACHState();
+
         List<loan__Loan_Payment_Transaction__c> lpt = [SELECT id FROM loan__Loan_Payment_Transaction__c];
         Test.startTest();
-        
-        List<filegen__File_Header_Record__c> fhrlist=new List<filegen__File_Header_Record__c>();
-        
-        filegen__File_Header_Record__c fhr=new filegen__File_Header_Record__c();
-        fHR.filegen__Immediate_Destination__c = 'immediateDestination';
-        fHR.filegen__Immediate_Origin__c = 'immediateOrigin';
-        fHR.filegen__Creation_Date__c = system.today();
-        fHR.filegen__Creation_Time__c = 'myTime';
-        fHR.filegen__ID_Modifier__c = 'abc';
-        fHR.filegen__Immediate_Destination_Name__c = 'immediateDestinationName';
-        fHR.filegen__Immediate_Origin_Name__c = 'immediateOriginName';
-        fHR.filegen__Reference_Code__c = 'referenceCode';
-        fhrlist.add(fHR);
-        
-        insert fhrlist;
-        CustomLoanPaymentTxnNACHAGen cus=new CustomLoanPaymentTxnNACHAGen();
-        cus.getEntries(state,lpt);
-        String msg = cus.getHeader(state,fhrlist);
+
+        List<filegen__File_Header_Record__c> fhrList = getFileHeaderRecords();
+        insert fhrList;
+
+        CustomLoanPaymentTxnNACHAGen cus = new CustomLoanPaymentTxnNACHAGen();
+        cus.getEntries(state, lpt);
+        String msg = cus.getHeader(state, fhrList);
         Test.stopTest();
-        loan__Automated_Payment_Configuration__c ap=[Select id,loan__Immediate_Destination__c from loan__Automated_Payment_Configuration__c LIMIT 1];
-        system.assertEquals('2222222222',ap.loan__Immediate_Destination__c);
+
+        System.assertEquals('2222222222', getApc().loan__Immediate_Destination__c);
         System.assert(String.isNotBlank(msg));
     }
-    
+
+    /**
+     * Test the left padding configuration flag enabled and disabled
+     */
+    static testMethod void testGetHeaderWithLeftPadding() {
+
+        loan.TransactionSweepToACHState state = getACHState();
+
+        loan__Automated_Payment_Configuration__c ap = getApc();
+        ap.loan__Immediate_Destination__c = STR_TO_PAD;
+        update ap;
+
+        Test.startTest();
+        List<filegen__File_Header_Record__c> frs = getFileHeaderRecords();
+        insert frs;
+
+        CustomLoanPaymentTxnNACHAGen cus=new CustomLoanPaymentTxnNACHAGen();
+        cus.getEntries(state, [SELECT Id FROM loan__Loan_Payment_Transaction__c]);
+        String flagDisabledMsg = cus.getHeader(state, frs);
+
+        MW_Settings__c mwSettings = MW_Settings__c.getOrgDefaults();
+        mwSettings.US_Bank_Enabled__c = true;
+        insert mwSettings;
+
+        String flagEnabledMsg = cus.getHeader(state, frs);
+
+        Test.stopTest();
+
+        System.debug('actualFlagOff: ' + flagDisabledMsg);
+        System.debug('flagEnabledMsg: ' + flagEnabledMsg);
+
+        System.assertEquals(STR_TO_PAD, getApc().loan__Immediate_Destination__c);
+
+        System.assert(flagDisabledMsg.contains(STR_TO_PAD_0_PADDED) && !flagDisabledMsg.contains(STR_TO_PAD_WS_PADDED));
+        System.assert(flagEnabledMsg.contains(STR_TO_PAD_WS_PADDED) && !flagEnabledMsg.contains(STR_TO_PAD_0_PADDED));
+    }
+
     /*Created By: Shakul Siddharth
 Description: To test the logic for trailer level description in NACHA file*/
     static testMethod void testGetTrailer(){
-        loan.TransactionSweepToACHState state=new loan.TransactionSweepToACHState();
-        map<string,integer> countMap=new map<string,integer>();
-        countMap.put('test',1);
-        state.o2=countMap;
+
+        loan.TransactionSweepToACHState state = getACHState();
+
         List<loan__Loan_Payment_Transaction__c> lpt = [SELECT id FROM loan__Loan_Payment_Transaction__c];
         Test.startTest();
         CustomLoanPaymentTxnNACHAGen cus=new CustomLoanPaymentTxnNACHAGen();
@@ -190,29 +214,15 @@ Description: To test the logic for trailer level description in NACHA file*/
     /*Created By: Shakul Siddharth
 Description: To test header level functionality without multiple payment support*/
     static testMethod void testGetHeader_WithoutMultiPaySupport(){
-        loan.TransactionSweepToACHState state=new loan.TransactionSweepToACHState();
-        map<string,integer> countMap=new map<string,integer>();
-        countMap.put('test',1);
-        state.o2=countMap;
-        
+
+        loan.TransactionSweepToACHState state = getACHState();
+
         loan__ACH_Parameters__c ach = [SELECT id, loan__Multiple_Payment_Method_Support__c FROM loan__ACH_Parameters__c];
         List<loan__Loan_Payment_Transaction__c> lpt = [SELECT id FROM loan__Loan_Payment_Transaction__c];
         Test.startTest();
         
-        List<filegen__File_Header_Record__c> fhrlist=new List<filegen__File_Header_Record__c>();
-        
-        filegen__File_Header_Record__c fhr=new filegen__File_Header_Record__c();
-        fHR.filegen__Immediate_Destination__c = 'immediateDestination';
-        fHR.filegen__Immediate_Origin__c = 'immediateOrigin';
-        fHR.filegen__Creation_Date__c = system.today();
-        fHR.filegen__Creation_Time__c = 'myTime';
-        fHR.filegen__ID_Modifier__c = 'abc1';
-        fHR.filegen__Immediate_Destination_Name__c = 'immediateDestinationName';
-        fHR.filegen__Immediate_Origin_Name__c = 'immediateOriginName';
-        fHR.filegen__Reference_Code__c = 'referenceCode';
-        fhrlist.add(fHR);
-        
-        insert fhrlist;
+        List<filegen__File_Header_Record__c> fhrList = getFileHeaderRecords();
+        insert fhrList;
         
         ach.loan__Multiple_Payment_Method_Support__c = false;
         update ach;
@@ -220,8 +230,87 @@ Description: To test header level functionality without multiple payment support
         CustomLoanPaymentTxnNACHAGen cus=new CustomLoanPaymentTxnNACHAGen();
         cus.getEntries(state,lpt);
         
-        String msg = cus.getHeader(state,fhrlist);
+        String msg = cus.getHeader(state,fhrList);
         Test.stopTest();
         System.assert(String.isNotBlank(msg));
+    }
+
+    static testMethod void testGetHeader_WithoutMultiPaySupportLeftPadChar() {
+
+        loan.TransactionSweepToACHState state = getACHState();
+
+        loan__ACH_Parameters__c achSettings = loan.CustomSettingsUtil.getACHParameters();
+        achSettings.loan__Immediate_Destination__c = STR_TO_PAD;
+        upsert achSettings;
+
+        loan__ACH_Parameters__c ach = [SELECT Id, loan__Multiple_Payment_Method_Support__c FROM loan__ACH_Parameters__c];
+        List<loan__Loan_Payment_Transaction__c> lpt = [SELECT Id FROM loan__Loan_Payment_Transaction__c];
+        Test.startTest();
+
+        List<filegen__File_Header_Record__c> fhrList = getFileHeaderRecords();
+        insert fhrList;
+
+        ach.loan__Multiple_Payment_Method_Support__c = false;
+        update ach;
+
+        CustomLoanPaymentTxnNACHAGen cus = new CustomLoanPaymentTxnNACHAGen();
+        cus.getEntries(state, lpt);
+
+        String flagDisabledMsg = cus.getHeader(state,fhrList);
+
+        MW_Settings__c mwSettings = MW_Settings__c.getOrgDefaults();
+        mwSettings.US_Bank_Enabled__c = true;
+        insert mwSettings;
+
+        String flagEnabledMsg = cus.getHeader(state,fhrList);
+        Test.stopTest();
+
+        System.debug('flagDisabledMsg: ' + flagDisabledMsg);
+        System.debug('flagEnabledMsg: ' + flagEnabledMsg);
+
+        System.assert(flagDisabledMsg.contains(STR_TO_PAD_0_PADDED) && !flagDisabledMsg.contains(STR_TO_PAD_WS_PADDED));
+        System.assert(flagEnabledMsg.contains(STR_TO_PAD_WS_PADDED) && !flagEnabledMsg.contains(STR_TO_PAD_0_PADDED));
+    }
+
+    /**
+     * @return an instance of TransactionSweepToACHState
+     */
+    private static loan.TransactionSweepToACHState getACHState() {
+        loan.TransactionSweepToACHState state = new loan.TransactionSweepToACHState();
+        Map<String, Integer> countMap = new Map<String, Integer>();
+        countMap.put('test', 1);
+        state.o2 = countMap;
+        return state;
+    }
+
+    /**
+     * @return The first Automated Payment Configuration record
+     */
+    private static loan__Automated_Payment_Configuration__c getApc() {
+        return [
+                SELECT Id,
+                       loan__Immediate_Destination__c
+                FROM   loan__Automated_Payment_Configuration__c
+                WHERE  loan__Active__c = TRUE
+                LIMIT 1
+        ];
+    }
+
+    /**
+     * @return Get file header records for test setup
+     */
+    private static List<filegen__File_Header_Record__c> getFileHeaderRecords() {
+        List<filegen__File_Header_Record__c> frs = new List<filegen__File_Header_Record__c>();
+        filegen__File_Header_Record__c fr = new filegen__File_Header_Record__c();
+        fr.filegen__Immediate_Destination__c = 'immediateDestination';
+        fr.filegen__Immediate_Origin__c = 'immediateOrigin';
+        fr.filegen__Creation_Date__c = System.today();
+        fr.filegen__Creation_Time__c = 'myTime';
+        fr.filegen__ID_Modifier__c = 'abc';
+        fr.filegen__Immediate_Destination_Name__c = 'immediateDestinationName';
+        fr.filegen__Immediate_Origin_Name__c = 'immediateOriginName';
+        fr.filegen__Reference_Code__c = 'referenceCode';
+        frs.add(fr);
+        return frs;
     }
 }

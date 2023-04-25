@@ -142,13 +142,17 @@ global class ApplicationToContractConverter implements ints.IProcessContract{
             
             try{
             
-                apc = [Select id,name,
-                       loan__Payment_Mode__c,
-                       loan__Bank_Account__c,
-                       loan__Bank_Account__r.loan__Account__c
-                       From loan__Automated_Payment_Configuration__c
-                       Where loan__Bank_Account__r.loan__Account__c =: application.Investor__c
-                       limit 1];
+                apc = [
+                    SELECT Id,
+                           Name,
+                           loan__Payment_Mode__c,
+                           loan__Bank_Account__c,
+                           loan__Bank_Account__r.loan__Account__c
+                    FROM   loan__Automated_Payment_Configuration__c
+                    WHERE  loan__Bank_Account__r.loan__Account__c =: application.Investor__c
+                    AND    loan__Active__c = TRUE
+                    LIMIT 1
+                ];
                        
             }catch(exception ex){
                 loan__batch_process_log__c logs = new loan__batch_process_log__c(loan__Message__c='Error in assignToUnderwriterQueue:  '+ex.getlinenumber()+'Error: '+ex.getMessage() + application.name);

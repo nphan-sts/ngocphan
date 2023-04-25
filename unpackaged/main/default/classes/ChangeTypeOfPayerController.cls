@@ -101,13 +101,17 @@ public with sharing class ChangeTypeOfPayerController
             /*LOS-28*/
             loan__Automated_Payment_Configuration__c apc;
                 try{
-                  apc = [Select id,name,
-                                loan__Payment_Mode__c,
-                                loan__Bank_Account__c,
-                                loan__Bank_Account__r.loan__Account__c
-                            From loan__Automated_Payment_Configuration__c
-                            Where loan__Bank_Account__r.loan__Account__c =: investor.loan__Account__c //loanAccQuery.Investor_Account__c  //LOS-28
-                            limit 1];
+                    apc = [
+                        SELECT Id,
+                               Name,
+                               loan__Payment_Mode__c,
+                               loan__Bank_Account__c,
+                               loan__Bank_Account__r.loan__Account__c
+                        FROM   loan__Automated_Payment_Configuration__c
+                        WHERE  loan__Bank_Account__r.loan__Account__c =: investor.loan__Account__c //loanAccQuery.Investor_Account__c  //LOS-28
+                        AND    loan__Active__c = TRUE
+                        LIMIT 1
+                    ];
                  }
                  catch(exception ex){
                      loan__batch_process_log__c logs = new loan__batch_process_log__c(loan__Message__c='Error in assignToUnderwriterQueue:  '+ex.getlinenumber()+'Error: '+ex.getMessage() + loanAccQuery.name);
