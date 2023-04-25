@@ -33,7 +33,7 @@ global class AchDocsUploadToBoxjob implements Database.Batchable<sObject>,Databa
        if(!scope.isEmpty()){ 
             list<Document> Documentlist = new list<Document>(scope);
              try{
-                  loan__Automated_Payment_Configuration__c APC = [
+                  loan__Automated_Payment_Configuration__c apc = [
                           SELECT Id,
                                  Name,
                                  Box_Folder_ID__c,
@@ -45,14 +45,14 @@ global class AchDocsUploadToBoxjob implements Database.Batchable<sObject>,Databa
                   ];
                
               
-                resp = BoX_Integ.uploadFileToBox(Documentlist[0].body,Documentlist[0].name,APC.Box_Folder_ID__c,null);
+                resp = BoX_Integ.uploadFileToBox(Documentlist[0].body,Documentlist[0].name,apc.Box_Folder_ID__c,null);
                 
                 System.debug('****rs****'+resp.getStatusCode());
                 System.debug('****rsStatus*****'+resp.getStatus());
                 if(resp.getStatusCode() == 201 && resp.getStatus() == 'Created'){
                     
                     Documentlist[0].Description = docs.UploadedBOX__c; 
-                    Update Documentlist[0];
+                    update Documentlist[0];
                     System.debug('***FileUploadedSuccessfully****');
                 }
                 if(resp.getStatusCode() == 401 && resp.getStatus() == 'Conflict')
