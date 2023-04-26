@@ -46,13 +46,17 @@
             // Getting the set of Folder names from apcList and add it to folderNameSet
             if(jobName == 'NachaJob'){
  
-                for(loan__Automated_Payment_Configuration__c fs: [SELECT id,
-                                                                  loan__folder_name__c FROM
-                                                                  loan__Automated_Payment_Configuration__c WHERE
-                                                                  loan__Folder_Name__c != null AND
-                                                                  Box_Folder_ID__c != null]){
-                                                                      folderNameSet.add(fs.loan__Folder_Name__c);
-                                                                  }
+                for(loan__Automated_Payment_Configuration__c fs: [
+                        SELECT Id,
+                               loan__Folder_Name__c
+                        FROM   loan__Automated_Payment_Configuration__c
+                        WHERE  loan__Folder_Name__c != NULL
+                        AND    loan__Active__c = TRUE
+                        AND    Box_Folder_ID__c != NULL
+                ]) {
+                    folderNameSet.add(fs.loan__Folder_Name__c);
+                }
+
                 // Fetch the list of ids from the folderNameSet
                 folderIds = [SELECT id,
                              Name FROM

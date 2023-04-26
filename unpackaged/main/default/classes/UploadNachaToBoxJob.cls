@@ -14,9 +14,16 @@ global with sharing class UploadNachaToBoxJob implements Database.Batchable<sObj
    global Map<Id,String> folderIdBoxMap = new Map<Id,String>();
 
    global UploadNachaToBoxJob(){
-       for(loan__Automated_Payment_Configuration__c apc : [ SELECT Id,name,loan__Folder_Name__c,Box_Folder_ID__c  FROM loan__Automated_Payment_Configuration__c
-                                                            WHERE loan__Folder_Name__c != null and Box_Folder_ID__c != null])
-       {
+       for(loan__Automated_Payment_Configuration__c apc : [
+               SELECT Id,
+                      Name,
+                      loan__Folder_Name__c,
+                      Box_Folder_ID__c
+               FROM   loan__Automated_Payment_Configuration__c
+               WHERE  loan__Folder_Name__c != NULL
+               AND    loan__Active__c = TRUE
+               AND    Box_Folder_ID__c != NULL
+       ]) {
            folderName.add(apc.loan__Folder_Name__c);
            folderBoxMap.put(apc.loan__Folder_Name__c,apc.Box_Folder_ID__c);
        }
