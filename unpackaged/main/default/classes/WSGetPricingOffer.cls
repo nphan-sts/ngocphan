@@ -89,6 +89,7 @@ global with sharing class WSGetPricingOffer {
         public String ebp_offer_code {get;set;}
         public String ebp_parent_offer_key {get;set;}
         public String score {get;set;}
+        public String external_offer_id {get;set;}
 
         public Offers(JSONParser parser,String applicationId) {
             
@@ -168,6 +169,10 @@ global with sharing class WSGetPricingOffer {
                         else if (text == 'score'){
                             score = parser.getText();
                             pOffer.Score__c = Decimal.valueOf(score);
+                        }
+                        else if (text == 'external_offer_id') {
+                            external_offer_id = parser.getText();
+                            pOffer.external_offer_id__c = external_offer_id;
                         }
                         else {
                             System.debug(LoggingLevel.WARN, 'Offers consuming unrecognized property: '+text);
