@@ -1277,7 +1277,18 @@ public class TestWSSetupAPS {
         
         
         apc.loan__Bank_Account__c = bankAcc.id;
-        update apc;        
+        update apc;
+
+        /* assert that an inactive apc with a bad configuration (null payment mode) is not used */
+        loan__Automated_Payment_Configuration__c inactiveApc = loan.TestHelper2.createAutomatedPaymentConfiguration('LOAN PAYMENT',
+                paymentMode,
+                collectionTrustBA,
+                'loan.LoanPaymentTxnNACHAGen');
+
+        inactiveApc.loan__Bank_Account__c = bankAcc.id;
+        inactiveApc.loan__Active__c = false;
+        inactiveApc.loan__Payment_Mode__c = null;
+        update inactiveApc;
         
         list<loan__Investor_Loan__c> ioList = new list<loan__Investor_Loan__c>();
         
@@ -1318,15 +1329,26 @@ public class TestWSSetupAPS {
         Test.startTest();
         Response results = WSSetupAPS.createAPSSetup();
         System.assert(results.status.equalsIgnoreCase(peer.Constants.SUCCESS));
-        loan__loan_Payment_transaction__c payofflpt = [select id,name,loan__installment_payment__c,loan__Early_Total_Repayment_of_the_Loan__c,loan__payment_Mode__c,loan__Automated_Payment_Setup__c,loan__Automated_Payment_Setup__r.loan__Active__c  
-                                                       from loan__loan_Payment_transaction__c 
-                                                       where loan__loan_Account__c=:lAcct.id];
+        loan__loan_Payment_transaction__c payofflpt = [
+                SELECT Id,
+                       Name,
+                       loan__Installment_Payment__c,
+                       loan__Early_Total_Repayment_of_the_Loan__c,
+                       loan__Payment_Mode__c,
+                       loan__Automated_Payment_Setup__c,
+                       loan__Automated_Payment_Setup__r.loan__Active__c,
+                       loan__Automated_Payment_Setup__r.loan__Payment_Mode__c
+                FROM   loan__Loan_Payment_Transaction__c
+                WHERE  loan__Loan_Account__c = :lAcct.Id
+        ];
         System.assertEquals(payofflpt.loan__installment_payment__c,false);
         System.assertEquals(payofflpt.loan__Early_Total_Repayment_of_the_Loan__c,true);
         System.assert(payofflpt.loan__Automated_Payment_Setup__c != null);//LSP-328.2 When payoff LPT gets created, APS is mapped to it for NACHA mapping
+        System.assert(apc.loan__Payment_Mode__c != null);//LPC-527 confirm the apc had a payment mode
+        System.assertEquals(apc.loan__Payment_Mode__c, payofflpt.loan__Automated_Payment_Setup__r.loan__Payment_Mode__c);//LPC-527 confirm the aps has the same payment mode as the apc (not the inactive one of null)
         System.assert(!payofflpt.loan__Automated_Payment_Setup__r.loan__Active__c);//LSP-328.2 APS status should be inactive
         Test.stopTest();
-        List<loan__batch_process_log__c> successLog = [select id, name,loan__Log_Level__c from loan__batch_process_log__c where loan__Origin__c = 'WSSetupAPS'];
+        List<loan__batch_process_log__c> successLog = [SELECT id, name,loan__Log_Level__c FROM loan__batch_process_log__c WHERE loan__Origin__c = 'WSSetupAPS'];
         System.assert(successLog.size()>0);
         System.assertEquals('INFO', successLog.get(0).loan__Log_Level__c);
     }
