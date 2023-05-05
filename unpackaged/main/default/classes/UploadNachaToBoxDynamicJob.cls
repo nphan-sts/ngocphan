@@ -22,7 +22,7 @@ loan__Batch_Process_Log__c batch = new loan__Batch_Process_Log__c();
                                     'loan__Automated_Payment_Configuration__c',
                                     '');
         loanPmtOC.addFields('id,name,loan__Folder_Name__c,Box_Folder_ID__c'); 
-        loanPmtOC.setWhereClause('loan__Folder_Name__c != null AND Box_Folder_ID__c != null');
+        loanPmtOC.setWhereClause('loan__Folder_Name__c != null AND Box_Folder_ID__c != null AND loan__Active__c = TRUE');
         loanPmtOC.buildQuery(); 
         return loanPmtOC.getQuery();
      } 

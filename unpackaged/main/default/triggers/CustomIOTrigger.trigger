@@ -40,15 +40,20 @@ trigger CustomIOTrigger on loan__Investor_Loan__c (after insert, after update) {
             
             LAList = [select id,loan__Payment_Mode__c,Auto_Sale_Date__c,IO_AutoSale_to_Funding_Partner__c,Application__r.Loan_Origination_Date__c/*,Investor_Account__c*/,(select id,name from loan__Automated_Payment_Setup__r where loan__Active__c = True) from loan__loan_account__c where id in : LASet];  //CRM-614	//COMMENTED FOR LOS-28  //pallavi(added autosale for CRM-502)
             List <loan__Automated_Payment_Setup__c> APSList = new List <loan__Automated_Payment_Setup__c>();
-            List <loan__Automated_Payment_Configuration__c> automatedpaymentSetups = [Select id,name,
-                                                                            loan__Payment_Mode__c,
-                                                                            loan__Bank_Account__c,
-                                                                            loan__Bank_Account__r.loan__Account__c
-                                                                        From loan__Automated_Payment_Configuration__c
-                                                                        Where loan__Bank_Account__r.loan__Account__c in : InvestorsSet];
+            List <loan__Automated_Payment_Configuration__c> apcs = [
+                    SELECT Id,
+                           Name,
+                           loan__Payment_Mode__c,
+                           loan__Bank_Account__c,
+                           loan__Bank_Account__r.loan__Account__c
+                    FROM   loan__Automated_Payment_Configuration__c
+                    WHERE  loan__Bank_Account__r.loan__Account__c IN : InvestorsSet
+                    AND    loan__Active__c = TRUE
+            ];
+
             System.debug(logginglevel.error, 'LAList ' + LAList );
             
-            for(loan__Automated_Payment_Configuration__c apc :automatedpaymentSetups ){
+            for(loan__Automated_Payment_Configuration__c apc : apcs){
             
                 MapInvestorToPaymentmode.put(apc.loan__Bank_Account__r.loan__Account__c,apc.loan__Payment_Mode__c);      
             

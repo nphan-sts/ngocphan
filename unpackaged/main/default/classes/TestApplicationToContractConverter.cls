@@ -110,7 +110,16 @@ private class TestApplicationToContractConverter{
         apc1.loan__Bank_Account__c = bnk1.id;
         apc1.loan__Filegen_Class__c = 'Test';
         apc1.loan__Folder_Name__c = 'TestFolder';
+        apc1.loan__Active__c = true;
         insert apc1;
+
+        loan__Automated_Payment_Configuration__c apcNullPaymentMode = new loan__Automated_Payment_Configuration__c();
+        apcNullPaymentMode.loan__Payment_Mode__c = null;
+        apcNullPaymentMode.loan__Bank_Account__c = bnk1.id;
+        apcNullPaymentMode.loan__Filegen_Class__c = 'Test';
+        apcNullPaymentMode.loan__Folder_Name__c = 'TestFolder';
+        apcNullPaymentMode.loan__Active__c = false;
+        insert apcNullPaymentMode;
         
          //Creating Application
         genesis__Applications__c app= new genesis__Applications__c(
@@ -210,6 +219,7 @@ private class TestApplicationToContractConverter{
         apc.loan__Bank_Account__c = bnk.id;
         apc.loan__Filegen_Class__c = 'Test';
         apc.loan__Folder_Name__c = 'TestFolder';
+        apc.loan__Active__c = true;
         insert apc;
         
         Map<SObject,SObject> AppVsLoanAppMap = new Map<SObject,SObject>();
@@ -235,8 +245,23 @@ private class TestApplicationToContractConverter{
         }        
         //LSP-256 end
         //LSP-218 start
-        List<loan__loan_account__c> laCreated = [select id, name, loan__Loan_Product_Name__r.name 
-                                                           from loan__loan_account__c where id =:contractId limit 1];
+        List<loan__Loan_Account__c> laCreated = [
+            SELECT Id,
+                   Name,
+                   loan__Payment_Mode__c,
+                   loan__Loan_Product_Name__r.Name,
+                   (SELECT Id,
+                           loan__Payment_Mode__c
+                    FROM   loan__Automated_Payment_Setup__r)
+            FROM   loan__Loan_Account__c
+            WHERE  Id =:contractId
+            LIMIT 1
+        ];
+
+        /* assert that the contract was created by using the active automated payment configuration */
+        System.assertEquals(apc1.loan__Payment_Mode__c, laCreated.get(0).loan__Payment_Mode__c);
+        System.assertEquals(apc1.loan__Payment_Mode__c, laCreated.get(0).loan__Automated_Payment_Setup__r[0].loan__Payment_Mode__c);
+
         if(laCreated != null && laCreated.size()>0){
             if(laCreated.get(0).loan__Loan_Product_Name__r.name == 'Auto Payer'){
                List<loan__Automated_Payment_Setup__c> aps =  [select id, name, loan__Amount_Type__c from loan__Automated_Payment_Setup__c

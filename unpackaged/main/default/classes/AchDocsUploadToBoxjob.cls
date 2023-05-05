@@ -6,11 +6,15 @@ global class AchDocsUploadToBoxjob implements Database.Batchable<sObject>,Databa
    global Database.QueryLocator start(Database.BatchableContext BC) {
         
         Set<String> foldersName = new Set<String>();
-        List<loan__Automated_Payment_Configuration__c> listAPC = [Select id,name,
-                                                                 Box_Folder_ID__c,
-                                                                 loan__Folder_Name__c
-                                                            From loan__Automated_Payment_Configuration__c
-                                                            Where Box_Folder_ID__c != null];
+        List<loan__Automated_Payment_Configuration__c> listAPC = [
+                SELECT Id,
+                       Name,
+                       Box_Folder_ID__c,
+                       loan__Folder_Name__c
+                FROM   loan__Automated_Payment_Configuration__c
+                WHERE  Box_Folder_ID__c != NULL
+                AND    loan__Active__c = TRUE
+        ];
         System.debug('****listAPC****'+listAPC);
         if(!listAPC.IsEmpty()){                                                                     
             for(loan__Automated_Payment_Configuration__c APC : listAPC){
@@ -29,22 +33,26 @@ global class AchDocsUploadToBoxjob implements Database.Batchable<sObject>,Databa
        if(!scope.isEmpty()){ 
             list<Document> Documentlist = new list<Document>(scope);
              try{
-                  loan__Automated_Payment_Configuration__c APC = [Select id,name,
-                                                                         Box_Folder_ID__c,
-                                                                         loan__Folder_Name__c
-                                                                    From loan__Automated_Payment_Configuration__c
-                                                                    Where loan__Folder_Name__c =: Documentlist[0].Folder.Name 
-                                                                    AND loan__Active__c = True limit 1];
+                  loan__Automated_Payment_Configuration__c apc = [
+                          SELECT Id,
+                                 Name,
+                                 Box_Folder_ID__c,
+                                 loan__Folder_Name__c
+                          FROM   loan__Automated_Payment_Configuration__c
+                          WHERE  loan__Folder_Name__c = :Documentlist[0].Folder.Name
+                          AND    loan__Active__c = TRUE
+                          LIMIT  1
+                  ];
                
               
-                resp = BoX_Integ.uploadFileToBox(Documentlist[0].body,Documentlist[0].name,APC.Box_Folder_ID__c,null);
+                resp = BoX_Integ.uploadFileToBox(Documentlist[0].body,Documentlist[0].name,apc.Box_Folder_ID__c,null);
                 
                 System.debug('****rs****'+resp.getStatusCode());
                 System.debug('****rsStatus*****'+resp.getStatus());
                 if(resp.getStatusCode() == 201 && resp.getStatus() == 'Created'){
                     
                     Documentlist[0].Description = docs.UploadedBOX__c; 
-                    Update Documentlist[0];
+                    update Documentlist[0];
                     System.debug('***FileUploadedSuccessfully****');
                 }
                 if(resp.getStatusCode() == 401 && resp.getStatus() == 'Conflict')
