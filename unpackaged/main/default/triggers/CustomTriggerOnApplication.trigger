@@ -119,12 +119,6 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 /** Call to redecision logic */
                 CustomTriggerOnApplicationHandler.callRedecisionLogic(app, oldApp,trigger.oldMap,trigger.newMap);
                 
-                //CRM-762
-                if(app.GIACT_Status__c != null){
-                    if((app.GIACT_Status__c.equals('Accept')) && (app.GIACT_Status__c != oldApp.GIACT_Status__c)){
-                        CustomTriggerOnApplicationHandler.updateBankAccountTab(app.id);
-                    }
-                }
                 // LOP-182
                 if(app.Plaid_Status__c != oldApp.Plaid_Status__c){
                     CustomTriggerOnApplicationHandler.updateBankStatement(app.id, app.Plaid_Status__c);
