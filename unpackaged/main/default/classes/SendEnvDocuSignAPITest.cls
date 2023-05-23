@@ -122,6 +122,12 @@ private class SendEnvDocuSignAPITest{
     
     static testMethod void test_sendDocuSignEnvelope_UseCase1(){
         
+        
+        MW_Settings__c customSetting = new MW_Settings__c();
+		customSetting.TagsAPI_URL__c = 'https://sfapi-dev.payoff.com/lsa/api/v1/resource_tagging/add_tag';
+		customSetting.CertificateNameForLEADS__c = 'sfapi_staging';
+        customSetting.CLSDSIntgnTurnOff__c = false;
+		insert customSetting;
         genesis__Applications__c app = [select id,
                                         genesis__Due_Day__c,
                                         DocuSignFlag__c
@@ -136,7 +142,7 @@ private class SendEnvDocuSignAPITest{
         
         TestTriggerParameter.disableTriggerHandler(true);
         System.assertEquals(true, TestTriggerParameter.disableTriggerTest);
-        List<genesis__Applications__c> lstgenesis_applications_Obj  =  [SELECT DocuSign_EnvelopeId__c from genesis__Applications__c];
+        List<genesis__Applications__c> lstgenesis_applications_Obj = [SELECT DocuSign_EnvelopeId__c from genesis__Applications__c];
         Test.startTest();
         
         SendEnvDocuSignAPI snd = new SendEnvDocuSignAPI(true);
@@ -149,9 +155,43 @@ private class SendEnvDocuSignAPITest{
         
         Test.stopTest();  
         system.debug('class' +snd);
-        System.assertEquals(false, TestTriggerParameter.disableTriggerTest);
-        System.assertEquals(true, lstgenesis_applications_Obj.size()>0);   
+        System.assertEquals(false, TestTriggerParameter.disableTriggerTest); 
         
         system.assertEquals([select Id from genesis__Applications__c].size(),1);
+    
+    system.assertEquals(true, lstgenesis_applications_Obj.size()>0);
+        system.assertEquals([select Id from genesis__Applications__c].size(),1);
     }
+    
+    static testMethod void test_sendDocuSignEnvelope_UseCase2(){
+        
+        
+        MW_Settings__c customSetting = new MW_Settings__c();
+		customSetting.TagsAPI_URL__c = 'https://sfapi-dev.payoff.com/lsa/api/v1/resource_tagging/add_tag';
+		customSetting.CertificateNameForLEADS__c = 'sfapi_staging';
+        customSetting.CLSDSIntgnTurnOff__c = true;
+		insert customSetting;
+        genesis__Applications__c app = [select id,
+                                        genesis__Due_Day__c,DocuSign_EnvelopeId__c,
+                                        DocuSignFlag__c, genesis__Status__c
+                                        from genesis__Applications__c];
+        
+        DocuSign_Template__c docTemplate = [select id,
+                                            name, 
+                                            Template_Id__c,
+                                            State__c,
+                                            Document_Category__c 
+                                            from DocuSign_Template__c];
+        
+        TestTriggerParameter.disableTriggerHandler(true);
+        System.assertEquals(true, TestTriggerParameter.disableTriggerTest);
+        Test.startTest();
+        
+        SendEnvDocuSignAPI snd = new SendEnvDocuSignAPI(true);
+        SendEnvDocuSignAPI.sendDocuSignEnvelope(app.Id); 
+        SendEnvDocuSignAPI.voidDocuSignEnvelope(app.DocuSign_EnvelopeId__c);
+        
+        Test.stopTest();  
+        System.assertEquals(app.genesis__Status__c, 'agent_verified');   
+    }     
 }

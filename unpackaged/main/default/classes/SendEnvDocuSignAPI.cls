@@ -22,6 +22,8 @@ public with sharing class SendEnvDocuSignAPI {
     Public Static String passWord = DocuSignAPICred__c.getInstance().passWord__c;
     Public Static String integratorKey = DocuSignAPICred__c.getInstance().integrator_Key__c;
     Public Static String DocusignEndpoint = DocuSignAPICred__c.getInstance().EndpointURL__c;
+    Public Static boolean DocusignIntgnBoolean = MW_Settings__c.getInstance().CLSDSIntgnTurnOff__c;
+
     /*Public Static String accountID = '1eadc548-9705-4c30-9a09-507874a0b1f8';
         //Public Static String userName = 'eef65811-7d4f-4381-9224-58ffb5bb666e';
         //Public Static String passWord = 'Welcome12345';
@@ -37,21 +39,23 @@ public with sharing class SendEnvDocuSignAPI {
     }
 
     public Static Void sendDocuSignEnvelope(Id ApplicationId){
-
+        if(DocusignIntgnBoolean==false){
         if(isDSTrgExecuting) {
             System.debug('isDSTrgExecuting....'+ isDSTrgExecuting);
             sendInvestorDocuments(ApplicationId);
             isDSTrgExecuting= false;
         }
+        }
     }
-
+    
     public Static Void voidDocuSignEnvelope(String envelopeID){
-
+       if(DocusignIntgnBoolean==false){
         if(isvoidTrgExecuting) {
             System.debug('isvoidTrgExecuting....'+ isvoidTrgExecuting);
             voidInvestorDocuments(envelopeID);
             isvoidTrgExecuting= false;
         }
+       }
     }
 
     /*@Future(callout=true)
