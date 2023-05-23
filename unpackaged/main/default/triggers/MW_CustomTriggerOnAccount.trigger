@@ -5,8 +5,7 @@
    * @return   
    */
 trigger MW_CustomTriggerOnAccount on Account (after insert, after update,before insert,before update) {
-    
-    if(trigger.isAfter && trigger.isUpdate){
+    if(!genesis.CustomSettingsUtil.getOrgParameters().genesis__Disable_Triggers__c && trigger.isAfter && trigger.isUpdate){
         MW_SynchronizeHandler.postAccountDetailsOnWebHook(trigger.OldMap,trigger.NewMap);
     }
 }

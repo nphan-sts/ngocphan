@@ -8,6 +8,11 @@
     </packageVersions>
     <packageVersions>
         <majorNumber>2</majorNumber>
+        <minorNumber>7011</minorNumber>
+        <namespace>genesis</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>2</majorNumber>
         <minorNumber>7004</minorNumber>
         <namespace>peer</namespace>
     </packageVersions>
