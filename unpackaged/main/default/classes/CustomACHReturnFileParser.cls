@@ -195,7 +195,7 @@ global class CustomACHReturnFileParser extends loan.ACHReturnPaymentProcessor{
                     CORPaymentEntries.add(changeCodeloanEntry);
                 }
                 system.debug('--changeCodeloanEntry--'+changeCodeloanEntry);
-                if(line.startsWith('7')){
+                if(line.startsWith('8')){
                     changeCodeFound= False;
                     lptReversalFound = False;
                     disbursalRevFound = False;
