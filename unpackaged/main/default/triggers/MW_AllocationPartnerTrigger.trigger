@@ -5,7 +5,8 @@
  * Test Coverage: MW_AllocationEngineHandlerTest
  */
 trigger MW_AllocationPartnerTrigger on Allocation_Partner__c (after update) {
-    if (Trigger.isAfter && Trigger.isUpdate && MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
+    if (!genesis.CustomSettingsUtil.getOrgParameters().genesis__Disable_Triggers__c
+        && Trigger.isAfter && Trigger.isUpdate && MW_AllocationEngineHandler.isAllocationEngineServiceEnabled()) {
         MW_AllocationEngineHandler.handleUpdatedAllocationPartners(Trigger.new);
     }
 }
