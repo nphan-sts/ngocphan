@@ -124,30 +124,32 @@ private class MW_LoanAccountTest {
         
         test.stopTest();
     }
-    static testmethod void TestUpdatePlacementFields(){
-        loan__loan_account__c LoanAcc = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
+    static testmethod void testUpdatePlacementFields(){
+        FINAL String placedHM = 'Placed - HM';
+        FINAL String  placedACU = 'Placed - ACU';
+        loan__loan_account__c loanAcc = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
                                          FROM loan__loan_account__c WHERE lead_guid__C = 'TestClassGuid0'];
 
-        LoanAcc.Placement_Status__c = 'Placed - HM';
-        update LoanAcc;
+        loanAcc.Placement_Status__c = placedHM;
+        update loanAcc;
         
-        LoanAcc = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
+        loanAcc = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
                                          FROM loan__loan_account__c WHERE lead_guid__C = 'TestClassGuid0'];
                                          
-        Assert.isTrue(LoanAcc.Placement_Status_StartDate__c.contains('Placed - HM'));
-        Assert.isTrue(LoanAcc.Placement_Status_EndDate__c == null);
+        Assert.isTrue(loanAcc.Placement_Status_StartDate__c.contains(placedHM));
+        Assert.isTrue(loanAcc.Placement_Status_EndDate__c == null);
 
-        LoanAcc.Placement_Status__c = 'Placed - ACU';
-        update LoanAcc;
+        loanAcc.Placement_Status__c = placedACU;
+        update loanAcc;
 
-        LoanAcc = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
+        loanAcc = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
                                          FROM loan__loan_account__c WHERE lead_guid__C = 'TestClassGuid0'];
                                          
-        Assert.isTrue(LoanAcc.Placement_Status_StartDate__c.contains('Placed - ACU'));
-        Assert.isTrue(LoanAcc.Placement_Status_EndDate__c.contains('Placed - HM'));
+        Assert.isTrue(loanAcc.Placement_Status_StartDate__c.contains(placedACU));
+        Assert.isTrue(loanAcc.Placement_Status_EndDate__c.contains(placedHM));
     }
     
-    static testmethod void TestMassUpdatePlacementFields(){
+    static testmethod void testMassUpdatePlacementFields(){
         list<loan__loan_account__c> loanAccList = new list<loan__loan_account__c>();
         for(loan__loan_account__c loanAcc : [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
                                              FROM loan__loan_account__c WHERE lead_guid__C like 'TestClassGuid%'])
