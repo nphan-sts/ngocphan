@@ -1,6 +1,7 @@
 global class UpdatePromissoryFieldsDocusignJob implements Database.Batchable<sObject>,Database.AllowsCallouts,Schedulable {
 
 List<String> skipLoanStatus = System.Label.skip_docusign_job.split(',');
+Public Static boolean DocusignIntgnBoolean = MW_Settings__c.getInstance().CLSDSIntgnTurnOff__c;
 String query;
 global UpdatePromissoryFieldsDocusignJob() {
     query = 'SELECT id, name, Application__c, dsfs__Envelope_Status__c, dsfs__Sent_Date_Time__c, Application__r.name, dsfs__DocuSign_Envelope_ID__c, Application__r.genesis__Status__c '+
@@ -14,7 +15,9 @@ global Database.QueryLocator start(Database.BatchableContext BC) {
 }
 global void execute(SchedulableContext sc) {
    UpdatePromissoryFieldsDocusignJob j =new UpdatePromissoryFieldsDocusignJob();
+    if(DocusignIntgnBoolean==false){
    Database.executebatch(j,1);
+    }
 }
 global void execute(Database.BatchableContext BC, List<dsfs__DocuSign_Status__c> scope) {
     System.debug(scope.size());

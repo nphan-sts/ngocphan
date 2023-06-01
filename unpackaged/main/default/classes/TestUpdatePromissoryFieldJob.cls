@@ -2,6 +2,12 @@
 public class TestUpdatePromissoryFieldJob {
     static testMethod void testPromissoryFieldJob(){
         
+        
+        MW_Settings__c customSetting = new MW_Settings__c();
+		customSetting.TagsAPI_URL__c = 'https://sfapi-dev.payoff.com/lsa/api/v1/resource_tagging/add_tag';
+		customSetting.CertificateNameForLEADS__c = 'sfapi_staging';
+        customSetting.CLSDSIntgnTurnOff__c = false;
+		insert customSetting;
         TestTriggerParameter.disableTriggerHandler(true);
         System.assertEquals(true, TestTriggerParameter.disableTriggerTest);
         Test.startTest();
