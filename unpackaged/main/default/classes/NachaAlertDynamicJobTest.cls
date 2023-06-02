@@ -94,12 +94,7 @@ public with sharing class NachaAlertDynamicJobTest {
 
         Test.setMock(HttpCalloutMock.class, new HttpSlackCalloutMock());
 
-        List<loan__Automated_Payment_Configuration__c> apcList = [
-            SELECT Id,
-                   loan__Folder_Name__c
-            FROM   loan__Automated_Payment_Configuration__c
-            WHERE  loan__Active__c = TRUE
-        ];
+        List<loan__Automated_Payment_Configuration__c> apcList = [Select id, loan__Folder_Name__c FROM loan__Automated_Payment_Configuration__c];
         LogsCalloutBatch job = new LogsCalloutBatch(apcList, System.now());
         String jobID = Database.executeBatch(job);
         Test.StopTest();
@@ -116,12 +111,7 @@ public with sharing class NachaAlertDynamicJobTest {
 
         Test.setMock(HttpCalloutMock.class, new HttpSlackCalloutMock());
 
-        List<loan__Automated_Payment_Configuration__c> apcList = [
-            SELECT Id,
-                   loan__Folder_Name__c
-            FROM   loan__Automated_Payment_Configuration__c
-            WHERE  loan__Active__c = TRUE
-        ];
+        List<loan__Automated_Payment_Configuration__c> apcList = [Select id, loan__Folder_Name__c FROM loan__Automated_Payment_Configuration__c];
 
         List<String> folderList = new List<String>();
 
