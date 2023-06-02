@@ -5,6 +5,7 @@ public with sharing class NightlyDynamicAlertHandler {
         if(dagLogList.get(0).clcommon__Status__c == 'Success') {
 
             LogsCalloutBatchHelper.sendSlackMessage('Nightly Jobs complete successfully', dagLogList.get(0).clcommon__Start_Time__c);
+
         }
         else {
             List<clcommon__Job_Logging__c> failedJobLogging = getJobLogging(dagLogList.get(0).Id);

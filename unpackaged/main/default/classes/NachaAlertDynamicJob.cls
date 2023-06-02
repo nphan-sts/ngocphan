@@ -10,7 +10,8 @@ global class NachaAlertDynamicJob extends clcommon.DynamicJob implements Databas
     }
     
     global override void doInitialize() {} 
-    
+
+    /* resolve with UploadNachaToBoxDynamicJob.getRuntimeQuery in future */
     global override String getRuntimeQuery() {   
         mfiflexUtil.ExecutionContext ec = mfiflexUtil.ExecutionContext.getExecContext();
         mfiflexUtil.ObjectCache loanPmtOC = ec.getObject('Document');

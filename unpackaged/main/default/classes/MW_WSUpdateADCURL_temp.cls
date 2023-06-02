@@ -29,7 +29,7 @@ global with sharing class MW_WSUpdateADCURL_temp {
                     createNewDocTag(newDoc[0].genesis__Application__c);
                     update newDoc;
                 }
-                else{
+                else if (newDoc.size() > 0){
                     //if doc is already CLEARED then tag the application
                     createApplicationTag(newDoc[0].genesis__Application__c);
                 }

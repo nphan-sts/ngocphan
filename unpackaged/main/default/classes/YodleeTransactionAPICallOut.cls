@@ -1,7 +1,7 @@
 /* ****************Modification History******************************************
  * Created By        Date          JIRA number
  *1. Pallavi        2020/08/13     CRM-755(Make NeoVerify Initiated Manually)
- *      
+ *2. Shakul         2022/02/08     LSP-501(Changed baseType to 'DEBIT' for response running in Test.isRunningTest scope)      
  ******************Modification History******************************************/
 global class YodleeTransactionAPICallOut {
     
@@ -222,7 +222,7 @@ global class YodleeTransactionAPICallOut {
                                    '        "amount": 9846,'+
                                    '        "currency": "USD"'+
                                    '      },'+
-                                   '      "baseType": "CREDIT",'+
+                                   '      "baseType": "DEBIT",'+
                                    '      "categoryType": "INCOME",'+
                                    '      "categoryId": 32,'+
                                    '      "category": "Other Income",'+

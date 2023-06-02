@@ -1,4 +1,4 @@
-trigger MW_PublishApplicationDocumentCategory1 on genesis__Application_Document_Category__c (after insert, after update,before insert,before update) 
+trigger MW_PublishApplicationDocumentCategory1 on genesis__Application_Document_Category__c (after insert, after update, after delete, before insert,before update)
 {
     // //This is temporary code related DataArchiva and CRM-955 where we need to restore archived application and following code would take care of known errors.
     // Boolean isTriggerActive = CEPARC__DataArchiva_App_Setting__c.getOrgDefaults().Is_Trigger_Active__c;
@@ -46,6 +46,9 @@ trigger MW_PublishApplicationDocumentCategory1 on genesis__Application_Document_
         
         if (trigger.isAfter)
         {
+
+          handle.log();
+
           if (trigger.isUpdate) handle.afterUpdate();
           if (trigger.isInsert) handle.afterInsert();
         }
