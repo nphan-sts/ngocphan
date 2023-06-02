@@ -21,66 +21,22 @@ public class LogsCalloutBatchHelper{
 
     /**
      *
-        @here:white_check_mark: *1 NACHA FILES were created today*
+        @here:white_check_mark: *1 NACHA FILES were created today* | Nightly Jobs complete successfully:
         Start time: 2023-03-06 11:40 PM PST
         Finish time: 2023-03-06 11:46 PM PST
         cc @Abhijeet Thorat
     */
-    public static void sendNachaAlerts(List<Document> nachaDocs, Datetime startTime){
+    public static void sendSlackMessage(String msg, Datetime startTime){
         string slackMentions = '';
         for(string userIds : MW_Settings__c.getInstance().Slack_mentions_for_Nacha_alert__c.split(',')){
             slackMentions += '<@' + userIds + '> ';
         }
         Map<String, Object> msgMap = new Map<String, Object>();        
-        msgMap.put('text', hereStr + whiteMark + '*' + nachaDocs.size() +' NACHA FILES were created today *' + newLineStr +
+        msgMap.put('text', hereStr + whiteMark + msg + newLineStr +
                                                 startTimeStr + startTime.format(timeFormat,timezone) + ' ' + timezone + newLineStr + 
                                                 finishTimeStr + System.now().format(timeFormat,timezone) + ' ' + timezone + newLineStr +
                                                 ccStr + slackMentions);                      
         sendSlackCallouts(JSON.serialize(msgMap));
-    }
-
-    /**
-     *
-        @here:white_check_mark:  Nightly Jobs complete successfully:
-        Start time: 2023-03-06 11:40 PM PST
-        Finish time: 2023-03-06 11:46 PM PST
-        cc @Abhijeet Thorat
-    */
-    public static void sendSuccesNightlyJobAlerts(Datetime startTime){
-        string slackMentions = '';
-        for(string userIds : MW_Settings__c.getInstance().Slack_mentions_for_Nacha_alert__c.split(',')){
-            slackMentions += '<@' + userIds + '> ';
-        }
-        Map<String, Object> msgMap = new Map<String, Object>();        
-        msgMap.put('text', hereStr + whiteMark +' Nightly Jobs complete successfully'+ newLineStr +
-                                                startTimeStr + startTime.format(timeFormat,timezone) + ' ' + timezone + newLineStr + 
-                                                finishTimeStr + System.now().format(timeFormat,timezone) + ' ' + timezone + newLineStr + 
-                                                ccStr + slackMentions);                      
-        sendSlackCallouts(JSON.serialize(msgMap));
-    }
-
-    /**
-     * 
-        @here:alert::alert::alert::alert::alert: Nightly jobs complete:
-        Start time: 2023-03-06 11:40 PM PST
-        Finish time: 2023-03-06 11:46 PM PST
-        Failed Jobs:StartOfDayDynamicJob,InterestPostingAmzDynamicJob,LoanPayoffPaymentTxnClearingDynamicJob
-        cc: 
-        @Abhijeet Thorat
-     */
-    public static void sendFailureNightlyJobAlerts(List<String> apexClassList, Datetime startTime){
-        string slackMentions = '';
-        for(string userIds : MW_Settings__c.getInstance().Slack_mentions_for_Nacha_alert__c.split(',')){
-            slackMentions += '<@' + userIds + '> ';
-        }
-
-        Map<String, Object> msgMap = new Map<String, Object>();
-        msgMap.put('text', hereStr + alertSign + ' Nightly jobs complete:\n' + 
-                                                        startTimeStr + startTime.format(timeFormat,timezone) + ' ' + timezone + newLineStr+ 
-                                                        finishTimeStr + System.now().format(timeFormat,timezone) + ' ' + timezone + newLineStr+ 
-                                                        'Failed Jobs:' + String.join(apexClassList, ' , ') + newLineStr + 
-                                                        ccStr + slackMentions);    
-        sendSlackCallouts(JSON.serialize(msgMap)); 
     }
 
     public static Map<String, Object> getFailureMessage(Integer failureCount,Integer totalCount){
