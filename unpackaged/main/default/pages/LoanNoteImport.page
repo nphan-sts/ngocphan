@@ -1,0 +1,65 @@
+<apex:page controller="LoanNoteImportController">
+    <style type="text/css">
+    .redFont{
+        font-style: bold;
+        color: red;
+    }
+    .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader{
+        font-style: bold;
+        color: black;
+    }
+    </style>
+    <apex:sectionHeader title="Upload Skip-a-Pay file" />
+    <apex:form id="myForm" >
+        <apex:pagemessages />
+        <apex:pageBlock id="pageBlockId" >
+            <apex:pageBlockSection columns="1" id="thePageBlockSection"> 
+                <apex:pageBlockSection columns="1" id="thePageBlockINFileSection"> 
+                    <apex:inputFile value="{!csvFileBody}"  filename="{!csvAsString}" id="fName" title="Select a file to upload"/>
+                    <apex:commandButton value="Import Notes" action="{!importCSVFile}" onclick="return validateForm();"/>
+                    <apex:outputLabel styleClass="redFont" id="warningMsg">  ** Bad notes will not be processed</apex:outputLabel>
+                    <apex:outputLabel styleClass="redFont" id="errMsg"></apex:outputLabel>
+                </apex:pageBlockSection>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+        
+        <script type="text/javascript">
+            function validateForm() 
+            {
+                try
+                {
+                    var fNameObj = document.getElementById("{!$Component.myForm.pageBlockId.thePageBlockSection.thePageBlockINFileSection.fName}");
+                    var errObj = document.getElementById("{!$Component.myForm.pageBlockId.thePageBlockSection.thePageBlockINFileSection.errMsg}");
+                    var fileNamewithPath = fNameObj.value;
+                    if (fileNamewithPath.length == 0) 
+                    {
+                        errObj.innerHTML = "Please select a file before importing notes"
+                        return false;
+                    }
+                    else if(fileNamewithPath.length >0)
+                    {
+                        if(fileNamewithPath.endsWith(".csv"))
+                        {
+                            return true;
+                        }
+                        else 
+                        {
+                            errObj.innerHTML = "Please upload a csv file"
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                } 
+                catch (e) 
+                {
+                    alert(e);
+                    return false;
+                }
+            }
+        </script>
+   </apex:form>
+</apex:page>
