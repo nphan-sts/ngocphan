@@ -24,8 +24,5 @@ trigger MW_LoanAccountTrigger on loan__Loan_Account__c (before update) {
             }
             update BankAccId;
         }
-        if(Trigger.isUpdate && Trigger.isBefore){
-            MW_LoanAccountTriggerHandler.updatePlacedStatusFields(Trigger.new, Trigger.oldMap);
-        }
     }
 }
