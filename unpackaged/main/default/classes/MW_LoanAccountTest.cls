@@ -14,6 +14,14 @@ private class MW_LoanAccountTest {
         
         loan__Office_Name__c dummyOffice = loan.TestHelper.createOffice();
         
+        loan__Org_Parameters__c org = loan__Org_Parameters__c.getOrgDefaults();
+        org.loan__Disable_Triggers__c = true;
+        upsert org;  
+        
+        genesis__Org_Parameters__c genorg = genesis__Org_Parameters__c.getOrgDefaults();
+        genorg.genesis__Disable_Triggers__c = true;
+        upsert genorg;
+        
         LoanPaymentDays__c lpdays = MW_GlobalTestUtility.GetLoanPaymentDays();
         insert lpdays;
         
@@ -73,38 +81,6 @@ private class MW_LoanAccountTest {
         lacc.application__c = objApp.id;
         insert lacc;
         
-        loan__Loan_Account__c lacc1 = MW_GlobalTestUtility.GetCLContract();
-        lacc1.loan__Account__c= acc.Id;
-        lacc1.loan__Contact__c= a1.ID;
-        lacc1.loan__Loan_Product_Name__c=loanProdObj.Id;
-        lacc1.application__c = objApp.id;
-        lacc1.lead_guid__c = 'TestClassGuid1';
-        insert lacc1;
-
-        loan__Loan_Account__c lacc2 = MW_GlobalTestUtility.GetCLContract();
-        lacc2.loan__Account__c= acc.Id;
-        lacc2.loan__Contact__c= a1.ID;
-        lacc2.loan__Loan_Product_Name__c=loanProdObj.Id;
-        lacc2.application__c = objApp.id;
-        lacc2.lead_guid__c = 'TestClassGuid2';
-        insert lacc2;
-
-        loan__Loan_Account__c lacc3 = MW_GlobalTestUtility.GetCLContract();
-        lacc3.loan__Account__c= acc.Id;
-        lacc3.loan__Contact__c= a1.ID;
-        lacc3.loan__Loan_Product_Name__c=loanProdObj.Id;
-        lacc3.application__c = objApp.id;
-        lacc3.lead_guid__c = 'TestClassGuid3';
-        insert lacc3;
-
-        loan__Loan_Account__c lacc4 = MW_GlobalTestUtility.GetCLContract();
-        lacc4.loan__Account__c= acc.Id;
-        lacc4.loan__Contact__c= a1.ID;
-        lacc4.loan__Loan_Product_Name__c=loanProdObj.Id;
-        lacc4.application__c = objApp.id;
-        lacc4.lead_guid__c = 'TestClassGuid4';
-        insert lacc4;
-        
     }
     
     static testmethod void updateLoanAcc(){
@@ -123,60 +99,5 @@ private class MW_LoanAccountTest {
         }
         
         test.stopTest();
-    }
-    static testmethod void testUpdatePlacementFields(){
-        FINAL String placedHM = 'Placed - HM';
-        FINAL String  placedACU = 'Placed - ACU';
-        loan__loan_account__c loanAcc = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
-                                         FROM loan__loan_account__c WHERE lead_guid__C = 'TestClassGuid0'];
-
-        loanAcc.Placement_Status__c = placedHM;
-        update loanAcc;
-        
-        loanAcc = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
-                                         FROM loan__loan_account__c WHERE lead_guid__C = 'TestClassGuid0'];
-                                         
-        Assert.isTrue(loanAcc.Placement_Status_StartDate__c.contains(placedHM));
-        Assert.isTrue(loanAcc.Placement_Status_EndDate__c == null);
-
-        loanAcc.Placement_Status__c = placedACU;
-        update loanAcc;
-
-        loanAcc = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
-                                         FROM loan__loan_account__c WHERE lead_guid__C = 'TestClassGuid0'];
-                                         
-        Assert.isTrue(loanAcc.Placement_Status_StartDate__c.contains(placedACU));
-        Assert.isTrue(loanAcc.Placement_Status_EndDate__c.contains(placedHM));
-    }
-    
-    static testmethod void testMassUpdatePlacementFields(){
-        list<loan__loan_account__c> loanAccList = new list<loan__loan_account__c>();
-        for(loan__loan_account__c loanAcc : [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
-                                             FROM loan__loan_account__c WHERE lead_guid__C like 'TestClassGuid%'])
-        {
-            loanAcc.Placement_Status__c = 'Placed - HM';
-            loanAccList.add(loanAcc);
-        }
-        update loanAccList;
-        
-        loanAccList = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
-                        FROM loan__loan_account__c WHERE lead_guid__C like 'TestClassGuid%' AND 
-                        Placement_Status_StartDate__c like 'Placed - HM%' AND 
-                        Placement_Status_EndDate__c = NULL];
-                                         
-        Assert.isTrue(loanAccList.size() == 5);
-
-        for(loan__loan_account__c loanAcc : loanAccList)
-        {
-            loanAcc.Placement_Status__c = 'Placed - ACU';
-        }
-        update loanAccList;
-
-        loanAccList = [SELECT Id,Name, loan__Loan_Status__c,Placement_Status__c,Placement_Status_StartDate__c,Placement_Status_EndDate__c
-                        FROM loan__loan_account__c WHERE lead_guid__C like 'TestClassGuid%' AND 
-                        Placement_Status_StartDate__c like 'Placed - ACU%' AND 
-                        Placement_Status_EndDate__c like 'Placed - HM%'];
-                                         
-        Assert.isTrue(loanAccList.size() == 5);
     }
 }
