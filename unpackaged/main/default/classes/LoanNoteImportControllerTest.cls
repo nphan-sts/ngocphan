@@ -14,10 +14,6 @@ public class LoanNoteImportControllerTest
 
     @TestSetup
     public static void testSetup(){
-        MW_Settings__c mwSetting = new MW_Settings__c();
-        mwSetting.ExcludeLoansForSkipAPay__c = 'Closed- Written Off';
-        insert mwSetting;
-        
         loan.TestHelper.createSeedDataForTesting();
         //Creating Conpany
         genesis__Company__c comp = genesis.TestHelper.createCompany(); 

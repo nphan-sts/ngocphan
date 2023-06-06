@@ -9,7 +9,7 @@
         color: black;
     }
     </style>
-    <apex:sectionHeader title="Upload Skip-a-Pay file" />
+    <apex:sectionHeader title="Upload Notes File" />
     <apex:form id="myForm" >
         <apex:pagemessages />
         <apex:pageBlock id="pageBlockId" >
