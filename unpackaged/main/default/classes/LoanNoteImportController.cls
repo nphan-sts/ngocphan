@@ -7,7 +7,7 @@
  * 	  Vitor		  2023/06/05	    LPC-798 Automate bulk note creation for ACU notes daily
  ******************Modification History*****************************************************************/
 
-public without sharing class LoanNoteImportController 
+public with sharing class LoanNoteImportController 
 {
     public Blob csvFileBody{get;set;}
     public String csvAsString{get;set;}

@@ -103,59 +103,64 @@ public class LoanNoteImportControllerTest
     /* Created By : Vitor
        Description : Test scenario for a note correctly filled.
     */
-    public static testMethod void testCorrectNoteCreation(){
+    public static testMethod void testCorrectNoteCreation()
+    {
         Test.startTest();
             List<loan__Loan_Account__c> testlacc = [SELECT Id, Payoff_Loan_ID__c FROM loan__Loan_Account__c];
         
-        	String str = header + testlacc[0].Payoff_Loan_ID__c + ',No Commitment,Test\r\n';
-            LoanNoteImportController cont = new LoanNoteImportController();
-        
-            cont.csvFileBody = Blob.valueOf(str);
-            cont.importCSVFile();
+        	String correctNotesStr = header + testlacc[0].Payoff_Loan_ID__c + ',No Commitment,Test\r\n';
+            importStringDocument(correctNotesStr);
         Test.stopTest();
         
-        List<Note> testNoteNumber = [SELECT ParentId FROM Note];
+        List<Note> correctTestNotes = [SELECT ParentId FROM Note];
         
-        System.assertEquals(1, testNoteNumber.size());
-        System.assertEquals(testlacc[0].Id, testNoteNumber[0].ParentId);
+        System.assertEquals(1, correctTestNotes.size());
+        System.assertEquals(testlacc[0].Id, correctTestNotes[0].ParentId);
     }
     
     /* Created By : Vitor
        Description : Test scenario for a note with Description bigger than 80 characters and no Title.
     */
-    public static testMethod void testMisfilledNoteCreation(){
-        Test.startTest();
+    public static testMethod void testMisfilledNoteCreation()
+    {
+        Test.startTest(); 
             List<loan__Loan_Account__c> testlacc = [SELECT Id, Payoff_Loan_ID__c FROM loan__Loan_Account__c];
         
-        	String str = header + testlacc[0].Payoff_Loan_ID__c + ',,TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest\r\n';
-            LoanNoteImportController cont = new LoanNoteImportController();
+        	String misfilledNotesStr = header + testlacc[0].Payoff_Loan_ID__c + ',,TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest\r\n';
+            importStringDocument(misfilledNotesStr);
+        Test.stopTest(); 
         
-            cont.csvFileBody = Blob.valueOf(str);
-            cont.importCSVFile();
-        Test.stopTest();
+        List<Note> misfilledTestNotes = [SELECT ParentId FROM Note];
         
-        List<Note> testNoteNumber = [SELECT ParentId FROM Note];
-        
-        System.assertEquals(1, testNoteNumber.size());
-        System.assertEquals(testlacc[0].Id, testNoteNumber[0].ParentId);
+        System.assertEquals(1, misfilledTestNotes.size() );
+        System.assertEquals(testlacc[0].Id, misfilledTestNotes[0].ParentId);
     }
     
-    /* Created By : Vitor
+    /* Created By : Vitor 
        Description : Test scenario for incorrect line format.
     */
-    public static testMethod void testExceptionNoteCreation(){
-        Test.startTest();
+    public static testMethod void testExceptionNoteCreation()
+    {
+        Test.startTest();  
             List<loan__Loan_Account__c> testlacc = [SELECT Payoff_Loan_ID__c FROM loan__Loan_Account__c];
         
-        	String str = header + testlacc[0].Payoff_Loan_ID__c + ',\r\n';
-            LoanNoteImportController cont = new LoanNoteImportController();
+        	String exceptionNotesStr = header + testlacc[0].Payoff_Loan_ID__c + ',\r\n';
+            importStringDocument(exceptionNotesStr);
+        Test.stopTest();  
         
-            cont.csvFileBody = Blob.valueOf(str);
-            cont.importCSVFile();
-        Test.stopTest();
+        List<Note> testNotes = [SELECT id FROM Note];
         
-        List<Note> testNoteNumber = [SELECT id FROM Note];
-        
-        System.assertEquals(0, testNoteNumber.size());
+        System.assertEquals(0, testNotes.size());
+    }
+
+    /* Created By : Vitor  
+       Description : Import document.
+    */
+    public static void importStringDocument(String document)
+    {
+        LoanNoteImportController cont = new LoanNoteImportController();
+    
+        cont.csvFileBody = Blob.valueOf(document);
+        cont.importCSVFile();
     }
 }
