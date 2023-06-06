@@ -7,7 +7,7 @@
  * 	  Vitor		  2023/06/05	    LPC-798 Automate bulk note creation for ACU notes daily
  ******************Modification History*****************************************************************/
 
-public class LoanNoteImportController 
+public without sharing class LoanNoteImportController 
 {
     public Blob csvFileBody{get;set;}
     public String csvAsString{get;set;}
@@ -30,8 +30,6 @@ public class LoanNoteImportController
         {
             csvAsString = csvFileBody.toString();
             csvFileLines = csvAsString.split('\n');
-            System.debug('csvAsString');
-            System.debug(csvAsString);
 
             for(Integer i=1; i<csvFileLines.size(); i++)
             {

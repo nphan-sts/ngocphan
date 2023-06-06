@@ -10,7 +10,8 @@
 @isTest
 public class LoanNoteImportControllerTest 
 {
-	public static String[] csvFileLines;
+    static final String header = 'LOANID,Call Outcome,Comments\r\n';
+
     @TestSetup
     public static void testSetup(){
         MW_Settings__c mwSetting = new MW_Settings__c();
@@ -38,7 +39,7 @@ public class LoanNoteImportControllerTest
         //Create a Fee Set
         loan__Fee__c dummyFee = loan.TestHelper.createFee(curr,dummyIncAccount ,dummyAccount);                                    
         loan__Fee_Set__c dummyFeeSet = loan.TestHelper.createFeeSet();
-        loan__Fee_Junction__c dummyFeeJunction = loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
+        loan.TestHelper.createFeeJunction(dummyFee,dummyFeeSet);
 
         loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet);
 
@@ -106,7 +107,7 @@ public class LoanNoteImportControllerTest
         Test.startTest();
             List<loan__Loan_Account__c> testlacc = [SELECT Id, Payoff_Loan_ID__c FROM loan__Loan_Account__c];
         
-        	String str = 'LOANID,Call Outcome,Comments\r\n' + testlacc[0].Payoff_Loan_ID__c + ',No Commitment,Test\r\n';
+        	String str = header + testlacc[0].Payoff_Loan_ID__c + ',No Commitment,Test\r\n';
             LoanNoteImportController cont = new LoanNoteImportController();
         
             cont.csvFileBody = Blob.valueOf(str);
@@ -126,7 +127,7 @@ public class LoanNoteImportControllerTest
         Test.startTest();
             List<loan__Loan_Account__c> testlacc = [SELECT Id, Payoff_Loan_ID__c FROM loan__Loan_Account__c];
         
-        	String str = 'LOANID,Call Outcome,Comments\r\n' + testlacc[0].Payoff_Loan_ID__c + ',,TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest\r\n';
+        	String str = header + testlacc[0].Payoff_Loan_ID__c + ',,TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest\r\n';
             LoanNoteImportController cont = new LoanNoteImportController();
         
             cont.csvFileBody = Blob.valueOf(str);
@@ -146,7 +147,7 @@ public class LoanNoteImportControllerTest
         Test.startTest();
             List<loan__Loan_Account__c> testlacc = [SELECT Payoff_Loan_ID__c FROM loan__Loan_Account__c];
         
-        	String str = 'LOANID,Call Outcome,Comments\r\n' + testlacc[0].Payoff_Loan_ID__c + ',\r\n';
+        	String str = header + testlacc[0].Payoff_Loan_ID__c + ',\r\n';
             LoanNoteImportController cont = new LoanNoteImportController();
         
             cont.csvFileBody = Blob.valueOf(str);
