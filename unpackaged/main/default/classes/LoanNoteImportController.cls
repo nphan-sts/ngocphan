@@ -34,11 +34,11 @@ public with sharing class LoanNoteImportController
             csvFileLines = csvAsString.split('\n');
 
             if(csvFileLines.size() <= 1)
-                throw new APSException();
+                throw new FailureException();
 
             for(Integer i=1; i<csvFileLines.size(); i++)
             {
-                line = i;
+                line = i + 1;
                 string[] csvRecordData = csvFileLines[i].split(',');
 
                 String loanId = csvRecordData[0];
@@ -78,4 +78,7 @@ public with sharing class LoanNoteImportController
             System.debug('Error Message: ' + e.getMessage());
         }
     }
+
+	class FailureException extends Exception {}
+
 }
