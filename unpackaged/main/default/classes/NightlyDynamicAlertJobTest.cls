@@ -14,7 +14,8 @@ public with sharing class NightlyDynamicAlertJobTest {
     static void jobSuccess() {
 
         clcommon__DAG_Logging__c dagLogging = new clcommon__DAG_Logging__c(
-			clcommon__Status__c = SUCCESS
+			clcommon__Status__c = SUCCESS,
+			clcommon__Start_Time__c = System.now()
 		);
 		insert dagLogging;
 
@@ -58,13 +59,15 @@ public with sharing class NightlyDynamicAlertJobTest {
     static void jobFailure() {
 
 		clcommon__DAG_Logging__c dagLogging = new clcommon__DAG_Logging__c(
-			clcommon__Status__c = FAILURE
+			clcommon__Status__c = FAILURE,
+			clcommon__Start_Time__c = System.now()
 		);
 		insert dagLogging;
 
 		clcommon__Job_Logging__c jobLogging = new clcommon__Job_Logging__c(
 			clcommon__Status__c = FAILURE,
-			clcommon__DAG_Logging__c = dagLogging.Id
+			clcommon__DAG_Logging__c = dagLogging.Id,
+			clcommon__Label__c = 'StartOfDayDynamicJob'
 		);
 		insert jobLogging;
 
