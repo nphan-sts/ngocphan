@@ -45,7 +45,7 @@
                         }
                         else 
                         {
-                            errObj.innerHTML = "Please upload a csv file"
+                            errObj.innerHTML = "Imported file must be .csv."
                             return false;
                         }
                     }

@@ -26,13 +26,19 @@ public with sharing class LoanNoteImportController
     */ 
     public void importCSVFile()
     {
+        Integer line = 1;
+        
         try
         {
             csvAsString = csvFileBody.toString();
             csvFileLines = csvAsString.split('\n');
 
+            if(csvFileLines.size() <= 1)
+                throw new APSException();
+
             for(Integer i=1; i<csvFileLines.size(); i++)
             {
+                line = i;
                 string[] csvRecordData = csvFileLines[i].split(',');
 
                 String loanId = csvRecordData[0];
@@ -53,7 +59,7 @@ public with sharing class LoanNoteImportController
             }
             
             for(loan__Loan_Account__c loan : [SELECT Id, Payoff_Loan_ID__c FROM loan__Loan_Account__c
-                                              WHERE Payoff_Loan_ID__c IN : noteList.keyset()])
+                                            WHERE Payoff_Loan_ID__c IN : noteList.keyset()])
             {
                 Note note = noteList.get(loan.Payoff_Loan_ID__c);
 
@@ -66,7 +72,8 @@ public with sharing class LoanNoteImportController
         }
         catch (Exception e)
         {
-            ApexPages.Message errorMessage = new ApexPages.Message(ApexPages.Severity.ERROR,'An error has occured while importing data. Please make sure input CSV file is correct');
+            String strError = 'An error has occured on line '+ line + ' while importing data. Please make sure input CSV file is correct';
+            ApexPages.Message errorMessage = new ApexPages.Message(ApexPages.Severity.ERROR, strError);
             ApexPages.addMessage(errorMessage);
             System.debug('Error Message: ' + e.getMessage());
         }
