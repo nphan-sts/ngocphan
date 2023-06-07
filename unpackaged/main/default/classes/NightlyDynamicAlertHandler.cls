@@ -1,5 +1,17 @@
-public with sharing class NightlyDynamicAlertHandler {
+public with sharing class NightlyDynamicAlertHandler implements Queueable{
 
+    private String dagLogId;
+
+    public NightlyDynamicAlertHandler(String dagLogId) {
+        this.dagLogId = dagLogId;
+    }
+
+    public void execute(QueueableContext context) {
+        List<clcommon__DAG_Logging__c> dagLogList = [SELECT id, name, clcommon__status__c, clcommon__start_time__c, clcommon__finish_time__c FROM clcommon__DAG_Logging__c WHERE Id =: dagLogId];
+
+        sendSlackCallout(dagLogList);
+
+    }
     public static void sendSlackCallout(List<clcommon__DAG_Logging__c> dagLogList) {
 
         if(dagLogList.get(0).clcommon__Status__c == 'Success') {
