@@ -21,7 +21,7 @@ global with sharing class NightlyDynamicAlertJob extends clcommon.DynamicJob imp
                                     'clcommon__DAG_Logging__c',
                                     '');
         dagLog.addNamedParameter('dagName', 'Consolidated DAG');
-        dagLog.addFields('id,name,clcommon__Status__c,clcommon__Start_Time__c,clcommon__Finish_Time__c'); 
+        dagLog.addFields('id'); 
         dagLog.setWhereClause('CreatedDate = TODAY AND DAG_Name__c = :dagName');
         dagLog.setOrderClause('CreatedDate DESC ');
         dagLog.setLimitClause('1');
@@ -43,7 +43,8 @@ global with sharing class NightlyDynamicAlertJob extends clcommon.DynamicJob imp
 
         if(!test.isRunningTest()){
 
-            NightlyDynamicAlertHandler.sendSlackCallout(dagLog);
+            NightlyDynamicAlertHandler handler = new NightlyDynamicAlertHandler(dagLog[0].Id);
+            System.enqueueJob(handler);
 
         }  
     }  

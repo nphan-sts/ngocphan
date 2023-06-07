@@ -48,7 +48,8 @@ public with sharing class NightlyDynamicAlertJobTest {
 
         List<clcommon__DAG_Logging__c> dagLogList = new List<clcommon__DAG_Logging__c>();
         dagLogList.add(dagLogging);
-        NightlyDynamicAlertHandler.sendSlackCallout(dagLogList);
+		NightlyDynamicAlertHandler handler = new NightlyDynamicAlertHandler(dagLogList[0].Id);
+        System.enqueueJob(handler);
         Test.StopTest();
 		
         Assert.isTrue(jobID != null,'job runs 1');
@@ -94,7 +95,8 @@ public with sharing class NightlyDynamicAlertJobTest {
 
         List<clcommon__DAG_Logging__c> dagLogList = new List<clcommon__DAG_Logging__c>();
         dagLogList.add(dagLogging);
-        NightlyDynamicAlertHandler.sendSlackCallout(dagLogList);
+		NightlyDynamicAlertHandler handler = new NightlyDynamicAlertHandler(dagLogList[0].Id);
+        System.enqueueJob(handler);
 
         Test.StopTest();
 
