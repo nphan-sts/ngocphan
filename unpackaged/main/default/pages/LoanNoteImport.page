@@ -4,6 +4,10 @@
         font-style: bold;
         color: red;
     }
+    .greenFont{
+        font-style: bold;
+        color: green;
+    }
     .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader{
         font-style: bold;
         color: black;
@@ -19,6 +23,7 @@
                     <apex:commandButton value="Import Notes" action="{!importCSVFile}" onclick="return validateForm();"/>
                     <apex:outputLabel styleClass="redFont" id="warningMsg">  ** Bad notes will not be processed</apex:outputLabel>
                     <apex:outputLabel styleClass="redFont" id="errMsg"></apex:outputLabel>
+                    <apex:outputLabel styleClass="greenFont" id="successMsg">{!successMessage}</apex:outputLabel>
                 </apex:pageBlockSection>
             </apex:pageBlockSection>
         </apex:pageBlock>

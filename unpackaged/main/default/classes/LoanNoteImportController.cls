@@ -11,6 +11,7 @@ public with sharing class LoanNoteImportController
 {
     public Blob csvFileBody{get;set;}
     public String csvAsString{get;set;}
+    public String successMessage{get;set;}
     public String[] csvFileLines{get;set;}
     public Map<String,Note> noteList{get;set;}
     
@@ -27,6 +28,8 @@ public with sharing class LoanNoteImportController
     public void importCSVFile()
     {
         Integer line = 1;
+        successMessage = '';
+        ApexPages.getMessages().clear();
         
         try
         {
@@ -41,9 +44,9 @@ public with sharing class LoanNoteImportController
                 line = i + 1;
                 string[] csvRecordData = csvFileLines[i].split(',');
 
-                String loanId = csvRecordData[0];
+                String loanId = 'P' + csvRecordData[0].substring(1).toLowerCase();
                 String title = csvRecordData[1];
-                String body = csvRecordData[2];
+                String body = (csvRecordData.size() < 2 && !String.isBlank(title))? '' : csvRecordData[2];
 
                 if(String.isBlank(title))
                     title = body;
@@ -58,6 +61,8 @@ public with sharing class LoanNoteImportController
                 noteList.put(loanId,note);
             }
             
+            line = 0;
+
             for(loan__Loan_Account__c loan : [SELECT Id, Payoff_Loan_ID__c FROM loan__Loan_Account__c
                                             WHERE Payoff_Loan_ID__c IN : noteList.keyset()])
             {
@@ -66,16 +71,25 @@ public with sharing class LoanNoteImportController
                 note.ParentId = loan.Id;
 
                 noteList.put(loan.Payoff_Loan_ID__c, note);
+
             }
 
             insert noteList.values();
+
+            successMessage = (csvFileLines.size() -1) + ' notes imported successfully.';
         }
         catch (Exception e)
         {
-            String strError = 'An error has occured on line '+ line + ' while importing data. Please make sure input CSV file is correct';
+            String strError;
+            if(e.getMessage().contains('Parent'))
+                strError = 'There is at least one incorrect Loan Id. Please make sure input CSV file is correct';
+            	
+            else
+                strError = 'An error has occured on line '+ line + ' while importing data. Please make sure input CSV file is correct';
+            
             ApexPages.Message errorMessage = new ApexPages.Message(ApexPages.Severity.ERROR, strError);
             ApexPages.addMessage(errorMessage);
-            System.debug('Error Message: ' + e.getMessage());
+            System.debug('Error Message: ' + e.getMessage() + ' Line: [' + e.getLineNumber() + ']');
         }
     }
 
