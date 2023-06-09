@@ -41,7 +41,7 @@ public with sharing class LoanNoteImportController
                 line = i + 1;
                 string[] csvRecordData = csvFileLines[i].split(',');
 
-                String loanId = csvRecordData[0];
+                String loanId = 'P' + csvRecordData[0].substring(1).toLowerCase();
                 String title = csvRecordData[1];
                 String body = csvRecordData[2];
 
@@ -75,7 +75,7 @@ public with sharing class LoanNoteImportController
             String strError = 'An error has occured on line '+ line + ' while importing data. Please make sure input CSV file is correct';
             ApexPages.Message errorMessage = new ApexPages.Message(ApexPages.Severity.ERROR, strError);
             ApexPages.addMessage(errorMessage);
-            System.debug('Error Message: ' + e.getMessage());
+            System.debug('Error Message: ' + e.getMessage() + ' Line: [' + e.getLineNumber() + ']');
         }
     }
 
