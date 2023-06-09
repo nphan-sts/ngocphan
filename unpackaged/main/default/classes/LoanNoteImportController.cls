@@ -46,7 +46,7 @@ public with sharing class LoanNoteImportController
 
                 String loanId = 'P' + csvRecordData[0].substring(1).toLowerCase();
                 String title = csvRecordData[1];
-                String body = csvRecordData[2];
+                String body = (csvRecordData.size() < 2 && !String.isBlank(title))? '' : csvRecordData[2];
 
                 if(String.isBlank(title))
                     title = body;
