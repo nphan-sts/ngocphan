@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Screen for bulk inserting Notes into Loans</description>
+    <label>Loan Note Import</label>
+    <motif>Custom7: Square</motif>
+    <page>LoanNoteImport</page>
+</CustomTab>
