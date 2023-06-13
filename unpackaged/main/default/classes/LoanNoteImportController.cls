@@ -44,7 +44,7 @@ public with sharing class LoanNoteImportController
                 line = i + 1;
                 string[] csvRecordData = csvFileLines[i].split(',');
 
-                String loanId = 'P' + csvRecordData[0].substring(1).toLowerCase();
+                String loanId = csvRecordData[0].toLowerCase();
                 String title = csvRecordData[1];
                 String body = (csvRecordData.size() < 2 && !String.isBlank(title))? '' : csvRecordData[2];
 
@@ -66,11 +66,11 @@ public with sharing class LoanNoteImportController
             for(loan__Loan_Account__c loan : [SELECT Id, Payoff_Loan_ID__c FROM loan__Loan_Account__c
                                             WHERE Payoff_Loan_ID__c IN : noteList.keyset()])
             {
-                Note note = noteList.get(loan.Payoff_Loan_ID__c);
+                Note note = noteList.get(loan.Payoff_Loan_ID__c.toLowerCase());
 
                 note.ParentId = loan.Id;
 
-                noteList.put(loan.Payoff_Loan_ID__c, note);
+                noteList.put(loan.Payoff_Loan_ID__c.toLowerCase(), note);
 
             }
 
