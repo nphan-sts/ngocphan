@@ -133,8 +133,8 @@ public with sharing class ModPaymentAmountUpdateJobTest {
 
         loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE, 12, application, 439.70, 500);
 
-        loan__Repayment_Schedule_Summary__c repaymentScheduleSummary = createRepayment(lacc, 1, 350, SYSTEM_DATE.addMonths(1));
-        loan__Repayment_Schedule_Summary__c repaymentScheduleSummary1 = createRepayment(lacc, 2, 300, SYSTEM_DATE.addMonths(2));
+        createRepayment(lacc, 1, 350, SYSTEM_DATE.addMonths(1));
+        createRepayment(lacc, 2, 300, SYSTEM_DATE.addMonths(2));
 
         Test.startTest();
 
@@ -158,9 +158,9 @@ public with sharing class ModPaymentAmountUpdateJobTest {
 
         loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE, 12, application, 439.70, 500);
 
-        loan__Repayment_Schedule_Summary__c repaymentScheduleSummary = createRepayment(lacc, 1, 500, SYSTEM_DATE.addMonths(1));
-        loan__Repayment_Schedule_Summary__c repaymentScheduleSummary1 = createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(2));
-        loan__Repayment_Schedule_Summary__c repaymentScheduleSummary2 = createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(3));
+        createRepayment(lacc, 1, 500, SYSTEM_DATE.addMonths(1));
+        createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(2));
+        createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(3));
 
         Test.startTest();
 
@@ -172,7 +172,6 @@ public with sharing class ModPaymentAmountUpdateJobTest {
 
         loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c FROM loan__Loan_Account__c LIMIT 1];
 
-        List<loan__Repayment_Schedule_Summary__c> repayemtSchedule = [Select loan__RSS_Repayment_Dt__c from loan__Repayment_Schedule_Summary__c order by loan__RSS_Seq__c asc];
         //one day before 
         system.assertEquals(null,updateLoanAcc.Mod_End_Date__c, 'should not be updated');
     }
@@ -184,9 +183,9 @@ public with sharing class ModPaymentAmountUpdateJobTest {
 
         loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE, 12, application, 439.70, 500);
 
-        loan__Repayment_Schedule_Summary__c repaymentScheduleSummary = createRepayment(lacc, 1, 600, SYSTEM_DATE.addMonths(1));
-        loan__Repayment_Schedule_Summary__c repaymentScheduleSummary1 = createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(2));
-        loan__Repayment_Schedule_Summary__c repaymentScheduleSummary2 = createRepayment(lacc, 3, 300, SYSTEM_DATE.addMonths(3));
+        createRepayment(lacc, 1, 600, SYSTEM_DATE.addMonths(1));
+        createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(2));
+        createRepayment(lacc, 3, 300, SYSTEM_DATE.addMonths(3));
 
         Test.startTest();
 
