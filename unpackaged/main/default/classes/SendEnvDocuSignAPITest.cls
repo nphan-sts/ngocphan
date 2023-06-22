@@ -51,6 +51,7 @@ private class SendEnvDocuSignAPITest{
             genesis__Draw_Period_End_Date__c = system.Today(),
             TU_consumer_id__c = '1324536829',
             genesis__Loan_Amount__c = 1000,  //pallavi
+            Employment_Status__c = 'Full Time',
             Origination_fee__c = 50
         );
         Insert app; 
@@ -155,43 +156,43 @@ private class SendEnvDocuSignAPITest{
         
         Test.stopTest();  
         system.debug('class' +snd);
-        System.assertEquals(false, TestTriggerParameter.disableTriggerTest); 
+        System.assertEquals(false, TestTriggerParameter.disableTriggerTest);
         
         system.assertEquals([select Id from genesis__Applications__c].size(),1);
     
-    system.assertEquals(true, lstgenesis_applications_Obj.size()>0);
-        system.assertEquals([select Id from genesis__Applications__c].size(),1);
+        system.assertEquals(true, lstgenesis_applications_Obj.size()>0);
+            system.assertEquals([select Id from genesis__Applications__c].size(),1);
+        }
+        
+        static testMethod void test_sendDocuSignEnvelope_UseCase2(){
+            
+            
+            MW_Settings__c customSetting = new MW_Settings__c();
+            customSetting.TagsAPI_URL__c = 'https://sfapi-dev.payoff.com/lsa/api/v1/resource_tagging/add_tag';
+            customSetting.CertificateNameForLEADS__c = 'sfapi_staging';
+            customSetting.CLSDSIntgnTurnOff__c = true;
+            insert customSetting;
+            genesis__Applications__c app = [select id,
+                                            genesis__Due_Day__c,DocuSign_EnvelopeId__c,
+                                            DocuSignFlag__c, genesis__Status__c
+                                            from genesis__Applications__c];
+            
+            DocuSign_Template__c docTemplate = [select id,
+                                                name, 
+                                                Template_Id__c,
+                                                State__c,
+                                                Document_Category__c 
+                                                from DocuSign_Template__c];
+            
+            TestTriggerParameter.disableTriggerHandler(true);
+            System.assertEquals(true, TestTriggerParameter.disableTriggerTest);
+            Test.startTest();
+            
+            SendEnvDocuSignAPI snd = new SendEnvDocuSignAPI(true);
+            SendEnvDocuSignAPI.sendDocuSignEnvelope(app.Id); 
+            SendEnvDocuSignAPI.voidDocuSignEnvelope(app.DocuSign_EnvelopeId__c);
+            
+            Test.stopTest();  
+            System.assertEquals(app.genesis__Status__c, 'agent_verified');   
+        }     
     }
-    
-    static testMethod void test_sendDocuSignEnvelope_UseCase2(){
-        
-        
-        MW_Settings__c customSetting = new MW_Settings__c();
-		customSetting.TagsAPI_URL__c = 'https://sfapi-dev.payoff.com/lsa/api/v1/resource_tagging/add_tag';
-		customSetting.CertificateNameForLEADS__c = 'sfapi_staging';
-        customSetting.CLSDSIntgnTurnOff__c = true;
-		insert customSetting;
-        genesis__Applications__c app = [select id,
-                                        genesis__Due_Day__c,DocuSign_EnvelopeId__c,
-                                        DocuSignFlag__c, genesis__Status__c
-                                        from genesis__Applications__c];
-        
-        DocuSign_Template__c docTemplate = [select id,
-                                            name, 
-                                            Template_Id__c,
-                                            State__c,
-                                            Document_Category__c 
-                                            from DocuSign_Template__c];
-        
-        TestTriggerParameter.disableTriggerHandler(true);
-        System.assertEquals(true, TestTriggerParameter.disableTriggerTest);
-        Test.startTest();
-        
-        SendEnvDocuSignAPI snd = new SendEnvDocuSignAPI(true);
-        SendEnvDocuSignAPI.sendDocuSignEnvelope(app.Id); 
-        SendEnvDocuSignAPI.voidDocuSignEnvelope(app.DocuSign_EnvelopeId__c);
-        
-        Test.stopTest();  
-        System.assertEquals(app.genesis__Status__c, 'agent_verified');   
-    }     
-}
