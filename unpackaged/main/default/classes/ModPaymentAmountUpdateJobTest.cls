@@ -1,8 +1,76 @@
 @isTest
 public with sharing class ModPaymentAmountUpdateJobTest {
 
-    @testSetup static void setup(){	
+    private static Date SYSTEM_DATE = Date.newInstance(2020, 03, 01);
 
+    private static genesis__applications__c createApp(Decimal loanAmount, Account account_Obj, genesis__Company__c comp, clcommon__CL_Product__c pr) {
+        genesis__applications__c application = MW_GlobalTestUtility.GetApplication();	
+        application.genesis__Loan_Amount__c = loanAmount;	
+        application.genesis__status__c = 'NEW - ENTERED';	
+        application.genesis__Term__c = 12;	
+        application.genesis__Payment_Frequency__c = 'MONTHLY';	
+        application.genesis__Expected_Start_Date__c = SYSTEM_DATE;
+        application.Application_Start_DateV2__c = SYSTEM_DATE;	
+        application.genesis__Expected_First_Payment_Date__c = SYSTEM_DATE.addDays(60);	
+        application.genesis__Expected_Close_Date__c = SYSTEM_DATE.addDays(30);
+        application.genesis__Interest_Only_Period__c = 0;	
+        application.genesis__Total_Estimated_Interest__c=500;	
+        application.genesis__Valid_Pricing_Flag__c=false;	
+        application.genesis__Account__c = account_Obj.Id;
+        application.genesis__Company__c = comp.id;	
+        application.genesis__CL_Product__c = pr.id;		
+        insert application;	
+
+        return application;
+    }
+
+    private static loan__loan_Account__c createCLContract(
+        Date firstInstallmentDate, Integer term, genesis__applications__c application, Decimal paymentAmount, Decimal paymentInstallment ) {
+
+        Contact a1 = new Contact(LastName='TestACH');	
+        insert a1;
+
+        loan__Loan_Product__c loanProdObj = new loan__Loan_Product__c(name='TestProduct'); 	
+        insert loanProdObj;	
+        System.assertEquals('TestProduct', loanProdObj.Name,'Wrong Loan Product');
+
+        loan__Loan_Account__c lacc = MW_GlobalTestUtility.GetCLContract();
+        lacc.loan__First_Installment_Date__c = firstInstallmentDate;
+        lacc.loan__Next_Installment_Date__c = firstInstallmentDate.addMonths(2);
+        lacc.loan__Maturity_Date_Current__c = firstInstallmentDate.addMonths(term);
+        lacc.loan__Last_Installment_Date__c = firstInstallmentDate.addMonths(12);
+        lacc.loan__Disbursal_Date__c = firstInstallmentDate.addMonths(-1);
+        lacc.application__c = application.id;
+        lacc.loan__Payment_Amount__c = paymentAmount;
+        lacc.loan__Pmt_Amt_Cur__c = paymentInstallment;
+        lacc.loan__Account__c = application.genesis__Account__c;
+        lacc.loan__Contact__c = a1.ID;
+        lacc.loan__Loan_Product_Name__c= loanProdObj.Id;
+        insert lacc;
+
+        return lacc;
+
+    }
+
+    private static loan__Repayment_Schedule_Summary__c createRepayment(
+        loan__Loan_Account__c lacc, Integer seq,  Integer paymentAmount, Date currentDate
+    ) {
+        loan__Repayment_Schedule_Summary__c rsSummary = new loan__Repayment_Schedule_Summary__c();	
+        rsSummary.loan__RSS_No_Of_Pmts__c = 12;	
+        rsSummary.loan__Archived__c = false;	
+        rsSummary.loan__RSS_Loan_Account__c = lacc.Id;
+        rsSummary.loan__RSS_Primary_flag__c= true;
+        rsSummary.loan__RSS_Seq__c = seq;
+        rsSummary.loan__RSS_Repayment_Amt__c = paymentAmount;
+        rsSummary.loan__RSS_Repayment_Dt__c = currentDate;
+
+        insert rsSummary;
+
+        return rsSummary;
+    }
+
+    @testSetup
+    private static void testSetup() {
         loan.TestHelper.createSeedDataForTesting();	
         loan__Currency__c curr = loan.TestHelper.createCurrency();	
         //Create a dummy MF_Account	
@@ -26,33 +94,18 @@ public with sharing class ModPaymentAmountUpdateJobTest {
         genorg.genesis__Disable_Triggers__c = true;	
         upsert genorg;	
     
-        //Creating Account	
-        Account acc = new Account(	
-            Name = 'Test',	
-            peer__Last_Name__c = 'Test',	
-            loan__Investor__c=False,	
-            cnotify__Email__c = 'abc@test.com',	
-            loan__SOCIAL_SECURITY_NUMBER__c = '123456789'	
-        );	
-        insert acc;	
-        System.assertEquals('Test',acc.Name,'Wrong Account');
-    
         LoanPaymentDays__c lpdays = new LoanPaymentDays__c();	
         lpdays.AutoPaymentRemainder__c= 3;	
         lpdays.ManualPaymentRemainder__c= 5;	
         insert lpdays;	
-    
-        loan__Loan_Product__c loanProdObj = new loan__Loan_Product__c(name='TestProduct'); 	
-        insert loanProdObj;	
-        System.assertEquals('TestProduct', loanProdObj.Name,'Wrong Loan Product');
-    
+
         //Creating Conpany	
         genesis__Company__c comp = genesis.TestHelper.createCompany(); 	
         comp.Name = 'payoff';	
         update comp;
-    
+
         //creating lending product	
-        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet);	
+        loan__Loan_Product__c dummyLP = loan.TestHelper.createLoanProduct(dummyOffice, dummyAccount, curr, dummyFeeSet);
     
         //creating CL Product	
         clcommon__CL_Product__c pr = new clcommon__CL_Product__c();	
@@ -68,80 +121,88 @@ public with sharing class ModPaymentAmountUpdateJobTest {
         );	
         Insert account_Obj;	
     
-        Contact a1 = new Contact(LastName='TestACH');	
-        insert a1;
-    
-        genesis__applications__c application = new genesis__applications__c();	
-        application.genesis__Product_Type__c = 'LOAN';	
-        application.genesis__Loan_Amount__c = 6700;	
-        application.genesis__status__c = 'NEW - ENTERED';	
-        application.genesis__Term__c = 12;	
-        application.genesis__Payment_Frequency__c = 'MONTHLY';	
-        application.genesis__Interest_Rate__c = 10;	
-        application.genesis__Days_Convention__c = 'ACTUAL/ACTUAL';	
-        application.genesis__Expected_Start_Date__c = system.today();	
-        application.genesis__Expected_First_Payment_Date__c = system.today().addDays(60);	
-        application.genesis__Expected_Close_Date__c = system.today().addDays(30);	
-        application.genesis__Interest_Calculation_Method__c = 'Declining Balance';	
-        application.genesis__Interest_Only_Period__c = 0;	
-        application.genesis__Account__c = account_Obj.Id;	
-        application.genesis__Total_Estimated_Interest__c=500;	
-        application.genesis__Valid_Pricing_Flag__c=false;	
-        application.genesis__Probability__c=100.00;	
-        application.genesis__Payment_Amount__c=523.80;	
-        application.genesis__Company__c = comp.id;	
-        application.genesis__CL_Product__c = pr.id;	
-        insert application;	
-    
-        loan.GlobalLoanUtilFacade util = new loan.GlobalLoanUtilFacade();
 
-        Date systemDate = util.getCurrentSystemDate();	
-
-        loan__Loan_Account__c lacc = new loan__Loan_Account__c(	
-            loan__Account__c= acc.Id,	
-            loan__Contact__c= a1.ID,	
-            loan__Product_Type__c='Flexible Amz Loan',	
-            loan__Loan_Amount__c =5000,	
-            loan__Loan_Product_Name__c=loanProdObj.Id,	
-            loan__Payment_Amount__c=439.70, 	
-            loan__Principal_Remaining__c = 4243.60,	
-            loan__Previous_Installment_Date__c= system.today(),	
-            application__c = application.id, 	
-            loan__First_Installment_Date__c = systemDate.addMonths(1),	
-            loan__Next_Installment_Date__c = systemDate.addMonths(2), 	
-            loan__Maturity_Date_Current__c = systemDate.addMonths(12), 	
-            loan__Frequency_of_Loan_Payment__c = 'Monthly',  	
-            loan__Last_Installment_Date__c = systemDate.addMonths(12),	
-            loan__Loan_Status__c = 'Active - Good Standing',	
-            loan__Interest_Rate__c = 10,	
-            loan__Term_Cur__c = 12,	
-            Skipped_a_pay_Date__c = null,	
-            Skipped_a_Pay__c = false,	
-            lead_guid__c = 'TestClassGuid0',	
-            loan__Disbursal_Date__c = systemDate	
-        );	
-        insert lacc;
-        
-        loan__Repayment_Schedule_Summary__c repaymentScheduleSummary = new loan__Repayment_Schedule_Summary__c();	
-        repaymentScheduleSummary.loan__RSS_No_Of_Pmts__c = 12;	
-        repaymentScheduleSummary.loan__Archived__c = false;	
-        repaymentScheduleSummary.loan__RSS_Loan_Account__c = lacc.Id;
-        repaymentScheduleSummary.loan__RSS_Primary_flag__c= true;
-        repaymentScheduleSummary.loan__RSS_Seq__c = 1;
-        repaymentScheduleSummary.loan__RSS_Repayment_Amt__c = 350;
-        repaymentScheduleSummary.loan__RSS_Repayment_Dt__c = systemDate;
-        insert repaymentScheduleSummary;
-
-        loan__Repayment_Schedule_Summary__c repaymentScheduleSummary1 = new loan__Repayment_Schedule_Summary__c();	
-        repaymentScheduleSummary1.loan__RSS_No_Of_Pmts__c = 12;	
-        repaymentScheduleSummary1.loan__Archived__c = false;	
-        repaymentScheduleSummary1.loan__RSS_Loan_Account__c = lacc.Id;
-        repaymentScheduleSummary1.loan__RSS_Primary_flag__c= true;
-        repaymentScheduleSummary1.loan__RSS_Seq__c = 2;
-        repaymentScheduleSummary1.loan__RSS_Repayment_Amt__c = 300;
-        repaymentScheduleSummary1.loan__RSS_Repayment_Dt__c = systemDate.addMonths(1);
-        insert repaymentScheduleSummary1;
     }
+
+    static testMethod void testTwoRepayments() {
+
+        Account account_Obj = [Select id from Account LIMIT 1];
+        genesis__Company__c comp = [Select id from genesis__Company__c LIMIT 1]; 
+        clcommon__CL_Product__c pr = [Select id from clcommon__CL_Product__c LIMIT 1];
+        genesis__Applications__c application = createApp(5000,account_Obj,comp,pr);
+
+        loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE, 12, application, 439.70, 500);
+
+        createRepayment(lacc, 1, 350, SYSTEM_DATE.addMonths(1));
+        createRepayment(lacc, 2, 300, SYSTEM_DATE.addMonths(2));
+
+        Test.startTest();
+
+        ModPaymentAmountUpdateJob job = new ModPaymentAmountUpdateJob('SELECT Id from loan__Loan_Account__c');
+
+        Database.executeBatch(job, 200);
+
+        Test.stopTest();
+
+        loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c FROM loan__Loan_Account__c LIMIT 1];
+
+        List<loan__Repayment_Schedule_Summary__c> repayemtSchedule = [Select loan__RSS_Repayment_Dt__c from loan__Repayment_Schedule_Summary__c order by loan__RSS_Seq__c asc];
+        //one day before 
+        system.assertEquals(null,updateLoanAcc.Mod_End_Date__c, 'should not be updated');
+    }
+    static testMethod void testThreeRepaymentsWithSamePaymentAmount() {
+        Account account_Obj = [Select id from Account LIMIT 1];
+        genesis__Company__c comp = [Select id from genesis__Company__c LIMIT 1]; 
+        clcommon__CL_Product__c pr = [Select id from clcommon__CL_Product__c LIMIT 1];
+        genesis__Applications__c application = createApp(5000,account_Obj,comp,pr);
+
+        loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE, 12, application, 439.70, 500);
+
+        createRepayment(lacc, 1, 500, SYSTEM_DATE.addMonths(1));
+        createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(2));
+        createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(3));
+
+        Test.startTest();
+
+        ModPaymentAmountUpdateJob job = new ModPaymentAmountUpdateJob();
+
+        Database.executeBatch(job, 200);
+
+        Test.stopTest();
+
+        loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c FROM loan__Loan_Account__c LIMIT 1];
+
+        //one day before 
+        system.assertEquals(null,updateLoanAcc.Mod_End_Date__c, 'should not be updated');
+    }
+    static testMethod void testThreeRepayments() {
+        Account account_Obj = [Select id from Account LIMIT 1];
+        genesis__Company__c comp = [Select id from genesis__Company__c LIMIT 1]; 
+        clcommon__CL_Product__c pr = [Select id from clcommon__CL_Product__c LIMIT 1];
+        genesis__Applications__c application = createApp(5000,account_Obj,comp,pr);
+
+        loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE, 12, application, 439.70, 500);
+
+        createRepayment(lacc, 1, 600, SYSTEM_DATE.addMonths(1));
+        createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(2));
+        createRepayment(lacc, 3, 300, SYSTEM_DATE.addMonths(3));
+
+        Test.startTest();
+
+        ModPaymentAmountUpdateJob job = new ModPaymentAmountUpdateJob('SELECT Id from loan__Loan_Account__c');
+
+        Database.executeBatch(job, 200);
+
+        Test.stopTest();
+
+        loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c FROM loan__Loan_Account__c LIMIT 1];
+
+        List<loan__Repayment_Schedule_Summary__c> repayemtSchedule = [Select loan__RSS_Repayment_Dt__c from loan__Repayment_Schedule_Summary__c order by loan__RSS_Seq__c asc];
+        //one day before 
+        system.assertEquals(updateLoanAcc.Mod_End_Date__c,repayemtSchedule[1].loan__RSS_Repayment_Dt__c.addDays(-1), 'wrong date');
+    }
+
+
 
     static testMethod void testModPaymentAmountUpdateJob() {  
 
@@ -156,27 +217,4 @@ public with sharing class ModPaymentAmountUpdateJobTest {
         Assert.isTrue(jobId != null);
 
     }
-
-    static testMethod void testModPaymentAmountUpdateJobWithQuery() {  
-
-        Test.startTest();
-
-        ModPaymentAmountUpdateJob job = new ModPaymentAmountUpdateJob('SELECT Id from loan__Loan_Account__c');
-
-        Database.executeBatch(job, 200);
-
-        Test.stopTest();
-        
-        loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c FROM loan__Loan_Account__c where lead_guid__c = 'TestClassGuid0' LIMIT 1];
-
-        List<loan__Repayment_Schedule_Summary__c> repayemtSchedule = [Select loan__RSS_Repayment_Dt__c from loan__Repayment_Schedule_Summary__c order by loan__RSS_Seq__c asc];
-
-        system.assertEquals(350, updateLoanAcc.Mod_Payment_Amount__c, 'wrong amount');
-        
-        //one day before 
-        system.assertEquals(updateLoanAcc.Mod_End_Date__c, repayemtSchedule[1].loan__RSS_Repayment_Dt__c.addDays(-1), 'wrong date');
-
-    }
-
-
 }

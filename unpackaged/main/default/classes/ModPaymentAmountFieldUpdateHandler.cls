@@ -1,14 +1,14 @@
 public with sharing class ModPaymentAmountFieldUpdateHandler {
 
     final static Integer FIRST_PAYMENT = 1;
-    final static Integer NUMBER_OF_PAYMENT = 2;
+    final static Integer NUMBER_OF_PAYMENT = 3;
 
     public static void updateModField(Set<String> contractIds) {
 
         List<loan__Loan_Account__c> updateContract = new List<loan__Loan_Account__c>();
 
         for (List<loan__Loan_Account__c> clContracts : [SELECT 
-                                                                Id, loan__Payment_Amount__c, 
+                                                                Id, loan__Pmt_Amt_Cur__c, 
                                                                 (select id, loan__RSS_Seq__c, loan__RSS_Repayment_Amt__c, loan__RSS_Repayment_Dt__c,
                                                                 createdDate 
                                                                 FROM loan__Repayment_Schedule_Summary__r 
@@ -23,7 +23,7 @@ public with sharing class ModPaymentAmountFieldUpdateHandler {
     
                 if (mapSequenceToRepayment.values().size() >= NUMBER_OF_PAYMENT &&
                     mapSequenceToRepayment.values()[0].loan__RSS_Seq__c == FIRST_PAYMENT && 
-                    mapSequenceToRepayment.values()[0].loan__RSS_Repayment_Amt__c != clContract.loan__Payment_Amount__c
+                    mapSequenceToRepayment.values()[0].loan__RSS_Repayment_Amt__c != clContract.loan__Pmt_Amt_Cur__c
                 ) {
 
                     clContract.Mod_Payment_Amount__c = mapSequenceToRepayment.values()[0].loan__RSS_Repayment_Amt__c;
