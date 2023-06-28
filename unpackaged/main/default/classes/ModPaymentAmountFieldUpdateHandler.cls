@@ -1,34 +1,26 @@
 public with sharing class ModPaymentAmountFieldUpdateHandler {
 
-    final static Integer FIRST_PAYMENT = 1;
-    final static Integer NUMBER_OF_PAYMENT = 3;
-
     public static void updateModField(Set<String> contractIds) {
 
         List<loan__Loan_Account__c> updateContract = new List<loan__Loan_Account__c>();
 
         for (List<loan__Loan_Account__c> clContracts : [SELECT 
                                                                 Id, loan__Pmt_Amt_Cur__c, 
-                                                                (select id, loan__RSS_Seq__c, loan__RSS_Repayment_Amt__c, loan__RSS_Repayment_Dt__c,
-                                                                createdDate 
-                                                                FROM loan__Repayment_Schedule_Summary__r 
-                                                                WHERE loan__RSS_Primary_flag__c = true order by loan__RSS_Seq__c asc, createdDate desc) 
+                                                                (select id, clcommon__Sequence_Number__c, clcommon__Payment_Amount__c, clcommon__Number_Of_Payments__c,
+                                                                clcommon__Payment_Start_Date__c  
+                                                                FROM loan__Repayment_Plan__r
+                                                                ) 
                                                                 FROM loan__Loan_Account__c 
                                                                 WHERE id IN :contractIds
                                                                 WITH SECURITY_ENFORCED])
         {
             for(loan__Loan_Account__c clContract : clContracts) {
 
-                Map<Decimal, loan__Repayment_Schedule_Summary__c> mapSequenceToRepayment = getMapSequenceToRepayment(clContract);
-    
-                if (mapSequenceToRepayment.values().size() >= NUMBER_OF_PAYMENT &&
-                    mapSequenceToRepayment.values()[0].loan__RSS_Seq__c == FIRST_PAYMENT && 
-                    mapSequenceToRepayment.values()[0].loan__RSS_Repayment_Amt__c != clContract.loan__Pmt_Amt_Cur__c
-                ) {
+                //if there is a repayment plan
+                if (clContract.loan__Repayment_Plan__r.size() > 0) {
 
-                    clContract.Mod_Payment_Amount__c = mapSequenceToRepayment.values()[0].loan__RSS_Repayment_Amt__c;
-                    clContract.Mod_End_Date__c = mapSequenceToRepayment.values()[1].loan__RSS_Repayment_Dt__c.addDays(-1);
-
+                    clContract.Mod_Payment_Amount__c = clContract.loan__Repayment_Plan__r[0].clcommon__Payment_Amount__c;
+                    clContract.Mod_End_Date__c = clContract.loan__Repayment_Plan__r[0].clcommon__Payment_Start_Date__c.addMonths(Integer.valueOf(clContract.loan__Repayment_Plan__r[0].clcommon__Number_Of_Payments__c));
 
                     updateContract.add(clContract);
                 }
@@ -40,18 +32,4 @@ public with sharing class ModPaymentAmountFieldUpdateHandler {
         }
     }
 
-
-    //make sure to get only one newest repayment schedule for each sequence
-    private static Map<Decimal, loan__Repayment_Schedule_Summary__c> getMapSequenceToRepayment(loan__Loan_Account__c clContract) {
-        Map<Decimal, loan__Repayment_Schedule_Summary__c> mapSequenceToRepayment = new Map<Decimal, loan__Repayment_Schedule_Summary__c>();
-
-        for(loan__Repayment_Schedule_Summary__c rs : clContract.loan__Repayment_Schedule_Summary__r) {
-
-            if(mapSequenceToRepayment.get(rs.loan__RSS_Seq__c) == null) {
-                mapSequenceToRepayment.put(rs.loan__RSS_Seq__c, rs);
-            }
-        }
-
-        return mapSequenceToRepayment;
-    }
 }

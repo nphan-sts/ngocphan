@@ -3,11 +3,13 @@ public with sharing class ModPaymentAmountUpdateJobTest {
 
     private static Date SYSTEM_DATE = Date.newInstance(2020, 03, 01);
 
-    private static genesis__applications__c createApp(Decimal loanAmount, Account account_Obj, genesis__Company__c comp, clcommon__CL_Product__c pr) {
+    private static genesis__applications__c createApp(
+        Decimal loanAmount, Account account_Obj, genesis__Company__c comp, clcommon__CL_Product__c pr, Integer term
+        ) {
         genesis__applications__c application = MW_GlobalTestUtility.GetApplication();	
         application.genesis__Loan_Amount__c = loanAmount;	
         application.genesis__status__c = 'NEW - ENTERED';	
-        application.genesis__Term__c = 12;	
+        application.genesis__Term__c = term;	
         application.genesis__Payment_Frequency__c = 'MONTHLY';	
         application.genesis__Expected_Start_Date__c = SYSTEM_DATE;
         application.Application_Start_DateV2__c = SYSTEM_DATE;	
@@ -52,11 +54,11 @@ public with sharing class ModPaymentAmountUpdateJobTest {
 
     }
 
-    private static loan__Repayment_Schedule_Summary__c createRepayment(
-        loan__Loan_Account__c lacc, Integer seq,  Integer paymentAmount, Date currentDate
+    private static void createRepayment(
+        loan__Loan_Account__c lacc, Integer seq,  Decimal paymentAmount, Integer noOfPayments, Date currentDate 
     ) {
         loan__Repayment_Schedule_Summary__c rsSummary = new loan__Repayment_Schedule_Summary__c();	
-        rsSummary.loan__RSS_No_Of_Pmts__c = 12;	
+        rsSummary.loan__RSS_No_Of_Pmts__c = noOfPayments;	
         rsSummary.loan__Archived__c = false;	
         rsSummary.loan__RSS_Loan_Account__c = lacc.Id;
         rsSummary.loan__RSS_Primary_flag__c= true;
@@ -66,7 +68,19 @@ public with sharing class ModPaymentAmountUpdateJobTest {
 
         insert rsSummary;
 
-        return rsSummary;
+    }
+
+    private static void createRepaymentPlan(
+        loan__Loan_Account__c lacc, Integer sequence, Integer noOfPayments, Decimal paymentAmount, Date startDate
+    ) {
+        clcommon__Repayment_Plan__c repaymentPlan = new clcommon__Repayment_Plan__c();
+        repaymentPlan.clcommon__Sequence_Number__c = sequence;
+        repaymentPlan.clcommon__Payment_Type__c = 'Equal Monthly Installments';
+        repaymentPlan.clcommon__Payment_Amount__c = paymentAmount;
+        repaymentPlan.clcommon__Number_Of_Payments__c = noOfPayments;
+        repaymentPlan.loan__Loan_Account__c = lacc.id;
+        repaymentPlan.clcommon__Payment_Start_Date__c = startDate;
+        insert repaymentPlan;
     }
 
     @testSetup
@@ -124,17 +138,21 @@ public with sharing class ModPaymentAmountUpdateJobTest {
 
     }
 
-    static testMethod void testTwoRepayments() {
+    static testMethod void testFourRepayments() {
 
         Account account_Obj = [Select id from Account LIMIT 1];
         genesis__Company__c comp = [Select id from genesis__Company__c LIMIT 1]; 
         clcommon__CL_Product__c pr = [Select id from clcommon__CL_Product__c LIMIT 1];
-        genesis__Applications__c application = createApp(5000,account_Obj,comp,pr);
+        genesis__Applications__c application = createApp(10000,account_Obj,comp,pr, 48);
 
-        loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE, 12, application, 439.70, 500);
+        loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE.addMonths(1), 48, application, 283.02, 200);
 
-        createRepayment(lacc, 1, 350, SYSTEM_DATE.addMonths(1));
-        createRepayment(lacc, 2, 300, SYSTEM_DATE.addMonths(2));
+        createRepayment(lacc, 1, 283.02, 3, SYSTEM_DATE.addMonths(1));
+        createRepayment(lacc, 2, 200, 5, SYSTEM_DATE.addMonths(4));
+        createRepayment(lacc, 3, 296.80, 39, SYSTEM_DATE.addMonths(9));
+        createRepayment(lacc, 4, 297.06, 1, SYSTEM_DATE.addMonths(48));
+        createRepaymentPlan(lacc, 2, 5, 200 , SYSTEM_DATE.addMonths(4));
+
 
         Test.startTest();
 
@@ -146,21 +164,52 @@ public with sharing class ModPaymentAmountUpdateJobTest {
 
         loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c FROM loan__Loan_Account__c LIMIT 1];
 
-        List<loan__Repayment_Schedule_Summary__c> repayemtSchedule = [Select loan__RSS_Repayment_Dt__c from loan__Repayment_Schedule_Summary__c order by loan__RSS_Seq__c asc];
-        //one day before 
-        system.assertEquals(null,updateLoanAcc.Mod_End_Date__c, 'should not be updated');
+        clcommon__Repayment_Plan__c repaymentPlan = [Select clcommon__Payment_Amount__c, clcommon__Payment_Start_Date__c, clcommon__Number_Of_Payments__c from clcommon__Repayment_Plan__c limit 1];
+
+        system.assertEquals(updateLoanAcc.Mod_End_Date__c,repaymentPlan.clcommon__Payment_Start_Date__c.addMonths(Integer.valueOf(repaymentPlan.clcommon__Number_Of_Payments__c)), 'wrong date');
+        system.assertEquals(updateLoanAcc.Mod_Payment_Amount__c,repaymentPlan.clcommon__Payment_Amount__c, 'wrong amount');
+
     }
-    static testMethod void testThreeRepaymentsWithSamePaymentAmount() {
+    static testMethod void testThreeRepayments() {
         Account account_Obj = [Select id from Account LIMIT 1];
         genesis__Company__c comp = [Select id from genesis__Company__c LIMIT 1]; 
         clcommon__CL_Product__c pr = [Select id from clcommon__CL_Product__c LIMIT 1];
-        genesis__Applications__c application = createApp(5000,account_Obj,comp,pr);
+        genesis__Applications__c application = createApp(10000,account_Obj,comp,pr, 48);
 
-        loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE, 12, application, 439.70, 500);
+        loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE.addMonths(1), 48, application, 283.02, 200);
 
-        createRepayment(lacc, 1, 500, SYSTEM_DATE.addMonths(1));
-        createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(2));
-        createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(3));
+        createRepayment(lacc, 1, 200, 5, SYSTEM_DATE.addMonths(1));
+        createRepayment(lacc, 2, 296.80, 42, SYSTEM_DATE.addMonths(6));
+        createRepayment(lacc, 3, 255.72, 1, SYSTEM_DATE.addMonths(48));
+        createRepaymentPlan(lacc, 1, 5, 200 , SYSTEM_DATE.addMonths(3));
+
+
+        Test.startTest();
+
+        ModPaymentAmountUpdateJob job = new ModPaymentAmountUpdateJob('SELECT Id from loan__Loan_Account__c');
+
+        Database.executeBatch(job, 200);
+
+        Test.stopTest();
+
+        loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c FROM loan__Loan_Account__c LIMIT 1];
+
+        clcommon__Repayment_Plan__c repaymentPlan = [Select clcommon__Payment_Amount__c, clcommon__Payment_Start_Date__c, clcommon__Number_Of_Payments__c from clcommon__Repayment_Plan__c limit 1];
+
+        system.assertEquals(updateLoanAcc.Mod_End_Date__c,repaymentPlan.clcommon__Payment_Start_Date__c.addMonths(Integer.valueOf(repaymentPlan.clcommon__Number_Of_Payments__c)), 'wrong date');
+        system.assertEquals(updateLoanAcc.Mod_Payment_Amount__c,repaymentPlan.clcommon__Payment_Amount__c, 'wrong amount');
+    }
+    static testMethod void testThreeRepaymentWithNoRepaymentPlan() {
+        Account account_Obj = [Select id from Account LIMIT 1];
+        genesis__Company__c comp = [Select id from genesis__Company__c LIMIT 1]; 
+        clcommon__CL_Product__c pr = [Select id from clcommon__CL_Product__c LIMIT 1];
+        genesis__Applications__c application = createApp(10000,account_Obj,comp,pr, 48);
+
+        loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE.addMonths(1), 48, application, 283.02, 200);
+
+        createRepayment(lacc, 1, 200, 5, SYSTEM_DATE.addMonths(1));
+        createRepayment(lacc, 2, 296.80, 42, SYSTEM_DATE.addMonths(6));
+        createRepayment(lacc, 3, 255.72, 1, SYSTEM_DATE.addMonths(48));
 
         Test.startTest();
 
@@ -172,34 +221,7 @@ public with sharing class ModPaymentAmountUpdateJobTest {
 
         loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c FROM loan__Loan_Account__c LIMIT 1];
 
-        //one day before 
         system.assertEquals(null,updateLoanAcc.Mod_End_Date__c, 'should not be updated');
-    }
-    static testMethod void testThreeRepayments() {
-        Account account_Obj = [Select id from Account LIMIT 1];
-        genesis__Company__c comp = [Select id from genesis__Company__c LIMIT 1]; 
-        clcommon__CL_Product__c pr = [Select id from clcommon__CL_Product__c LIMIT 1];
-        genesis__Applications__c application = createApp(5000,account_Obj,comp,pr);
-
-        loan__Loan_Account__c lacc = createCLContract(SYSTEM_DATE, 12, application, 439.70, 500);
-
-        createRepayment(lacc, 1, 600, SYSTEM_DATE.addMonths(1));
-        createRepayment(lacc, 2, 500, SYSTEM_DATE.addMonths(2));
-        createRepayment(lacc, 3, 300, SYSTEM_DATE.addMonths(3));
-
-        Test.startTest();
-
-        ModPaymentAmountUpdateJob job = new ModPaymentAmountUpdateJob('SELECT Id from loan__Loan_Account__c');
-
-        Database.executeBatch(job, 200);
-
-        Test.stopTest();
-
-        loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c FROM loan__Loan_Account__c LIMIT 1];
-
-        List<loan__Repayment_Schedule_Summary__c> repayemtSchedule = [Select loan__RSS_Repayment_Dt__c from loan__Repayment_Schedule_Summary__c order by loan__RSS_Seq__c asc];
-        //one day before 
-        system.assertEquals(updateLoanAcc.Mod_End_Date__c,repayemtSchedule[1].loan__RSS_Repayment_Dt__c.addDays(-1), 'wrong date');
     }
 
 
