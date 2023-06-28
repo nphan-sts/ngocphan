@@ -76,7 +76,7 @@ public with sharing class ModPaymentAmountUpdateJobTest {
         clcommon__Repayment_Plan__c repaymentPlan = new clcommon__Repayment_Plan__c();
         repaymentPlan.clcommon__Sequence_Number__c = sequence;
         repaymentPlan.clcommon__Payment_Type__c = 'Equal Monthly Installments';
-        repaymentPlan.clcommon__Payment_Amount__c = paymentAmount; //lacc.loan__Pmt_Amt_Cur__c;
+        repaymentPlan.clcommon__Payment_Amount__c = paymentAmount;
         repaymentPlan.clcommon__Number_Of_Payments__c = noOfPayments;
         repaymentPlan.loan__Loan_Account__c = lacc.id;
         repaymentPlan.clcommon__Payment_Start_Date__c = startDate;
