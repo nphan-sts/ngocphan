@@ -33,7 +33,7 @@
                 
                 <strong>Source:</strong> <a href="https://www.transunion.com" target="_blank">TransUnion</a>
                 <br />
-                <strong>Date:</strong> <apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!NOW()}" /></apex:outputText>
+                <strong>Date:</strong> <apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!nowTime}" /></apex:outputText>
               </p>
             </td>
           </tr>
