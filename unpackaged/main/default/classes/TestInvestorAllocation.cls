@@ -7,7 +7,6 @@ private class TestInvestorAllocation{
     private static final String tilDocName = 'TIL Document';
     private static final String csnDocName = 'Credit Score Notice';
     private static final String aanDocName = 'Adverse Action Notice';
-    
     private static final String ATTACHMENT_BODY = 'Unit Test Attachment Body Two';
 
     @TestSetup static void setup() {
@@ -133,11 +132,8 @@ private class TestInvestorAllocation{
            update app1; 
         }catch(Exception e){
             system.debug(e);
-        }
-        
+        }        
         test.stopTest();
-        
-
         genesis__Applications__c app = [Select id,genesis__Status__c from genesis__Applications__c limit 1];
         Assert.areEqual(app.genesis__Status__c, 'agent_document_verification_pending');
         
@@ -1226,7 +1222,6 @@ private class TestInvestorAllocation{
                                   order by Investor_Alloted_Weight__c desc];
         
         System.assertEquals(apps[0].investor__c,accounts[1].id );
-       
         System.assertEquals(accounts[0].Investor_Current_Weight__c,0 );
         
         
@@ -1328,7 +1323,6 @@ private class TestInvestorAllocation{
 
         List<genesis__Applications__c> listApp = new List<genesis__Applications__c>();
 
-        
         genesis__Applications__c app1 = new genesis__Applications__c(
             genesis__Due_Day__c = 20,
             genesis__Expected_First_Payment_Date__c = system.Today(),
@@ -1368,6 +1362,7 @@ private class TestInvestorAllocation{
 
         genesis__Application_Document_Category__c adc1 = new genesis__Application_Document_Category__c();
         adc1.name = tilDocName;
+
         adc1.genesis__Application__c = app1.id;
 
         listAdc.add(adc1);
