@@ -42,7 +42,7 @@ global class LogsCalloutBatch implements Database.batchable<sObject>,Database.Al
     global void execute(Database.BatchableContext bc, List<sObject> scope) {
         /* This was added just for sending Nacha file count alert */
         if(apcList != null && apcList.size() > 0){
-            LogsCalloutBatchHelper.sendNachaAlerts((List<Document>)scope, startTime);
+            LogsCalloutBatchHelper.sendSlackMessage(String.valueOf(((List<Document>)scope).size()) +' NACHA FILES were created today ', startTime);
         }else{
             LogsCalloutBatchHelper.sendNACHALogs(successCount,failureCount,totalCount);
         }
