@@ -1,34 +1,31 @@
-public with sharing class ModPaymentAmountFieldUpdateHandler {
+public with sharing class ModPaymentAmountFieldUpdateHandler
+ {
 
-    public static void updateModField(Set<String> contractIds) {
+    public static void updateEndDateAndPaymentAmountModField(Set<String> contractIds) {
 
-        List<loan__Loan_Account__c> updateContract = new List<loan__Loan_Account__c>();
+        Map<Id, loan__Loan_Account__c>updateContract = new Map<Id, loan__Loan_Account__c>();
 
         for (List<loan__Loan_Account__c> clContracts : [SELECT 
-                                                                Id, loan__Pmt_Amt_Cur__c, 
-                                                                (select id, clcommon__Sequence_Number__c, clcommon__Payment_Amount__c, clcommon__Number_Of_Payments__c,
-                                                                clcommon__Payment_Start_Date__c  
-                                                                FROM loan__Repayment_Plan__r
-                                                                ) 
+                                                                Id, loan__Payment_Amount__c, Skipped_a_Pay__c, U_LoanModForbearDt__c, U_LoanModForbearance__c, Mod_End_Date__c, Mod_Payment_Amount__c
                                                                 FROM loan__Loan_Account__c 
                                                                 WHERE id IN :contractIds
                                                                 WITH SECURITY_ENFORCED])
         {
             for(loan__Loan_Account__c clContract : clContracts) {
 
-                //if there is a repayment plan
-                if (clContract.loan__Repayment_Plan__r.size() > 0) {
+                //for skipped a pay
+                if (clContract.Skipped_a_Pay__c) {
+                    clContract.Mod_Payment_Amount__c = 0;
+                    clContract.Mod_End_Date__c = clContract.U_LoanModForbearDt__c.addDays(-1).addMonths(Integer.valueOf(clContract.U_LoanModForbearance__c));
 
-                    clContract.Mod_Payment_Amount__c = clContract.loan__Repayment_Plan__r[0].clcommon__Payment_Amount__c;
-                    clContract.Mod_End_Date__c = clContract.loan__Repayment_Plan__r[0].clcommon__Payment_Start_Date__c.addMonths(Integer.valueOf(clContract.loan__Repayment_Plan__r[0].clcommon__Number_Of_Payments__c));
-
-                    updateContract.add(clContract);
+                    updateContract.put(clContract.id, clContract);
                 }
+
             }                                                    
         }
 
-        if (updateContract.size() > 0) {
-            update updateContract;
+        if (updateContract.values().size() > 0) {
+            Database.update(updateContract.values(), false);
         }
     }
 

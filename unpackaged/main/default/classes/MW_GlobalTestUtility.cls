@@ -298,4 +298,33 @@ public with sharing class MW_GlobalTestUtility {
         );
         return sobj;
     }
+
+    public static loan__Repayment_Schedule_Summary__c createRepayment(
+        loan__Loan_Account__c lacc, Integer seq,  Decimal paymentAmount, Integer noOfPayments, Date currentDate 
+    ) {
+        loan__Repayment_Schedule_Summary__c rsSummary = new loan__Repayment_Schedule_Summary__c();	
+        rsSummary.loan__RSS_No_Of_Pmts__c = noOfPayments;	
+        rsSummary.loan__Archived__c = false;	
+        rsSummary.loan__RSS_Loan_Account__c = lacc.Id;
+        rsSummary.loan__RSS_Primary_flag__c= true;
+        rsSummary.loan__RSS_Seq__c = seq;
+        rsSummary.loan__RSS_Repayment_Amt__c = paymentAmount;
+        rsSummary.loan__RSS_Repayment_Dt__c = currentDate;
+
+        return rsSummary;
+
+    }
+
+    public static clcommon__Repayment_Plan__c createRepaymentPlan(
+        loan__Loan_Account__c lacc, Integer sequence, Integer noOfPayments, Decimal paymentAmount, Date startDate
+    ) {
+        clcommon__Repayment_Plan__c repaymentPlan = new clcommon__Repayment_Plan__c();
+        repaymentPlan.clcommon__Sequence_Number__c = sequence;
+        repaymentPlan.clcommon__Payment_Type__c = 'Equal Monthly Installments';
+        repaymentPlan.clcommon__Payment_Amount__c = paymentAmount;
+        repaymentPlan.clcommon__Number_Of_Payments__c = noOfPayments;
+        repaymentPlan.loan__Loan_Account__c = lacc.id;
+        repaymentPlan.clcommon__Payment_Start_Date__c = startDate;
+        return repaymentPlan;
+    }
 }
