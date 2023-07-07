@@ -15,17 +15,17 @@ public with sharing class ModPaymentAmountUpdateJob implements Database.Batchabl
             query = 'SELECT Id from loan__Loan_Account__c ' +
             'WHERE Mod_Payment_Amount__c = null and Mod_End_Date__c = null ' +
             'and '+
-            '((U_LoanModTermExt__c != null and U_LoanModTermExt__c != 0) '+
-            'or (U_LoanModForbearance__c != null and U_LoanModForbearance__c != 0) '+
+            '(U_LoanModTermExt__c != null  '+
+            'or U_LoanModForbearance__c != null '+
             'or U_LoanModForbearDt__c != null '+
-            'or (U_LoanModRateLengt__c != null and U_LoanModRateLengt__c != 0) '+
+            'or U_LoanModRateLengt__c != null '+
             'or U_LoanModRateEffDt__c != null '+
-            'or (U_LoanModRate__c != null and U_LoanModRate__c != 0) '+
+            'or U_LoanModRate__c != null '+
             'or Hardship_Reason__c != null '+
             'or Hardship_Request_Date__c != null '+
             'or Hardship_New_Maturity_Date__c != null '+
             'or Loan_Mod_Offer__c != null '+
-            'or (Loan_Mod_Offer_Length_months__c != null and Loan_Mod_Offer_Length_months__c != 0)'+
+            'or Loan_Mod_Offer_Length_months__c != null '+
             'or U_LoanModExtDt__c != null)';       
         }
 
