@@ -172,7 +172,7 @@ public with sharing class ModPaymentAmountUpdateJobTest {
         loan__Loan_Account__c updateLoanAcc = [Select Id,Mod_Payment_Amount__c,Mod_End_Date__c,U_LoanModForbearance__c,U_LoanModForbearDt__c,Skipped_a_Pay__c FROM loan__Loan_Account__c LIMIT 1];
 
         system.assertEquals(updateLoanAcc.Mod_End_Date__c,updateLoanAcc.U_LoanModForbearDt__c.addDays(-1).addMonths(Integer.valueOf(updateLoanAcc.U_LoanModForbearance__c)));
-        system.assertEquals(updateLoanAcc.Mod_Payment_Amount__c,0, 'wrong amount');
+        system.assertEquals(updateLoanAcc.Mod_Payment_Amount__c,null, 'wrong amount');
 
     }
 

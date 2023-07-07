@@ -15,7 +15,7 @@ public with sharing class ModPaymentAmountFieldUpdateHandler
 
                 //for skipped a pay
                 if (clContract.Skipped_a_Pay__c) {
-                    clContract.Mod_Payment_Amount__c = 0;
+                    clContract.Mod_Payment_Amount__c = null;
                     clContract.Mod_End_Date__c = clContract.U_LoanModForbearDt__c.addDays(-1).addMonths(Integer.valueOf(clContract.U_LoanModForbearance__c));
 
                     updateContract.put(clContract.id, clContract);
