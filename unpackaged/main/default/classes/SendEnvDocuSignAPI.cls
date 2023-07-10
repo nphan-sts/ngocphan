@@ -47,15 +47,15 @@ public with sharing class SendEnvDocuSignAPI {
         }
         }
     }
-    
+
     public Static Void voidDocuSignEnvelope(String envelopeID){
-       if(DocusignIntgnBoolean==false){
+        if(DocusignIntgnBoolean==false){
         if(isvoidTrgExecuting) {
             System.debug('isvoidTrgExecuting....'+ isvoidTrgExecuting);
             voidInvestorDocuments(envelopeID);
             isvoidTrgExecuting= false;
         }
-       }
+        }
     }
 
     /*@Future(callout=true)
@@ -133,6 +133,7 @@ public with sharing class SendEnvDocuSignAPI {
             Decimal amount_financed = 0;
             Decimal last_payment_amount = 0;
             Decimal ach_amount = 0;
+            String employmentStatus = '';
             
             if((lstApp[0].genesis__Total_Estimated_Interest__c != null)&&(lstApp[0].Origination_fee__c != null))  
                 finance_charge = lstApp[0].genesis__Total_Estimated_Interest__c + lstApp[0].Origination_fee__c;
@@ -145,6 +146,9 @@ public with sharing class SendEnvDocuSignAPI {
             
             if(lstApp[0].DCP_total_amount__c != null)
                 ach_amount = lstApp[0].genesis__Loan_Amount__c - lstApp[0].Origination_fee__c - lstApp[0].DCP_total_amount__c;
+
+            if(lstApp[0].Employment_Status__c != null)
+                employmentStatus = lstApp[0].Employment_Status__c;
             //pallavi
 
             String workPhone = '';
@@ -518,6 +522,10 @@ public with sharing class SendEnvDocuSignAPI {
                         '{'+
                         '"tabLabel": "MemberEmployer",'+
                         '"value": "'+employerName+'"'+
+                        '},'+
+                        '{'+
+                        '"tabLabel": "EmploymentStatus",'+
+                        '"value": "'+employmentStatus +'"'+
                         '},'+
                         '{'+
                         '"tabLabel": "MemberOccupation",'+

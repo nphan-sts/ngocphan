@@ -21,6 +21,9 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
     System.debug('CustomTriggerOnApplication');
 
     Boolean allocateAtAgentVerified = MW_Settings__c.getOrgDefaults().Allocation_Engine_At_Agent_Verified__c;
+    String allocationStatus = allocateAtAgentVerified ?
+            PayoffConstants.AGENT_VERIFIED :
+            PayoffConstants.AGENT_DOCUMENT_VERIFICATION_PENDING;
 
     if (!genesis.CustomSettingsUtil.getOrgParameters().genesis__Disable_Triggers__c ) {
         MW_Settings__c mwsetting = MW_Settings__c.getOrgDefaults();
@@ -46,7 +49,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
 
                     genesis__Applications__c oldApp = oldAppMap.get(app.id);
 
-                    MW_AllocationEngineHandler.setInvestorAdvpCalledForAES(app, oldApp);
+                    MW_AllocationEngineHandler.setInvestorAdvpCalledForAES(app, oldApp, allocationStatus);
 
                     if(app.Bureau_SSN__c != null && app.Bureau_SSN__c != oldApp.Bureau_SSN__c){
                         app.Bureau_SSN_Masked__c= '*******' + app.Bureau_SSN__c.right(4);
@@ -111,17 +114,11 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
 
                 genesis__Applications__c oldApp = oldAppMap.get(app.id);
 
-                MW_AllocationEngineHandler.setInvestorAdvpCalledForAES(app, oldApp);
+                MW_AllocationEngineHandler.setInvestorAdvpCalledForAES(app, oldApp, allocationStatus);
 
                 /** Call to redecision logic */
                 CustomTriggerOnApplicationHandler.callRedecisionLogic(app, oldApp,trigger.oldMap,trigger.newMap);
                 
-                //CRM-762
-                if(app.GIACT_Status__c != null){
-                    if((app.GIACT_Status__c.equals('Accept')) && (app.GIACT_Status__c != oldApp.GIACT_Status__c)){
-                        CustomTriggerOnApplicationHandler.updateBankAccountTab(app.id);
-                    }
-                }
                 // LOP-182
                 if(app.Plaid_Status__c != oldApp.Plaid_Status__c){
                     CustomTriggerOnApplicationHandler.updateBankStatement(app.id, app.Plaid_Status__c);
@@ -165,9 +162,6 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                     }
                 }
 
-                String allocationStatus = allocateAtAgentVerified ?
-                        PayoffConstants.AGENT_VERIFIED :
-                        PayoffConstants.AGENT_DOCUMENT_VERIFICATION_PENDING;
                 Boolean isAllocationStatus = app.genesis__Status__c == allocationStatus;
                 Boolean appStatusChanged = app.genesis__Status__c != oldApp.genesis__Status__c;
                 Boolean appStatusUnchanged = app.genesis__Status__c == oldApp.genesis__Status__c;
@@ -277,7 +271,7 @@ trigger CustomTriggerOnApplication on genesis__Applications__c (before update, a
                 } else if (app.genesis__Status__c != null && app.Investor__c != null) {
 
                     if (app.genesis__Status__c == PayoffConstants.AGENT_VERIFIED && app.DocuSignFlag__c) {
-                        if (allocateAtAgentVerified) {
+                        if (allocateAtAgentVerified && MW_AllocationEngineHandler.isAllocationValid(app)) {
                             SendEnvDocuSignAPI.sendDocuSignEnvelope(app.Id);
                         } else if (appStatusChanged) {
                             SendEnvDocuSignAPI.sendDocuSignEnvelope(app.Id);
