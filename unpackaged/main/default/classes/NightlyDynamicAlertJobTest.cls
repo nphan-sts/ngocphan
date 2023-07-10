@@ -19,7 +19,7 @@ public with sharing class NightlyDynamicAlertJobTest {
 		insert dagLogging;
 
 		clcommon__Job_Logging__c jobLogging = new clcommon__Job_Logging__c(
-			clcommon__Status__c = SUCCESS,
+			clcommon__Status__c = jobStatus,
 			clcommon__DAG_Logging__c = dagLogging.Id,
 			clcommon__Label__c = jobName
 		);
