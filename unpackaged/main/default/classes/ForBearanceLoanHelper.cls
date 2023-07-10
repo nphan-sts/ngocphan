@@ -141,10 +141,6 @@
                 
                 system.debug('Skipped_a_Pay__c: '+lAtobeUpdated.Skipped_a_Pay__c+' and Skipped_a_pay_Date__c: '+lAtobeUpdated.Skipped_a_pay_Date__c);
                 
-                if(lAtobeUpdated!=null && lAtobeUpdated.U_LoanModForbearDt__c!= null){
-                sapdaysDifference = systemDate.daysBetween(lAtobeUpdated.U_LoanModForbearDt__c);
-                }
-                
                 //Before processing the loan, check if skip-a-pay action is already peformed for the loan, if yes log an exception and dont process that loan
                 if(lAtobeUpdated.Skipped_a_Pay__c != null && lAtobeUpdated.Skipped_a_Pay__c == true){
                     if(lAtobeUpdated.Skipped_a_pay_Date__c != null && lAtobeUpdated.Skipped_a_pay_Date__c == systemDate){
@@ -295,7 +291,7 @@
                 lAtobeUpdated.loan__Next_Installment_Date__c = repaymentStartDate;
                 lAtobeUpdated.loan__Maturity_Date_Current__c = lastPaymentDate;
                 if(((lAtobeUpdated.loan__Loan_Status__c).equals('Active - Good Standing')) || 
-                   isFromAPI && (((lAtobeUpdated.loan__Loan_Status__c).equals('Active - Bad Standing'))) ){ //LSP-292 - Update Mod fields for badstanding loans
+                isFromAPI && (((lAtobeUpdated.loan__Loan_Status__c).equals('Active - Bad Standing'))) ){ //LSP-292 - Update Mod fields for badstanding loans
                        
                        /*LSP-3 start */
                        if(lAtobeUpdated.U_LoanModForbearance__c == null) lAtobeUpdated.U_LoanModForbearance__c = 0;
@@ -317,23 +313,28 @@
                               System.debug('This is an extension to already performed skip a pay. Hence not changing U_LoanModForbearDt__c. Adding the extended number of skips to U_LoanModForbearance__c');
                               lAtobeUpdated.U_LoanModForbearance__c = lAtobeUpdated.U_LoanModForbearance__c + numberOfSkips;
                           }else{
-                              lAtobeUpdated.U_LoanModForbearDt__c = lAtobeUpdated.loan__Oldest_Due_Date__c != null ? lAtobeUpdated.loan__Oldest_Due_Date__c:lAtobeUpdated.loan__First_Installment_Date__c;//if loan__Oldest_Due_Date__c is null, it means there are no repayments done yet on the contract
+                              Date newLoanModForbearDt = (lAtobeUpdated.loan__Oldest_Due_Date__c == null ? lAtobeUpdated.loan__First_Installment_Date__c : lAtobeUpdated.loan__Oldest_Due_Date__c);
+                              sapdaysDifference = (lAtobeUpdated.U_LoanModForbearDt__c == null || newLoanModForbearDt == null)? null : newLoanModForbearDt.daysBetween(lAtobeUpdated.U_LoanModForbearDt__c);
+                              lAtobeUpdated.U_LoanModForbearDt__c = newLoanModForbearDt;
                               lAtobeUpdated.U_LoanModForbearance__c = numberOfSkips;
                               if(lAtobeUpdated.Skipped_a_Pay__c == false){
-                              lAtobeUpdated.Hardship_Request_Date__c = systemDate;
-                              
-                                }
+                                lAtobeUpdated.Hardship_Request_Date__c = systemDate;
+                              }
                           }
                        /*LSP-3 end */
                        
                        lAtobeUpdated.loan__Oldest_Due_Date__c = repaymentStartDate;
                        /* START LSP-836 - The below block checks if the difference between last skipped date and the transaction date
                             1- If the difference is greater than 45 days - the hardship date is set to the system date
-                            2- Hardship date is not altered otherwise if the difference is less than 45 days*/
+                            2- Hardship date is not altered otherwise if the difference is less than 45 days
+                            START LPC-6 - Hardship Request Date not being updated with new requests
+                            3- Hardship_Request_Date__c should be filled if it is null
+                            4- Rules 1 and 2 mentioned above are no longer valid, the 45 days difference is applied between the current and new Loan Mod Forbearance Start Date */
                        
-                        if((sapdaysDifference!=null && sapdaysDifference > SAP_CHECK_DAYS) || !lAtobeUpdated.Skipped_a_Pay__c ){
+                        if((sapdaysDifference!=null && sapdaysDifference > SAP_CHECK_DAYS) || !lAtobeUpdated.Skipped_a_Pay__c 
+                            || lAtobeUpdated.Hardship_Request_Date__c == null){
                               lAtobeUpdated.Hardship_Request_Date__c = systemDate;
-                                  }
+                        }
                        /*END LSP-836*/
                        lAtobeUpdated.Skipped_a_Pay__c = true;
                    }
