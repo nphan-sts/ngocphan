@@ -10,35 +10,42 @@ public with sharing class NightlyDynamicAlertJobTest {
         setting.Slack_mentions_for_Nacha_alert__c = 'test@user.com';
         insert setting;
     }
-    @isTest
-    static void jobSuccess() {
 
-        clcommon__DAG_Logging__c dagLogging = new clcommon__DAG_Logging__c(
-			clcommon__Status__c = SUCCESS,
+	static void createJobLogging(String jobStatus, String jobName) {
+		clcommon__DAG_Logging__c dagLogging = new clcommon__DAG_Logging__c(
+			clcommon__Status__c = jobStatus,
 			clcommon__Start_Time__c = System.now()
 		);
 		insert dagLogging;
 
-        clcommon__Job_Logging__c jobLogging = new clcommon__Job_Logging__c(
-			clcommon__Status__c = SUCCESS,
-			clcommon__DAG_Logging__c = dagLogging.Id
+		clcommon__Job_Logging__c jobLogging = new clcommon__Job_Logging__c(
+			clcommon__Status__c = jobStatus,
+			clcommon__DAG_Logging__c = dagLogging.Id,
+			clcommon__Label__c = jobName
 		);
 		insert jobLogging;
 
 		clcommon__Thread_Logging__c threadLogging = new clcommon__Thread_Logging__c(
-			clcommon__Status__c = SUCCESS,
+			clcommon__Status__c = jobStatus,
 			clcommon__Job_Logging__c = jobLogging.Id
 		);
 		insert threadLogging;
 
 		clcommon__Batch_Logging__c log = new clcommon__Batch_Logging__c();
-		log.clcommon__Status__c = SUCCESS;
+		log.clcommon__Status__c = jobStatus;
 		log.clcommon__Thread_Logging__c = threadLogging.Id;
 
 		Database.SaveResult result = Database.insert(log, false);
+
 		System.assert(result.isSuccess(), 'inserted');
 		System.assert(result.getErrors().size() == 0, 'no errors');
+	}
 
+    @isTest
+    static void jobSuccess() {
+
+		createJobLogging(SUCCESS, '');
+		
         Test.startTest();
 
         Test.setMock(HttpCalloutMock.class, new HttpSlackCalloutMock());
@@ -47,6 +54,9 @@ public with sharing class NightlyDynamicAlertJobTest {
         String jobID = Database.executeBatch(job,1);
 
         List<clcommon__DAG_Logging__c> dagLogList = new List<clcommon__DAG_Logging__c>();
+
+		clcommon__DAG_Logging__c dagLogging = [Select Id from clcommon__DAG_Logging__c LIMIT 1];
+
         dagLogList.add(dagLogging);
 		NightlyDynamicAlertHandler handler = new NightlyDynamicAlertHandler(dagLogList[0].Id);
         System.enqueueJob(handler);
@@ -59,32 +69,7 @@ public with sharing class NightlyDynamicAlertJobTest {
     @isTest
     static void jobFailure() {
 
-		clcommon__DAG_Logging__c dagLogging = new clcommon__DAG_Logging__c(
-			clcommon__Status__c = FAILURE,
-			clcommon__Start_Time__c = System.now()
-		);
-		insert dagLogging;
-
-		clcommon__Job_Logging__c jobLogging = new clcommon__Job_Logging__c(
-			clcommon__Status__c = FAILURE,
-			clcommon__DAG_Logging__c = dagLogging.Id,
-			clcommon__Label__c = 'StartOfDayDynamicJob'
-		);
-		insert jobLogging;
-
-		clcommon__Thread_Logging__c threadLogging = new clcommon__Thread_Logging__c(
-			clcommon__Status__c = FAILURE,
-			clcommon__Job_Logging__c = jobLogging.Id
-		);
-		insert threadLogging;
-
-		clcommon__Batch_Logging__c log = new clcommon__Batch_Logging__c();
-		log.clcommon__Status__c = 'Failure';
-		log.clcommon__Thread_Logging__c = threadLogging.Id;
-
-		Database.SaveResult result = Database.insert(log, false);
-		System.assert(result.isSuccess(), 'inserted');
-		System.assert(result.getErrors().size() == 0, 'no errors');
+		createJobLogging(FAILURE, 'StartOfDayDynamicJob');
         
         Test.startTest();
 
@@ -94,6 +79,9 @@ public with sharing class NightlyDynamicAlertJobTest {
         String jobID = Database.executeBatch(job);
 
         List<clcommon__DAG_Logging__c> dagLogList = new List<clcommon__DAG_Logging__c>();
+
+		clcommon__DAG_Logging__c dagLogging = [Select Id from clcommon__DAG_Logging__c LIMIT 1];
+		
         dagLogList.add(dagLogging);
 		NightlyDynamicAlertHandler handler = new NightlyDynamicAlertHandler(dagLogList[0].Id);
         System.enqueueJob(handler);
@@ -103,4 +91,6 @@ public with sharing class NightlyDynamicAlertJobTest {
 		Assert.isTrue(jobID != null,'job runs 2');
 
     }
+
+
 }
