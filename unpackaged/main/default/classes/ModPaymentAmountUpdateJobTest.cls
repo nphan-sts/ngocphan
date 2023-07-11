@@ -156,7 +156,6 @@ public with sharing class ModPaymentAmountUpdateJobTest {
         insert rsSummary;
         loan__Repayment_Schedule_Summary__c rsSummary2 = MW_GlobalTestUtility.createRepayment(lacc, 2, 200, 5, SYSTEM_DATE.addMonths(4));
         insert rsSummary2;
-        loan__Repayment_Schedule_Summary__c rsSummary3 = MW_GlobalTestUtility.createRepayment(lacc, 3, 296.80, 39, SYSTEM_DATE.addMonths(9));
         
         clcommon__Repayment_Plan__c repaymentPlan = MW_GlobalTestUtility.createRepaymentPlan(lacc, 2, 5, 200 , SYSTEM_DATE.addMonths(4));
         insert repaymentPlan;
