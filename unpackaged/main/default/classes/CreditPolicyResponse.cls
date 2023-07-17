@@ -816,6 +816,11 @@ global class CreditPolicyResponse {
         else{
             obj.Raw_XML__c = 'No Data found in raw_bureau_data';
         }
+
+        if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.risk_models != null
+        && CPResponse.credit_policy_decision.risk_models.V6 !=null && CPResponse.credit_policy_decision.risk_models.V6.logistic_prediction_of_default != null){
+            obj.Risk_Model_Score__c = CPResponse.credit_policy_decision.risk_models.V6.logistic_prediction_of_default;
+        }
         
         if(CPResponse!=null && CPResponse.credit_policy_decision!=null && CPResponse.credit_policy_decision.bureau_subset != null){
             String bureau_data = String.valueOF(CPResponse.credit_policy_decision.bureau_subset);
