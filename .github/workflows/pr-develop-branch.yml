@@ -7,7 +7,7 @@ on:
     pull_request:
       # The events are that a PR is opened, or when a commit is pushed
       # to a branch that has an existing pull request
-      types: [opened, synchronize]
+      types: [opened, synchronize, reopened]
       # The branches filter allows to specify that this workflow should only
       # run if the branch name is "develop". This way we prevent this workflow
       # from running when PRs are opened on other branches
@@ -22,7 +22,7 @@ on:
 # Jobs to be executed when the above conditions are met
 jobs:
     # This is the name of the job. You can give it whatever name you want
-    validate-deployment-on-develop-org:
+    validate-deployment-on-qa-org:
         # As mentioned in the blog post, this job runs inside a VM. Here we
         # can specify which OS this VM should run on. 
         # In this case, we are going to run our commands on the latest version
@@ -134,7 +134,7 @@ jobs:
             #   run: sfdx plugins:install @salesforce/sfdx-scanner
 
             # Prior to setting up this workflow, you have to create a Github Secret
-            # that contains the sfdx url of the integration/qa org.
+            # that contains the sfdx url of the QA org.
 
             # The steps to generate the url are here 
             # https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_auth_sfdxurl.htm
@@ -144,16 +144,16 @@ jobs:
             # was generated from. This works just like that, there's no need to create
             # connected apps or any else. 
 
-            # The URL is stored in the Github Secret named SFDX_INTEGRATION_URL
+            # The URL is stored in the Github Secret named SFDX_QA_URL
             # so here we store the URL into a text file
-            - name: 'Populate auth file with SFDX_URL secret of integration org'
+            - name: 'Populate auth file with SFDX_URL secret of QA org'
               shell: bash
               run: |
-                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+                  echo ${{ secrets.SFDX_QA_URL}} > ./SFDX_QA_URL.txt
 
             # Authenticate to org using the URL stored in the text file
-            - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a integration
+            - name: 'Authenticate to qa Org'
+              run: sfdx auth:sfdxurl:store -f ./SFDX_QA_URL.txt -s -a qa
 
             # We use SFDX Git Delta to create a directory with only the metadata that has changed.
             # this allows us to deploy only those changes, as opposed to deploying the entire branch. 
@@ -161,7 +161,7 @@ jobs:
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
                   mkdir changed-sources
-                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
+                  sfdx sgd:source:delta --to "HEAD" --from origin/qa --output changed-sources/ --generate-delta --source force-app/
 
             - name: 'extract test classes in changed-sources/package/package.xml' 
               run: |

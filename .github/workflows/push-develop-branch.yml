@@ -1,5 +1,5 @@
 # Unique name for this workflow
-name: Deploy integration branch to integration and staging/uat orgs
+name: Deploy QA branch to QA and staging/uat orgs
 
 # Definition when the workflow should run
 on:
@@ -56,16 +56,16 @@ jobs:
                 fetch-depth: 0
 
             # Store secret for both otgs
-            - name: 'Populate auth file with SFDX_URL secret of the integration and staging orgs'
+            - name: 'Populate auth file with SFDX_URL secret of the QA and staging orgs'
               shell: bash
               run: |
-                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+                  echo ${{ secrets.SFDX_QA_URL}} > ./SFDX_QA_URL.txt
                   echo ${{ secrets.SFDX_STAGING_URL}} > ./SFDX_STAGING_URL.txt
 
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
                   mkdir changed-sources
-                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
+                  sfdx sgd:source:delta --to "HEAD" --from origin/qa --output changed-sources/ --generate-delta --source force-app/
 
             #JUST FOR DEMO 
             - name: 'extract test classes in changed-sources/package/package.xml' 
@@ -75,10 +75,10 @@ jobs:
                   echo "APEX_CLASSES=$APEX_CLASSES" >> $GITHUB_ENV
 
             # Authenticate to org
-            - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a integration
+            - name: 'Authenticate to QA Org'
+              run: sfdx auth:sfdxurl:store -f ./SFDX_QA_URL.txt -s -a qa
 
-            - name: 'Deploy the entire branch to Integration org'
+            - name: 'Deploy the entire branch to QA org'
               run: |
                   if [ -d "./changed-sources/force-app" ]; then
                     #file exists
@@ -91,7 +91,7 @@ jobs:
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
                   if [ -d "./changed-sources/force-app" ]; then
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
                     sfdx force:source:deploy -p "changed-sources/force-app"  --json
                     #file exists
                   fi
