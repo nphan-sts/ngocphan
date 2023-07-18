@@ -5,7 +5,7 @@ name: Daily run test
 on:
     schedule:
       # At the end of every day
-      - cron: "20 7 * * *"
+      - cron: "30 10 * * *"
             
 # Jobs to be executed
 jobs:
@@ -25,12 +25,6 @@ jobs:
                   echo "$HOME/sfdx/bin" >> $GITHUB_PATH
                   ~/sfdx/bin/sfdx version
 
-            # install SFDX-Git-Delta plugin - https://github.com/scolladon/sfdx-git-delta
-            - name: 'Installing sfdx git delta'
-              run: | 
-                  echo y | sfdx plugins:install sfdx-git-delta
-                  sfdx plugins 
-
             # Checkout the source code
             - name: 'Checkout source code'
               uses: actions/checkout@v3
@@ -38,19 +32,19 @@ jobs:
                 fetch-depth: 0
 
             # Store secret for both otgs
-            - name: 'Populate auth file with SFDX_URL secret of the integration org'
+            - name: 'Populate auth file with SFDX_URL secret of the qa org'
               shell: bash
               run: |
-                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+                  echo ${{ secrets.SFDX_QA_URL}} > ./SFDX_QA_URL.txt
 
             # Authenticate to org
-            - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a integration
+            - name: 'Authenticate to qa Org'
+              run: sfdx auth:sfdxurl:store -f ./SFDX_QA_URL.txt -s -a qa
 
             - name: 'Run test all'
               run: |
                   mkdir testresults
-                  sfdx force:apex:run:test  --target-org integration -d testresults --synchronous --test-level  RunLocalTests --wait 120 --json
+                  sfdx force:apex:run:test  --target-org qa -d testresults --synchronous --test-level  RunLocalTests --wait 120 --json
 
             - name: Get test result
               if: ${{ always() }}
@@ -71,7 +65,14 @@ jobs:
                       echo "msg=$msg" >> $GITHUB_ENV
                     fi
 
+            - name: Test report
+              if: ${{ always() }}
+              run: |
+                TEST_ID=$(cat testresults/test-run-id.txt)
+                sf apex get test --test-run-id ${TEST_ID}
+
             - name: Send custom JSON data to Slack workflow
+              if: ${{ always() }}
               id: slack
               uses: slackapi/slack-github-action@v1.23.0
               with:
@@ -82,7 +83,3 @@ jobs:
                   
               env:
                 SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-                  
-            - name: 'Deploy destructive changes (if any)'
-              run: |
-                  sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
