@@ -7,7 +7,7 @@ on:
     pull_request:
       # The events are that a PR is opened, or when a commit is pushed
       # to a branch that has an existing pull request
-      types: [opened, synchronize, reopened, edited]
+      types: [opened, synchronize, reopened]
       # The branches filter allows to specify that this workflow should only
       # run if the branch name is "develop". This way we prevent this workflow
       # from running when PRs are opened on other branches
@@ -183,8 +183,8 @@ jobs:
               run: |
                   if [ -d "./changed-sources/force-app" ]; then
                     #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly
-                    sfdx force:source:deploy -p "changed-sources/force-app"
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  --json
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --json
                   fi
 
             # If the env variable equals all, we run all tests
@@ -193,7 +193,7 @@ jobs:
               run: |
                   if [ -d "./changed-sources/force-app" ]; then
                     #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  --json
                   fi
 
             # Run tests specified by dev
@@ -204,7 +204,7 @@ jobs:
                   echo "--- Delta Check-Only Deploy ---"
                   if [ -d "./changed-sources/force-app" ]; then
                     #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
                   fi
 
             # Run tests generated in change-sources/package/package.xml
@@ -214,7 +214,7 @@ jobs:
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
                   if [ -d "./changed-sources/force-app" ]; then
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
                   fi
 
             - name: 'Deploy destructive changes (if any)'
