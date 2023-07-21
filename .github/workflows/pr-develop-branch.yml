@@ -185,7 +185,6 @@ jobs:
                   if [ -d "./changed-sources/force-app" ]; then
                     #file exists
                     grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  
-                    sfdx force:source:deploy -p "changed-sources/force-app"  --json
                   fi
 
             # If the env variable equals all, we run all tests

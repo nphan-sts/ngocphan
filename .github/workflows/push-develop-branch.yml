@@ -61,40 +61,63 @@ jobs:
               run: |
                   echo ${{ secrets.SFDX_QA_URL}} > ./SFDX_QA_URL.txt
                   echo ${{ secrets.SFDX_STAGING_URL}} > ./SFDX_STAGING_URL.txt
+            # Authenticate to org
+            - name: 'Authenticate to QA Org'
+              run: sfdx auth:sfdxurl:store -f ./SFDX_QA_URL.txt -s -a qa
 
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
                   mkdir changed-sources
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
 
-            #JUST FOR DEMO 
             - name: 'extract test classes in changed-sources/package/package.xml' 
               run: |
                   APEX_CLASSES=$(xq . < changed-sources/package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | map(select(. | index("Test") | not)) | map(. + "Test") | unique | join(",")' -r)
                   echo $APEX_CLASSES 
                   echo "APEX_CLASSES=$APEX_CLASSES" >> $GITHUB_ENV
 
-            # Authenticate to org
-            - name: 'Authenticate to QA Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_QA_URL.txt -s -a qa
-
-            - name: 'Deploy the entire branch to QA org'
+            # If no test specified
+            - name: 'deploy delta changes - no tests'
+              if: env.APEX_TESTS == 'none'
               run: |
                   if [ -d "./changed-sources/force-app" ]; then
                     #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  
                   fi
 
-            - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
-              if: env.APEX_TESTS != 'all' && env.APEX_TESTS == '' && env.APEX_CLASSES != ''
+            # If the env variable equals all, we run all tests
+            - name: 'deploy delta changes - run all tests'
+              if: env.APEX_TESTS == 'all'
+              run: |
+                  if [ -d "./changed-sources/force-app" ]; then
+                    #file exists
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" -l RunLocalTests  
+                  fi
+
+            # Run tests specified by dev
+            - name: 'deploy delta changes - run specified tests - User specified'
+              if: env.APEX_TESTS != 'all' && env.APEX_TESTS != 'none' && env.APEX_TESTS != ''
               run: |
                   echo ${{env.APEX_TESTS}}
-                  echo "--- Delta Check-Only Deploy ---"
+                  echo "--- Delta Deploy ---"
                   if [ -d "./changed-sources/force-app" ]; then
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}} --json
-                    sfdx force:source:deploy -p "changed-sources/force-app"  --json
                     #file exists
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
                   fi
+
+            # Run tests generated in change-sources/package/package.xml
+            - name: 'deploy delta changes - run specified change-sources/package/package.xml'
+              if: env.APEX_TESTS == '' && env.APEX_CLASSES != ''
+              run: |
+                  echo ${{env.APEX_TESTS}}
+                  echo "--- Delta Deploy ---"
+                  if [ -d "./changed-sources/force-app" ]; then
+                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}}
+                  fi
+
+            - name: 'Deploy destructive changes (if any)'
+              run: |
+                  sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --ignorewarnings
 
             # Authenticate to org
             #- name: 'Authenticate to Staging Org to Staging org'
