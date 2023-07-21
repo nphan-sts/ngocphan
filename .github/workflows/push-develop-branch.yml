@@ -1,5 +1,5 @@
 # Unique name for this workflow
-name: Deploy QA branch to QA and staging/uat orgs
+name: Deploy QA branch to QA 
 
 # Definition when the workflow should run
 on:
@@ -65,7 +65,7 @@ jobs:
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
                   mkdir changed-sources
-                  sfdx sgd:source:delta --to "HEAD" --from origin/qa --output changed-sources/ --generate-delta --source force-app/
+                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
 
             #JUST FOR DEMO 
             - name: 'extract test classes in changed-sources/package/package.xml' 
