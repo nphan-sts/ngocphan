@@ -3,5 +3,8 @@ public with sharing class ClassA {
 
         String test = 'test';
 
+        System.debug(test);
+
+
     }
 }

@@ -4,6 +4,7 @@ public with sharing class ClassATest {
     public static void ClassATest() {
 
         ClassA.test();
+        System.assert(true);
 
     }
 }
