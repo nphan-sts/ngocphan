@@ -23,7 +23,7 @@ on:
 jobs:
     # This is the name of the job. You can give it whatever name you want
     validate-deployment-on-qa-org:
-        if: ${{ github.actor != 'dependabot[bot]' }} &&  ${{ github.base_ref == 'qa' }}
+        if: ${{ github.actor != 'dependabot[bot]' && github.base_ref == 'qa'}}
         runs-on: ubuntu-latest
         steps:
             # Now we install nodejs in the VM, and specify version 18, below 18 might not work
@@ -170,7 +170,7 @@ jobs:
                   sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
     # This is the name of the job. You can give it whatever name you want
     validate-deployment-on-stage-org:
-        if: ${{ github.actor != 'dependabot[bot]' }} &&  ${{ github.base_ref == 'main' }}
+        if: ${{ github.actor != 'dependabot[bot]' && github.base_ref == 'main' }}
         runs-on: ubuntu-latest
         steps:
             # Now we install nodejs in the VM, and specify version 18, below 18 might not work
@@ -317,7 +317,7 @@ jobs:
                   sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
     # This is the name of the job. You can give it whatever name you want
     validate-deployment-on-main-org:
-        if: ${{ github.actor != 'dependabot[bot]' }} &&  ${{ github.base_ref == 'main' }}
+        if: ${{ github.actor != 'dependabot[bot]' && github.base_ref == 'main' }}
         runs-on: ubuntu-latest
         steps:
             # Now we install nodejs in the VM, and specify version 18, below 18 might not work
