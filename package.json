@@ -40,5 +40,6 @@
     "**/{aura,lwc}/**": [
       "eslint"
     ]
-  }
+  },
+  "release": { "branches": [ "main" ] }
 }
