@@ -82,9 +82,7 @@ jobs:
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
-                    sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests $(<testsToRun.txt)
-                  fi
+
                   if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
                     sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests $(<testsToRun.txt)
                   elif [ -f changesExist.txt ]; then
@@ -167,9 +165,7 @@ jobs:
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
-                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests $(<testsToRun.txt)
-                  fi
+
                   if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
                     sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests $(<testsToRun.txt)
                   elif [ -f changesExist.txt ]; then

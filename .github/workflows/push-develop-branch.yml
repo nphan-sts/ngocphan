@@ -103,9 +103,6 @@ jobs:
                   echo "--- Delta Deploy ---"
                   if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
                     sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests $(<testsToRun.txt)
-                  fi
-                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
-                    sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests $(<testsToRun.txt)
                   elif [ -f changesExist.txt ]; then
                     sfdx force:source:deploy -p "changed-sources/force-app" 
                   fi
