@@ -2,7 +2,7 @@ import groovy.json.JsonSlurperClassic;
 import groovy.io.FileType
 
 //--------CONSTANTS--------
-def relativePathToPackageXml = 'changed-sources/package.xml'
+def relativePathToPackageXml = 'changed-sources/package/package.xml'
 def addOrUpdateChangesExistFileName = 'changesExist.txt'
 def relativePathToClassesThatChanged = 'force-app/main/default/classes'
 def relativePathToMapJson = 'unittest.json'

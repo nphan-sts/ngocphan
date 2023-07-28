@@ -110,7 +110,7 @@ jobs:
                   sfdx sgd:source:delta --to "HEAD" --from origin/qa --output changed-sources/ --generate-delta --source force-app/
                   
                   echo "changed-sources"
-                  if [ -d "./changed-source" ]; then
+                  if [ -d "./changed-sources" ]; then
                     find changed-sources -type d -exec ls {} \;
                   fi
                   if [ -d "./destructiveChanges" ]; then
