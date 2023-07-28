@@ -51,7 +51,7 @@ jobs:
                   groovy ParseManifests
 
             # If no test specified
-            - name: 'Check-only deploy delta changes - no tests'
+            - name: 'deploy delta changes - no tests'
               if: env.APEX_TESTS == 'none'
               run: |
                   if [ -f changesExist.txt ]; then
@@ -59,7 +59,7 @@ jobs:
                   fi
 
             # If the env variable equals all, we run all tests
-            - name: 'Check-only deploy delta changes - run all tests'
+            - name: 'deploy delta changes - run all tests'
               if: env.APEX_TESTS == 'all'
               run: |
                   if [ -f changesExist.txt ]; then
@@ -67,21 +67,21 @@ jobs:
                   fi
 
             # Run tests specified by dev
-            - name: 'Check-only deploy delta changes - run specified tests - User specified'
+            - name: 'deploy delta changes - run specified tests - User specified'
               if: env.APEX_TESTS != 'all' && env.APEX_TESTS != 'none' && env.APEX_TESTS != ''
               run: |
                   echo ${{env.APEX_TESTS}}
-                  echo "--- Delta Check-Only Deploy ---"
+                  echo "--- Delta Deploy ---"
                   if [ -f changesExist.txt ]; then
                     sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
                   fi
 
             # Run tests generated in change-sources/package/package.xml
-            - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
+            - name: 'deploy delta changes - run specified change-sources/package/package.xml'
               if: env.APEX_TESTS == ''
               run: |
                   echo ${{env.APEX_TESTS}}
-                  echo "--- Delta Check-Only Deploy ---"
+                  echo "--- Delta Deploy ---"
 
                   if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
                     sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests $(<testsToRun.txt)
@@ -93,7 +93,7 @@ jobs:
               run: |
                   if [ -f deletesExist.txt ]; then 
                     sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --ignorewarnings
-                  if
+                  fi
     validate-branch-to-production-org:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
@@ -134,7 +134,7 @@ jobs:
                   groovy ParseManifests
 
             # If no test specified
-            - name: 'Check-only deploy delta changes - no tests'
+            - name: 'deploy delta changes - no tests'
               if: env.APEX_TESTS == 'none'
               run: |
                   if [ -f changesExist.txt ]; then
@@ -142,7 +142,7 @@ jobs:
                   fi
 
             # If the env variable equals all, we run all tests
-            - name: 'Check-only deploy delta changes - run all tests'
+            - name: 'deploy delta changes - run all tests'
               if: env.APEX_TESTS == 'all'
               run: |
                   if [ -f changesExist.txt ]; then
@@ -150,21 +150,21 @@ jobs:
                   fi
 
             # Run tests specified by dev
-            - name: 'Check-only deploy delta changes - run specified tests - User specified'
+            - name: 'deploy delta changes - run specified tests - User specified'
               if: env.APEX_TESTS != 'all' && env.APEX_TESTS != 'none' && env.APEX_TESTS != ''
               run: |
                   echo ${{env.APEX_TESTS}}
-                  echo "--- Delta Check-Only Deploy ---"
+                  echo "--- Delta Deploy ---"
                   if [ -f changesExist.txt ]; then
                     sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
                   fi
 
             # Run tests generated in change-sources/package/package.xml
-            - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
+            - name: 'deploy delta changes - run specified change-sources/package/package.xml'
               if: env.APEX_TESTS == ''
               run: |
                   echo ${{env.APEX_TESTS}}
-                  echo "--- Delta Check-Only Deploy ---"
+                  echo "--- Delta Deploy ---"
 
                   if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
                     sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests $(<testsToRun.txt)
