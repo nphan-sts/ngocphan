@@ -180,4 +180,4 @@ jobs:
               run: |
                   if [ -f deletesExist.txt ]; then 
                     sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
-                  if
+                  fi

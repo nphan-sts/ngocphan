@@ -78,7 +78,7 @@ jobs:
         run: |
             if [ -f deletesExist.txt ]; then 
               sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --ignorewarnings
-            if
+            fi
 
       - run: npm ci
       - run: npx semantic-release

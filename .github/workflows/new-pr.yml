@@ -168,7 +168,7 @@ jobs:
               run: |
                   if [ -f deletesExist.txt ]; then 
                     sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
-                  if
+                  fi
     # This is the name of the job. You can give it whatever name you want
     validate-deployment-on-stage-org:
         if: ${{ github.actor != 'dependabot[bot]' && github.base_ref == 'main' }}
@@ -316,7 +316,7 @@ jobs:
               run: |
                   if [ -f deletesExist.txt ]; then 
                     sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
-                  if
+                    fi
 
 
     # This is the name of the job. You can give it whatever name you want
@@ -467,4 +467,4 @@ jobs:
               run: |
                   if [ -f deletesExist.txt ]; then 
                     sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
-                  if
+                  fi
