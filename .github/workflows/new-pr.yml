@@ -100,12 +100,6 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt install default-jdk
-            
-            # Install jq,yq as it is required for the next step
-            - name: 'Install jq,yq'
-              run: |
-                pip install yq
-                sudo apt-get install jq
                 
             # We use SFDX Git Delta to create a directory with only the metadata that has changed.
             # this allows us to deploy only those changes, as opposed to deploying the entire branch. 
@@ -123,28 +117,26 @@ jobs:
                     find destructiveChanges -type d -exec ls {} \;
                   fi
 
-            - name: 'extract test classes in changed-sources/package/package.xml' 
+            - name: 'Install groovy'
               run: |
-                  APEX_CLASSES=$(xq . < changed-sources/package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | map(select(. | index("Test") | not)) | map(. + "Test") | unique | join(",")' -r)
-                  echo $APEX_CLASSES 
-                  echo "APEX_CLASSES=$APEX_CLASSES" >> $GITHUB_ENV
+                  sudo apt-get -qq -y install curl wget unzip zip groovy
+                  groovy --version
+                  groovy ParseManifests
 
             # If no test specified
             - name: 'Check-only deploy delta changes - no tests'
               if: env.APEX_TESTS == 'none'
               run: |
-                  if [ -d "./changed-sources/force-app" ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  
                   fi
 
             # If the env variable equals all, we run all tests
             - name: 'Check-only deploy delta changes - run all tests'
               if: env.APEX_TESTS == 'all'
               run: |
-                  if [ -d "./changed-sources/force-app" ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  
                   fi
 
             # Run tests specified by dev
@@ -153,19 +145,23 @@ jobs:
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  if [ -d "./changed-sources/force-app" ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
                   fi
 
             # Run tests generated in change-sources/package/package.xml
             - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
-              if: env.APEX_TESTS == '' && env.APEX_CLASSES != ''
+              if: env.APEX_TESTS == ''
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  if [ -d "./changed-sources/force-app" ]; then
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}}
+                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests $(<testsToRun.txt)
+                  fi
+                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests $(<testsToRun.txt)
+                  elif [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly
                   fi
 
             - name: 'Deploy destructive changes (if any)'
@@ -250,12 +246,6 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt install default-jdk
-            
-            # Install jq,yq as it is required for the next step
-            - name: 'Install jq,yq'
-              run: |
-                pip install yq
-                sudo apt-get install jq
                 
             # We use SFDX Git Delta to create a directory with only the metadata that has changed.
             # this allows us to deploy only those changes, as opposed to deploying the entire branch. 
@@ -273,28 +263,20 @@ jobs:
                     find destructiveChanges -type d -exec ls {} \;
                   fi
 
-            - name: 'extract test classes in changed-sources/package/package.xml' 
-              run: |
-                  APEX_CLASSES=$(xq . < changed-sources/package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | map(select(. | index("Test") | not)) | map(. + "Test") | unique | join(",")' -r)
-                  echo $APEX_CLASSES 
-                  echo "APEX_CLASSES=$APEX_CLASSES" >> $GITHUB_ENV
-
             # If no test specified
             - name: 'Check-only deploy delta changes - no tests'
               if: env.APEX_TESTS == 'none'
               run: |
-                  if [ -d "./changed-sources/force-app" ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  
                   fi
 
             # If the env variable equals all, we run all tests
             - name: 'Check-only deploy delta changes - run all tests'
               if: env.APEX_TESTS == 'all'
               run: |
-                  if [ -d "./changed-sources/force-app" ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  
                   fi
 
             # Run tests specified by dev
@@ -303,9 +285,8 @@ jobs:
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  if [ -d "./changed-sources/force-app" ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
                   fi
 
             # Run tests generated in change-sources/package/package.xml
@@ -314,8 +295,8 @@ jobs:
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  if [ -d "./changed-sources/force-app" ]; then
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}}
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}}
                   fi
 
             - name: 'Deploy destructive changes (if any)'
@@ -400,12 +381,7 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt install default-jdk
-            
-            # Install jq,yq as it is required for the next step
-            - name: 'Install jq,yq'
-              run: |
-                pip install yq
-                sudo apt-get install jq
+        
                 
             # We use SFDX Git Delta to create a directory with only the metadata that has changed.
             # this allows us to deploy only those changes, as opposed to deploying the entire branch. 
@@ -423,28 +399,20 @@ jobs:
                     find destructiveChanges -type d -exec ls {} \;
                   fi
 
-            - name: 'extract test classes in changed-sources/package/package.xml' 
-              run: |
-                  APEX_CLASSES=$(xq . < changed-sources/package/package.xml | jq '.Package.types | [.] | flatten | map(select(.name=="ApexClass")) | .[] | .members | [.] | flatten | map(select(. | index("*") | not)) | map(select(. | index("Test") | not)) | map(. + "Test") | unique | join(",")' -r)
-                  echo $APEX_CLASSES 
-                  echo "APEX_CLASSES=$APEX_CLASSES" >> $GITHUB_ENV
-
             # If no test specified
             - name: 'Check-only deploy delta changes - no tests'
               if: env.APEX_TESTS == 'none'
               run: |
-                  if [ -d "./changed-sources/force-app" ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app" --checkonly  
                   fi
 
             # If the env variable equals all, we run all tests
             - name: 'Check-only deploy delta changes - run all tests'
               if: env.APEX_TESTS == 'all'
               run: |
-                  if [ -d "./changed-sources/force-app" ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app" --checkonly -l RunLocalTests  
                   fi
 
             # Run tests specified by dev
@@ -453,9 +421,8 @@ jobs:
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  if [ -d "./changed-sources/force-app" ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
                   fi
 
             # Run tests generated in change-sources/package/package.xml
@@ -464,8 +431,8 @@ jobs:
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  if [ -d "./changed-sources/force-app" ]; then
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}}
+                  if [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}}
                   fi
 
             - name: 'Deploy destructive changes (if any)'
