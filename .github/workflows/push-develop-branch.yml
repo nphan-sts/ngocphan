@@ -62,6 +62,11 @@ jobs:
                   if [ -d "./destructiveChanges" ]; then
                     find destructiveChanges -type d -exec ls {} \;
                   fi
+            - name: 'Install groovy'
+              run: |
+                  sudo apt-get -qq -y install curl wget unzip zip groovy
+                  groovy --version
+                  groovy ParseManifests
 
             - name: 'extract test classes in changed-sources/package/package.xml' 
               run: |

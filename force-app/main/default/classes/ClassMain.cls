@@ -3,10 +3,7 @@ public with sharing class ClassMain {
 
         String test = 'test';
         System.debug(test); 
-
-        
-
-        
+        System.debug(test); 
 
     }
 }
