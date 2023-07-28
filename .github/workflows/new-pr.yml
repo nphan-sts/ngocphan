@@ -166,7 +166,9 @@ jobs:
 
             - name: 'Deploy destructive changes (if any)'
               run: |
-                  sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
+                  if [ -f deletesExist.txt ]; then 
+                    sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
+                  if
     # This is the name of the job. You can give it whatever name you want
     validate-deployment-on-stage-org:
         if: ${{ github.actor != 'dependabot[bot]' && github.base_ref == 'main' }}
@@ -262,6 +264,12 @@ jobs:
                   if [ -d "./destructiveChanges" ]; then
                     find destructiveChanges -type d -exec ls {} \;
                   fi
+            
+            - name: 'Install groovy'
+              run: |
+                  sudo apt-get -qq -y install curl wget unzip zip groovy
+                  groovy --version
+                  groovy ParseManifests
 
             # If no test specified
             - name: 'Check-only deploy delta changes - no tests'
@@ -291,17 +299,26 @@ jobs:
 
             # Run tests generated in change-sources/package/package.xml
             - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
-              if: env.APEX_TESTS == '' && env.APEX_CLASSES != ''
+              if: env.APEX_TESTS == ''
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  if [ -f changesExist.txt ]; then
-                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}}
+                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests $(<testsToRun.txt)
+                  fi
+                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests $(<testsToRun.txt)
+                  elif [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly
                   fi
 
             - name: 'Deploy destructive changes (if any)'
               run: |
-                  sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
+                  if [ -f deletesExist.txt ]; then 
+                    sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
+                  if
+
+
     # This is the name of the job. You can give it whatever name you want
     validate-deployment-on-main-org:
         if: ${{ github.actor != 'dependabot[bot]' && github.base_ref == 'main' }}
@@ -399,6 +416,12 @@ jobs:
                     find destructiveChanges -type d -exec ls {} \;
                   fi
 
+            - name: 'Install groovy'
+              run: |
+                  sudo apt-get -qq -y install curl wget unzip zip groovy
+                  groovy --version
+                  groovy ParseManifests
+
             # If no test specified
             - name: 'Check-only deploy delta changes - no tests'
               if: env.APEX_TESTS == 'none'
@@ -427,14 +450,21 @@ jobs:
 
             # Run tests generated in change-sources/package/package.xml
             - name: 'Check-only deploy delta changes - run specified change-sources/package/package.xml'
-              if: env.APEX_TESTS == '' && env.APEX_CLASSES != ''
+              if: env.APEX_TESTS == ''
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Check-Only Deploy ---"
-                  if [ -f changesExist.txt ]; then
-                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}}
+                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests $(<testsToRun.txt)
+                  fi
+                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly -l RunSpecifiedTests --runtests $(<testsToRun.txt)
+                  elif [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  --checkonly
                   fi
 
             - name: 'Deploy destructive changes (if any)'
               run: |
-                  sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
+                  if [ -f deletesExist.txt ]; then 
+                    sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
+                  if

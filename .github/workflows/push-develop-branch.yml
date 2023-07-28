@@ -62,6 +62,7 @@ jobs:
                   if [ -d "./destructiveChanges" ]; then
                     find destructiveChanges -type d -exec ls {} \;
                   fi
+
             - name: 'Install groovy'
               run: |
                   sudo apt-get -qq -y install curl wget unzip zip groovy
@@ -69,44 +70,48 @@ jobs:
                   groovy ParseManifests
 
             # If no test specified
-            - name: 'deploy delta changes - no tests'
+            - name: 'Deploy delta changes - no tests'
               if: env.APEX_TESTS == 'none'
               run: |
                   if [ -f changesExist.txt ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  
+                    sfdx force:source:deploy -p "changed-sources/force-app"  
                   fi
 
             # If the env variable equals all, we run all tests
-            - name: 'deploy delta changes - run all tests'
+            - name: 'Deploy delta changes - run all tests'
               if: env.APEX_TESTS == 'all'
               run: |
                   if [ -f changesExist.txt ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app" -l RunLocalTests  
+                    sfdx force:source:deploy -p "changed-sources/force-app" -l RunLocalTests  
                   fi
 
             # Run tests specified by dev
-            - name: 'deploy delta changes - run specified tests - User specified'
+            - name: 'Deploy delta changes - run specified tests - User specified'
               if: env.APEX_TESTS != 'all' && env.APEX_TESTS != 'none' && env.APEX_TESTS != ''
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Deploy ---"
                   if [ -f changesExist.txt ]; then
-                    #file exists
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
+                    sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests ${{env.APEX_TESTS}} 
                   fi
 
             # Run tests generated in change-sources/package/package.xml
-            - name: 'deploy delta changes - run specified change-sources/package/package.xml'
-              if: env.APEX_TESTS == '' && env.APEX_CLASSES != ''
+            - name: 'Deploy delta changes - run specified change-sources/package/package.xml'
+              if: env.APEX_TESTS == ''
               run: |
                   echo ${{env.APEX_TESTS}}
                   echo "--- Delta Deploy ---"
-                  if [ -f changesExist.txt ]; then
-                    grep -q '<types>' changed-sources/package/package.xml && sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests ${{env.APEX_CLASSES}}
+                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests $(<testsToRun.txt)
+                  fi
+                  if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests $(<testsToRun.txt)
+                  elif [ -f changesExist.txt ]; then
+                    sfdx force:source:deploy -p "changed-sources/force-app" 
                   fi
 
             - name: 'Deploy destructive changes (if any)'
               run: |
-                  sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --ignorewarnings
+                  if [ -f deletesExist.txt ]; then 
+                    sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --ignorewarnings
+                  if
