@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    permissions:
+      contents: write
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Setup SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+        with:
+          sfdx-auth-url: ${{ secrets.SFDX_PROD_URL }}
+
+      # install SFDX-Git-Delta plugin - https://github.com/scolladon/sfdx-git-delta
+      - name: 'Installing sfdx git delta'
+        run: | 
+            echo y | sfdx plugins:install sfdx-git-delta
+            sfdx plugins 
+
+      # Checkout the source code
+      - name: 'Checkout source code'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Create delta packages for new, modified or deleted metadata'
+        run: | 
+            mkdir changed-sources
+
+            sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
+            echo "changed-sources"
+            if [ -d "./changed-source" ]; then
+              find changed-sources -type d -exec ls {} \;
+            fi
+            if [ -d "./destructiveChanges" ]; then
+              find destructiveChanges -type d -exec ls {} \;
+            fi
+
+      - name: 'Install groovy'
+        run: |
+            sudo apt-get -qq -y install curl wget unzip zip groovy
+            groovy --version
+            groovy ParseManifests
+
+      # Run tests generated in change-sources/package/package.xml
+      - name: 'deploy delta changes - run specified change-sources/package/package.xml'
+        run: |
+            echo "--- Delta Deploy ---"
+            
+            if [ -f changesExist.txt ] && [ -f testsToRun.txt ]; then
+              sfdx force:source:deploy -p "changed-sources/force-app"  -l RunSpecifiedTests --runtests $(<testsToRun.txt)
+            elif [ -f changesExist.txt ]; then
+              sfdx force:source:deploy -p "changed-sources/force-app" 
+            fi
+
+      - name: 'Deploy destructive changes (if any)'
+        run: |
+            if [ -f deletesExist.txt ]; then 
+              sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --ignorewarnings
+            fi
+
+      - run: npm ci
+      - run: npx semantic-release
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

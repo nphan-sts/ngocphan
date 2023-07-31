@@ -1,11 +1,12 @@
 {
   "packageDirectories": [
     {
-      "path": "unpackaged",
+      "path": "force-app",
       "default": true
     }
   ],
+  "name": "hm-cls-middleware",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "51.0"
+  "sourceApiVersion": "57.0"
 }
