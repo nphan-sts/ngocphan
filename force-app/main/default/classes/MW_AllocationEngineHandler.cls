@@ -229,11 +229,53 @@ global with sharing class MW_AllocationEngineHandler {
      *  After allocation from Allocation Engine, the timestamp is always updated.
      *  Use timestamp change to mimic behavior of InvestorAllocation class.
      */
-    public static void setInvestorAdvpCalledForAES(genesis__Applications__c app, genesis__Applications__c oldApp) {
+    public static void setInvestorAdvpCalledForAES(genesis__Applications__c app, genesis__Applications__c oldApp, String allocationStatus) {
         Boolean allocationEngineUpdated = app.Allocation_Timestamp__c != oldApp.Allocation_Timestamp__c;
-        if (allocationEngineUpdated && app.genesis__Status__c == 'agent_document_verification_pending') {
+        if (allocationEngineUpdated && app.genesis__Status__c == allocationStatus) {
             InvestorAllocation.allocationForADVPcalled = true;
         }
+    }
+
+    /**
+     * This method only applies to the agent verified allocation version.
+     * It makes sure the most recent allocation timestamp is after the most recent agent verified timestamp.
+     *
+     * Solves the following scenarios:
+     * 1. an advp allocation which might have left a previous investor
+     * 2. a redecision might have left a previous investor
+     *
+     * @param app an app allocated at agent verified
+     * @return true or false
+     */
+    public static Boolean isAllocationValid(genesis__Applications__c app) {
+
+        List<genesis__Application_Status_History__c> appHistory = [
+            SELECT Id,
+                    genesis__New_Value__c,
+                    CreatedDate
+            FROM   genesis__Application_Status_History__c
+            WHERE  genesis__Application__c = :app.Id
+            ORDER BY CreatedDate DESC
+        ];
+
+        /* get the latest agent_verified date */
+        Datetime agentVerifiedDate = null;
+        for (genesis__Application_Status_History__c appStatus : appHistory) {
+            if (appStatus.genesis__New_Value__c == PayoffConstants.AGENT_VERIFIED) {
+                agentVerifiedDate = appStatus.CreatedDate;
+                break;
+            }
+        }
+
+        /*
+        if agentVerifiedDate is null, app has never been agent verified, so it should not be considered a valid allocation.
+        Using a >= because there isn't enough time resolution in Salesforce to demonstrate an actual greater than.
+         */
+
+        Boolean result = agentVerifiedDate != null && app.Allocation_Timestamp__c >= agentVerifiedDate;
+        System.debug('isAllocationValid: ' + result + ' app: ' + app.Id + ' agentVerifiedDate: ' + agentVerifiedDate + ' allocationTimestamp: ' + app.Allocation_Timestamp__c);
+
+        return result;
     }
 
     private class CalloutResult {

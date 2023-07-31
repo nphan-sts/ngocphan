@@ -104,6 +104,7 @@ private class TestArcusWebhookAPI {
                                                                     genesis__Loan_Amount__c=3000
                                                                     );
         insert app;
+
         //Inserting Application Document Category record
         genesis__Application_Document_Category__c genAppDocCatTIL = new genesis__Application_Document_Category__c();
         genAppDocCatTIL.Name = 'TIL Document';

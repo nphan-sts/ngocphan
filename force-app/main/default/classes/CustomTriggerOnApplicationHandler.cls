@@ -4,7 +4,7 @@
  *2. Pallavi        2020/11/19     CRM-1022 Status 500 responses causing missing data in CLS - CLS Case #02456279
  ******************Modification History******************/
 
-Public class CustomTriggerOnApplicationHandler{
+public class CustomTriggerOnApplicationHandler{
     public static boolean isAppTrgExecuting=true;
 
     public CustomTriggerOnApplicationHandler(){
@@ -127,7 +127,7 @@ Public class CustomTriggerOnApplicationHandler{
                     ////////////////////////////////////////////////////////////////////////////////////
                     investorsToBeUpdate.add(newInv);
                 }
-                else if(appl.Investor__c != oldApp.Investor__c && oldApp.Investor__c != NULL){
+                else if(appl.Investor__c != oldApp.Investor__c && oldApp.Investor__c != null){
                     Account oldInv = oldInvestorMap.get(oldApp.Investor__c);
                     List<genesis__Applications__c> oldAppList = oldInv.Applications__r;
                     oldInv.Amount_Invested__c = oldInv.Amount_Invested__c - oldApp.Invested_Amount__c;
@@ -209,13 +209,11 @@ Public class CustomTriggerOnApplicationHandler{
             }
 
         }
-        if(adcToBeDeleted != null && adcToBeDeleted.size() > 0){
-            Delete adcToBeDeleted;
-        }
-        if(adcToBeUpdated != null && adcToBeUpdated.size() > 0){
-            update adcToBeUpdated;
 
+        if(!adcToBeDeleted.isEmpty() || !adcToBeUpdated.isEmpty()){
+            executeAdcChanges(toIds(adcToBeDeleted), toIds(adcToBeUpdated));
         }
+
         if(investorsToBeUpdate != null && investorsToBeUpdate.size() > 0){
             update investorsToBeUpdate;
             retValue = true;
@@ -223,6 +221,51 @@ Public class CustomTriggerOnApplicationHandler{
         System.debug('....runInvestorRule completed...');
         return retValue;
     }
+
+    /**
+     * Update or delete the Application Document Categories as a future
+     * This is done to avoid an adc update from failing due to attempting to lock the invoking application
+     *
+     * @param deleteIds ids to delete
+     * @param updateIds ids to set boxurl to null
+     */
+    @Future(Callout=true)
+    private static void executeAdcChanges(List<Id> deleteIds, List<Id> updateIds) {
+
+        /* if reallocated at AV, the folders are about to be updated again, do not delete */
+        if (deleteIds != null && deleteIds.size() > 0 && !MW_Settings__c.getOrgDefaults().Allocation_Engine_At_Agent_Verified__c) {
+            delete [
+                    SELECT Id
+                    FROM   genesis__Application_Document_Category__c
+                    WHERE Id IN :deleteIds
+            ];
+        }
+        if (updateIds != null && updateIds.size() > 0) {
+            List<genesis__Application_Document_Category__c> updateCategories = [
+                    SELECT Id
+                    FROM   genesis__Application_Document_Category__c
+                    WHERE  Id IN :updateIds
+            ];
+            for (genesis__Application_Document_Category__c adc : updateCategories) {
+                adc.Box_URl__c = null;
+            }
+            update updateCategories;
+        }
+    }
+
+    /**
+     * @param adcList to convert to list of ids
+     *
+     * @return list of Ids
+     */
+    private static List<Id> toIds(List<genesis__Application_Document_Category__c> adcList) {
+        List<Id> ids = new List<Id>();
+        for (genesis__Application_Document_Category__c adc : adcList) {
+            ids.add(adc.Id);
+        }
+        return ids;
+    }
+
     public Date addWorkingDaysToDate(Date date1,Integer adDays){
 
                List<Holiday> holidays=[Select StartTimeInMinutes,
