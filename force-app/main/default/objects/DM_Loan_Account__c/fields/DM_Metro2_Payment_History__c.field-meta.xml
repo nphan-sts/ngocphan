@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Metro2_Payment_History__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Report one month&apos;s payment record in each byte from the left to right in least recent to most recent order.</inlineHelpText>
+    <label>DM Payment History</label>
+    <length>180</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

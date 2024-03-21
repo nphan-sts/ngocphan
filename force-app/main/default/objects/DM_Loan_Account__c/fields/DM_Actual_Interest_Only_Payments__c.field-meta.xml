@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Actual_Interest_Only_Payments__c</fullName>
+    <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
+    <inlineHelpText>If this is checked, interest only payments are set to actual interest amounts during the interest only period. If it is unchecked, the system computes a single interest only amount for all interest only payments.</inlineHelpText>
+    <label>DM Actual Interest Only Payments</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

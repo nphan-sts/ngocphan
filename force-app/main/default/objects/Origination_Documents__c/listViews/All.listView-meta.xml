@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>Application__c</columns>
+    <columns>BoxUrl__c</columns>
+    <columns>Code_FF__c</columns>
+    <columns>Lead_Id__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Application__c</field>
+        <operation>equals</operation>
+        <value>APP-0000704961</value>
+    </filters>
+    <label>All</label>
+</ListView>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Result__c</fullName>
+    <externalId>false</externalId>
+    <label>DM Result</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Open Special Condition(METRO2</fullName>
+                <default>false</default>
+                <label>Open Special Condition(METRO2</label>
+            </value>
+            <value>
+                <fullName>Open Consumer Information(METRO2)</fullName>
+                <default>false</default>
+                <label>Open Consumer Information(METRO2)</label>
+            </value>
+            <value>
+                <fullName>Open Compliance Condition(METRO2)</fullName>
+                <default>false</default>
+                <label>Open Compliance Condition(METRO2)</label>
+            </value>
+            <value>
+                <fullName>Stop Credit Bureau</fullName>
+                <default>false</default>
+                <label>Stop Credit Bureau</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

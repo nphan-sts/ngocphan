@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Capitalization_Frequency__c</fullName>
+    <description>This decides the frequency at which capitalization will be done</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This decides the Capitalization Frequency, below are the supported ones:
+Daily
+Weekly
+Bi-weekly
+Semi-Monthly
+Monthly
+Bi-Monthly
+Quarterly
+Semi-Annual
+Annual
+Single-Payment</inlineHelpText>
+    <label>DM Capitalization Frequency</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Daily</fullName>
+                <default>false</default>
+                <label>DM_Daily</label>
+            </value>
+            <value>
+                <fullName>DM_Weekly</fullName>
+                <default>false</default>
+                <label>DM_Weekly</label>
+            </value>
+            <value>
+                <fullName>DM_Bi-weekly</fullName>
+                <default>false</default>
+                <label>DM_Bi-weekly</label>
+            </value>
+            <value>
+                <fullName>DM_Semi-Monthly</fullName>
+                <default>false</default>
+                <label>DM_Semi-Monthly</label>
+            </value>
+            <value>
+                <fullName>DM_Monthly</fullName>
+                <default>false</default>
+                <label>DM_Monthly</label>
+            </value>
+            <value>
+                <fullName>DM_Bi-Monthly</fullName>
+                <default>false</default>
+                <label>DM_Bi-Monthly</label>
+            </value>
+            <value>
+                <fullName>DM_Quarterly</fullName>
+                <default>false</default>
+                <label>DM_Quarterly</label>
+            </value>
+            <value>
+                <fullName>DM_Semi-Annual</fullName>
+                <default>false</default>
+                <label>DM_Semi-Annual</label>
+            </value>
+            <value>
+                <fullName>DM_Annual</fullName>
+                <default>false</default>
+                <label>DM_Annual</label>
+            </value>
+            <value>
+                <fullName>DM_Single-Payment</fullName>
+                <default>false</default>
+                <label>DM_Single-Payment</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

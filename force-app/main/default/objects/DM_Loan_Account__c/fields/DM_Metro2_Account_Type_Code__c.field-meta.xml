@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Metro2_Account_Type_Code__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Report the specific code that identifies the account classification.</inlineHelpText>
+    <label>DM Account Type Code</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_7B - Agricultural</fullName>
+                <default>false</default>
+                <label>DM_7B - Agricultural</label>
+            </value>
+            <value>
+                <fullName>DM_00 - Auto</fullName>
+                <default>false</default>
+                <label>DM_00 - Auto</label>
+            </value>
+            <value>
+                <fullName>DM_3A - Auto Lease</fullName>
+                <default>false</default>
+                <label>DM_3A - Auto Lease</label>
+            </value>
+            <value>
+                <fullName>DM_10 - Business Loan</fullName>
+                <default>false</default>
+                <label>DM_10 - Business Loan</label>
+            </value>
+            <value>
+                <fullName>DM_6A - Commercial Installment Loan</fullName>
+                <default>false</default>
+                <label>DM_6A - Commercial Installment Loan</label>
+            </value>
+            <value>
+                <fullName>DM_0F - Construction Loan</fullName>
+                <default>false</default>
+                <label>DM_0F - Construction Loan</label>
+            </value>
+            <value>
+                <fullName>DM_12 - Education</fullName>
+                <default>false</default>
+                <label>DM_12 - Education</label>
+            </value>
+            <value>
+                <fullName>DM_15 - Line of Credit</fullName>
+                <default>false</default>
+                <label>DM_15 - Line of Credit</label>
+            </value>
+            <value>
+                <fullName>DM_20 - Note Loan</fullName>
+                <default>false</default>
+                <label>DM_20 - Note Loan</label>
+            </value>
+            <value>
+                <fullName>DM_03 - Partially Secured</fullName>
+                <default>false</default>
+                <label>DM_03 - Partially Secured</label>
+            </value>
+            <value>
+                <fullName>DM_29 - Rental Agreement</fullName>
+                <default>false</default>
+                <label>DM_29 - Rental Agreement</label>
+            </value>
+            <value>
+                <fullName>DM_02 - Secured</fullName>
+                <default>false</default>
+                <label>DM_02 - Secured</label>
+            </value>
+            <value>
+                <fullName>01 - Unsecured</fullName>
+                <default>false</default>
+                <label>01 - Unsecured</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

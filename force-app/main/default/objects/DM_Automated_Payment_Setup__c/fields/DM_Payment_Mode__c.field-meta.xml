@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Payment_Mode__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>DM Payment Mode</label>
+    <referenceTo>loan__Payment_Mode__c</referenceTo>
+    <relationshipLabel>DM Automated Payment Setup (DM Payment Mode)</relationshipLabel>
+    <relationshipName>DM_Automated_Payment_Setup1</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

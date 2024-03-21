@@ -1,0 +1,105 @@
+<apex:page standardController="genesis__Applications__c" extensions="ConvertAppToContractCntrl" recordSetVar="apps" action="{!convertApps}">
+   
+   <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>
+    <script>
+        j$ = jQuery.noConflict();
+        j$(document).ready(function() {
+            
+            var urlparameter = '';
+            console.log('url'+(window.location.href));
+            console.log('urlIndex'+(window.location.href.indexOf('jobId')));
+            if(window.location.href.indexOf('retURL') > -1){
+                urlparameter = getUrlVars()['retURL'];
+                }
+            
+            init(urlparameter);
+        });
+        
+        function getUrlVars() {
+            var vars = {};
+            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                vars[key] = value;
+            });
+            return vars;
+        }
+        function init(val) {
+            console.log('HelloMeFromInit'+val);
+            if(val=='') {
+                console.log('HelloMe');
+                var newHeight = j$("[id$=lead-edit-section] .pbSubsection").css("height");//Just shade the body, not the header
+                j$("[id$=loading-curtain-div]").css("background-color", "black").css("opacity", 0.20).css("height", newHeight).css("width", "80%");
+            }
+        }
+        
+        function showLoadingDiv() {
+            console.log('Hello');
+            var newHeight = j$("[id$=lead-edit-section] .pbSubsection").css("height");//Just shade the body, not the header
+            j$("[id$=loading-curtain-div]").css("background-color", "black").css("opacity", 0.20).css("height", newHeight).css("width", "80%");
+        }
+        function hideLoadingDiv(val) {
+            
+            console.log('Hello'+val);
+            if(val==0) {
+            j$("[id$=loading-curtain-div]").css("background-color", "black").css("opacity", "1").css("height", "0px").css("width", "80%");
+            redirectPage();
+            }
+        }
+        
+    </script>
+    <style>
+        #loading-curtain-div {
+            height:100%;
+            width:100%;
+            position:absolute;
+            z-index:100%;
+            //-webkit-transition: all 0.30s ease-out;
+            //-moz-transition: all 0.30s ease-out;
+        }
+    </style>
+   <body onload="init();">
+   <apex:form >
+        
+       <div id="loading-curtain-div"> 
+       <apex:pageBlock >
+            
+            <apex:actionFunction name="redirectPage" action="{!direct}"/>
+            <apex:actionStatus id="save-lead-status" onstart="showLoadingDiv();" />
+            <apex:actionPoller action="{!checkJobStatus}" rerender="counter"
+                status="save-lead-status" interval="5"   enabled="{!isEnabled}" oncomplete="hideLoadingDiv({!count});"/>
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!updateApps}" value="Confirm" rendered="{!jobId==null}"/>
+            </apex:pageBlockButtons>
+            
+            <apex:pageBlockSection title="These Applications are valid"  id="lead-edit-section"
+                rendered="{!eligibleApps != null}">     
+                          
+                <apex:pageBlockTable value="{!eligibleAppsLst}" var="app">
+                    <apex:column value="{!app.name}"/>
+                    <apex:column value="{!app.genesis__account__r.name}"/>
+                    <apex:column value="{!app.genesis__Status__c}"/> 
+                    <apex:column value="{!app.OwnerID}"/>
+                </apex:pageBlockTable>         
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock >
+             
+            <apex:pageBlockSection title="These Application are not valid"
+                rendered="{!notEligibleApps != null}"> 
+                      
+                <apex:pageBlockTable value="{!notEligibleAppsLst}" var="app">
+                    <apex:column value="{!app.name}"/>
+                    <apex:column value="{!app.genesis__account__r.name}"/>
+                    <apex:column value="{!app.genesis__Status__c}"/> 
+                    <apex:column value="{!app.OwnerID}"/> 
+                    <apex:column value="{!app.genesis__CL_Product__c}"/> 
+                    <apex:column value="{!app.Payment_Mode__c}"/>
+                    <apex:column value="{!app.Investor__c}"/> 
+                    <apex:column value="{!app.genesis__CL_Product__r.loan__Lending_Product__r.name}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        </div>
+      
+    </apex:form>  
+    </body>  
+</apex:page>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis_Monthly_Income_Expense_Info__c</fullName>
+    <externalId>false</externalId>
+    <label>Monthly Income &amp; Expense Info</label>
+    <referenceTo>genesis__Monthly_Income_Expense_Info__c</referenceTo>
+    <relationshipName>genesis_Monthly_Income_Expe1589329474936</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

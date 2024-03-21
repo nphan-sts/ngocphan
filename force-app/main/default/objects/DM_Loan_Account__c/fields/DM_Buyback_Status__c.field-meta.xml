@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Buyback_Status__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>This field is used to indicate the loan&apos;s buyback status.</inlineHelpText>
+    <label>DM Buyback Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Not Yet Boarded</fullName>
+                <default>false</default>
+                <label>DM_Not Yet Boarded</label>
+            </value>
+            <value>
+                <fullName>DM_Boarded</fullName>
+                <default>false</default>
+                <label>DM_Boarded</label>
+            </value>
+            <value>
+                <fullName>DM_Disbursed By Bank</fullName>
+                <default>false</default>
+                <label>DM_Disbursed By Bank</label>
+            </value>
+            <value>
+                <fullName>DM_Buyback Complete</fullName>
+                <default>false</default>
+                <label>DM_Buyback Complete</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

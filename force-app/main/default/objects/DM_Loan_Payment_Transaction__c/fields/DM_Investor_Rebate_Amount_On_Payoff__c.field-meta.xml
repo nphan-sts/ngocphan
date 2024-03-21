@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Investor_Rebate_Amount_On_Payoff__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the rebate to be paid to the investors on a Protect enabled contract in case of a payoff.</inlineHelpText>
+    <label>Investor Rebate Amount On Payoff</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

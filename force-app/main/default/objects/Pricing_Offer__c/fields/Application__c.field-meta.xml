@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Application__c</fullName>
+    <description>/Changed on 16-10-2017 by Sagar Hinsu</description>
+    <externalId>false</externalId>
+    <label>Application</label>
+    <referenceTo>genesis__Applications__c</referenceTo>
+    <relationshipLabel>Pricing Offer</relationshipLabel>
+    <relationshipName>Pricing_Offer</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

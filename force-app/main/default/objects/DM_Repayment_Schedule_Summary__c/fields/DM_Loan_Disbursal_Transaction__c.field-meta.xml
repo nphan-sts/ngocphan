@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Loan_Disbursal_Transaction__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Repayment Schedule Record of which LDT</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field is used only in case of FIT (Fund in Tranches) Loans. Every disbursal re-generates repayment schedule, this field keeps track of parent disbursal due to which record is created.</inlineHelpText>
+    <label>DM Loan Disbursal Transaction</label>
+    <referenceTo>DM_Loan_Disbursal_Transaction__c</referenceTo>
+    <relationshipName>DM_Loan_Disbursal_Transaction</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

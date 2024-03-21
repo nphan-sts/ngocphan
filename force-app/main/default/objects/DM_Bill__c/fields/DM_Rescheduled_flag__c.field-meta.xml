@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Rescheduled_flag__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>If this flag is checked that means this bills was marked as not enabled as part of Rescheduled transaction posted on this loan account.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If this flag is checked that means this bills was marked as not enabled as part of Rescheduled transaction posted on this loan account.</inlineHelpText>
+    <label>DM Is Rescheduled</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

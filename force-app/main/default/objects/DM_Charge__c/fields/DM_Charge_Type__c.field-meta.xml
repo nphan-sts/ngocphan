@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Charge_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>DM_Charge Type_deprecated</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Late Fees</fullName>
+                <default>false</default>
+                <label>DM_Late Fees</label>
+            </value>
+            <value>
+                <fullName>DM_NSF Fees</fullName>
+                <default>false</default>
+                <label>DM_NSF Fees</label>
+            </value>
+            <value>
+                <fullName>DM_Wire Fees</fullName>
+                <default>false</default>
+                <label>DM_Wire Fees</label>
+            </value>
+            <value>
+                <fullName>DM_Pay-Off Fees</fullName>
+                <default>false</default>
+                <label>DM_Pay-Off Fees</label>
+            </value>
+            <value>
+                <fullName>DM_Other</fullName>
+                <default>true</default>
+                <label>DM_Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

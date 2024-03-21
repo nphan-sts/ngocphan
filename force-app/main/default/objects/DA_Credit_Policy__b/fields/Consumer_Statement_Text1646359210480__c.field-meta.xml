@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Consumer_Statement_Text1646359210480__c</fullName>
+    <externalId>false</externalId>
+    <label>Consumer Statement Text</label>
+    <length>131072</length>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

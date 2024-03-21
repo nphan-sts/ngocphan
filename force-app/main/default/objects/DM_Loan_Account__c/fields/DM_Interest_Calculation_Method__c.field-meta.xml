@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Interest_Calculation_Method__c</fullName>
+    <description>Billing Method.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Flat - Interest computed every month on the original amount.
+Declining Balance - Interest calculated on the reduced principal balance.
+Flexible Repayment - Interest calculated on the reduced principal balance with the change in interest rate.</inlineHelpText>
+    <label>DM Interest Calculation Method</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Flat</fullName>
+                <default>false</default>
+                <label>Flat</label>
+            </value>
+            <value>
+                <fullName>Flexible Repayment</fullName>
+                <default>false</default>
+                <label>Flexible Repayment</label>
+            </value>
+            <value>
+                <fullName>Declining Balance</fullName>
+                <default>true</default>
+                <label>Declining Balance</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

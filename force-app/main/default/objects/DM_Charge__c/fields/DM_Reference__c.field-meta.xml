@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Reference__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>This text can be used to provide additional information about the charge.</inlineHelpText>
+    <label>DM_Reference</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

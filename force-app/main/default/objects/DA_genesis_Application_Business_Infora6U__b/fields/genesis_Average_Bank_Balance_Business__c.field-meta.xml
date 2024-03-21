@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis_Average_Bank_Balance_Business__c</fullName>
+    <externalId>false</externalId>
+    <label>Average Bank Balance (Business)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

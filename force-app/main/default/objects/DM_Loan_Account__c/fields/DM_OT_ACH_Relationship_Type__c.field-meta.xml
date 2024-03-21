@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_OT_ACH_Relationship_Type__c</fullName>
+    <description>One time ACH relationship type</description>
+    <externalId>false</externalId>
+    <label>DM OT ACH Relationship Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Primary</fullName>
+                <default>false</default>
+                <label>DM_Primary</label>
+            </value>
+            <value>
+                <fullName>DM_Spouse</fullName>
+                <default>false</default>
+                <label>DM_Spouse</label>
+            </value>
+            <value>
+                <fullName>DM_Secondary</fullName>
+                <default>false</default>
+                <label>DM_Secondary</label>
+            </value>
+            <value>
+                <fullName>DM_Cosigner</fullName>
+                <default>false</default>
+                <label>DM_Cosigner</label>
+            </value>
+            <value>
+                <fullName>DM_Cosigner Spouse</fullName>
+                <default>false</default>
+                <label>DM_Cosigner Spouse</label>
+            </value>
+            <value>
+                <fullName>DM_Cosigner2</fullName>
+                <default>false</default>
+                <label>DM_Cosigner2</label>
+            </value>
+            <value>
+                <fullName>DM_Cosigner2 Spouse</fullName>
+                <default>false</default>
+                <label>DM_Cosigner2 Spouse</label>
+            </value>
+            <value>
+                <fullName>DM_Third Party</fullName>
+                <default>false</default>
+                <label>DM_Third Party</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

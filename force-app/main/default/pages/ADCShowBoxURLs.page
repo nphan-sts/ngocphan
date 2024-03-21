@@ -1,0 +1,19 @@
+<apex:page standardController="genesis__Application_Document_Category__c"
+    extensions="ADCShowBoxURLsController"
+    sidebar="{!IF($CurrentPage.Parameters.modal == 'true', false, true)}"
+   showHeader="false">
+    <apex:include pageName="clcommon__mintTheme"/>       
+    <apex:form >
+        <apex:pageBlock title="Document pages" rendered="{!boxuRLlist != null}">
+            
+            <apex:outputPanel id="section">
+                <apex:repeat var="a" value="{!boxuRLlist }">
+                    <apex:outputtext value="{!a}"/>
+                </apex:repeat>
+            </apex:outputPanel>
+                         
+        </apex:pageBlock>
+        
+    </apex:form>
+    
+</apex:page>

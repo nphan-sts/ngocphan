@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Routing_Number__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>This is a nine digit number used to identify the financial institution in a transaction.</inlineHelpText>
+    <label>DM Routing Number</label>
+    <length>50</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

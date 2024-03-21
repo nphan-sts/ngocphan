@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Force_No_Loan_Payoff__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Halt closing of loan, even if the obligations are met</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is added to handle the cases where we may want to keep the loan accounts open even if the loan obligations are met</inlineHelpText>
+    <label>Force No Loan Payoff</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

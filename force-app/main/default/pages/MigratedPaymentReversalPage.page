@@ -1,0 +1,26 @@
+<apex:page standardController="loan__Loan_Account__c" extensions="MigratedPaymentReversalController">
+  <apex:form >
+    <apex:pageBlock >
+        <apex:pageBlockSection title="Current Loan account record Id is : {!currentRecordId}" collapsible="false">
+            
+            <apex:outputField label="CL Contract ID :" value="{!migratedLoan.name}"/>
+            <apex:inputTextarea label="Number of Payments to be reversed : " value="{!NumOfPayments}"/>
+                       
+        </apex:pageBlockSection>
+        <apex:commandButton action="{!getPayments}" value="Get Payment List"/> 
+       
+    </apex:pageBlock>
+    
+    <apex:pageblock >
+        <apex:pageBlockSection title="Payments to be Reversed :" collapsible="false">
+        <apex:pageblocktable value="{!paymentsToBeReversed}" var="a" id="pbTable"  >
+        <apex:column value="{!a.Id}"/>
+        <apex:column value="{!a.name}"/>
+        </apex:pageblocktable>
+        </apex:pageBlockSection>
+        
+        <apex:commandButton value="Reverse Payments " action="{!reversePayments}" />
+    </apex:pageblock>
+      
+  </apex:form>
+</apex:page>

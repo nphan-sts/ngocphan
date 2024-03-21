@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Is_Partially_Paid__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates if this scheduled installment is only partially paid.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates if this scheduled installment is only partially paid.</inlineHelpText>
+    <label>DM Is Partially Paid</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

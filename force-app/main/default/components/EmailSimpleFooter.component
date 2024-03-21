@@ -1,0 +1,47 @@
+<apex:component access="global">
+<tr>
+<td valign="top" id="templateFooter" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; border-top-width: 1px; border-top-color: #e5e7eb; border-top-style: dashed; border-bottom-width: 0;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+        <tbody class="mcnTextBlockOuter">
+            <tr>
+                <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                    <!--[if mso]>
+                    <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                    <tr>
+                    <![endif]-->
+
+                    <!--[if mso]>
+                    <td valign="top" width="600" style="width:600px;">
+                    <![endif]-->
+                    <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                        <tbody>
+                            <tr>
+                                <td valign="top" class="mcnTextContent" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; word-break: break-word; color: #777c85; font-family: 'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif; font-size: 11px; line-height: 125%; padding: 0 18px 9px;" align="left">
+                                    <br />
+                                    <br />
+                                    <em>Copyright © {!YEAR(TODAY())} Happy Money, Inc., All rights reserved.</em>
+                                    <br />
+                                    <br />
+                                    <strong>Disclaimer:</strong> This email and its contents are confidential and intended only for you. Happy Money is not liable for any loss or damage that may arise from this email or any attachments. Unless we specifically say, we will not enter into a contract over email.
+                                    <br />
+                                    <br />
+                                    Happy Money works with lending partners to ultimately originate loans. Information about our Lending Partners, including their address, financial institution type and charter, as well as links to their websites and privacy policies can be found on our <a href="https://www.payoff.com/legal/lending-partners/" target="_blank" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #777c85; font-weight: normal; text-decoration: underline;">Lending Partners</a> page. Individual borrowers must be at least 18 years old and have a valid Social Security number and a valid checking account. All loans are subject to credit review and approval. Your actual rate depends upon credit score, loan amount, loan term, credit usage and history. Currently loans are not offered in: MA and NV. Our mailing address is: Happy Money Inc. (Payoff) <a href="https://www.google.com/maps/place/Happy+Money/@33.7042078,-117.8416553,17z/data=!3m1!4b1!4m5!3m4!1s0x80dcdf214eeaef19:0x8cc949717ad0b9df!8m2!3d33.7042078!4d-117.8394666" target="_blank" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #777c85; font-weight: normal; text-decoration: underline;"> 21515 Hawthorne Blvd, Suite 200, Torrance, CA 90503 </a>.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--[if mso]>
+                    </td>
+                    <![endif]-->
+
+                    <!--[if mso]>
+                    </tr>
+                    </table>
+                    <![endif]-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</td>
+</tr>
+</apex:component>

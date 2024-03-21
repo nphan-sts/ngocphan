@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loan_Premium_Price__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( Is_Offer_Selected__c == true,  IF(  OR(Application__r.Investor__r.Investor_Code__c ==&apos;FTCU&apos;,Application__r.Investor__r.Investor_Code__c ==&apos;TCU&apos;) ,
+ IF( Term__c ==24, IF( Pricing_Tier__c == &apos;t1&apos;, 0.025, IF(Pricing_Tier__c == &apos;t2&apos;, 0.027, IF(Pricing_Tier__c == &apos;t3&apos;, 0.032, IF(Pricing_Tier__c == &apos;t4&apos;, 0.034, IF(Pricing_Tier__c == &apos;t5&apos;, 0.043, 0) ) ) ) ) , 
+IF( Term__c == 36, IF(Pricing_Tier__c == &apos;t1&apos;, 0.035, IF(Pricing_Tier__c == &apos;t2&apos;, 0.037, IF(Pricing_Tier__c == &apos;t3&apos;,0.045, IF(Pricing_Tier__c == &apos;t4&apos;, 0.047, IF(Pricing_Tier__c == &apos;t5&apos;, 0.055, 0) ) ) ) ) , 
+IF( Term__c == 48, IF(Pricing_Tier__c == &apos;t1&apos;, 0.045, IF(Pricing_Tier__c == &apos;t2&apos;, 0.048, IF(Pricing_Tier__c == &apos;t3&apos;, 0.050, IF(Pricing_Tier__c == &apos;t4&apos;, 0.052, IF(Pricing_Tier__c == &apos;t5&apos;, 0.058, 0) ) ) ) ) , 
+IF( Term__c == 60, IF(Pricing_Tier__c == &apos;t1&apos;, 0.050, IF(Pricing_Tier__c == &apos;t2&apos;, 0.053, IF(Pricing_Tier__c == &apos;t3&apos;, 0.055, IF(Pricing_Tier__c == &apos;t4&apos;, 0.055, IF(Pricing_Tier__c == &apos;t5&apos;, 0.060, 0) ) ) ) ) , 0) ) ) )
+ ,  IF(Application__r.Investor__r.Investor_Code__c ==&apos;ACU&apos;, 
+IF( Term__c ==24,  IF( Pricing_Tier__c == &apos;t1&apos;,0.022,  IF(Pricing_Tier__c == &apos;t2&apos;, 0.023,  IF(Pricing_Tier__c == &apos;t3&apos;, 0.028,  IF(Pricing_Tier__c == &apos;t4&apos;, 0.029,  IF(Pricing_Tier__c == &apos;t5&apos;, 0.037, 0) ) ) ) ) ,
+  IF(Term__c ==36,  IF(Pricing_Tier__c == &apos;t1&apos;, 0.03,  IF(Pricing_Tier__c == &apos;t2&apos;, 0.032,  IF(Pricing_Tier__c == &apos;t3&apos;, 0.039,  IF(Pricing_Tier__c == &apos;t4&apos;, 0.04,  IF(Pricing_Tier__c == &apos;t5&apos;, 0.047, 0) ) ) ) ) , 
+ IF(Term__c ==48,  IF(Pricing_Tier__c == &apos;t1&apos;, 0.039, IF(Pricing_Tier__c == &apos;t2&apos;, 0.041,  IF(Pricing_Tier__c == &apos;t3&apos;, 0.043,  IF(Pricing_Tier__c == &apos;t4&apos;, 0.045,  IF(Pricing_Tier__c == &apos;t5&apos;, 0.05, 0) ) ) )  ) , 
+ IF(Term__c ==60,  IF(Pricing_Tier__c == &apos;t1&apos;, 0.043,  IF(Pricing_Tier__c == &apos;t2&apos;, 0.046,  IF(Pricing_Tier__c == &apos;t3&apos;, 0.047,  IF(Pricing_Tier__c == &apos;t4&apos;, 0.047,  IF(Pricing_Tier__c == &apos;t5&apos;, 0.052, 0) ) ) ) ) , 0) ) ) ) , 0) ),0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Loan Premium Price</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>3</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Payment_Application_Mode__c</fullName>
+    <description>If the value is Future Dues, Reserve Amount For Next Due will be used for satisfying Bills. Otherwise, Reserve Amount For Next Due will not be used for satisfying Bills.
+        Deposit is selected when extra amount is used to increase the deposit amount</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Possible values are
+1) Future Dues
+2) Current Dues
+3) Deposit
+Future Dues is used when Loan Payments should be used to satisfy future dues.
+Current Dues is used when Loan Payments should only be used to satisfy present dues.</inlineHelpText>
+    <label>DM Payment Application Mode</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Future Dues</fullName>
+                <default>true</default>
+                <label>DM_Future Dues</label>
+            </value>
+            <value>
+                <fullName>DM_Current Dues</fullName>
+                <default>false</default>
+                <label>DM_Current Dues</label>
+            </value>
+            <value>
+                <fullName>DM_Deposit</fullName>
+                <default>false</default>
+                <label>DM_Deposit</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

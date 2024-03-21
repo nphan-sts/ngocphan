@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IntRate_Words__c</fullName>
+    <description>Converts Interest Rate value to words</description>
+    <externalId>false</externalId>
+    <formula>CASE(floor(10 * Interest_Rate__c), 0, CASE(FLOOR(100*Interest_Rate__c )-(10*FLOOR(10*Interest_Rate__c )), 0, &quot;Zero&quot;, 1,&quot;One&quot;,2, &quot;Two&quot;,3,&quot;Three&quot;, 4,&quot;Four&quot;,5,&quot;Five&quot;,6,&quot;Six&quot;,7,&quot;Seven&quot;,8,&quot;Eight&quot;,9,&quot;Nine&quot;,null),
+
+1, (CASE(FLOOR(100 * Interest_Rate__c) - (10 * FLOOR(10 * Interest_Rate__c )), 0,&quot;Ten&quot;,1,&quot;Eleven&quot;,2, &quot;Twelve&quot;,3,&quot;Thirteen&quot;, 4,&quot;Fourteen&quot;,5,&quot;Fifteen&quot;,6,&quot;Sixteen&quot;,7,&quot;Seventeen&quot;,8,&quot;Eighteen&quot;,9,&quot;Nineteen&quot;,null)),
+
+(CASE(FLOOR(10*Interest_Rate__c), 2,&quot;Twenty-&quot;,3, &quot;Thirty-&quot;,4,&quot;Forty-&quot;,5,&quot;Fifty-&quot;,6,&quot;Sixty-&quot;,7,&quot;Seventy-&quot;,8,&quot;Eighty-&quot;,9,&quot;Ninety-&quot;,null) +
+CASE(FLOOR(100*Interest_Rate__c )-(10*FLOOR(10*Interest_Rate__c )), 0, &quot;Zero&quot;, 1,&quot;One&quot;,2, &quot;Two&quot;,3,&quot;Three&quot;, 4,&quot;Four&quot;,5,&quot;Five&quot;,6,&quot;Six&quot;,7,&quot;Seven&quot;,8,&quot;Eight&quot;,9,&quot;Nine&quot;,null))
+)
+
++ &quot; Point &quot; +
+
+CASE(FLOOR(1000*Interest_Rate__c)-(10*FLOOR(100*Interest_Rate__c)), 0, &quot;Zero&quot;, 1,&quot;One&quot;,2, &quot;Two&quot;,3,&quot;Three&quot;, 4,&quot;Four&quot;,5,&quot;Five&quot;,6,&quot;Six&quot;,7,&quot;Seven&quot;,8,&quot;Eight&quot;,9,&quot;Nine&quot;,null)
+
++ &quot; &quot; +
+
+CASE(FLOOR(10000*Interest_Rate__c)-(10*FLOOR(1000*Interest_Rate__c)), 0, &quot;Zero&quot;, 1,&quot;One&quot;,2, &quot;Two&quot;,3,&quot;Three&quot;, 4,&quot;Four&quot;,5,&quot;Five&quot;,6,&quot;Six&quot;,7,&quot;Seven&quot;,8,&quot;Eight&quot;,9,&quot;Nine&quot;,null)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>IntRate_Words</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

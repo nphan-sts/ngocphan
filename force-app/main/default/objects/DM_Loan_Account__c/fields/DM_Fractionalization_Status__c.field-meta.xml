@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Fractionalization_Status__c</fullName>
+    <description>Describes whether loan is activated for Fractionalization.</description>
+    <externalId>false</externalId>
+    <label>DM Fractionalization Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Pending</fullName>
+                <default>true</default>
+                <label>DM_Pending</label>
+            </value>
+            <value>
+                <fullName>DM_Active</fullName>
+                <default>false</default>
+                <label>DM_Active</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

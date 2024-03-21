@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Membership Team Manager</label>
+    <protected>false</protected>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Add_Tags__c</field>
+        <value xsi:type="xsd:string">Cannabis Review,Issues,Manual Fraud Review,Max OB,New Documents,New Interaction,Not Moving Forward,Re allocation,Redecision,Spanish Speaker Requested,Unresponsive,Hot List,View Box for Documents,Soft Pull Requested.,Needs Review,Pending Offer,Doc Review,E-Sign Redecision,Fast Pass</value>
+    </values>
+    <values>
+        <field>Delete_Tags__c</field>
+        <value xsi:type="xsd:string">Cannabis Review,DCP Card Verifications Failed,E-Sign Redecision,Follow-Up,Hot List,Identity,Issues,Max OB,Needs Approval,Needs Review,New Documents,New Interaction,Non-Resident,Not Moving Forward,Pending 9012,Pending 9013,Pending Docs,Pending EmpInfo,Pending Info,Pending KBA,Pending Offer,Pending Paystubs,Pending Tenure,Potential Stacker,Re allocation,Redecision,RFP 9012,Soft Pull Requested.,Spanish Speaker Requested,Specialized Income,Stacker Check Declined,Suspicious Documentation,Suspicious Funding Account,Suspicious Inconsistencies,Suspicious Interaction,To-Do,Unresponsive,View Box for Documents</value>
+    </values>
+    <values>
+        <field>Profile_Id__c</field>
+        <value xsi:type="xsd:string">00e41000001qyia</value>
+    </values>
+    <values>
+        <field>Profile_Name__c</field>
+        <value xsi:type="xsd:string">Membership Team Manager</value>
+    </values>
+</CustomMetadata>

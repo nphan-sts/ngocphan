@@ -1,0 +1,59 @@
+<apex:page >
+    <iframe height="600px" id="theIframe" name="theIframe" src="http://www.salesforce.com" width="90%"></iframe>
+    <html>
+    <head>
+        <title>Fast Link</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0"/>
+        <link rel="stylesheet" type="text/css" href="/v5/combo?/brands/default/css/scss/loader.css"/>
+    </head>
+    <body>
+        <form action="/finapp/10003600/?brand=10010352&amp;id=10003600&amp;appId=3A4CAE9B71A1CCD7FF41F51006E9ED00&amp;channelId=-1&amp;version=1011.79&amp;status=published&amp;c=csit_key_0:aIrqJre0e6XUOk87yjRav2TFfKY=&amp;finappCDNURL=&amp;resturl=https%3A%2F%2F172.17.25.88%2Fservices%2Fsrest%2Frestserver&amp;l=" method="post" id='form'>
+            <input type='hidden' name ='rdata' value ='08062013_0:1f5692792f5b97a1c825fb8fbe687023f583c9b5029d8437c90ddb99c9eb77539cef1b37005e5007cbdeb2df272626b49ce1c3cc9539ef52526c267a1de238b7' />
+            <input type='hidden' name ='capp' value ='restserver' />
+            <input type='hidden' name ='userId' value ='10060307' />
+            <input type='hidden' name ='firmId' value ='' />
+            <input type='hidden' name ='docObj' value ='' />
+        </form>
+        <div class="inline-spinner"></div>
+        <script>
+
+function getCookie(k){var v=document.cookie.match('(^|;) ?'+k+'=([^;]*)(;|$)');return v?v[2]:false};
+ var error = false;
+ var isCookieSupported = getCookie('isCookie');
+ var whichBrowser = "CHROME";
+ if (typeof isCookieSupported != 'undefined' && !isCookieSupported){
+        try{
+         sessionStorage.setItem("rdata", "08062013_0:1f5692792f5b97a1c825fb8fbe687023f583c9b5029d8437c90ddb99c9eb77539cef1b37005e5007cbdeb2df272626b49ce1c3cc9539ef52526c267a1de238b7");
+         sessionStorage.setItem('prefs', '{&quot;currencyCode&quot;:&quot;USD&quot;,&quot;dateFormat&quot;:&quot;MM/dd/yyyy&quot;,&quot;timeZone&quot;:&quot;PST&quot;,&quot;decimalSeparator&quot;:&quot;.&quot;,&quot;groupingSeparator&quot;:&quot;,&quot;,&quot;groupPattern&quot;:&quot;###,##0.##&quot;,&quot;groupSize&quot;:0,&quot;currencyNotation&quot;:&quot;SYMBOL&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;segmentId&quot;:&quot;-1&quot;}');
+        }
+        catch(e){
+         var isOLB = ""
+         var ssoDomain = ""
+         var postSource = ""
+         var query = 'brand=' + 10010352 +'&app='+ 10003600 + '&appId=' + '3A4CAE9B71A1CCD7FF41F51006E9ED00' + '&cookieDisabled=true' 
+            + '&version=' + '1011.79' +'&status=' + 'published';
+         
+         if (isOLB !=""){
+          query= query + '&isOLB=true';
+         }
+         
+         if (ssoDomain !=""){
+          query= query + '&ssoDomain=' + ssoDomain;
+         }     
+         if (postSource !=""){
+          query= query + '&postSource=' + postSource;
+         }
+         window.location.href='/apperror/?' + query;
+         var error = true;
+        } 
+ }
+ //sessionStorage.setItem("capp", "restserver");
+ sessionStorage.removeItem("hideIntertialPage");
+ if (!error){
+  document.getElementById("form").submit();
+ }
+</script>
+    </body>
+</html>
+</apex:page>

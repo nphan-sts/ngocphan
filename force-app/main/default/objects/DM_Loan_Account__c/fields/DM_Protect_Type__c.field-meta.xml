@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Protect_Type__c</fullName>
+    <description>Type of Protect,
+Full is only for full waiver claims
+Partial type can be used for both full and partial waiver claims</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Full is only for full waiver claims
+Partial type can be used for both full and partial waiver claims</inlineHelpText>
+    <label>DM Protect Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Full</fullName>
+                <default>false</default>
+                <label>DM_Full</label>
+            </value>
+            <value>
+                <fullName>DM_Partial</fullName>
+                <default>false</default>
+                <label>DM_Partial</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,6 @@
+{
+  "name": "ACME Company",
+  "balance": 7000,
+  "minimum_balance": 5000,
+  "currency": "USD"
+}
