@@ -1,0 +1,69 @@
+name: retrieve org
+on:
+    workflow_call:
+        secrets:
+            SFDX_AUTH_URL:
+                required: true
+
+
+jobs:
+    run-retrieve-org:
+        runs-on: ubuntu-latest
+        steps:
+            # Now we install nodejs in the VM, and specify version 18, below 18 might not work
+            - uses: actions/setup-node@v3
+              with:
+                node-version: '18'
+
+            # The idea is that the VM can access your remote repository
+            # because your repository is an sfdx project.
+            # This is a default action that allows us to enter the root
+            # directory of the repository
+
+            # Make sure to specify fetch-depth:0. This allows us to
+            # access previous commits that have been pushed to the repository.
+
+            # We'll need this later when we try to figure out which metadata has
+            # changed between commits, so that we can only deploy that metadata
+            # to the destination org
+            - name: 'Checkout source code'
+              uses: actions/checkout@v3
+              with:
+                fetch-depth: 0
+
+            
+            - name: Setup SFDX
+              uses: sfdx-actions/setup-sfdx@v1
+              with:
+                sfdx-auth-url: ${{ secrets.SFDX_AUTH_URL }}
+
+            - name: 'Installing sfdx git delta'
+              run: |
+                    echo y | sfdx plugins:install sfdx-git-delta
+                    which sfdx
+                    sfdx plugins
+
+            # We use SFDX Git Delta to create a directory with only the metadata that has changed.
+            # this allows us to deploy only those changes, as opposed to deploying the entire branch.
+            # This helps reducing deployment times
+            - name: 'Retrive components'
+              run: |
+                METADATA_TYPES=("CustomObject" "ApexClass,ApexComponent,ApexPage,ApexTrigger,AppMenu,ApprovalProcess,AssignmentRules,AuraDefinitionBundle,AutoResponseRules,Certificate,CorsWhitelistOrigin,CustomApplication,CustomApplicationComponent,CustomLabels,CustomMetadata,CustomPermission,CustomTab,Dashboard,DataCategoryGroup,DelegateGroup,Document,DuplicateRule,EmailTemplate,EscalationRules,FlexiPage,FlowDefinition,GlobalValueSet,HomePageComponent,HomePageLayout,Layout,LightningComponentBundle,PermissionSet,Profile,Queue,QuickAction,RemoteSiteSetting,ReportType,Role,Settings,SharingRules,StandardValueSetTranslation,StaticResource,Workflow")
+                for str in ${METADATA_TYPES[@]}; do
+                    sfdx force:source:retrieve --metadata "$TYPE" --verbose --wait 120
+                done
+                git add .
+                git status --porcelain
+
+                if [[ git status --porcelain ]]; then
+                    git commit -m "Sync from org [skip ci]"
+                    #git push https://$GITUSER:$GITPASS@GITHUB.org/$GITHUB_REPO_FULL_NAME.git
+                    git push
+                    ORG_SYNC_TAG_PREFIX="org-synced-$GITHUB_REPO_UUID"
+                    CURRENT=$(date +"%Y%m%d_%H%M%S")
+                    echo $CURRENT
+                    echo deployed-$CURRENT
+                    git tag "$ORG_SYNC_TAG_PREFIX-$CURRENT"
+                    #git push --tags https://$GITUSER:$GITPASS@GITHUB.org/$GITHUB_REPO_FULL_NAME.git
+                    git push --tags
+                fi

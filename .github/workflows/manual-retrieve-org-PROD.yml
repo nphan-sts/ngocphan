@@ -1,0 +1,7 @@
+on: workflow_dispatch
+
+jobs:
+  manual-retrieve-prod:
+    uses: ./.github/workflows/retrieve-org.yml
+    secrets:
+      SFDX_AUTH_URL : ${{secrets.SFDX_PROD_URL}}
