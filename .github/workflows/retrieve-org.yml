@@ -9,6 +9,7 @@ on:
 jobs:
     run-retrieve-org:
         runs-on: ubuntu-latest
+        timeout-minutes: 120
         steps:
             # Now we install nodejs in the VM, and specify version 18, below 18 might not work
             - uses: actions/setup-node@v3
@@ -37,33 +38,33 @@ jobs:
               with:
                 sfdx-auth-url: ${{ secrets.SFDX_AUTH_URL }}
 
-            - name: 'Installing sfdx git delta'
-              run: |
-                    echo y | sfdx plugins:install sfdx-git-delta
-                    which sfdx
-                    sfdx plugins
-
             # We use SFDX Git Delta to create a directory with only the metadata that has changed.
             # this allows us to deploy only those changes, as opposed to deploying the entire branch.
             # This helps reducing deployment times
             - name: 'Retrive components'
               run: |
-                METADATA_TYPES=("CustomObject" "ApexClass,ApexComponent,ApexPage,ApexTrigger,AppMenu,ApprovalProcess,AssignmentRules,AuraDefinitionBundle,AutoResponseRules,Certificate,CorsWhitelistOrigin,CustomApplication,CustomApplicationComponent,CustomLabels,CustomMetadata,CustomPermission,CustomTab,Dashboard,DataCategoryGroup,DelegateGroup,Document,DuplicateRule,EmailTemplate,EscalationRules,FlexiPage,FlowDefinition,GlobalValueSet,HomePageComponent,HomePageLayout,Layout,LightningComponentBundle,PermissionSet,Profile,Queue,QuickAction,RemoteSiteSetting,ReportType,Role,Settings,SharingRules,StandardValueSetTranslation,StaticResource,Workflow")
-                for str in ${METADATA_TYPES[@]}; do
-                    sfdx force:source:retrieve --metadata "$TYPE" --verbose --wait 120
+                METADATA_TYPES=("CustomObject" "ApexClass" "ApexComponent" "ApexPage" "ApexTrigger" "AppMenu" "ApprovalProcess" "AssignmentRules" "AuraDefinitionBundle" "AutoResponseRules" "Certificate" "CorsWhitelistOrigin" "CustomApplication" "CustomApplicationComponent" "CustomLabels" "CustomMetadata" "CustomPermission" "CustomTab" "Dashboard" "DataCategoryGroup" "DelegateGroup" "Document" "DuplicateRule" "EmailTemplate" "EscalationRules" "FlexiPage" "FlowDefinition" "GlobalValueSet" "HomePageComponent" "HomePageLayout" "Layout" "LightningComponentBundle" "PermissionSet" "Profile" "Queue" "QuickAction" "RemoteSiteSetting" "ReportType" "Role" "Settings" "SharingRules" "StandardValueSetTranslation" "StaticResource" "Workflow")
+                for TYPE in ${METADATA_TYPES[@]}; do
+                    sf project retrieve start --metadata "$TYPE" --wait 120
                 done
-                git add .
+            - name: 'Identity'
+              run: |
+                git config user.name "nphan-sts"
+                git config user.email "nphan@happymoney.com"
+                
+
+            - name: 'Commit Changes'
+              run: |
+                echo "Commit code"
+                git add --all
                 git status --porcelain
 
-                if [[ git status --porcelain ]]; then
+                if [[ $(git status --porcelain) ]]; then
                     git commit -m "Sync from org [skip ci]"
-                    #git push https://$GITUSER:$GITPASS@GITHUB.org/$GITHUB_REPO_FULL_NAME.git
                     git push
-                    ORG_SYNC_TAG_PREFIX="org-synced-$GITHUB_REPO_UUID"
                     CURRENT=$(date +"%Y%m%d_%H%M%S")
                     echo $CURRENT
-                    echo deployed-$CURRENT
+                    ORG_SYNC_TAG_PREFIX="org-synced"
                     git tag "$ORG_SYNC_TAG_PREFIX-$CURRENT"
-                    #git push --tags https://$GITUSER:$GITPASS@GITHUB.org/$GITHUB_REPO_FULL_NAME.git
                     git push --tags
                 fi
