@@ -1,0 +1,220 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soap:Body>
+        <api:Response xmlns:api="http://idanalytics.com/core/api">
+            <api:Solution>Standard/MultiProduct</api:Solution>
+            <api:RequestID>3ebf49a49071458e:853fe0d8-fac7-49d6-8d72-db3b77489076</api:RequestID>
+            <api:View>MultiProduct/FINISHED</api:View>
+            <api:Body>
+                <api:Item key="OLNAttributesFCRAOLNAF1.0Response">
+                    <OutputRecord xmlns="http://idanalytics.com/products/idscore/result" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:internal="http://idanalytics.com/internal/api" schemaVersion="3.0">
+                        <IDAStatus>100</IDAStatus>
+                        <AppID>1</AppID>
+                        <Designation>A1</Designation>
+                        <IDASequence>109242493205169</IDASequence>
+                        <IDATimeStamp>2019-02-07T10:31:38</IDATimeStamp>
+                        <PassThru1>offer_ge</PassThru1>
+                        <Indicators>
+                            <Group name="OLNAttributesFCRA">
+                                <Indicator name="OLNAF1001">-2.0</Indicator>
+                                <Indicator name="OLNAF1002">-2.0</Indicator>
+                                <Indicator name="OLNAF1003">-2.0</Indicator>
+                                <Indicator name="OLNAF1004">-2.0</Indicator>
+                                <Indicator name="OLNAF1005">-2.0</Indicator>
+                                <Indicator name="OLNAF1006">-2.0</Indicator>
+                                <Indicator name="OLNAF1007">-2.0</Indicator>
+                                <Indicator name="OLNAF1008">-2.0</Indicator>
+                                <Indicator name="OLNAF1009">-2.0</Indicator>
+                                <Indicator name="OLNAF1010">-2.0</Indicator>
+                                <Indicator name="OLNAF1011">-2.0</Indicator>
+                                <Indicator name="OLNAF1012">-2.0</Indicator>
+                                <Indicator name="OLNAF1013">-2.0</Indicator>
+                                <Indicator name="OLNAF1014">-2.0</Indicator>
+                                <Indicator name="OLNAF1015">-2.0</Indicator>
+                                <Indicator name="OLNAF1016">-2.0</Indicator>
+                                <Indicator name="OLNAF1017">-2.0</Indicator>
+                                <Indicator name="OLNAF1018">-2.0</Indicator>
+                                <Indicator name="OLNAF1019">-2.0</Indicator>
+                                <Indicator name="OLNAF1020">-2.0</Indicator>
+                                <Indicator name="OLNAF1021">-2.0</Indicator>
+                                <Indicator name="OLNAF1022">-2.0</Indicator>
+                                <Indicator name="OLNAF1023">-2.0</Indicator>
+                                <Indicator name="OLNAF1024">-2.0</Indicator>
+                                <Indicator name="OLNAF1025">-2.0</Indicator>
+                                <Indicator name="OLNAF1026">-2.0</Indicator>
+                                <Indicator name="OLNAF1027">-2.0</Indicator>
+                                <Indicator name="OLNAF1028">-2.0</Indicator>
+                                <Indicator name="OLNAF1029">-2.0</Indicator>
+                                <Indicator name="OLNAF1030">-2.0</Indicator>
+                                <Indicator name="OLNAF1031">-2.0</Indicator>
+                                <Indicator name="OLNAF1032">-2.0</Indicator>
+                                <Indicator name="OLNAF1033">-2.0</Indicator>
+                                <Indicator name="OLNAF1034">-2.0</Indicator>
+                                <Indicator name="OLNAF1035">-2.0</Indicator>
+                                <Indicator name="OLNAF1036">-2.0</Indicator>
+                                <Indicator name="OLNAF1037">-2.0</Indicator>
+                                <Indicator name="OLNAF1038">-2.0</Indicator>
+                                <Indicator name="OLNAF1039">-2.0</Indicator>
+                                <Indicator name="OLNAF1040">-2.0</Indicator>
+                                <Indicator name="OLNAF1041">-2.0</Indicator>
+                                <Indicator name="OLNAF1042">-2.0</Indicator>
+                                <Indicator name="OLNAF1043">-2.0</Indicator>
+                                <Indicator name="OLNAF1044">-2.0</Indicator>
+                                <Indicator name="OLNAF1045">-2.0</Indicator>
+                                <Indicator name="OLNAF1046">-2.0</Indicator>
+                                <Indicator name="OLNAF1047">-2.0</Indicator>
+                                <Indicator name="OLNAF1048">-2.0</Indicator>
+                                <Indicator name="OLNAF1049">-2.0</Indicator>
+                                <Indicator name="OLNAF1050">-2.0</Indicator>
+                                <Indicator name="OLNAF1051">-2.0</Indicator>
+                                <Indicator name="OLNAF1052">-2.0</Indicator>
+                                <Indicator name="OLNAF1053">-2.0</Indicator>
+                                <Indicator name="OLNAF1054">-2.0</Indicator>
+                                <Indicator name="OLNAF1055">-2.0</Indicator>
+                                <Indicator name="OLNAF1056">-2.0</Indicator>
+                                <Indicator name="OLNAF1057">-2.0</Indicator>
+                                <Indicator name="OLNAF1058">-2.0</Indicator>
+                                <Indicator name="OLNAF1059">-2.0</Indicator>
+                                <Indicator name="OLNAF1060">-2.0</Indicator>
+                                <Indicator name="OLNAF1061">-2.0</Indicator>
+                                <Indicator name="OLNAF1062">-2.0</Indicator>
+                                <Indicator name="OLNAF1063">-2.0</Indicator>
+                                <Indicator name="OLNAF1064">-2.0</Indicator>
+                                <Indicator name="OLNAF1065">-2.0</Indicator>
+                                <Indicator name="OLNAF1066">-2.0</Indicator>
+                                <Indicator name="OLNAF1067">-2.0</Indicator>
+                                <Indicator name="OLNAF1068">-2.0</Indicator>
+                                <Indicator name="OLNAF1069">-2.0</Indicator>
+                                <Indicator name="OLNAF1070">-2.0</Indicator>
+                                <Indicator name="OLNAF1071">-2.0</Indicator>
+                                <Indicator name="OLNAF1072">-2.0</Indicator>
+                                <Indicator name="OLNAF1073">-2.0</Indicator>
+                                <Indicator name="OLNAF1074">-2.0</Indicator>
+                                <Indicator name="OLNAF1075">-2.0</Indicator>
+                                <Indicator name="OLNAF1076">-2.0</Indicator>
+                                <Indicator name="OLNAF1077">-2.0</Indicator>
+                                <Indicator name="OLNAF1078">-2.0</Indicator>
+                                <Indicator name="OLNAF1079">-2.0</Indicator>
+                                <Indicator name="OLNAF1080">-2.0</Indicator>
+                                <Indicator name="OLNAF1081">-2.0</Indicator>
+                                <Indicator name="OLNAF1082">-2.0</Indicator>
+                                <Indicator name="OLNAF1083">-2.0</Indicator>
+                                <Indicator name="OLNAF1084">-2.0</Indicator>
+                                <Indicator name="OLNAF1085">-2.0</Indicator>
+                                <Indicator name="OLNAF1086">-2.0</Indicator>
+                                <Indicator name="OLNAF1087">-2.0</Indicator>
+                                <Indicator name="OLNAF1088">-2.0</Indicator>
+                                <Indicator name="OLNAF1089">-2.0</Indicator>
+                                <Indicator name="OLNAF1090">-2.0</Indicator>
+                                <Indicator name="OLNAF1091">-2.0</Indicator>
+                                <Indicator name="OLNAF1092">-2.0</Indicator>
+                                <Indicator name="OLNAF1093">-2.0</Indicator>
+                                <Indicator name="OLNAF1094">-2.0</Indicator>
+                                <Indicator name="OLNAF1095">-2.0</Indicator>
+                                <Indicator name="OLNAF1096">-2.0</Indicator>
+                                <Indicator name="OLNAF1097">-2.0</Indicator>
+                                <Indicator name="OLNAF1098">-2.0</Indicator>
+                                <Indicator name="OLNAF1099">-2.0</Indicator>
+                                <Indicator name="OLNAF1100">-2.0</Indicator>
+                                <Indicator name="OLNAF1101">-2.0</Indicator>
+                                <Indicator name="OLNAF1102">-2.0</Indicator>
+                                <Indicator name="OLNAF1103">-2.0</Indicator>
+                                <Indicator name="OLNAF1104">-2.0</Indicator>
+                                <Indicator name="OLNAF1105">-2.0</Indicator>
+                                <Indicator name="OLNAF1106">-2.0</Indicator>
+                                <Indicator name="OLNAF1107">-2.0</Indicator>
+                                <Indicator name="OLNAF1108">-2.0</Indicator>
+                                <Indicator name="OLNAF1109">-2.0</Indicator>
+                                <Indicator name="OLNAF1110">-2.0</Indicator>
+                                <Indicator name="OLNAF1111">-2.0</Indicator>
+                                <Indicator name="OLNAF1112">-2.0</Indicator>
+                                <Indicator name="OLNAF1113">-2.0</Indicator>
+                                <Indicator name="OLNAF1114">-2.0</Indicator>
+                                <Indicator name="OLNAF1115">-2.0</Indicator>
+                                <Indicator name="OLNAF1116">-2.0</Indicator>
+                                <Indicator name="OLNAF1117">-2.0</Indicator>
+                                <Indicator name="OLNAF1118">-2.0</Indicator>
+                                <Indicator name="OLNAF1119">-2.0</Indicator>
+                                <Indicator name="OLNAF1120">-2.0</Indicator>
+                                <Indicator name="OLNAF1121">-2.0</Indicator>
+                                <Indicator name="OLNAF1122">-2.0</Indicator>
+                                <Indicator name="OLNAF1123">-2.0</Indicator>
+                                <Indicator name="OLNAF1124">-2.0</Indicator>
+                                <Indicator name="OLNAF1125">-2.0</Indicator>
+                                <Indicator name="OLNAF1126">-2.0</Indicator>
+                                <Indicator name="OLNAF1127">-2.0</Indicator>
+                                <Indicator name="OLNAF1128">-2.0</Indicator>
+                                <Indicator name="OLNAF1129">-2.0</Indicator>
+                                <Indicator name="OLNAF1130">-2.0</Indicator>
+                                <Indicator name="OLNAF1131">-2.0</Indicator>
+                                <Indicator name="OLNAF1132">-2.0</Indicator>
+                                <Indicator name="OLNAF1133">-2.0</Indicator>
+                                <Indicator name="OLNAF1134">-2.0</Indicator>
+                                <Indicator name="OLNAF1135">-2.0</Indicator>
+                                <Indicator name="OLNAF1136">-2.0</Indicator>
+                                <Indicator name="OLNAF1137">-2.0</Indicator>
+                                <Indicator name="OLNAF1138">-2.0</Indicator>
+                                <Indicator name="OLNAF1139">-2.0</Indicator>
+                                <Indicator name="OLNAF1140">-2.0</Indicator>
+                                <Indicator name="OLNAF1141">-2.0</Indicator>
+                                <Indicator name="OLNAF1142">-2.0</Indicator>
+                                <Indicator name="OLNAF1143">-2.0</Indicator>
+                                <Indicator name="OLNAF1144">-2.0</Indicator>
+                                <Indicator name="OLNAF1145">-2.0</Indicator>
+                                <Indicator name="OLNAF1146">-2.0</Indicator>
+                                <Indicator name="OLNAF1147">-2.0</Indicator>
+                                <Indicator name="OLNAF1148">-2.0</Indicator>
+                                <Indicator name="OLNAF1149">-2.0</Indicator>
+                                <Indicator name="OLNAF1150">-2.0</Indicator>
+                                <Indicator name="OLNAF1151">-2.0</Indicator>
+                                <Indicator name="OLNAF1152">-2.0</Indicator>
+                                <Indicator name="OLNAF1153">-2.0</Indicator>
+                                <Indicator name="OLNAF1154">-2.0</Indicator>
+                                <Indicator name="OLNAF1155">-2.0</Indicator>
+                                <Indicator name="OLNAF1156">-2.0</Indicator>
+                                <Indicator name="OLNAF1157">-2.0</Indicator>
+                                <Indicator name="OLNAF1158">-2.0</Indicator>
+                                <Indicator name="OLNAF1159">-2.0</Indicator>
+                                <Indicator name="OLNAF1160">-2.0</Indicator>
+                                <Indicator name="OLNAF1161">-2.0</Indicator>
+                                <Indicator name="OLNAF1162">-2.0</Indicator>
+                                <Indicator name="OLNAF1163">-2.0</Indicator>
+                                <Indicator name="OLNAF1164">-2.0</Indicator>
+                                <Indicator name="OLNAF1165">-2.0</Indicator>
+                                <Indicator name="OLNAF1166">-2.0</Indicator>
+                                <Indicator name="OLNAF1167">-2.0</Indicator>
+                                <Indicator name="OLNAF1168">-2.0</Indicator>
+                                <Indicator name="OLNAF1169">-2.0</Indicator>
+                                <Indicator name="OLNAF1170">-2.0</Indicator>
+                                <Indicator name="OLNAF1171">-2.0</Indicator>
+                                <Indicator name="OLNAF1172">-2.0</Indicator>
+                                <Indicator name="OLNAF1173">-2.0</Indicator>
+                                <Indicator name="OLNAF1174">-2.0</Indicator>
+                                <Indicator name="OLNAF1175">-2.0</Indicator>
+                                <Indicator name="OLNAF1176">-2.0</Indicator>
+                                <Indicator name="OLNAF1177">-2.0</Indicator>
+                                <Indicator name="OLNAF1178">-2.0</Indicator>
+                                <Indicator name="OLNAF1179">-2.0</Indicator>
+                                <Indicator name="OLNAF1180">-2.0</Indicator>
+                                <Indicator name="OLNAF1181">-2.0</Indicator>
+                                <Indicator name="OLNAF1182">-2.0</Indicator>
+                                <Indicator name="OLNAF1183">-2.0</Indicator>
+                                <Indicator name="OLNAF1184">-2.0</Indicator>
+                                <Indicator name="OLNAF1185">-2.0</Indicator>
+                                <Indicator name="OLNAF1186">-2.0</Indicator>
+                                <Indicator name="OLNAF1187">-2.0</Indicator>
+                                <Indicator name="OLNAF1188">-2.0</Indicator>
+                                <Indicator name="OLNAF1189">-2.0</Indicator>
+                                <Indicator name="OLNAF1190">-2.0</Indicator>
+                                <Indicator name="OLNAF1191">-2.0</Indicator>
+                                <Indicator name="OLNAF1192">-2.0</Indicator>
+                                <Indicator name="OLNAF1193">-2.0</Indicator>
+                                <Indicator name="OLNAF1194">-2.0</Indicator>
+                                <Indicator name="OLNAF1195">-2.0</Indicator>
+                            </Group>
+                        </Indicators>
+                    </OutputRecord>
+                </api:Item>
+            </api:Body>
+        </api:Response>
+    </soap:Body>
+</soap:Envelope>

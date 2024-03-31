@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>43.0</apiVersion>
+    <description>Payoff email templates - This is the signature file you use when the email comes from the Payments Team</description>
+    <label>EmailSignaturePayments</label>
+</ApexComponent>

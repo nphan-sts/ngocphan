@@ -1,0 +1,37 @@
+{
+   "lead_guid":"abcde-12345",
+   "offers":[
+      {
+         "amount":5000,
+         "origination_fee":0.0,
+         "key":1,
+         "monthly_payment":222.71,
+         "apr":6.490593260784,
+         "type":"USRule360Loan",
+         "interest_rate":6.49,
+         "segment":"prime",
+         "term_months":24,
+         "origination_fee_discount":100.0,
+         "pricing_tier":"t1",
+         "origination_fee_rate_discount":2.0,
+         "above_prime_max":"false",
+         "origination_fee_rate":0.0
+      },
+      {
+         "amount":7000,
+         "origination_fee":0.0,
+         "key":2,
+         "monthly_payment":311.79,
+         "apr":6.489328874596,
+         "type":"USRule360Loan",
+         "interest_rate":6.49,
+         "segment":"prime",
+         "term_months":24,
+         "origination_fee_discount":140.0,
+         "pricing_tier":"t1",
+         "origination_fee_rate_discount":2.0,
+         "above_prime_max":"false",
+         "origination_fee_rate":0.0
+      }
+   ]
+}

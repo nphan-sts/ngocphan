@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>test_email</name>
+        <label>test email</label>
+        <locationX>630</locationX>
+        <locationY>136</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>plaintext</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>clsinternal@happymoney.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>DefaultWorkflowUser</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>system date</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <apiVersion>49.0</apiVersion>
+    <description>Send email alert everyday with system date</description>
+    <interviewLabel>MW_Send email alert on system date {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>MW_Send email alert system date</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>51</locationY>
+        <connector>
+            <targetReference>test_email</targetReference>
+        </connector>
+        <object>loan__Office_Name__c</object>
+        <schedule>
+            <frequency>Daily</frequency>
+            <startDate>2020-07-13</startDate>
+            <startTime>06:00:00.000Z</startTime>
+        </schedule>
+        <triggerType>Scheduled</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>plaintext</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>System date is {!$Record.loan__Current_System_Date__c}.</text>
+    </textTemplates>
+    <textTemplates>
+        <name>Test</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;System date is {!$Record.loan__Current_System_Date__c}.&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>testemail</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;{!$Record.loan__Current_System_Date__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>Testemail1</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;{!$Record.loan__Current_System_Date__c}&lt;/p&gt;</text>
+    </textTemplates>
+</Flow>

@@ -1,0 +1,97 @@
+{
+    "report_id": "BSQsAw9hOXHDPLtAMDoSsAsWS",
+    "application_date": "06/08/2017",
+    "report_start_date": "05/15/2017",
+    "report_end_date": "06/05/2017",
+    "report_duration": 21,
+    "averages": {
+        "total_income": "148.79",
+        "payroll_income": "0.0",
+        "other_income": "148.79",
+        "total_expenses": "199.5",
+        "living_expenses": "0.0",
+        "discretionary_expenses": "199.5"
+    },
+    "living_expenses": {
+        "utility": 0,
+        "insurance": 0,
+        "gasoline": 0,
+        "telecom": 0,
+        "other": 0
+    },
+    "discretionary_expenses": {
+        "restaurant": 0,
+        "auto": 0,
+        "clothing": 0,
+        "entertainment": 0,
+        "home_improvement": 0,
+        "household": 0,
+        "cash": 0,
+        "other": "199.5"
+    },
+    "accounts": [
+        {
+            "type": null,
+            "number": "xxxx7653",
+            "name": "BofA Core Checking",
+            "balance": "41.72",
+            "FI": ""
+        }
+    ],
+    "period_summaries": [
+        {
+            "month": "5/6/2017 - 6/5/2017",
+            "cash_flow_total_income": "-35.5",
+            "cash_flow_net_income": "-139.65",
+            "payroll_income": 0,
+            "other_income": "104.15",
+            "total_income": "104.15",
+            "living_expense": "0.0",
+            "discretionary_expense": "139.65",
+            "total_expense": "139.65"
+        }
+    ],
+    "employments": [],
+    "other_income": [
+        {
+            "description": "Hands Moonbeam Nymph's Warrant Exit",
+            "amount": "39.87",
+            "date": "06/05/2017"
+        },
+        {
+            "description": "Thornwrack Commodity Collateral Calculation Luck",
+            "amount": "24.54",
+            "date": "05/26/2017"
+        },
+        {
+            "description": "Erase AMEX Earthquake Campsite Deathmaster's",
+            "amount": "39.74",
+            "date": "05/15/2017"
+        }
+    ],
+    "payday_loans": {
+        "count": 0,
+        "fees": 0,
+        "items": []
+    },
+    "bounced_checks": {
+        "count": 0,
+        "fees": 0,
+        "items": []
+    },
+    "nsfs_by_month": {
+        "first": 0,
+        "second": 0,
+        "third": 0
+    },
+    "overdrafts": {
+        "count": 0,
+        "fees": 0,
+        "items": []
+    },
+    "ods_by_month": {
+        "first": 0,
+        "second": 0,
+        "third": 0
+    }
+}

@@ -1,0 +1,858 @@
+{
+    "bureau_report": {
+        "bureau_request_uid": "f8add52d-b96c-410a-b236-0998337f2b97",
+        "AADM12_credit_vision_alternative_risk_score": 637,
+        "AGG901_non_mortgage_increases_last_3_mo": 0,
+        "AGG909_mo_since_max_bankcard_balance": 3,
+        "AGG911_max_bankcard_utilization": "0.0",
+        "AGGS903_monthly_spend": -2,
+        "AT02S_open_trades": 8,
+        "AT03S_satisfactory_open_trades": 6,
+        "AT103S_percent_satisfactory_trades_last_24_mo": 100,
+        "AT104S_percent_trades_opened_last_24_mo": 17,
+        "AT20S_mo_since_oldest_trade_opened": 175,
+        "BC02S_open_credit_cards": 2,
+        "BC20S_mo_since_oldest_credit_card_opened": 175,
+        "BR109S_revolving_trades_with_past_due_over_50_days": 0,
+        "EPAY01_ATTR06_student_loan_monthly_payment": null,
+        "EPAY01_ATTR10_payments_mortgage_trade_highest_high_credit": null,
+        "EPAY01_AUP1003_auto_trade_monthly_payment": 297,
+        "FI02S_installment_trades": -1,
+        "G058S_trades_30_days_past_due_last_6_mo": 0,
+        "G061S_trades_30_days_past_due_last_24_mo": 0,
+        "G069S_trades_90_days_past_due_last_12_mo": 0,
+        "G095S_mo_since_public_record": -4,
+        "G209S_mo_since_recent_charge_off_opened": -1,
+        "G215B_non_medical_collections": -4,
+        "HIAP01_home_equity_monthly_payment": 1209,
+        "IN33S_installment_trades_balance": 70120,
+        "IN34S_utilization_installment_trades_last_12_mo": 85,
+        "INAP01_installment_trades_monthly_payment": 1506,
+        "MT101S_total_mortgage_balance": 0,
+        "MT21S_mo_since_recent_mortgage_trade_opened": 28,
+        "PAYMNT08_min_payment_revolving_ratio": "-2.0",
+        "RE101S_revolving_trades_balance": 19586,
+        "RE31S_percent_high_revolving_trade_utilization": 0,
+        "RE33S_open_revolving_trades_balance": 19586,
+        "REAP01_revolving_trade_monthly_payment": 387,
+        "RVLR04_retail_revolver_trade_balance": 0,
+        "RVLR14_revolver_transactor_inactive_pattern": -2,
+        "SCRG082_trades_past_due_last_2_mo": 0,
+        "SCRG085_trades_90_days_past_due_last_2_mo": 0,
+        "SCRG086_trades_120_days_past_due_last_2_mo": 0,
+        "SCRG087_trades_150_days_past_due_last_2_mo": 0,
+        "SCRIN07_installment_trades_opened_last_12_mo": 1,
+        "S114S_inquiries_last_6_mo": -4,
+        "ST06S_student_loan_trades_opened_last_6_mo": -1,
+        "TRV01_mo_since_overlimit_on_bankcard": 999,
+        "TRV02_mo_overlimit_on_bankcard": 0,
+        "TRV12_revolving_high_credit_increases_last_3_mo": -2,
+        "inquiries": [
+            {
+                "ecoa_designator": "individual",
+                "subscriber": {
+                    "inquiry_subscriber_prefix_code": "06TR",
+                    "industry_code": "F",
+                    "member_code": "04177063",
+                    "name": {
+                        "unparsed": "PAYOFF"
+                    }
+                },
+                "requestor": {},
+                "date": "2018-05-11"
+            }
+        ],
+        "fico_score": 758,
+        "fico_score_factors": [
+            "018",
+            "003",
+            "014",
+            "012"
+        ],
+        "file_inquiries_impacted_score": false,
+        "consumer_id": "602D8C04EB38",
+        "trades": [
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "07519110",
+                    "name": {
+                        "unparsed": "FST USA BK B"
+                    }
+                },
+                "portfolio_type": "revolving",
+                "account_number": "111115350004",
+                "ecoa_designator": "individual",
+                "date_opened": "2012-07-23",
+                "date_effective": "2018-02-15",
+                "current_balance": "000017673",
+                "high_credit": "000000000",
+                "account_rating": "01",
+                "remarks": [],
+                "terms": {
+                    "payment_schedule_month_count": "MIN",
+                    "scheduled_monthly_payment": "000000349"
+                },
+                "account": {
+                    "type": "CC"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2018-01-15",
+                        "text": "111111111111111111111"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "21",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2018-01-02"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0402D038",
+                    "name": {
+                        "unparsed": "CHASE AUTO"
+                    }
+                },
+                "portfolio_type": "installment",
+                "account_number": "111118470500",
+                "ecoa_designator": "individual",
+                "date_opened": "2016-08-01",
+                "date_effective": "2018-02-14",
+                "current_balance": "000019582",
+                "high_credit": "000022691",
+                "account_rating": "01",
+                "remarks": [],
+                "terms": {
+                    "payment_frequency": "monthly",
+                    "payment_schedule_month_count": "024",
+                    "scheduled_monthly_payment": "000000297"
+                },
+                "account": {
+                    "type": "AU"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2018-01-14",
+                        "text": "111111X111111X111"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "17",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2018-02-12"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0362N400",
+                    "name": {
+                        "unparsed": "WF/WB"
+                    }
+                },
+                "portfolio_type": "lineOfCredit",
+                "account_number": "111110200081",
+                "ecoa_designator": "jointContractLiability",
+                "date_opened": "2009-12-31",
+                "date_effective": "2018-02-13",
+                "current_balance": "000001913",
+                "high_credit": "000025000",
+                "credit_limit": "000025000",
+                "account_rating": "01",
+                "remarks": [],
+                "terms": {
+                    "payment_schedule_month_count": "MIN",
+                    "scheduled_monthly_payment": "000000038"
+                },
+                "account": {
+                    "type": "LC"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2018-01-13",
+                        "text": "1111111111111111111111111111X111X1X111XXXX111111"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "48",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2018-02-11"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "U",
+                    "member_code": "060VJ001",
+                    "name": {
+                        "unparsed": "MET/CELLONE"
+                    }
+                },
+                "portfolio_type": "open",
+                "account_number": "111110009799",
+                "ecoa_designator": "individual",
+                "date_opened": "2016-07-22",
+                "date_effective": "2018-02-12",
+                "date_paid_out": "2016-10-14",
+                "current_balance": "000000000",
+                "high_credit": "000000000",
+                "account_rating": "01",
+                "remarks": [],
+                "terms": {},
+                "account": {
+                    "type": "CU"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2018-01-12",
+                        "text": "1111111111111111111"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "19",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2017-11-14"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0362N400",
+                    "name": {
+                        "unparsed": "WF/WB"
+                    }
+                },
+                "portfolio_type": "revolving",
+                "account_number": "111118201017",
+                "ecoa_designator": "jointContractLiability",
+                "date_opened": "2003-10-20",
+                "date_effective": "2018-02-10",
+                "date_closed": "2017-02-01",
+                "closed_indicator": "normal",
+                "current_balance": "000000000",
+                "high_credit": "000000000",
+                "credit_limit": "000015000",
+                "account_rating": "01",
+                "remarks": [
+                    {
+                        "code": "CBC",
+                        "type": "affiliate"
+                    }
+                ],
+                "terms": {},
+                "account": {
+                    "type": "CC"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2018-01-10",
+                        "text": "111111111111111111111111111111XX1XXXXXX1XXX1X11"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "47",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2016-12-15"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0468S004",
+                    "name": {
+                        "unparsed": "SANTANDER BK"
+                    }
+                },
+                "portfolio_type": "installment",
+                "account_number": "111117016022",
+                "ecoa_designator": "jointContractLiability",
+                "date_opened": "2017-05-24",
+                "date_effective": "2017-10-20",
+                "current_balance": "000050538",
+                "high_credit": "000060000",
+                "account_rating": "01",
+                "remarks": [],
+                "terms": {
+                    "payment_frequency": "monthly",
+                    "payment_schedule_month_count": "060",
+                    "scheduled_monthly_payment": "000001209"
+                },
+                "account": {
+                    "type": "HI"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2017-09-20",
+                        "text": "1111"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "04",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2017-10-02"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "02292001",
+                    "name": {
+                        "unparsed": "FLEET MTG"
+                    }
+                },
+                "portfolio_type": "mortgage",
+                "account_number": "11111175",
+                "ecoa_designator": "jointContractLiability",
+                "date_opened": "2016-01-18",
+                "date_effective": "2017-05-11",
+                "date_closed": "2017-05-11",
+                "closed_indicator": "normal",
+                "current_balance": "000000000",
+                "high_credit": "000207000",
+                "account_rating": "01",
+                "remarks": [
+                    {
+                        "code": "CLO",
+                        "type": "affiliate"
+                    }
+                ],
+                "terms": {
+                    "payment_frequency": "monthly",
+                    "payment_schedule_month_count": "360",
+                    "scheduled_monthly_payment": "000003017"
+                },
+                "account": {
+                    "type": "CV"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2017-04-11",
+                        "text": "X11111111111111"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "15",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2017-04-25"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0910N088",
+                    "name": {
+                        "unparsed": "CHASE MHT BK"
+                    }
+                },
+                "portfolio_type": "installment",
+                "account_number": "1111179635",
+                "ecoa_designator": "individual",
+                "date_opened": "2016-01-17",
+                "date_effective": "2017-05-10",
+                "date_closed": "2017-05-10",
+                "closed_indicator": "normal",
+                "current_balance": "000000000",
+                "high_credit": "000150000",
+                "account_rating": "01",
+                "remarks": [
+                    {
+                        "code": "CLO",
+                        "type": "affiliate"
+                    }
+                ],
+                "terms": {
+                    "payment_frequency": "monthly",
+                    "payment_schedule_month_count": "015"
+                },
+                "account": {
+                    "type": "HE"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2017-04-10",
+                        "text": "X1X111111111111"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "15",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2017-05-21"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0402D017",
+                    "name": {
+                        "unparsed": "CHASE NA"
+                    }
+                },
+                "portfolio_type": "revolving",
+                "account_number": "111110006903",
+                "ecoa_designator": "authorizedUser",
+                "date_opened": "2012-07-21",
+                "date_effective": "2017-05-01",
+                "high_credit": "000022000",
+                "credit_limit": "000022000",
+                "account_rating": "01",
+                "remarks": [],
+                "terms": {},
+                "account": {
+                    "type": "CC"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2017-04-01",
+                        "text": "11111111111111111111111111111111X1X1111111X11X11"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "48",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2017-02-10"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "U",
+                    "member_code": "060VJ001",
+                    "name": {
+                        "unparsed": "MET/CELLONE"
+                    }
+                },
+                "portfolio_type": "open",
+                "account_number": "1111",
+                "ecoa_designator": "individual",
+                "date_opened": "2012-12-31",
+                "date_effective": "2016-12-09",
+                "date_closed": "2016-01-17",
+                "closed_indicator": "normal",
+                "current_balance": "000000000",
+                "high_credit": "000000000",
+                "account_rating": "01",
+                "remarks": [
+                    {
+                        "code": "CLO",
+                        "type": "affiliate"
+                    }
+                ],
+                "terms": {},
+                "account": {
+                    "type": "CU"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [
+                        {
+                            "earliest": "true",
+                            "date": "2015-04-01",
+                            "account_rating": "03"
+                        }
+                    ],
+                    "payment_pattern": {
+                        "start_date": "2016-11-09",
+                        "text": "XXXXXXXXXXXXXXXX1113"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "20",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "01",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2015-11-13"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "064DB003",
+                    "name": {
+                        "unparsed": "CITI"
+                    }
+                },
+                "portfolio_type": "revolving",
+                "account_number": "111110223045",
+                "ecoa_designator": "individual",
+                "date_opened": "2006-12-31",
+                "date_effective": "2014-01-19",
+                "date_closed": "2014-01-16",
+                "closed_indicator": "normal",
+                "current_balance": "000000000",
+                "high_credit": "000000000",
+                "credit_limit": "000020000",
+                "account_rating": "01",
+                "remarks": [
+                    {
+                        "code": "CBC",
+                        "type": "affiliate"
+                    }
+                ],
+                "terms": {},
+                "account": {
+                    "type": "CC"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2013-12-19",
+                        "text": "XXXXXXXXXXXXXXX111111111111111"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "31",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2013-08-06"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "D",
+                    "member_code": "06256374",
+                    "name": {
+                        "unparsed": "CBUSASEARS"
+                    }
+                },
+                "portfolio_type": "revolving",
+                "account_number": "11111101",
+                "ecoa_designator": "authorizedUser",
+                "date_opened": "2004-07-20",
+                "date_effective": "2011-12-08",
+                "date_paid_out": "2011-04-07",
+                "current_balance": "000000000",
+                "high_credit": "000000473",
+                "credit_limit": "000001900",
+                "account_rating": "01",
+                "remarks": [],
+                "terms": {},
+                "account": {},
+                "past_due": "000000000",
+                "payment_history": {},
+                "most_recent_payment": {
+                    "date": "2005-07-21"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0164E001",
+                    "name": {
+                        "unparsed": "GECAP MTG SV"
+                    }
+                },
+                "portfolio_type": "mortgage",
+                "account_number": "1111140",
+                "ecoa_designator": "participant",
+                "date_opened": "2009-12-31",
+                "date_effective": "2011-08-19",
+                "date_paid_out": "2011-08-08",
+                "current_balance": "000000000",
+                "high_credit": "000500000",
+                "account_rating": "01",
+                "remarks": [],
+                "terms": {
+                    "payment_frequency": "unspecified",
+                    "payment_schedule_month_count": "360",
+                    "scheduled_monthly_payment": "000004847"
+                },
+                "account": {
+                    "type": "RE"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {
+                        "start_date": "2011-07-19",
+                        "text": "X11"
+                    },
+                    "historical_counters": {
+                        "months_reviewed_count": "03",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2011-08-07"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0164E001",
+                    "name": {
+                        "unparsed": "GECAP MTG SV"
+                    }
+                },
+                "portfolio_type": "mortgage",
+                "account_number": "1111119",
+                "ecoa_designator": "participant",
+                "date_opened": "2011-08-31",
+                "date_effective": "2011-08-04",
+                "date_closed": "2011-08-04",
+                "closed_indicator": "normal",
+                "current_balance": "000000000",
+                "high_credit": "000500000",
+                "account_rating": "01",
+                "remarks": [
+                    {
+                        "code": "CLO",
+                        "type": "affiliate"
+                    }
+                ],
+                "terms": {
+                    "payment_frequency": "monthly",
+                    "payment_schedule_month_count": "360",
+                    "scheduled_monthly_payment": "000004711"
+                },
+                "account": {
+                    "type": "CV"
+                },
+                "past_due": "000000000",
+                "payment_history": {
+                    "max_delinquency": [],
+                    "payment_pattern": {},
+                    "historical_counters": {
+                        "months_reviewed_count": "48",
+                        "late_30_days_total": "00",
+                        "late_60_days_total": "00",
+                        "late_90_days_total": "00"
+                    }
+                },
+                "most_recent_payment": {
+                    "date": "2015-12-16"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0731U002",
+                    "name": {
+                        "unparsed": "CORESTATE BK"
+                    }
+                },
+                "portfolio_type": "revolving",
+                "account_number": "1111",
+                "ecoa_designator": "individual",
+                "date_opened": "2003-10-19",
+                "date_effective": "2009-12-07",
+                "date_paid_out": "2009-07-19",
+                "current_balance": "000000000",
+                "high_credit": "000005366",
+                "credit_limit": "000007000",
+                "account_rating": "01",
+                "remarks": [],
+                "terms": {},
+                "account": {},
+                "past_due": "000000000",
+                "payment_history": {},
+                "most_recent_payment": {
+                    "date": "2009-07-20"
+                },
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0861R002",
+                    "name": {
+                        "unparsed": "NW SVGS BK"
+                    }
+                },
+                "portfolio_type": "mortgage",
+                "account_number": "111110003604",
+                "ecoa_designator": "participant",
+                "date_opened": "2006-01-16",
+                "date_effective": "2009-11-07",
+                "date_closed": "2009-11-07",
+                "closed_indicator": "normal",
+                "current_balance": "000000000",
+                "high_credit": "000300000",
+                "account_rating": "01",
+                "remarks": [],
+                "terms": {
+                    "payment_frequency": "monthly",
+                    "payment_schedule_month_count": "030",
+                    "scheduled_monthly_payment": "000002723"
+                },
+                "account": {
+                    "type": "RE"
+                },
+                "past_due": "000000000",
+                "payment_history": {},
+                "most_recent_payment": {},
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0731U002",
+                    "name": {
+                        "unparsed": "CORESTATE BK"
+                    }
+                },
+                "portfolio_type": "lineOfCredit",
+                "account_number": "111111000000",
+                "ecoa_designator": "jointContractLiability",
+                "date_opened": "2009-06-13",
+                "date_effective": "2010-02-18",
+                "date_closed": "2009-12-19",
+                "closed_indicator": "normal",
+                "current_balance": "000000000",
+                "high_credit": "000000000",
+                "account_rating": "UR",
+                "remarks": [],
+                "terms": {},
+                "account": {},
+                "past_due": "000000000",
+                "payment_history": {},
+                "most_recent_payment": {},
+                "additional_trade_account": {},
+                "update_method": "automated"
+            },
+            {
+                "subscriber": {
+                    "industry_code": "B",
+                    "member_code": "0731U002",
+                    "name": {
+                        "unparsed": "CORESTATE BK"
+                    }
+                },
+                "portfolio_type": "revolving",
+                "account_number": "111118000005",
+                "ecoa_designator": "jointContractLiability",
+                "date_opened": "2006-10-21",
+                "date_effective": "2009-11-12",
+                "date_closed": "2009-09-25",
+                "closed_indicator": "normal",
+                "current_balance": "000000000",
+                "high_credit": "000000000",
+                "account_rating": "UR",
+                "remarks": [],
+                "terms": {},
+                "account": {},
+                "past_due": "000000000",
+                "payment_history": {},
+                "most_recent_payment": {},
+                "additional_trade_account": {},
+                "update_method": "automated"
+            }
+        ],
+        "bureau_social_security_number": [
+            "666508361"
+        ],
+        "bureau_date_of_birth": null,
+        "months_since_oldest_trade": 175,
+        "inquiries_last_6_months": 0,
+        "number_of_open_trades": 8,
+        "number_of_satisfactory_open_trades": 8,
+        "number_of_delinquencies_last_2_years": 0,
+        "number_of_current_delinquencies": 0,
+        "number_of_tax_liens": 0,
+        "number_of_90_day_delinquencies": 0,
+        "number_of_trades_opened_in_last_12_months": 1,
+        "public_records": 0,
+        "revolving_balance": 19586,
+        "percent_high_card_utilization": "50.0",
+        "months_since_derogatory_public_record": null,
+        "no_hit": false,
+        "frozen": false,
+        "bureau_inquiry_date": "2018-05-11T12:48:20.372-05:00",
+        "bureau_report_uid": "f8add52d-b96c-410a-b236-0998337f2b97"
+    },
+    "_metadata": {
+        "status": 200
+    }
+}

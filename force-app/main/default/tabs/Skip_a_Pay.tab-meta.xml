@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>This tab is to upload csv file containing list of contracts for which skip-a-pay should be performed</description>
+    <label>Skip a Pay</label>
+    <motif>Custom38: Camera</motif>
+    <page>ForbearanceImportLoan</page>
+</CustomTab>

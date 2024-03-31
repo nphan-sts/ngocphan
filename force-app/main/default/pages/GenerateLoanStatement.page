@@ -1,0 +1,478 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" showHeader="false" controller="LoanStatementController" id="LoanStatement" renderAs="pdf" standardStylesheets="false" doctype="html-5.0">
+<head>
+  <title>Loan Statement | Payoff</title>
+  <apex:stylesheet value="{!$Resource.PayoffStyleSheet}"/>
+  <style>
+    .table td.border-bottom-0 { border-bottom: 0 !important; }
+    .table td.border-top-0 { border-top: 0 !important; }
+    .table td.border-thick { border-width: 4px !important; }
+     h5{ text-align:center; }
+  </style>
+</head>
+<body>
+  <div class="px-3">
+  <table class="table mb-3">
+      <tr>
+        <td class="w-50" style="vertical-align: top;">
+          <strong>Payoff Inc</strong><br />
+            {!street}<br/>
+            {!city}<br/>
+            {!statePostalCode}<br/>
+        </td>
+        <td class="w-50" style="vertical-align: top;">
+          <table class="table table-bordered">
+              <tbody>
+                  <tr>
+                      <td class="w-25 border-thick">
+                          <strong> Due Date </strong><br/>
+                          <apex:outputText value="{0,date,yyyy/MM/dd}">
+                            <apex:param value="{!contractRec.loan__Next_Installment_Date__c}"/>
+                          </apex:outputText>
+
+                      </td>
+                      <td class="w-25 border-thick">
+                          <strong> Total Due </strong><br/>
+                          $
+                          <apex:outputText value="{0, number, #,##0.00}">
+                            <apex:param value="{!ROUND((TotalDueAmount),2)}" />
+                        </apex:outputText>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+        </td>
+      </tr>
+    </table>
+     
+       <td class="w-50" style="vertical-align: top;">
+           
+       </td>
+      <table class="table table-bordered"  style="width:400px"  align = "right">
+          <tbody>
+              <tr>
+                  <td>
+                      <strong>Contract ID</strong><br/>
+                      {!contractRec.name}
+                  </td>
+                  <td>
+                      <strong>Loan ID</strong><br/>
+                      {!contractRec.Payoff_Loan_ID__c}
+                  </td>
+              </tr>
+              <tr>
+                <td>
+                    <strong>Past Due Principal</strong><br/>
+                    $
+                    <apex:outputText value="{0, number, #,##0.00}">
+                        <apex:param value="{!ROUND((prevDuePrincipal),2)}" />
+                    </apex:outputText>
+                </td >
+                <td>
+                    <strong>Current Due Principal</strong><br/>
+                    $
+                    <apex:outputText value="{0, number, #,##0.00}">
+                        <apex:param value="{!ROUND((AMZrec1.loan__Due_Principal__c),2)}" />
+                    </apex:outputText>
+                </td>
+            </tr>
+              <tr>
+                <td>
+                    <strong>Past Due Interest</strong><br/>
+                    $
+                    <apex:outputText value="{0, number, #,##0.00}">
+                        <apex:param value="{!ROUND((prevDueInterest),2)}" />
+                    </apex:outputText>
+                </td >
+                <td>
+                    <strong>Current Due Interest</strong><br/>
+                    $
+                    <apex:outputText value="{0, number, #,##0.00}">
+                        <apex:param value="{!ROUND((AMZrec1.loan__Due_Interest__c),2)}" />
+                    </apex:outputText>
+                </td>
+        </tr>
+              <tr>
+                <td>
+                    <strong>Past Due Late Fee</strong><br/>
+                    $0.00
+                </td >
+                <td>
+                    <strong>Current Due Late Fee</strong><br/>
+                    $0.00
+                </td>
+        </tr>
+              <tr>
+                <td>
+                    <strong>Past Due Other Fee</strong><br/>
+                    $0.00
+                </td >
+                <td>
+                    <strong>Current Due Other Fee</strong><br/>
+                    $0.00
+                </td>
+        </tr>
+          </tbody>
+      </table>
+      <table>
+          <apex:pageblock >
+          <apex:pageBlockSection rendered="{!flag}">
+          <td class="w-50" style="vertical-align: top;">
+          <strong>{!contractRec.loan__Account__r.Address_1__c}</strong><br />
+              <strong>  {!contractRec.loan__Account__r.Address_2__c} </strong><br/>
+              <strong> {!contractRec.loan__Account__r.city__C}, {!contractRec.loan__Account__r.State__c} {!contractRec.loan__Account__r.ZIP_Code__c}</strong><br/>
+              
+              <br style = "line-height:17;"/>
+          </td>
+              </apex:pageBlockSection>
+              </apex:pageblock>
+          <td class="w-50" style="vertical-align: top;">    
+              <br style = "line-height:21;"/>       <!-- comment this if address is to be displayed-->
+          </td>
+      </table>
+      <p style="font-size:12px">
+           Please detach and return the above payment coupon with your check.
+      </p>
+      <table class="table table-bordered">
+          <tbody>
+              <tr>
+                 <td class="w-25 border-thick">
+                     <strong style="font-size:15px"> Transaction Detail </strong>
+                 </td>
+              </tr>
+          </tbody>
+      </table>
+      <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="w-20" style="font-size:13px">
+                Activity Date
+              </th>
+              <th class="w-30" style="font-size:13px">
+                Activity Description
+              </th>
+              <th class="w-20" style="font-size:13px">
+                Principal
+              </th>
+              <th class="w-10" style="font-size:13px">
+                Interest
+              </th>
+              <th class="w-10" style="font-size:13px">
+                Late Fee
+              </th>
+              <th class="w-10" style="font-size:13px">
+                Other Fees
+              </th>
+            </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td>
+                <apex:outputText value="{0,date,yyyy/MM/dd}">
+                    <apex:param value="{!LPTRec.loan__Transaction_Date__c}"/>
+                </apex:outputText>  
+              </td>
+              <td>
+                  Loan Payment
+              </td>
+              <td>
+                  $
+                    <apex:outputText value="{0, number, #,##0.00}">
+                        <apex:param value="{!ROUND((LPTRec.loan__Principal__c),2)}" />
+                    </apex:outputText>
+              </td>
+              <td>
+                  $
+                    <apex:outputText value="{0, number, #,##0.00}">
+                        <apex:param value="{!ROUND((LPTRec.loan__Interest__c),2)}" />
+                    </apex:outputText>
+              </td>
+              <td>
+                  $0.00
+              </td>
+              <td>
+                  $0.00
+              </td>
+          </tr>
+      </tbody>
+      </table>
+      <table class="table table-bordered">
+          <tbody>
+              <tr>
+                 <td class="w-25 border-thick">
+                     <strong style="font-size:15px"> Interest Charges and Adjustments </strong>
+                 </td>
+              </tr>
+          </tbody>
+      </table>
+      <table class="table table-bordered">
+          <tr>
+             <th class="w-20" style="font-size:13px">
+                From
+              </th>
+              <th class="w-20" style="font-size:13px">
+                To
+              </th>
+              <th class="w-10" style="font-size:13px">
+                Days
+              </th>
+              <th class="w-10" style="font-size:13px">
+                Balance
+              </th>
+              <th class="w-10" style="font-size:13px">
+                Rate
+              </th>
+              <th class="w-10" style="font-size:13px">
+                Daily Rate
+              </th>
+              <th class="w-10" style="font-size:13px">
+                Day Code
+              </th>
+              <th class="w-10" style="font-size:13px">
+                Charge
+              </th>
+          </tr>
+          <tbody>
+              <tr>
+                  <td>
+                     <apex:outputText value="{0,date,yyyy/MM/dd}">
+                        <apex:param value="{!IPTRec.loan__Transaction_Creation_Date__c}"/>
+                     </apex:outputText>  
+                  </td>
+                  <td>
+                     <apex:outputText value="{0,date,yyyy/MM/dd}">
+                        <apex:param value="{!IPTRec.loan__Transaction_Due_Date__c}"/>
+                     </apex:outputText>  
+                  </td>
+                  <td>
+                     30  
+                  </td>
+                  <td>
+                    $
+                    <apex:outputText value="{0, number, #,##0.00}">
+                        <apex:param value="{!ROUND((contractRec.loan__Principal_Remaining__c),2)}" />
+                    </apex:outputText>
+                  </td>
+                  <td>
+                    $
+                    <apex:outputText value="{0, number, #,##0.00}">
+                        <apex:param value="{!ROUND((contractRec.loan__Interest_Rate__c),2)}" />
+                    </apex:outputText>
+                  </td>
+                  <td>
+                      {!ROUND(dailyRate,4)}
+                  </td>
+                  <td>
+                      360/360
+                  </td>
+                  <td>
+                      $0.00
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+      <p style="font-size:12px">
+          <strong> Totals: </strong>
+          $
+          <apex:outputText value="{0, number, #,##0.00}">
+              <apex:param value="{!ROUND((contractRec.loan__Pmt_Amt_Cur__c),2)}" />
+          </apex:outputText>
+           will be debited from account:
+      </p>
+      <table class="table table-bordered">
+          <tbody>
+              <tr>
+                 <td class="w-25 border-thick">
+                     <strong style="font-size:15px"> Summary </strong>
+                 </td>
+              </tr>
+          </tbody>
+      </table>
+      <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="w-25" style="font-size:13px">
+                Contract ID
+              </th>
+              <th class="w-25" style="font-size:13px">
+                Loan ID
+              </th>
+              <th class="w-25" style="font-size:13px">
+                Customer Name
+              </th>
+              <th class="w-25" style="font-size:13px">
+                Loan Purpose
+              </th>
+            </tr>
+      </thead>
+          <tbody>
+              <tr>
+                  <td>
+                      {!contractRec.name}
+                  </td>
+                  <td>
+                      {!contractRec.Payoff_Loan_ID__c}
+                  </td>
+                  <td>
+                      {!contractRec.loan__Account__r.name}
+                  </td>
+                  <td>
+                      {!contractRec.loan__Loan_Purpose__c}
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+      <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="w-20" style="font-size:13px">
+                Previous Balance
+              </th>
+              <th class="w-20" style="font-size:13px">
+                Period Payments
+              </th>
+              <th class="w-20" style="font-size:13px">
+                Period Disbursements
+              </th>
+              <th class="w-20" style="font-size:13px">
+                Finance Charges
+              </th>
+              <th class="w-20" style="font-size:13px">
+                New Balance
+              </th>
+            </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td>
+                  $
+                  <apex:outputText value="{0, number, #,##0.00}">
+                      <apex:param value="{!ROUND((contractRec.loan__Principal_Paid__c),2)}" />
+                  </apex:outputText>
+              </td>
+              <td>
+                  $
+                  <apex:outputText value="{0, number, #,##0.00}">
+                      <apex:param value="{!ROUND((contractRec.loan__Payment_Amount__c),2)}" />
+                  </apex:outputText>
+              </td>
+              <td>
+                 $ 
+              </td>
+              <td>
+                  $0.00
+              </td>
+              <td>
+                  $
+                  <apex:outputText value="{0, number, #,##0.00}">
+                      <apex:param value="{!ROUND((contractRec.loan__Principal_Remaining__c),2)}" />
+                  </apex:outputText>
+              </td>
+          </tr>
+      </tbody>
+      </table>
+      <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="w-20" style="font-size:13px">
+                Interest Paid This Year
+              </th>
+              <th class="w-20" style="font-size:13px">
+                Interest Paid Last Year
+              </th>
+              <th class="w-20" style="font-size:13px">
+                Interest Reserve Balance
+              </th>
+              <th class="w-20" style="font-size:13px">
+                Late Fee Balance
+              </th>
+              <th class="w-20" style="font-size:13px">
+                Other Fee Balance
+              </th>
+            </tr>
+      </thead>
+          <tbody>
+              <tr>
+                  <td>
+                      $
+                      <apex:outputText value="{0, number, #,##0.00}">
+                          <apex:param value="{!ROUND((PaidInterest),2)}" />
+                      </apex:outputText>
+                  </td>
+                  <td>
+                      $
+                      <apex:outputText value="{0, number, #,##0.00}">
+                          <apex:param value="{!ROUND((prevPaidInterest),2)}" />
+                      </apex:outputText>
+                  </td>
+                  <td>
+                      $
+                  </td>
+                  <td>
+                      $0.00
+                  </td>
+                  <td>
+                      $0.00
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+      <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="w-10" style="font-size:13px">
+                Commitment
+              </th>
+              <th class="w-10" style="font-size:13px">
+                Available
+              </th>
+              <th class="w-20" style="font-size:13px">
+                Principal Balance
+              </th>
+              <th class="w-20" style="font-size:13px">
+                Print Date
+              </th>
+              <th class="w-20" style="font-size:13px">
+                  <strong>Due Date </strong>
+              </th>
+                <th class="w-20" style="font-size:13px">
+                    <strong> Total Due </strong>
+                </th>
+            </tr>
+      </thead>
+          <tbody>
+              <tr>
+                  <td>
+                     $
+                  </td>
+                  <td>
+                      $
+                  </td>
+                  <td>
+                      $
+                      <apex:outputText value="{0, number, #,##0.00}">
+                          <apex:param value="{!ROUND((contractRec.loan__Principal_Remaining__c),2)}" />
+                      </apex:outputText>
+                      
+                  </td>
+                  <td>
+                     <apex:outputText value="{0,date,yyyy/MM/dd}">
+                        <apex:param value="{!systemDate}"/>
+                     </apex:outputText> 
+                  </td>
+                  <td>
+                      <apex:outputText value="{0,date,yyyy/MM/dd}">
+                        <apex:param value="{!contractRec.loan__Next_Installment_Date__c}"/>
+                     </apex:outputText>
+                  </td>
+                  <td>
+                      $
+                      <apex:outputText value="{0, number, #,##0.00}">
+                          <apex:param value="{!ROUND((TotalDueAmount),2)}" />
+                      </apex:outputText>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+</body>
+</apex:page>

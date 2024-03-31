@@ -1,0 +1,3 @@
+<apex:page standardController="loan__Automated_Payment_Setup__c">
+   <h1>Installment Payment determines if the payment transaction is an installment payment or not. It should be applied when the payment is recorded between the bill generation date and the bill due date.</h1>
+</apex:page>

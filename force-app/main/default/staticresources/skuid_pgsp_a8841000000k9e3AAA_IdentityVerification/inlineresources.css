@@ -1,0 +1,19 @@
+#vendorId .nx-basicfieldeditor-item-label{
+   display: inline;
+}
+
+#FraudId .nx-basicfieldeditor-item-label{
+   display: inline;
+}
+
+#BankId .nx-basicfieldeditor-item-label{
+   display: inline;
+}
+
+#FundId .nx-fieldtext .nx-radiowrapper:first-child{
+    display:list-item;
+}
+
+#IVFlagId .nx-basicfieldeditor-item-label{
+   display: inline;
+}

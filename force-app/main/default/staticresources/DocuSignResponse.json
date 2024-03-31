@@ -1,0 +1,107 @@
+{
+    "envelopeId": "a9be6341-3992-4d90-91c1-ec830ad4b077",
+    "envelopeDocuments": [
+        {
+            "documentId": "1",
+            "name": "3rd Party Membership",
+            "type": "content",
+            "uri": "/envelopes/a9be6341-3992-4d90-91c1-ec830ad4b077/documents/1",
+            "order": "1",
+            "pages": "1",
+            "availableDocumentTypes": [
+                {
+                    "type": "electronic",
+                    "isDefault": "true"
+                }
+            ],
+            "display": "inline",
+            "includeInDownload": "true",
+            "signerMustAcknowledge": "no_interaction"
+        },
+        {
+            "documentId": "2",
+            "name": "CU Membership",
+            "type": "content",
+            "uri": "/envelopes/a9be6341-3992-4d90-91c1-ec830ad4b077/documents/2",
+            "order": "2",
+            "pages": "1",
+            "availableDocumentTypes": [
+                {
+                    "type": "electronic",
+                    "isDefault": "true"
+                }
+            ],
+            "display": "inline",
+            "includeInDownload": "true",
+            "signerMustAcknowledge": "no_interaction"
+        },
+        {
+            "documentId": "3",
+            "name": "Payoff Member Agreement",
+            "type": "content",
+            "uri": "/envelopes/a9be6341-3992-4d90-91c1-ec830ad4b077/documents/3",
+            "order": "3",
+            "pages": "6",
+            "availableDocumentTypes": [
+                {
+                    "type": "electronic",
+                    "isDefault": "true"
+                }
+            ],
+            "display": "inline",
+            "includeInDownload": "true",
+            "signerMustAcknowledge": "no_interaction"
+        },
+        {
+            "documentId": "4",
+            "name": "Payoff Promissory Note",
+            "type": "content",
+            "uri": "/envelopes/a9be6341-3992-4d90-91c1-ec830ad4b077/documents/4",
+            "order": "4",
+            "pages": "5",
+            "availableDocumentTypes": [
+                {
+                    "type": "electronic",
+                    "isDefault": "true"
+                }
+            ],
+            "display": "inline",
+            "includeInDownload": "true",
+            "signerMustAcknowledge": "no_interaction"
+        },
+        {
+            "documentId": "5",
+            "name": "Credit Services Contract",
+            "type": "content",
+            "uri": "/envelopes/a9be6341-3992-4d90-91c1-ec830ad4b077/documents/5",
+            "order": "5",
+            "pages": "4",
+            "availableDocumentTypes": [
+                {
+                    "type": "electronic",
+                    "isDefault": "true"
+                }
+            ],
+            "display": "inline",
+            "includeInDownload": "true",
+            "signerMustAcknowledge": "no_interaction"
+        },
+        {
+            "documentId": "certificate",
+            "name": "Summary",
+            "type": "summary",
+            "uri": "/envelopes/a9be6341-3992-4d90-91c1-ec830ad4b077/documents/certificate",
+            "order": "999",
+            "pages": "1",
+            "availableDocumentTypes": [
+                {
+                    "type": "electronic",
+                    "isDefault": "true"
+                }
+            ],
+            "display": "inline",
+            "includeInDownload": "true",
+            "signerMustAcknowledge": "no_interaction"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>AutoReach Permission</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>AutoReach Permission</label>
+    <pageAccesses>
+        <apexPage>goattech__autoreach</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <tabSettings>
+        <tab>goattech__AutoReach</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+</PermissionSet>

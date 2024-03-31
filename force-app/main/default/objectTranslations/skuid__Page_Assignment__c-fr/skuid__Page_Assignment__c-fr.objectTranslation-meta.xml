@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Désignation de page</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Désignations de page</value>
+    </caseValues>
+    <gender>Feminine</gender>
+    <nameFieldLabel>Id de désignation de page</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

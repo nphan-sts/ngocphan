@@ -1,0 +1,324 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" showHeader="false" controller="ApplicationController" id="TILPage" renderAs="pdf" standardStylesheets="false" doctype="html-5.0">
+<head>
+  <title>Truth in Lending | Payoff</title>
+  <apex:stylesheet value="{!$Resource.PayoffStyleSheet}"/>
+  <style>
+    .hideTableHeader {
+        display: none;
+    }
+    
+    .table td.border-bottom-0 { border-bottom: 0 !important; }
+    .table td.border-top-0 { border-top: 0 !important; }
+    .table td.border-thick { border-width: 4px !important; }
+    h5{ text-align:center; }
+    
+  </style>
+</head>
+
+<body>
+  <div class="px-3">
+    <div class="mb-5 text-center">
+      <h1>Truth in Lending Disclosure Statement</h1>
+      <!--<p class="lead">(Made in compliance with Federal Law)</p>-->
+    </div>
+
+    <table class="table mb-3">
+      <tr>
+        <td class="w-50" style="vertical-align: top;">
+          <strong>Lender</strong><br />
+          {!applicationRec.Investor__r.Name} <!--Technology Credit Union--> <br /> {!applicationRec.Investor__r.Address_1__c} <br />
+          {!applicationRec.Investor__r.City__c},  {!applicationRec.Investor__r.State__c}  {!applicationRec.Investor__r.ZIP_Code__c}
+        </td>
+        <td class="w-50" style="vertical-align: top;">
+          <strong>Borrower</strong><br />
+          <!--{!applicationRec.genesis__Account__r.Borrower_s_First_Name__c}
+          {!applicationRec.genesis__Account__r.Borrower_s_Last_Name__c }-->
+          {!applicationRec.genesis__Account__r.Name}<br />
+          {!applicationRec.genesis__Account__r.Address_1__c }<br />
+          {!applicationRec.genesis__Account__r.Address_2__c }<br />
+          {!applicationRec.genesis__Account__r.City__c},  {!applicationRec.genesis__Account__r.State__c}  {!applicationRec.genesis__Account__r.ZIP_Code__c}
+        </td>
+      </tr>
+    </table>
+
+    <table class="table table-bordered mb-0 border-bottom-0">
+      <tbody>
+        <tr>
+          <td class="w-25 border-bottom-0 border-thick">
+            <strong>ANNUAL PERCENTAGE RATE</strong>
+            <p>
+              The cost of your credit as a yearly rate.
+            </p>
+          </td>
+          <td class="w-25 border-bottom-0 border-thick">
+            <strong>FINANCE CHARGE</strong>
+            <p>
+              The dollar amount the credit will cost you.
+            </p>
+          </td>
+          <td class="w-25 border-bottom-0">
+            <strong>Amount Financed</strong>
+            <p>
+              The amount of credit provided to you or on your behalf.
+            </p>
+          </td>
+          <td class="w-25 border-bottom-0">
+            <strong>Total of Payments</strong>
+            <p>
+              The amount you will have paid after you have made all payments as scheduled.
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-bordered text-right border-top-0">
+      <tbody>
+        <tr>
+          <td class="w-25 border-top-0 border-thick">
+            <!--{!applicationRec.genesis__APR__c}-->
+            <apex:outputText value="{0, number, #,##0.00}">
+            <!--<apex:param value="{!ROUND(applicationRec.genesis__APR__c,2)}" />-->
+                <apex:param value="{!apr_strInt}" />
+            </apex:outputText>%
+          </td>
+          <td class="w-25 border-top-0 border-thick">
+            $<!--{!applicationRec.genesis__Total_Estimated_Interest__c+applicationRec.Origination_fee__c}1,729.55 --> 
+             <apex:repeat value="{!applicationRec.Pricing_offer__r}" var="offer">
+              <apex:outputText value="{0, number, #,##0.00}">
+                <!--apex:param value="{!ROUND((applicationRec.genesis__Total_Estimated_Interest__c+applicationRec.Origination_fee__c),2)}" /-->
+                <apex:param value="{!ROUND((offer.Total_of_Payments_TIL__c-applicationRec.genesis__Financed_Amount__c),2)}" />
+              </apex:outputText>
+             </apex:repeat> 
+          </td>
+          <td class="w-25 border-top-0">
+            $<!--{!applicationRec.genesis__Loan_Amount__c-applicationRec.Origination_fee__c} 4,800.00 -->
+              <apex:outputText value="{0, number, #,###.00}">
+                <!--<apex:param value="{!ROUND((1234),2)}" />          
+                <apex:param value="{!ROUND((applicationRec.genesis__Loan_Amount__c-applicationRec.Origination_fee__c),2)}" />-->
+                <apex:param value="{!ROUND((applicationRec.genesis__Financed_Amount__c),2)}" />
+            </apex:outputText> 
+          </td>
+          <!--<td class="w-25 border-top-0">
+              <apex:outputText value="{0, number, #,###.##}">
+                <apex:param value="{!ROUND(applicationRec.Total_of_Payments__c,2)}" />
+            </apex:outputText> 
+          </td>-->
+          <td class="w-25 border-top-0">
+            $ <!--{!applicationRec.Initial_Term_Payment_Amt__c}136.03 -->
+              <apex:repeat value="{!applicationRec.Pricing_offer__r}" var="offer">
+                <apex:outputText value="{0, number, #,##0.00}">
+                    <apex:param value="{!ROUND(offer.Total_of_Payments_TIL__c-0,2)}" />
+                </apex:outputText> 
+              </apex:repeat>                
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      Your payment schedule will be as follows:
+    </p>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="w-25">
+            Number of Payments
+          </th>
+          <th class="w-25">
+            Amounts
+          </th>
+          <th class="w-50">
+            When Payments Are Due
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            {!applicationRec.Loan_Term_sub_1__c}
+          </td>
+          <td>
+            $ <!--{!applicationRec.Initial_Term_Payment_Amt__c}136.03 -->
+              <apex:repeat value="{!applicationRec.Pricing_offer__r}" var="offer">
+                <apex:outputText value="{0, number, #,##0.00}">
+                    <apex:param value="{!ROUND(offer.Monthly_Payment__c,2)}" />
+                </apex:outputText> 
+              </apex:repeat>
+                     <!--<apex:outputfield value="{!offer.Monthly_Payment__c}" />-->
+                
+          </td>
+          <td>
+            Your first payment will be due one month after the issuance of your loan and then monthly thereafter. Payments are due on the same date each month. If your due date is the 29th, 30th, or 31st, and the current month is shorter, your payment will be on the last day of the month.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            1
+          </td>
+          <td>
+            $<!--{!applicationRec.Last_Payment_Amount__c} 136.14 -->
+              <apex:repeat value="{!applicationRec.Pricing_offer__r}" var="offer">
+                <apex:outputText value="{0, number, #,##0.00}">
+                    <apex:param value="{!ROUND(offer.Monthly_Payment__c,2)}" />
+            </apex:outputText> 
+              </apex:repeat>
+          </td>
+          <td>
+            Your last payment will be due {!applicationRec.genesis__Term__c} months from the issuance date of your loan.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      <strong>Late Charges:</strong> If your payment is late, you will NOT be charged a late fee.
+    </p>
+
+    <p>
+      <strong>Prepayment Policy:</strong> If you pay early, you will not have to pay a penalty.
+    </p>
+
+    <p class="font-weight-bold">
+      See your contract documents for any additional infromation about nonpayment or default.
+     </p>
+     
+     <p>&nbsp;</p>
+    <!--
+    <p class="font-weight-bold">
+      You are not required to complete this agreement merely because you have received these disclosures or signed an applicant agreement.
+    </p>
+  -->
+    <hr class="my-5" style="border-top: 6px solid #001239 !important;" />
+  
+  <br/>
+  <br/>
+      
+    <h5 >Itemization of Amount Financed</h5>
+    
+    <p>
+    <strong>Borrower</strong><br />
+    <!--{!applicationRec.genesis__Account__r.Borrower_s_First_Name__c}
+      {!applicationRec.genesis__Account__r.Borrower_s_Last_Name__c } -->
+        {!applicationRec.genesis__Account__r.Name}<br />
+      {!applicationRec.genesis__Account__r.Address_1__c }<br />
+      {!applicationRec.genesis__Account__r.Address_2__c }<br />
+      {!applicationRec.genesis__Account__r.City__c},
+      {!applicationRec.genesis__Account__r.State__c}
+      {!applicationRec.genesis__Account__r.ZIP_Code__c}
+    </p>
+    
+    <br />
+    
+    <table class="table mb-3">
+    <tr>
+      <td class="w-50">
+        Itemization of Amount Financed
+      </td>
+      <td class="w-50">
+        $   <apex:outputText value="{0, number, #,##0.00}">
+                <apex:param value="{!ROUND((applicationRec.genesis__Loan_Amount__c-applicationRec.Origination_fee__c),2)}" />
+            </apex:outputText>
+      </td>
+    </tr>
+    <tr>
+      <td class="w-100" colspan="2">
+        &nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td class="w-50">
+        Amount Paid Directly to You
+      </td>
+      <td class="w-50">
+        $ <!--{!applicationRec.genesis__Loan_Amount__c-applicationRec.Origination_fee__c}  4,800.00 --> 
+          <apex:outputText value="{0, number, #,##0.00}">
+                <apex:param value="{!ROUND((applicationRec.genesis__Loan_Amount__c-applicationRec.Origination_fee__c-applicationRec.DCP_total_amount__c),2)}" />
+            </apex:outputText>
+      </td>
+    </tr>
+    <tr>
+      <td class="w-100" colspan="2">
+        &nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td class="w-100" colspan="2">
+        Amount Paid to Others on Your Behalf:
+      </td>
+    </tr>
+        <apex:pageBlock > 
+        <apex:pageBlockTable value="{!dcpArcusTransaction}" var="dcpArcusTransactions1" headerClass="hideTableHeader" cellpadding="10" cellspacing="10">
+            <apex:column colspan="10" width="360">
+                {!dcpArcusTransactions1.Bank_Name__c}
+            </apex:column>
+            <apex:column colspan="10">
+                $<apex:outputText value="{0, number, #,##0.00}">
+                    <apex:param value="{!ROUND(dcpArcusTransactions1.Requested_Amount__c,2)}" />
+                </apex:outputText>
+            </apex:column>
+        </apex:pageBlockTable>
+        </apex:pageBlock>
+    </table>
+    <table class="table mb-3">
+    <tr>
+      <td class="w-100" colspan="2">
+       &nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td class="w-50">
+        Prepaid Finance Charge
+      </td>
+      <td class="w-50">
+        $<apex:outputText value="{0, number, #,##0.00}">
+                <apex:param value="{!ROUND(applicationRec.Origination_fee__c,2)}" />
+            </apex:outputText>
+      </td>
+    </tr>
+    <tr>
+      <td class="w-100" colspan="2">
+        &nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td class="w-50">
+        Itemization of Prepaid Finance Charge:
+      </td>
+    </tr>
+    <tr>
+      <td class="w-50">
+        Origination Fee
+      </td>
+      <td class="w-50">
+        $ <apex:outputText value="{0, number, #,##0.00}">
+                <apex:param value="{!ROUND(applicationRec.Origination_fee__c,2)}" />
+            </apex:outputText>
+      </td>
+    </tr>
+    </table>
+    <p class="font-italic">
+      The Origination Fee is the entire up front cost of your loan and is the only prepaid finance charge.
+    </p>
+    
+   
+     <p class="font-italic">
+      Amount paid to others on your behalf may differ from the itemization above if direct payment attempts are unsuccessful.
+    </p>
+
+   
+
+    <hr class="my-5" style="border-top: 2px solid #001239 !important;" />
+
+    <h5>Military Lending Act</h5>
+
+    <p>
+      Federal law provides important protections to members of the Armed Forces and their dependents relating to extensions of consumer credit. In general, the cost of consumer credit to a member of the Armed Forces and his or her dependent may not exceed an annual percentage rate of 36 percent. This rate must include, as applicable to the credit transaction or account: The costs associated with credit insurance premiums; fees for ancillary products sold in connection with the credit transaction; any application fee charged (other than certain application fees for specified credit transactions or accounts); and any participation fee charged (other than certain participation fees for a credit card account).
+    </p>
+    
+    <p>
+      If you would like to discuss the above disclosure or your payment obligation, please call us at <a href="tel:+8008780901">800-878-0901</a>.
+    </p>
+    </div>
+</body>
+</apex:page>

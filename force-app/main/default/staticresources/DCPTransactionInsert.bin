@@ -1,0 +1,15 @@
+{
+   "lead_id":"c9149473-e69f-ee12-38a7-d18b0cba847d",
+   "dcp":[
+      {
+         "bank_name":"CITI",
+         "id":"d6a7128e-9df0-4c4d-9df7-2717c32d7ef9",
+         "balance":"000005844",
+         "member_code": "MEM-0000001",
+         "portfolio_type": "revolving around",
+         "account_number": "786757555575",
+         "date_opened":"2020-01-20",
+         "arcus_eligible": true
+      }
+   ]
+}

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Collection Team Admin</layout>
+        <sections>
+            <label></label>
+            <section>Account Balance Details</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Activity</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Amortization</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Bankruptcy</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Charge Off Details</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Contract</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Credit Bureau Reporting</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Debt Recovery Efforts</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Delinquent Dues</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Funding</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Interest Remediation Details</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Loan Details</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Loan Mod variables</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Notices</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>One time ACH Details</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Payment Tolerance and Grace Period</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Prepayment Penalty</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Recurring ACH Details</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Refinance</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>

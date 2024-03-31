@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Fraud Analyst</label>
+    <protected>false</protected>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Add_Tags__c</field>
+        <value xsi:type="xsd:string">Account in Dispute,Fraud Hold,Cannabis Review,Doc Review,E-Sign Redecision,Follow-Up,Fraud To-Do,Identity,Issues,Manual Fraud Review,Max OB,Needs Approval,Needs Review,New Documents,New Interaction,Non-Resident,Not Moving Forward,Pending 9012,Pending 9013,Pending Docs,Pending EmpInfo,Pending Fraud Call,Pending Info,Pending KBA,Pending Offer,Pending Paystubs,Pending Tenure,Re allocation,Redecision,RFP 9012,Soft Pull Requested.,Spanish Speaker Requested,Specialized Income,Suspicious Documentation,Suspicious Funding Account,Suspicious Inconsistencies,Suspicious Interaction,To-Do,Unresponsive,View Box for Documents,Confirmed Fraud,Fraud Awaiting Action,Fraud F/U,Fraud Reviewed Declined,Fraud RFP,Potential Fraud,First Party Fraud,Identity Theft,Family Fraud,Synthetic Fraud,Fraud Ring</value>
+    </values>
+    <values>
+        <field>Delete_Tags__c</field>
+        <value xsi:type="xsd:string">Account in Dispute,Cannabis Review,DCP Card Verifications Failed,E-Sign Redecision,Follow-Up,Hot List,Identity,Issues,Max OB,Needs Approval,Needs Review,New Documents,New Interaction,Non-Resident,Not Moving Forward,Pending 9012,Pending 9013,Pending Docs,Pending EmpInfo,Pending Info,Pending KBA,Pending Offer,Pending Paystubs,Pending Tenure,Potential Stacker,Re allocation,Redecision,RFP 9012,Soft Pull Requested.,Spanish Speaker Requested,Specialized Income,Stacker Check Declined,Suspicious Documentation,Suspicious Funding Account,Suspicious Inconsistencies,Suspicious Interaction,To-Do,Unresponsive,View Box for Documents,Account in Dispute,Fraud Hold,Confirmed Fraud,Fraud,Fraud Awaiting Action,Fraud F/U,Fraud Reviewed Declined,Fraud RFP,Fraud To-Do,Manual Fraud Review,Potential Fraud,Suspicious Documentation,Suspicious Interaction,Suspicious Inconsistencies,Suspicious Funding Account,Cannabis Review,Pending Fraud Call,First Party Fraud,Identity Theft,Family Fraud,Synthetic Fraud,Fraud Ring</value>
+    </values>
+    <values>
+        <field>Profile_Id__c</field>
+        <value xsi:type="xsd:string">00e41000001qyiV</value>
+    </values>
+    <values>
+        <field>Profile_Name__c</field>
+        <value xsi:type="xsd:string">Fraud Analyst</value>
+    </values>
+</CustomMetadata>

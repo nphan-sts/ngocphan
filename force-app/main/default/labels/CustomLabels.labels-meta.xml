@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>ASSIGNED_TO_AGENT_VERIFIED_QUEUE</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ASSIGNED_TO_AGENT_VERIFIED_QUEUE</shortDescription>
+        <value>ASSIGNED_TO_AGENT_VERIFIED_QUEUE</value>
+    </labels>
+    <labels>
+        <fullName>ASSIGNED_TO_VERIFICATION_QUEUE</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ASSIGNED_TO_VERIFICATION_QUEUE</shortDescription>
+        <value>Assigned to verification queue</value>
+    </labels>
+    <labels>
+        <fullName>ActiveStatus</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ActiveStatus</shortDescription>
+        <value>Active - Good Standing,Active - Bad Standing</value>
+    </labels>
+    <labels>
+        <fullName>App_Status</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>App_Status</shortDescription>
+        <value>agent_document_verification_pending,kba_success,kba_fail,agent_verification_pending,agent_verified</value>
+    </labels>
+    <labels>
+        <fullName>Application_Expired_Status</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Application Expired Status</shortDescription>
+        <value>Funded,Expired,Approved for funding,pre_funding,Withdrawn,Declined,Decline_Manual_Review,Expired-Withdrawn</value>
+    </labels>
+    <labels>
+        <fullName>Assign_To_Review_Queue</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Assign_To_Review_Queue</shortDescription>
+        <value>Assign To Review Queue</value>
+    </labels>
+    <labels>
+        <fullName>Assigned_to_Declined_Queue</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Assigned to Declined Queue</shortDescription>
+        <value>Assigned to Declined Queue</value>
+    </labels>
+    <labels>
+        <fullName>Assigned_to_Final_Verification_Queue</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Assigned to Final Verification Queue</shortDescription>
+        <value>Assigned to Final Verification Queue</value>
+    </labels>
+    <labels>
+        <fullName>Assigned_to_Outbounder</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Assigned_to_Outbounder</shortDescription>
+        <value>Assigned_to_Outbounder</value>
+    </labels>
+    <labels>
+        <fullName>Assigned_to_PreChecker</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Assigned_to_PreChecker</shortDescription>
+        <value>Assigned_to_PreChecker</value>
+    </labels>
+    <labels>
+        <fullName>Assigned_to_User</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Assigned_to_User</shortDescription>
+        <value>Assigned to User</value>
+    </labels>
+    <labels>
+        <fullName>Assigned_to_Withdrawn_Queue</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Assigned_to_Withdrawn_Queue</shortDescription>
+        <value>Assigned_to_Withdrawn_Queue</value>
+    </labels>
+    <labels>
+        <fullName>AttachmentTrg</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>AttachmentTrg</shortDescription>
+        <value>Active</value>
+    </labels>
+    <labels>
+        <fullName>BankDeactivateStatus</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>BankDeactivateStatus</shortDescription>
+        <value>Withdrawn,Declined,Expired,Decline_Manual_Review</value>
+    </labels>
+    <labels>
+        <fullName>ChangeLogLevelList</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ChangeLogLevelList</shortDescription>
+        <value>fill in message to change log level from error to warning, separate by semicolon;expected_logs for testing DO NOT delete;first error: FIELD_CUSTOM_VALIDATION_EXCEPTION, This repayment transaction has already been reversed.: \\[\\]</value>
+    </labels>
+    <labels>
+        <fullName>CreditSummaryEmpty_mail</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CreditSummaryEmpty_mail</shortDescription>
+        <value>jira@happymoney.com</value>
+    </labels>
+    <labels>
+        <fullName>DaysFebMonthLeapYear</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>DaysFebMonthLeapYear</shortDescription>
+        <value>29</value>
+    </labels>
+    <labels>
+        <fullName>DaysFebMonthNonLeapYear</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>DaysFebMonthNonLeapYear</shortDescription>
+        <value>28</value>
+    </labels>
+    <labels>
+        <fullName>DontFetchYodleeStatuses</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>DontFetchYodleeStatuses</shortDescription>
+        <value>Stacker_Check_Passed,docusign_loan_docs_sent,docusign_loan_docs_complete,pre_funding ,Approved for funding,funded</value>
+    </labels>
+    <labels>
+        <fullName>InterestAccrualFebMonthBatchSize</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>InterestAccrualFebMonthBatchSize</shortDescription>
+        <value>750</value>
+    </labels>
+    <labels>
+        <fullName>LPTNachaGenDaysConsideration</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>LPTNachaGenDaysConsideration</shortDescription>
+        <value>7</value>
+    </labels>
+    <labels>
+        <fullName>LastBilledAmountemailRecepients</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>LastBilledAmountemailRecepients</shortDescription>
+        <value>mspedaletti@happymoney.com;athorat@happymoney.com</value>
+    </labels>
+    <labels>
+        <fullName>Loan_BankAccountMissing</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Loan_BankAccountMissing</shortDescription>
+        <value>APS Bank Account Details are missing.</value>
+    </labels>
+    <labels>
+        <fullName>MW_Docusign_Doc_Check_Job_WHERE_Clause</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>MW Docusign Doc Check Job WHERE Clause</shortDescription>
+        <value>WHERE genesis__Application__r.genesis__Status__c IN (&apos;Approved for Funding&apos;, &apos;pre_funding&apos;) AND genesis__Application__r.DocuSign_Sign_Date__c=TODAY AND Box_URl__c=&apos;&apos; AND (NAME IN (&apos;CU Membership&apos;,&apos;Payoff Member Agreement&apos;,&apos;Payoff Promissory Note&apos;) OR (Investor_Code__c = &apos;TCU&apos; AND NAME = &apos;3rd Party Membership&apos;) OR (Investor_Code__c = &apos;ACU&apos; AND NAME = &apos;ACH&apos;) OR (genesis__Application__r.genesis__Account__r.State__c IN (&apos;CA&apos;, &apos;OH&apos;, &apos;VA&apos;) AND NAME = &apos;Credit Services Contract&apos;)) order by genesis__Application__c</value>
+    </labels>
+    <labels>
+        <fullName>MW_ExcludeAppStatusForBankAccountSync</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>MW_ExcludeAppStatusForBankAccountSync</shortDescription>
+        <value>funded;Declined;Expired;Withdrawn</value>
+    </labels>
+    <labels>
+        <fullName>MW_SkipAPayEmailRecipients</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>MW SkipAPayEmailRecipients</shortDescription>
+        <value>fhernandez@happymoney.com;ngocnguyen@happymoney.com;jardilla@happymoney.com</value>
+    </labels>
+    <labels>
+        <fullName>Masked_fields</fullName>
+        <categories>Masked fields application in MW_SynchronizeHandler</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Masked fields</shortDescription>
+        <value>account,applicant_name,application_email,application_work_email,bank_account,bank_account_number,bank_account_type,bank_name,borrower_s_email,borrower_s_first_name,borrower_s_lastname,borrowers_work_email,cl_company,company,contact,customer_cash_used_for,employer,gross_annual_income,healthcare_procedure,investor_name,investoraddress,primary_property_address,routing_number,secondary_source_of_repayment,testemail,testemail1,work_email,owner_name,lending_partner,total_of_payments,payment_amount,selected_monthly_payment</value>
+    </labels>
+    <labels>
+        <fullName>SUBMITTED_TO_FRAUD_QUEUE</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SUBMITTED_TO_FRAUD_QUEUE</shortDescription>
+        <value>Application assigned to fraud queue</value>
+    </labels>
+    <labels>
+        <fullName>SUBMITTED_TO_MX_QUEUE</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SUBMITTED_TO_MX_QUEUE</shortDescription>
+        <value>Application submitted MX queue</value>
+    </labels>
+    <labels>
+        <fullName>SkipInvestorforAllocation</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SkipInvestorforAllocation</shortDescription>
+        <value>Happy Money</value>
+    </labels>
+    <labels>
+        <fullName>TIL_Regenerated</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>TIL_Regenerated</shortDescription>
+        <value>TIL Regenerated</value>
+    </labels>
+    <labels>
+        <fullName>WorkEmailVerify</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>WorkEmailVerify</shortDescription>
+        <value>Work Email Verification Sent</value>
+    </labels>
+    <labels>
+        <fullName>jira_email</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>jira_email</shortDescription>
+        <value>jira@happymoney.com</value>
+    </labels>
+    <labels>
+        <fullName>skip_docusign_job</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>skip docusign job</shortDescription>
+        <value>Funded,Expired,Declined,Decline_Manual_Review,Withdrawn,Pre-funding,Approved for funding,Expired-Withdrawn</value>
+    </labels>
+</CustomLabels>

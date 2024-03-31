@@ -1,0 +1,16 @@
+{
+   "lead_id":"c9149473-e69f-ee12-38a7-d18b0cba847d",
+   "transactions":[
+      {
+         "balance":"000005844",
+         "credit_card_name":"CITI",
+         "id":"656a92c8-5216-4999-ad04-5f8e218db2c1",
+         "transaction_id":"a3efb98a-c97b-440b-b7c7-05dc38b6793b",
+         "masked_account_number":"111110******",
+         "payoffAmount":100,
+         "transaction_created":true,
+         "verified":true,
+         "verify_attempts":1
+      }
+   ]
+}

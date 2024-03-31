@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label></label>
+        <name>Webhook_Fields</name>
+    </fieldSets>
+    <layouts>
+        <layout>Account Layout</layout>
+        <sections>
+            <label></label>
+            <section>Highlights</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Income</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Investor Funds</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Investor Layout</layout>
+        <sections>
+            <label></label>
+            <section>Highlights</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Investor Funds</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Investor Reporting</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Member Layout</layout>
+        <sections>
+            <label></label>
+            <section>Activity On Other Accounts</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Application Archived</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Highlights</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Income</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>
