@@ -38,15 +38,17 @@ jobs:
               with:
                 sfdx-auth-url: ${{ secrets.SFDX_AUTH_URL }}
 
-            # We use SFDX Git Delta to create a directory with only the metadata that has changed.
-            # this allows us to deploy only those changes, as opposed to deploying the entire branch.
-            # This helps reducing deployment times
+            # or using this command if there is no timemout issue
+            # sf project retrieve start --manifest .manifest/package.xml
+            #METADATA_TYPES=("CustomObject" "ApexClass" "ApexComponent" "ApexPage" "ApexTrigger" "AppMenu" "ApprovalProcess" "AssignmentRules" "AuraDefinitionBundle" "AutoResponseRules" "Certificate" "CorsWhitelistOrigin" "CustomApplication" "CustomApplicationComponent" "CustomLabels" "CustomMetadata" "CustomPermission" "CustomTab" "Dashboard" "DataCategoryGroup" "DelegateGroup" "Document" "DuplicateRule" "EmailTemplate" "EscalationRules" "FlexiPage" "FlowDefinition" "GlobalValueSet" "HomePageComponent" "HomePageLayout" "Layout" "LightningComponentBundle" "PermissionSet" "Profile" "Queue" "QuickAction" "RemoteSiteSetting" "ReportType" "Role" "Settings" "SharingRules" "StandardValueSetTranslation" "StaticResource" "Workflow")
+
+            #for TYPE in ${METADATA_TYPES[@]}; do
+            #    sf project retrieve start --metadata "$TYPE" --wait 120
+            #done
             - name: 'Retrive components'
               run: |
-                METADATA_TYPES=("CustomObject" "ApexClass" "ApexComponent" "ApexPage" "ApexTrigger" "AppMenu" "ApprovalProcess" "AssignmentRules" "AuraDefinitionBundle" "AutoResponseRules" "Certificate" "CorsWhitelistOrigin" "CustomApplication" "CustomApplicationComponent" "CustomLabels" "CustomMetadata" "CustomPermission" "CustomTab" "Dashboard" "DataCategoryGroup" "DelegateGroup" "Document" "DuplicateRule" "EmailTemplate" "EscalationRules" "FlexiPage" "FlowDefinition" "GlobalValueSet" "HomePageComponent" "HomePageLayout" "Layout" "LightningComponentBundle" "PermissionSet" "Profile" "Queue" "QuickAction" "RemoteSiteSetting" "ReportType" "Role" "Settings" "SharingRules" "StandardValueSetTranslation" "StaticResource" "Workflow")
-                for TYPE in ${METADATA_TYPES[@]}; do
-                    sf project retrieve start --metadata "$TYPE" --wait 120
-                done
+                sf project retrieve start --manifest manifest/package.xml
+                
             - name: 'Identity'
               run: |
                 git config user.name "nphan-sts"
@@ -60,10 +62,12 @@ jobs:
                 git status --porcelain
 
                 if [[ $(git status --porcelain) ]]; then
-                    git commit -m "Sync from org [skip ci]"
-                    git push
                     CURRENT=$(date +"%Y%m%d_%H%M%S")
                     echo $CURRENT
+
+                    git commit -m "Sync from org $CURRENT"
+                    git push
+                    
                     ORG_SYNC_TAG_PREFIX="org-synced"
                     git tag "$ORG_SYNC_TAG_PREFIX-$CURRENT"
                     git push --tags
