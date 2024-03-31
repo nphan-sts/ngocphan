@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Product_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Product for which queue is created such as loan,lease etc</description>
+    <externalId>false</externalId>
+    <label>Product Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Loan</fullName>
+                <default>false</default>
+                <label>Loan</label>
+            </value>
+            <value>
+                <fullName>Lease</fullName>
+                <default>false</default>
+                <label>Lease</label>
+            </value>
+            <value>
+                <fullName>PAF</fullName>
+                <default>false</default>
+                <label>PAF</label>
+            </value>
+            <value>
+                <fullName>Mortgage</fullName>
+                <default>false</default>
+                <label>Mortgage</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

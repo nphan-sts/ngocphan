@@ -1,0 +1,77 @@
+<messaging:emailTemplate subject="It’s time to take the next step!" recipientType="Contact" relatedToType="genesis__Applications__c">
+<messaging:HTMLEmailBody >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+    <c:EmailSimpleHeader />
+    
+    <body>
+        <c:EmailLogoHeader />
+        <center>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
+                <tr>
+                    <td align="left" valign="top" id="bodyCell">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
+                            <tr>
+                                <td valign="top" id="templateHeader"></td>
+                            </tr>
+                            <tr>
+                                <td valign="top" id="templateBody">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+                                        <tbody class="mcnTextBlockOuter">
+                                            <tr>
+                                                <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                                                    <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
+                                                                    <div style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #000000; font-family: 'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif; font-size: 16px; line-height: 150%; margin: 10px 0; padding: 0;" align="left">
+
+                                                                      <p>Hi {!relatedTo.Borrower_s_First_Name__c },</p>
+                                                                      
+                                                                      <p>Thank you for taking the time to verify your identity with our team. As a reminder, please login and continue with your Happy Money Loan application.</p>
+                                                                      
+                                                                      <p><a href="https://start.happymoney.com/apply/auth/login?inf_medium=email&inf_campaign=manual_kba&inf_source=cls&inf_content=e1&inf_term=button" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #f2117a; font-weight: normal; text-decoration: underline;">Continue my application</a></p>
+
+                                                                      <p>If you have any questions about how to proceed with your application, please give us a call at 1-800-878-0901. We can’t wait to play a part in your financial journey!</p>
+                                                                      
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!--[if mso]>
+                                                    </td>
+                                                    <![endif]-->
+
+                                                    <!--[if mso]>
+                                                    </tr>
+                                                    </table>
+                                                    <![endif]-->
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    <c:EmailSignatureSuccess />
+                                    
+                                </td>
+                            </tr>
+                            
+                            <c:EmailSimpleFooter />
+                            
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                        <!-- // END TEMPLATE -->
+                    </td>
+                </tr>
+            </table>
+        </center>
+    </body>
+</html>
+
+</messaging:HTMLEmailBody>
+</messaging:emailTemplate>

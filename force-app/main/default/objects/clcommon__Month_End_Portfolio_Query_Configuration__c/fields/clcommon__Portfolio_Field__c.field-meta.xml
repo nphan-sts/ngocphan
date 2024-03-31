@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Portfolio_Field__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Field on which the Portfolio Balance is calculated</description>
+    <externalId>false</externalId>
+    <label>Portfolio Field</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

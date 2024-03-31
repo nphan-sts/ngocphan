@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>genesis__Applications__c$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$State__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.DocuSign_Status__r$dsfs__Completed_Date_Time__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$genesis__Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Loan_Doc_Signed_On__c</field>
+    </columns>
+    <format>Tabular</format>
+    <name>Application signed on 11/24</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>App_docusignstatus__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c$Loan_Doc_Signed_On__c</dateColumn>
+        <endDate>2020-11-24</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2020-11-24</startDate>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>DM CL Contract</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>DM CL Contract</value>
+    </caseValues>
+    <layouts>
+        <layout>DM CL Contract Layout</layout>
+        <sections>
+            <label></label>
+            <section>Credit Bureau Reporting</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Migration Information</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Rule Criteria Filters</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

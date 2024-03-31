@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Pay_Off_Amount_As_Of_Today__c</fullName>
+    <defaultValue>0.0</defaultValue>
+    <description>Tells the pay off amount for this account as of today</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Tells the pay off amount for this account as of today</inlineHelpText>
+    <label>DM Today&apos;s Payoff</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

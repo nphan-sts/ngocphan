@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>Update_Application_Last_Interaction_DAte</fullName>
+        <field>Last_Interaction__c</field>
+        <formula>NOW()</formula>
+        <name>Update Application Last Interaction DAte</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+        <targetObject>genesis__Application__c</targetObject>
+    </fieldUpdates>
+    <rules>
+        <fullName>Update Last Interaction Date</fullName>
+        <actions>
+            <name>Update_Application_Last_Interaction_DAte</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>1 OR 2 OR 3 OR 4 OR 5</booleanFilter>
+        <criteriaItems>
+            <field>genesis__Application_Note__c.NoteType__c</field>
+            <operation>equals</operation>
+            <value>Inbound Call</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>genesis__Application_Note__c.NoteType__c</field>
+            <operation>equals</operation>
+            <value>Outbound Call</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>genesis__Application_Note__c.NoteType__c</field>
+            <operation>equals</operation>
+            <value>Outbound Email</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>genesis__Application_Note__c.NoteType__c</field>
+            <operation>equals</operation>
+            <value>Chat</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>genesis__Application_Note__c.NoteType__c</field>
+            <operation>equals</operation>
+            <value>SMS</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+</Workflow>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Filter_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Specifies type for record. It can be either Select Field(field which need to be selected in the query) or Expression(means fields or records which will be used as a part of Where Clause/Start With/Connect By)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Specifies type for record. It can be either Select Field(field which need to be selected in the query) or Expression(means fields or records which will be used as a part of Where Clause/Start With/Connect By)</inlineHelpText>
+    <label>Filter Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>SELECT_FIELD</fullName>
+                <default>true</default>
+                <label>SELECT_FIELD</label>
+            </value>
+            <value>
+                <fullName>EXPRE</fullName>
+                <default>false</default>
+                <label>EXPRE</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

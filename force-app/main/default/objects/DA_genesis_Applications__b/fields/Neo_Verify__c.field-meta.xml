@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Neo_Verify__c</fullName>
+    <externalId>false</externalId>
+    <label>Neo Verify</label>
+    <referenceTo>Neo_Verify__c</referenceTo>
+    <relationshipName>Neo_Verify1589329475016</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

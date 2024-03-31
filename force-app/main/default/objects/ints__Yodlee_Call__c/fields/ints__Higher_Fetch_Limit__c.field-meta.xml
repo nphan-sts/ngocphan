@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__Higher_Fetch_Limit__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This is the higher limit for the set of records that needs to be retrieved and kept in the cache (i.e., the value for n while retrieving from mth transaction to nth transaction). The higherFetchLimit and lowerFetchLimit parameters are used for limiting the number of transactions that should be retrieved and kept in the cache by this API. The difference between higherFetchLimit and lowerFetchLimit will indicate the number of transactions that will be retrieved. For example, if a value of 1 is specified for lowerFetchLimit and a value of 500 is specified for higherFetchLimit, then that set of 500 transactions will be retrieved by this API and will be kept in cache. For the next set, this API has to be called again providing the new lowerFetchLimit (say, 501) and higherFetchLimit (say, 1000).</description>
+    <externalId>false</externalId>
+    <label>Higher Fetch Limit</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

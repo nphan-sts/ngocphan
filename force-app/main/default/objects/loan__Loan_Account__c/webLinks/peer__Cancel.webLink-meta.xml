@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Cancel</fullName>
+    <availability>online</availability>
+    <description>Cancels the loan</description>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Cancel</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/13.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/apex.js&quot;)} 
+var confirmed = window.confirm(&apos;Once cancelled cannot be undone. Are you sure you want to cancel this loan?&apos;);
+if(confirmed) {
+var retVal = sforce.apex.execute(&quot;peer/CancelLoanController&quot;,&quot;cancelLoan&quot;, {loanAccountId:&quot;{!loan__Loan_Account__c.Id}&quot;}); 
+window.alert(retVal); 
+window.location.reload();
+}</url>
+</WebLink>

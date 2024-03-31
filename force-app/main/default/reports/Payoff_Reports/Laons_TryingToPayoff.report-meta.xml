@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Loan_Status__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Principal_Remaining__c</field>
+    </columns>
+    <filter>
+        <booleanFilter>(1 OR 2) AND 3</booleanFilter>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Loan_Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Active - Marked for Closure</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Principal_Remaining__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>lessThan</operator>
+            <value>50</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Loan_Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Closed - Obligations met</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Laons_TryingToPayoff</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$loan__Loan_Account__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Account__c.loan__Accrual_Start_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

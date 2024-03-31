@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Discharge_Date_or_Dismissal_Date</fullName>
+    <active>true</active>
+    <description>- Must be after File Date
+- Either Discharge or Dismissal Date can be populated, not both</description>
+    <errorConditionFormula>AND(NOT(ISBLANK(Dismissal_Date__c)), NOT(ISBLANK(Discharge_Date__c)))</errorConditionFormula>
+    <errorMessage>Either Discharge or Dismissal Date can be populated, not both</errorMessage>
+</ValidationRule>

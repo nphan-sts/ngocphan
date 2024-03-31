@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Reason_Waived__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Reason Waived</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Customer Satisfaction</fullName>
+                <default>false</default>
+                <label>Customer Satisfaction</label>
+            </value>
+            <value>
+                <fullName>Non-Recoverable</fullName>
+                <default>false</default>
+                <label>Non-Recoverable</label>
+            </value>
+            <value>
+                <fullName>Bankruptcy - Active</fullName>
+                <default>false</default>
+                <label>Bankruptcy - Active</label>
+            </value>
+            <value>
+                <fullName>Bankruptcy - Discharged</fullName>
+                <default>false</default>
+                <label>Bankruptcy - Discharged</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

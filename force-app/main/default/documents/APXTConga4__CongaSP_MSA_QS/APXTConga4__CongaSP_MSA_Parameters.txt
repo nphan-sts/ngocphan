@@ -1,0 +1,7 @@
+&RM=1
+&OFN=MSA+for+{!APXT_Redlining__Contract_Agreement__c.APXT_Redlining__Account__c}
+&DataTagEnable=1
+&LRTF=1
+&DS7=0
+&BML=Generating+MSA+for+{!APXT_Redlining__Contract_Agreement__c.APXT_Redlining__Account__c}
+&DefaultPDF=0

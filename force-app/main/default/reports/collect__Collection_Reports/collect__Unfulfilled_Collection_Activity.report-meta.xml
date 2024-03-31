@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Loan_Account_Name__c</field>
+    </columns>
+    <columns>
+        <field>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Account__c</field>
+    </columns>
+    <columns>
+        <field>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Contact__c</field>
+    </columns>
+    <columns>
+        <field>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Action__c</field>
+    </columns>
+    <description>Unfulfilled Collection Activity Report</description>
+    <filter>
+        <criteriaItems>
+            <column>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Days_Past_Due__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>greaterThan</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Completed__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Unfulfilled Collection Activity Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>collect__Collection_Strategies__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>false</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>collect__Collection_Configuration__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_LAST30</interval>
+    </timeFrameFilter>
+</Report>

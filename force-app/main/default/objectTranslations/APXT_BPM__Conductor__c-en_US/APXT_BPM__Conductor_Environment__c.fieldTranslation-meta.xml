@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>APXT_BPM__Conductor_Environment__c</name>
+    <picklistValues>
+        <masterLabel>prod-</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>staging-</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

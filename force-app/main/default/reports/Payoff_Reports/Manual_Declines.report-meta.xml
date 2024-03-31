@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Manual_Adverse_Action_Decline__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Manual_Adverse_Action_Decline__c.Applications__r$Name</field>
+    </columns>
+    <columns>
+        <field>Manual_Adverse_Action_Decline__c$Name</field>
+    </columns>
+    <format>Tabular</format>
+    <name>Manual Decline Reasons</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Applications_join_Manual_Decline__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Manual_Adverse_Action_Decline__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

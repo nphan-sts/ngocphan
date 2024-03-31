@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>loan__Repayment_Billing_Method__c</name>
+    <picklistValues>
+        <masterLabel>Interest Only</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Percentage Of Remaining Balance</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Principal Plus Interest</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Sliding Billing</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -1,0 +1,5 @@
+&DefaultPDF=0
+&DS7=0
+&BML=Generating+NDA+for+{!Opportunity.Account}
+&OFN=NDA+for+{!Opportunity.Account}
+&LRTF=1

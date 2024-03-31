@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Borrower_s_Last_Name__c</fullName>
+    <description>/*Created by Nupur */
+ - For Email Templates</description>
+    <externalId>false</externalId>
+    <formula>IF( RecordType.Name=&apos;Member&apos; , peer__Last_Name__c,NULL)</formula>
+    <label>Borrower&apos;s Last Name</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

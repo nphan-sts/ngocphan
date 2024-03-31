@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Accrued_Interest__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field is deprecated and should not be used.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field is deprecated and should not be used.</inlineHelpText>
+    <label>Accrued Interest</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

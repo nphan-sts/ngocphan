@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Package_Names_For_Auto_Assignment__c</fullName>
+    <defaultValue>&quot;skuid&quot;</defaultValue>
+    <deprecated>false</deprecated>
+    <description>(Optional) Namespaces of packages to which to auto-assign licenses when new users are created or activated. Semi-colon delimited.</description>
+    <externalId>false</externalId>
+    <label>Packages to Auto-Assign Licenses to</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

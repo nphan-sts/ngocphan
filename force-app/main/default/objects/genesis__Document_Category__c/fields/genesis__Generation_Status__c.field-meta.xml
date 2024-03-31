@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Generation_Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Generation Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>PULL CREDIT</fullName>
+                <default>false</default>
+                <label>PULL CREDIT</label>
+            </value>
+            <value>
+                <fullName>agent_verified</fullName>
+                <default>false</default>
+                <label>agent_verified</label>
+            </value>
+            <value>
+                <fullName>offer_shown</fullName>
+                <default>false</default>
+                <label>offer_shown</label>
+            </value>
+            <value>
+                <fullName>Self Employed Documents</fullName>
+                <default>false</default>
+                <label>Self Employed Documents</label>
+            </value>
+            <value>
+                <fullName>Default Documents</fullName>
+                <default>false</default>
+                <label>Default Documents</label>
+            </value>
+            <value>
+                <fullName>kba_success</fullName>
+                <default>false</default>
+                <label>kba_success</label>
+            </value>
+            <value>
+                <fullName>TRUE</fullName>
+                <default>false</default>
+                <label>TRUE</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

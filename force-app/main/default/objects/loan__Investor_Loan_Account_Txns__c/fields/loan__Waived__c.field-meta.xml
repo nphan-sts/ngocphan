@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Waived__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Indicates if this ILT is a waived ILT. If marked as waived the TXN should be used as for loan state change but not for actual cash movement as waived txn are to be ignored for cash movements</description>
+    <externalId>false</externalId>
+    <label>Waived</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

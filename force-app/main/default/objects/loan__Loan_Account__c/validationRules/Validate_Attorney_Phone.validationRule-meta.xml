@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Validate_Attorney_Phone</fullName>
+    <active>true</active>
+    <description>10 digits number or format 111-111-1111</description>
+    <errorConditionFormula>AND(NOT(REGEX(Attorney_Phone__c, &quot;\\D*?(\\d\\D*?){10}&quot;)), NOT(ISBLANK(Attorney_Phone__c) ) )</errorConditionFormula>
+    <errorDisplayField>Attorney_Phone__c</errorDisplayField>
+    <errorMessage>Phone must be 10 digits number</errorMessage>
+</ValidationRule>

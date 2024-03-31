@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$CreatedBy</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Transaction_Date__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Loan_Account__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Loan_Account__c.loan__Loan_Product_Name__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>loan__Loan_Payment_Transaction__c$loan__Transaction_Date__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>6/1/2021</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Payment_Transaction__c$CreatedBy</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Saranya Kumar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Payment_Transaction__c$loan__Loan_Account__c.loan__Loan_Product_Name__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Auto payer</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>LPT created on 5/28 with 6/1 due</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Loan_Payment_Transactions_Reports_Unmanaged__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Payment_Transaction__c$CreatedDate</dateColumn>
+        <endDate>2021-05-28</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2021-05-28</startDate>
+    </timeFrameFilter>
+</Report>

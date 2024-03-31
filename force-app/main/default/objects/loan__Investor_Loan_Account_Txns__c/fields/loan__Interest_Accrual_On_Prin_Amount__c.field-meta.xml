@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Interest_Accrual_On_Prin_Amount__c</fullName>
+    <defaultValue>0.00</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This field will show on what amount interest has been calculated.</description>
+    <externalId>false</externalId>
+    <label>Interest Accrual Prin Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Custom_List_View</fullName>
+    <columns>NAME</columns>
+    <columns>DM_Account_Type__c</columns>
+    <columns>DM_Invalid_Data__c</columns>
+    <columns>DM_Is_Migrated__c</columns>
+    <columns>Migrated_CL_Contract__c</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>Migrated_CL_Contract__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>CREATED_DATE</field>
+        <operation>equals</operation>
+        <value>TODAY</value>
+    </filters>
+    <label>My Custom List View</label>
+</ListView>

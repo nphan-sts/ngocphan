@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <aggregates>
+        <calculatedFormula>loan__Loan_Payment_Transaction__c.Principal_with_reversal__c:SUM + loan__Loan_Payment_Transaction__c.Principal_without_Reversal__c:SUM</calculatedFormula>
+        <datatype>number</datatype>
+        <description>Sum of reversal principal and non reversal principal</description>
+        <developerName>FORMULA1</developerName>
+        <isActive>false</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Total</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <columns>
+        <field>loan__Loan_Account__c$Payoff_Loan_ID__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Loan_Payment_Transactions__r$loan__Reversed__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>loan__Loan_Account__c.loan__Loan_Payment_Transactions__r$Sum_Principal_Payment_Amount__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>loan__Loan_Account__c.loan__Loan_Payment_Transactions__r$Total_Interest__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Loan_Payment_Transactions__r$loan__Payment_Mode__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>ACU ACH</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>loan__Loan_Account__c$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Principal and Interest for Loan Tape</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>LPT_report_duplicate_payments__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Account__c.loan__Loan_Payment_Transactions__r$loan__Clearing_Date__c</dateColumn>
+        <endDate>2019-09-30</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2019-09-01</startDate>
+    </timeFrameFilter>
+</Report>

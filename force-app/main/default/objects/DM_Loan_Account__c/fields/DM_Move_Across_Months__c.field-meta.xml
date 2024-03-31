@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Move_Across_Months__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>It will define whether the schedule&apos;s due date should get moved across the month if schedule is lying on holiday.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>It will define whether the schedule&apos;s due date should get moved across the month if schedule is lying on holiday.</inlineHelpText>
+    <label>DM Move Across Months</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

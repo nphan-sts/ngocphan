@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Princi_Adjustment_Reschedule_Option__c</fullName>
+    <description>This field determines the reschedule option to be used for principal adjustment action. Default value is Change Payment Amount. When Change Payment Amount is selected, loan tenure does not change, while Keep Same Payment Amount changes loan tenure keeping payment amount same as original.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This option is used for rescheduling the loan when principal adjustment action is performed. You can reschedule by changing either the payment amount or the tenure of the loan.</inlineHelpText>
+    <label>DM Princi Adjustment Reschedule Option</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Change Payment Amount</fullName>
+                <default>false</default>
+                <label>DM_Change Payment Amount</label>
+            </value>
+            <value>
+                <fullName>DM_Keep Same Payment Amount</fullName>
+                <default>false</default>
+                <label>DM_Keep Same Payment Amount</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

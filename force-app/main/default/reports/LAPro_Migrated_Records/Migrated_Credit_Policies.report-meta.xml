@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Credit_Policy__c$Name</field>
+    </columns>
+    <columns>
+        <field>Credit_Policy__c$DM_External_Id__c</field>
+    </columns>
+    <columns>
+        <field>Credit_Policy__c$request_intent__c</field>
+    </columns>
+    <columns>
+        <field>Credit_Policy__c$final_decision__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Credit_Policy__c$DM_External_Id__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Migrated Credit Policies</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Credit_Policy__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Credit_Policy__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

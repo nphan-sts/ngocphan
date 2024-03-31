@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>cnotify__Investor_Fund_Deposited</fullName>
+        <description>Investor Fund Deposited</description>
+        <protected>false</protected>
+        <recipients>
+            <field>cnotify__Email_Address__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>cnotify__Notification_Templates/cnotify__Investor_Fund_Deposited_Reminder</template>
+    </alerts>
+    <alerts>
+        <fullName>cnotify__Investor_Fund_Withdrawn</fullName>
+        <description>Investor Fund Withdrawn</description>
+        <protected>false</protected>
+        <recipients>
+            <field>cnotify__Email_Address__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>cnotify__Notification_Templates/cnotify__Investor_Fund_Withdrwan_Reminder</template>
+    </alerts>
+    <alerts>
+        <fullName>cnotify__Loan_Approved</fullName>
+        <description>Loan Approved</description>
+        <protected>false</protected>
+        <recipients>
+            <field>cnotify__Email_Address__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>cnotify__Notification_Templates/cnotify__Loan_Approval_Reminder</template>
+    </alerts>
+    <alerts>
+        <fullName>cnotify__Payment_Reminder_After_Due_Date</fullName>
+        <description>Payment Reminder After Due Date</description>
+        <protected>false</protected>
+        <recipients>
+            <field>cnotify__Email_Address__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>cnotify__Notification_Templates/cnotify__Payment_Reminder_After_Due_Date</template>
+    </alerts>
+    <alerts>
+        <fullName>cnotify__Payment_Reminder_Before_Due</fullName>
+        <description>Payment Reminder Before Due</description>
+        <protected>false</protected>
+        <recipients>
+            <field>cnotify__Email_Address__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>cnotify__Notification_Templates/cnotify__Payment_Reminder_Before_Due_Date</template>
+    </alerts>
+    <alerts>
+        <fullName>collect__Collection_s_Email</fullName>
+        <description>Collection&apos;s Email</description>
+        <protected>false</protected>
+        <recipients>
+            <field>cnotify__Email_Address__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>cnotify__Notification_Templates/collect__Collection_s_Email_Template</template>
+    </alerts>
+    <rules>
+        <fullName>cnotify__Investor Fund Deposited Workflow</fullName>
+        <actions>
+            <name>cnotify__Investor_Fund_Deposited</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <formula>ISPICKVAL(cnotify__Configuration__r.cnotify__Event__c,&apos;Investor Fund Deposited&apos;) &amp;&amp; NOT(ISBLANK( cnotify__Email_Address__c )) &amp;&amp;  cnotify__Configuration__r.cnotify__Email_Notification__c</formula>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>cnotify__Investor Fund Withdrawn Workflow</fullName>
+        <actions>
+            <name>cnotify__Investor_Fund_Withdrawn</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <formula>ISPICKVAL(cnotify__Configuration__r.cnotify__Event__c,&apos;Investor Fund Withdrawn&apos;) &amp;&amp; NOT(ISBLANK( cnotify__Email_Address__c )) &amp;&amp;  cnotify__Configuration__r.cnotify__Email_Notification__c</formula>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>cnotify__Loan Approval Workflow</fullName>
+        <actions>
+            <name>cnotify__Loan_Approved</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <formula>ISPICKVAL(cnotify__Configuration__r.cnotify__Event__c,&apos;Loan Approval&apos;) &amp;&amp; NOT(ISBLANK( cnotify__Email_Address__c )) &amp;&amp;  cnotify__Configuration__r.cnotify__Email_Notification__c</formula>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>cnotify__Payment Reminder After Due Date  Workflow</fullName>
+        <actions>
+            <name>cnotify__Payment_Reminder_After_Due_Date</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <formula>ISPICKVAL(cnotify__Configuration__r.cnotify__Event__c,&apos;Loan Payment Reminder After Due&apos;) &amp;&amp; NOT(ISBLANK( cnotify__Email_Address__c )) &amp;&amp;  cnotify__Configuration__r.cnotify__Email_Notification__c</formula>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>cnotify__Payment Reminder Before Due Date Workflow</fullName>
+        <actions>
+            <name>cnotify__Payment_Reminder_Before_Due</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <formula>ISPICKVAL(cnotify__Configuration__r.cnotify__Event__c,&apos;Loan Payment Reminder Before Due&apos;) &amp;&amp; NOT(ISBLANK( cnotify__Email_Address__c )) &amp;&amp;  cnotify__Configuration__r.cnotify__Email_Notification__c</formula>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>collect__Collections Email</fullName>
+        <actions>
+            <name>collect__Collection_s_Email</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>cnotify__Notification__c.cnotify__Current_Amount_Due__c</field>
+            <operation>greaterThan</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>cnotify__Notification__c.collect__Send_Email__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+</Workflow>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Loan_Amortize_Balances__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the child to the loan account</inlineHelpText>
+    <label>Loan Amortize Balances</label>
+    <referenceTo>loan__loan_amortize_balances__c</referenceTo>
+    <relationshipLabel>Amortize Transactions</relationshipLabel>
+    <relationshipName>Amortize_Transactions</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

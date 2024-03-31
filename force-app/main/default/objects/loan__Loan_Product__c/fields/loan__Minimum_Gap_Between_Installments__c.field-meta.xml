@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Minimum_Gap_Between_Installments__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Specifies the minimum gap between 2 installments in days.
+Mandatory if Can configure variable installments is checked.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Specifies the minimum gap between 2 installments in days.
+Mandatory if Can configure variable installments is checked.</inlineHelpText>
+    <label>Minimum Gap Between Installments</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

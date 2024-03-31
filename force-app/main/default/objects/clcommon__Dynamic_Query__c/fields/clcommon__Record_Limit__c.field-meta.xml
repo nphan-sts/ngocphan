@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Record_Limit__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Specifies number of records to be queried.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Specifies number of records to be queried.</inlineHelpText>
+    <label>Record Limit</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

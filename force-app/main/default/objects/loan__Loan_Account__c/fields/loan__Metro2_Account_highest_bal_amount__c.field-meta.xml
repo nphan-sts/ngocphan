@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Metro2_Account_highest_bal_amount__c</fullName>
+    <defaultValue>0.00</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Highest Outstanding Principal Balance Amount</description>
+    <externalId>false</externalId>
+    <label>Highest Bal Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

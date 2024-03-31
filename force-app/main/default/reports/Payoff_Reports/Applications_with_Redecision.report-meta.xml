@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.LEAD_ID_ExtKey__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Lead_ID__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Member_ID__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.genesis__Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Expiry_Date__c</field>
+    </columns>
+    <description>Applications with Redecision</description>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c.genesis__Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Redecision_Required</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_OWNER_ALIAS</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Expired Queue</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Applications with Redecision</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$genesis__Applications__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c.Anniversary_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

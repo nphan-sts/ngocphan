@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Loan_Amount_Boundary_Check</fullName>
+    <active>true</active>
+    <description>Loan_Amount_Boundary_Check</description>
+    <errorConditionFormula>AND(OR(ISPICKVAL(loan__Product_Type__c, &apos;Loan&apos;),ISPICKVAL(loan__Product_Type__c, &apos;Amz Based Loan&apos;) ),( loan__Loan_Amount__c &gt;  loan__Loan_Product_Name__r.loan__Max_Loan_Amount__c
+ ||
+ loan__Loan_Amount__c &lt;  loan__Loan_Product_Name__r.loan__Min_Loan_Amount__c ))</errorConditionFormula>
+    <errorDisplayField>loan__Loan_Amount__c</errorDisplayField>
+    <errorMessage>The Loan Amount should fall between the Limits specified in the Lending Product.</errorMessage>
+</ValidationRule>

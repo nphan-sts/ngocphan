@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__CreditReportLiability__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Credit Report Liability</label>
+    <referenceTo>ints__Credit_Report_Liability__c</referenceTo>
+    <relationshipLabel>CreditReportLiabilityCreditComment</relationshipLabel>
+    <relationshipName>CreditReportLiabilityCreditComment</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Link_Current_Account_to_FD</fullName>
+    <active>false</active>
+    <errorConditionFormula>NOT(ISNULL(loan__Linked_Savings_Account__c)
+||
+ISPICKVAL( loan__Savings_Product_Name__r.loan__Product_Type__c ,&apos;Fixed&apos;))</errorConditionFormula>
+    <errorMessage>You can only link a current account with a fixed deposit. This account is not a Fixed Deposit. Please check the Savings Product Type.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Investor_Current_Weight__c</fullName>
+    <defaultValue>0</defaultValue>
+    <description>Current weight for investor used to manage allocation routine. Field is updated by allocation process.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Current weight for investor used to manage allocation routine. Field is updated by allocation process.</inlineHelpText>
+    <label>Investor Current Weight</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

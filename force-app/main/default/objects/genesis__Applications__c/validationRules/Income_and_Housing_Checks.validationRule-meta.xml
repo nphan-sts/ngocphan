@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Income_and_Housing_Checks</fullName>
+    <active>true</active>
+    <errorConditionFormula>IF( (ISCHANGED( Annual_Individual_Income_App__c ) || ISCHANGED( Monthly_Housing_Payment_App__c )) &amp;&amp;
+(TEXT(genesis__Status__c) = &apos;Expired&apos; || TEXT(genesis__Status__c) = &apos;Withdrawn&apos; || TEXT(genesis__Status__c) = &apos;Declined&apos; || TEXT(genesis__Status__c) = &apos;funded&apos; || TEXT(genesis__Status__c) = &apos;Expired-Withdrawn&apos; || TEXT(genesis__Status__c) = &apos;Decline_Manual_Review&apos;), true, false)</errorConditionFormula>
+    <errorMessage>The Stated Income OR Housing Expense on an Application cannot change.</errorMessage>
+</ValidationRule>

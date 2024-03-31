@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Payoff_Loan_ID__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.genesis__Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Delivery_Internal_Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Delivery_Message__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Delivery_Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Loan_Origination_Date__c</field>
+    </columns>
+    <description>Report displaying ACH dispersal returns for CRB loans</description>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c.Delivery_Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Returned</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>CRB Returns</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$genesis__Applications__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c.Loan_Doc_Signed_On__c</dateColumn>
+        <endDate>2022-07-19</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2022-07-19</startDate>
+    </timeFrameFilter>
+</Report>

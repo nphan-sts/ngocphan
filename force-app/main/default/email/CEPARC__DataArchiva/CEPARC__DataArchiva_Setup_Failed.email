@@ -1,0 +1,228 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!------ Include the above in your HEAD tag ---------->
+<!--
+    Responsive Email Template by @keenthemes
+    A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: http://j.mp/metronictheme
+    Licensed under MIT
+    -->
+<style>
+    body {
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    -webkit-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+}
+
+@media only screen and (max-device-width: 680px),
+only screen and (max-width: 680px) {
+    *[class="table_width_100"] {
+        width: 96% !important;
+    }
+    *[class="border-right_mob"] {
+        border-right: 1px solid #dddddd;
+    }
+    *[class="mob_100"] {
+        width: 100% !important;
+    }
+    *[class="mob_center"] {
+        text-align: center !important;
+    }
+    *[class="mob_center_bl"] {
+        float: none !important;
+        display: block !important;
+        margin: 0px auto;
+    }
+    .iage_footer a {
+        text-decoration: none;
+    }
+    img.mob_display_none {
+        width: 0px !important;
+        height: 0px !important;
+        display: none !important;
+    }
+    img.mob_width_50 {
+        width: 40% !important;
+        height: auto !important;
+    }
+}
+
+.table_width_100 {
+    width: 680px;
+}
+
+.fa {
+    padding: 4px;
+    font-size: 20px;
+    width: 20px;
+    text-align: center;
+    text-decoration: none;
+    margin: 3px 3px;
+}
+
+.fa:hover {
+    color: #33b5e5;
+}
+
+
+.fa-facebook {
+    color: white;
+}
+
+.fa-twitter {
+    color: white;
+}
+
+.fa-linkedin {
+    color: white;
+}
+
+.fa-youtube-play {
+    color: white;
+}
+</style>
+<div id="mailsub" class="notification" align="center">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="min-width: 320px;">
+        <tr>
+            <td align="center" bgcolor="#F0F0F0">
+                <table width="680" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td>
+                            <table border="0" cellspacing="0" cellpadding="0" class="table_width_100" width="100%" style="max-width: 680px; min-width: 300px;">
+                                <tr>
+                                    <td>
+                                        <!-- padding -->
+                                        <div style="height: 80px; line-height: 80px; font-size: 10px;"> </div>
+                                    </td>
+                                </tr>
+                                <!--header -->
+                                <tr>
+                                    <td align="center" bgcolor="#50636f">
+                                        <!-- padding -->
+                                        <div style="height: 10px; line-height: 30px; font-size: 10px;"> </div>
+                                        <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td align="left">
+                                                    <!-- 
+                                                        Item -->
+                                                    <div class="mob_center_bl" >
+                                                        <table class="mob_center" width="115" border="0" cellspacing="0" cellpadding="0"  style="border-collapse: collapse;">
+                                                            <tr>
+                                                                <td align="left" valign="middle">
+                                                                    <!-- padding -->
+                                                                    <table width="115" border="0" cellspacing="0" cellpadding="0" >
+                                                                        <tr>
+                                                                            <td >
+                                                                                <img src="https://dataarchiva-dev-ed--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000004RNEx&oid=00D1N000001tpFY"  width="200" style=" display: block;
+                                                                                    margin-left: auto;
+                                                                                    margin-right: auto;
+                                                                                    z-index: 1;"/></font>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <!-- Item END--><!--[if gte mso 10]>
+                                                </td>
+                                                <td align="right">
+                                                    <![endif]--><!-- 
+                                                        Item --><!-- Item END-->
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!-- padding -->
+                                    </td>
+                                </tr>
+                                <!--header END-->
+                                <!--content 1 -->
+                                <tr>
+                                    <td align="center" bgcolor="#fbfcfd">
+                                        <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td align="center">
+                                                    <div style="line-height: 24px;">
+                                                        <font face="Arial, Helvetica, sans-serif" size="4" color="#57697E" style="font-size: 15px;">
+                                                            <span style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #57697e;">
+                                                                <div  style="text-align: left;">
+                                                                    <div style="margin: 30px;">
+                                                                        <p>
+                                                                            Dear **name**,
+                                                                            <br>  <br>
+                                                                            This is a system generated mail from Salesforce DataArchiva application.
+                                                                            The object you were trying to configure got failed and details are given below. Please rectify the issue and re-configure it. 
+                                                                            In case if you're unable to figure out the root cause and require help, please contact <a href="mailto:support@dataarchiva.com" target="_top">support@dataarchiva.com</a> with this mail attached.<br><br>
+                                                                        <div style="text-align: left;line-height: 15px;">
+                                                                            <p><b>Organization ID</b> : **OrgId**</p>
+                                                                            <p><b>Object Name </b> : **object**</p>
+                                                                            <p><b>Date </b>: **Date and time**</p>
+                                                                            <p><b>Failure cause </b> : **Message**</p>
+                                                                        </div>
+                                                                        <br>  <br>
+                                                                        <div style="text-align: Right;">
+                                                                            Thanks,<br>
+                                                                            DataArchiva System
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </span>
+                                                        </font>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!--content 1 END-->
+                                <!--footer -->
+                                <tr>
+                                    <td class="iage_footer" align="center" bgcolor="#50636f">
+                                        <!-- padding -->
+                                        <!--
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-bottom:2%;">
+                                            <tr>
+                                                <td align="center">
+                                                    <font face="Arial, Helvetica, sans-serif" size="3" color="#96a5b5" style="font-size: 13px;">
+                                                    <span style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: white;">
+                                                    Footer Content.
+                                                    </span></font>              
+                                                </td>
+                                            </tr>
+                                        </table>-->
+                                        <table width="115" border="0" cellspacing="10" cellpadding="0">
+                                            <tr>
+                                                <td width="30" align="center" style="line-height: 19px;">
+                                                    <a href="https://www.facebook.com/ceptes/" class="fa fa-facebook"></a>
+                                                </td>
+                                                <td width="30" align="center" style="line-height: 19px;">
+                                                    <a href="https://www.linkedin.com/company/ceptes-software-pvt.-ltd." class="fa fa-linkedin"></a>
+                                                </td>
+                                                <td width="30" align="center" style="line-height: 19px;">
+                                                    <a href="https://twitter.com/ceptessoftware" class="fa fa-twitter"></a>
+                                                </td>
+                                                <td width="25" align="right" style="line-height: 19px;">
+                                                    <a href="https://www.youtube.com/channel/UCaroAoxKFSqHVADZjU_367A" class="fa fa-youtube-play"></a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!--footer END-->
+                                <tr>
+                                    <td>
+                                        <!-- padding -->
+                                        <div style="height: 80px; line-height: 80px; font-size: 10px;"> </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>

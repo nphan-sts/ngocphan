@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Time_Counting_Method__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>1) Month and Days will use 360 days in a year for the Interest calculation.
+2) Actual Days will use 365 days in a year for the Interest calculation.</inlineHelpText>
+    <label>Time Counting Method</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Actual Days</fullName>
+                <default>true</default>
+                <label>Actual Days</label>
+            </value>
+            <value>
+                <fullName>Month and Days</fullName>
+                <default>false</default>
+                <label>Month and Days</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

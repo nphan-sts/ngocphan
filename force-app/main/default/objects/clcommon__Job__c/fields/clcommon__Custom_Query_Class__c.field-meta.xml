@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Custom_Query_Class__c</fullName>
+    <deprecated>false</deprecated>
+    <description>If custom query class is provided then query from the class will be taken instead of default query. Custom class need to implement the IBatchJobQuery interface.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If custom query class is provided then query from the class will be taken instead of default query. Custom class need to implement the IBatchJobQuery interface.</inlineHelpText>
+    <label>Custom Query Class</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

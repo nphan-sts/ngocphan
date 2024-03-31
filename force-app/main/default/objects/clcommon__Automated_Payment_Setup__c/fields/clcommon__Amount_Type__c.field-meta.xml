@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Amount_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Amount Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>clcommon__Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>FIXED AMOUNT</fullName>
+                <default>false</default>
+                <label>FIXED AMOUNT</label>
+            </value>
+            <value>
+                <fullName>LAST BILLED AMOUNT</fullName>
+                <default>false</default>
+                <label>LAST BILLED AMOUNT</label>
+            </value>
+            <value>
+                <fullName>CURRENT PAYMENT AMOUNT</fullName>
+                <default>false</default>
+                <label>CURRENT PAYMENT AMOUNT</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>RECURRING</controllingFieldValue>
+            <valueName>FIXED AMOUNT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>RECURRING</controllingFieldValue>
+            <valueName>LAST BILLED AMOUNT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>RECURRING</controllingFieldValue>
+            <valueName>CURRENT PAYMENT AMOUNT</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

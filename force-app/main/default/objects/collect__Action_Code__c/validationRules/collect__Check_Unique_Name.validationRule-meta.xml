@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Check_Unique_Name</fullName>
+    <active>true</active>
+    <errorConditionFormula>Name = VLOOKUP($ObjectType.collect__Action_Code__c.Fields.Name, $ObjectType.collect__Action_Code__c.Fields.Name, Name) 
+&amp;&amp; 
+Id &lt;&gt; VLOOKUP($ObjectType.collect__Action_Code__c.Fields.Id, $ObjectType.collect__Action_Code__c.Fields.Name, Name)</errorConditionFormula>
+    <errorMessage>Action Code already exists.</errorMessage>
+</ValidationRule>

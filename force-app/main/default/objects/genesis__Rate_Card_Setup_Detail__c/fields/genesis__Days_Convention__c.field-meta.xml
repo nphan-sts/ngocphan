@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Days_Convention__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Days Convention</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>30/360</fullName>
+                <default>true</default>
+                <label>30/360</label>
+            </value>
+            <value>
+                <fullName>365/365</fullName>
+                <default>false</default>
+                <label>365/365</label>
+            </value>
+            <value>
+                <fullName>ACTUAL/ACTUAL</fullName>
+                <default>false</default>
+                <label>ACTUAL/ACTUAL</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

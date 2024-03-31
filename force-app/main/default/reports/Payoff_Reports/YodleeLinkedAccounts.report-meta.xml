@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account$Name</field>
+    </columns>
+    <columns>
+        <field>Account$Encrypted_SSN__c</field>
+    </columns>
+    <columns>
+        <field>Account.ints__Yodlee_User_Credentials__r$Name</field>
+    </columns>
+    <columns>
+        <field>Account$CreatedDate</field>
+    </columns>
+    <description>Accounts with Yodlee Credentials</description>
+    <filter>
+        <criteriaItems>
+            <column>Account$loan__SOCIAL_SECURITY_NUMBER__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>YodleeLinkedAccounts</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>LinkedAccounts__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Account$CreatedDate</dateColumn>
+        <interval>INTERVAL_THISMONTH</interval>
+    </timeFrameFilter>
+</Report>

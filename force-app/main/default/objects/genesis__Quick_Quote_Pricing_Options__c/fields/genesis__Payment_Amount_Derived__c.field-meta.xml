@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Payment_Amount_Derived__c</fullName>
+    <defaultValue>0</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Rental payment made by customer. Finance Amount * Rate Factor</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Rental payment made by customer (Finance Amount * Rate Factor).</inlineHelpText>
+    <label>Payment Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

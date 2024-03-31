@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Loan_Account__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.Applications__r$Applicant_Name__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c$lead_Guid__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c$loan__Payment_Amount__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.Applications__r$genesis__Monthly_Debt_Payments__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c$loan__Pmt_Amt_Cur__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c$CreatedDate</field>
+    </columns>
+    <format>Tabular</format>
+    <name>Contracts monthly amount check</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CL_Contracts_with_CL_Application_with_CP__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <sortColumn>loan__Loan_Account__c$CreatedDate</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Account__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_TODAY</interval>
+    </timeFrameFilter>
+</Report>

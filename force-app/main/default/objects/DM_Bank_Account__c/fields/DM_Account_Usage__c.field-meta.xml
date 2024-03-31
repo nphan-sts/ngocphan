@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Account_Usage__c</fullName>
+    <externalId>false</externalId>
+    <label>DM Account Usage</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Investor Trust Account</fullName>
+                <default>false</default>
+                <label>DM_Investor Trust Account</label>
+            </value>
+            <value>
+                <fullName>DM_Collections Trust Account</fullName>
+                <default>false</default>
+                <label>DM_Collections Trust Account</label>
+            </value>
+            <value>
+                <fullName>DM_Advance Trust Account</fullName>
+                <default>false</default>
+                <label>DM_Advance Trust Account</label>
+            </value>
+            <value>
+                <fullName>DM_Business Account</fullName>
+                <default>false</default>
+                <label>DM_Business Account</label>
+            </value>
+            <value>
+                <fullName>DM_Tax Withholding Account</fullName>
+                <default>false</default>
+                <label>DM_Tax Withholding Account</label>
+            </value>
+            <value>
+                <fullName>DM_Borrower/Investor Account</fullName>
+                <default>false</default>
+                <label>DM_Borrower/Investor Account</label>
+            </value>
+            <value>
+                <fullName>DM_Broker Account</fullName>
+                <default>false</default>
+                <label>DM_Broker Account</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>5</visibleLines>
+</CustomField>

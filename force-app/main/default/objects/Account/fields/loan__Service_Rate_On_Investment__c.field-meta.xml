@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Service_Rate_On_Investment__c</fullName>
+    <defaultValue>$Setup.loan__Fractionalization_Parameters__c.loan__Default_Service_Rate__c</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Default service rate on investor&apos;s investments</inlineHelpText>
+    <label>Service Rate On Investment</label>
+    <precision>7</precision>
+    <required>false</required>
+    <scale>4</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

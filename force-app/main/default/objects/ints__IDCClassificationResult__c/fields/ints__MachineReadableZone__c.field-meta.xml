@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__MachineReadableZone__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>IDCMachineReadableZone</label>
+    <referenceTo>ints__IDCMachineReadableZone__c</referenceTo>
+    <relationshipLabel>IDCClassificationResults</relationshipLabel>
+    <relationshipName>IDCClassificationResults</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

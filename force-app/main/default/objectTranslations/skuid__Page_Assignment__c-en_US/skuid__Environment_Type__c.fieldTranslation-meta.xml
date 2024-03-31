@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help></help>
+    <label></label>
+    <name>skuid__Environment_Type__c</name>
+    <picklistValues>
+        <masterLabel>Lightning</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Salesforce Classic</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Start_Meet</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Start Meet</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;https://www.moxtra.com/api/js/moxtra-latest.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/13.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/apex.js&quot;)}
+
+Moxtra.clientId = &apos;{!$Setup.genesis__Meet_Configuration__c.genesis__Client_Id__c}&apos;;
+var retVal;
+var contactId = &apos;{!Contact.Id}&apos;;
+var accountId = &apos;&apos;;
+
+var namespacePrefix = &quot;{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}&quot;;
+if (namespacePrefix != null &amp;&amp; namespacePrefix != &quot;&quot;){
+namespacePrefix += &quot;/&quot;;
+}
+var className = namespacePrefix + &quot;StartMeet&quot;;
+var methodName = &quot;emailChecker&quot;;
+
+var contactEmail = sforce.apex.execute(className ,methodName ,{contactId:contactId,accountId:accountId});
+
+var methodName2 = &quot;meetChecker&quot;;
+var checker = sforce.apex.execute(className ,methodName2 ,{checker:&apos; &apos;});
+
+var options = {
+iframe: false,
+
+success: function(event) {
+//alert(&quot;session key: &quot; + event.session_key + &quot; session id: &quot; + event.session_id);
+
+var methodName3 = &quot;inviteUser&quot;;
+retVal = sforce.apex.execute(className,methodName3 ,{contactId:contactId,accountId:accountId,sessionKey:event.session_key,sessionId:event.session_id});
+if(retVal != &apos;1&apos;)
+alert(retVal);
+},
+error: function(event) {
+alert(&quot;error code: &quot; + event.error_code + &quot; message: &quot; + error_message);
+},
+save: function(event) {
+alert(&quot;Meet saved on binder: &quot; + event.binder_id);
+},
+invite: function(event) {
+//alert(&quot;session key: &quot; + event.session_key + &quot; session id: &quot; + event.session_id);
+},
+invited: function(event) {
+//alert(&quot;session key: &quot; + event.session_key +&quot; session id: &quot; + event.session_id);
+},
+exit: function(event) {
+//alert(&quot;Meet exit event: &quot; + event.action);
+},
+extension:{
+&quot;css_file&quot;:
+{
+&quot;use&quot; : true
+}
+}
+};
+
+if(checker != &apos;1&apos;){
+alert(checker);
+}
+else if(contactEmail != &apos;1&apos;){
+if(confirm(&quot;Contact &quot; + contactEmail + &quot; is missing EmailId. Do you still wish to start meet?&quot;)){
+Moxtra.meet(options);
+}
+}
+else if(contactEmail == &apos;1&apos;){
+Moxtra.meet(options);
+}</url>
+</WebLink>

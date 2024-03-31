@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Loan_Purpose__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Loan Purpose (Deprecated)</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Business Loan</fullName>
+                <default>false</default>
+                <label>Business Loan</label>
+            </value>
+            <value>
+                <fullName>Car Financing</fullName>
+                <default>false</default>
+                <label>Car Financing</label>
+            </value>
+            <value>
+                <fullName>Debt Consolidation</fullName>
+                <default>false</default>
+                <label>Debt Consolidation</label>
+            </value>
+            <value>
+                <fullName>Education</fullName>
+                <default>false</default>
+                <label>Education</label>
+            </value>
+            <value>
+                <fullName>Home Down Payment</fullName>
+                <default>false</default>
+                <label>Home Down Payment</label>
+            </value>
+            <value>
+                <fullName>Major Purchase</fullName>
+                <default>false</default>
+                <label>Major Purchase</label>
+            </value>
+            <value>
+                <fullName>Medical Expenses</fullName>
+                <default>false</default>
+                <label>Medical Expenses</label>
+            </value>
+            <value>
+                <fullName>Personal</fullName>
+                <default>false</default>
+                <label>Personal</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

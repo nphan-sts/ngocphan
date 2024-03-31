@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Product_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Type of Product, only LoC and Loans are supported.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This will be populated from lending product and must not be changed by the user.
+This will define the classification of the product.
+Possible values are
+1) Loan
+2) Line of credit
+3) Merchant Cash Advance</inlineHelpText>
+    <label>Product Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Loan</fullName>
+                <default>true</default>
+                <label>Loan</label>
+            </value>
+            <value>
+                <fullName>Line of Credit</fullName>
+                <default>false</default>
+                <label>Line of Credit</label>
+            </value>
+            <value>
+                <fullName>Merchant Cash Advance</fullName>
+                <default>false</default>
+                <label>Merchant Cash Advance</label>
+            </value>
+            <value>
+                <fullName>Amz Based Loan</fullName>
+                <default>false</default>
+                <label>Amz Based Loan</label>
+            </value>
+            <value>
+                <fullName>Flexible Amz Loan</fullName>
+                <default>false</default>
+                <label>Flexible Amz Loan</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

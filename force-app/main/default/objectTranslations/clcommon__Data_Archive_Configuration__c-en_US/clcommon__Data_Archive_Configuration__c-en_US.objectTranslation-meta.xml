@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <recordTypes>
+        <description></description>
+        <label></label>
+        <name>clcommon__Detail_Object_Configuration</name>
+    </recordTypes>
+    <recordTypes>
+        <description></description>
+        <label></label>
+        <name>clcommon__Master_Object_Configuration</name>
+    </recordTypes>
+    <recordTypes>
+        <description></description>
+        <label></label>
+        <name>clcommon__Standalone_Object_Configuration</name>
+    </recordTypes>
+</CustomObjectTranslation>

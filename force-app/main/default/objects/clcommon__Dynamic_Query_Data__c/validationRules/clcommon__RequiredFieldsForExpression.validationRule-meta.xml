@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__RequiredFieldsForExpression</fullName>
+    <active>true</active>
+    <description>Expression with field name operator value OR expressionLeft and expressionRight</description>
+    <errorConditionFormula>AND(ISPICKVAL(clcommon__Filter_Type__c, &apos;EXPRE&apos;),
+ OR(
+ AND(
+  ISBLANK( clcommon__Field_Name__c ) ,
+  ISPICKVAL( clcommon__Operator__c , &apos;&apos;) ,
+  ISBLANK( clcommon__Value__c ) 
+) ,
+ AND(
+ ISBLANK( clcommon__Expression_Left__c ) ,
+ ISPICKVAL( clcommon__Operator__c , &apos;&apos;) ,
+ ISBLANK( clcommon__Expression_Right__c ) 
+) 
+) 
+)</errorConditionFormula>
+    <errorMessage>For EXPRE filter, either enter Field Name, Operator and Value or Left Expression, Operator and Right Expression</errorMessage>
+</ValidationRule>

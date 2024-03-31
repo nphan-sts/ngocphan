@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Grace_Period_Duration__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Grace Period can be defined in days. E.g. If Grace Period is defined as 7 days then the system will wait for 7 days before it starts accruing any Overdue Interest . On the 8th day if the amount is not paid then the system will accrue overdue interest for 8 days and continue accruing the overdue interest.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>It allows you to provide the client with additional days after the due date for loan repayment.
+For example, if the Grace period is defined as 7 days, then the system will wait for 7 days before it starts accruing any Overdue Interest .</inlineHelpText>
+    <label>Grace Period Duration</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

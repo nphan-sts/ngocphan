@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Deposit_Interest_Remaining__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field stores the value of interest remaining for a particular deposit till previous accrual date.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field stores the value of interest remaining for a particular deposit till previous accrual date.</inlineHelpText>
+    <label>Deposit Interest Remaining</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

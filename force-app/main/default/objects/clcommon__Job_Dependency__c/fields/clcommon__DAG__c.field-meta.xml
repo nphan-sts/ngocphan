@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__DAG__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>DAG</label>
+    <referenceTo>clcommon__DAG_Schedule__c</referenceTo>
+    <relationshipLabel>Job Dependencies</relationshipLabel>
+    <relationshipName>Job_Dependencies</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Allocation_Engine_Deployment_Mode__c</fullName>
+    <description>Either &apos;LEGACY_MODE&apos;, &apos;DARK_MODE&apos;, or &apos;FULL_MODE&apos;.  Legacy uses rules api code, dark mode is both, and full is Allocation Engine only.  Null is treated as &apos;LEGACY_MODE&apos;</description>
+    <externalId>false</externalId>
+    <label>Allocation Engine Deployment Mode</label>
+    <length>16</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

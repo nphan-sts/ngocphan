@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ReasonForDelinquency__c</fullName>
+    <externalId>false</externalId>
+    <label>Reason For Delinquency</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Change Payment Account Delay</fullName>
+                <default>false</default>
+                <label>Change Payment Account Delay</label>
+            </value>
+            <value>
+                <fullName>Cost of Living - Inflation</fullName>
+                <default>false</default>
+                <label>Cost of Living - Inflation</label>
+            </value>
+            <value>
+                <fullName>Death in the Family</fullName>
+                <default>false</default>
+                <label>Death in the Family</label>
+            </value>
+            <value>
+                <fullName>Delay in Payroll</fullName>
+                <default>false</default>
+                <label>Delay in Payroll</label>
+            </value>
+            <value>
+                <fullName>Divorce / Legal Separation</fullName>
+                <default>false</default>
+                <label>Divorce / Legal Separation</label>
+            </value>
+            <value>
+                <fullName>Involuntary Retirement</fullName>
+                <default>false</default>
+                <label>Involuntary Retirement</label>
+            </value>
+            <value>
+                <fullName>Job Loss</fullName>
+                <default>false</default>
+                <label>Job Loss</label>
+            </value>
+            <value>
+                <fullName>Loan Dispute</fullName>
+                <default>false</default>
+                <label>Loan Dispute</label>
+            </value>
+            <value>
+                <fullName>Loss / Reduced Income</fullName>
+                <default>false</default>
+                <label>Loss / Reduced Income</label>
+            </value>
+            <value>
+                <fullName>Member - Bank Issue</fullName>
+                <default>false</default>
+                <label>Member - Bank Issue</label>
+            </value>
+            <value>
+                <fullName>Member Experience Fraud</fullName>
+                <default>false</default>
+                <label>Member Experience Fraud</label>
+            </value>
+            <value>
+                <fullName>Misapplied Payment</fullName>
+                <default>false</default>
+                <label>Misapplied Payment</label>
+            </value>
+            <value>
+                <fullName>Natural Disaster</fullName>
+                <default>false</default>
+                <label>Natural Disaster</label>
+            </value>
+            <value>
+                <fullName>Overextended</fullName>
+                <default>false</default>
+                <label>Overextended</label>
+            </value>
+            <value>
+                <fullName>Oversight</fullName>
+                <default>false</default>
+                <label>Oversight</label>
+            </value>
+            <value>
+                <fullName>Permanent Change in Income</fullName>
+                <default>false</default>
+                <label>Permanent Change in Income</label>
+            </value>
+            <value>
+                <fullName>Unexpected Expense</fullName>
+                <default>false</default>
+                <label>Unexpected Expense</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Current - Good Standing</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Current - Good Standing</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Module__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Which module is this Page included in?</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Which module is this Page included in?</inlineHelpText>
+    <label>Module</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Skuid</fullName>
+                <default>false</default>
+                <label>Skuid</label>
+            </value>
+            <value>
+                <fullName>clOriginate</fullName>
+                <default>false</default>
+                <label>clOriginate</label>
+            </value>
+            <value>
+                <fullName>hmMiddleware</fullName>
+                <default>false</default>
+                <label>hmMiddleware</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

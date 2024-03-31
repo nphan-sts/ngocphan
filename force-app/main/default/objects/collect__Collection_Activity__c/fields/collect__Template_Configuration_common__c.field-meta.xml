@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Template_Configuration_common__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Template Configuration</label>
+    <referenceTo>clcommon__Template_Configuration__c</referenceTo>
+    <relationshipLabel>Collection Activities (Template Configuration)</relationshipLabel>
+    <relationshipName>Collection_Activities_common</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>DM_Loan_Account__c$Name</field>
+    </columns>
+    <columns>
+        <field>DM_Loan_Account__c$DM_Loan_Account_External_Id__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>DM_Loan_Account__c$DM_Loan_Account_External_Id__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>DM CL Contract</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>DM_CL_Contract__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>DM_Loan_Account__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_TODAY</interval>
+    </timeFrameFilter>
+</Report>

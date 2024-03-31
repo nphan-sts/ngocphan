@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__All</fullName>
+    <columns>NAME</columns>
+    <columns>skuid__SObject_Type__c</columns>
+    <columns>skuid__Action_Type__c</columns>
+    <columns>skuid__Context__c</columns>
+    <columns>skuid__RecordTypeDeveloperName__c</columns>
+    <columns>skuid__Page__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>UPDATEDBY_USER</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+    <language>en_US</language>
+</ListView>

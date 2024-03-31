@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>LPT_Lockdown_Fields</fullName>
+    <active>false</active>
+    <description>Fields cannot be edited if payment is cleared.</description>
+    <errorConditionFormula>AND(
+NOT(ISBLANK(loan__Loan_Snapshot__c)) ,
+$Profile.Name &lt;&gt; &quot;System Administrator&quot;,
+
+OR(
+ISCHANGED( loan__Clearing_Date__c),
+ISCHANGED( loan__Transaction_Amount__c ),
+ISCHANGED(loan__Principal__c ),
+ISCHANGED( loan__Interest__c ),
+ISCHANGED( loan__Fees__c),
+ISCHANGED( loan__Excess__c ),
+ISCHANGED( loan__Balance__c ),
+ISCHANGED( loan__Transaction_Date__c ),
+ISCHANGED( loan__Transaction_Time__c )
+))</errorConditionFormula>
+    <errorMessage>One of the fields you modified cannot be edited after the payment has been Cleared.</errorMessage>
+</ValidationRule>

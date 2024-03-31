@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Loan_Account__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Transaction_Date__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Transaction_Amount__c</field>
+    </columns>
+    <format>Tabular</format>
+    <name>LPT with transaction date 10/7-1012</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>peer__Loan_Payment_Transactions_Reports__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Payment_Transaction__c$loan__Transaction_Date__c</dateColumn>
+        <endDate>2021-10-12</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2021-10-07</startDate>
+    </timeFrameFilter>
+</Report>

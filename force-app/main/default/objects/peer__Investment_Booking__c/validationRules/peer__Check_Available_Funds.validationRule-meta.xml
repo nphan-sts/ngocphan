@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Check_Available_Funds</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISNEW() &amp;&amp; (  peer__Booking_Order__r.peer__Investor__r.peer__Funds_Available_For_Investment__c  &lt;  peer__Investment_Amount__c )</errorConditionFormula>
+    <errorMessage>You don&apos;t have enough funds to book an investment.</errorMessage>
+</ValidationRule>

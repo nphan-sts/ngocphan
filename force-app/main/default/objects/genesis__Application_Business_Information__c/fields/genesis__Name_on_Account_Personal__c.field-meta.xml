@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Name_on_Account_Personal__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Name on Account (Personal)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Name on Account (Personal)</inlineHelpText>
+    <label>Name on Account (Personal)</label>
+    <length>100</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

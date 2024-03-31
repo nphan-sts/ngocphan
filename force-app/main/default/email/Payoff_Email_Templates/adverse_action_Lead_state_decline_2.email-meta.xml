@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>false</available>
+    <description>//*Created By Nupur */ -- Your Payoff Loan Application Status</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Payoff_Loan</letterhead>
+    <name>adverse action(Lead state = decline)2</name>
+    <style>formalLetter</style>
+    <subject>Your Payoff Loan Application Status</subject>
+    <textOnly>Thanks for applying for a Payoff Loan™, but at this time, we can’t approve your application.
+
+Here at Payoff, we want you to understand the reasons why we cannot approve your application, so we listed all of the areas to focus on making improvements below. We’re still dedicated to helping you pay off your credit cards.
+
+
+
+Additionally, we want you to have a clear understanding of your current credit score. Your credit score notice is attached as a PDF.
+
+
+
+Reasons why you were not approved
+
+1. Your credit score does not meet our minimum requirement, mainly due to:
+
+Serious delinquency, and public record or collection filled
+Number of accounts with delinquency
+Time since delinquency is too recent or unknown
+Too few accounts currently paid as agreed
+
+
+
+2. Your credit report shows you’ve had more than 2 recent hard inquiries.
+
+3. Your credit report shows you have been 90+ days late on an account, have had an account charged off, and/or have had a bankruptcy.
+
+4. Our partner, TransUnion, is not returning information for us to make a credit  decision.
+
+We’ve attached a more formal letter outlining all of the above and letting you know your rights under the Fair Credit Reporting Act. Your adverse action statement is attached as a PDF.
+
+If you have any questions, feel free to give us a call at 1-800-878-0901.
+
+
+
+
+
+The Payoff Team
+
+Payoff, Inc.
+
+
+
+success@payoff.com
+
+
+1-800-878-0901
+Follow us: Facebook Twitter Instagram
+
+Payoff, Inc.
+3200 Park Center Drive, Ste. 800,
+Costa Mesa, CA 92626
+
+© Copyright 2009-{!genesis__Applications__c.Today_s_Date__c}. All rights reserved. Payoff, Inc.
+
+
+
+Disclaimer: This email and its contents are confidential and intended only for you. Payoff is not liable for any loss or damage that may arise from this email or any attachments. Unless we specifically say, we will not enter into a contract over email.
+Payoff works with lending partners to ultimately originate loans. Information about our Lending Partners, including their address, financial institution type and charter, as well as links to their websites and privacy policies can be found on our Lending Partners page. Individual borrowers must be at least 18 years old and have valid Social Security number and a valid checking account. All loans are subject to credit review and approval. Your actual rate depends upon credit score, loan amount, loan term, credit usage and history. Currently loans are not offered in: DC, DE, IA, MA, MD, MI, MN, MS, NC, NE, NV, OH, OK, VA, VT, WA, WI, and WV. Our mailing address is: Payoff, Inc., 3200 Park Center Drive, STE 800, Costa Mesa, CA 92626.</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

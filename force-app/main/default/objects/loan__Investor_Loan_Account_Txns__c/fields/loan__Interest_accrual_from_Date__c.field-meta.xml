@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Interest_accrual_from_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>At the time of this transaction, Interest accrual is done from, this is for the informational purpose.</description>
+    <externalId>false</externalId>
+    <label>Interest Accrual From Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

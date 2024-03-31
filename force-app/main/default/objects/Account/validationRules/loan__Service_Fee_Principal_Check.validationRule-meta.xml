@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Service_Fee_Principal_Check</fullName>
+    <active>true</active>
+    <description>User cannot select both Principal paid and principal remaining to calculate the service fee.</description>
+    <errorConditionFormula>AND( INCLUDES(loan__Collect_Service_Fees_on__c, &apos;Principal&apos;) , INCLUDES(loan__Collect_Service_Fees_on__c, &apos;Principal Remaining&apos;) )</errorConditionFormula>
+    <errorMessage>You can select either Principal or Principal Remaining but not both of them.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Maximum_Financed_Percent_Broker__c</fullName>
+    <defaultValue>0.00</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Maximum finance percentage of Dealer price/collateral Value for Broker Deal.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Maximum finance percentage of Dealer price/collateral Value for Broker Deal.</inlineHelpText>
+    <label>Maximum Financed Broker (%)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

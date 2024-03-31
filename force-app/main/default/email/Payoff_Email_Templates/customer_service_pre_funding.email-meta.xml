@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>42.0</apiVersion>
+    <available>true</available>
+    <description>email confirming application approval and funding timeline - 4/9/18</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>customer_service_pre_funding</name>
+    <packageVersions>
+        <majorNumber>2</majorNumber>
+        <minorNumber>5014</minorNumber>
+        <namespace>genesis</namespace>
+    </packageVersions>
+    <style>none</style>
+    <subject>Your Payoff Loan is on the way!</subject>
+    <type>visualforce</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

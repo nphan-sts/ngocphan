@@ -1,0 +1,382 @@
+{
+  "DM_Metadata_Config": {
+    "ForEachLendingProduct": [
+      {
+        "name": "Simple Loan",
+        "Config": [
+          {
+            "srcobj": "dm_loan_account__c",
+            "trgobj": "loan__loan_account__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+              {
+                "srcfield": "dm_custom_field_1__c",
+                "trgfield": "custesting__c",
+                "datatype": "Date"
+              },
+			  {
+                "srcfield": "dm_custom_field_2__c",
+                "trgfield": "cusTesting2__c",
+                "datatype": "Checkbox"
+              },
+	      {
+                "srcfield": "dm_custom_field_3__c",
+                "trgfield": "cusTesting3__c",
+                "datatype": "Number"
+              },
+	      {
+                "srcfield": "dm_custom_field_4__c",
+                "trgfield": "cusTesting4__c",
+                "datatype": "Text"
+              },
+	      {
+                "srcfield": "dm_custom_field_5__c",
+                "trgfield": "cusTesting5__c",
+                "datatype": "checkbox"
+              },
+	      {
+                "srcfield": "dm_custom_field_6__c",
+                "trgfield": "cusTesting6__c",
+                "datatype": "checkbox"
+              }
+            ]
+          },
+          {
+            "srcobj": "dm_loan_payment_transaction__c",
+            "trgobj": "loan__loan_payment_transaction__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+              
+            ]
+          },
+          {
+            "srcobj": "dm_loan_disbursal_transaction__c",
+            "trgobj": "loan__loan_disbursal_transaction__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+          {
+            "srcobj": "dm_charge__c",
+            "trgobj": "loan__charge__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+              
+            ]
+          },
+		  {
+            "srcobj": "dm_contingency_status_code__c",
+            "trgobj": "loan__loan_block_code__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+              
+            ]
+          },
+	  {
+            "srcobj": "dm_disbursal_transaction_distribution__c",
+            "trgobj": "loan__disbursal_txn_distribution__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+		  {
+            "srcobj": "dm_due_payment__c",
+            "trgobj": "loan__due_payment__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+		  {
+            "srcobj": "dm_repayment_transaction_reversal__c",
+            "trgobj": "loan__repayment_transaction_adjustment__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+              
+            ]
+          },
+		  {
+            "srcobj": "dm_multi_step_loan_setup__c",
+            "trgobj": "loan__multi_step_loan_setup__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+          {
+            "srcobj": "dm_bill__c",
+            "trgobj": "loan__loan_account_due_details__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+              
+            ]
+          },
+          {
+            "srcobj": "dm_automated_payment_setup__c",
+            "trgobj": "loan__automated_payment_setup__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+		  {
+            "srcobj": "dm_loan_account_conditions__c",
+            "trgobj": "loan__loan_account_conditions__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+		  {
+            "srcobj": "dm_repayment_plan__c",
+            "trgobj": "clcommon__repayment_plan__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+          {
+            "srcobj": "dm_repayment_schedule_summary__c",
+            "trgobj": "loan__repayment_schedule_summary__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+          {
+            "srcobj": "dm_repayment_schedule__c",
+            "trgobj": "loan__repayment_schedule__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+	  {
+            "srcobj": "dm_accrual_entry__c",
+            "trgobj": "loan__accrual_entry__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+		  {
+            "srcobj": "dm_interest_posting_transaction__c",
+            "trgobj": "loan__interest_posting_transaction__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+		  {
+            "srcobj": "dm_contingency_status_code__c",
+            "trgobj": "loan__loan_block_code__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+              
+            ]
+          },
+	  {
+            "srcobj": "dm_investment_order__c",
+            "trgobj": "loan__investor_loan__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+	  {
+            "srcobj": "dm_investor_loan_transaction__c",
+            "trgobj": "loan__investor_loan_account_txns__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Difficult Loan",
+        "Config": [
+          {
+            "srcobj": "dm_loan_account__c",
+            "trgobj": "loan__loan_account__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+              {
+                "srcfield": "dm_custom_field_1__c",
+                "trgfield": "CusTesting2__c",
+                "datatype": "Checkbox"
+              }  
+            ]
+          },
+          {
+            "srcobj": "dm_loan_payment_transaction__c",
+            "trgobj": "loan__loan_payment_transaction__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+              
+            ]
+          },
+          {
+            "srcobj": "dm_loan_disbursal_transaction__c",
+            "trgobj": "loan__loan_disbursal_transaction__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+          {
+            "srcobj": "dm_charge__c",
+            "trgobj": "loan__charge__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+              
+            ]
+          },
+	  {
+            "srcobj": "dm_disbursal_transaction_distribution__c",
+            "trgobj": "loan__disbursal_txn_distribution__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+		  {
+            "srcobj": "dm_due_payment__c",
+            "trgobj": "loan__due_payment__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+		  {
+            "srcobj": "dm_repayment_transaction_reversal__c",
+            "trgobj": "loan__repayment_transaction_adjustment__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+              
+            ]
+          },
+		  {
+            "srcobj": "dm_multi_step_loan_setup__c",
+            "trgobj": "loan__multi_step_loan_setup__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+          {
+            "srcobj": "dm_bill__c",
+            "trgobj": "loan__loan_account_due_details__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+              
+            ]
+          },
+          {
+            "srcobj": "dm_automated_payment_setup__c",
+            "trgobj": "loan__automated_payment_setup__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+		  {
+            "srcobj": "dm_loan_account_conditions__c",
+            "trgobj": "loan__loan_account_conditions__c",
+            "strategy": "0",
+            "strategyclass": "",
+            "fieldmapping": [
+             
+            ]
+          },
+          {
+            "srcobj": "dm_repayment_schedule_summary__c",
+            "trgobj": "loan__repayment_schedule_summary__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+          {
+            "srcobj": "dm_repayment_schedule__c",
+            "trgobj": "loan__repayment_schedule__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+	  {
+            "srcobj": "dm_accrual_entry__c",
+            "trgobj": "loan__accrual_entry__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+		  {
+            "srcobj": "dm_interest_posting_transaction__c",
+            "trgobj": "loan__interest_posting_transaction__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+	  {
+            "srcobj": "dm_investment_order__c",
+            "trgobj": "loan__investor_loan__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          },
+	  {
+            "srcobj": "dm_investor_loan_transaction__c",
+            "trgobj": "loan__investor_loan_account_txns__c",
+            "strategy": "1000",
+            "strategyclass": "SampleRSSOverrideTesting",
+            "fieldmapping": [
+             
+            ]
+          }
+       ]
+      }
+    ]
+  }
+}

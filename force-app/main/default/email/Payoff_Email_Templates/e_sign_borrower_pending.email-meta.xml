@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>42.0</apiVersion>
+    <available>true</available>
+    <description>email notice that loan docs are ready to sign - 4/9/18</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>e_sign_borrower_pending</name>
+    <packageVersions>
+        <majorNumber>2</majorNumber>
+        <minorNumber>5014</minorNumber>
+        <namespace>genesis</namespace>
+    </packageVersions>
+    <style>none</style>
+    <subject>Action Required - Please eSign your documents</subject>
+    <type>visualforce</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

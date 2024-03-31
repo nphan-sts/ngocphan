@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Shift_Meeting__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Shift Meeting</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>After</fullName>
+                <default>true</default>
+                <label>After</label>
+            </value>
+            <value>
+                <fullName>Before</fullName>
+                <default>false</default>
+                <label>Before</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>staging__Hardship_Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Hardship Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Hardship Entered</fullName>
+                <default>false</default>
+                <label>Hardship Entered</label>
+            </value>
+            <value>
+                <fullName>Hardship Expired</fullName>
+                <default>false</default>
+                <label>Hardship Expired</label>
+            </value>
+            <value>
+                <fullName>Hardship extension of term (Active)</fullName>
+                <default>false</default>
+                <label>Hardship extension of term (Active)</label>
+            </value>
+            <value>
+                <fullName>Hardship Part Payment Moritorium</fullName>
+                <default>false</default>
+                <label>Hardship Part Payment Moritorium</label>
+            </value>
+            <value>
+                <fullName>Hardship Payment Moritorium</fullName>
+                <default>false</default>
+                <label>Hardship Payment Moritorium</label>
+            </value>
+            <value>
+                <fullName>Hardship Requested</fullName>
+                <default>false</default>
+                <label>Hardship Requested</label>
+            </value>
+            <value>
+                <fullName>Hardship Time to sell arragement (Active)</fullName>
+                <default>false</default>
+                <label>Hardship Time to sell arragement (Active)</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

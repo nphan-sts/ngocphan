@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Earned_Balance__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Earned Balance</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is zero initially. It is updated when amortization transaction is created.</inlineHelpText>
+    <label>Earned</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

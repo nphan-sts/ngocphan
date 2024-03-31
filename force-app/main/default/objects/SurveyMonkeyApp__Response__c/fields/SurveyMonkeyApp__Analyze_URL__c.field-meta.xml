@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SurveyMonkeyApp__Analyze_URL__c</fullName>
+    <deprecated>false</deprecated>
+    <description>URL to SurveyMonkey&apos;s analyze page for this response (must be logged in)</description>
+    <externalId>false</externalId>
+    <label>Analyze URL</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Url</type>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>Unmapped Status</name>
+    <style>none</style>
+    <subject>Unmapped Omni-Channel Status for {!Organization.Name} ({!$Setup.talkdesk__Talkdesk__c.talkdesk__Account__c})</subject>
+    <textOnly>You have an unmapped status
+
+We detected a new unmapped status for your Omni-Channel integration in Talkdesk for Salesforce. Please login to your Salesforce account and map the new status on the Talkdesk Admin page so that changes in your agent&apos;s Omni-Channel status are reflected in real time in Talkdesk.
+
+-The Talkdesk Team</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

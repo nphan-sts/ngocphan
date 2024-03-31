@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Inv_Interest_Posted_Amt__c</fullName>
+    <defaultValue>0.00</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Total Interest Posted on account, this will be updated when the payment amount is being calculated.</description>
+    <externalId>false</externalId>
+    <label>Interest Posted</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

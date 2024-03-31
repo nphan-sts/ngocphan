@@ -1,0 +1,2 @@
+GM - Opportunities [Opp] SELECT CloseDate, Amount, Owner.name, (SELECT id,Contact.FirstName, Contact.LastName, Contact.MailingStreet, Contact.MailingCity, Contact.MailingState, Contact.MailingPostalCode FROM OpportunityContactRoles WHERE IsPrimary = true LIMIT 1) FROM Opportunity WHERE IsWon = true AND CloseDate = LAST_MONTHAND Amount > 0 AND ContactId != null
+Opp Count - Donation Receipt [OppCount] SELECT count(id) total FROM Opportunity WHERE IsWon = true AND CloseDate = LAST_MONTH AND Amount > 0 AND ContactId != null 

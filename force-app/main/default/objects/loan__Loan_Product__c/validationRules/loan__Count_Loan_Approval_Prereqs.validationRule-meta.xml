@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Count_Loan_Approval_Prereqs</fullName>
+    <active>true</active>
+    <errorConditionFormula>loan__Number_Of_Prereqs__c &gt; 1</errorConditionFormula>
+    <errorMessage>You can only associate one Loan Approval Prerequisite with a Loan Product.</errorMessage>
+</ValidationRule>

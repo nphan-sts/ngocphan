@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Terminate_FD_does_not_make_sense</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(ISPICKVAL( loan__Savings_Account__r.loan__Savings_Product_Name__r.loan__Product_Type__c, &apos;Fixed&apos;))
+&amp;&amp; loan__Terminate_Fixed_Deposit__c</errorConditionFormula>
+    <errorMessage>This account is not a Fixed Deposit. Please uncheck the Terminate Fixed Deposit flag.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>loan__Day_Ended_Flag_Update</fullName>
+        <field>loan__Day_Ended__c</field>
+        <literalValue>1</literalValue>
+        <name>Day Ended Flag Update</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>loan__Day_Process_Ended_Flag_Update</fullName>
+        <field>loan__EOD_Process_Started__c</field>
+        <literalValue>0</literalValue>
+        <name>Day Process Ended Flag Update</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>loan__Day_Process_Started_Flag_Update</fullName>
+        <field>loan__SOD_Process_Started__c</field>
+        <literalValue>0</literalValue>
+        <name>Day Process Started Flag Update</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>loan__Day_Started_Flag_Update</fullName>
+        <field>loan__Day_Started__c</field>
+        <literalValue>1</literalValue>
+        <name>Day Started Flag Update</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>loan__Day Ended Flag Update Rule</fullName>
+        <actions>
+            <name>loan__Day_Ended_Flag_Update</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <actions>
+            <name>loan__Day_Process_Ended_Flag_Update</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>loan__Day_Process__c.loan__EOD_Finished__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>loan__Day Started Flag Update Rule</fullName>
+        <actions>
+            <name>loan__Day_Process_Started_Flag_Update</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <actions>
+            <name>loan__Day_Started_Flag_Update</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>loan__Day_Process__c.loan__Accounts_Accrured__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+</Workflow>

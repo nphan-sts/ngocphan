@@ -1,0 +1,2 @@
+LineItems [LineItems] SELECT ProductCode, name, UnitPrice, Quantity, TotalPrice, Product2.family FROM OpportunityLineItem WHERE OpportunityId = '{pv0}' order by name;
+

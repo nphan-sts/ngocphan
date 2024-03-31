@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>File_cleared_Image__c</fullName>
+    <externalId>false</externalId>
+    <label>File - cleared Image</label>
+    <referenceTo>skuid__Image__c</referenceTo>
+    <relationshipName>File_cleared_Image1589329474996</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

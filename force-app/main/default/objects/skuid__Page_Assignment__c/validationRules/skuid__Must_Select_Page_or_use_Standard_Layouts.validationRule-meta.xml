@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Must_Select_Page_or_use_Standard_Layouts</fullName>
+    <active>true</active>
+    <description>You must select either a Skuid Page to use, or choose to use Standard Layouts.</description>
+    <errorConditionFormula>AND(
+ISBLANK(skuid__Page__c),
+skuid__Use_Standard_Layouts__c = FALSE
+)</errorConditionFormula>
+    <errorMessage>You must either select a Skuid Page or select &quot;Use Standard Layouts&quot;.</errorMessage>
+</ValidationRule>

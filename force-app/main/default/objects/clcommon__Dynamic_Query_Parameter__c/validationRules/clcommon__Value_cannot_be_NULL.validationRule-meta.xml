@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Value_cannot_be_NULL</fullName>
+    <active>true</active>
+    <description>Value cannot be NULL</description>
+    <errorConditionFormula>AND( ISBLANK( clcommon__Value__c ) ,
+OR(ISPICKVAL( clcommon__Type__c , &apos;FN&apos;) ,
+   ISPICKVAL( clcommon__Type__c , &apos;DT&apos;),
+   ISPICKVAL( clcommon__Type__c , &apos;CONTEXT_VALUE&apos;)))</errorConditionFormula>
+    <errorMessage>Value cannot be NULL</errorMessage>
+</ValidationRule>

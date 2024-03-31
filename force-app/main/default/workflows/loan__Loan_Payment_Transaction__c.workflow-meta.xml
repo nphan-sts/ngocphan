@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>Process_Excess_Payments</fullName>
+        <field>loan__Cleared__c</field>
+        <literalValue>1</literalValue>
+        <name>Process Excess Payments</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>loan__Loan_Payment_Txn_Update_To_Cleared</fullName>
+        <field>loan__Cleared__c</field>
+        <literalValue>1</literalValue>
+        <name>Loan Payment Txn Update To Cleared</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>loan__Loan_Payment_Txn_Update_To_Rejected</fullName>
+        <field>loan__Rejected__c</field>
+        <literalValue>1</literalValue>
+        <name>Loan Payment Txn Update To Rejected</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>loan__Loan_Status_Update_To_Active_BS</fullName>
+        <description>Loan Status Update To Active BS</description>
+        <field>loan__Loan_Status__c</field>
+        <literalValue>Active - Bad Standing</literalValue>
+        <name>Loan Status Update To Active BS</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+        <targetObject>loan__Loan_Account__c</targetObject>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>loan__Loan_Status_Update_To_Active_GS</fullName>
+        <description>Approved to Active (Good Standing)</description>
+        <field>loan__Loan_Status__c</field>
+        <literalValue>Active - Good Standing</literalValue>
+        <name>Loan Status Update To Active GS</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+        <targetObject>loan__Loan_Account__c</targetObject>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>loan__Loan_Status_Update_to_OM</fullName>
+        <field>loan__Loan_Status__c</field>
+        <literalValue>Closed - Obligations met</literalValue>
+        <name>Loan Status Update to OM</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+        <targetObject>loan__Loan_Account__c</targetObject>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>loan__Missed_Payment_Update</fullName>
+        <description>Update Transaction Amount to zero on Missed Payment</description>
+        <field>loan__Transaction_Amount__c</field>
+        <formula>0</formula>
+        <name>Missed Payment Update</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>peer__Update_cancellation_status</fullName>
+        <field>peer__Cancellation_Status__c</field>
+        <literalValue>Success</literalValue>
+        <name>Update cancellation status</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+        <targetObject>loan__Loan_Account__c</targetObject>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>peer__Update_status_to_canceled</fullName>
+        <field>loan__Loan_Status__c</field>
+        <literalValue>Canceled</literalValue>
+        <name>Update status to canceled</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+        <targetObject>loan__Loan_Account__c</targetObject>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>peer__Update_status_to_cancellation_in_progres</fullName>
+        <field>loan__Loan_Status__c</field>
+        <literalValue>Cancellation in progress</literalValue>
+        <name>Update status to cancellation in progres</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+        <targetObject>loan__Loan_Account__c</targetObject>
+    </fieldUpdates>
+    <rules>
+        <fullName>Process Excess Payments</fullName>
+        <actions>
+            <name>Process_Excess_Payments</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>and( loan__Cleared__c =false , loan__Reversed__c =false , loan__Rejected__c =false , loan__Payment_Mode__r.Name =&apos;Excess&apos;)</formula>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>loan__Loan Status Update To Active BS</fullName>
+        <actions>
+            <name>loan__Loan_Status_Update_To_Active_BS</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <description>Update to Active BS</description>
+        <formula>( ( loan__Loan_Account__r.loan__Disbursal_Date__c &gt;= Today())    &amp;&amp; (loan__Loan_Account__r.loan__Total_Amount_Overdue__c &gt; 0))</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>loan__Loan Status Update To Active GS</fullName>
+        <actions>
+            <name>loan__Loan_Status_Update_To_Active_GS</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <formula>( ( loan__Loan_Account__r.loan__Disbursal_Date__c &gt;= Today())    &amp;&amp; (loan__Loan_Account__r.loan__Total_Amount_Overdue__c &lt;= 0))   &amp;&amp;  ((ISPICKVAL( loan__Loan_Account__r.loan__Loan_Status__c ,&apos;Active - Bad Standing&apos;)))</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>loan__Loan Status Update To Closed OM</fullName>
+        <active>false</active>
+        <description>Loan Status Update To Closed Obligation Met</description>
+        <formula>(loan__Loan_Account__r.loan__Principal_Remaining__c &lt;= 0.5 &amp;&amp;  loan__Loan_Account__r.loan__Total_Amount_Overdue__c &lt;= 0.5)</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>peer__Change status of cancellation initiated loans</fullName>
+        <actions>
+            <name>peer__Update_status_to_cancellation_in_progres</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>AND(peer__Loan_Cancellation__c,  loan__Cleared__c,  NOT(loan__Paid_to_Investor__c))</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>peer__Change status of cancelled loans</fullName>
+        <actions>
+            <name>peer__Update_cancellation_status</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <actions>
+            <name>peer__Update_status_to_canceled</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>OR(AND( peer__Loan_Cancellation__c, loan__Loan_Account__r.loan__Protect_Enabled__c, loan__Paid_to_Investor__c,  IF( (loan__Loan_Account__r.loan__Principal_Remaining__c -  loan__Loan_Account__r.loan__Cancellation_Tolerance_Amount__c) == 0.0 , true, false) ), AND( peer__Loan_Cancellation__c, NOT(loan__Loan_Account__r.loan__Protect_Enabled__c), loan__Paid_to_Investor__c))</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

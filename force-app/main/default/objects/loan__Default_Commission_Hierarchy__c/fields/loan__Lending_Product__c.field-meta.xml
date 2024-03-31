@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Lending_Product__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Lending Product</label>
+    <referenceTo>loan__Loan_Product__c</referenceTo>
+    <relationshipLabel>Broker Commission Hierarchy</relationshipLabel>
+    <relationshipName>Default_Commission_Hierarchy</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

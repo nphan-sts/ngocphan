@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Disable_Collaboration_Polling__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Disable features of the Collaboration Framework that require client-side server polling, such as the Page Interaction Service. Features not dependent on polling, such as Page Version Conflict Detection, are not affected by this setting.</description>
+    <externalId>false</externalId>
+    <label>Disable Collaboration Polling</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

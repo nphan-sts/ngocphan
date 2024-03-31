@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Package_Names_For_Auto_Revocation__c</fullName>
+    <defaultValue>&quot;skuid&quot;</defaultValue>
+    <deprecated>false</deprecated>
+    <description>(Optional) Namespaces of packages from which licenses should be auto-revoked when users are deactivated. Semi-colon delimited.</description>
+    <externalId>false</externalId>
+    <label>Packages to Auto-Revoke Licenses to</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

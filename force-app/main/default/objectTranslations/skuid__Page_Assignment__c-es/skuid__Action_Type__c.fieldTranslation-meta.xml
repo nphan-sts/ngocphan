@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El tipo de acción de Salesforce a la cual esta Designación de página se aplica</help>
+    <label></label>
+    <name>skuid__Action_Type__c</name>
+    <picklistValues>
+        <masterLabel>Clone</masterLabel>
+        <translation>Clonar</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Delete</masterLabel>
+        <translation>Eliminar</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Edit</masterLabel>
+        <translation>Modificar</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>List</masterLabel>
+        <translation>Lista</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>New</masterLabel>
+        <translation>Nueva</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Tab</masterLabel>
+        <translation>Ficha</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>View</masterLabel>
+        <translation>Visualizar</translation>
+    </picklistValues>
+</CustomFieldTranslation>

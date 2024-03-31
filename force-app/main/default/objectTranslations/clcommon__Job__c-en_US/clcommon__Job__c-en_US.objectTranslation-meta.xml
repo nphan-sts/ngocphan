@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>clcommon__Batch_Size_Validation_Rule</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>clcommon__Custom_query_check_for_pipelined_job</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>clcommon__Number_of_Instance_for_abort_forcefully</name>
+    </validationRules>
+</CustomObjectTranslation>

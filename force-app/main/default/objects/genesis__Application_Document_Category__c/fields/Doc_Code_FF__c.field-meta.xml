@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Doc_Code_FF__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( genesis__Parent_Application_Document_Category__r.Name == &apos;ESign Documents&apos;, 
+IF( Name == &apos;3rd Party Membership&apos; , IF( Investor_Code__c == &apos;ACU&apos;, &apos;authoritative_ffa_app&apos;, IF(Investor_Code__c == &apos;TCU&apos;, &apos;authoritative_ffa_app&apos;, IF(Investor_Code__c == &apos;FTCU&apos;, &apos;authoritative_ffa_app&apos;, &apos;authoritative_ffa_app&apos;) ) ) , 
+IF(Name == &apos;CU Membership&apos;, IF(Investor_Code__c == &apos;ACU&apos;, &apos;authoritative_alliant_agreement&apos;, IF(Investor_Code__c == &apos;TCU&apos;, &apos;authoritative_tcu_member_agreement&apos;, IF(Investor_Code__c == &apos;FTCU&apos;, &apos;ftcu_member_agreement&apos;, &apos;authoritative_member_agreement&apos;) ) ) , 
+IF(Name == &apos;Payoff Promissory Note&apos;, IF(Investor_Code__c == &apos;ACU&apos;, &apos;authoritative_promissory_note &apos;, IF(Investor_Code__c == &apos;TCU&apos;, &apos;authoritative_promissory_note&apos;, IF(Investor_Code__c == &apos;FTCU&apos;, &apos;promissory_note&apos;, &apos;authoritative_promissory_note&apos;) ) ) , 
+IF(Name == &apos;Payoff Member Agreement&apos;, IF(Investor_Code__c == &apos;ACU&apos;, &apos;authoritative_borrower_agreement &apos;, IF(Investor_Code__c == &apos;TCU&apos;, &apos;authoritative_borrower_agreement&apos;, IF(Investor_Code__c == &apos;FTCU&apos;, &apos;borrower_agreement&apos;, &apos;authoritative_borrower_agreement&apos;) ) ) , 
+IF(Name == &apos;Credit Services Contract&apos;, IF(Investor_Code__c == &apos;ACU&apos;, &apos;authoritative_cso_agreement &apos;, IF(Investor_Code__c == &apos;TCU&apos;, &apos;authoritative_cso_agreement&apos;, IF(Investor_Code__c == &apos;FTCU&apos;, &apos;cso_agreement&apos;, &apos;authoritative_cso_agreement&apos;) ) ) ,
+IF(Name == &apos;Alliant ACH&apos;,  IF(Investor_Code__c == &apos;ACU&apos;, &apos;authoritative_alliant_ach&apos;,  IF(Investor_Code__c == &apos;TCU&apos;, &apos;&apos;,  IF(Investor_Code__c == &apos;FTCU&apos;, &apos;&apos;, Doc_Code_as_for_Investors__c ) ) ) , Doc_Code_as_for_Investors__c ) ) ) ) ) ) , 
+Doc_Code_as_for_Investors__c )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Doc_Code_FF</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__LOC_Term_Boundary_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISPICKVAL(loan__Product_Type__c, &apos;Line of Credit&apos;) ,( loan__Number_of_Installments__c &gt; loan__Loan_Product_Name__r.loan__Max_Number_of_Installments__c
+|| loan__Number_of_Installments__c &lt; loan__Loan_Product_Name__r.loan__Min_Number_of_Installments__c))</errorConditionFormula>
+    <errorDisplayField>loan__Number_of_Installments__c</errorDisplayField>
+    <errorMessage>Term should fall between the Limits specified in the Lending Product.</errorMessage>
+</ValidationRule>

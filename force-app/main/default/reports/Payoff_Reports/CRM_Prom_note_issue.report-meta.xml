@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Loan_Origination_Date__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Anniversary_Date__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Investor__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c.Loan_Doc_Signed_On__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>11/23/2021</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c.Investor__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>contains</operator>
+            <value>Cross river bank</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>CRM Prom note issue</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$genesis__Applications__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c.Anniversary_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

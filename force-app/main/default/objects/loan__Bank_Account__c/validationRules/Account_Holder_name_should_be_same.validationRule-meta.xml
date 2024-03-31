@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Holder_name_should_be_same</fullName>
+    <active>false</active>
+    <description>Account Holder name should be same as Funding Account holder name</description>
+    <errorConditionFormula>AND(  Name_on_Account__c  != NULL,  loan__Account__r.Name !=  Name_on_Account__c )</errorConditionFormula>
+    <errorDisplayField>Account_Holder__c</errorDisplayField>
+    <errorMessage>Account Holder name should be same as Funding Account holder name</errorMessage>
+</ValidationRule>

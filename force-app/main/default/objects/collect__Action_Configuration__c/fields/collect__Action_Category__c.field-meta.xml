@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Action_Category__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The main category of action under which the current action being configured falls.</description>
+    <externalId>false</externalId>
+    <label>Action Category</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Notify</fullName>
+                <default>false</default>
+                <label>Notify</label>
+            </value>
+            <value>
+                <fullName>Contract Action</fullName>
+                <default>false</default>
+                <label>Contract Action</label>
+            </value>
+            <value>
+                <fullName>Manual Action</fullName>
+                <default>false</default>
+                <label>Manual Action</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

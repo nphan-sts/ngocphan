@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Duplicate_Key__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <deprecated>false</deprecated>
+    <description>Internal use only. This key is used to uniquely identify aliases for a given template. The value is equal to alias value, if alias is not null.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Internal use only. This key is used to uniquely identify aliases for a given template. The value is equal to alias value, if alias is not null.</inlineHelpText>
+    <label>Duplicate Key</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

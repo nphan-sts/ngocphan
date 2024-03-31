@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Primary_Property_Address__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Address of Primary Property</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Address of Primary Property</inlineHelpText>
+    <label>Primary Property Address</label>
+    <length>32768</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

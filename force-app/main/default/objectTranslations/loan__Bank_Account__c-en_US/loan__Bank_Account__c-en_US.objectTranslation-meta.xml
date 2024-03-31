@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Account_Holder_name_should_be_same</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Account_Number_and_Funding_Account</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Account_type_cannot_be_empty</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Account_usage_cannot_be_empty</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Routing_Number_Should_be_9_Digits_Only</name>
+    </validationRules>
+</CustomObjectTranslation>

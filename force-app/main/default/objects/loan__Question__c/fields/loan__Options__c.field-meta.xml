@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Options__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Single Select/Multi Select: Enter valid pipe &apos;|&apos; separated values.
+Number: Enter a range of allowable value
+Free Text &amp; Date: Not reuired</description>
+    <externalId>false</externalId>
+    <label>Options</label>
+    <length>32000</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

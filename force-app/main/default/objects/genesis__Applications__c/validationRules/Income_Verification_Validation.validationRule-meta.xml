@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Income_Verification_Validation</fullName>
+    <active>false</active>
+    <description>Income Verification Validation</description>
+    <errorConditionFormula>AND(TEXT(Income_Verification_Flag__c) == &apos;PASS&apos;,Variance__c != NULL, Variance__c &lt; -0.15, genesis__No_Of_Payments_Required_Upfront__c != Null )</errorConditionFormula>
+    <errorDisplayField>genesis__No_Of_Payments_Required_Upfront__c</errorDisplayField>
+    <errorMessage>Variance is less than -15%, Income Verification cannot be completed</errorMessage>
+</ValidationRule>

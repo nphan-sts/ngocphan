@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Group_System_ID__c</fullName>
+    <deprecated>false</deprecated>
+    <description>System Generated Group System ID</description>
+    <displayFormat>Group-{0000}</displayFormat>
+    <externalId>false</externalId>
+    <label>Group System ID</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>AutoNumber</type>
+</CustomField>

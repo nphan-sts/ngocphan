@@ -1,0 +1,34 @@
+<apex:page standardController="Account" title="" >
+    <apex:Detail subject="{!Account.ID}" relatedList="true" />
+<script type="text/javascript">
+// The code below is executed as soon as the page loads. Based on the value of the Status__c field
+// it either hides or renames the update_status button
+if ('{!Account.State__c}' == 'CA') renameButton("update_status", "Delete");
+if ('{!Account.State__c}' == 'CA') hideButton("update_status");
+
+function hideButton(btnName) {
+  try{
+    var buttons = parent.document.getElementsByName(btnName);
+    for (var i=0; i < buttons.length; i++) {
+      buttons[i].className="btnDisabled ";
+      buttons[i].disabled=true;
+      buttons[i].type='hidden';
+    }
+  } catch(e) {
+    // var ee = e.message || 0; alert('Error: \n\n'+e+'\n'+ee);
+  }
+}
+
+function renameButton(btnName, newTitle) {
+  try{
+    var buttons = parent.document.getElementsByName(btnName);
+    for (var i=0; i < buttons.length; i++) {
+      buttons[i].value=newTitle;
+    }
+  } catch(e) {
+    // var ee = e.message || 0; alert('Error: \n\n'+e+'\n'+ee);
+  }
+}
+</script>
+
+</apex:page>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Transaction_Date__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Loan_Account__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Transaction_Amount__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Cleared__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Rejected__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Reversed__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c.loan__Repayment_Transaction_Adjustment__r$Name</field>
+    </columns>
+    <description>This report shows all loan payment transactions that were recently (last 7 days) rejected.</description>
+    <filter>
+        <booleanFilter>1 OR 2</booleanFilter>
+        <criteriaItems>
+            <column>loan__Loan_Payment_Transaction__c$loan__Reversed__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Payment_Transaction__c$loan__Rejected__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Rejected/Reversed Loan Payments</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>loan__Loan_payments_with_reversals__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>false</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Payment_Transaction__c$loan__Transaction_Date__c</dateColumn>
+        <interval>INTERVAL_LAST7</interval>
+    </timeFrameFilter>
+</Report>

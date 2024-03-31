@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Segment4__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Segment4</label>
+    <referenceTo>loan__Value_Sets__c</referenceTo>
+    <relationshipLabel>Accounting Segment Setup (Segment4)</relationshipLabel>
+    <relationshipName>Accounting_Segment_Setup2</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

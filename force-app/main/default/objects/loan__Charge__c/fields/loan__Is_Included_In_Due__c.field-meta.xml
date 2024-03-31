@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Is_Included_In_Due__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Field should not be updated manually. System updates this field when charge is added to bill.</inlineHelpText>
+    <label>Is Included In Due</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

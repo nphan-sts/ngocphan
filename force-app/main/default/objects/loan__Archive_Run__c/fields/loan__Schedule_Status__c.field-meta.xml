@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Schedule_Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>CASE (loan__Status__c, &quot;Completed&quot;, &quot;---&quot;, IMAGE(
+CASE(loan__Status__c, &quot;Scheduled&quot;, &quot;/img/samples/light_green.gif&quot;, &quot;Late&quot;, &quot;/img/samples/light_yellow.gif&quot;,&quot;Not Scheduled&quot;, &quot;/img/samples/light_red.gif&quot;,&quot;&quot;)
+,&quot;Status&quot;))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Schedule Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

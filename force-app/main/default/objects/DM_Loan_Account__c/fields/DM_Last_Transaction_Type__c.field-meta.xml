@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Last_Transaction_Type__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>This shows the last transaction happened on this contract.
+This will be populated by system and must not be changed by user.</inlineHelpText>
+    <label>DM Last Transaction Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Reschedule</fullName>
+                <default>false</default>
+                <label>DM_Reschedule</label>
+            </value>
+            <value>
+                <fullName>DM_Extension</fullName>
+                <default>false</default>
+                <label>DM_Extension</label>
+            </value>
+            <value>
+                <fullName>DM_PrincipalAdjustment-Add</fullName>
+                <default>false</default>
+                <label>DM_PrincipalAdjustment-Add</label>
+            </value>
+            <value>
+                <fullName>DM_Refund</fullName>
+                <default>false</default>
+                <label>DM_Refund</label>
+            </value>
+            <value>
+                <fullName>DM_Additional Repayment</fullName>
+                <default>false</default>
+                <label>DM_Additional Repayment</label>
+            </value>
+            <value>
+                <fullName>DM_Stop Accrual</fullName>
+                <default>false</default>
+                <label>DM_Stop Accrual</label>
+            </value>
+            <value>
+                <fullName>DM_Start Accrual</fullName>
+                <default>false</default>
+                <label>DM_Start Accrual</label>
+            </value>
+            <value>
+                <fullName>DM_Payment Transaction</fullName>
+                <default>false</default>
+                <label>DM_Payment Transaction</label>
+            </value>
+            <value>
+                <fullName>DM_Disbursal Transaction</fullName>
+                <default>false</default>
+                <label>DM_Disbursal Transaction</label>
+            </value>
+            <value>
+                <fullName>DM_Payment Reversal</fullName>
+                <default>false</default>
+                <label>DM_Payment Reversal</label>
+            </value>
+            <value>
+                <fullName>DM_Disbursal Reversal</fullName>
+                <default>false</default>
+                <label>DM_Disbursal Reversal</label>
+            </value>
+            <value>
+                <fullName>DM_Credit Limit Change</fullName>
+                <default>false</default>
+                <label>DM_Credit Limit Change</label>
+            </value>
+            <value>
+                <fullName>DM_Index Rate Change</fullName>
+                <default>false</default>
+                <label>DM_Index Rate Change</label>
+            </value>
+            <value>
+                <fullName>Charge Off</fullName>
+                <default>false</default>
+                <label>Charge Off</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

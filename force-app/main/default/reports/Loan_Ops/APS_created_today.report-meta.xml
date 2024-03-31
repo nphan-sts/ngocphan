@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$CreatedBy</field>
+    </columns>
+    <format>Tabular</format>
+    <name>APS created today</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Automated_Payment_Setup__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Automated_Payment_Setup__c$CreatedDate</dateColumn>
+        <endDate>2020-10-23</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2020-10-23</startDate>
+    </timeFrameFilter>
+</Report>

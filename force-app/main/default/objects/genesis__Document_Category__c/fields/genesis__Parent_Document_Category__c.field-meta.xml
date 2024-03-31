@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Parent_Document_Category__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Child document category to define folder structure in documents.</description>
+    <externalId>false</externalId>
+    <label>Parent Document Category</label>
+    <referenceTo>genesis__Document_Category__c</referenceTo>
+    <relationshipLabel>Document Categories</relationshipLabel>
+    <relationshipName>Document_Categories</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>LoanOps_Jobs</fullName>
+    <booleanFilter>1 OR 2 OR 3</booleanFilter>
+    <columns>NAME</columns>
+    <columns>loan__Date__c</columns>
+    <columns>loan__Master_Archive_Object__c</columns>
+    <columns>loan__Origin__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>OWNER.FIRST_NAME</field>
+        <operation>equals</operation>
+        <value>Orvelin</value>
+    </filters>
+    <filters>
+        <field>OWNER.FIRST_NAME</field>
+        <operation>equals</operation>
+        <value>Francisco</value>
+    </filters>
+    <filters>
+        <field>OWNER.LAST_NAME</field>
+        <operation>equals</operation>
+        <value>Finley</value>
+    </filters>
+    <label>LoanOps_Jobs</label>
+</ListView>

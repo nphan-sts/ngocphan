@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Page</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Pages</value>
+    </caseValues>
+    <nameFieldLabel>Page Name</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>skuid__Max_Auto_Saves_At_Least_0</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>skuid__Page_Name_Validation</name>
+    </validationRules>
+</CustomObjectTranslation>

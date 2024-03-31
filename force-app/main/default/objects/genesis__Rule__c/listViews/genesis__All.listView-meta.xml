@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__All</fullName>
+    <columns>NAME</columns>
+    <columns>genesis__Message_failure__c</columns>
+    <columns>genesis__Message_success__c</columns>
+    <columns>genesis__Object_Type__c</columns>
+    <columns>genesis__Lending_Product__c</columns>
+    <columns>genesis__Total_Criteria__c</columns>
+    <columns>genesis__Enabled__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+</ListView>

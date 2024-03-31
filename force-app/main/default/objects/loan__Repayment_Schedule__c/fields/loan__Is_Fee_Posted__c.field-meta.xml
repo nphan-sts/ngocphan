@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Is_Fee_Posted__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This field represents whether the scheduled fee is added to charge.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field represents whether the scheduled fee is added to charge.</inlineHelpText>
+    <label>Is Fee Posted</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

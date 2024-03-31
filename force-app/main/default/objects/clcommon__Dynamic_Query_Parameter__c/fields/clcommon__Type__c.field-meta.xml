@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Specifies type of parameter</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Specifies type of parameter</inlineHelpText>
+    <label>Type</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>CONSTANT</fullName>
+                <default>false</default>
+                <label>CONSTANT</label>
+            </value>
+            <value>
+                <fullName>FN</fullName>
+                <default>false</default>
+                <label>FN</label>
+            </value>
+            <value>
+                <fullName>SUB_QUERY</fullName>
+                <default>false</default>
+                <label>SUB_QUERY</label>
+            </value>
+            <value>
+                <fullName>DT</fullName>
+                <default>false</default>
+                <label>DT</label>
+            </value>
+            <value>
+                <fullName>CONTEXT_VALUE</fullName>
+                <default>false</default>
+                <label>CONTEXT_VALUE</label>
+            </value>
+            <value>
+                <fullName>EXECUTE_QUERY</fullName>
+                <default>false</default>
+                <label>EXECUTE_QUERY</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bankrupt__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>If values is TRUE than All the CL Contract associated to account will marked as Bankrupt</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If values is TRUE than All the CL Contract associated to account will marked as Bankrupt</inlineHelpText>
+    <label>Bankrupt</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

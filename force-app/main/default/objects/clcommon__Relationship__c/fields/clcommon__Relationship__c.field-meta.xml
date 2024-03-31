@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Relationship__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>This field represents roles played by entities in a relationship.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field represents roles played by entities in a relationship.</inlineHelpText>
+    <label>Relationship</label>
+    <referenceTo>clcommon__Reciprocal_Role__c</referenceTo>
+    <relationshipLabel>Relationships</relationshipLabel>
+    <relationshipName>Relationships</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

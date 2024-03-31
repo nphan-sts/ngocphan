@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Interest_Only_Product_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+ISPICKVAL( loan__Interest_Calculation_Method__c , &apos;Interest Only&apos;),
+ISBLANK(loan__Interest_Only_Period__c)
+)</errorConditionFormula>
+    <errorMessage>&apos;Interest Only Period&apos; must be provided for an &apos;Interest Only&apos; product.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Source_System__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Source system for which status is being configured.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Source system for which status is being configured.</inlineHelpText>
+    <label>Source System</label>
+    <referenceTo>collect__Source_System__c</referenceTo>
+    <relationshipLabel>Status Configs</relationshipLabel>
+    <relationshipName>Status_Configs</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

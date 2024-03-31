@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MX_Queue_Applications</fullName>
+    <columns>NAME</columns>
+    <columns>Applicant_Name__c</columns>
+    <columns>Lead_ID__c</columns>
+    <columns>genesis__Status__c</columns>
+    <columns>OWNER.ALIAS</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>Expiry_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>genesis__Status__c</field>
+        <operation>equals</operation>
+        <value>offer_accepted,kba_success,kba_fail</value>
+    </filters>
+    <label>MX: MX Assignments</label>
+</ListView>

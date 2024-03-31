@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Metro2_First_Delinquency_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This will be reported only if the Account Status Code is 61-65, 71, 78, 80, 82-84, 88-89 and 93-97.
+This field gets updated only when the status of loan account changes from Active-Good Standing to Active-Bad Standing.</inlineHelpText>
+    <label>Date of First Delinquency</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

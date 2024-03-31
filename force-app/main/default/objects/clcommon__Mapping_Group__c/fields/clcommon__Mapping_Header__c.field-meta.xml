@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Mapping_Header__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Mapping Header</label>
+    <referenceTo>clcommon__Mapping_Header__c</referenceTo>
+    <relationshipName>Mapping_Header_Groups</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>true</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

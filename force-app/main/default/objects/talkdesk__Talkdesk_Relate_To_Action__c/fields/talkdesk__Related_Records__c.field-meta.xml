@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>talkdesk__Related_Records__c</fullName>
+    <deprecated>false</deprecated>
+    <description>List of related record ids, separated by a comma each</description>
+    <externalId>false</externalId>
+    <label>Related Records</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

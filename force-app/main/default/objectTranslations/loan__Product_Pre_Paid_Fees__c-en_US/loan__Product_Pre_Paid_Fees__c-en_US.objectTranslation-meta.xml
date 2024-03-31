@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Apply_On_Every_Disbursal_Check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Fee_Accrual_Method_Check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Fee_Frequency_Check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__LOC_should_not_have_prepaid_fees</name>
+    </validationRules>
+</CustomObjectTranslation>

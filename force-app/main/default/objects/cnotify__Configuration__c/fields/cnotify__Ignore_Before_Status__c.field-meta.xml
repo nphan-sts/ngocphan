@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>cnotify__Ignore_Before_Status__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This will not consider Before Status value of status field. Only change on Status field&apos;s value will be tracked.</inlineHelpText>
+    <label>Ignore Before Status</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

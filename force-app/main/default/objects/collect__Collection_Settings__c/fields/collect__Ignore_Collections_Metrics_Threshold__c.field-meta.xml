@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Ignore_Collections_Metrics_Threshold__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If selected, system continues to process collection strategy actions (SMS, Email, Letters &amp; Dialer) even after collections metrics threshold is reached.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If selected, system continues to process collection strategy actions (SMS, Email, Letters &amp; Dialer) even after collections metrics threshold is reached.</inlineHelpText>
+    <label>Ignore Collections Metrics Threshold</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

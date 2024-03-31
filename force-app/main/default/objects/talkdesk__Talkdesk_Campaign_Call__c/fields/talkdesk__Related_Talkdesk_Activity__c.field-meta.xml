@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>talkdesk__Related_Talkdesk_Activity__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>The Talkdesk Activity with the details regarding the campaign call</description>
+    <externalId>false</externalId>
+    <label>Talkdesk Activity</label>
+    <referenceTo>talkdesk__Talkdesk_Activity__c</referenceTo>
+    <relationshipLabel>Talkdesk Campaign Calls</relationshipLabel>
+    <relationshipName>Talkdesk_Campaign_Activities</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>talkdesk__Campaign_Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF( NOW() &gt;= (talkdesk__StartTimeGMT__c + (talkdesk__Hours_Per_Day__c/24) + (talkdesk__End_Date__c - talkdesk__Start_Date__c)), $Label.talkdesk__talkdesk_campaign_expired_status , 
+			IF( OR(  talkdesk__Number_of_Campaign_Agents__c == 0,  talkdesk__Number_of_Campaign_Calls__c == 0), $Label.talkdesk__talkdesk_campaign_incomplete_status , 
+						 TEXT(talkdesk__State__c)  
+					)
+		)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Campaign Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,3 @@
+Email Notification : 
+
+{!cnotify__Notification__c.cnotify__Message__c}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Parent_Company__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Parent Company</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the company that owns enough voting stock in another firm to control management and operations by influencing or electing its board of directors.</inlineHelpText>
+    <label>Parent Company</label>
+    <referenceTo>genesis__Company__c</referenceTo>
+    <relationshipLabel>Companies</relationshipLabel>
+    <relationshipName>Companies</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

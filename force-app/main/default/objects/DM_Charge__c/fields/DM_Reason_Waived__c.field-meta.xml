@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Reason_Waived__c</fullName>
+    <externalId>false</externalId>
+    <label>DM_Reason Waived</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Customer Satisfaction</fullName>
+                <default>false</default>
+                <label>DM_Customer Satisfaction</label>
+            </value>
+            <value>
+                <fullName>DM_Non-Recoverable</fullName>
+                <default>false</default>
+                <label>DM_Non-Recoverable</label>
+            </value>
+            <value>
+                <fullName>DM_Bankruptcy - Active</fullName>
+                <default>false</default>
+                <label>DM_Bankruptcy - Active</label>
+            </value>
+            <value>
+                <fullName>DM_Bankruptcy - Discharged</fullName>
+                <default>false</default>
+                <label>DM_Bankruptcy - Discharged</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

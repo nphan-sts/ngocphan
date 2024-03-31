@@ -1,0 +1,47 @@
+<html>
+<body style="-webkit-text-size-adjust: none; margin: 0; padding: 0 24px; background-color: #E0E6EB; color: #50677b;">
+
+        <!-- START PREVIEW PRETEXT -->
+        <div style="display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden; mso-hide:all;">
+            You have an unmapped status. We detected a new unmapped status for your Omni-Channel integration in Talkdesk for Salesforce.
+        </div>
+
+        <!-- START EMAIL -->
+        <center>
+            <table width="600" style="border-collapse: collapse; border: none; margin: 0px; padding: 0px; max-width: 600px; width: 100%; font-family: 'Helvetica Neue', Arial, sans-serif; color: #50677b;">
+
+                <!-- START LOGO HEADER -->
+                <tr style="border-collapse: collapse; border: none; margin: 0px; padding: 0px;">
+                    <td>
+                        <img width="120" height="24" style="-ms-interpolation-mode: bicubic; width: 120px; height: auto; padding: 24px 0px;" src="http://design.talkdeskapp.com/assets/talkdesk-logo/talkdesk-logo-240x48.png" alt="Talkdesk">
+                    </td>
+                </tr>
+
+                <!-- START EMAIL BODY CONTENT -->
+                <tr style="border-collapse: collapse; border: none; padding: 0px; margin: 0px; border-radius: 4px;">
+                    <td>
+                        <div style="padding: 32px; background-color: white; border-radius: 4px;">
+
+                            <!-- START EMAIL TITLE -->
+                            <h1 style="font-size: 24px; line-height: 32px; font-weight: 400; margin: 0px;">Unmapped Omni-Channel Status for Account {!Organization.Name} ({!$Setup.talkdesk__Talkdesk__c.talkdesk__Account__c})</h1>
+
+                            <!-- START EMAIL BODY TEXT -->
+                            <p style="font-size: 14px; line-height: 20px; font-weight: 400; margin: 16px 0px;">We detected a new unmapped status for your Omni-Channel integration in Talkdesk for Salesforce. Please login to your Salesforce account and map the new status on the Talkdesk Admin page so that changes in your agent's Omni-Channel status are reflected in real time in Talkdesk.</p>
+
+
+                            <span align="right" style="font-size: 14px; line-height: 20px; font-weight: 400; display: block; text-align: right;">- The Talkdesk Team</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr style="border-collapse: collapse; border: none; margin: 0px; padding: 0px;">
+                    <td style="padding: 8px 0px 24px;">
+                        <a style="font-size: 12px; padding-right: 16px; text-decoration: none; color: rgba(34,44,52,0.5);" href="https://www.talkdesk.com/">Talkdesk.com</a>
+                        <a style="font-size: 12px; padding-right: 16px; text-decoration: none; color: rgba(34,44,52,0.5);" href="http://support.talkdesk.com">Support</a>
+                        <a style="font-size: 12px; padding-right: 16px; text-decoration: none; color: rgba(34,44,52,0.5);" href="https://twitter.com/talkdesk">Twitter</a>
+                        <a style="font-size: 12px; padding-right: 16px; text-decoration: none; color: rgba(34,44,52,0.5);" href="https://www.facebook.com/pages/Talkdesk/242599085821571">Facebook</a>
+                    </td>
+                </tr>
+            </table>
+        </center>
+    </body>
+</html>

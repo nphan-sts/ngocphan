@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Cheque_Number_Validation</fullName>
+    <active>true</active>
+    <errorConditionFormula>loan__Payment_Mode__r.Name  = &apos;Cheque&apos;  &amp;&amp;  ISBLANK( loan__Cheque_Number__c )</errorConditionFormula>
+    <errorMessage>Cheque Number can&apos;t be blank if payment mode is Cheque.</errorMessage>
+</ValidationRule>

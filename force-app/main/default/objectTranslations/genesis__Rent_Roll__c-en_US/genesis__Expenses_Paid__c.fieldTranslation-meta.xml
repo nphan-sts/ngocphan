@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>genesis__Expenses_Paid__c</name>
+    <picklistValues>
+        <masterLabel>Full Service Gross</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Modified Gross</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Triple Net</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

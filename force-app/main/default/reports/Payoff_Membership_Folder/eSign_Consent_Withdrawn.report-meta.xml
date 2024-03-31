@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>genesis__Applications__c$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$genesis__Account__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Application_Start_DateV2__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$genesis__Status__c</field>
+    </columns>
+    <description>Loan applications where eSign Consent has been withdrawn by the consumer.</description>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c$Esign_consent_withdrawn__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>eSign Consent Withdrawn Loan Apps</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Application__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c$Application_Start_DateV2__c</dateColumn>
+        <interval>INTERVAL_CURY</interval>
+    </timeFrameFilter>
+</Report>

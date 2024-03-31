@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Grace_Period_for_Repayments__c</fullName>
+    <defaultValue>0</defaultValue>
+    <deprecated>false</deprecated>
+    <description>E.g. If Grace period is 10 days and payment doesn&apos;t come of due date, following things will happen
+-Interest will still accrue
+-Overdue Interest (Penalty - interest on OP, OI and OF) will not accrue. However, if payment doesn&apos;t come at all, on 11th day, overdue interest for all 11 days will be accrued.
+-Overdue components will be non-zero but the account status will not be delinquent</description>
+    <externalId>false</externalId>
+    <inlineHelpText>E.g. If Grace period is 10 days and payment doesn&apos;t come of due date, following things will happen
+-Interest will still accrue
+-Overdue Interest (Penalty - interest on OP, OI and OF) will not accrue.
+-status will not be delinquent</inlineHelpText>
+    <label>Late Charge Grace Days</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

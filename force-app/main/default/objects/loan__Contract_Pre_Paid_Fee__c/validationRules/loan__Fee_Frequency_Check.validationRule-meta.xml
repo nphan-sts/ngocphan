@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Fee_Frequency_Check</fullName>
+    <active>true</active>
+    <description>Provide Frequency when Accrual Required is true</description>
+    <errorConditionFormula>AND(loan__Accrual_Required__c, ISPICKVAL( loan__Frequency__c, &apos;&apos;))</errorConditionFormula>
+    <errorMessage>Frequency should be specified when Accrual Required is true.</errorMessage>
+</ValidationRule>

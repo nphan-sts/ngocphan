@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__SS_Inv_Accrued_Interest_Amt__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Payable Accrued Interest amount to investor</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Payable Accrued Interest amount to investor</inlineHelpText>
+    <label>Accrued Interest Snapshot</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

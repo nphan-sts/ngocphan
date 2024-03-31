@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Income_Check</fullName>
+    <active>false</active>
+    <description>This has been deprecated.</description>
+    <errorConditionFormula>1 != 1</errorConditionFormula>
+    <errorMessage>Monthly income check failed.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>genesis__Applications__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Applicant_Name__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$genesis__Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Owner</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Application_Tags__r$LastModifiedDate</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Expiry_Date__c</field>
+    </columns>
+    <description>Applications that failed KBA in the MX queue tagged with Needs Review</description>
+    <filter>
+        <booleanFilter>((1 AND 2 AND 3)) AND 4</booleanFilter>
+        <criteriaItems>
+            <column>genesis__Applications__c$Owner</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>MX Queue</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c$genesis__Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>kba_fail</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c.Application_Tags__r$Application_Tag__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Needs Review</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c.Application_Tags__r$softDelete__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>genesis__Applications__c.Application_Tags__r$Application_Tag__c</field>
+        <sortOrder>Desc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>genesis__Applications__c$User_Processor__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Failed KBA in MX queue</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Applications_and_Application_Tags__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

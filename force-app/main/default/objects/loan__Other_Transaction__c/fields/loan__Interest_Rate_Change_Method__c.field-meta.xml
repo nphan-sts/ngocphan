@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Interest_Rate_Change_Method__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field captures interest rate change method based on &apos;Interest Rate Change Method&apos; field value on &apos;CL Contract&apos; object  at the time of rate change.
+Empty/blank - Keeps the current schedule
+Keep Same Payment Amount - Changes loan maturity date keeping same installment
+Change Payment Amount - Changes installment amount keeping same maturity date</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field captures interest rate change method based on &apos;Interest Rate Change Method&apos; field value on &apos;CL Contract&apos; object  at the time of rate change</inlineHelpText>
+    <label>Interest Rate Change Method</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

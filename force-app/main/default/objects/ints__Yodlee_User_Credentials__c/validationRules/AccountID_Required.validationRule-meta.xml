@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AccountID_Required</fullName>
+    <active>true</active>
+    <description>Account ID must be required field any time new credentials record is added, otherwise trigger looking to pull Yodlee transactions will fail</description>
+    <errorConditionFormula>ISBLANK(ints__Account__c)</errorConditionFormula>
+    <errorMessage>Account field is missing from Yodlee User Credentials record</errorMessage>
+</ValidationRule>

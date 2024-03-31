@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__No_Recurrence_Month_if_not_recurring</fullName>
+    <active>true</active>
+    <description>Recurrence Month of Year cannot be selected if the holiday is not marked as Recurring</description>
+    <errorConditionFormula>AND(NOT(clcommon__IsRecurrence__c), NOT(ISBLANK(TEXT(clcommon__RecurrenceMonthOfYear__c))))</errorConditionFormula>
+    <errorDisplayField>clcommon__RecurrenceMonthOfYear__c</errorDisplayField>
+    <errorMessage>Recurrence Month of Year cannot be selected if the holiday is not marked as Recurring</errorMessage>
+</ValidationRule>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Tolerance_Percentage__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Indicates Tolerance percentage  for the source system</description>
+    <externalId>false</externalId>
+    <label>Tolerance Percentage</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>3</scale>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

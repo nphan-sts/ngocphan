@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Account__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Broker Account for this lending account.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Broker Account for this lending account.</inlineHelpText>
+    <label>Broker Account</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Account.loan__Broker__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Brokers</relationshipLabel>
+    <relationshipName>Brokers</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

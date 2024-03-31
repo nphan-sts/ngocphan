@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Next_Crb_Payment_Profile_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Next Payment Profile Generation date</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Next Payment Profile Generation date</inlineHelpText>
+    <label>Next Credit Bureau Payment Profile Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

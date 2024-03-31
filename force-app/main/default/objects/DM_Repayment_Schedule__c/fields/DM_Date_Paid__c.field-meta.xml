@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Date_Paid__c</fullName>
+    <description>Date paid</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Date paid</inlineHelpText>
+    <label>DM Date Paid</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

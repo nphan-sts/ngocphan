@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>genesis__Applications__c$Applicant_Name__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$genesis__Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Owner</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Employment_Status__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c$genesis__Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>docusign_loan_docs_sent,docusign_loan_docs_complete,pre_funding,Approved for funding,funded,Declined,Expired,Withdrawn,Decline_Manual_Review</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c$Owner</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>ready for verification</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>genesis__Applications__c$User_Processor__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>All RFVs</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Applications_and_Application_Tags__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <sortColumn>genesis__Applications__c$Owner</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c.Application_Tags__r$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

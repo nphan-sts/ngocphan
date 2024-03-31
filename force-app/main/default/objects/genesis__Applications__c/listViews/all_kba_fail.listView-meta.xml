@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>all_kba_fail</fullName>
+    <columns>NAME</columns>
+    <columns>genesis__Account__c</columns>
+    <columns>OBJECT_ID</columns>
+    <columns>Expiry_Date__c</columns>
+    <columns>genesis__Status__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>genesis__Status__c</field>
+        <operation>equals</operation>
+        <value>kba_fail</value>
+    </filters>
+    <label>all kba_fail</label>
+</ListView>

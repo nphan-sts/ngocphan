@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Payoff_Payment_Alert_Notification_Template1</fullName>
+        <description>Payoff Payment Alert Notification Template</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>verification@happymoney.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Payoff_Email_Templates/payoff_payment_alert</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>Update_Email_Field_With_Contact_Email</fullName>
+        <description>Update the email field with the value of contract contact email address</description>
+        <field>Email__c</field>
+        <formula>loan__CL_Contract__r.loan__Account__r.cnotify__Email__c</formula>
+        <name>Update Email Field With Contact Email</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_Email_Field_With_Contact_Email1</fullName>
+        <description>Update the email field with the value of contract contact email address</description>
+        <field>Email__c</field>
+        <formula>loan__CL_Contract__r.loan__Account__r.cnotify__Email__c</formula>
+        <name>Update Email Field With Contact Email</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>SendPayoffEmailAlert</fullName>
+        <actions>
+            <name>Update_Email_Field_With_Contact_Email</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>loan__Automated_Payment_Setup__c.loan__Type__c</field>
+            <operation>equals</operation>
+            <value>ONE TIME</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>loan__Automated_Payment_Setup__c.CreatedById</field>
+            <operation>notEqual</operation>
+            <value>Member User</value>
+        </criteriaItems>
+        <description>Sends Pay off email alert when automated payment set up record is created</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+</Workflow>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Go_Back_Queue_Applications</fullName>
+    <columns>NAME</columns>
+    <columns>User_Processor__c</columns>
+    <filterScope>Queue</filterScope>
+    <label>Go-Back Queue</label>
+    <queue>Go_Back_Queue</queue>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

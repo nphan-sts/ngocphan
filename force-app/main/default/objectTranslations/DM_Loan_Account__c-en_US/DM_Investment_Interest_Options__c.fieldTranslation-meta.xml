@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>DM_Investment_Interest_Options__c</name>
+    <picklistValues>
+        <masterLabel>DM_Donate</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>DM_Pay Back</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>DM_Reinvest</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

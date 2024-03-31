@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Loan_Status__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Status of the Account expected values are :
+Pending Approval
+Active - Good Standing
+Active - Bad Standing
+Active - Matured
+Approved
+Canceled
+Closed - Obligations met
+Closed- Written Off
+Closed - Refinanced
+Partial Application
+Closed - Premature</inlineHelpText>
+    <label>DM Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Active - Bad Standing</fullName>
+                <default>false</default>
+                <label>DM_Active - Bad Standing</label>
+            </value>
+            <value>
+                <fullName>DM_Active - Good Standing</fullName>
+                <default>false</default>
+                <label>DM_Active - Good Standing</label>
+            </value>
+            <value>
+                <fullName>DM_Active - Marked for Closure</fullName>
+                <default>false</default>
+                <label>DM_Active - Marked for Closure</label>
+            </value>
+            <value>
+                <fullName>DM_Active - Matured</fullName>
+                <default>false</default>
+                <label>DM_Active - Matured</label>
+            </value>
+            <value>
+                <fullName>DM_Approved</fullName>
+                <default>false</default>
+                <label>DM_Approved</label>
+            </value>
+            <value>
+                <fullName>DM_Canceled</fullName>
+                <default>false</default>
+                <label>DM_Canceled</label>
+            </value>
+            <value>
+                <fullName>DM_Closed - Obligations met</fullName>
+                <default>false</default>
+                <label>DM_Closed - Obligations met</label>
+            </value>
+            <value>
+                <fullName>DM_Closed - Premature</fullName>
+                <default>false</default>
+                <label>DM_Closed - Premature</label>
+            </value>
+            <value>
+                <fullName>DM_Closed - Refinanced</fullName>
+                <default>false</default>
+                <label>DM_Closed - Refinanced</label>
+            </value>
+            <value>
+                <fullName>DM_Closed- Written Off</fullName>
+                <default>false</default>
+                <label>DM_Closed- Written Off</label>
+            </value>
+            <value>
+                <fullName>DM_Invalid</fullName>
+                <default>false</default>
+                <label>DM_Invalid</label>
+            </value>
+            <value>
+                <fullName>DM_Partial Application</fullName>
+                <default>true</default>
+                <label>DM_Partial Application</label>
+            </value>
+            <value>
+                <fullName>DM_Pending Approval</fullName>
+                <default>false</default>
+                <label>DM_Pending Approval</label>
+            </value>
+            <value>
+                <fullName>DM_Premature Closure Initiated</fullName>
+                <default>false</default>
+                <label>DM_Premature Closure Initiated</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

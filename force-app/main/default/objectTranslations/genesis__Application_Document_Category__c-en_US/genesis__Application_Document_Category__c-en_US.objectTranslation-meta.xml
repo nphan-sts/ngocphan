@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Application Doc Category Layout</layout>
+        <sections>
+            <label></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Box_Url_Cannot_be_Shared_Url</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>CSN_and_TIL_can_not_be_required</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Rejection_Reason_Required</name>
+    </validationRules>
+</CustomObjectTranslation>

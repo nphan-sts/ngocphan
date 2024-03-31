@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loan_Mod_Offer_Length_months__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Amount of months member has a billed amount less than payment amount on contract but greater than $0.</inlineHelpText>
+    <label>Loan Mod Offer Length (months)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

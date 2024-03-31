@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Deactivate_Leads</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Deactivate Leads</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/51.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/51.0/apex.js&quot;)}
+if (!confirm(&apos;You are about to make a call to Matcha and it may change data, Do you still want to proceed?&apos;)) {
+location.reload(true);}
+else {
+var result = sforce.apex.execute(&quot;MW_MemberMatchingDeactivation&quot;,&quot;makeCallout&quot;,{leadId:&quot;{!Lead.Id}&quot;});
+if(result) {
+alert(&apos;Successful Connection Established with Leads API. Response will be loaded.&apos;);
+window.location.reload();
+
+}else alert(&apos;Unsuccessful Connection With Leads API&apos;);
+
+}</url>
+</WebLink>

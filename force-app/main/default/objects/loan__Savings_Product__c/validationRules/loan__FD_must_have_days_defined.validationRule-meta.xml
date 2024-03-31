@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__FD_must_have_days_defined</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISPICKVAL(loan__Product_Type__c, &apos;Fixed&apos;)
+&amp;&amp;
+ISNULL(loan__Fixed_Deposit_Term__c)</errorConditionFormula>
+    <errorMessage>You must define the term for a Fixed Deposit.</errorMessage>
+</ValidationRule>

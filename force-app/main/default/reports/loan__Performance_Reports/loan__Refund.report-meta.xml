@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Loan_Account__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c$loan__Loan_Status__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c$loan__Loan_Amount__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c$loan__Principal_Paid__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>loan__Loan_Account__c$loan__Excess__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c$loan__Maturity_Date_Current__c</field>
+    </columns>
+    <description>This report shows the loans that have an excess payment on them.</description>
+    <filter>
+        <criteriaItems>
+            <column>loan__Loan_Account__c$loan__Excess__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>greaterThan</operator>
+            <value>0</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>loan__Loan_Account__c$loan__Branch__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Refund Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>loan__Loan_with_Payments__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Account__c$loan__Disbursal_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

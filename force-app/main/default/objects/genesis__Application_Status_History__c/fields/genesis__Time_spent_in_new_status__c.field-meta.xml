@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Time_spent_in_new_status__c</fullName>
+    <deprecated>false</deprecated>
+    <description>If it is not the most recent status change record, then the time elapsed between the status change is calculated in minutes and recorded in this field.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If it is not the most recent status change record, then the time elapsed between the status change( that is time when the new record is created minus changed on date/time value) is calculated in minutes and recorded in this field.</inlineHelpText>
+    <label>Time Spent In New Status</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

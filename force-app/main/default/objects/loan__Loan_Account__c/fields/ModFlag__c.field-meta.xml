@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ModFlag__c</fullName>
+    <description>Indication of whether a loan has ever been modified. Includes modifications for hardship - SAPs, short term payment reduction mods with or without forbearance and long term payment reduction mods with or without forbearance. This flag should not be updated for SCRAs and CPDs.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indication of whether a loan has ever been modified. Includes modifications for hardship - SAPs, short term payment reduction mods with or without forbearance and long term payment reduction mods with or without forbearance. This flag should not be updated for SCRAs and CPDs.</inlineHelpText>
+    <label>Mod Flag</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Y</fullName>
+                <default>false</default>
+                <label>Y</label>
+            </value>
+            <value>
+                <fullName>N</fullName>
+                <default>false</default>
+                <label>N</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

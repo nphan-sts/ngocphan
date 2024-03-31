@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Debit_Payment_on_Previous_Working_Day__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If this option is selected, the loan payment ACH job picks up payments for debiting the previous working day. For example, if a payment fell on a Sunday, the system would include it in Friday&apos;s ACH file.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If this option is selected, the loan payment ACH job picks up payments for debiting the previous working day. For example, if a payment fell on a Sunday, the system would include it in Friday&apos;s ACH file. (Future Use)</inlineHelpText>
+    <label>Debit Loan Pmt on Previous Working Day</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

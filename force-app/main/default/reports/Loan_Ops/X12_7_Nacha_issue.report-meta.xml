@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Cleared__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Loan_Account__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Transaction_Amount__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>loan__Loan_Payment_Transaction__c$loan__Sent_To_ACH_On__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>12/7/2021</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Payment_Transaction__c$loan__ACH_Filename__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>A - Loan_Payments_ACU ACH 2021-12-07 16:32:26</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>12/7 Nacha issue</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>peer__Loan_Payment_Transactions_Reports__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Payment_Transaction__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

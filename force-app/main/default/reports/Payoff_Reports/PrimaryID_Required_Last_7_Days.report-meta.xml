@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>genesis__Applications__c$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$genesis__Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.genesis__Application_Document_Category__r$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.genesis__Application_Document_Category__r$genesis__Status__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c.genesis__Application_Document_Category__r$Name</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Primary ID</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c.genesis__Application_Document_Category__r$genesis__Required__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c$genesis__Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>kba_success,kba_fail,agent_document_verification_pending,agent_verified,docusign_loan_docs_sent,docusign_loan_docs_complete,pre_funding,Approved for funding,funded,Stacker_Check_Passed,Redecision_Required,Withdrawn,Decline_Manual_Review</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>PrimaryID_Required_Last_7_Days</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Applications_with_Application_Document_Category__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_LAST7</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <aggregates>
+        <calculatedFormula>loan__MF_Account__c.loan__Balance__c:SUM</calculatedFormula>
+        <datatype>number</datatype>
+        <description>Opening Balance</description>
+        <developerName>FORMULA1</developerName>
+        <isActive>false</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Opening Balance</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <aggregates>
+        <calculatedFormula>loan__MF_Account__c.loan__Balance__c:SUM+loan__Transaction_Entry__c.loan__Debit__c:SUM-loan__Transaction_Entry__c.loan__Credit__c:SUM</calculatedFormula>
+        <datatype>number</datatype>
+        <description>Closing Balance</description>
+        <developerName>FORMULA2</developerName>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Closing Balance</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>loan__MF_Account__c$loan__Balance__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>loan__MF_Account__c.loan__TransactionEntries__r$loan__Debit__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>loan__MF_Account__c.loan__TransactionEntries__r$loan__Credit__c</field>
+    </columns>
+    <description>Trial Balance. This report has been deprecated for this release.</description>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>loan__MF_Account__c$loan__Account_Type__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>loan__MF_Account__c$loan__Parent_Account__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Trial Balance (deprecated)</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>loan__Trial_Balance_Report__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__MF_Account__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

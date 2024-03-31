@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__days_until_due_date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>No of days to close the task created from this setup.
+&gt;= 0 → sets due date on task as current date plus value set
+null → no due date is set
+&lt; 0 → sets due date as expected closing date of application minus the value</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Number of days to close this tasks either from present date(+ve number) or number of days before which the task needs to be closed from the expected close date on application(-ve number)</inlineHelpText>
+    <label># days until due date</label>
+    <precision>2</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

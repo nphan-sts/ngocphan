@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Use_Standard_Layouts__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, then standard layouts will be used instead of Skuid Pages for this Page Assignment.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If checked, then standard layouts will be used instead of Skuid Pages for this Page Assignment.</inlineHelpText>
+    <label>Use Standard Layouts</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

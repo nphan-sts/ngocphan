@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Pay_Off_Amount_As_Of_Today__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Loan_Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Active - Marked for Closure</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Pay_Off_Amount_As_Of_Today__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>lessOrEqual</operator>
+            <value>10</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Failed in loan clouser</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$loan__Loan_Account__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Account__c.loan__Accrual_Start_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

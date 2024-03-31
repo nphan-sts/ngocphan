@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Payment_Frequency_Constraint</fullName>
+    <active>true</active>
+    <description>Payment Frequency and loan term interdependency constraint</description>
+    <errorConditionFormula>loan__Number_of_Installments__c = 1  &amp;&amp;  !ISPICKVAL(loan__Frequency_of_Loan_Payment__c , &quot;Single-Payment&quot;)</errorConditionFormula>
+    <errorDisplayField>loan__Frequency_of_Loan_Payment__c</errorDisplayField>
+    <errorMessage>Payment Frequency should always be &apos;Single-Payment&apos; for loan with 1 term</errorMessage>
+</ValidationRule>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__RecurrenceType__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field holds the pattern of recurrence of the holiday.</description>
+    <externalId>false</externalId>
+    <label>Recurrence Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>RecursDaily</fullName>
+                <default>false</default>
+                <label>RecursDaily</label>
+            </value>
+            <value>
+                <fullName>RecursEveryWeekday</fullName>
+                <default>false</default>
+                <label>RecursEveryWeekday</label>
+            </value>
+            <value>
+                <fullName>RecursWeekly</fullName>
+                <default>false</default>
+                <label>RecursWeekly</label>
+            </value>
+            <value>
+                <fullName>RecursMonthly</fullName>
+                <default>false</default>
+                <label>RecursMonthly</label>
+            </value>
+            <value>
+                <fullName>RecursMonthlyNth</fullName>
+                <default>false</default>
+                <label>RecursMonthlyNth</label>
+            </value>
+            <value>
+                <fullName>RecursYearly</fullName>
+                <default>false</default>
+                <label>RecursYearly</label>
+            </value>
+            <value>
+                <fullName>RecursYearlyNth</fullName>
+                <default>false</default>
+                <label>RecursYearlyNth</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

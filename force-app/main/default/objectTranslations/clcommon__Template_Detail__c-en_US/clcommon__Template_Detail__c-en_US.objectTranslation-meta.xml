@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>clcommon__Alias_Alphanumeric</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>clcommon__Circular_Dependency</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>clcommon__Type_Compute</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>clcommon__Type_Difference</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>clcommon__Type_Header</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>clcommon__Type_Input</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>clcommon__Type_Rollup</name>
+    </validationRules>
+</CustomObjectTranslation>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Fee_Type__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Fee</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>No Fees exist with the type as pre-paid fees, please define a new fee with the type as pre paid fees</errorMessage>
+        <filterItems>
+            <field>loan__Fee__c.loan__Time_of_charge__c</field>
+            <operation>equals</operation>
+            <value>Pre-Paid Fees</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>loan__Fee__c</referenceTo>
+    <relationshipLabel>Pre-Paid Fee</relationshipLabel>
+    <relationshipName>Pre_Paid_Fee</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

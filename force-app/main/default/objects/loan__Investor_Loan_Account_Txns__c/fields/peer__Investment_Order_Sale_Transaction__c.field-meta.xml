@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Investment_Order_Sale_Transaction__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>When transaction code is &quot;SALE&quot;, this field would have a reference of Investment Order Sale Transaction. Also when IOs are activated or deactivated due to purchase/sale this field would have a reference of Investment Order Sale Transaction.</description>
+    <externalId>false</externalId>
+    <label>Investment Order Sale Transaction</label>
+    <referenceTo>peer__Investment_Order_Sale_Transaction__c</referenceTo>
+    <relationshipLabel>Investor Loan Transactions</relationshipLabel>
+    <relationshipName>Investor_Loan_Transactions</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

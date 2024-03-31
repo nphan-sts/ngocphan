@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Recurring_OT_ACH_Conflict_Check</fullName>
+    <active>false</active>
+    <errorConditionFormula>NOT( ISBLANK( loan__ACH_Next_Debit_Date__c ))  &amp;&amp;  NOT( ISBLANK( loan__OT_ACH_Debit_Date__c )) &amp;&amp; (loan__ACH_Next_Debit_Date__c == loan__OT_ACH_Debit_Date__c )</errorConditionFormula>
+    <errorMessage>System Limitation - You cannot set up a One Time ACH and Recurring ACH transaction on the same day.</errorMessage>
+</ValidationRule>

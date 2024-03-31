@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Skip_Query_Validation_For_DAG__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If this field is checked then the query in the DAG jobs will not be validated.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If this field is checked then the query in the DAG jobs will not be validated.</inlineHelpText>
+    <label>Skip Query Validation For DAG</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>picklist</bucketType>
+        <developerName>BucketField_56080614</developerName>
+        <masterLabel>application status</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <sourceColumnName>genesis__Applications__c.genesis__Status__c</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <sourceValue>offer_shown</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Redecision_Required</sourceValue>
+            </sourceValues>
+            <value>b.offer_shown</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>NEW - CREDIT PULLED</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>NEW - ENTERED</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>NEW - IN CREDIT CHECK</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>NEW - IN REVIEW</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>NEW - PRICING GENERATED</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>NEW - SCORECARD GENERATED</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>NEW - CHECKLIST GENERATED</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>NEW - VEHICLE VALUATION REQUIRED</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>REJECTED</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>PULL CREDIT</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Default Documents</sourceValue>
+            </sourceValues>
+            <value>a.before offer shown</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>offer_accepted</sourceValue>
+            </sourceValues>
+            <value>c.offer_accepted</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>kba_success</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>kba_fail</sourceValue>
+            </sourceValues>
+            <value>d.kba</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>agent_document_verification_pending</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>agent_verification_pending</sourceValue>
+            </sourceValues>
+            <value>f.AVP/ADVP</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Self Employed Documents</sourceValue>
+            </sourceValues>
+            <value>e.self employed doc</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>agent_verified</sourceValue>
+            </sourceValues>
+            <value>h.agent_verified</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Stacker_Check_Passed</sourceValue>
+            </sourceValues>
+            <value>g.stacker_check_passed</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>docusign_loan_docs_sent</sourceValue>
+            </sourceValues>
+            <value>i.e-sign sent</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>docusign_loan_docs_complete</sourceValue>
+            </sourceValues>
+            <value>j.e-sign completed</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>pre_funding</sourceValue>
+            </sourceValues>
+            <value>k.pre-funding</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Approved for funding</sourceValue>
+            </sourceValues>
+            <value>l.approved for funding</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>funded</sourceValue>
+            </sourceValues>
+            <value>m.funded</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>APPROVED - APPROVED</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>APPROVED - CONVERTED TO CONTRACT</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>APPROVED - DOCUMENT CHECK</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Declined</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Expired</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Withdrawn</sourceValue>
+            </sourceValues>
+            <value>n.other</value>
+        </values>
+    </buckets>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Lead_ID__c</field>
+    </columns>
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Employment_Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Fastpass_Score__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Investor__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.genesis__Loan_Amount__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Application_Start_DateV2__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Expiry_Date__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c.genesis__Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>review,Decline_Manual_Review,Declined,Expired,Withdrawn,Default Documents</value>
+        </criteriaItems>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>BucketField_56080614</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>genesis__Applications__c.utm_medium__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>genesis__Applications__c.utm_source__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>application_funnel</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$genesis__Applications__c@genesis__Applications__c.genesis__Account__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c.Application_Start_DateV2__c</dateColumn>
+        <endDate>2019-09-30</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2019-09-01</startDate>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Base_Statement_Detail_Amount__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Statement detail amount for the corresponding chart of account from the base statement</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Statement detail amount for the corresponding chart of account from the base statement</inlineHelpText>
+    <label>Base Statement Detail Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

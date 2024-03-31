@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Amortization_Schedule__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>This fields defines a one to one mapping between amortisation schedule and regular Interest Posting Transaction for Flexible Amz Loans.</description>
+    <externalId>false</externalId>
+    <label>Amortization Schedule</label>
+    <referenceTo>loan__Repayment_Schedule__c</referenceTo>
+    <relationshipLabel>Interest Posting Transactions</relationshipLabel>
+    <relationshipName>Interest_Posting_Transactions</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Promise_To_Pay_Amount__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Amount which was promised to pay</description>
+    <externalId>false</externalId>
+    <label>Promise To Pay Amount</label>
+    <precision>18</precision>
+    <required>true</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

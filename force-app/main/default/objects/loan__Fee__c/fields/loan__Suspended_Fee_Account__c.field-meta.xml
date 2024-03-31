@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Suspended_Fee_Account__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Suspended Fee Account</label>
+    <lookupFilter>
+        <active>false</active>
+        <errorMessage>Please select a master GL.</errorMessage>
+        <filterItems>
+            <field>loan__MF_Account__c.loan__Is_Master__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>loan__MF_Account__c</referenceTo>
+    <relationshipLabel>Fees (Suspended Fee Account)</relationshipLabel>
+    <relationshipName>Fees_SFA</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

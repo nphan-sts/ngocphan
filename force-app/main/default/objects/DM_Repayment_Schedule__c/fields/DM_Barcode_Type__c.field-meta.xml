@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Barcode_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>DM Barcode Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Code128</fullName>
+                <default>false</default>
+                <label>DM_Code128</label>
+            </value>
+            <value>
+                <fullName>DM_code39</fullName>
+                <default>false</default>
+                <label>DM_code39</label>
+            </value>
+            <value>
+                <fullName>DM_ean13</fullName>
+                <default>false</default>
+                <label>DM_ean13</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Loan_Disbursal_Transaction__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Loan Disbursal Transaction</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Loan Disbursal Transaction</inlineHelpText>
+    <label>Loan Disbursal Transaction</label>
+    <referenceTo>loan__Loan_Disbursal_Transaction__c</referenceTo>
+    <relationshipName>Disbursal_Transaction_Adjustment</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

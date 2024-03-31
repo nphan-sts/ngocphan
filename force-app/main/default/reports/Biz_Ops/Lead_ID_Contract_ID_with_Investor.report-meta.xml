@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.genesis__Applications_account__r.CL_Contracts__r$Name</field>
+    </columns>
+    <columns>
+        <field>Account.genesis__Applications_account__r.CL_Contracts__r$Payoff_Loan_ID__c</field>
+    </columns>
+    <columns>
+        <field>Account.genesis__Applications_account__r.CL_Contracts__r$lead_Guid__c</field>
+    </columns>
+    <columns>
+        <field>Account.genesis__Applications_account__r.CL_Contracts__r.loan__Investors_Loans__r$loan__Account__c</field>
+    </columns>
+    <columns>
+        <field>Account.genesis__Applications_account__r.CL_Contracts__r$loan__Account__c</field>
+    </columns>
+    <format>Tabular</format>
+    <name>Lead ID - Contract ID with Investor</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_Applications_Contract_Investment_Orders__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Account$Bureau_Date_of_Birth__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

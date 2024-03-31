@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Child_Investment_Order__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Child Investment Order</label>
+    <referenceTo>loan__Investor_Loan__c</referenceTo>
+    <relationshipLabel>Investment Order Sale Transactions (New Investment Order)</relationshipLabel>
+    <relationshipName>Investment_Order_Sale_Transactions1</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

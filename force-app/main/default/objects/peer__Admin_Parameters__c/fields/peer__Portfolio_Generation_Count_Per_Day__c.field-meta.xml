@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Portfolio_Generation_Count_Per_Day__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The number of times the portfolio can be build a day</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the number of times a portfolio can be built in a day</inlineHelpText>
+    <label>Portfolio Generation Count Per Day</label>
+    <precision>18</precision>
+    <required>true</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

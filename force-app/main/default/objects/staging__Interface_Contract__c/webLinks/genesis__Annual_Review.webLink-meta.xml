@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Annual_Review</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Annual Review</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/29.0/connection.js&quot;)}
+		{!REQUIRESCRIPT(&quot;/soap/ajax/29.0/apex.js&quot;)}
+		var namespacePrefix = &quot;{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}&quot;;
+		if (namespacePrefix != null &amp;&amp; namespacePrefix != &quot;&quot;){
+		namespacePrefix += &quot;/&quot;;
+		}
+		var className = namespacePrefix + &quot;SkuidRenewalCtrl&quot;;
+		var methodName = &quot;doAnnualReview&quot;;
+		var contractId = &quot;{!staging__Interface_Contract__c.Id}&quot;;
+		var prodType = &quot;{!staging__Interface_Contract__c.staging__Contract_Type__c}&quot;;
+		var result = sforce.apex.execute(className, methodName, {contractId:contractId , productType:prodType});
+		var resObj = JSON.parse(result);
+		if(resObj.status == &apos;SUCCESS&apos;){
+		var appId = resObj.content[0].Id;
+		window.location.href = &apos;/&apos;+appId;
+		}else{
+		alert(resObj.errorMessage);
+	}</url>
+</WebLink>

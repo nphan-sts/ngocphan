@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Backdated_Reschedule_Required__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This field will be marked true during reversal of a payment before rate/index change.This field indicates that backdated reschedule will be required for the related contract.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field will be marked true during reversal of a payment before rate/index change.This field indicates that backdated reschedule will be required for the related contract.</inlineHelpText>
+    <label>Backdated Reschedule Required</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

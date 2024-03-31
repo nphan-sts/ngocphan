@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Action_Code__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Action Code which is being configured for the source system.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Action Code which is being configured for the source system.</inlineHelpText>
+    <label>Action Code</label>
+    <referenceTo>collect__Action_Code__c</referenceTo>
+    <relationshipName>Source_System_Action_Code_Associations</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Payment_Application_Order__c</fullName>
+    <description>If Spread is chosen, all components are sorted by Spread, and within given spread, the components will be sorted by date and vice-versa.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If Spread is chosen, all components are sorted by Spread, and within given spread, the components will be sorted by date and vice-versa.</inlineHelpText>
+    <label>DM Payment Application Order</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Spread</fullName>
+                <default>true</default>
+                <label>DM_Spread</label>
+            </value>
+            <value>
+                <fullName>DM_Date</fullName>
+                <default>false</default>
+                <label>DM_Date</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

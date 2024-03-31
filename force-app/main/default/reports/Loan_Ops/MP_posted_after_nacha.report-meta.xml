@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$loan__CL_Contract__c</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c.loan__Loan_Payment_Transactions__r$Id</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c.loan__Loan_Payment_Transactions__r$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$CreatedBy</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>loan__Automated_Payment_Setup__c$CreatedDate</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>12/7/2021 3:30 PM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Automated_Payment_Setup__c$CreatedBy</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Member user</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>MP posted after nacha</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>APS_LPT__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <sortColumn>loan__Automated_Payment_Setup__c$CreatedBy</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>loan__Automated_Payment_Setup__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

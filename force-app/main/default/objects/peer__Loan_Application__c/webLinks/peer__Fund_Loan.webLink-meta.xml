@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Fund_Loan</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Fund Loan</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/13.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/apex.js&quot;)} 
+var retVal = sforce.apex.execute(&quot;peer/FundLoanApplicationCtrl&quot;,&quot;fundLoanApplication&quot;, {loanAppId:&quot;{!peer__Loan_Application__c.Id}&quot;}); 
+window.alert(retVal);
+window.location.reload();</url>
+</WebLink>

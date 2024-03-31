@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>genesis__Applications__c.CL_Contracts__r$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Payoff_Loan_ID__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.CL_Contracts__r.loan__Loan_Payment_Transactions__r$loan__ACH_Filename__c</field>
+    </columns>
+    <description>Payments on ACH file that was not provided to SVB</description>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c.CL_Contracts__r.loan__Loan_Payment_Transactions__r$loan__ACH_Filename__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>A - Loan_Payments_ACU ACH 2021-02-06 17:11:35</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Bad ACH File</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CL_contract_applications_LPT__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c.CL_Contracts__r.loan__Loan_Payment_Transactions__r$loan__Sent_To_ACH_On__c</dateColumn>
+        <endDate>2021-02-12</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2021-02-01</startDate>
+    </timeFrameFilter>
+</Report>

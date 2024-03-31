@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status_Cannot_be_Approved_for_funding</fullName>
+    <active>true</active>
+    <description>Applications signed today cannot be approved for funding today.</description>
+    <errorConditionFormula>IF( Loan_Doc_Signed_On__c == Today() &amp;&amp; ISPICKVAL( genesis__Status__c, &apos;Approved for Funding&apos;) , true, false)</errorConditionFormula>
+    <errorMessage>Applications signed today cannot be approved for funding today.</errorMessage>
+</ValidationRule>

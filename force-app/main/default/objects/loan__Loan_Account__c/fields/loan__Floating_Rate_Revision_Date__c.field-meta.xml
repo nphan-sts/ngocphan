@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Floating_Rate_Revision_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Date on which floating rate for a contract will be revised (if applicable).</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Date on which floating rate for a contract will be revised (if applicable).</inlineHelpText>
+    <label>Floating Rate Revision Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

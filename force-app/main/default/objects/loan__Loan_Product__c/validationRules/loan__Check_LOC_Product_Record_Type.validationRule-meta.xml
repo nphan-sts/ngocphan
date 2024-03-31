@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_LOC_Product_Record_Type</fullName>
+    <active>true</active>
+    <errorConditionFormula>IF( (RecordType.DeveloperName == &apos;Line_Of_Credit_Product_Record_Type&apos;) &amp;&amp; (  NOT(ISPICKVAL(loan__Loan_Product_Type__c, &apos;Line of Credit&apos;))  ) , true, false)</errorConditionFormula>
+    <errorMessage>Product type should be &apos;Line of Credit&apos;.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Select_Equipment</fullName>
+    <availability>online</availability>
+    <displayType>massActionButton</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Select Equipment</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/13.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/apex.js&quot;)} 
+
+
+var selectedEquipmentIds = {!GETRECORDIDS($ObjectType.ints__EquipmentDetail__c)};
+var SelectedIds=&quot;&apos;&quot;+selectedEquipmentIds[0]+&quot;&apos;&quot;;
+var blackBookId=&apos;&apos;; 
+if(selectedEquipmentIds.length == 1){
+
+var qquery = sforce.connection.query(&quot;select ints__Blackbook_Result__c from ints__EquipmentDetail__c where Id in (&quot;+SelectedIds+&quot;)&quot;);	
+var records = qquery.getArray(&quot;records&quot;);
+blackBookId = &quot;&apos;&quot;+records[0].get(&quot;ints__Blackbook_Result__c&quot;)+&quot;&apos;&quot;;
+
+qquery = sforce.connection.query(&quot;select Name, genesis__Selected__c from ints__EquipmentDetail__c where ints__Blackbook_Result__r.Id in (&quot;+blackBookId+&quot;)&quot;);
+records = qquery.getArray(&quot;records&quot;);
+var foundSel = false;
+for (index = 0; index &lt; records.length; ++index) {
+var selected = records[index].get(&quot;genesis__Selected__c&quot;);
+if(selected  == &quot;true&quot;){
+alert(&apos;Already detail record is selected with name : &apos; + records[index].get(&quot;Name&quot;));
+foundSel = true;
+break;
+}
+}
+if(foundSel == false){
+var r = confirm(&quot;Click &apos;&apos;OK&apos;&apos; to continue with equipment detail selection.&quot;); 
+if (r){
+var retVal = sforce.apex.execute(&quot;genesis.EquipmentEvaluationController&quot;, &quot;markEquipmentDetailSelected&quot;, {equipmentDetailId:selectedEquipmentIds});
+window.alert(retVal);
+window.location.reload();
+}
+}
+}else if (selectedEquipmentIds.length == 0) {
+alert(&apos;Please select appropriate detail record from the result.&apos;)
+}else{
+alert(&apos;One equipment cannot have multiple detail records.Please select only one record .&apos;)
+}</url>
+</WebLink>

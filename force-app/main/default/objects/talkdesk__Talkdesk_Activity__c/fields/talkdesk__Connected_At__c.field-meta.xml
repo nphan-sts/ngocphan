@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>talkdesk__Connected_At__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Has the time at which the outbound call was connected</description>
+    <externalId>false</externalId>
+    <label>Connected At</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Batch_Size_Validation_Rule</fullName>
+    <active>true</active>
+    <errorConditionFormula>clcommon__Batch_Size__c &lt;= 0 || clcommon__Batch_Size__c &gt; 2000</errorConditionFormula>
+    <errorDisplayField>clcommon__Batch_Size__c</errorDisplayField>
+    <errorMessage>Error: Batch size cannot be outside of range [1, 2000]</errorMessage>
+</ValidationRule>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Loan_Account__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Transaction_Date__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Payment_Transaction__c$loan__Clearing_Date__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>loan__Loan_Payment_Transaction__c$CreatedDate</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>6/4/2021 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Payment_Transaction__c$loan__Clearing_Date__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>6/8/2021 12:00 AM</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Added twice in NACHA</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Loan_Payment_Transactions_Reports_Unmanaged__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Payment_Transaction__c$loan__Transaction_Date__c</dateColumn>
+        <endDate>2021-06-07</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2021-06-05</startDate>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CL_Contract__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>CL Contract</label>
+    <referenceTo>loan__Loan_Account__c</referenceTo>
+    <relationshipLabel>DM Primary Objects Validations</relationshipLabel>
+    <relationshipName>DM_Primary_Objects_Validations</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

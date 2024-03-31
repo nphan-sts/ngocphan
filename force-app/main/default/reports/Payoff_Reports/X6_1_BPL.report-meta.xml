@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Batch_Process_Log__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Batch_Process_Log__c$loan__Message__c</field>
+    </columns>
+    <format>Tabular</format>
+    <name>6/1/ - BPL</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Batch_Process_Logs_CL_Loan__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Batch_Process_Log__c$CreatedDate</dateColumn>
+        <endDate>2021-07-01</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2021-06-01</startDate>
+    </timeFrameFilter>
+</Report>

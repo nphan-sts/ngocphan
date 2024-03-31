@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Rejection_Reason_Required</fullName>
+    <active>true</active>
+    <description>A Document cannot be Rejected without providing appropriate Rejection Reason.</description>
+    <errorConditionFormula>AND(ISPICKVAL(genesis__Status__c, &apos;REJECTED&apos;),
+ ISPICKVAL(Rejection_Reasons__c, &apos;&apos;))</errorConditionFormula>
+    <errorDisplayField>Rejection_Reasons__c</errorDisplayField>
+    <errorMessage>Rejection Reason must be selected to Reject Documents</errorMessage>
+</ValidationRule>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Retry__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>If enabled, we will retry a rejected payment as per the retry configuration.</inlineHelpText>
+    <label>DM Retry</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Enabled</fullName>
+                <default>false</default>
+                <label>DM_Enabled</label>
+            </value>
+            <value>
+                <fullName>DM_Disabled</fullName>
+                <default>false</default>
+                <label>DM_Disabled</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

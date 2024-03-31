@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Indirect_Proposed_Exposure__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Total amount of credit cosigned or guaranteed by the customer, plus any loan opportunities currently being cosigned or guaranteed by the customer</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Total amount of credit cosigned or guaranteed by the customer, plus any loan opportunities currently being cosigned or guaranteed by the customer</inlineHelpText>
+    <label>Indirect Proposed Exposure</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Loan_Account_Name__c</field>
+    </columns>
+    <columns>
+        <field>collect__Collection_Configuration__c$Name</field>
+    </columns>
+    <columns>
+        <field>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Account__c</field>
+    </columns>
+    <columns>
+        <field>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Contact__c</field>
+    </columns>
+    <columns>
+        <field>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Days_Past_Due__c</field>
+    </columns>
+    <columns>
+        <field>collect__Collection_Configuration__c.collect__Collection_Activities__r$collect__Delinquent_Amount__c</field>
+    </columns>
+    <columns>
+        <field>collect__Collection_Configuration__c.collect__Collection_Activities__r$Owner</field>
+    </columns>
+    <description>List of accounts past due</description>
+    <filter>
+        <criteriaItems>
+            <column>collect__Collection_Configuration__c$collect__Product_Type__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>Loan,Lease</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>List of accounts past due</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>collect__Collection_Strategies__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>false</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>collect__Collection_Configuration__c$CreatedDate</dateColumn>
+        <endDate>2017-01-12</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2017-01-12</startDate>
+    </timeFrameFilter>
+</Report>

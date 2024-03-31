@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__SObject_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The name of the SObject that this Page Assignment is for. Can also be an arbitrary name, e.g.  &quot;SiteHome&quot;, for running Skuid from the component, e.g. &lt;skuid:page objecttype=&quot;SiteHome&quot;&gt; component with</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Which SObject, or other scenario, will this Page Assignment be used for? Could also be an arbitrary name, such as &quot;SiteHome&quot;, for running Skuid from the Visualforce Component.</inlineHelpText>
+    <label>Object Type</label>
+    <length>100</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

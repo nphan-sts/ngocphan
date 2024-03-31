@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__LOC_Last_Billing_Date_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISNEW(),
+ISPICKVAL(loan__Loan_Account__r.loan__Product_Type__c, &apos;Line of Credit&apos;),
+(loan__Loan_Account__r.loan__Cleared_Disbursal_Txn_Count__c &gt; 0),
+NOT(ISBLANK(loan__Loan_Account__r.loan__Previous_Installment_Date__c)),
+NOT(ISBLANK(loan__Loan_Account__r.loan__Pre_Bill_Days__c)),
+(loan__Disbursal_Date__c  &lt;  (loan__Loan_Account__r.loan__Previous_Installment_Date__c -  loan__Loan_Account__r.loan__Pre_Bill_Days__c)))</errorConditionFormula>
+    <errorMessage>Disbursal Transaction Date cannot be before the Last Billing Date.</errorMessage>
+</ValidationRule>

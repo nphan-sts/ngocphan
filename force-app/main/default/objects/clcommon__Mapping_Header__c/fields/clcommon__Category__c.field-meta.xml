@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Category__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Field stores functional category to which record belongs to. For ex: Accounting, Data Migration etc.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Field stores functional category to which record belongs to. For ex: Accounting, Data Migration etc.</inlineHelpText>
+    <label>Category</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Accounting</fullName>
+                <default>true</default>
+                <label>Accounting</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

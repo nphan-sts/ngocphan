@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Fee_Set__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Fee Set</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Fee Set</inlineHelpText>
+    <label>Fee Set</label>
+    <referenceTo>loan__Fee_Set__c</referenceTo>
+    <relationshipLabel>Loan Account Interfaces</relationshipLabel>
+    <relationshipName>Loan_Account_Interfaces</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

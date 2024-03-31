@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Is_Current__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>skuid__Page__r.LastModifiedDate == skuid__Page_Last_Modified_Date__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Is Current</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

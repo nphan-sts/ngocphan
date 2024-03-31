@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Convert_to_Application</fullName>
+    <availability>online</availability>
+    <displayType>massActionButton</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Convert to Application</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/13.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/apex.js&quot;)}
+
+var selectedPricingOptionsIds = {!GETRECORDIDS($ObjectType.genesis__Quick_Quote_Pricing_Options__c)};
+
+var nsp = &quot;{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}&quot;;
+var namespacePrefix = &quot;{!$Setup.genesis__Org_Parameters__c.genesis__Namespace_Prefix__c}&quot;;
+if (namespacePrefix != null &amp;&amp; namespacePrefix != &quot;&quot;){
+namespacePrefix += &quot;/&quot;;
+nsp = nsp + &apos;__&apos;;
+}
+var SelectedIds=&quot;&apos;&quot;+selectedPricingOptionsIds[0]+&quot;&apos;&quot;;
+var quickQuoteId=&apos;&apos;;
+
+if (selectedPricingOptionsIds.length == 1) {
+var qquery = sforce.connection.query(&quot;select &quot; + nsp + &quot;Quick_Quote__c from &quot; + nsp + &quot;Quick_Quote_Pricing_Options__c where Id in (&quot;+SelectedIds+&quot;)&quot;);
+var records = qquery.getArray(&quot;records&quot;);
+quickQuoteId = &quot;&apos;&quot;+records[0].get(nsp+&quot;Quick_Quote__c&quot;)+&quot;&apos;&quot;;
+qquery = sforce.connection.query(&quot;select &quot; + nsp + &quot;Valid_Pricing_Flag__c from &quot; + nsp + &quot;Quick_Quotes__c where Id in (&quot;+quickQuoteId+&quot;)&quot;);
+records = qquery.getArray(&quot;records&quot;);
+var validPricingFlag = records[0].get(nsp + &quot;Valid_Pricing_Flag__c&quot;);
+if (validPricingFlag ==&quot;true&quot;){
+var r = confirm(&quot;Click &apos;&apos;OK&apos;&apos; to continue with application creation.&quot;);
+if (r){
+var className = namespacePrefix + &quot;CreateApplicationCtrlOnQuickQuote&quot;;
+var methodName = &quot;createApplication&quot;;
+var retVal = sforce.apex.execute(className, methodName, {pricingId:selectedPricingOptionsIds});
+window.alert(retVal);
+window.location.reload();
+}
+}else{
+alert(&apos;Current Pricing options are invalid, please regenerate the pricing before converting it to application.&apos;)
+}
+
+} else if (selectedPricingOptionsIds.length == 0) {
+    alert(&apos;Please select a pricing record to create a application.&apos;)
+}else{
+    alert(&apos;Multiple pricing records cannot be used to create a application.&apos;)
+}</url>
+</WebLink>

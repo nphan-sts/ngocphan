@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Address__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>If(LEN( genesis__Address_1__c ) &gt; 0, genesis__Address_1__c &amp; &quot;, &quot; , &quot;&quot; ) &amp;
+If(LEN( genesis__Address_2__c )&gt; 0, genesis__Address_2__c  &amp; &quot;, &quot; , &quot;&quot; )&amp;
+If(LEN( genesis__City__c ) &gt; 0, genesis__City__c &amp; &quot;, &quot;, &quot;&quot;) &amp;
+If(LEN(TEXT( genesis__State__c)) &gt; 0,  TEXT( genesis__State__c )&amp; &quot;, &quot;, &quot;&quot;) &amp;
+If(LEN( genesis__Country__c ) &gt; 0, genesis__Country__c  &amp; &quot;, &quot; , &quot;&quot; )&amp;
+If(LEN( genesis__Zipcode__c ) &gt; 0, genesis__Zipcode__c, &apos;&apos;)</formula>
+    <label>Address</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

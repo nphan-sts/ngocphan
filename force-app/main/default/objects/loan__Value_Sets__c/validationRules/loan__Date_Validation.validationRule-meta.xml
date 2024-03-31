@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Date_Validation</fullName>
+    <active>true</active>
+    <description>Date Validation</description>
+    <errorConditionFormula>loan__Effective_from__c &gt;  loan__Effective_to__c</errorConditionFormula>
+    <errorMessage>&apos;Effective From&apos; date should be before &apos;Effective To&apos; date</errorMessage>
+</ValidationRule>

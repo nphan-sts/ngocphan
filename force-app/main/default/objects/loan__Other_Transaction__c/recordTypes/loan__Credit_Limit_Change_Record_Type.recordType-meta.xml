@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Credit_Limit_Change_Record_Type</fullName>
+    <active>true</active>
+    <label>Credit Limit Change Record Type</label>
+    <picklistValues>
+        <picklist>loan__ACH_Frequency__c</picklist>
+        <values>
+            <fullName>Annual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bi-Monthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bi-weekly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Daily</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Monthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quarterly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Semi-Annual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Semi-Monthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Semi-Monthly-PD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Single-Payment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Weekly</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Billing_Method__c</picklist>
+        <values>
+            <fullName>Declining Balance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Flat</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Flexible Repayment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Interest Only</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Frequency_of_Loan_Payment__c</picklist>
+        <values>
+            <fullName>Bi-weekly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Monthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Weekly</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__OT_ACH_Account_Type__c</picklist>
+        <values>
+            <fullName>Checking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Saving</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__OT_ACH_Relationship_Type__c</picklist>
+        <values>
+            <fullName>Cosigner</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cosigner Spouse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cosigner2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cosigner2 Spouse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Primary</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Secondary</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Spouse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Third Party</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Reschedule_Option_On_Excess_Payment__c</picklist>
+        <values>
+            <fullName>Change Payment Amount</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Keep Same Payment Amount</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Transaction_Type__c</picklist>
+        <values>
+            <fullName>Additional Repayment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Charge Off</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Limit Change</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Due Day Change</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Extension</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Interest Waive</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Loan Maintenance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>One Time ACH</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PayOff Quote Generation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Payment Tolerance Change</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PrincipalAdjustment-Add</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rate Change</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Recurring ACH</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Refund</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Reschedule</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Start Accrual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Stop Accrual</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

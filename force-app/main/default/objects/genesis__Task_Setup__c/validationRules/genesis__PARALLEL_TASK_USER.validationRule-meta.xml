@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__PARALLEL_TASK_USER</fullName>
+    <active>true</active>
+    <description>Parallel Tasks must have the Assigned Task to User field populated</description>
+    <errorConditionFormula>AND(genesis__Is_Parallel__c == true, ISBLANK( genesis__Assign_Parallel_Task_To__c ) )</errorConditionFormula>
+    <errorMessage>Assign Parallel Task To cannot be null for parallel task setup</errorMessage>
+</ValidationRule>

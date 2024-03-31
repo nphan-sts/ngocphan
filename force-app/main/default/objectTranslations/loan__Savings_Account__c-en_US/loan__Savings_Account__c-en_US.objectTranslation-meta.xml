@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <recordTypes>
+        <description></description>
+        <label></label>
+        <name>loan__Fixed</name>
+    </recordTypes>
+    <recordTypes>
+        <description></description>
+        <label></label>
+        <name>loan__Savings</name>
+    </recordTypes>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Clients_Status_check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Deposit_Start_Date_check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Link_Current_Account_to_FD</name>
+    </validationRules>
+    <webLinks>
+        <label></label>
+        <name>loan__New_Savings_Account</name>
+    </webLinks>
+</CustomObjectTranslation>

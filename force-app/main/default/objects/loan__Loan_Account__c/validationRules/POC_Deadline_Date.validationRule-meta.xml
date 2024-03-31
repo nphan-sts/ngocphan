@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>POC_Deadline_Date</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(ISBLANK(POC_Completed_Date__c)) &amp;&amp; ISBLANK(POC_Deadline_Date__c)</errorConditionFormula>
+    <errorDisplayField>POC_Deadline_Date__c</errorDisplayField>
+    <errorMessage>POC Deadline Date must be filled when POC Completed Date is filled</errorMessage>
+</ValidationRule>

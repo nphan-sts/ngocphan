@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>API_User_Filter__c</fullName>
+    <description>Avoid these API users making web service callout when they are the one making the update to application.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Separate each username by comma.</inlineHelpText>
+    <label>API User Filter</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

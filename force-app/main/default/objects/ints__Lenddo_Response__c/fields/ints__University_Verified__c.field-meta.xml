@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__University_Verified__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>verifications JSON tag. 
+LenddoResponse.Verification.university</description>
+    <externalId>false</externalId>
+    <label>University Verified</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

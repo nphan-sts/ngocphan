@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>genesis__Regulation_O__c</name>
+    <picklistValues>
+        <masterLabel>Director</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Executive Officer</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Principal Shareholder</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

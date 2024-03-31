@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__No_End_Time_if_all_day</fullName>
+    <active>true</active>
+    <description>This validation rule is applied if a holiday is marked as an all day event and then tries to set the end time as well.</description>
+    <errorConditionFormula>AND(AND(clcommon__IsAllDay__c, NOT(ISBLANK(clcommon__EndTimeInMinutes__c))),NOT(clcommon__IsRecurrence__c))</errorConditionFormula>
+    <errorDisplayField>clcommon__EndTimeInMinutes__c</errorDisplayField>
+    <errorMessage>End time cannot be defined if the holiday is an all day event.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Skipped_a_pay_Date__c</fullName>
+    <description>This field represents the day on which skip-a-pay is performed</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Date batch process for executing Skip a Pays in bulk is run.</inlineHelpText>
+    <label>Loan Mod Batch Date</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

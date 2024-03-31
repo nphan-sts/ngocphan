@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Auto_Gen_Page_Support_File__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If true, Skuid will automatically generate a Page Support File, required for Lightning Support, as a Static Resources when saving a Page in the Composer.</description>
+    <externalId>false</externalId>
+    <label>Auto Gen Page Support File in Composer</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

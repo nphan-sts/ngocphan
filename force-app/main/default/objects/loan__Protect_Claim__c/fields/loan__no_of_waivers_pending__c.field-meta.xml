@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__no_of_waivers_pending__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Indicate no of claims yet to be received</description>
+    <externalId>false</externalId>
+    <formula>loan__No_Terms_Waived__c -  loan__No_of_waivers_received__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>no of waivers pending</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

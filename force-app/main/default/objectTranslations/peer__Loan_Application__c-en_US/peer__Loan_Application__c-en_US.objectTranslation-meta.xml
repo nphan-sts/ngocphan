@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>peer__Amount_funded_exceeds_requested_amount</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>peer__Amt_In_funding_exceeds_requested_amount</name>
+    </validationRules>
+    <webLinks>
+        <label></label>
+        <name>peer__Fund_Loan</name>
+    </webLinks>
+    <webLinks>
+        <label></label>
+        <name>peer__Start_Meet</name>
+    </webLinks>
+</CustomObjectTranslation>

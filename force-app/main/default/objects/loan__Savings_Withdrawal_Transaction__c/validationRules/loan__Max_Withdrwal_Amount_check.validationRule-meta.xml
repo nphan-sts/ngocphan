@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Max_Withdrwal_Amount_check</fullName>
+    <active>true</active>
+    <description>Max_Withdrwal_Amount_check</description>
+    <errorConditionFormula>OR(
+             ( loan__Withdrawal_Amount__c   &gt;  
+             loan__Savings_Account__r.loan__Savings_Product_Name__r.loan__Max_Amount_Per_Withdrawal__c),
+             ( loan__Withdrawal_Amount__c   &gt;    loan__Savings_Account__r.loan__Balance__c  )
+)</errorConditionFormula>
+    <errorDisplayField>loan__Withdrawal_Amount__c</errorDisplayField>
+    <errorMessage>Amount should be within the withdrawal limits and less than account balance.</errorMessage>
+</ValidationRule>

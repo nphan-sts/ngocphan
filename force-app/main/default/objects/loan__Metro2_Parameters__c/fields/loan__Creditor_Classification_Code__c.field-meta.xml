@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Creditor_Classification_Code__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>01 Retail
+02 Medical/Health Care
+03 Oil Company
+04 Government
+05 Personal Services
+06 Insurance
+07 Educational
+08 Banking
+09 Rental/Leasing
+10 Utilities
+11 Cable/Cellular
+12 Financial
+13 Credit Union
+14 Automotive
+15 Check Guarantee</inlineHelpText>
+    <label>Creditor Classification Code</label>
+    <length>2</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

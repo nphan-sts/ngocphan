@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Office_Name_ID__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Company ID</description>
+    <displayFormat>Off-{0000}</displayFormat>
+    <externalId>false</externalId>
+    <inlineHelpText>Company ID</inlineHelpText>
+    <label>Company ID</label>
+    <trackTrending>false</trackTrending>
+    <type>AutoNumber</type>
+</CustomField>

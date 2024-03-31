@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Loan_Account__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>DM Loan Account</label>
+    <referenceTo>DM_Loan_Account__c</referenceTo>
+    <relationshipLabel>DM Rate Schedule Setups</relationshipLabel>
+    <relationshipName>DM_Rate_Schedule_Setups</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

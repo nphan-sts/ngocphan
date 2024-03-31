@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Last_Transaction_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This shows the last transaction happened on this contract.
+This will be populated by system and must not be changed by user.</inlineHelpText>
+    <label>Last Transaction Type</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Reschedule</fullName>
+                <default>false</default>
+                <label>Reschedule</label>
+            </value>
+            <value>
+                <fullName>Extension</fullName>
+                <default>false</default>
+                <label>Extension</label>
+            </value>
+            <value>
+                <fullName>PrincipalAdjustment-Add</fullName>
+                <default>false</default>
+                <label>PrincipalAdjustment-Add</label>
+            </value>
+            <value>
+                <fullName>Refund</fullName>
+                <default>false</default>
+                <label>Refund</label>
+            </value>
+            <value>
+                <fullName>Additional Repayment</fullName>
+                <default>false</default>
+                <label>Additional Repayment</label>
+            </value>
+            <value>
+                <fullName>Stop Accrual</fullName>
+                <default>false</default>
+                <label>Stop Accrual</label>
+            </value>
+            <value>
+                <fullName>Start Accrual</fullName>
+                <default>false</default>
+                <label>Start Accrual</label>
+            </value>
+            <value>
+                <fullName>Payment Transaction</fullName>
+                <default>false</default>
+                <label>Payment Transaction</label>
+            </value>
+            <value>
+                <fullName>Disbursal Transaction</fullName>
+                <default>false</default>
+                <label>Disbursal Transaction</label>
+            </value>
+            <value>
+                <fullName>Payment Reversal</fullName>
+                <default>false</default>
+                <label>Payment Reversal</label>
+            </value>
+            <value>
+                <fullName>Disbursal Reversal</fullName>
+                <default>false</default>
+                <label>Disbursal Reversal</label>
+            </value>
+            <value>
+                <fullName>Credit Limit Change</fullName>
+                <default>false</default>
+                <label>Credit Limit Change</label>
+            </value>
+            <value>
+                <fullName>Charge Off</fullName>
+                <default>false</default>
+                <label>Charge Off</label>
+            </value>
+            <value>
+                <fullName>Index Rate Change</fullName>
+                <default>false</default>
+                <label>Index Rate Change</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

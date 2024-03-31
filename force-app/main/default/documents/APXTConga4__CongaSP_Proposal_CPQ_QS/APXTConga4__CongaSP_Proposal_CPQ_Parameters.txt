@@ -1,0 +1,4 @@
+&DefaultPDF=1
+&DS7=13
+&OFN={!Apttus_Proposal__Proposal__c.Apttus_Proposal__Opportunity__c}+Proposal+_{!Today()}
+&BML=Generating+Proposal+for+{!Apttus_Proposal__Proposal__c.Apttus_Proposal__Account__c}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>U_LoanModRateLengt__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Manually entered value representing the number of months with the new interest rate for the most recent loan modification.</inlineHelpText>
+    <label>Loan Mod Rate Length</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

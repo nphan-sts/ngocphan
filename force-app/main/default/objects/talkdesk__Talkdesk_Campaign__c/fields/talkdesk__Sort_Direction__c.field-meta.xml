@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>talkdesk__Sort_Direction__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Sorting direction of the Talkdesk Campaign, possible values are DESC or ASC</description>
+    <externalId>false</externalId>
+    <label>[DEPRECATED] Sort direction</label>
+    <length>4</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

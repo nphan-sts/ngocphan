@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Quarter_End_Average__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Reporting Average of quarter end portfolio balance</description>
+    <externalId>false</externalId>
+    <label>Quarter End Average</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Skip_Credit_Bureau_Payment_History__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If set to true, the CreditBureauPaymentHistoryJob will be skipped from the standard SOD chain.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>CreditBureauPaymentHistoryJob is used for reporting to creditbureaus. This may not be required by some customers as they have their own way of reporting the status. In such a case, they may want to skip this job from CL Loan&apos;s standard SOD chain.</inlineHelpText>
+    <label>Skip Credit Bureau Payment History</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

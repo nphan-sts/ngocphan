@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <recordTypes>
+        <label></label>
+        <name>talkdesk__Account</name>
+    </recordTypes>
+    <recordTypes>
+        <label></label>
+        <name>talkdesk__Campaign</name>
+    </recordTypes>
+    <recordTypes>
+        <label></label>
+        <name>talkdesk__Case</name>
+    </recordTypes>
+    <recordTypes>
+        <label></label>
+        <name>talkdesk__Contact</name>
+    </recordTypes>
+    <recordTypes>
+        <label></label>
+        <name>talkdesk__Lead</name>
+    </recordTypes>
+    <recordTypes>
+        <label></label>
+        <name>talkdesk__Opportunity</name>
+    </recordTypes>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>talkdesk__List_Type_Not_Null</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>talkdesk__Talkdesk_Sync_Status_Not_Null</name>
+    </validationRules>
+</CustomObjectTranslation>

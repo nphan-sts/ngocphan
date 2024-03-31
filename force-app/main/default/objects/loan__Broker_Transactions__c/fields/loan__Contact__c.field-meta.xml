@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Contact__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Broker Contact</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Broker Contact</inlineHelpText>
+    <label>Broker Contact</label>
+    <referenceTo>Contact</referenceTo>
+    <relationshipLabel>Broker Transactions</relationshipLabel>
+    <relationshipName>Broker_Transactions</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

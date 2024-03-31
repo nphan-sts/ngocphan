@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Debit</fullName>
+    <active>true</active>
+    <label>Debit</label>
+    <picklistValues>
+        <picklist>genesis__Category_Type__c</picklist>
+        <values>
+            <fullName>BUSINESS EXPENSES</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>DISCRETIONARY EXPENSES</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>LIVING EXPENSES</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+</RecordType>

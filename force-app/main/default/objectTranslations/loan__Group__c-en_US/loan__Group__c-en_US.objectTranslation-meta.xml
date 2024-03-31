@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Address1_Special_char_check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Address2_Special_char_check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Address3_Special_char_check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Center_Belongs_To_Branch</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__City_Special_char_check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__ExternalID_Special_char_check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Telephone_Special_char_check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Zipcode_check</name>
+    </validationRules>
+</CustomObjectTranslation>

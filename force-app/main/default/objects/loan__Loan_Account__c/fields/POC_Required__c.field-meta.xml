@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>POC_Required__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>- If Chapter = 13, then auto checkmark this box (true)
+
+ - Agents should be able to edit to this checkbox</description>
+    <externalId>false</externalId>
+    <label>POC Required</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

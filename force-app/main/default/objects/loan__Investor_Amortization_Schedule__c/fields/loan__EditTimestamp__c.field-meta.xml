@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__EditTimestamp__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Keep track when this record was edited</description>
+    <externalId>false</externalId>
+    <label>EditTimestamp</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

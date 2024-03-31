@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help></help>
+    <label></label>
+    <name>clcommon__Mode_of_Rule_Execution_On_Priority__c</name>
+    <picklistValues>
+        <masterLabel>Pass Failed Records To Lower Priority Rules</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Pass Success Records To Lower Priority Rules</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Run All Records For Each Rule</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

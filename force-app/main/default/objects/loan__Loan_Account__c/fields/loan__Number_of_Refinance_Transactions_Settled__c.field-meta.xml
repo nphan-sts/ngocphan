@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Number_of_Refinance_Transactions_Settled__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Number of Refinance Transactions Settled</inlineHelpText>
+    <label>Number of Refinance Transactions Settled</label>
+    <summaryFilterItems>
+        <field>loan__Refinance_Transaction__c.loan__Settled__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryForeignKey>loan__Refinance_Transaction__c.loan__Loan_Account__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

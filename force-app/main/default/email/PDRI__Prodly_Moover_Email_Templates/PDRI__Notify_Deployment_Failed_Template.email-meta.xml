@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>PDRI__Prodly_Moover_Letterhead</letterhead>
+    <name>Notify Deployment Failed Template</name>
+    <style>freeForm</style>
+    <subject>Prodly Moover Deployment Failed</subject>
+    <textOnly>The submitted Prodly Moover deployment has completed with failures. Please find the deployment result here.
+
+Deployment Result Name: {!PDRI__Deployment_Result__c.Name}
+Deployment Result ID: {!PDRI__Deployment_Result__c.Id}
+Deployment Result: {!PDRI__Deployment_Result__c.PDRI__Result__c}
+Deployment Status: {!PDRI__Deployment_Result__c.PDRI__Status__c}
+Source Connection: {!PDRI__Deployment_Result__c.PDRI__Source_Connection__c}
+Target Connection: {!PDRI__Deployment_Result__c.PDRI__Target_Connection__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

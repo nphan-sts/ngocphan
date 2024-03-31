@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Overdue_Principal__c</fullName>
+    <defaultValue>0</defaultValue>
+    <description>Overdue principal from earlier installments.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Overdue principal from earlier installments.</inlineHelpText>
+    <label>DM Overdue Principal</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

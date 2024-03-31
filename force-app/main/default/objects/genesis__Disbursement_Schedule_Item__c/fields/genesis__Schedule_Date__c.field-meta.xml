@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Schedule_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>genesis__Application__r.genesis__Expected_Close_Date__c +  genesis__Days_After_Closing__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Schedule Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

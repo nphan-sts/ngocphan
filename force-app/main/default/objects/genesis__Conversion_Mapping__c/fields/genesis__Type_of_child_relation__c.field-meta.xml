@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Type_of_child_relation__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This is used to identify which method from the interface to call to the child objects for new converted loan.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the way different types of child objects are identified and passed on to interface implementation.</inlineHelpText>
+    <label>Type of child relation</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Disbursal Distribution</fullName>
+                <default>false</default>
+                <label>Disbursal Distribution</label>
+            </value>
+            <value>
+                <fullName>Rate Schedule</fullName>
+                <default>false</default>
+                <label>Rate Schedule</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

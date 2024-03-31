@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>false</available>
+    <description>/*Created By Nupur */ ------ Payoff Document Alert</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>PayOff_Emails</letterhead>
+    <name>new_document_upload(Payoff Document Alert)1</name>
+    <style>formalLetter</style>
+    <subject>Upload your documents and fund your loan</subject>
+    <textOnly>Hi {!genesis__Application_Document_Category__c.Borrower_s_First_Name__c},
+
+Currently, we&apos;re waiting for you to upload your verification documents so we can continue with your application. If you haven’t done so already, please log in to upload the required documents.
+
+Login to My Account
+
+Curious how to upload the documents or need a little assistance with the upload process ? Click here for our Document Upload Guide to learn exactly how to prepare your documents and finalize your Payoff Loan™ application.
+
+Enjoy the rest of your day, {!genesis__Application_Document_Category__c.Borrower_s_First_Name__c}, and please give us a call if you have any questions.
+
+The Payoff Team
+
+Payoff, Inc.
+
+verification@payoff.com
+
+
+1-800-878-0901
+Follow us: Facebook Twitter Instagram
+
+Payoff, Inc.
+3200 Park Center Drive, Ste. 800,
+Costa Mesa, CA 92626
+
+© Copyright 2009-2017. All rights reserved. Payoff, Inc.
+
+
+
+Disclaimer: This email and its contents are confidential and intended only for you. Payoff is not liable for any loss or damage that may arise from this email or any attachments. Unless we specifically say, we will not enter into a contract over email.
+Payoff works with lending partners to ultimately originate loans. Information about our Lending Partners, including their address, financial institution type and charter, as well as links to their websites and privacy policies can be found on our Lending Partners page. Individual borrowers must be at least 18 years old and have valid Social Security number and a valid checking account. All loans are subject to credit review and approval. Your actual rate depends upon credit score, loan amount, loan term, credit usage and history. Currently loans are not offered in: DC, DE, IA, MA, MD, MI, MN, MS, NC, NE, NV, OH, OK, VA, VT, WA, WI, and WV. Our mailing address is: Payoff, Inc., 3200 Park Center Drive, STE 800, Costa Mesa, CA 92626.</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

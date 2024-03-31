@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Savings_Deposit_type_must_be_Mandatory</fullName>
+    <active>false</active>
+    <errorConditionFormula>ISPICKVAL(loan__Savings_Product__r.loan__Type_of_Deposits__c, &quot;Voluntary&quot;)</errorConditionFormula>
+    <errorMessage>Savings Must be Mandatory. Check linked Savings Product definition.</errorMessage>
+</ValidationRule>

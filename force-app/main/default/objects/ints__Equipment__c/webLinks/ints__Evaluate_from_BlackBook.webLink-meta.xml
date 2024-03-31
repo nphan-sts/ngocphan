@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__Evaluate_from_BlackBook</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Evaluate from BlackBook</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/13.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/10.0/apex.js&quot;)}
+var equipmentId = &apos;{!ints__Equipment__c.Id }&apos;
+var retVal = sforce.apex.execute(&quot;ints.BlackBookServiceAction&quot;,&quot;fetchBlackBookData&quot;,{equipmentId:equipmentId,type:&apos;ints__Equipment__c&apos;,fieldNameToMap:&apos;equipment__c&apos;});
+window.alert(retVal);
+window.location.reload();</url>
+</WebLink>

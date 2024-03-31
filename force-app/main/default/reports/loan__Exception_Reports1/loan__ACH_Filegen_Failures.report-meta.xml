@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Data_Migration_Error__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Data_Migration_Error__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>loan__Data_Migration_Error__c$loan__Error_Code__c</field>
+    </columns>
+    <columns>
+        <field>loan__Data_Migration_Error__c$loan__Error_Message__c</field>
+    </columns>
+    <columns>
+        <field>loan__Data_Migration_Error__c$loan__Level__c</field>
+    </columns>
+    <columns>
+        <field>loan__Data_Migration_Error__c$loan__Object_Id__c</field>
+    </columns>
+    <description>This report describes all transactions that could not be included in the day&apos;s ACH file.</description>
+    <filter>
+        <criteriaItems>
+            <column>loan__Data_Migration_Error__c$loan__Error_Code__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>ACH Filegen Error</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>ACH Filegen Failures</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>loan__ACH_Exception_Report_Type__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <sortColumn>loan__Data_Migration_Error__c$CreatedDate</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>loan__Data_Migration_Error__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

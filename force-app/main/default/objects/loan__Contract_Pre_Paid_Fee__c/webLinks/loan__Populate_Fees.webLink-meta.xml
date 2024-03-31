@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Populate_Fees</fullName>
+    <availability>online</availability>
+    <displayType>massActionButton</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Populate Fees</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <requireRowSelection>false</requireRowSelection>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/51.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/51.0/apex.js&quot;)}
+var namespacePrefix = &quot;{!$Setup.loan__Org_Parameters__c.loan__Namespace_Prefix__c}&quot;;
+if (namespacePrefix != null &amp;&amp; namespacePrefix != &quot;&quot;){
+    namespacePrefix += &quot;/&quot;;
+}
+var className = namespacePrefix + &quot;PopulatePrePaidFeesOnContractCtrl&quot;;
+var methodName = &quot;PopulatePrePaidFeesOnContract&quot;;
+var parameter1 = &quot;{!loan__Loan_Account__c.Id}&quot;;
+var retVal = sforce.apex.execute(className, methodName, {loanAccId:parameter1});
+window.alert(retVal);
+window.location.reload();</url>
+</WebLink>

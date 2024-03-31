@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>false</available>
+    <description>/*Created By Nupur */--Take advantage of your Payoff Loan offer</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>PayOff_Emails</letterhead>
+    <name>offer_expiration_14_days(Sent to applicants with active application)1</name>
+    <style>formalLetter</style>
+    <subject>Take advantage of your Payoff Loan offer</subject>
+    <textOnly>Hi {!genesis__Applications__c.Borrower_s_First_Name__c},
+
+
+
+I wanted to reach out about your Payoff Loan application. Do you have any questions? You started it but never finished.
+
+
+This is a friendly reminder that your application is only valid for 30 days and you currently have 14 days left until it expires. If it does expire, you&apos;ll miss out on all the savings that come with paying off your credit cards at a lower interest rate.
+
+
+
+Continue my application
+
+
+
+If we do not receive all requested information prior to the expiration date, the application will be incomplete and can not be further considered. If your application does expire, you may submit a new application to continue the process of becoming a member with Payoff.
+
+
+
+The Payoff Team
+
+Payoff, Inc.
+
+success@payoff.com
+
+
+1-800-878-0901
+Follow us: Facebook Twitter Instagram
+
+Payoff, Inc.
+3200 Park Center Drive, Ste. 800,
+Costa Mesa, CA 92626
+
+© Copyright 2009-2017. All rights reserved. Payoff, Inc.
+
+
+
+Disclaimer: This email and its contents are confidential and intended only for you. Payoff is not liable for any loss or damage that may arise from this email or any attachments. Unless we specifically say, we will not enter into a contract over email.
+Payoff works with lending partners to ultimately originate loans. Information about our Lending Partners, including their address, financial institution type and charter, as well as links to their websites and privacy policies can be found on our Lending Partners page. Individual borrowers must be at least 18 years old and have valid Social Security number and a valid checking account. All loans are subject to credit review and approval. Your actual rate depends upon credit score, loan amount, loan term, credit usage and history. Currently loans are not offered in: DC, DE, IA, MA, MD, MI, MN, MS, NC, NE, NV, OH, OK, VA, VT, WA, WI, and WV. Our mailing address is: Payoff, Inc., 3200 Park Center Drive, STE 800, Costa Mesa, CA 92626.</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

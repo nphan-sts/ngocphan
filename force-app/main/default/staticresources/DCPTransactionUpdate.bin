@@ -1,0 +1,21 @@
+{
+   "lead_id":"c9149473-e69f-ee12-38a7-d18b0cba847d",
+   "dcp":[
+      {
+         "bank_name":"CITI",
+         "id":"d6a7128e-9df0-4c4d-9df7-2717c32d7ef9",
+         "transaction_id":"3747fe78-b4ef-4505-b86a-7784c312a895",
+         "credit_card_number":"*******1932",
+         "payoff_amount":100,
+         "balance":"000005844",
+         "braintree_verification_failed": true,
+         "arcus_failed_message": "This card can not be process by Arcus",
+         "member_code": "MEM-0000001",
+         "portfolio_type": "revolving",
+         "account_number": "786757555575",
+         "date_opened":"2020-04-20",
+         "arcus_eligible": false
+      }
+   ],
+   "dcp_confirmation_date":"2019-03-28T18:00:12.665"
+}

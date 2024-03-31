@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__ACH_Account_Number_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(ISBLANK(loan__OT_ACH_Account_Number__c)) &amp;&amp; NOT(ISNUMBER( loan__OT_ACH_Account_Number__c ))</errorConditionFormula>
+    <errorMessage>Account number should be numeric.</errorMessage>
+</ValidationRule>

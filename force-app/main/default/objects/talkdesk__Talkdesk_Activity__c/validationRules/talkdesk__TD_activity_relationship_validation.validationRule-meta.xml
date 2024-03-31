@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>talkdesk__TD_activity_relationship_validation</fullName>
+    <active>true</active>
+    <description>This validation rule aims to guarantee the relationship between the contact and interaction activity exists when the activity is a contact type.</description>
+    <errorConditionFormula>AND(
+        ISPICKVAL(talkdesk__Talkdesk_Activity_Type__c,&apos;Contact&apos;),
+        OR(
+            ISBLANK(talkdesk__Talkdesk_Activity_Related__c),
+            AND(
+                NOT(ISBLANK(talkdesk__Talkdesk_Activity_Related__c)),
+                ISPICKVAL(talkdesk__Talkdesk_Activity_Related__r.talkdesk__Talkdesk_Activity_Type__c, &apos;Contact&apos;)
+            )
+        )
+    )</errorConditionFormula>
+    <errorMessage>Contact activity must be related to the interaction activity.</errorMessage>
+</ValidationRule>

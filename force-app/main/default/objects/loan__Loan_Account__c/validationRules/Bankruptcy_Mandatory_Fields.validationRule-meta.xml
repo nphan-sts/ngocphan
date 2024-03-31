@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bankruptcy_Mandatory_Fields</fullName>
+    <active>true</active>
+    <description>Agent Processed Date, Bankruptcy Status, Chapter, Attorney Name, Attorney Phone, Retention Confirmed</description>
+    <errorConditionFormula>OR(
+NOT(ISBLANK(TEXT(Bankruptcy_Status__c))) &amp;&amp;
+OR(
+    TEXT(Bankruptcy_Status__c) = &apos;Active&apos;,
+    TEXT(Bankruptcy_Status__c) = &apos;Dismiss&apos;,
+    TEXT(Bankruptcy_Status__c) = &apos;Discharge&apos;
+) &amp;&amp;
+OR(
+ISBLANK(Agent_Processed_Date__c),
+ISBLANK(TEXT(Chapter__c)),
+ISBLANK(Attorney_Name__c),
+ISBLANK(Attorney_Phone__c),
+ISBLANK(TEXT(Retention_Confirmed__c))
+),
+NOT(ISBLANK(TEXT(Bankruptcy_Status__c))) &amp;&amp;
+TEXT(Bankruptcy_Status__c) != &apos;Active&apos; &amp;&amp;
+TEXT(Bankruptcy_Status__c) != &apos;Dismiss&apos; &amp;&amp;
+TEXT(Bankruptcy_Status__c) != &apos;Discharge&apos; &amp;&amp;
+OR(
+ISBLANK(TEXT(Chapter__c)),
+ISBLANK(Attorney_Name__c),
+ISBLANK(Attorney_Phone__c),
+ISBLANK(TEXT(Retention_Confirmed__c))
+)
+,
+NOT(ISBLANK(TEXT(Chapter__c))) &amp;&amp;
+OR(
+ISBLANK(TEXT(Bankruptcy_Status__c)),
+ISBLANK(Attorney_Name__c),
+ISBLANK(Attorney_Phone__c),
+ISBLANK(TEXT(Retention_Confirmed__c))
+),
+NOT(ISBLANK(Attorney_Name__c)) &amp;&amp;
+OR(
+ISBLANK(TEXT(Bankruptcy_Status__c)),
+ISBLANK(TEXT(Chapter__c)),
+ISBLANK(Attorney_Phone__c),
+ISBLANK(TEXT(Retention_Confirmed__c))
+),
+NOT(ISBLANK(Attorney_Phone__c)) &amp;&amp;
+OR(
+ISBLANK(TEXT(Bankruptcy_Status__c)),
+ISBLANK(TEXT(Chapter__c)),
+ISBLANK(Attorney_Name__c),
+ISBLANK(TEXT(Retention_Confirmed__c))
+),
+NOT(ISBLANK(TEXT(Retention_Confirmed__c))) &amp;&amp;
+OR(
+ISBLANK(TEXT(Bankruptcy_Status__c)),
+ISBLANK(TEXT(Chapter__c)),
+ISBLANK(Attorney_Name__c),
+ISBLANK(Attorney_Phone__c)
+),
+NOT(ISBLANK(Agent_Processed_Date__c)) &amp;&amp;
+OR(
+ISBLANK(TEXT(Bankruptcy_Status__c)),
+ISBLANK(TEXT(Chapter__c)),
+ISBLANK(Attorney_Name__c),
+ISBLANK(Attorney_Phone__c),
+ISBLANK(TEXT(Retention_Confirmed__c))
+),
+NOT(ISBLANK(Discharge_Date__c)) &amp;&amp;
+OR(
+ISBLANK(TEXT(Bankruptcy_Status__c)),
+ISBLANK(TEXT(Chapter__c)),
+ISBLANK(Attorney_Name__c),
+ISBLANK(Attorney_Phone__c),
+ISBLANK(TEXT(Retention_Confirmed__c))
+),
+NOT(ISBLANK(Dismissal_Date__c)) &amp;&amp;
+OR(
+ISBLANK(TEXT(Bankruptcy_Status__c)),
+ISBLANK(TEXT(Chapter__c)),
+ISBLANK(Attorney_Name__c),
+ISBLANK(Attorney_Phone__c),
+ISBLANK(TEXT(Retention_Confirmed__c))
+)
+)</errorConditionFormula>
+    <errorMessage>Agent Processed Date, Bankruptcy Status, Chapter, Attorney Name, Attorney Phone, Retention Confirmed must be filled</errorMessage>
+</ValidationRule>

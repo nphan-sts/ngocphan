@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Product_Code__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Field stores unique code of lending product</description>
+    <externalId>false</externalId>
+    <formula>loan__Loan_Disbursal_Transaction__r.loan__Loan_Account__r.loan__Loan_Product_Name__r.loan__Loan_Product_Code__c</formula>
+    <inlineHelpText>Field stores unique code of lending product</inlineHelpText>
+    <label>Product Code</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

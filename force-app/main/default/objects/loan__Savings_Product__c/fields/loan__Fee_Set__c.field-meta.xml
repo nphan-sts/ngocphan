@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Fee_Set__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Fee Set</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Fee Set</inlineHelpText>
+    <label>Fee Set</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>Selected Fee Set&apos;s category must be of type &apos;Savings&apos; and it should include at least one fee.</errorMessage>
+        <filterItems>
+            <field>loan__Fee_Set__c.loan__Number_of_Fees__c</field>
+            <operation>notEqual</operation>
+            <value>0</value>
+        </filterItems>
+        <filterItems>
+            <field>loan__Fee_Set__c.loan__Fee_Set_Category__c</field>
+            <operation>equals</operation>
+            <value>Savings</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>loan__Fee_Set__c</referenceTo>
+    <relationshipLabel>Savings Products</relationshipLabel>
+    <relationshipName>Savings_Products</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

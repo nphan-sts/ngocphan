@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Action_Input_API_Choices__c</fullName>
+    <deprecated>false</deprecated>
+    <description>User can enter one or more new line separated API names if the Action Input is API only.
+API entered here should belong to the source system specified in the &apos;Source System&apos; lookup.
+If the Source System is &apos;Other&apos; i.e, its a custom API, and if the org has a local namespace, append the namespace to the APIs entered here.</description>
+    <externalId>false</externalId>
+    <label>Action Input API Choices</label>
+    <length>32768</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>4</visibleLines>
+</CustomField>

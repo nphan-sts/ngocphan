@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Pre_Bill_Days_Value_Check</fullName>
+    <active>true</active>
+    <description>Pre Bill Days shouldn&apos;t be negative</description>
+    <errorConditionFormula>loan__Pre_Bill_Days__c &lt;0</errorConditionFormula>
+    <errorDisplayField>loan__Pre_Bill_Days__c</errorDisplayField>
+    <errorMessage>&apos;Pre Bill Days&apos; can&apos;t be negative</errorMessage>
+</ValidationRule>

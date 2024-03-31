@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__SelectClauseGeneral</fullName>
+    <active>true</active>
+    <description>In case of select clause, all fields except fieldvalue and/or parameter should be empty</description>
+    <errorConditionFormula>AND(ISPICKVAL(clcommon__Filter_Type__c, &apos;SELECT_FIELD&apos;),
+    OR( 
+        NOT(ISBLANK( clcommon__Expression_Left__c )),
+        NOT(ISBLANK( clcommon__Expression_Right__c )),
+        NOT(ISBLANK(TEXT(clcommon__Operator__c))),
+        AND(
+            ISBLANK(clcommon__Field_Name__c),
+            ISBLANK(TEXT(clcommon__Operator__c)),
+            ISBLANK(clcommon__Value__c) 
+        )
+    )
+)</errorConditionFormula>
+    <errorMessage>For SELECT FIELD filter, Field Name, Alias must be filled. Aggregation can be selected too. Other fields must be empty</errorMessage>
+</ValidationRule>

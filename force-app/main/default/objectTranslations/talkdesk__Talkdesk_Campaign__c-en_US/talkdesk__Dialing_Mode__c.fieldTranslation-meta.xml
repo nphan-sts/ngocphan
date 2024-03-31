@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>talkdesk__Dialing_Mode__c</name>
+    <picklistValues>
+        <masterLabel>Power Dialing</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Preview Dialing</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

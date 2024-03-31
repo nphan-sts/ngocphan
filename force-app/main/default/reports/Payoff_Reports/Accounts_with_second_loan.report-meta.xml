@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account$LastModifiedDate</field>
+    </columns>
+    <columns>
+        <field>Account$Name</field>
+    </columns>
+    <columns>
+        <field>Account$Id</field>
+    </columns>
+    <columns>
+        <field>Account.FeedItems$DerivedFeedItem</field>
+    </columns>
+    <columns>
+        <field>Account.FeedItems$Body</field>
+    </columns>
+    <columns>
+        <field>Account.FeedItems$Title</field>
+    </columns>
+    <columns>
+        <field>Account.FeedItems$LinkUrl</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Account.FeedItems$Body</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>contains</operator>
+            <value>SSN was moved to</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Accounts with second loan</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_FeedItem__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Account.FeedItems$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

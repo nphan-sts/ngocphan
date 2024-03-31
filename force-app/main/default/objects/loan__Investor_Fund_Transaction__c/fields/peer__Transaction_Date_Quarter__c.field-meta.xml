@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Transaction_Date_Quarter__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>TEXT(YEAR(loan__Transaction_Date__c)) &amp; &quot; &quot; &amp; If(MONTH(loan__Transaction_Date__c) &lt;= 3, &quot;Q1&quot;, 
+If(MONTH(loan__Transaction_Date__c) &lt;= 6, &quot;Q2&quot;, 
+If(MONTH(loan__Transaction_Date__c) &lt;= 9, &quot;Q3&quot;, &quot;Q4&quot;)))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Transaction Date Quarter</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

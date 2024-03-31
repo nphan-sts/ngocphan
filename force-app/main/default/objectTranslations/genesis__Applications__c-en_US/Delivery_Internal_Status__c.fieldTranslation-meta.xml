@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>Delivery_Internal_Status__c</name>
+    <picklistValues>
+        <masterLabel>Loan Files Resolved</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Pending Resolution</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Resolved</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

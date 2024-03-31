@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>genesis__Repayment_Procedure__c</name>
+    <picklistValues>
+        <masterLabel>Equal Monthly Installments</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Equated Principal</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Flexible</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

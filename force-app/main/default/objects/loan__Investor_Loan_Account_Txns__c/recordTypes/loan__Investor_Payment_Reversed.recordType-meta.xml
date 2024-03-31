@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Investor_Payment_Reversed</fullName>
+    <active>true</active>
+    <label>Investor Payment Reversed</label>
+    <picklistValues>
+        <picklist>loan__SS_Status__c</picklist>
+        <values>
+            <fullName>Active</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>De-Active</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Pending</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Txn_Code__c</picklist>
+        <values>
+            <fullName>ACTIVE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CERTIFICATE RATE CHANGE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>DE-ACTIVE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>INTEREST REINVESTED</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PAYMENT APPROVAL</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PAYMENT RELEASE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PAYMENT REVERSED</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PRINCIPAL %26 INTEREST REINVESTED</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PRINCIPAL REINVESTED</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SERVICE RATE CHANGE</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

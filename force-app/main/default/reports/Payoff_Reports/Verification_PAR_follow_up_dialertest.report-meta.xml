@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>genesis__Applications__c$Payoff_UID__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Id</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Applicant_Name__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$genesis__Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Owner</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Last_Interaction__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$LastModifiedDate</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Expiry_Date__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$genesis__Account__c.Phone</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$genesis__Account__c</field>
+    </columns>
+    <description>Verification_PAR_(follow up)_dialertest</description>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c$genesis__Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>docusign_loan_docs_sent,docusign_loan_docs_complete,pre_funding,Approved for funding,funded,Declined,Expired,Withdrawn,Decline_Manual_Review</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c.Application_Tags__r$softDelete__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c$Owner</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Pending Applicant Response</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Verification_PAR_(follow up)_dialertest</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Applications_and_Application_Tags__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <sortColumn>genesis__Applications__c$Last_Interaction__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c.Application_Tags__r$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

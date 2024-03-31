@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__lat_gl_post_date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Gl Post date</description>
+    <externalId>false</externalId>
+    <inlineHelpText>It is the date on which the account is created.</inlineHelpText>
+    <label>GL Post Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

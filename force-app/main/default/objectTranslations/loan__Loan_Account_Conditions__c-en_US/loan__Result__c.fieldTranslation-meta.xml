@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>loan__Result__c</name>
+    <picklistValues>
+        <masterLabel>Open Compliance Condition(METRO2)</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Open Consumer Information(METRO2)</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Open Special Condition(METRO2)</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Stop Credit Bureau</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

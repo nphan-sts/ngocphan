@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Service_Rate__c</fullName>
+    <defaultValue>0.00</defaultValue>
+    <deprecated>false</deprecated>
+    <description>On this rate service charge will be charged to the investors for servicing loans, making note payments and maintaining the accounts.
+The service charge paid by investors is on all amounts paid by the borrowers.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Is the %age of the certificate rate which is earned by the P2P platform.</inlineHelpText>
+    <label>Interest Service Rate</label>
+    <precision>7</precision>
+    <required>true</required>
+    <scale>4</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

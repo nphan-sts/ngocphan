@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Adjust_Deposit_Amount_In_Payoff__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This field indicates whether to consider the deposit amount for this deposit in Payoff calculation or not</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field indicates whether to consider the deposit amount for this deposit in Payoff calculation or not</inlineHelpText>
+    <label>Adjust Deposit Amount In Payoff</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

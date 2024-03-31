@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Rejection_Reason__c</fullName>
+    <externalId>false</externalId>
+    <label>Rejection Reason</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Paystub - not recent</fullName>
+                <default>false</default>
+                <label>Paystub - not recent</label>
+            </value>
+            <value>
+                <fullName>ID Expired</fullName>
+                <default>false</default>
+                <label>ID Expired</label>
+            </value>
+            <value>
+                <fullName>Too Blurry</fullName>
+                <default>false</default>
+                <label>Too Blurry</label>
+            </value>
+            <value>
+                <fullName>Image Cut Off</fullName>
+                <default>false</default>
+                <label>Image Cut Off</label>
+            </value>
+            <value>
+                <fullName>Statement - not PDF</fullName>
+                <default>false</default>
+                <label>Statement - not PDF</label>
+            </value>
+            <value>
+                <fullName>Not applicable</fullName>
+                <default>false</default>
+                <label>Not applicable</label>
+            </value>
+            <value>
+                <fullName>Duplicate</fullName>
+                <default>false</default>
+                <label>Duplicate</label>
+            </value>
+            <value>
+                <fullName>Password</fullName>
+                <default>false</default>
+                <label>Password</label>
+            </value>
+            <value>
+                <fullName>Non-color ID</fullName>
+                <default>false</default>
+                <label>Non-color ID</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

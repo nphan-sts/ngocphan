@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>genesis__Applications__c.DocuSign_Envelope_ID__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Lead_ID__c</field>
+    </columns>
+    <description>fix-apps-from-2022-05-03-outage</description>
+    <filter>
+        <criteriaItems>
+            <column>CUST_ID</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>a6h2M000000iJ0a,a6h2M000000iElR,a6h2M000000i75s,a6h2M000000i8te,a6h2M000000Yhbb,a6h2M000000iJvq,a6h2M000000iKE9,a6h2M000000iH8N,a6h2M000000iLxo,a6h2M000000iNv1,a6h2M000000iCNS,a6h2M000000iFsE,a6h2M000000hrVz,a6h2M000000i4vv,a6h2M000000huKQ,a6h2M000000iE01,a6h2M000000i0tl,a6h2M000000he1I,a6h2M000000iFdJ,a6h2M000000iFMw,a6h2M000000iN9M,a6h2M000000iK5M,a6h2M000000iNOg,a6h2M000000iC1M,a6h2M000000iIfx,a6h2M000000iDUA,a6h2M000000hoWu,a6h2M000000hv2X</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>fix-apps-from-2022-05-03-outage</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$genesis__Applications__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c.Allocation_Timestamp__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

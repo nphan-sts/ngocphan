@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Rejection_Reasons__c</fullName>
+    <externalId>false</externalId>
+    <label>Rejection Reason</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Accept</fullName>
+                <default>false</default>
+                <label>Accept</label>
+            </value>
+            <value>
+                <fullName>Accept: Additional Docs</fullName>
+                <default>false</default>
+                <label>Accept: Additional Docs</label>
+            </value>
+            <value>
+                <fullName>Accept: Previous Statement</fullName>
+                <default>false</default>
+                <label>Accept: Previous Statement</label>
+            </value>
+            <value>
+                <fullName>Accept: Primary Statement</fullName>
+                <default>false</default>
+                <label>Accept: Primary Statement</label>
+            </value>
+            <value>
+                <fullName>Accept: More Recent Statement</fullName>
+                <default>false</default>
+                <label>Accept: More Recent Statement</label>
+            </value>
+            <value>
+                <fullName>Accept: Not Personal Account</fullName>
+                <default>false</default>
+                <label>Accept: Not Personal Account</label>
+            </value>
+            <value>
+                <fullName>Accept: Previous Paystub</fullName>
+                <default>false</default>
+                <label>Accept: Previous Paystub</label>
+            </value>
+            <value>
+                <fullName>Statement: Missing Pages</fullName>
+                <default>false</default>
+                <label>Statement: Missing Pages</label>
+            </value>
+            <value>
+                <fullName>Statement: Not PDF</fullName>
+                <default>false</default>
+                <label>Statement: Not PDF</label>
+            </value>
+            <value>
+                <fullName>Statement: Not Recent</fullName>
+                <default>false</default>
+                <label>Statement: Not Recent</label>
+            </value>
+            <value>
+                <fullName>Paystub: Not Recent</fullName>
+                <default>false</default>
+                <label>Paystub: Not Recent</label>
+            </value>
+            <value>
+                <fullName>ID: Expired</fullName>
+                <default>false</default>
+                <label>ID: Expired</label>
+            </value>
+            <value>
+                <fullName>ID: Non-color</fullName>
+                <default>false</default>
+                <label>ID: Non-color</label>
+            </value>
+            <value>
+                <fullName>ID: Security Image</fullName>
+                <default>false</default>
+                <label>ID: Security Image</label>
+            </value>
+            <value>
+                <fullName>Blurry/Glare/Dark</fullName>
+                <default>false</default>
+                <label>Blurry/Glare/Dark</label>
+            </value>
+            <value>
+                <fullName>Image Cut Off</fullName>
+                <default>false</default>
+                <label>Image Cut Off</label>
+            </value>
+            <value>
+                <fullName>Not Applicable</fullName>
+                <default>false</default>
+                <label>Not Applicable</label>
+            </value>
+            <value>
+                <fullName>Duplicate</fullName>
+                <default>false</default>
+                <label>Duplicate</label>
+            </value>
+            <value>
+                <fullName>Password Protected</fullName>
+                <default>false</default>
+                <label>Password Protected</label>
+            </value>
+            <value>
+                <fullName>Linked Account: Too few transactions</fullName>
+                <default>false</default>
+                <label>Linked Account: Too few transactions</label>
+            </value>
+            <value>
+                <fullName>Linked Account: Did not link properly - Please try again</fullName>
+                <default>false</default>
+                <label>Linked Account: Did not link properly - Please try again</label>
+            </value>
+            <value>
+                <fullName>Reject</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Reject</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

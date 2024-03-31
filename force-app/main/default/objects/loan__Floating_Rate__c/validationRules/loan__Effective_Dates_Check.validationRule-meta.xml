@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Effective_Dates_Check</fullName>
+    <active>true</active>
+    <description>Effective To (if populated) should be greater than the Effective From</description>
+    <errorConditionFormula>AND( NOT( ISBLANK( loan__Rate_Effective_To__c ) ) ,  loan__Rate_Effective_To__c  &lt;  loan__Rate_Effective_From__c )</errorConditionFormula>
+    <errorMessage>Effective To date should be equal to or greater than the Effective From date.</errorMessage>
+</ValidationRule>

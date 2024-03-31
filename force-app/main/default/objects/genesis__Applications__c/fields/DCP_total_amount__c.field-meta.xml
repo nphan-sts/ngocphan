@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DCP_total_amount__c</fullName>
+    <externalId>false</externalId>
+    <label>DCP_total_amount</label>
+    <summarizedField>DCp_Arcus_Transactions__c.Requested_Amount__c</summarizedField>
+    <summaryFilterItems>
+        <field>DCp_Arcus_Transactions__c.Transaction_Id__c</field>
+        <operation>notEqual</operation>
+        <value></value>
+    </summaryFilterItems>
+    <summaryFilterItems>
+        <field>DCp_Arcus_Transactions__c.Pay_at_Funding__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryForeignKey>DCp_Arcus_Transactions__c.Application__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

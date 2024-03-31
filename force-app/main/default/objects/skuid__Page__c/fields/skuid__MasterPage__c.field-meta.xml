@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__MasterPage__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Reference to this page&apos;s &quot;Master&quot; page</description>
+    <externalId>false</externalId>
+    <label>Master Page</label>
+    <referenceTo>skuid__Page__c</referenceTo>
+    <relationshipLabel>Child Pages</relationshipLabel>
+    <relationshipName>Pages</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

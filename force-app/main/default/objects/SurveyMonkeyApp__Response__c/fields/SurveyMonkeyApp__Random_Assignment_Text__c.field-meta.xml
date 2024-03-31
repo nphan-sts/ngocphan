@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SurveyMonkeyApp__Random_Assignment_Text__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The text shown to the user when more than one header was set (A/B testing)</description>
+    <externalId>false</externalId>
+    <label>Random Assignment Text</label>
+    <length>131072</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

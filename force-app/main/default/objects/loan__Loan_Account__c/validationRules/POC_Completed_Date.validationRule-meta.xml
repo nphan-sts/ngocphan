@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>POC_Completed_Date</fullName>
+    <active>true</active>
+    <description>POC Completed Date must be filled when Agent Name: Completed POC is filled</description>
+    <errorConditionFormula>NOT(ISBLANK(Agent_Name_Completed_POC__c)) &amp;&amp; ISBLANK(POC_Completed_Date__c)</errorConditionFormula>
+    <errorDisplayField>POC_Completed_Date__c</errorDisplayField>
+    <errorMessage>POC Completed Date must be filled when Agent Name: Completed POC is filled</errorMessage>
+</ValidationRule>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Journal_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISBLANK(loan__Journal__c)</errorConditionFormula>
+    <errorDisplayField>loan__Journal__c</errorDisplayField>
+    <errorMessage>You must select a Journal</errorMessage>
+</ValidationRule>

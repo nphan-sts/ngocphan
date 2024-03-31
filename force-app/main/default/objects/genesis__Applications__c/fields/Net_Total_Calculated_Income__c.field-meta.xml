@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Net_Total_Calculated_Income__c</fullName>
+    <externalId>false</externalId>
+    <label>Net Total Calculated Income</label>
+    <summarizedField>Net_Income_Calculator__c.Annualized__c</summarizedField>
+    <summaryForeignKey>Net_Income_Calculator__c.Application__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Must_be_after_File_Date</fullName>
+    <active>true</active>
+    <errorConditionFormula>IF(
+				NOT(ISBLANK(Dismissal_Date__c)),
+				Dismissal_Date__c &lt; File_Date__c,
+				Discharge_Date__c &lt; File_Date__c
+)</errorConditionFormula>
+    <errorMessage>Dismissal Date or Discharge Date must be after File Date</errorMessage>
+</ValidationRule>

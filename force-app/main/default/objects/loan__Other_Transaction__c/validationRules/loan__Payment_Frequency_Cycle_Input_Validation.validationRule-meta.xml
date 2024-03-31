@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Payment_Frequency_Cycle_Input_Validation</fullName>
+    <active>true</active>
+    <description>Frequency Cycle cannot be less than equal to zero
+It&apos;s valid for frequencies Monthly, Weekly and Daily</description>
+    <errorConditionFormula>AND( NOT( ISNULL(loan__Frequency_Cycle_of_Loan_Payment__c) ) ,OR(loan__Frequency_Cycle_of_Loan_Payment__c &lt;= 0 , AND( loan__Frequency_Cycle_of_Loan_Payment__c &gt; 1,OR(ISPICKVAL(loan__Frequency_of_Loan_Payment__c, &apos;Bi-weekly&apos;),
+ISPICKVAL(loan__Frequency_of_Loan_Payment__c, &apos;Semi-Monthly&apos;),
+ISPICKVAL(loan__Frequency_of_Loan_Payment__c, &apos;Bi-Monthly&apos;),
+ISPICKVAL(loan__Frequency_of_Loan_Payment__c, &apos;Quarterly&apos;),
+ISPICKVAL(loan__Frequency_of_Loan_Payment__c, &apos;Semi-Annual&apos;),
+ISPICKVAL(loan__Frequency_of_Loan_Payment__c, &apos;Annual&apos;),
+ISPICKVAL(loan__Frequency_of_Loan_Payment__c, &apos;Single-Payment&apos;)))))</errorConditionFormula>
+    <errorDisplayField>loan__Frequency_Cycle_of_Loan_Payment__c</errorDisplayField>
+    <errorMessage>Kindly put correct value for Frequency Cycle, the value can not be less than zero, or Frequency is not Monthly, Weekly or Daily.</errorMessage>
+</ValidationRule>

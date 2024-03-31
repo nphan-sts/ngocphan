@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Use_As_SubLimit_Product__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Allow this product to be used when creating SubLimits</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Allow this product to be used when creating SubLimits</inlineHelpText>
+    <label>Use As SubLimit Product</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>U_LoanModExtDt__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>First unpaid due date for modified payment amount for Payment Reduction.</inlineHelpText>
+    <label>Loan Mod Effective Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

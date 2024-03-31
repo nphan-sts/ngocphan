@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Equipment_Condition__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Condition of equipment.</inlineHelpText>
+    <label>Equipment Condition</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>NEW</fullName>
+                <default>true</default>
+                <label>NEW</label>
+            </value>
+            <value>
+                <fullName>USED</fullName>
+                <default>false</default>
+                <label>USED</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

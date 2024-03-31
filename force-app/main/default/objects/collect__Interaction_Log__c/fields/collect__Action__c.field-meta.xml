@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Action__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Lookup reference to the collection Action Code (can be one of Cat1, Cat2, Cat3 or other)</description>
+    <externalId>false</externalId>
+    <label>Action</label>
+    <referenceTo>collect__Action_Code__c</referenceTo>
+    <relationshipLabel>Interaction Logs</relationshipLabel>
+    <relationshipName>Interaction_Logs</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

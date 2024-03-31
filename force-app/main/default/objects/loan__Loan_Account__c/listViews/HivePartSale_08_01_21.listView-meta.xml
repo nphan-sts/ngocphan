@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>HivePartSale_08_01_21</fullName>
+    <columns>Payoff_Loan_ID__c</columns>
+    <columns>NAME</columns>
+    <columns>loan__Account__c</columns>
+    <columns>Investor_Account__c</columns>
+    <columns>InvestorAccount__c</columns>
+    <columns>loan__Accrual_Start_Date__c</columns>
+    <columns>loan__Next_Installment_Date__c</columns>
+    <columns>loan__Pmt_Amt_Cur__c</columns>
+    <columns>Effective_Date_for_AutoSale__c</columns>
+    <columns>loan__Loan_Status__c</columns>
+    <columns>loan__Loan_Product_Name__c</columns>
+    <columns>Application__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Effective_Date_for_AutoSale__c</field>
+        <operation>equals</operation>
+        <value>8/1/2021</value>
+    </filters>
+    <filters>
+        <field>Buyer__c</field>
+        <operation>equals</operation>
+        <value>Hive Participations</value>
+    </filters>
+    <label>HivePartSale_08_01_21</label>
+</ListView>

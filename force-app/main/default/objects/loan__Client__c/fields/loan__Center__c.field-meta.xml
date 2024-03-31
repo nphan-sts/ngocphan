@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Center__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Center</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>loan__Center__c.loan__Branch__r.Name</field>
+            <operation>equals</operation>
+            <valueField>$User.loan__Current_Branch__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>loan__Center__c</referenceTo>
+    <relationshipLabel>Clients</relationshipLabel>
+    <relationshipName>Clients</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

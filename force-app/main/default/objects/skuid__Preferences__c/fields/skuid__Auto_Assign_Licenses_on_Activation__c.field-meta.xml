@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Auto_Assign_Licenses_on_Activation__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If true, Skuid will auto-assign a License to Skuid (and optionally other packages) when a new user is created or newly-activated.</description>
+    <externalId>false</externalId>
+    <label>Auto Assign Licenses on Activation</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

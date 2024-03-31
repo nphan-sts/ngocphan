@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Passthrough_Event__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Passthrough Event</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>On Billing</fullName>
+                <default>false</default>
+                <label>On Billing</label>
+            </value>
+            <value>
+                <fullName>On Partial Payment</fullName>
+                <default>false</default>
+                <label>On Partial Payment</label>
+            </value>
+            <value>
+                <fullName>On Full Payment</fullName>
+                <default>false</default>
+                <label>On Full Payment</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Base_Segment_Definition__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Base Segment Definition</label>
+    <referenceTo>loan__Base_Segment_Definition__c</referenceTo>
+    <relationshipLabel>K1 Segments</relationshipLabel>
+    <relationshipName>K1_Segments</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

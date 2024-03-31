@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Neo_Verify__c$Name</field>
+    </columns>
+    <format>Tabular</format>
+    <name>Neo verify report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Neo_verify__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Neo_Verify__c$LastModifiedDate</dateColumn>
+        <endDate>2020-08-31</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2020-08-01</startDate>
+    </timeFrameFilter>
+</Report>

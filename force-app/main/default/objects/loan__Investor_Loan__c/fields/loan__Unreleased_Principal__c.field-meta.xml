@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Unreleased_Principal__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Fields calculates Unreleased principal for investment order.</description>
+    <externalId>false</externalId>
+    <formula>loan__Principal_Amount_Paid__c -  loan__Principal_Disbursed_To_Investor__c -  loan__Principal_Reinvested__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Fields calculates Unreleased principal for investment order.</inlineHelpText>
+    <label>Unreleased Principal</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

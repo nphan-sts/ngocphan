@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Interest_Rate_On_Due_Principal__c</fullName>
+    <defaultValue>0</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Interest rate on due principal to calculate interest amount on due principal which needs to be paid to investor</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Interest rate on due principal to calculate interest amount on due principal which needs to be paid to investor</inlineHelpText>
+    <label>Interest Rate On Due Principal</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>4</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

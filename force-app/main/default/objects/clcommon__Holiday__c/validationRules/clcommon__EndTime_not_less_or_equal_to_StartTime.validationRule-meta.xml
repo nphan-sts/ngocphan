@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__EndTime_not_less_or_equal_to_StartTime</fullName>
+    <active>true</active>
+    <description>The End Time for the Holiday cannot be less than or equal to the Start Time of the Holiday.</description>
+    <errorConditionFormula>TIMEVALUE(clcommon__EndTimeInMinutes__c) &lt;=  TIMEVALUE(clcommon__StartTimeInMinutes__c)</errorConditionFormula>
+    <errorDisplayField>clcommon__EndTimeInMinutes__c</errorDisplayField>
+    <errorMessage>Holiday end time should occur after the start time.</errorMessage>
+</ValidationRule>

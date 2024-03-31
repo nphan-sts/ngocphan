@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DebtSettlementCompany__c</fullName>
+    <externalId>false</externalId>
+    <label>Debt Settlement Company</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Alleviate Financial</fullName>
+                <default>false</default>
+                <label>Alleviate Financial</label>
+            </value>
+            <value>
+                <fullName>Americor</fullName>
+                <default>false</default>
+                <label>Americor</label>
+            </value>
+            <value>
+                <fullName>Atlas Debt Relief</fullName>
+                <default>false</default>
+                <label>Atlas Debt Relief</label>
+            </value>
+            <value>
+                <fullName>Beyond Finance</fullName>
+                <default>false</default>
+                <label>Beyond Finance</label>
+            </value>
+            <value>
+                <fullName>Canyon Legal Group</fullName>
+                <default>false</default>
+                <label>Canyon Legal Group</label>
+            </value>
+            <value>
+                <fullName>Century Support Services</fullName>
+                <default>false</default>
+                <label>Century Support Services</label>
+            </value>
+            <value>
+                <fullName>Century Law Group</fullName>
+                <default>false</default>
+                <label>Century Law Group</label>
+            </value>
+            <value>
+                <fullName>Citizens Debt Relief</fullName>
+                <default>false</default>
+                <label>Citizens Debt Relief</label>
+            </value>
+            <value>
+                <fullName>Clarity Debt Resolutions</fullName>
+                <default>false</default>
+                <label>Clarity Debt Resolutions</label>
+            </value>
+            <value>
+                <fullName>Clear One Advantage</fullName>
+                <default>false</default>
+                <label>Clear One Advantage</label>
+            </value>
+            <value>
+                <fullName>Consumers Alliance</fullName>
+                <default>false</default>
+                <label>Consumers Alliance</label>
+            </value>
+            <value>
+                <fullName>Cordoba Legal</fullName>
+                <default>false</default>
+                <label>Cordoba Legal</label>
+            </value>
+            <value>
+                <fullName>Credit Associates</fullName>
+                <default>false</default>
+                <label>Credit Associates</label>
+            </value>
+            <value>
+                <fullName>DMB Financial</fullName>
+                <default>false</default>
+                <label>DMB Financial</label>
+            </value>
+            <value>
+                <fullName>Five Lakes Law Group</fullName>
+                <default>false</default>
+                <label>Five Lakes Law Group</label>
+            </value>
+            <value>
+                <fullName>Freedom Debt Relief</fullName>
+                <default>false</default>
+                <label>Freedom Debt Relief</label>
+            </value>
+            <value>
+                <fullName>Greenburg Law Group</fullName>
+                <default>false</default>
+                <label>Greenburg Law Group</label>
+            </value>
+            <value>
+                <fullName>GRT Financial</fullName>
+                <default>false</default>
+                <label>GRT Financial</label>
+            </value>
+            <value>
+                <fullName>Guardian Litigation Group</fullName>
+                <default>false</default>
+                <label>Guardian Litigation Group</label>
+            </value>
+            <value>
+                <fullName>J.G. Wentworth</fullName>
+                <default>false</default>
+                <label>J.G. Wentworth</label>
+            </value>
+            <value>
+                <fullName>Level One Law</fullName>
+                <default>false</default>
+                <label>Level One Law</label>
+            </value>
+            <value>
+                <fullName>Member Direct</fullName>
+                <default>false</default>
+                <label>Member Direct</label>
+            </value>
+            <value>
+                <fullName>National Debt Relief</fullName>
+                <default>false</default>
+                <label>National Debt Relief</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Pacific Debt Inc.</fullName>
+                <default>false</default>
+                <label>Pacific Debt Inc.</label>
+            </value>
+            <value>
+                <fullName>Palisade Legal Group</fullName>
+                <default>false</default>
+                <label>Palisade Legal Group</label>
+            </value>
+            <value>
+                <fullName>Robert S. Gitmeid &amp; Associates</fullName>
+                <default>false</default>
+                <label>Robert S. Gitmeid &amp; Associates</label>
+            </value>
+            <value>
+                <fullName>TrueAccord</fullName>
+                <default>false</default>
+                <label>TrueAccord</label>
+            </value>
+            <value>
+                <fullName>Turnbull Law Group</fullName>
+                <default>false</default>
+                <label>Turnbull Law Group</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Auto_Revoke_Perm_Sets_on_Deactivation__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If true, Skuid will auto-revoke the Skuid Page Viewer (and/or other Permission sets) when a user is deactivated.</description>
+    <externalId>false</externalId>
+    <label>Auto Revoke Perm Sets on Deactivation</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

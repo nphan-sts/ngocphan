@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help></help>
+    <label></label>
+    <name>loan__Disable_Saving_Pmt_Txn_Trigger__c</name>
+</CustomFieldTranslation>

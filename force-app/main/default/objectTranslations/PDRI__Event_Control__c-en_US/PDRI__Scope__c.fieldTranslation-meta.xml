@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>PDRI__Scope__c</name>
+    <picklistValues>
+        <masterLabel>Data Set</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Data Set Element</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Deployment Plan</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

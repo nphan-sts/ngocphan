@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__FirstName_Special_char_check</fullName>
+    <active>true</active>
+    <description>FirstName_Special_char_check</description>
+    <errorConditionFormula>NOT(REGEX(  loan__First_Name__c  , &quot;^[a-zA-Z]*$&quot;))</errorConditionFormula>
+    <errorDisplayField>loan__First_Name__c</errorDisplayField>
+    <errorMessage>First Name should not include special characters</errorMessage>
+</ValidationRule>

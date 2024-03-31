@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Reason_Code__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Reason</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>loan__Lookup__c.loan__Lookup_Sub_Type__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.loan__Result__c</valueField>
+        </filterItems>
+        <filterItems>
+            <field>loan__Lookup__c.loan__Lookup_Type__c</field>
+            <operation>equals</operation>
+            <value>CRB_CONDITION_REASON_CD</value>
+        </filterItems>
+        <filterItems>
+            <field>loan__Lookup__c.loan__Enabled_Flag__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>loan__Lookup__c</referenceTo>
+    <relationshipLabel>Conditions</relationshipLabel>
+    <relationshipName>Loan_Account_Conditions</relationshipName>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__All</fullName>
+    <columns>NAME</columns>
+    <columns>genesis__Asset_Type__c</columns>
+    <columns>genesis__Identification_number__c</columns>
+    <columns>genesis__Make__c</columns>
+    <columns>genesis__Model__c</columns>
+    <columns>genesis__Style__c</columns>
+    <columns>genesis__Valuation_Source__c</columns>
+    <columns>genesis__Mileage__c</columns>
+    <columns>genesis__Retail_Average_Base_Price__c</columns>
+    <columns>genesis__Retail_Average_Mileage_Adjustment__c</columns>
+    <columns>genesis__Wholesale_Average_Base_Price__c</columns>
+    <columns>genesis__Wholesale_Rough_Mileage_Adjustment__c</columns>
+    <columns>genesis__Wholesale_Average_Mileage_Adjustment__c</columns>
+    <columns>genesis__Valuation_Date__c</columns>
+    <columns>genesis__Enabled_Flag__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+</ListView>

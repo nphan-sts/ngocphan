@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Loan_Account__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Data_Migration_Errors__r$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Data_Migration_Errors__r$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Data_Migration_Errors__r$loan__Error_Message__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Data_Migration_Errors__r$loan__Error_Code__c</field>
+    </columns>
+    <description>This report contains diagnostic information about loans which may have invalid data.</description>
+    <filter>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Data_Migration_Errors__r$loan__Error_Code__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>Diagnostic</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Daily Loan Diagnostics</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>loan__Loans_with_Data_Migration_Error__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Account__c$loan__Accrual_Start_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

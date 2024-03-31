@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__DD_Primary_Flag__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Specifies whether this is for the primary account for the associated contract</description>
+    <externalId>false</externalId>
+    <label>Primary</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

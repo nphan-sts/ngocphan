@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__TCTLoan</fullName>
+    <active>true</active>
+    <label>TCTLoan</label>
+    <picklistValues>
+        <picklist>loan__Transaction_For__c</picklist>
+        <values>
+            <fullName>GL</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Savings</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>loan__Transaction_Type__c</picklist>
+        <values>
+            <fullName>Cash Dispensed %2F Expense</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cash Received %2F Income</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+</RecordType>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>loan__Funding_Stop_Basis__c</name>
+    <picklistValues>
+        <masterLabel>Draw Period End</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Suspended Funding</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

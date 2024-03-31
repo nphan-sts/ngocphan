@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Group_Loan_Validation</fullName>
+    <active>false</active>
+    <description>This validation is deprecated. Do not activate it.</description>
+    <errorConditionFormula>OR(
+AND(ISPICKVAL( loan__Loan_Product_Name__r.loan__Loan_Product_Type__c , &apos;Group-Client&apos;),
+NOT($Setup.loan__Org_Parameters__c.loan__Integrate_Salesforce_CRM__c),
+NOT(ISBLANK( loan__Client__r.loan__Center__c ))
+),
+AND(ISPICKVAL( loan__Loan_Product_Name__r.loan__Loan_Product_Type__c , &apos;Group-Client&apos;),
+NOT($Setup.loan__Org_Parameters__c.loan__Integrate_Salesforce_CRM__c),
+ISBLANK( loan__Client__r.loan__Group__c ) )
+)</errorConditionFormula>
+    <errorMessage>The Loan Product is of type &apos;Group-Client (Group Loan)&apos;.  Client must not have a Center. Client must have a Group.</errorMessage>
+</ValidationRule>

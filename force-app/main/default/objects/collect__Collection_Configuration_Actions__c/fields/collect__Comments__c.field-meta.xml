@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Comments__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Description / Comments related to strategy actions.</description>
+    <externalId>false</externalId>
+    <label>Comments</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Simple reminder advice</fullName>
+                <default>false</default>
+                <label>Simple reminder advice</label>
+            </value>
+            <value>
+                <fullName>Immediate contact</fullName>
+                <default>false</default>
+                <label>Immediate contact</label>
+            </value>
+            <value>
+                <fullName>Reporting</fullName>
+                <default>false</default>
+                <label>Reporting</label>
+            </value>
+            <value>
+                <fullName>Contact &amp; obtain arrangement</fullName>
+                <default>false</default>
+                <label>Contact &amp; obtain arrangement</label>
+            </value>
+            <value>
+                <fullName>Reconfirm payment arrangement</fullName>
+                <default>false</default>
+                <label>Reconfirm payment arrangement</label>
+            </value>
+            <value>
+                <fullName>Calls daily till arrangement obtained</fullName>
+                <default>false</default>
+                <label>Calls daily till arrangement obtained</label>
+            </value>
+            <value>
+                <fullName>Issued if applicable</fullName>
+                <default>false</default>
+                <label>Issued if applicable</label>
+            </value>
+            <value>
+                <fullName>Further fees and adverse credit pending Issued if applicable</fullName>
+                <default>false</default>
+                <label>Further fees and adverse credit pending Issued if applicable</label>
+            </value>
+            <value>
+                <fullName>Approval required</fullName>
+                <default>false</default>
+                <label>Approval required</label>
+            </value>
+            <value>
+                <fullName>Escalation due to days overdue</fullName>
+                <default>false</default>
+                <label>Escalation due to days overdue</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>false</available>
+    <description>/*Created By Nupur */ ------ Action Required - Please eSign your documents</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>PayOff_Emails</letterhead>
+    <name>e_sign_borrower_pending_liquid1</name>
+    <style>formalLetter</style>
+    <subject>Action Required - Please eSign your documents</subject>
+    <textOnly>Hi {!genesis__Applications__c.Borrower_s_First_Name__c},
+
+Congrats! Your Payoff Loan documents are ready for you to review, accept and eSign for your convenience. All you need to do is click the link below and follow the instructions to accept and sign your final documents
+
+Review and eSign Documents.
+
+This is a required final step before we deposit your Payoff Loan funds into your bank account.
+
+If you have any questions, feel free to give us a call at 1-800-878-0901.
+
+The Payoff Team
+
+Payoff, Inc.
+
+success@payoff.com
+
+
+1-800-878-0901
+Follow us: Facebook Twitter Instagram
+
+Payoff, Inc.
+3200 Park Center Drive, Ste. 800,
+Costa Mesa, CA 92626
+
+© Copyright 2009-2017. All rights reserved. Payoff, Inc.
+
+
+
+Disclaimer: This email and its contents are confidential and intended only for you. Payoff is not liable for any loss or damage that may arise from this email or any attachments. Unless we specifically say, we will not enter into a contract over email.
+Payoff works with lending partners to ultimately originate loans. Information about our Lending Partners, including their address, financial institution type and charter, as well as links to their websites and privacy policies can be found on our Lending Partners page. Individual borrowers must be at least 18 years old and have valid Social Security number and a valid checking account. All loans are subject to credit review and approval. Your actual rate depends upon credit score, loan amount, loan term, credit usage and history. Currently loans are not offered in: DC, DE, IA, MA, MD, MI, MN, MS, NC, NE, NV, OH, OK, VA, VT, WA, WI, and WV. Our mailing address is: Payoff, Inc., 3200 Park Center Drive, STE 800, Costa Mesa, CA 92626.</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

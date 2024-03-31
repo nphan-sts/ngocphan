@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Perm_Sets_For_Auto_Revocation__c</fullName>
+    <defaultValue>&quot;skuid__Skuid_Page_Viewer&quot;</defaultValue>
+    <deprecated>false</deprecated>
+    <description>(Optional) Names of Permission Sets to auto-revoke from deactivated users. Semi-colon delimited and namespace-prefixed, e.g. &quot;skuid__Skuid_Page_Viewer&quot;</description>
+    <externalId>false</externalId>
+    <label>Permission Sets to Auto-Revoke</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

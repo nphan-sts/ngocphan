@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>false</available>
+    <description> Upcoming Auto Loan Payment Reminder - before 3 days</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Payoff_Loan</letterhead>
+    <name>Upcoming Auto Loan Payment Reminder</name>
+    <style>formalLetter</style>
+    <subject>DEV Upcoming payment reminder</subject>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

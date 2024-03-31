@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Loan_Disbursal_Transaction__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>DM Loan Disbursal Transaction</label>
+    <referenceTo>DM_Loan_Disbursal_Transaction__c</referenceTo>
+    <relationshipLabel>DM Disbursal Transaction Distributions</relationshipLabel>
+    <relationshipName>DM_Disbursal_Transaction_Distributions</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

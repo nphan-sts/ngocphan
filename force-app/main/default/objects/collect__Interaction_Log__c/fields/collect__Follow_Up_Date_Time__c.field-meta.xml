@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Follow_Up_Date_Time__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Date-time on which collector needs to follow up with the borrower/other party</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Date-time on which collector needs to follow up with the borrower/other party</inlineHelpText>
+    <label>Follow Up Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

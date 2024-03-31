@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>QC_Ready_to_Fund_list_pending_JIRA</fullName>
+    <columns>NAME</columns>
+    <columns>User_Approver__c</columns>
+    <columns>User_Processor__c</columns>
+    <columns>OWNER.ALIAS</columns>
+    <columns>genesis__Term__c</columns>
+    <columns>Employment_Status__c</columns>
+    <columns>Investor__c</columns>
+    <columns>genesis__APR__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>OWNER.ALIAS</field>
+        <operation>equals</operation>
+        <value>Ready to fund list</value>
+    </filters>
+    <label>VS-QC: Ready to Fund list</label>
+    <sharedTo>
+        <role>Loan_Ops_Manager</role>
+        <role>Loan_Ops_Specialist</role>
+        <role>Verification_Manager</role>
+        <role>Verification_Team_Lead</role>
+        <role>Verification_Team_Mgr</role>
+        <role>Verification_Team_Specialist</role>
+        <role>Verification_Team_Sr_Specialist</role>
+    </sharedTo>
+</ListView>

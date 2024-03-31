@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Allocation_Status__c</fullName>
+    <description>The allocation engine result</description>
+    <externalId>false</externalId>
+    <label>Allocation Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>none</fullName>
+                <default>true</default>
+                <label>none</label>
+            </value>
+            <value>
+                <fullName>success</fullName>
+                <default>false</default>
+                <label>success</label>
+            </value>
+            <value>
+                <fullName>no_allocation</fullName>
+                <default>false</default>
+                <label>no_allocation</label>
+            </value>
+            <value>
+                <fullName>error</fullName>
+                <default>false</default>
+                <label>error</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

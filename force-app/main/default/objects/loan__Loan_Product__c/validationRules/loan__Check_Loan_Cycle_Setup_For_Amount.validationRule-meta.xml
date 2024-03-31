@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_Loan_Cycle_Setup_For_Amount</fullName>
+    <active>false</active>
+    <description>Deprecated by Abhinav and Snehal, not supported.</description>
+    <errorConditionFormula>AND(  ISPICKVAL(loan__Loan_Cycle_Setup__c, &apos;Same for all Loans&apos;) ,OR( ISBLANK( loan__Max_Loan_Amount__c ) , ISBLANK( loan__Min_Loan_Amount__c ) ) )</errorConditionFormula>
+    <errorMessage>Please fill out the Loan section.</errorMessage>
+</ValidationRule>

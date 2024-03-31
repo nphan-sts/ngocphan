@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Last_Modified_Date_Exposure__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Last date on which credit exposure was calculated</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Last date on which credit exposure was calculated</inlineHelpText>
+    <label>Last Modified Date(Exposure)</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>DateTime</type>
+</CustomField>

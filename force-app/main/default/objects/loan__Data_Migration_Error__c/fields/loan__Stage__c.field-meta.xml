@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Stage__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Stage</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Pre-Import</fullName>
+                <default>false</default>
+                <label>Pre-Import</label>
+            </value>
+            <value>
+                <fullName>Pre-Import Valid</fullName>
+                <default>false</default>
+                <label>Pre-Import Valid</label>
+            </value>
+            <value>
+                <fullName>Record Created</fullName>
+                <default>false</default>
+                <label>Record Created</label>
+            </value>
+            <value>
+                <fullName>Post-Import Valid</fullName>
+                <default>false</default>
+                <label>Post-Import Valid</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

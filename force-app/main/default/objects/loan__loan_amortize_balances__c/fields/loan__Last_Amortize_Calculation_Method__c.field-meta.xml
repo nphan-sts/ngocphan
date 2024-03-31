@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Last_Amortize_Calculation_Method__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Last Amortization Method.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>It is the balance earned in the last Amortization process run</inlineHelpText>
+    <label>Last Amortization Method</label>
+    <length>100</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,4 @@
+&DefaultPDF=1
+&OFN=Donation+Receipts+-+{!Today()}
+&DS7=3
+&BML=Generating+Donation+Receipts

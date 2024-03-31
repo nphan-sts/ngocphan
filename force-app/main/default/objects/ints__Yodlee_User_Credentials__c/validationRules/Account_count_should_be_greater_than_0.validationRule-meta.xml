@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_count_should_be_greater_than_0</fullName>
+    <active>true</active>
+    <errorConditionFormula>OR(yodlee_Account_count__c&lt;=0 ,ISBLANK(yodlee_Account_count__c))</errorConditionFormula>
+    <errorMessage>Yodlee credentials with more than 1 account linked are acceptable</errorMessage>
+</ValidationRule>

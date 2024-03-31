@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>DM_Repayment_Transaction_Reversal__c$Name</field>
+    </columns>
+    <format>Tabular</format>
+    <name>DM Repayment Transaction Reversal</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>DM_Repayment_Transaction_Reversal__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>DM_Repayment_Transaction_Reversal__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,4 @@
+&DefaultPDF=1
+&OFN=Invoice for {!Account.Name} - {!Today()}
+&DS7=13
+&BML=Generating+Invoice

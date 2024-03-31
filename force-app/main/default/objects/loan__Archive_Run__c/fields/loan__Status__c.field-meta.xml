@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>if ( not(isnull( loan__Completed__c )), &quot;Completed&quot;, if(isnull( loan__Scheduled_To_Run__c ),&quot;Not Scheduled&quot; , if( loan__Scheduled_To_Run__c &gt; now() , &quot;Scheduled&quot;, &quot;Late&quot; ) ))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

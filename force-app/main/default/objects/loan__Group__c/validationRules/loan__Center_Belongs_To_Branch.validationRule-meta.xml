@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Center_Belongs_To_Branch</fullName>
+    <active>true</active>
+    <errorConditionFormula>(loan__Center__c  &lt;&gt; NULL) &amp;&amp; (loan__Center__r.loan__Branch__r.Id  &lt;&gt;  loan__Office__r.Id)</errorConditionFormula>
+    <errorMessage>User entered Center does not belong to this Branch.</errorMessage>
+</ValidationRule>

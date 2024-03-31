@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Report__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Report</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>loan__Report_Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Loan Portfolio Report</fullName>
+                <default>false</default>
+                <label>Loan Portfolio Report</label>
+            </value>
+            <value>
+                <fullName>Summary of Key Data</fullName>
+                <default>false</default>
+                <label>Summary of Key Data</label>
+            </value>
+            <value>
+                <fullName>Balance Sheet</fullName>
+                <default>false</default>
+                <label>Balance Sheet</label>
+            </value>
+            <value>
+                <fullName>Trial Balance</fullName>
+                <default>false</default>
+                <label>Trial Balance</label>
+            </value>
+            <value>
+                <fullName>Staffing Summary</fullName>
+                <default>false</default>
+                <label>Staffing Summary</label>
+            </value>
+            <value>
+                <fullName>Outreach Summary</fullName>
+                <default>false</default>
+                <label>Outreach Summary</label>
+            </value>
+            <value>
+                <fullName>Savings Product Summary</fullName>
+                <default>false</default>
+                <label>Savings Product Summary</label>
+            </value>
+            <value>
+                <fullName>Performance Ratio</fullName>
+                <default>false</default>
+                <label>Performance Ratio</label>
+            </value>
+            <value>
+                <fullName>Cash Flow Statement</fullName>
+                <default>false</default>
+                <label>Cash Flow Statement</label>
+            </value>
+            <value>
+                <fullName>General Ledger</fullName>
+                <default>false</default>
+                <label>General Ledger</label>
+            </value>
+            <value>
+                <fullName>Profit &amp; Loss</fullName>
+                <default>false</default>
+                <label>Profit &amp; Loss</label>
+            </value>
+            <value>
+                <fullName>Voluntary Savings Product Summary</fullName>
+                <default>false</default>
+                <label>Voluntary Savings Product Summary</label>
+            </value>
+            <value>
+                <fullName>SACCO Balance Sheet</fullName>
+                <default>false</default>
+                <label>SACCO Balance Sheet</label>
+            </value>
+            <value>
+                <fullName>Portfolio Aging Schedule</fullName>
+                <default>false</default>
+                <label>Portfolio Aging Schedule</label>
+            </value>
+            <value>
+                <fullName>Liquidity ratio</fullName>
+                <default>false</default>
+                <label>Liquidity ratio</label>
+            </value>
+            <value>
+                <fullName>Solvency Ratio</fullName>
+                <default>false</default>
+                <label>Solvency Ratio</label>
+            </value>
+            <value>
+                <fullName>rca report</fullName>
+                <default>false</default>
+                <label>rca report</label>
+            </value>
+            <value>
+                <fullName>Income Statement</fullName>
+                <default>false</default>
+                <label>Income Statement</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Financial Reports</controllingFieldValue>
+            <valueName>Balance Sheet</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial Reports</controllingFieldValue>
+            <valueName>Trial Balance</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial Reports</controllingFieldValue>
+            <valueName>Cash Flow Statement</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial Reports</controllingFieldValue>
+            <valueName>General Ledger</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial Reports</controllingFieldValue>
+            <valueName>Profit &amp; Loss</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Financial Reports</controllingFieldValue>
+            <valueName>SACCO Balance Sheet</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Performance Reports</controllingFieldValue>
+            <valueName>Loan Portfolio Report</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Performance Reports</controllingFieldValue>
+            <valueName>Savings Product Summary</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Performance Reports</controllingFieldValue>
+            <valueName>Performance Ratio</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Performance Reports</controllingFieldValue>
+            <valueName>Voluntary Savings Product Summary</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Performance Reports</controllingFieldValue>
+            <valueName>Portfolio Aging Schedule</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Statistical Reports</controllingFieldValue>
+            <valueName>Summary of Key Data</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Statistical Reports</controllingFieldValue>
+            <valueName>Staffing Summary</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Statistical Reports</controllingFieldValue>
+            <valueName>Outreach Summary</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Statistical Reports</controllingFieldValue>
+            <valueName>Liquidity ratio</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Statistical Reports</controllingFieldValue>
+            <valueName>Solvency Ratio</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Statistical Reports</controllingFieldValue>
+            <valueName>rca report</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

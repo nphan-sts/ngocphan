@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Application_Tags__c$Application__c</field>
+    </columns>
+    <columns>
+        <field>Application_Tags__c$Name</field>
+    </columns>
+    <columns>
+        <field>Application_Tags__c$Application_Tag__c</field>
+    </columns>
+    <columns>
+        <field>Application_Tags__c$Created_date__c</field>
+    </columns>
+    <columns>
+        <field>Application_Tags__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Application_Tags__c$Application__c.genesis__Status__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Application_Tags__c$Application_Tag__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Soft Pull Requested.</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Application_Tags__c$Application__c.genesis__Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>agent_document_verification_pending</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Application_Tags__c$Application__c.LastModifiedDate</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>7/17/2020 2:13 PM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Application_Tags__c$Application__c.LastModifiedDate</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>lessOrEqual</operator>
+            <value>7/17/2020 2:34 PM</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>App struck with Soft pull request</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Application_tag_Application_App_status_history__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Application_Tags__c$Application__c.LastModifiedDate</dateColumn>
+        <interval>INTERVAL_TODAY</interval>
+    </timeFrameFilter>
+</Report>

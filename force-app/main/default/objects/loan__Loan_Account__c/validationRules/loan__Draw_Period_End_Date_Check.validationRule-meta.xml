@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Draw_Period_End_Date_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(loan__Funding_in_Tranches__c, OR(ISNEW(), ISCHANGED(loan__Expected_Disbursal_Date__c)),
+OR(ISBLANK(loan__Draw_Period_End_Date__c),
+(loan__Branch__r.loan__Current_System_Date__c  &gt; loan__Draw_Period_End_Date__c)))</errorConditionFormula>
+    <errorMessage>Draw Period End Date cannot be less than current system date.</errorMessage>
+</ValidationRule>

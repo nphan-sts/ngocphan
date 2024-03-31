@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WorkEmailKeyCodeResponse__c</fullName>
+    <description>work email verification key code sent by front end system to validate against WorkEmailKeyCode generated when work email was updated.</description>
+    <externalId>false</externalId>
+    <label>WorkEmailKeyCodeResponse</label>
+    <length>40</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

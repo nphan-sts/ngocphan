@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Actual_Tolerance_Amount__c</fullName>
+    <description>This is the tolerance amount calculated from the bill. It will be populated on billing based on the tolerance defined on Loan account.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Populated from loan account on the basis of tolerance amount calculated.</inlineHelpText>
+    <label>DM Actual Tolerance Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Behavior__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This will provide the behavior of how the app will be launched on browser once clicked.</description>
+    <externalId>false</externalId>
+    <label>Behavior</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Display in new window</fullName>
+                <default>false</default>
+                <label>Display in new window</label>
+            </value>
+            <value>
+                <fullName>Display in new tab</fullName>
+                <default>false</default>
+                <label>Display in new tab</label>
+            </value>
+            <value>
+                <fullName>Display in launchpad detail view</fullName>
+                <default>false</default>
+                <label>Display in launchpad detail view</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

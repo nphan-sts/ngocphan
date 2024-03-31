@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bank_Account_Active_check</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(Not(loan__Bank_Account__r.loan__Active__c), loan__Active__c )</errorConditionFormula>
+    <errorMessage>Please Select/update an Active Bank Account.</errorMessage>
+</ValidationRule>

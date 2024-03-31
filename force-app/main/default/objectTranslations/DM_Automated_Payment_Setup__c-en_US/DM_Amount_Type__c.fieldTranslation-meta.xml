@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>DM_Amount_Type__c</name>
+    <picklistValues>
+        <masterLabel>DM_CURRENT PAYMENT AMOUNT</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>DM_FIXED AMOUNT</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>DM_LAST BILLED AMOUNT</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>DM_OLDEST UNPAID BILL AMOUNT</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>DM_TOTAL OUTSTANDING BILL AMOUNT</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

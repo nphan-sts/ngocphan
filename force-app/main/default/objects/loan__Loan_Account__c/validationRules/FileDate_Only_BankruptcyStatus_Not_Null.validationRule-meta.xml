@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FileDate_Only_BankruptcyStatus_Not_Null</fullName>
+    <active>true</active>
+    <errorConditionFormula>OR(
+    AND(
+        OR(
+            TEXT(Bankruptcy_Status__c) = &apos;Active&apos;,
+                        TEXT(Bankruptcy_Status__c) = &apos;Dismiss&apos;,
+                        TEXT(Bankruptcy_Status__c) = &apos;Discharge&apos;
+        ),
+        ISBLANK(File_Date__c)
+    ),
+    AND(
+        TEXT(Bankruptcy_Status__c) = &apos;Pending Retention&apos;,
+        NOT(ISBLANK(File_Date__c))
+    )			
+)</errorConditionFormula>
+    <errorDisplayField>File_Date__c</errorDisplayField>
+    <errorMessage>Can only be filled when Bankruptcy Status is either Active, Dismiss, or Discharge</errorMessage>
+</ValidationRule>

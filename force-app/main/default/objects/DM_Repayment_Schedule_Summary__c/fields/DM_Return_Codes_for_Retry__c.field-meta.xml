@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Return_Codes_for_Retry__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Select the return codes for which we want to retry payments.</inlineHelpText>
+    <label>DM Return Codes for Retry</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_R01</fullName>
+                <default>false</default>
+                <label>DM_R01</label>
+            </value>
+            <value>
+                <fullName>DM_R09</fullName>
+                <default>false</default>
+                <label>DM_R09</label>
+            </value>
+            <value>
+                <fullName>DM_X0</fullName>
+                <default>false</default>
+                <label>DM_X0</label>
+            </value>
+            <value>
+                <fullName>DM_X</fullName>
+                <default>false</default>
+                <label>DM_X</label>
+            </value>
+            <value>
+                <fullName>DM_0</fullName>
+                <default>false</default>
+                <label>DM_0</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

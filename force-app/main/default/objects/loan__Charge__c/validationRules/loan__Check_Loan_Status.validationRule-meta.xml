@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_Loan_Status</fullName>
+    <active>false</active>
+    <errorConditionFormula>NOT(ISPICKVAL( loan__Loan_Account__r.loan__Loan_Status__c , &apos;Active - Good Standing&apos;) ) &amp;&amp;
+NOT(ISPICKVAL( loan__Loan_Account__r.loan__Loan_Status__c , &apos;Active - Bad Standing&apos;) ) &amp;&amp;
+NOT(ISPICKVAL( loan__Loan_Account__r.loan__Loan_Status__c , &apos;Active - Matured&apos;) )</errorConditionFormula>
+    <errorMessage>Charges can only be applied to active loans.</errorMessage>
+</ValidationRule>

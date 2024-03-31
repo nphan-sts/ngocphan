@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Due_Day_Limit</fullName>
+    <active>true</active>
+    <description>Due Day cannot be greater than 31, nor less than 1.</description>
+    <errorConditionFormula>genesis__Due_Day__c &gt;31 || genesis__Due_Day__c &lt;1</errorConditionFormula>
+    <errorMessage>Due Day cannot be greater than 31, nor less than 1.</errorMessage>
+</ValidationRule>

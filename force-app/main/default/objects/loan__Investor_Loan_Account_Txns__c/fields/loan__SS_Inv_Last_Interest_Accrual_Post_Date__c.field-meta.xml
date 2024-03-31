@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__SS_Inv_Last_Interest_Accrual_Post_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Last Interest accrual Posted</description>
+    <externalId>false</externalId>
+    <label>Last Interest Accrual Date Snapshot</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

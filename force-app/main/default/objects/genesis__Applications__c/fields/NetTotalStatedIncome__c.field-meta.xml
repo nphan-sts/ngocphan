@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NetTotalStatedIncome__c</fullName>
+    <description>For Net Income calculations, income_annual_self_reported - (state_tax_payment + federal_tax_payment) from credit policy</description>
+    <externalId>false</externalId>
+    <formula>Annual_Individual_Income_App__c  - (VALUE( state_tax_payment__c ) + VALUE( Federal_tax_payment__c ))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>NetTotalStatedIncome</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

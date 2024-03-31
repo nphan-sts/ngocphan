@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <columns>
+        <field>FK_$genesis__Applications__c.Lead_ID__c</field>
+    </columns>
+    <columns>
+        <field>dsfs__DocuSign_Status__c.dsfs__Completed_Date_Time__c</field>
+    </columns>
+    <columns>
+        <field>FK_$genesis__Applications__c.genesis__Status__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>dsfs__DocuSign_Status__c.dsfs__Completed_Date_Time__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>12/22/2021 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>dsfs__DocuSign_Status__c.dsfs__Completed_Date_Time__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>lessOrEqual</operator>
+            <value>12/28/2021 12:00 AM</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <name>Docs signed from 12/22 - 12/28</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$dsfs__DocuSign_Status__c@dsfs__DocuSign_Status__c.Application__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>dsfs__DocuSign_Status__c.dsfs__Completed_Date_Time__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

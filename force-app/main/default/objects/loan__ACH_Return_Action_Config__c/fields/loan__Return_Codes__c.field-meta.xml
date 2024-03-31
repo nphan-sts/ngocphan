@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Return_Codes__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Return Codes</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>R01</fullName>
+                <default>false</default>
+                <label>R01</label>
+            </value>
+            <value>
+                <fullName>R02</fullName>
+                <default>false</default>
+                <label>R02</label>
+            </value>
+            <value>
+                <fullName>R09</fullName>
+                <default>false</default>
+                <label>R09</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

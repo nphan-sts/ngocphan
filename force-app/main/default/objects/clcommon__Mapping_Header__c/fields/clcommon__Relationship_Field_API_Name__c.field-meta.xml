@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Relationship_Field_API_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <description>API name of source lookup field present on target object</description>
+    <externalId>false</externalId>
+    <inlineHelpText>API name of lookup field that defines a relation between source object and target object.</inlineHelpText>
+    <label>Relationship Field API Name</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

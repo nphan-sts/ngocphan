@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Source__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>The type of source from where the Quick Quote is generated.</inlineHelpText>
+    <label>Source</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>genesis__Product_Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DEALER</fullName>
+                <default>false</default>
+                <label>DEALER</label>
+            </value>
+            <value>
+                <fullName>DIRECT</fullName>
+                <default>true</default>
+                <label>DIRECT</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>LEASE</controllingFieldValue>
+            <valueName>DEALER</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>LEASE</controllingFieldValue>
+            <valueName>DIRECT</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

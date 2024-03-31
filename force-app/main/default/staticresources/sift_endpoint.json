@@ -1,0 +1,614 @@
+{
+    "status": "success",
+    "result": {
+        "status": 0,
+        "error_message": "OK",
+        "score": 0.7817310079952333,
+        "reasons": [
+            {
+                "name": "API event without page view",
+                "value": "false"
+            },
+            {
+                "name": "Number of users with the same cookie",
+                "value": "4",
+                "details": {
+                    "users": "084da43c-1001-eff8-c1e8-ab4636a6ab49,34d4f376-a714-8ff7-e47f-f35bc5f804c1,7b073e2f-3fff-d5eb-f030-aca7b40cab9a"
+                }
+            },
+            {
+                "name": "Email username keyboard spread",
+                "value": "19.992"
+            },
+            {
+                "name": "Create accounts in the last hour ",
+                "value": "2"
+            },
+            {
+                "name": "Account billing phone number country code",
+                "value": "United States"
+            },
+            {
+                "name": "Number of users with the same device",
+                "value": "37",
+                "details": {
+                    "users": "878d8d09-a4e4-1e11-3ce6-f088128208aa,581ed057-521d-b6ef-9674-936d430dc7e1,fceb2217-1f0e-39c6-44f0-7305d505b944,a2450e0a-031a-f255-e446-5c09955818d2,20fdec61-bfb6-7cd0-cfe1-38f5c43fa339,28906807-6df9-785b-4eda-b8e5de89c3d6,6462e384-f0fb-e3b4-9b4f-ca9b90b2b820,666c9129-6602-49bf-81a1-9a3d402e7f8b,6bf4632b-6f24-ff2a-c7f0-09a362b09cc9,5634f2fc-ad45-fc01-4033-65496aef2921,36fc27a7-3fe9-f06e-ff93-08245546d959,ebb5fbf7-679c-4544-0d8d-c603bf865a26,fe04e31f-c6e4-4467-b8bc-4cb401049048,9c6fb4e1-08f2-3a4e-23d5-05aee45c1715,d75abfd7-f803-895d-189d-ae72e2037612,3b8129f9-8e12-48d6-ddf5-222f7452c6bc,ad166ea9-4bb4-948a-6371-5d4aaa57a1e3,e8a7f9b3-6a61-af27-0889-7be8bbb69733,3147cff8-ff3b-04a8-b633-c6e2a7ad886a,eede25b4-6d66-cba7-6bc4-be9fb7a1b751,d02c4813-65ee-ef17-6075-1909d5cca1f3,ad8f8e92-3e3b-c665-8515-e0a69ea8f605,f5734901-2e88-155b-6158-d1d989f6c777,7b073e2f-3fff-d5eb-f030-aca7b40cab9a,8d127829-4feb-06a8-1491-2fe3935896d6,5afbf15d-2399-db12-07d5-397429feefc6,bbbf5a80-bd3a-d5cc-134d-92a9dce5c1a0,b33fdcb9-1466-5725-d200-8884b6572412,8853e822-eacc-3304-8b7c-d3bb85bba4c7,7b452a57-a606-d8ed-2bd7-503b52274b1f,ec473f12-7a79-a739-ef01-c861e0b48ab6,34d4f376-a714-8ff7-e47f-f35bc5f804c1,084da43c-1001-eff8-c1e8-ab4636a6ab49,f0893201-3dea-be0b-56f2-03560d5efccd,3f3e9c2f-4a91-c93c-936e-1e3fe0c886a0,5f4a5df6-69a4-48f1-6ba5-744f0ffe697a"
+                }
+            },
+            {
+                "name": "Browser fingerprint",
+                "value": "d6f79e29cd76c5e2c8be119b9f3bec8d9f6360d6"
+            },
+            {
+                "name": "Update accounts in the last day",
+                "value": "7"
+            },
+            {
+                "name": "Email username number of digits",
+                "value": "9"
+            },
+            {
+                "name": "IP/billing distance",
+                "value": "2633.94 km"
+            },
+            {
+                "name": "Number of users with the same browser + IP Pair",
+                "value": "27",
+                "details": {
+                    "users": "878d8d09-a4e4-1e11-3ce6-f088128208aa,581ed057-521d-b6ef-9674-936d430dc7e1,fceb2217-1f0e-39c6-44f0-7305d505b944,a2450e0a-031a-f255-e446-5c09955818d2,ebb5fbf7-679c-4544-0d8d-c603bf865a26,3b8129f9-8e12-48d6-ddf5-222f7452c6bc,6462e384-f0fb-e3b4-9b4f-ca9b90b2b820,5634f2fc-ad45-fc01-4033-65496aef2921,fe04e31f-c6e4-4467-b8bc-4cb401049048,d75abfd7-f803-895d-189d-ae72e2037612,6bf4632b-6f24-ff2a-c7f0-09a362b09cc9,bbbf5a80-bd3a-d5cc-134d-92a9dce5c1a0,e8a7f9b3-6a61-af27-0889-7be8bbb69733,eede25b4-6d66-cba7-6bc4-be9fb7a1b751,d02c4813-65ee-ef17-6075-1909d5cca1f3,f5734901-2e88-155b-6158-d1d989f6c777,7b073e2f-3fff-d5eb-f030-aca7b40cab9a,8d127829-4feb-06a8-1491-2fe3935896d6,5afbf15d-2399-db12-07d5-397429feefc6,b33fdcb9-1466-5725-d200-8884b6572412,8853e822-eacc-3304-8b7c-d3bb85bba4c7,7b452a57-a606-d8ed-2bd7-503b52274b1f,ec473f12-7a79-a739-ef01-c861e0b48ab6,084da43c-1001-eff8-c1e8-ab4636a6ab49,f0893201-3dea-be0b-56f2-03560d5efccd,5f4a5df6-69a4-48f1-6ba5-744f0ffe697a"
+                }
+            },
+            {
+                "name": "Account age",
+                "value": "4.11 days"
+            },
+            {
+                "name": "Number of users with similar email address",
+                "value": "1143"
+            }
+        ],
+        "user_id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca",
+        "actions": [
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9c9a863ddf:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526415868448,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9c9a863ddf:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526415868448,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cae578354:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526083386539,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cae578354:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526083386539,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cae5c2ebc:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526083080515,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cae5c2ebc:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526083080515,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafaa2e18:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061191655,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafaa2e18:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061191655,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafaa2e96:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061191529,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafaa2e96:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061191529,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafac6d83:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061044348,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafac6d83:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061044348,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafac7211:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061043182,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafac7211:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061043182,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafac7222:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061043165,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafac7222:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061043165,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafac77a6:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061041753,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafac77a6:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526061041753,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafae8a66:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526060905881,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafae8a66:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526060905881,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafae9491:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526060903278,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafae9491:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526060903278,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafae9f56:558c8061e4b0e75151f01f4f",
+                "action": {
+                    "id": "558c8061e4b0e75151f01f4f"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526060900521,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "558c8150e4b0e75151f01f53"
+                        }
+                    },
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "cc0dee998c7a19fbb6c1a72e7606c5ff7ffffe9cafae9f56:5591c8a9e4b04d309724ddaf",
+                "action": {
+                    "id": "5591c8a9e4b04d309724ddaf"
+                },
+                "entity": {
+                    "id": "2364ba65-7e6f-9fcf-2555-1d85699b18ca"
+                },
+                "time": 1526060900521,
+                "triggers": [
+                    {
+                        "type": "formula",
+                        "source": "soju_indexer_service",
+                        "trigger": {
+                            "id": "5591c8d8e4b0402a4aa7b55f"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

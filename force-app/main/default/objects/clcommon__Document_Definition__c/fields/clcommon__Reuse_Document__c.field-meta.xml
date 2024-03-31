@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Reuse_Document__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Should an already existing document in the system be reused or not?</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Should an already existing document in the system be reused or not?</inlineHelpText>
+    <label>Reuse Document</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

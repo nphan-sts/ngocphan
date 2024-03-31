@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Recurring_ACH</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Recurring ACH</masterLabel>
+    <openType>sidebar</openType>
+    <page>loan__recurringACHTxn</page>
+    <protected>false</protected>
+</WebLink>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Event used to signal the extension package that a call should be made using BYOT.</description>
+    <eventType>HighVolume</eventType>
+    <label>Start Call</label>
+    <pluralLabel>Start Calls</pluralLabel>
+    <publishBehavior>PublishAfterCommit</publishBehavior>
+</CustomObject>

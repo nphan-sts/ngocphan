@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>talkdesk__Talkdesk_Activity_Related__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Represents the relationship between interactions and contacts.</description>
+    <externalId>false</externalId>
+    <label>Talkdesk Activity Related</label>
+    <referenceTo>talkdesk__Talkdesk_Activity__c</referenceTo>
+    <relationshipLabel>Talkdesk Activities</relationshipLabel>
+    <relationshipName>Talkdesk_Activities</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

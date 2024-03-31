@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Check_Unique_Account</fullName>
+    <active>false</active>
+    <errorConditionFormula>IF((Name = VLOOKUP( $ObjectType.loan__MF_Account__c.Fields.Name , $ObjectType.loan__MF_Account__c.Fields.Name , Name ) 
+&amp;&amp; 
+loan__Branch__c  =  VLOOKUP($ObjectType.loan__MF_Account__c.Fields.loan__Branch__c ,  $ObjectType.loan__MF_Account__c.Fields.Name,loan__Branch__c )
+&amp;&amp;
+ loan__Fiscal_Year__c  =  VLOOKUP( $ObjectType.loan__MF_Account__c.Fields.loan__Fiscal_Year__c , $ObjectType.loan__MF_Account__c.Fields.Name,  loan__Fiscal_Year__c ) 
+),TRUE,FALSE)</errorConditionFormula>
+    <errorMessage>Account Number already exists.</errorMessage>
+</ValidationRule>

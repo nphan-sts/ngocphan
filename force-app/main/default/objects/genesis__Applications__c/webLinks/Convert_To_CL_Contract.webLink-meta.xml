@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Convert_To_CL_Contract</fullName>
+    <availability>online</availability>
+    <description>Will convert the Application CL Contract.</description>
+    <displayType>massActionButton</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Convert To CL Contract</masterLabel>
+    <openType>sidebar</openType>
+    <page>ConvertApplication</page>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+</WebLink>

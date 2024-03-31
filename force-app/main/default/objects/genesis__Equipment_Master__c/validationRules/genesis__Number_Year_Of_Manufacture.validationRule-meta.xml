@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Number_Year_Of_Manufacture</fullName>
+    <active>false</active>
+    <errorConditionFormula>NOT(
+OR(
+ISBLANK( genesis__Year_Of_Manufacture__c ),
+ISNUMBER( genesis__Year_Of_Manufacture__c )
+)
+)</errorConditionFormula>
+    <errorMessage>Year of manufacture should contain numbers only</errorMessage>
+</ValidationRule>

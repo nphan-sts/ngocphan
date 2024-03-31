@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Aging__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(AND(DM_Number_of_Days_Overdue__c=0),&quot;0&quot;,
+        IF(AND(DM_Number_of_Days_Overdue__c&gt;0,DM_Number_of_Days_Overdue__c&lt;=30), &quot;1-30&quot;,
+        IF(AND(DM_Number_of_Days_Overdue__c&gt;30,DM_Number_of_Days_Overdue__c&lt;=60),&quot;31-60&quot;,
+        IF(AND(DM_Number_of_Days_Overdue__c&gt;60,DM_Number_of_Days_Overdue__c&lt;=90),&quot;61-90&quot;,
+        IF(AND(DM_Number_of_Days_Overdue__c&gt;90,DM_Number_of_Days_Overdue__c&lt;=120),&quot;91-120&quot;,
+        IF(AND(DM_Number_of_Days_Overdue__c&gt;120,DM_Number_of_Days_Overdue__c&lt;=180),&quot;121-180&quot;,
+        IF(DM_Number_of_Days_Overdue__c&gt;180,&quot;180+&quot;,&quot;&quot;)))))))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>It is used to determine whether a company carries overdue debtors that may never repay their bills.</inlineHelpText>
+    <label>DM Aging</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Master_Archive_Object__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Selection indicates that this is a master object record containing one or more child object records. Master object records may be archived but are not deleted by the system. This is automatically updated by the system. Do not update it manually.</inlineHelpText>
+    <label>Master Archive Object</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

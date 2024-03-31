@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Distribution_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>DM Distribution Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Disbursement</fullName>
+                <default>false</default>
+                <label>Disbursement</label>
+            </value>
+            <value>
+                <fullName>Pre-Paid Fee</fullName>
+                <default>false</default>
+                <label>Pre-Paid Fee</label>
+            </value>
+            <value>
+                <fullName>Refinance</fullName>
+                <default>false</default>
+                <label>Refinance</label>
+            </value>
+            <value>
+                <fullName>Payoff Platform Fee</fullName>
+                <default>false</default>
+                <label>Payoff Platform Fee</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

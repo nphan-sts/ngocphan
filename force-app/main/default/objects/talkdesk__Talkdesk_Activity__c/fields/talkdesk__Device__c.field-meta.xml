@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>talkdesk__Device__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Displays which device the call was made through. Service Cloud Voice or Open CTI.</description>
+    <externalId>false</externalId>
+    <label>Device</label>
+    <length>16</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Page__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>The Skuid page the user was on when feedback was captured.</description>
+    <externalId>false</externalId>
+    <label>Page</label>
+    <referenceTo>skuid__Page__c</referenceTo>
+    <relationshipLabel>Feedback</relationshipLabel>
+    <relationshipName>Feedback</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

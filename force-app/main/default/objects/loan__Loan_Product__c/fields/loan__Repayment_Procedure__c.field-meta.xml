@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Repayment_Procedure__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This  field contains the procedure which will be followed to create the installment schedule. The two types of procedures are:
+ EMI (Equated Monthly Installments) and Flexible.</inlineHelpText>
+    <label>Repayment Procedure</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Equal Monthly Installments</fullName>
+                <default>true</default>
+                <label>Equal Monthly Installments</label>
+            </value>
+            <value>
+                <fullName>Flexible</fullName>
+                <default>false</default>
+                <label>Flexible</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

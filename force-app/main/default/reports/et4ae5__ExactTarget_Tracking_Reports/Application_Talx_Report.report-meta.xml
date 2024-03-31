@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>genesis__Applications__c$Id</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Applicant_Name__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Application_Start_DateV2__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Talxs__r$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Talxs__r$TalxRequestLogging__c.requestBody__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Talxs__r$Talx_Response__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Talxs__r$Employeer__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Talxs__r$CreatedDate</field>
+    </columns>
+    <description>This Report is to check the talx requests and responses for applications</description>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c.Talxs__r$CreatedDate</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>lessOrEqual</operator>
+            <value>12/4/2020 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c.Talxs__r$CreatedDate</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>12/3/2020 12:00 AM</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>genesis__Applications__c.Talxs__r$Is_Active__c</field>
+        <sortOrder>Desc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>genesis__Applications__c.Talxs__r$TalxRequestLogging__c.Id</field>
+        <sortOrder>Desc</sortOrder>
+    </groupingsDown>
+    <name>Application Talx Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Application_Talx_Requests_and_Responses__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <sortColumn>genesis__Applications__c.Talxs__r$Name</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

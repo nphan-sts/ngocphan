@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>genesis__Applications__c$Applicant_Name__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$genesis__Status__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Name</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Owner</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$LastModifiedDate</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c$Expiry_Date__c</field>
+    </columns>
+    <description>Report sorted by last interaction</description>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c$genesis__Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>docusign_loan_docs_sent,docusign_loan_docs_complete,pre_funding,Approved for funding,funded,Declined,Expired,Withdrawn,Decline_Manual_Review</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c$User_Processor__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>contains</operator>
+            <value>Brett Vogt,Dallas Dickinson,Jose Torres,Jenette Rodriguez,Mathew Flores,Nicolette Cale,Steven Cahill,Trevor Williams,Victoria Marquez</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c.Application_Tags__r$softDelete__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>genesis__Applications__c$Owner</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Pending Applicant Response,Processing queue</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>genesis__Applications__c$Last_Interaction__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>genesis__Applications__c$User_Processor__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Team HD PAR/PQ</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Applications_and_Application_Tags__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>genesis__Applications__c.Application_Tags__r$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

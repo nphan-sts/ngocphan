@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Loan_Status_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISNEW() &amp;&amp;
+(TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = &apos;Partial Application&apos; ||  TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = &apos;Pending Approval&apos; ||  TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = &apos;Canceled&apos; ||  TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = &apos;Closed - Obligations met&apos; ||
+TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = &apos;Closed - Rescheduled&apos; ||
+TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = &apos;Closed- Written Off&apos; ||
+TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = &apos;Disbursed to LO&apos; ||
+TEXT(loan__Loan_Account__r.loan__Loan_Status__c) = &apos;Partial Application&apos;)</errorConditionFormula>
+    <errorMessage>Invalid Loan Status. You cannot disburse this loan.</errorMessage>
+</ValidationRule>

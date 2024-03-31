@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__No_Recurrence_Instance_if_not_recurring</fullName>
+    <active>true</active>
+    <description>Recurrence Instance cannot be selected if the holiday is not marked as Recurring</description>
+    <errorConditionFormula>AND(NOT(clcommon__IsRecurrence__c), NOT(ISBLANK(TEXT(clcommon__RecurrenceInstance__c))))</errorConditionFormula>
+    <errorDisplayField>clcommon__RecurrenceInstance__c</errorDisplayField>
+    <errorMessage>Recurrence Instance cannot be selected if the holiday is not marked as Recurring</errorMessage>
+</ValidationRule>

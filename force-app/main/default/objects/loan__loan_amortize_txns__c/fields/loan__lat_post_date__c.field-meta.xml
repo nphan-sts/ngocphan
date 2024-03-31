@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__lat_post_date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Date of Amortized txn</description>
+    <externalId>false</externalId>
+    <inlineHelpText>It is the date on which the account transaction is created.</inlineHelpText>
+    <label>Post Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Loan_Payment_Transaction_Time__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Time stamp of Loan Payment Transaction. Investor Transactions must be reversed in order starting from last investor payment created. We use this field to detect which Investor Transaction to reverse first.</description>
+    <externalId>false</externalId>
+    <label>Loan Payment Transaction Time</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

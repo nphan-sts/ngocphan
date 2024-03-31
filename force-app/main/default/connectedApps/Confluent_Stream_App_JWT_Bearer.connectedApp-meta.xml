@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConnectedApp xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contactEmail>cdcaccess@happymoney.com</contactEmail>
+    <label>Confluent_Stream_App_JWT_Bearer</label>
+    <oauthConfig>
+        <callbackUrl>http://localhost/</callbackUrl>
+        <certificate>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</certificate>
+        <consumerKey>3MVG9lJB4lV8F4SjfGf0sZm0U_AXVi.zpvdkhsh0jrVba0gpJ4uNAzsvJlYKo8CxG.samzjdybngmiYRHZyo1</consumerKey>
+        <isAdminApproved>true</isAdminApproved>
+        <isClientCredentialEnabled>false</isClientCredentialEnabled>
+        <isCodeCredentialEnabled>false</isCodeCredentialEnabled>
+        <isCodeCredentialPostOnly>false</isCodeCredentialPostOnly>
+        <isConsumerSecretOptional>false</isConsumerSecretOptional>
+        <isIntrospectAllTokens>false</isIntrospectAllTokens>
+        <isNamedUserJwtEnabled>false</isNamedUserJwtEnabled>
+        <isSecretRequiredForRefreshToken>false</isSecretRequiredForRefreshToken>
+        <scopes>Api</scopes>
+        <scopes>RefreshToken</scopes>
+    </oauthConfig>
+    <oauthPolicy>
+        <ipRelaxation>ENFORCE</ipRelaxation>
+        <refreshTokenPolicy>infinite</refreshTokenPolicy>
+    </oauthPolicy>
+    <profileName>System API</profileName>
+</ConnectedApp>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Originating_Bank_Fee_Share__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the %age of origination fees (pre-paid) that will be shared with the originating bank.</inlineHelpText>
+    <label>DM Originating Bank Fee Share</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>4</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

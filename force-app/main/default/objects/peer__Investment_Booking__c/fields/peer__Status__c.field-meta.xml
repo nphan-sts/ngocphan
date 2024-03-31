@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Partially Winning</fullName>
+                <default>false</default>
+                <label>Partially Winning</label>
+            </value>
+            <value>
+                <fullName>Winning</fullName>
+                <default>false</default>
+                <label>Winning</label>
+            </value>
+            <value>
+                <fullName>Losing</fullName>
+                <default>false</default>
+                <label>Losing</label>
+            </value>
+            <value>
+                <fullName>Uncommited</fullName>
+                <default>false</default>
+                <label>Uncommited</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

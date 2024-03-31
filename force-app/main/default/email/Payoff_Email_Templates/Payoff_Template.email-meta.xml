@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>42.0</apiVersion>
+    <available>false</available>
+    <description>general template provided by Payoff --- 4/5/2018</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>Payoff Template</name>
+    <packageVersions>
+        <majorNumber>2</majorNumber>
+        <minorNumber>5014</minorNumber>
+        <namespace>genesis</namespace>
+    </packageVersions>
+    <style>none</style>
+    <type>visualforce</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

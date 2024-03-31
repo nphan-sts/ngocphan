@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Customer_Cash_Used_For__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Customer Cash Used For</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>genesis__Source__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Down Payment</fullName>
+                <default>false</default>
+                <label>Down Payment</label>
+            </value>
+            <value>
+                <fullName>Upfront Payments</fullName>
+                <default>false</default>
+                <label>Upfront Payments</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>DEALER</controllingFieldValue>
+            <valueName>Down Payment</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DIRECT</controllingFieldValue>
+            <valueName>Upfront Payments</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

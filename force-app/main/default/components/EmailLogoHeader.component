@@ -1,0 +1,32 @@
+<!--
+* ─────────────────────────────────────────────────────────────────────────────────────────────────┐
+* This visualforce component hosts the Payoff logo used in headers of below email templates.
+->e_sign_borrower_pending
+->customer_service_pre_funding
+->payoff_document_alert
+->payoff_document_alert_reminder
+->work email verify
+->Manual KBA Pass Email
+->Adverse_Action
+->Offer Expiration Application
+->payoff_payment_alert
+
+* @changes
+* LSP-659. Replaced old payoff logo with new happymoney logo
+* Modified by: Mohan Kiran Tadikonda
+* ─────────────────────────────────────────────────────────────────────────────────────────────────┘
+-->
+<apex:component access="global">
+<table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
+  <tbody>
+    <tr>
+      <td class="mcnImageContent" align="left" valign="top" style="padding-right: 9px; padding-left: 8px; padding-top: 30px; padding-bottom: 0;">
+      <!--a href="http://www.payoff.com" target="_blank"-->
+          <!-- START LSP-659 --> 
+      <img align="center" alt="Payoff, Inc." src="https://hm-s3-bucket-staticassets-prod-ue1.s3.amazonaws.com/happymoney_black_logo.png" width="250" style="max-width:250px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage"></img>
+            <!-- END- LSP-659 -->
+    </td>
+    </tr>
+  </tbody>
+</table>
+</apex:component>

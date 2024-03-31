@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$loan__CL_Contract__c</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$loan__CL_Contract__c.Payoff_Loan_ID__c</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$loan__CL_Contract__c.lead_Guid__c</field>
+    </columns>
+    <columns>
+        <field>loan__Automated_Payment_Setup__c$LastModifiedDate</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>loan__Automated_Payment_Setup__c$LastModifiedDate</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>6/30/2020 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Automated_Payment_Setup__c$LastModifiedDate</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>lessOrEqual</operator>
+            <value>6/30/2020 11:48 AM</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Automated Payment Setup June 30</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Automated_Payment_Setup__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Automated_Payment_Setup__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Validate_Expected_Repayment_Start_Date</fullName>
+    <active>false</active>
+    <errorConditionFormula>AND(NOT(ISBLANK(loan__Expected_Repayment_Start_Date__c)),  ISCHANGED(loan__Expected_Repayment_Start_Date__c),
+loan__Expected_Repayment_Start_Date__c &lt;   loan__Branch__r.loan__Current_System_Date__c )</errorConditionFormula>
+    <errorMessage>Expected repayment start date cannot be less than current system date.</errorMessage>
+</ValidationRule>

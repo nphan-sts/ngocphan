@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Withhold_Tax_on_Income_Less_Service_Fees__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Select this option if tax must be withheld on an investor&apos;s income minus the service fees. Unchecking this option would mean that tax is withheld on the investor&apos;s income irrespective of the service fees. In most cases this should be checked.</inlineHelpText>
+    <label>Withhold Tax on Income Less Service Fees</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Higher_Investor_Certificate_Rate_Allowed__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This lending product can have loans with some of the IOs with higher certificate rate than the loan&apos;s interest rate. However weighted average of certificate rate with the IO share should be less than Interest rate on loan contract</description>
+    <externalId>false</externalId>
+    <label>Allow Higher Investor Certificate Rate</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

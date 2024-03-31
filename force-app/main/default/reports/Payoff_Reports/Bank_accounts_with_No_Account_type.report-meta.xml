@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Bank_Account__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Bank_Account__c$loan__Account_Type__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>loan__Bank_Account__c$loan__Account_Type__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Bank accounts with No Account type</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>bank_accounts__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Bank_Account__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

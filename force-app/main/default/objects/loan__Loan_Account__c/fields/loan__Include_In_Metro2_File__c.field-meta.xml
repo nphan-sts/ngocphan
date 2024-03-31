@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Include_In_Metro2_File__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Metro 2 Format is the current standard electronic data reporting format for credit. You can generate a Metro 2 file only when &apos;Include in Metro 2 file&apos; is checked..</inlineHelpText>
+    <label>Include In Credit Reporting</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

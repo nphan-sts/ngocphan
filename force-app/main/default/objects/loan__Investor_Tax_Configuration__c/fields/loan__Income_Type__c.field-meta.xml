@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Income_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Income Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Interest Income</fullName>
+                <default>false</default>
+                <label>Interest Income</label>
+            </value>
+            <value>
+                <fullName>Fees Income</fullName>
+                <default>false</default>
+                <label>Fees Income</label>
+            </value>
+            <value>
+                <fullName>Entire Income</fullName>
+                <default>true</default>
+                <label>Entire Income</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

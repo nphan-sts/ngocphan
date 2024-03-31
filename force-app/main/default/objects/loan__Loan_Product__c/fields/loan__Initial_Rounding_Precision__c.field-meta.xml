@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Initial_Rounding_Precision__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Specifies the precision of the rounded amount for initial installments.
+DEPRECATED - Moved this setup at Org Level.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Specifies the precision of the rounded amount for initial installments.
+DEPRECATED - Moved this setup at Org Level.</inlineHelpText>
+    <label>Initial Rounding Precision</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>ONE</fullName>
+                <default>true</default>
+                <label>ONE</label>
+            </value>
+            <value>
+                <fullName>FIVE</fullName>
+                <default>false</default>
+                <label>FIVE</label>
+            </value>
+            <value>
+                <fullName>TEN</fullName>
+                <default>false</default>
+                <label>TEN</label>
+            </value>
+            <value>
+                <fullName>HUNDRED</fullName>
+                <default>false</default>
+                <label>HUNDRED</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

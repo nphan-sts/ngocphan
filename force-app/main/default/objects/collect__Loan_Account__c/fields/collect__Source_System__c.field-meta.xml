@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Source_System__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Lookup relationship with the Source System</description>
+    <externalId>false</externalId>
+    <label>Source System</label>
+    <referenceTo>collect__Source_System__c</referenceTo>
+    <relationshipLabel>Contracts</relationshipLabel>
+    <relationshipName>Dev_Contracts</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

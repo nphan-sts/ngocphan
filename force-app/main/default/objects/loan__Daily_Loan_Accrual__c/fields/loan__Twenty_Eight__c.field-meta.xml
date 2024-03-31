@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Twenty_Eight__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Accrual for Twenty Eight day of the month.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Accrual for Twenty Eight day of the month.</inlineHelpText>
+    <label>Twenty Eight</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

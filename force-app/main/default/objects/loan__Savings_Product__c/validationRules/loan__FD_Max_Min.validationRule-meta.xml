@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__FD_Max_Min</fullName>
+    <active>true</active>
+    <description>FD Max and Min must make sense</description>
+    <errorConditionFormula>ISPICKVAL(loan__Product_Type__c, &apos;Fixed&apos;)
+&amp;&amp;
+NOT(ISNULL(loan__maximum_amount_for_fixed_deposit__c))
+&amp;&amp;
+NOT(ISNULL(loan__minimum_amount_for_fixed_deposit__c))
+&amp;&amp;
+(loan__maximum_amount_for_fixed_deposit__c &lt;  loan__minimum_amount_for_fixed_deposit__c)</errorConditionFormula>
+    <errorMessage>The Maximum amount is less than the minimum amount for the Fixed Deposit.</errorMessage>
+</ValidationRule>

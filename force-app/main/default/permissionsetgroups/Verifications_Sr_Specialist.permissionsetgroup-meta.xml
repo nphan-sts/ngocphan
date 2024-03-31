@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSetGroup xmlns="http://soap.sforce.com/2006/04/metadata">
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Verifications_Sr_Specialist</label>
+    <permissionSets>Bank_Confirmation_Source_All_Verification_Specialist</permissionSets>
+    <permissionSets>Batch_assign</permissionSets>
+    <permissionSets>CLS_CRU_Orignation</permissionSets>
+    <permissionSets>Cl_Custom_RCE</permissionSets>
+    <permissionSets>GIACT_Edit</permissionSets>
+    <permissionSets>OfferSelection</permissionSets>
+    <permissionSets>skuid__Connect_to_this_Salesforce_orgs_data_using_Skuid</permissionSets>
+    <status>Updated</status>
+</PermissionSetGroup>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Loan_Account__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Dues_Details__r$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Dues_Details__r$loan__Due_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>loan__Loan_Account__c.loan__Dues_Details__r$loan__Due_Amt__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Dues_Details__r$loan__Payment_Amt__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Dues_Details__r$loan__Payment_Satisfied__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Dues_Details__r$loan__Tolerance__c</field>
+    </columns>
+    <description>This report shows all unpaid dues for loans that are not written off.</description>
+    <filter>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Dues_Details__r$loan__Payment_Satisfied__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Account__c$loan__Invalid_Data__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Account__c$loan__Loan_Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Closed- Written Off</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Unpaid Dues Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>loan__Loan_with_Dues__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Account__c$loan__Disbursal_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

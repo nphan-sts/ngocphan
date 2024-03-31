@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Clients_Status_check</fullName>
+    <active>false</active>
+    <description>This validation rule is deprecated.</description>
+    <errorConditionFormula>OR(
+AND(
+NOT( ISPICKVAL(loan__Loan_Product_Name__r.loan__Loan_Product_Type__c,&quot;Group&quot;)),
+NOT( $Setup.loan__Org_Parameters__c.loan__Integrate_Salesforce_CRM__c ),
+NOT( ISPICKVAL(loan__Client__r.loan__Status__c, &quot;Active&quot;))
+),
+AND(
+NOT( ISPICKVAL(loan__Loan_Product_Name__r.loan__Loan_Product_Type__c,&quot;Group&quot;)),
+ $Setup.loan__Org_Parameters__c.loan__Integrate_Salesforce_CRM__c ,
+NOT( ISPICKVAL(loan__Account__r.loan__Active__c, &quot;Yes&quot;))
+)
+)</errorConditionFormula>
+    <errorMessage>The client account is not active.</errorMessage>
+</ValidationRule>

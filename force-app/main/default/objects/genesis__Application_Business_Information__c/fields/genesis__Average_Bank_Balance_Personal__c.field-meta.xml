@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Average_Bank_Balance_Personal__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Average Bank Balance (Personal)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Average Bank Balance (Personal)</inlineHelpText>
+    <label>Average Bank Balance (Personal)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

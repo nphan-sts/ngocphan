@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Transaction_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Transaction Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Cash Received / Income</fullName>
+                <default>true</default>
+                <label>Cash Received / Income</label>
+            </value>
+            <value>
+                <fullName>Cash Dispensed / Expense</fullName>
+                <default>false</default>
+                <label>Cash Dispensed / Expense</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

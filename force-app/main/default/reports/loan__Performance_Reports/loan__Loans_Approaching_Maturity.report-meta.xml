@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Account__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Contact__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Loan_Amount__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Principal_Remaining__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Pmt_Amt_Cur__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Maturity_Date_Current__c</field>
+    </columns>
+    <description>This report shows all loans that are going to mature in the next 30 days.</description>
+    <filter>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Maturity_Date_Current__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>lessOrEqual</operator>
+            <value>NEXT_N_DAYS:30</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Maturity_Date_Current__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>TODAY</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Loans Approaching Maturity</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$loan__Loan_Account__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Account__c.loan__Accrual_Start_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

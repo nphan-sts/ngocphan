@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.Lead_ID__c</field>
+    </columns>
+    <columns>
+        <field>genesis__Applications__c.genesis__Status__c</field>
+    </columns>
+    <columns>
+        <field>CUST_CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>CUST_LAST_UPDATE</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>genesis__Applications__c.genesis__Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>offer_shown,agent_document_verification_pending,pre_funding,Approved for funding,funded,Declined,Expired,Withdrawn,Decline_Manual_Review,Stacker_Check_Passed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_LAST_UPDATE</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>5/30/2020 4:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_LAST_UPDATE</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>lessOrEqual</operator>
+            <value>5/30/2020 10:00 AM</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Apps Failed After 4 AM</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$genesis__Applications__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <sortColumn>genesis__Applications__c.genesis__Status__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CUST_LAST_UPDATE</dateColumn>
+        <endDate>2020-05-30</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2020-05-30</startDate>
+    </timeFrameFilter>
+</Report>

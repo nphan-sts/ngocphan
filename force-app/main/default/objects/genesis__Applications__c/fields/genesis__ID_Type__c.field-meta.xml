@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__ID_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>ID Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Driver License</fullName>
+                <default>false</default>
+                <label>Driver License</label>
+            </value>
+            <value>
+                <fullName>State ID Card</fullName>
+                <default>false</default>
+                <label>State ID Card</label>
+            </value>
+            <value>
+                <fullName>Passport</fullName>
+                <default>false</default>
+                <label>Passport</label>
+            </value>
+            <value>
+                <fullName>Work ID</fullName>
+                <default>false</default>
+                <label>Work ID</label>
+            </value>
+            <value>
+                <fullName>Military ID</fullName>
+                <default>false</default>
+                <label>Military ID</label>
+            </value>
+            <value>
+                <fullName>Utility Bill</fullName>
+                <default>false</default>
+                <label>Utility Bill</label>
+            </value>
+            <value>
+                <fullName>Other Picture ID</fullName>
+                <default>false</default>
+                <label>Other Picture ID</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Deposit_Snapshot__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field stores the snapshot of state of multiple deposits before the payment.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field stores the snapshot of multiple deposits before the payment.</inlineHelpText>
+    <label>Deposit Snapshot</label>
+    <length>32768</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

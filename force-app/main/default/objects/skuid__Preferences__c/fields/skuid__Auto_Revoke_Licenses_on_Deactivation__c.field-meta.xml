@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Auto_Revoke_Licenses_on_Deactivation__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If true, Skuid will auto-revoke a License to Skuid (and optionally licenses to other packages) when a user is deactivated.</description>
+    <externalId>false</externalId>
+    <label>Auto Revoke Licenses on Deactivation</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Custom_query_check_for_pipelined_job</fullName>
+    <active>true</active>
+    <description>For pipelined job custom query is not supported.</description>
+    <errorConditionFormula>AND ( NOT( OR(ISNULL(clcommon__Custom_Query_Class__c), ISBLANK(clcommon__Custom_Query_Class__c)) ), (clcommon__Pipelined__c  = true))</errorConditionFormula>
+    <errorMessage>For pipelined Job custom query is not supported.</errorMessage>
+</ValidationRule>

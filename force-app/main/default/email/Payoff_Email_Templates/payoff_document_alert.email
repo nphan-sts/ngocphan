@@ -1,0 +1,93 @@
+<messaging:emailTemplate subject="Document alert" recipientType="Contact" relatedToType="genesis__Applications__c">
+<messaging:HTMLEmailBody >
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+    <c:EmailSimpleHeader />
+    
+    <body>
+        <c:EmailLogoHeader />
+        <center>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
+                <tr>
+                    <td align="left" valign="top" id="bodyCell">
+                        <!-- BEGIN TEMPLATE // -->
+                        <!--[if (gte mso 9)|(IE)]>
+                        <table align="center" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;">
+                        <tr>
+                        <td align="center" valign="top" width="600" style="width:600px;">
+                        <![endif]-->
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
+                            <tr>
+                                <td valign="top" id="templateHeader"></td>
+                            </tr>
+                            <tr>
+                                <td valign="top" id="templateBody">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+                                        <tbody class="mcnTextBlockOuter">
+                                            <tr>
+                                                <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                                                    <!--[if mso]>
+                                                    <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                                                    <tr>
+                                                    <![endif]-->
+
+                                                    <!--[if mso]>
+                                                    <td valign="top" width="600" style="width:600px;">
+                                                    <![endif]-->
+                                                    <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
+                                                                    <div style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #000000; font-family: 'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif; font-size: 16px; line-height: 150%; margin: 10px 0; padding: 0;" align="left">
+
+                                                                      <p>Dear Happy Money Member,</p>
+                                                                      
+                                                                      <p>We wanted to let you know there’s a document alert for your application. To keep moving smoothly and quickly through the application process, <a href="https://start.happymoney.com/apply/auth/login?inf_medium=email&inf_campaign=document_alert&inf_source=cls&inf_content=e1&inf_term=text" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #f2117a; font-weight: normal; text-decoration: underline;">log in</a> to see your alert now.</p>
+
+                                                                      <p>Just to let you know, you may receive more account alert emails like this one. Please keep an eye out for them to avoid delays in your application process.</p>
+
+                                                                      <p>And if you have any questions, call us at <a href="tel:18779097900" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #f2117a; font-weight: normal; text-decoration: underline;">1-877-909-7900</a> to speak to one of our friendly Member Advocates.</p>
+
+                                                                      <p><a href="https://start.happymoney.com/apply/auth/login?inf_medium=email&inf_campaign=document_alert&inf_source=cls&inf_content=e1&inf_term=button" style="mso-line-height-rule: exactly; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #f2117a; font-weight: normal; text-decoration: underline;">Login to my account</a></p>
+                                                                      
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!--[if mso]>
+                                                    </td>
+                                                    <![endif]-->
+
+                                                    <!--[if mso]>
+                                                    </tr>
+                                                    </table>
+                                                    <![endif]-->
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    <c:EmailSignatureVerification />
+                                    
+                                </td>
+                            </tr>
+                            
+                            <c:EmailSimpleFooter />
+                            
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                        <!-- // END TEMPLATE -->
+                    </td>
+                </tr>
+            </table>
+        </center>
+    </body>
+</html>
+</messaging:HTMLEmailBody>
+</messaging:emailTemplate>

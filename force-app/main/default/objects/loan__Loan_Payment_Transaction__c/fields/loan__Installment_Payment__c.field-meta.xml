@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Installment_Payment__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This field determines whether the current payment is installment payment or not</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field determines whether payment transaction is installment payment or not.It should be applied when the payment is recorded between the bill generation date and the bill due date.</inlineHelpText>
+    <label>Installment Payment</label>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

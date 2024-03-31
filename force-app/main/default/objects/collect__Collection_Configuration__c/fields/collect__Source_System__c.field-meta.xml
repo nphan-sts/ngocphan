@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Source_System__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Source system for which we are having the strategy.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Source system for which we are having the strategy.</inlineHelpText>
+    <label>Source System</label>
+    <referenceTo>collect__Source_System__c</referenceTo>
+    <relationshipLabel>Collection Strategies</relationshipLabel>
+    <relationshipName>Collection_Strategies</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

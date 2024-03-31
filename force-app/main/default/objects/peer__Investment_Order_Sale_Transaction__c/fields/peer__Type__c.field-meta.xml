@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>&apos;Sale&apos; specifies &apos;Parent Investment Order&apos; is sold and &apos;Child Investment Order&apos; is post sale IO. 
+&apos;Post Sale Continuation&apos; specifies  &apos;Child Investment Order&apos;  is new IO which is continuation of &apos;Parent Investment Order&apos; which was sold partially.</description>
+    <externalId>false</externalId>
+    <label>Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Sale</fullName>
+                <default>true</default>
+                <label>Sale</label>
+            </value>
+            <value>
+                <fullName>Post Sale Continuation</fullName>
+                <default>false</default>
+                <label>Post Sale Continuation</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Charge__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Charge__c$loan__Date__c</field>
+    </columns>
+    <columns>
+        <field>loan__Charge__c$loan__Loan_Account__c</field>
+    </columns>
+    <columns>
+        <field>loan__Charge__c$loan__Fee__c.loan__Time_of_charge__c</field>
+    </columns>
+    <columns>
+        <field>loan__Charge__c$loan__Original_Amount__c</field>
+    </columns>
+    <columns>
+        <field>loan__Charge__c.loan__Fee_Payment__r$Name</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>loan__Charge__c$loan__Fee__c.loan__Time_of_charge__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>Late Fees</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Recent Late Charges</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>peer__Charges_with_Fee_Payments__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>false</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Charge__c$loan__Date__c</dateColumn>
+        <interval>INTERVAL_LAST7</interval>
+    </timeFrameFilter>
+</Report>

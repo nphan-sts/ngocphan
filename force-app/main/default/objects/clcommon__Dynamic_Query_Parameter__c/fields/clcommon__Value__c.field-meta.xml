@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Value__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Specifies value for the parameter. It can be 
+- a constant value if the parameter type is Constant, Date/Datetime
+- field name if parameter type is Context Value 
+- class name if parameter type is Function</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Specifies value for the parameter. It can be 
+- a constant value if the parameter type is Constant, Date/Datetime
+- field name if parameter type is Context Value 
+- class name if parameter type is Function</inlineHelpText>
+    <label>Value</label>
+    <length>100</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

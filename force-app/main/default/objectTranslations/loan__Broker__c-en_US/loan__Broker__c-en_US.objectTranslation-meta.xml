@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Check_Broker_Account_and_Contact</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Check_Broker_cound</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Flat_Rate_Validation</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Validate_Rate</name>
+    </validationRules>
+</CustomObjectTranslation>

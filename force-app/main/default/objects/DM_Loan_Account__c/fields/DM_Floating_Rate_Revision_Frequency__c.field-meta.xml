@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Floating_Rate_Revision_Frequency__c</fullName>
+    <description>This field defines floating interest rate revision frequency. Interest rate on floating rate loans will be revised on this selected frequency.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field defines floating interest rate revision frequency. Interest rate on floating rate loans will be revised on this selected frequency.</inlineHelpText>
+    <label>DM Floating Rate Revision Frequency</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_Daily</fullName>
+                <default>false</default>
+                <label>DM_Daily</label>
+            </value>
+            <value>
+                <fullName>DM_Monthly</fullName>
+                <default>false</default>
+                <label>DM_Monthly</label>
+            </value>
+            <value>
+                <fullName>DM_Billing Frequency</fullName>
+                <default>true</default>
+                <label>DM_Billing Frequency</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

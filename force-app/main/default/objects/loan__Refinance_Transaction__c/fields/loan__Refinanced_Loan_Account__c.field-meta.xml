@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Refinanced_Loan_Account__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Loan Account (Refinanced)</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>loan__Loan_Account__c.loan__Loan_Status__c</field>
+            <operation>equals</operation>
+            <value>Active - Good Standing, Active - Bad Standing</value>
+        </filterItems>
+        <filterItems>
+            <field>loan__Loan_Account__c.loan__Protect_Enabled__c</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </filterItems>
+        <isOptional>true</isOptional>
+    </lookupFilter>
+    <referenceTo>loan__Loan_Account__c</referenceTo>
+    <relationshipLabel>Refinanced To Contract</relationshipLabel>
+    <relationshipName>Refinanced_Loan_Account</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

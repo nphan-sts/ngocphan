@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Action_Reason__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( (ISPICKVAL(Rejection_Reasons__c, &quot;Accept: Additional Docs&quot;)),&quot;We still need additional documents of this type.&quot;,
+IF( (ISPICKVAL(Rejection_Reasons__c, &quot;Accept: Previous Statement&quot;)),&quot;We still need the previous month&apos;s bank statement.&quot;,IF( (ISPICKVAL(Rejection_Reasons__c, &quot;Accept: Primary Statement&quot;)),&quot;We still need the statement from your primary bank account where your income is deposited.&quot;,IF( (ISPICKVAL(Rejection_Reasons__c, &quot;Accept: More Recent Statement&quot;)),&quot;We still need your most recent bank statement.&quot;,IF((ISPICKVAL(Rejection_Reasons__c, &quot;Accept: Not Personal Account&quot;)),&quot;We still need your personal account statement as we cannot use business accounts for verification.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;Accept: Previous Paystub&quot;),&quot;We still need a paystub from the previous pay period.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;Statement: Missing Pages&quot;),&quot;Document Incomplete: Please include all pages of your bank statement.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;Statement: Not PDF&quot;),&quot;Incorrect file type: Please upload your most recent PDF bank statement. You can download this from your online bank account.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;Statement: Not Recent&quot;),&quot;Document out of date: Please upload the most recent version of your bank statement.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;Paystub: Not Recent&quot;),&quot;Document out of date: Please upload the most recent version of your paystubs.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;ID: Expired&quot;),&quot;Document out of date: Please upload a non-expired form of identification.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;ID: Non-color&quot;),&quot;Image not in color: Please upload a color photo of your ID. Hint: Use your smart phone to take a picture.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;ID: Security Image&quot;),&quot;Please upload a copy of your ID with the security image clearly visible.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;Blurry/Glare/Dark&quot;),&quot;Insufficient quality: Please upload a clear and legible copy.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;Image Cut Off&quot;),&quot;Insufficient quality: Please make sure the entire document is clearly visible.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;Not Applicable&quot;),&quot;Not applicable: This document is not required.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;Duplicate&quot;),&quot;Duplicate: This document is a duplicate of an existing uploaded document.&quot;,
+IF( ISPICKVAL(Rejection_Reasons__c, &quot;Password Protected&quot;),&quot;Password Protected: This file is password protected. Please upload an accessible file.&quot;
+,NULL))))))))))))))))))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Action Reason</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

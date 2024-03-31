@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <recordTypes>
+        <description></description>
+        <label></label>
+        <name>clcommon__Lease</name>
+    </recordTypes>
+    <recordTypes>
+        <description></description>
+        <label></label>
+        <name>clcommon__Line_Of_Credit</name>
+    </recordTypes>
+    <recordTypes>
+        <description></description>
+        <label></label>
+        <name>clcommon__Loan</name>
+    </recordTypes>
+    <recordTypes>
+        <description></description>
+        <label></label>
+        <name>clcommon__Package</name>
+    </recordTypes>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>genesis__Number_of_digits_allowed</name>
+    </validationRules>
+</CustomObjectTranslation>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__LOOP_Plus</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <height>600</height>
+    <linkType>url</linkType>
+    <masterLabel>LOOP Plus</masterLabel>
+    <openType>sidebar</openType>
+    <protected>false</protected>
+    <url>/apex/loop__looplus?sessionId={!$Api.Session_ID}&amp;eid={!genesis__Quick_Quotes__c.Id}&amp;filter={!genesis__Quick_Quotes__c.genesis__Source__c}</url>
+</WebLink>

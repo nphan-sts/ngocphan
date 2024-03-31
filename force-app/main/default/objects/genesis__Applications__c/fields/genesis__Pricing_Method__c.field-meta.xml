@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>genesis__Pricing_Method__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Pricing Method</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>genesis__Product_Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>RATE CARD</fullName>
+                <default>false</default>
+                <label>RATE CARD</label>
+            </value>
+            <value>
+                <fullName>MANUAL</fullName>
+                <default>false</default>
+                <label>MANUAL</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>LEASE</controllingFieldValue>
+            <controllingFieldValue>LOAN</controllingFieldValue>
+            <valueName>RATE CARD</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>LEASE</controllingFieldValue>
+            <valueName>MANUAL</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

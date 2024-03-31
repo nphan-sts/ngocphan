@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Interest_Remaining__c</field>
+    </columns>
+    <columns>
+        <field>loan__Loan_Account__c.loan__Interest_Accrued_Not_Due__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>loan__Loan_Account__c.loan__Interest_estimated__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>loan__Loan_Account__c.loan__Interest_Paid__c</field>
+    </columns>
+    <description>This report shows the interest income for all loans that were issued this quarter.</description>
+    <filter>
+        <criteriaItems>
+            <column>loan__Loan_Account__c.loan__Invalid_Data__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Interest Income Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$loan__Loan_Account__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Loan_Account__c.loan__Disbursal_Date__c</dateColumn>
+        <endDate>2015-06-18</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2015-06-18</startDate>
+    </timeFrameFilter>
+</Report>

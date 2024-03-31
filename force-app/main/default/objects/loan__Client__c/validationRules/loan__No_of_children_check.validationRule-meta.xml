@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__No_of_children_check</fullName>
+    <active>true</active>
+    <description>No of children check</description>
+    <errorConditionFormula>OR(
+          loan__Number_of_children__c &gt; 20,loan__Number_of_children__c &lt; 0
+)</errorConditionFormula>
+    <errorDisplayField>loan__Number_of_children__c</errorDisplayField>
+    <errorMessage>Number of children should be an integer less than 20</errorMessage>
+</ValidationRule>

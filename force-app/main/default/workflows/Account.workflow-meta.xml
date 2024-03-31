@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>Account_Payload_History</fullName>
+        <field>Account_Payload_History__c</field>
+        <formula>Account_Payload_History__c + BR() + BR() + $User.LastName + &apos;, &apos; + $User.FirstName  + &apos; &apos; + TEXT( NOW() ) + &apos; - &apos; + Account_Payload__c</formula>
+        <name>Account Payload History</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Disable_Send_Work_Verification_email</fullName>
+        <field>Send_work_email_verification_Email__c</field>
+        <literalValue>0</literalValue>
+        <name>Disable Send Work Verification email</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_Count</fullName>
+        <field>Count__c</field>
+        <formula>PRIORVALUE(Count__c) + 1</formula>
+        <name>Update Count</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>social_security_number_unique</fullName>
+        <field>social_security_number_uniqueness_field__c</field>
+        <formula>loan__SOCIAL_SECURITY_NUMBER__c</formula>
+        <name>social_security_number_unique</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>Account payload</fullName>
+        <actions>
+            <name>Account_Payload_History</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>ISNEW() || ISCHANGED( Account_Payload__c )</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>SSN unique field update</fullName>
+        <actions>
+            <name>social_security_number_unique</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>OR(NOT (ISNULL( loan__SOCIAL_SECURITY_NUMBER__c ) ),ISCHANGED( loan__SOCIAL_SECURITY_NUMBER__c ))</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

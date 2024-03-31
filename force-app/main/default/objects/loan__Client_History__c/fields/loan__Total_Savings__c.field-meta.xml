@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Total_Savings__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Sum of account balances of all mandatory and voluntary savings accounts.
+This should include all the savings accounts of the client.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Sum of account balances of all mandatory and voluntary savings accounts.
+This should include all the savings accounts of the client.</inlineHelpText>
+    <label>Total Savings</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

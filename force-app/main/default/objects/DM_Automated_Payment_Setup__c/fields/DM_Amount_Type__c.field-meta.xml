@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Amount_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>DM Amount Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>DM_Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>DM_FIXED AMOUNT</fullName>
+                <default>false</default>
+                <label>DM_FIXED AMOUNT</label>
+            </value>
+            <value>
+                <fullName>DM_LAST BILLED AMOUNT</fullName>
+                <default>false</default>
+                <label>DM_LAST BILLED AMOUNT</label>
+            </value>
+            <value>
+                <fullName>DM_CURRENT PAYMENT AMOUNT</fullName>
+                <default>false</default>
+                <label>DM_CURRENT PAYMENT AMOUNT</label>
+            </value>
+            <value>
+                <fullName>DM_OLDEST UNPAID BILL AMOUNT</fullName>
+                <default>false</default>
+                <label>DM_OLDEST UNPAID BILL AMOUNT</label>
+            </value>
+            <value>
+                <fullName>DM_TOTAL OUTSTANDING BILL AMOUNT</fullName>
+                <default>false</default>
+                <label>DM_TOTAL OUTSTANDING BILL AMOUNT</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>DM_RECURRING</controllingFieldValue>
+            <valueName>DM_FIXED AMOUNT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DM_RECURRING</controllingFieldValue>
+            <valueName>DM_LAST BILLED AMOUNT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DM_RECURRING</controllingFieldValue>
+            <valueName>DM_CURRENT PAYMENT AMOUNT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DM_RECURRING</controllingFieldValue>
+            <valueName>DM_OLDEST UNPAID BILL AMOUNT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DM_RECURRING</controllingFieldValue>
+            <valueName>DM_TOTAL OUTSTANDING BILL AMOUNT</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

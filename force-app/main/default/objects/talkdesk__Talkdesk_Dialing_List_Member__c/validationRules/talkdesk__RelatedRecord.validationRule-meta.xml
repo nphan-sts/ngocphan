@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>talkdesk__RelatedRecord</fullName>
+    <active>true</active>
+    <description>Check for each record type is the correspondent record is linked</description>
+    <errorConditionFormula>OR(
+				(RecordType.DeveloperName = &apos;Account&apos; &amp;&amp; ISBLANK(talkdesk__Account__c)),
+				(RecordType.DeveloperName = &apos;Case&apos; &amp;&amp; ISBLANK(talkdesk__Case__c)),
+				(RecordType.DeveloperName = &apos;Contact&apos; &amp;&amp; ISBLANK(talkdesk__Contact__c)),
+				(RecordType.DeveloperName = &apos;Lead&apos; &amp;&amp; ISBLANK(talkdesk__Lead__c)),
+				(RecordType.DeveloperName = &apos;Opportunity&apos; &amp;&amp; ISBLANK(talkdesk__Opportunity__c)),
+				(RecordType.DeveloperName = &apos;Campaign&apos; &amp;&amp; ISBLANK(talkdesk__Contact__c) &amp;&amp; ISBLANK(talkdesk__Lead__c))
+)</errorConditionFormula>
+    <errorMessage>Linkage to the respective field must be made</errorMessage>
+</ValidationRule>

@@ -1,0 +1,7 @@
+Application ID: {!genesis__Applications__c.Id}
+Lead GUID: {!genesis__Applications__c.Lead_ID__c}
+
+Partner: {!genesis__Applications__c.Delivery_Partner_Code__c}
+ID: {!genesis__Applications__c.Delivery_Id__c}
+Status: {!genesis__Applications__c.Delivery_Status__c}
+Message: {!genesis__Applications__c.Delivery_Message__c}

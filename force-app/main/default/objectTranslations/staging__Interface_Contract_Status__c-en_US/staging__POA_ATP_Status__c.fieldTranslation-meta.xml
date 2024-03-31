@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>staging__POA_ATP_Status__c</name>
+    <picklistValues>
+        <masterLabel>ATP In Place</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>POA In Place</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>

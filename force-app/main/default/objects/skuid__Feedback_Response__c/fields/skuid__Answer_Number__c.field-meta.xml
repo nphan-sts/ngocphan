@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>skuid__Answer_Number__c</fullName>
+    <deprecated>false</deprecated>
+    <description>For analyzing responses to numeric question types.</description>
+    <externalId>false</externalId>
+    <label>Answer Number</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>9</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

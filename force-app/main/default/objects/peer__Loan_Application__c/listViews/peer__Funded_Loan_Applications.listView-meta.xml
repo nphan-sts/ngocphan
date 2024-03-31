@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Funded_Loan_Applications</fullName>
+    <columns>NAME</columns>
+    <columns>peer__Application_Date__c</columns>
+    <columns>peer__Loan_Purpose_1__c</columns>
+    <columns>peer__Amount_Funded__c</columns>
+    <columns>peer__Requested_Loan_Amount__c</columns>
+    <columns>peer__Monthly_Payment__c</columns>
+    <columns>peer__Stage__c</columns>
+    <columns>peer__Loan__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>peer__Stage__c</field>
+        <operation>equals</operation>
+        <value>Funded</value>
+    </filters>
+    <label>Funded Loan Applications</label>
+</ListView>

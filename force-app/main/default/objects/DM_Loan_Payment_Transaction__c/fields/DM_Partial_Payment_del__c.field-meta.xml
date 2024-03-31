@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_Partial_Payment_del__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Read only field. Checked when the payment is less than scheduled.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Read only field. Checked when the payment is less than scheduled.</inlineHelpText>
+    <label>Partial Payment</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

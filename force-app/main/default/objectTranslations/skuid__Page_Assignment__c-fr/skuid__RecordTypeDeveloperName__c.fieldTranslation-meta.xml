@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le nom API/de développeurs du type d&apos;enregistrement auquel cette Désignation de page doit s&apos;appliquer.</help>
+    <label></label>
+    <name>skuid__RecordTypeDeveloperName__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>cnotify__Recipient_Field_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <description>It should be look-up field name of Contact on the Object that is specified in Object__c field on Configuration__c.</description>
+    <externalId>false</externalId>
+    <label>Recipient Field Name</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

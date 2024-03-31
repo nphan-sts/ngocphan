@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>peer__Investment_Order_Post_Sale__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the new investment order that is created when the current investment order is sold. Typically the new investment order will belong to a different Account and old investment order will drop in value.</inlineHelpText>
+    <label>Investment Order Post Sale</label>
+    <referenceTo>loan__Investor_Loan__c</referenceTo>
+    <relationshipLabel>Investor Loan Transactions (Investment Order Post Sale)</relationshipLabel>
+    <relationshipName>Investor_Loan_Transactions</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

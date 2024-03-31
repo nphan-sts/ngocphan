@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DA_LoanswithCPD__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Loans with CPD transactions - Loans impacted by Data accrual change.</description>
+    <externalId>false</externalId>
+    <label>DA LoanswithCPD</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

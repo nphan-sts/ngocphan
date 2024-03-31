@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Accrual_start_days_negative_check</fullName>
+    <active>true</active>
+    <errorConditionFormula>loan__Accrual_Start_Days__c &lt; 0</errorConditionFormula>
+    <errorMessage>Accrual start days cannot be negative.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Payoff_As_Of_Previous_Bill__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The payoff amount as on the day that the previous bill was generated.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The payoff amount as on the day that the previous bill was generated.</inlineHelpText>
+    <label>Payoff As Of Previous Bill</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

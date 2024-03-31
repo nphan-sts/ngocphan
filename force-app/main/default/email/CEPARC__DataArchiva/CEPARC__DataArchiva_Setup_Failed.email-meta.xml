@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>DataArchiva : Setup Failed</name>
+    <style>none</style>
+    <subject>DataArchiva Object Seetup Failed</subject>
+    <textOnly>Dear **name**,
+
+This is a system generated mail from Salesforce DataArchiva application. The object you were trying to configure got failed and details are given below. Please rectify the issue and re-configure it. In case if you&apos;re unable to figure out the root cause and require help, please contact support@dataarchiva.com with this mail attached.
+
+
+Organization ID : **OrgId**
+
+Object Name  : **object**
+
+Date : **Date and time**
+
+Failure cause  : **Message**
+
+
+
+Thanks,
+DataArchiva System</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

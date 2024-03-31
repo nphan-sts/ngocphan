@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Check_Clear_Flag</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Check_Existing_Reversal_Txn</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Check_for_Suspension</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Transaction_Date_Check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>loan__Validate_Txn_Date_Against_System_Date</name>
+    </validationRules>
+</CustomObjectTranslation>

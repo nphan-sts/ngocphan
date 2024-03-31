@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>loan__Data_Migration_Error__c$Name</field>
+    </columns>
+    <columns>
+        <field>loan__Data_Migration_Error__c$loan__Error_Code__c</field>
+    </columns>
+    <columns>
+        <field>loan__Data_Migration_Error__c$loan__Error_Message__c</field>
+    </columns>
+    <columns>
+        <field>loan__Data_Migration_Error__c$loan__Interface_Record_External_Id__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>loan__Data_Migration_Error__c$loan__Loan__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>null</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Invalid Objects for Bank Files</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>peer__Invalid_Scope_for_Bank_Files__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>false</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>loan__Data_Migration_Error__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

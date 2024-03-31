@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>b2e501e7_b369_7027_8374_d5783445787c</fullName>
+    <columns>NAME</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Lead_ID__c</field>
+        <operation>equals</operation>
+        <value>b2e501e7-b369-7027-8374-d5783445787c</value>
+    </filters>
+    <label>b2e501e7-b369-7027-8374-d5783445787c</label>
+</ListView>

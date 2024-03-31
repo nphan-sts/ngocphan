@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ints__uvc__c</fullName>
+    <deprecated>false</deprecated>
+    <description>It is a 10 character identifier that is made up of three parts: Model Year (4 characters) Example: 2002
+Manufacturer Code (3 characters) Example: 440 (Isuzu)
+Vehicle Id (3 characters) Example: 021 (N-Series NQR Cabover 4X2 (CA88-155))</description>
+    <externalId>false</externalId>
+    <label>BlackBook Universal Vehicle Code</label>
+    <length>10</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

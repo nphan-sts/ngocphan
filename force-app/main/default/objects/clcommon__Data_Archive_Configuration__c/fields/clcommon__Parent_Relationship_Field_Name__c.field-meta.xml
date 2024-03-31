@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>clcommon__Parent_Relationship_Field_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>The field which points the parent record, this will useful to filter records belonging to same parent and attach summary record to that. Required if Is_Master_Object_Record__c is false and Create_Summary_Transaction__c is TRUE</inlineHelpText>
+    <label>Parent Relationship Field Name</label>
+    <length>100</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

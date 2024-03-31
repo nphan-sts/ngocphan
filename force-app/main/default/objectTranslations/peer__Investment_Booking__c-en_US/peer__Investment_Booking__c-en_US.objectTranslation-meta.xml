@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>peer__Amount_should_be_positive</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>peer__Certificate_Rate_Check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>peer__Check_Available_Funds</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>peer__Loan_Application_Status_Check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>peer__Requested_Amount_check</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>peer__Service_Rate_Check</name>
+    </validationRules>
+</CustomObjectTranslation>

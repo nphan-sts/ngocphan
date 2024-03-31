@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Floating_Rate_Change_Action_Validation</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISPICKVAL(loan__Interest_Rate_Type__c,&apos;Floating&apos;), NOT(ISPICKVAL( loan__Loan_Product_Type__c, &apos;Line of Credit&apos;)),
+    ISBLANK(TEXT(loan__Floating_Rate_Change_Action__c)))</errorConditionFormula>
+    <errorDisplayField>loan__Floating_Rate_Change_Action__c</errorDisplayField>
+    <errorMessage>Floating Rate Change Action cannot be null for a Lending Product with Interest Type &apos;Floating&apos;.</errorMessage>
+</ValidationRule>

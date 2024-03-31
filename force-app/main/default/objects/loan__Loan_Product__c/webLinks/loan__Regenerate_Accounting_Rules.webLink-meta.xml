@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Regenerate_Accounting_Rules</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Regenerate Accounting Rules</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>function loadScript(url) {
+var request;
+if (window.XMLHttpRequest) {
+request = new XMLHttpRequest();
+} else if (window.ActiveXObject) {
+request = new ActiveXObject(&quot;Msxml2.XMLHTTP&quot;);
+if (!request) {
+request = new ActiveXObject(&quot;Microsoft.XMLHTTP&quot;);
+}
+}
+
+var se = document.createElement(&apos;script&apos;);
+se.type = &quot;text/javascript&quot;;
+request.open(&quot;GET&quot;, url, false);
+request.send(null);
+se.text = request.responseText;
+document.getElementsByTagName(&apos;head&apos;)[0].appendChild(se);
+}
+
+loadScript(&quot;/soap/ajax/51.0/connection.js&quot;);
+loadScript(&quot;/soap/ajax/51.0/apex.js&quot;);
+
+var namespacePrefix = &quot;{!$Setup.loan__Org_Parameters__c.loan__Namespace_Prefix__c}&quot;;
+if (namespacePrefix != null &amp;&amp; namespacePrefix != &quot;&quot;){
+namespacePrefix += &quot;/&quot;;
+}
+var className = namespacePrefix + &quot;RegenerateLoanProductAccountingRules&quot;;
+var methodName = &quot;regenerateLoanProductAccountingRules&quot;;
+var parameter1 = &apos;{!loan__Loan_Product__c.Id }&apos;
+var retVal = sforce.apex.execute(className ,methodName, {loanproductId:parameter1});
+window.alert(retVal);
+window.location.reload();</url>
+</WebLink>

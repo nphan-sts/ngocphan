@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DM_CL_Contract__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>DM CL Contract</label>
+    <referenceTo>DM_Loan_Account__c</referenceTo>
+    <relationshipLabel>DM Repayment Schedule</relationshipLabel>
+    <relationshipName>DM_Repayment_Schedule_Summarys</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Buyer__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Buyer&apos;s Account - To whom IOs will be sold after a certain point of time.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Buyer&apos;s Account - To whom IOs will be sold after a certain point of time.</inlineHelpText>
+    <label>Buyer</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Account.loan__Investor__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Investment Orders (Buyer)</relationshipLabel>
+    <relationshipName>Investment_Orders</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

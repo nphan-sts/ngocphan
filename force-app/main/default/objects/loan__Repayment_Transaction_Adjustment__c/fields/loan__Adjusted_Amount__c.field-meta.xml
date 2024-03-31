@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Adjusted_Amount__c</fullName>
+    <defaultValue>0</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Adjusted Amount (+ve or -ve). This is not yet implemented.
+Reversal Txn will reverse the master payment transaction&apos;s full amount.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Adjusted Amount (+ve or -ve). This is not yet implemented. 
+Reversal Txn will reverse the master payment transaction&apos;s full amount.</inlineHelpText>
+    <label>Adjusted Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>collect__Promise_Kept__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>if checked Indicates that the promise to pay was kept</description>
+    <externalId>false</externalId>
+    <label>Promise Kept</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>loan__Include_K1__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, metro 2 generator will include K1 segment.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Check this if Metro 2 K1 segment needs to be added in credit reporting file</inlineHelpText>
+    <label>Include K1</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
